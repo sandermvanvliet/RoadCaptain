@@ -1,4 +1,5 @@
-﻿using Autofac;
+﻿using System.Reflection.Metadata.Ecma335;
+using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using RoadCaptain.Host.Console.HostedServices;
@@ -36,6 +37,7 @@ namespace RoadCaptain.Host.Console
                 .CreateLogger();
         }
 
+        // The logger instance is passed in because it needs to go into the IoC container and is used directly by UseSerilog
         private static IHostBuilder CreateHostBuilder(string[] args, ILogger logger) =>
             Microsoft.Extensions.Hosting.Host.CreateDefaultBuilder(args)
                 .UseServiceProviderFactory(new AutofacServiceProviderFactory())
