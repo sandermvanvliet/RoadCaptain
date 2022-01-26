@@ -45,6 +45,9 @@ namespace RoadCaptain.Host.Console
 
                     builder.RegisterAssemblyModules(typeof(Program).Assembly);
                     builder.RegisterAssemblyModules(typeof(MonitoringEvents).Assembly);
+
+                    // TODO: find a nicer way to do this
+                    builder.RegisterAssemblyModules(typeof(RoadCaptain.Adapters.AdaptersModule).Assembly);
                 })
                 .UseSerilog(logger);
 

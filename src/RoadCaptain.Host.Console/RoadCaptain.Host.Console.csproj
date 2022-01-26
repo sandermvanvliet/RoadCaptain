@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -16,6 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\RoadCaptain.Adapters\RoadCaptain.Adapters.csproj" />
     <ProjectReference Include="..\RoadCaptain\RoadCaptain.csproj" />
   </ItemGroup>
 

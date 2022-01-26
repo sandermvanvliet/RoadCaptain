@@ -18,12 +18,16 @@ namespace RoadCaptain.UseCases
 
         public void Execute(CancellationToken token)
         {
-            var bytes = _messageReceiver.ReceiveMessageBytes();
-
-            if (bytes != null)
+            // do-while to at least attempt one receive action
+            do
             {
-                _messageEmitter.Emit(bytes);
-            }
+                var bytes = _messageReceiver.ReceiveMessageBytes();
+
+                if (bytes != null)
+                {
+                    _messageEmitter.Emit(bytes);
+                }
+            } while (!token.IsCancellationRequested);
         }
     }
 }

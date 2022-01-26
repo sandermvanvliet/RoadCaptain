@@ -44,7 +44,7 @@ namespace RoadCaptain.Tests.Unit
 
         private void WhenReceivingMessage()
         {
-            _useCase.Execute(CancellationToken.None);
+            _useCase.Execute(new CancellationToken(true)); // Always in cancelled state because otherwise the usecasse remains in an infinite loop
         }
 
         private void GivenBytesOnNetwork()
