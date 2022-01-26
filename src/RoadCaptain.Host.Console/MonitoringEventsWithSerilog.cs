@@ -1,6 +1,5 @@
 ﻿using System;
 using Serilog;
-using Serilog.Core;
 
 namespace RoadCaptain.Host.Console
 {

@@ -4,15 +4,17 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Hosting;
 using RoadCaptain.UseCases;
 
-namespace RoadCaptain.Host.Console
+namespace RoadCaptain.Host.Console.HostedServices
 {
-    internal class RoadCaptainConsoleHost : IHostedService
+    internal class HandleIncomingMessagesService : IHostedService
     {
         private readonly MonitoringEvents _monitoringEvents;
         private readonly CancellationTokenSource _cancellationTokenSource;
         private readonly HandleIncomingMessageUseCase _incomingMessageUseCase;
 
-        public RoadCaptainConsoleHost(MonitoringEvents monitoringEvents, HandleIncomingMessageUseCase incomingMessageUseCase)
+        public HandleIncomingMessagesService(
+            MonitoringEvents monitoringEvents,
+            HandleIncomingMessageUseCase incomingMessageUseCase)
         {
             _monitoringEvents = monitoringEvents;
             _incomingMessageUseCase = incomingMessageUseCase;
@@ -22,10 +24,10 @@ namespace RoadCaptain.Host.Console
 
         public Task StartAsync(CancellationToken cancellationToken)
         {
-            _monitoringEvents.ApplicationStarted();
-            
             Task.Factory.StartNew(() => _incomingMessageUseCase.Execute(_cancellationTokenSource.Token), _cancellationTokenSource.Token);
-            
+
+            _monitoringEvents.ServiceStarted(nameof(HandleIncomingMessagesService));
+
             return Task.CompletedTask;
         }
 
@@ -38,8 +40,10 @@ namespace RoadCaptain.Host.Console
             catch (OperationCanceledException)
             {
             }
-
-            _monitoringEvents.ApplicationEnded();
+            finally
+            {
+                _monitoringEvents.ServiceStopped(nameof(HandleIncomingMessagesService));
+            }
 
             return Task.CompletedTask;
         }

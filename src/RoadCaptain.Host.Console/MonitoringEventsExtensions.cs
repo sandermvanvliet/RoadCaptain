@@ -11,9 +11,24 @@ namespace RoadCaptain.Host.Console
             monitoringEvents.Information("RoadCaptain version {Version}", version);
         }
 
-        public static void ApplicationEnded(this MonitoringEvents monitoringEvents)
+        public static void ApplicationStopping(this MonitoringEvents monitoringEvents)
         {
-            monitoringEvents.Information("RoadCaptain exiting...");
+            monitoringEvents.Information("RoadCaptain stopping...");
+        }
+
+        public static void ApplicationStopped(this MonitoringEvents monitoringEvents)
+        {
+            monitoringEvents.Information("RoadCaptain stopped");
+        }
+
+        public static void ServiceStarted(this MonitoringEvents monitoringEvents, string serviceName)
+        {
+            monitoringEvents.Information("Service {Name} started", serviceName);
+        }
+
+        public static void ServiceStopped(this MonitoringEvents monitoringEvents, string serviceName)
+        {
+            monitoringEvents.Information("Service {Name} stopped", serviceName);
         }
 
         private static string GetApplicationVersion()
