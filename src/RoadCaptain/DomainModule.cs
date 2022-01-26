@@ -6,8 +6,8 @@ namespace RoadCaptain
     {
         protected override void Load(ContainerBuilder builder)
         {
-            builder.RegisterAssemblyTypes(this.GetType().Assembly)
-                .Where(t => t.Namespace.EndsWith("UseCases"))
+            builder.RegisterAssemblyTypes(GetType().Assembly)
+                .Where(t => t.Namespace != null && t.Namespace.EndsWith(".UseCases"))
                 .AsSelf();
         }
     }

@@ -1,7 +1,6 @@
 ﻿using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using RoadCaptain.Host.Console.HostedServices;
 using Serilog;
 using Serilog.Core;
 
@@ -43,10 +42,9 @@ namespace RoadCaptain.Host.Console
                 .ConfigureContainer<ContainerBuilder>((_, builder) =>
                 {
                     builder.Register(_ => logger).SingleInstance();
-                    builder.RegisterType<MonitoringEventsWithSerilog>().As<MonitoringEvents>().SingleInstance();
 
-                    builder.RegisterModule<HostedServicesModule>();
-                    builder.RegisterModule<DomainModule>();
+                    builder.RegisterAssemblyModules(typeof(Program).Assembly);
+                    builder.RegisterAssemblyModules(typeof(MonitoringEvents).Assembly);
                 })
                 .UseSerilog(logger);
 
