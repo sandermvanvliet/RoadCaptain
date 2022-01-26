@@ -1,5 +1,4 @@
 ﻿using Autofac;
-using RoadCaptain.UseCases;
 
 namespace RoadCaptain
 {
@@ -7,7 +6,9 @@ namespace RoadCaptain
     {
         protected override void Load(ContainerBuilder builder)
         {
-            builder.RegisterType<HandleIncomingMessageUseCase>().AsSelf();
+            builder.RegisterAssemblyTypes(this.GetType().Assembly)
+                .Where(t => t.Namespace.EndsWith("UseCases"))
+                .AsSelf();
         }
     }
 }
