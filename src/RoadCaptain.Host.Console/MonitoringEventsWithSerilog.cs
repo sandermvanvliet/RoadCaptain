@@ -1,5 +1,6 @@
 ﻿using System;
 using Serilog;
+using Serilog.Core;
 
 namespace RoadCaptain.Host.Console
 {
@@ -9,7 +10,12 @@ namespace RoadCaptain.Host.Console
 
         public MonitoringEventsWithSerilog()
         {
-            _logger = new LoggerConfiguration()
+            _logger = CreateLogger();
+        }
+
+        public static Logger CreateLogger()
+        {
+            return new LoggerConfiguration()
                 .WriteTo.Console()
                 .Enrich.FromLogContext()
                 .CreateLogger();

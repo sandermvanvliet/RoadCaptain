@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Serilog;
 
 namespace RoadCaptain.Host.Console
 {
@@ -15,6 +16,7 @@ namespace RoadCaptain.Host.Console
                 .ConfigureServices((hostContext, services) =>
                 {
                     services.AddHostedService<RoadCaptainConsoleHost>();
-                });
+                })
+                .UseSerilog(MonitoringEventsWithSerilog.CreateLogger());
     }
 }
