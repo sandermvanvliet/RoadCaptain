@@ -1,6 +1,8 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Autofac;
+using Autofac.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Serilog;
+using Serilog.Core;
 
 namespace RoadCaptain.Host.Console
 {
@@ -8,15 +10,42 @@ namespace RoadCaptain.Host.Console
     {
         public static void Main(string[] args)
         {
-            CreateHostBuilder(args).Build().Run();
+            var logger = CreateLogger();
+            
+            var builder = new ContainerBuilder();
+            
+            // ReSharper disable once AccessToDisposedClosure
+            builder.Register<ILogger>(_ => logger).SingleInstance();
+            builder.RegisterType<MonitoringEvents>().As<MonitoringEventsWithSerilog>().SingleInstance();
+            builder.RegisterType<RoadCaptainConsoleHost>().As<IHostedService>();
+
+            builder.RegisterModule<DomainModule>();
+
+            try
+            {
+                CreateHostBuilder(args, builder, logger).Build().Run();
+            }
+            finally
+            {
+                // Flush the logger
+                logger.Dispose();
+            }
         }
 
-        public static IHostBuilder CreateHostBuilder(string[] args) =>
+        private static IHostBuilder CreateHostBuilder(string[] args, ContainerBuilder containerBuilder, ILogger logger) =>
             Microsoft.Extensions.Hosting.Host.CreateDefaultBuilder(args)
                 .ConfigureServices((hostContext, services) =>
                 {
-                    services.AddHostedService<RoadCaptainConsoleHost>();
+                    containerBuilder.Populate(services);
                 })
-                .UseSerilog(MonitoringEventsWithSerilog.CreateLogger());
+                .UseSerilog(logger);
+
+        private static Logger CreateLogger()
+        {
+            return new LoggerConfiguration()
+                .WriteTo.Console()
+                .Enrich.FromLogContext()
+                .CreateLogger();
+        }
     }
 }

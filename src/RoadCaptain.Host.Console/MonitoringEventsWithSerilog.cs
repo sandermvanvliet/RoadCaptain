@@ -8,17 +8,9 @@ namespace RoadCaptain.Host.Console
     {
         private readonly ILogger _logger;
 
-        public MonitoringEventsWithSerilog()
+        public MonitoringEventsWithSerilog(ILogger logger)
         {
-            _logger = CreateLogger();
-        }
-
-        public static Logger CreateLogger()
-        {
-            return new LoggerConfiguration()
-                .WriteTo.Console()
-                .Enrich.FromLogContext()
-                .CreateLogger();
+            _logger = logger;
         }
 
         public override void Information(string messageTemplate, params object[] propertyValues)
