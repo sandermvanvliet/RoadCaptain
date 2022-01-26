@@ -1,5 +1,4 @@
-﻿using System.Reflection.Metadata.Ecma335;
-using Autofac;
+﻿using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using RoadCaptain.Host.Console.HostedServices;
@@ -55,6 +54,11 @@ namespace RoadCaptain.Host.Console
         {
             var monitoringEvents = host.Services.GetService(typeof(MonitoringEvents)) as MonitoringEvents;
             var lifetime = (IHostApplicationLifetime)host.Services.GetService(typeof(IHostApplicationLifetime));
+            if (lifetime == null)
+            {
+                return;
+            }
+
             lifetime.ApplicationStarted.Register(() => monitoringEvents.ApplicationStarted());
             lifetime.ApplicationStopping.Register(() => monitoringEvents.ApplicationStopping());
             lifetime.ApplicationStopped.Register(() => monitoringEvents.ApplicationStopped());
