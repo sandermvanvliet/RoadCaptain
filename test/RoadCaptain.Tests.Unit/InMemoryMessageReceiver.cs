@@ -9,6 +9,10 @@ namespace RoadCaptain.Tests.Unit
             return AvailableBytes;
         }
 
+        public void Shutdown()
+        {
+        }
+
         public byte[] AvailableBytes { get; set; }
     }
 }

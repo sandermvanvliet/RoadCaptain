@@ -3,5 +3,6 @@
     public interface IMessageReceiver
     {
         byte[] ReceiveMessageBytes();
+        void Shutdown();
     }
 }
