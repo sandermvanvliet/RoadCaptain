@@ -7,9 +7,9 @@
             monitoringEvents.Information("User is currently riding in Zwift");
         }
 
-        public static void ReceivedMessage(this MonitoringEvents monitoringEvents)
+        public static void ReceivedMessage(this MonitoringEvents monitoringEvents, int size, long sequenceNumber)
         {
-            monitoringEvents.Information("Received a message from Zwift");
+            monitoringEvents.Information("Received a message from Zwift. Sequence no {SequenceNumber}, size {Size}", sequenceNumber, size);
         }
 
         public static void AcceptedConnection(this MonitoringEvents monitoringEvents)

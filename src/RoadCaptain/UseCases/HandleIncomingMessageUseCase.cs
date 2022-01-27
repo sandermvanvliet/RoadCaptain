@@ -18,6 +18,7 @@ namespace RoadCaptain.UseCases
         private readonly IMessageEmitter _messageEmitter;
         private readonly Pipe _pipe;
         private readonly MonitoringEvents _monitoringEvents;
+        private long _messageSequenceNumber = 1;
 
         public HandleIncomingMessageUseCase(
             IMessageReceiver messageReceiver,
@@ -99,7 +100,7 @@ namespace RoadCaptain.UseCases
                         // iteration.
                         while (TryExtractMessage(ref buffer, out byte[] payload))
                         {
-                            _monitoringEvents.ReceivedMessage();
+                            _monitoringEvents.ReceivedMessage(payload.Length, _messageSequenceNumber++);
                             _messageEmitter.Emit(payload);
                         }
 
