@@ -1,5 +1,4 @@
-﻿using System;
-using RoadCaptain.Ports;
+﻿using RoadCaptain.Ports;
 
 namespace RoadCaptain.Adapters
 {
@@ -7,7 +6,6 @@ namespace RoadCaptain.Adapters
     {
         public void Emit(object message)
         {
-            throw new NotImplementedException();
         }
     }
 }

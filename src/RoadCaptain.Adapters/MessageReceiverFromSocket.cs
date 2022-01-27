@@ -15,9 +15,11 @@ namespace RoadCaptain.Adapters
         private Socket _acceptedSocket;
         private readonly Mutex _mutex = new Mutex(false);
         private readonly TimeSpan _mutextTimeout = TimeSpan.FromMilliseconds(250);
+        private readonly MonitoringEvents _monitoringEvents;
 
-        public MessageReceiverFromSocket()
+        public MessageReceiverFromSocket(MonitoringEvents monitoringEvents)
         {
+            _monitoringEvents = monitoringEvents;
             _socket = new Socket(
                 AddressFamily.InterNetwork,
                 SocketType.Stream,
@@ -53,8 +55,12 @@ namespace RoadCaptain.Adapters
                 return;
             }
 
+            _monitoringEvents.WaitingForConnection();
+
             // This blocks until a connection is made
             _acceptedSocket = _socket.Accept();
+
+            _monitoringEvents.AcceptedConnection();
 
             // Allow ReceiveMessagesBytes to unblock
             _mutex.ReleaseMutex();
@@ -79,6 +85,8 @@ namespace RoadCaptain.Adapters
                 if (socketError != SocketError.Success)
                 {
                     // Shit went wrong...
+                    _monitoringEvents.ReceiveFailed();
+
                     _acceptedSocket = null;
                     Task.Factory.StartNew(WaitForConnection);
 
@@ -117,6 +125,11 @@ namespace RoadCaptain.Adapters
 
         public void Shutdown()
         {
+            if (_acceptedSocket != null)
+            {
+                _acceptedSocket.Close();
+            }
+
             _socket.Close();
         }
     }

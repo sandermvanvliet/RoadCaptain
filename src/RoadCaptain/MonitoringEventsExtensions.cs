@@ -6,5 +6,25 @@
         {
             monitoringEvents.Information("User is currently riding in Zwift");
         }
+
+        public static void ReceivedMessage(this MonitoringEvents monitoringEvents)
+        {
+            monitoringEvents.Information("Received a message from Zwift");
+        }
+
+        public static void AcceptedConnection(this MonitoringEvents monitoringEvents)
+        {
+            monitoringEvents.Information("Accepted a inbound TCP connection from Zwift");
+        }
+
+        public static void ReceiveFailed(this MonitoringEvents monitoringEvents)
+        {
+            monitoringEvents.Error("Failed to receive data from socket, closing socket");
+        }
+
+        public static void WaitingForConnection(this MonitoringEvents monitoringEvents)
+        {
+            monitoringEvents.Error("Waiting for inbound TCP connection");
+        }
     }
 }

@@ -17,13 +17,15 @@ namespace RoadCaptain.UseCases
         private readonly IMessageReceiver _messageReceiver;
         private readonly IMessageEmitter _messageEmitter;
         private readonly Pipe _pipe;
+        private readonly MonitoringEvents _monitoringEvents;
 
         public HandleIncomingMessageUseCase(
             IMessageReceiver messageReceiver,
-            IMessageEmitter messageEmitter)
+            IMessageEmitter messageEmitter, MonitoringEvents monitoringEvents)
         {
             _messageReceiver = messageReceiver;
             _messageEmitter = messageEmitter;
+            _monitoringEvents = monitoringEvents;
             _pipe = new Pipe();
         }
 
@@ -97,6 +99,7 @@ namespace RoadCaptain.UseCases
                         // iteration.
                         while (TryExtractMessage(ref buffer, out object message))
                         {
+                            _monitoringEvents.ReceivedMessage();
                             _messageEmitter.Emit(message);
                         }
 
