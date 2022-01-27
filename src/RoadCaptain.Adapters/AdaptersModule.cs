@@ -1,4 +1,5 @@
-﻿using Autofac;
+﻿using System.Net.Http;
+using Autofac;
 
 namespace RoadCaptain.Adapters
 {
@@ -6,6 +7,10 @@ namespace RoadCaptain.Adapters
     {
         protected override void Load(ContainerBuilder builder)
         {
+            builder
+                .Register(_ => new HttpClient())
+                .InstancePerLifetimeScope();
+
             builder
                 .RegisterAssemblyTypes(ThisAssembly)
                 .AsImplementedInterfaces();

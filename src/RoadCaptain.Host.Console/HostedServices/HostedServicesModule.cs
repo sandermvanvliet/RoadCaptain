@@ -1,5 +1,4 @@
 ﻿using Autofac;
-using Microsoft.Extensions.Hosting;
 
 namespace RoadCaptain.Host.Console.HostedServices
 {
@@ -7,7 +6,9 @@ namespace RoadCaptain.Host.Console.HostedServices
     {
         protected override void Load(ContainerBuilder builder)
         {
-            builder.RegisterType<HandleIncomingMessagesService>().As<IHostedService>();
+            builder.RegisterAssemblyTypes(ThisAssembly)
+                .Where(t => t.Namespace.EndsWith(".HostedServices"))
+                .AsImplementedInterfaces();
         }
     }
 }

@@ -1,5 +1,7 @@
 ﻿using Autofac;
 using Autofac.Extensions.DependencyInjection;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Configuration.Json;
 using Microsoft.Extensions.Hosting;
 using Serilog;
 using Serilog.Core;
@@ -42,6 +44,14 @@ namespace RoadCaptain.Host.Console
                 .ConfigureContainer<ContainerBuilder>((_, builder) =>
                 {
                     builder.Register(_ => logger).SingleInstance();
+
+                    var configurationRoot = new ConfigurationBuilder()
+                        .AddJsonFile("appsettings.json", true)
+                        .Build();
+
+                    var configuration = new Configuration();
+                    configurationRoot.Bind(configuration);
+                    builder.Register(_ => configuration).SingleInstance();
 
                     builder.RegisterAssemblyModules(typeof(Program).Assembly);
                     builder.RegisterAssemblyModules(typeof(MonitoringEvents).Assembly);
