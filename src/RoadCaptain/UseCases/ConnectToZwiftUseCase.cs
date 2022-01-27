@@ -1,4 +1,9 @@
-﻿using System.Threading;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Net;
+using System.Net.NetworkInformation;
+using System.Net.Sockets;
+using System.Threading;
 using System.Threading.Tasks;
 using RoadCaptain.Commands;
 using RoadCaptain.Ports;
@@ -12,8 +17,8 @@ namespace RoadCaptain.UseCases
         private readonly MonitoringEvents _monitoringEvents;
 
         public ConnectToZwiftUseCase(
-            IRequestToken requestToken, 
-            IZwift zwift, 
+            IRequestToken requestToken,
+            IZwift zwift,
             MonitoringEvents monitoringEvents)
         {
             _requestToken = requestToken;
@@ -24,12 +29,12 @@ namespace RoadCaptain.UseCases
         public async Task ExecuteAsync(ConnectCommand connectCommand, CancellationToken cancellationToken)
         {
             // TODO: Work out what the correct IP address should be
-            var ipAddress = "192.168.1.53";
+            var ipAddress = GetMostLikelyAddress().ToString();
 
             var tokens = await _requestToken.RequestAsync(connectCommand.Username, connectCommand.Password);
 
             var relayUri = await _zwift.RetrieveRelayUrl(tokens.AccessToken);
-            
+
             await _zwift.InitiateRelayAsync(tokens.AccessToken, relayUri, ipAddress);
 
             while (!cancellationToken.IsCancellationRequested)
@@ -47,6 +52,45 @@ namespace RoadCaptain.UseCases
 
                 Thread.Sleep(5 * 1000);
             }
+        }
+
+        private static IPAddress GetMostLikelyAddress()
+        {
+            // Only look at network interfaces that are either Ethernet or WiFi
+            var nics = NetworkInterface
+                .GetAllNetworkInterfaces()
+                .Where(nic => nic.NetworkInterfaceType == NetworkInterfaceType.Ethernet ||
+                              nic.NetworkInterfaceType == NetworkInterfaceType.Wireless80211)
+                .Where(nic => nic.OperationalStatus == OperationalStatus.Up)
+                .ToList();
+
+            var likelyAddresses = new List<IPAddress>();
+
+            foreach (var nic in nics)
+            {
+                var ipProperties = nic.GetIPProperties();
+
+                // If there is no gateway set then the network interface
+                // most likely isn't the right one as it's probably not
+                // routable anyway.
+                if (!ipProperties.GatewayAddresses.Any())
+                {
+                    continue;
+                }
+
+                var likelyAddress = ipProperties
+                        .UnicastAddresses
+                        .Where(unicastAddress => unicastAddress.Address.AddressFamily == AddressFamily.InterNetwork)
+                        .Select(unicastAddress => unicastAddress.Address)
+                        .FirstOrDefault();
+
+                if (likelyAddress != null)
+                {
+                    likelyAddresses.Add(likelyAddress);
+                }
+            }
+
+            return likelyAddresses.FirstOrDefault();
         }
     }
 }
