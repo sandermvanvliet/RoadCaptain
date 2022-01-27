@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using RoadCaptain.Ports;
 
 namespace RoadCaptain.Tests.Unit
@@ -12,9 +13,13 @@ namespace RoadCaptain.Tests.Unit
 
         public List<byte[]> Messages { get; }
 
-        public void EmitMessageFromBytes(byte[] payload, long messageSequenceNumber)
+        public void EmitMessageFromBytes(byte[] payload, long sequenceNumber)
         {
             Messages.Add(payload);
+        }
+
+        public void SubscribeOnPing(Action<int> callback)
+        {
         }
     }
 }

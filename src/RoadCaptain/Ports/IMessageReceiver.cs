@@ -4,5 +4,8 @@
     {
         byte[] ReceiveMessageBytes();
         void Shutdown();
+
+        void SendMessageBytes(byte[] payload);
+        void SendInitialPairingMessage(int riderId);
     }
 }

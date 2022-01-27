@@ -60,7 +60,9 @@ namespace RoadCaptain.Tests.Unit
             var useCase = new ConnectToZwiftUseCase(
                 new RequestTokenFromApi(new HttpClient(_handler)),
                 new Zwift(new HttpClient(_handler)),
-                new NopMonitoringEvents());
+                new NopMonitoringEvents(),
+                null,
+                null);
 
             useCase.ExecuteAsync(new ConnectCommand
                     {

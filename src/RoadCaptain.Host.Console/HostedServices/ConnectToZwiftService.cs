@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Hosting;
 using RoadCaptain.Commands;
+using RoadCaptain.Ports;
 using RoadCaptain.UseCases;
 
 namespace RoadCaptain.Host.Console.HostedServices

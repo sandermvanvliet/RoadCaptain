@@ -29,6 +29,14 @@ namespace RoadCaptain.Tests.Unit
         {
         }
 
+        public void SendMessageBytes(byte[] payload)
+        {
+        }
+
+        public void SendInitialPairingMessage(int riderId)
+        {
+        }
+
         public byte[] AvailableBytes { get; set; }
     }
 }

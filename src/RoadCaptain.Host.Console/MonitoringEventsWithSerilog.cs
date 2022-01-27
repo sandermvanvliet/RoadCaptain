@@ -12,6 +12,11 @@ namespace RoadCaptain.Host.Console
             _logger = logger;
         }
 
+        public override void Debug(string message, params object[] arguments)
+        {
+            _logger.Debug(message, arguments);
+        }
+
         public override void Information(string messageTemplate, params object[] propertyValues)
         {
             _logger.Information(messageTemplate, propertyValues);
@@ -20,6 +25,11 @@ namespace RoadCaptain.Host.Console
         public override void Warning(string messageTemplate, params object[] propertyValues)
         {
             _logger.Warning(messageTemplate, propertyValues);
+        }
+
+        public override void Warning(Exception exception, string messageTemplate, params object[] propertyValues)
+        {
+            _logger.Warning(exception, messageTemplate, propertyValues);
         }
 
         public override void Error(string messageTemplate, params object[] propertyValues)

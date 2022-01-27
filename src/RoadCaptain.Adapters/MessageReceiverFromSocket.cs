@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
+using Google.Protobuf;
+using RoadCaptain.Adapters.Protobuf;
 using RoadCaptain.Ports;
 
 namespace RoadCaptain.Adapters
@@ -34,7 +37,11 @@ namespace RoadCaptain.Adapters
 
         private void WaitForConnection()
         {
-            if (_mutex.WaitOne())
+            // TODO: Split accept and reading into separate components
+            // That way we can have an accept loop that kicks off new processing use cases
+            // and not bother with that thing closing on the same mutex which is why currently
+            // we have this time-out here.
+            if (_mutex.WaitOne(_mutextTimeout))
             {
                 if (_acceptedSocket != null)
                 {
@@ -52,6 +59,7 @@ namespace RoadCaptain.Adapters
             else
             {
                 // We did not get exclusive access, how come?
+                Task.Factory.StartNew(WaitForConnection);
                 return;
             }
 
@@ -90,8 +98,9 @@ namespace RoadCaptain.Adapters
                 if (socketError != SocketError.Success)
                 {
                     // Shit went wrong...
-                    _monitoringEvents.ReceiveFailed();
+                    _monitoringEvents.ReceiveFailed(socketError);
 
+                    _acceptedSocket.Close();
                     _acceptedSocket = null;
                     Task.Factory.StartNew(WaitForConnection);
 
@@ -130,12 +139,69 @@ namespace RoadCaptain.Adapters
 
         public void Shutdown()
         {
-            if (_acceptedSocket != null)
-            {
-                _acceptedSocket.Close();
-            }
+            _acceptedSocket?.Close();
 
             _socket.Close();
+        }
+
+        public void SendMessageBytes(byte[] payload)
+        {
+            if (_acceptedSocket == null)
+            {
+                _monitoringEvents.Error("Tried to send data to Zwift but there is no active connection");
+                return;
+            }
+
+            // Note: For messages to the Zwift app we need to have a 4-byte length prefix instead
+            // of the 2-byte one we see on incoming messages...
+            var payloadToSend = WrapWithLength(payload);
+
+            var offset = 0;
+
+            while (offset < payloadToSend.Length)
+            {
+                var sent = _acceptedSocket.Send(payloadToSend, offset, payloadToSend.Length - offset, SocketFlags.None);
+                
+                _monitoringEvents.Debug("Sent {Count} bytes, {Offset} sent so far of {Total} total payload size", sent, offset, payloadToSend.Length);
+
+                offset += sent;
+            }
+        }
+
+        public void SendInitialPairingMessage(int riderId)
+        {
+            var message = new ZwiftCompanionToAppRiderMessage
+            {
+                MyId = (uint)riderId,
+                Details = new ZwiftCompanionToAppRiderMessage.Types.RiderMessage
+                {
+                    RiderId = (uint)riderId,
+                    Tag1 = 1,
+                    Type = 28
+                },
+                Sequence = 0
+            };
+
+            var memoryStream = new MemoryStream();
+            var outputStream = new CodedOutputStream(memoryStream);
+            message.WriteTo(outputStream);
+            var bytes = memoryStream.GetBuffer().Take((int)memoryStream.Position).ToArray();
+            
+            SendMessageBytes(bytes);
+        }
+
+        private static byte[] WrapWithLength(byte[] payload)
+        {
+            var prefix = BitConverter.GetBytes(payload.Length);
+
+            if (BitConverter.IsLittleEndian)
+            {
+                prefix = prefix.Reverse().ToArray();
+            }
+
+            return prefix
+                .Concat(payload)
+                .ToArray();
         }
     }
 }

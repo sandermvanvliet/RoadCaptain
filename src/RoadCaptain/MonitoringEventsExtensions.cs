@@ -1,4 +1,6 @@
-﻿namespace RoadCaptain
+﻿using System.Net.Sockets;
+
+namespace RoadCaptain
 {
     public static class MonitoringEventsExtensions
     {
@@ -17,9 +19,9 @@
             monitoringEvents.Information("Accepted a inbound TCP connection from Zwift");
         }
 
-        public static void ReceiveFailed(this MonitoringEvents monitoringEvents)
+        public static void ReceiveFailed(this MonitoringEvents monitoringEvents, SocketError socketError)
         {
-            monitoringEvents.Error("Failed to receive data from socket, closing socket");
+            monitoringEvents.Error("Failed to receive data from socket because {Error}, closing socket", socketError.ToString());
         }
 
         public static void WaitingForConnection(this MonitoringEvents monitoringEvents)

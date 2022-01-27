@@ -1,0 +1,293 @@
+syntax="proto3";
+package RoadCaptain;
+option csharp_namespace="RoadCaptain.Adapters.Protobuf";
+
+////////////////////////////////////////////////////////////////
+////// Zwift Desktop app to Zwift Companion app messages //////
+////////////////////////////////////////////////////////////////
+
+// Base message type for Zwift Desktop app to Zwift Companion app messages
+message ZwiftAppToCompanion
+{
+    // These fields are always there
+    uint32 sequence = 1; // This can be either the rider_id in which case tag10 is set or another value in the low range
+
+    uint32 tag2 = 2;
+    uint32 rider_id = 3;
+    uint32 tag4 = 4;
+    uint32 tag6 = 6;
+    uint32 tag7 = 7;
+    
+    message SubItem
+    {
+        uint32 sequence = 1;
+        uint32 type = 2;
+        optional uint32 tag3 = 3;
+        optional uint32 tag7 = 7;
+
+        message SubItemData19
+        {
+            SubItemData20 data = 1;
+        }
+        optional SubItemData19 data19 = 19;
+
+        message SubItemData20
+        {
+            uint64 tag1 = 1;
+            uint32 tag2 = 2;
+            uint32 tag3 = 3;
+        }
+        optional SubItemData20 data20 = 20;
+
+        message SubItemData
+        {
+            uint32 tag1 = 1; // Can be 3 or 6
+            optional string tag7 = 7;
+        }
+
+        optional SubItemData data = 21;
+    }
+    repeated SubItem items = 11;
+
+    uint64 world_clock = 12;
+}
+
+message ZwiftAppToCompanionMessageRiderPosition {
+    uint32 myId = 1; // Our own Zwift rider_id
+    optional float tag3 = 3;
+    optional float tag4 = 4;
+    optional float tag5 = 5;
+    optional float tag6 = 6;
+    optional float tag7 = 7;
+    optional float tag8 = 8;
+    double clock_time = 9;
+    uint32 tag10 = 10; // Seems to always be zero for this message type
+}
+
+// Received when a power-up has become available
+message ZwiftAppToCompanionPowerUpMessage
+{
+    uint32 tag1 = 1;
+    uint32 tag2 = 2; // Always 2 for this type
+    uint32 tag3 = 3;
+    string power_up = 4;
+    string foreground_color = 6;
+    string background_color = 12;
+}
+
+// Received when an action has become available
+message ZwiftAppToCompanionButtonMessage
+{
+    uint32 tag1 = 1;
+    uint32 tag2 = 4;
+    uint32 type_id = 8; // This is the numerical value for title (tag 10)
+    uint32 tag9 = 9; // This is 0 for type_id 23 or HUD off, 1 for all others but can be 3 for POWER_GRAPH. Could it be 0 = turn off, 1 = turn on, 3 = toggle?
+    string title = 10; // TURN LEFT, ELBOW FLICK, HUD etc. Not sure if this could be localized...
+    string image_url = 11;
+    uint32 tag13 = 13;
+}
+
+// Received when the desktop app sends information to the companion app
+message ZwiftAppToCompanionActivityDetailsMessage
+{
+    uint32 sequence = 1;
+    uint32 type = 2; // Always 13 for this type
+
+    message ActivityDetails
+    {
+        uint32 type = 1; // Appears to be a detail type that specifies which info is available
+
+        message ActivityDetailsData
+        {
+            uint32 tag1 = 1;
+            uint64 activity_id = 2;
+            uint32 tag3 = 3;
+            uint32 tag4 = 4;
+            uint32 tag7 = 7;
+            uint32 tag8 = 8;
+            uint32 tag10 = 10;
+            uint32 tag11 = 11;
+            uint32 tag12 = 12;
+        }
+
+        optional ActivityDetailsData data = 4;
+
+        message Rider
+        {
+            uint32 rider_id = 1;
+            uint32 tag2 = 2;
+            message RiderPosition
+            {
+                float latitude = 1; // Latitude
+                float altitude = 2; // Wild guess...
+                float longitude = 3; // Longitude
+            }
+            RiderPosition position = 3;
+            optional string profile_url = 5;
+            uint32 second_rider_id = 6; // This is appearing twice...
+            uint32 tag7 = 7;
+            string description = 11;
+            uint32 tag12 = 12;
+            float tag13 = 13;
+            uint32 tag16 = 16;
+            uint32 tag18 = 18;
+            double tag19 = 19;
+            uint32 tag20 = 20;
+        }
+
+        message ActivityDetailsRiderData
+        {
+            message Sub
+            {
+                uint32 index = 1;
+                repeated Rider riders = 2;
+                uint32 repeated_index = 3;
+            }
+            
+            repeated Sub sub = 1;
+        }
+
+        optional ActivityDetailsRiderData rider_data = 6;
+
+        message OtherRider
+        {
+            uint32 tag1 = 1;
+            uint32 tag2 = 2;
+            uint32 rider_id = 3;
+            uint32 tag4 = 4;
+            uint64 tag5 = 5;
+            uint32 tag6 = 6;
+            string first_name = 7;
+            string last_name = 8;
+            int64 tag9 = 9;
+            string tag10 = 10;
+            uint32 tag11 = 11;
+            uint32 tag12 = 12;
+            uint32 tag13 = 13;
+            uint32 tag14 = 14;
+            uint32 tag15 = 15;
+            uint32 tag16 = 16;
+            uint32 tag17 = 17;
+            uint32 tag18 = 18;
+            optional string profile_url = 19;
+        }
+        optional OtherRider other_rider = 18;
+    }
+
+    ActivityDetails details = 21;
+}
+
+////////////////////////////////////////////////////////////////
+////// Zwift Companion app to Zwift Desktop app messages //////
+////////////////////////////////////////////////////////////////
+
+// Base message type for Zwift Companion app to Zwift Desktop app messages
+message ZwiftCompanionToApp
+{
+    // These fields are always there
+    uint32 tag1 = 1; // Our own Zwift rider_id but it can also be 2 (uint32)
+    uint32 tag10 = 10; // Zero for this type
+}
+
+message ZwiftCompanionToAppRiderMessage
+{
+    // These fields are always there
+    uint32 myId = 1; // Our own Zwift rider_id but it can also be 2 (uint32)
+    uint32 sequence = 10; // This now seems to be a sequence number
+
+    message RiderMessage
+    {
+        uint32 tag1 = 1;
+        uint32 type = 2; // Possible type, have seen values 1, 2, 16, 22 (left/right/straight), 29
+        uint32 tag3 = 3;
+        uint32 tag5 = 5;
+        uint32 tag7 = 7;
+        optional uint32 tag8 = 8;
+        optional uint32 command_type = 10;
+        optional uint32 rider_id = 19;
+
+        message RiderMessageData
+        {
+            uint32 tag1 = 1;
+
+            message RiderMessageSubData
+            {
+                uint32 tag1 = 1;
+                string world_name = 3;
+                uint32 tag4 = 4;
+            }
+        }
+
+        optional RiderMessageData data = 21;
+    }
+
+    optional RiderMessage details = 2;
+}
+
+// A message sent to the desktop app to end the current activity
+message ZwiftCompanionToAppEndActivityMessage
+{
+    uint32 tag1 = 1;
+
+    message EndActivityData
+    {
+        uint32 tag1 = 1;
+        string activity_name = 3;
+        uint32 tag4 = 4;
+    }
+
+    EndActivityData data = 16;
+}
+
+// Give a ride-on to another rider
+message ZwiftCompanionToAppRideOnMessage
+{
+    uint32 tag1 = 1;
+    uint32 tag2 = 2; // Always 16 for this type
+    uint32 tag3 = 3;
+    uint32 other_rider_id = 5;
+    string profile_url = 6;
+    uint32 tag7 = 7;
+}
+
+// Informs the desktop app of the version of the companion app
+message ZwiftCompanionToAppDeviceInfoMessage
+{
+    // These fields are always there
+    uint32 tag1 = 1; // Our own Zwift rider_id
+    uint32 tag10 = 10;
+
+    message DeviceInfo
+    {
+        message ZwiftCompanionDevice {
+            int32 tag1 = 1;
+            message Version {
+                string app_version = 1; // Version of the Zwift Companion app
+                string os_version = 2; // Version of the device OS
+                string os = 3; // Type of the device OS
+                string device = 4; // Device model
+                message SomeThing {
+                    int32 tag1 = 1;
+                }
+                SomeThing tag5 = 5;
+            }
+            optional Version version = 5;
+        }
+        ZwiftCompanionDevice device = 21; // For type 29 messages
+    }
+
+    DeviceInfo device_info = 2;    
+}
+
+message ZwiftCompanionToAppMessageTag10Zero
+{
+    uint32 myId = 1;
+    float tag3 = 3;
+    float tag4 = 4;
+    float tag5 = 5;
+    float tag6 = 6;
+    float tag7 = 7;
+    float tag8 = 8;
+    double clock_time = 9;
+    uint32 tag10 = 10;
+}
