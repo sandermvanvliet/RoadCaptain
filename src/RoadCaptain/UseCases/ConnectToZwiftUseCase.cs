@@ -31,6 +31,8 @@ namespace RoadCaptain.UseCases
             // TODO: Work out what the correct IP address should be
             var ipAddress = GetMostLikelyAddress().ToString();
 
+            _monitoringEvents.Information("Telling Zwift to connect to {IPAddress}:21587", ipAddress);
+
             var tokens = await _requestToken.RequestAsync(connectCommand.Username, connectCommand.Password);
 
             var relayUri = await _zwift.RetrieveRelayUrl(tokens.AccessToken);
