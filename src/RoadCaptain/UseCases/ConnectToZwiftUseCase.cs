@@ -18,8 +18,7 @@ namespace RoadCaptain.UseCases
             IRequestToken requestToken, 
             IZwift zwift, 
             MonitoringEvents monitoringEvents, 
-            IMessageReceiver messageReceiver, 
-            IMessageEmitter messageEmitter)
+            IMessageReceiver messageReceiver)
         {
             _requestToken = requestToken;
             _zwift = zwift;

@@ -61,7 +61,6 @@ namespace RoadCaptain.Tests.Unit
                 new RequestTokenFromApi(new HttpClient(_handler)),
                 new Zwift(new HttpClient(_handler)),
                 new NopMonitoringEvents(),
-                null,
                 null);
 
             useCase.ExecuteAsync(new ConnectCommand
