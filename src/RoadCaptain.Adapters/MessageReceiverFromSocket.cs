@@ -77,6 +77,11 @@ namespace RoadCaptain.Adapters
                 // Additional sleep here?
             }
 
+            if (_acceptedSocket == null)
+            {
+                return null;
+            }
+
             while (true)
             {
                 // Receive will block until bytes are available to read.
