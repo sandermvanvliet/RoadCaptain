@@ -4,7 +4,7 @@ namespace RoadCaptain.Adapters
 {
     internal class MessageEmitterToQueue : IMessageEmitter
     {
-        public void Emit(object message)
+        public void EmitMessageFromBytes(byte[] payload, long messageSequenceNumber)
         {
         }
     }

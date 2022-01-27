@@ -101,7 +101,7 @@ namespace RoadCaptain.UseCases
                         while (TryExtractMessage(ref buffer, out byte[] payload))
                         {
                             _monitoringEvents.ReceivedMessage(payload.Length, _messageSequenceNumber++);
-                            _messageEmitter.Emit(payload);
+                            _messageEmitter.EmitMessageFromBytes(payload, _messageSequenceNumber);
                         }
 
                         // There's no more data to be processed.

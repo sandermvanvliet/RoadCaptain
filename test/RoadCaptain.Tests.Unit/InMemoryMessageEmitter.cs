@@ -7,14 +7,14 @@ namespace RoadCaptain.Tests.Unit
     {
         public InMemoryMessageEmitter()
         {
-            Messages = new List<object>();
+            Messages = new List<byte[]>();
         }
 
-        public List<object> Messages { get; }
+        public List<byte[]> Messages { get; }
 
-        public void Emit(object message)
+        public void EmitMessageFromBytes(byte[] payload, long messageSequenceNumber)
         {
-            Messages.Add(message);
+            Messages.Add(payload);
         }
     }
 }

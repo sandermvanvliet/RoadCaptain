@@ -2,6 +2,6 @@
 {
     public interface IMessageEmitter
     {
-        void Emit(object message);
+        void EmitMessageFromBytes(byte[] payload, long messageSequenceNumber);
     }
 }
