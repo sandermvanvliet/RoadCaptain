@@ -37,12 +37,12 @@ namespace RoadCaptain.Tests.Unit
             GivenBytesOnNetwork(new byte[] { 0x2, 0x3, 0x4 });
 
             WhenReceivingMessage();
-            Thread.Sleep(50);
+
             _messageEmitter
                 .Messages
                 .Single()
                 .Should()
-                .BeEquivalentTo(new byte[] {0x2, 0x3, 0x4 });
+                .BeEquivalentTo( new byte[] {0x2, 0x3, 0x4 });
         }
 
         [Fact]

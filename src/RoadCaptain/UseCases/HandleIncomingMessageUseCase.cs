@@ -97,10 +97,10 @@ namespace RoadCaptain.UseCases
                     {
                         // Process all messages from the buffer, modifying the input buffer on each
                         // iteration.
-                        while (TryExtractMessage(ref buffer, out object message))
+                        while (TryExtractMessage(ref buffer, out byte[] payload))
                         {
                             _monitoringEvents.ReceivedMessage();
-                            _messageEmitter.Emit(message);
+                            _messageEmitter.Emit(payload);
                         }
 
                         // There's no more data to be processed.
@@ -128,18 +128,18 @@ namespace RoadCaptain.UseCases
             }
         }
 
-        private static bool TryExtractMessage(ref ReadOnlySequence<byte> buffer, out object message)
+        private static bool TryExtractMessage(ref ReadOnlySequence<byte> buffer, out byte[] payload)
         {
             var payloadLength = ToUInt16(buffer, 0, MessageLengthPrefix);
 
             if(buffer.Length - MessageLengthPrefix < payloadLength)
             {
                 // Not enough bytes in the buffer for the message that we expecteds
-                message = null;
+                payload = default;
                 return false;
             }
 
-            message = buffer.Slice(MessageLengthPrefix, payloadLength).ToArray();
+            payload = buffer.Slice(MessageLengthPrefix, payloadLength).ToArray();
             buffer = buffer.Slice(MessageLengthPrefix + payloadLength);
 
             return true;
