@@ -1,4 +1,6 @@
-﻿using System.Threading;
+﻿using System;
+using System.Linq;
+using System.Threading;
 using FluentAssertions;
 using RoadCaptain.UseCases;
 using Xunit;
@@ -30,26 +32,85 @@ namespace RoadCaptain.Tests.Unit
         }
 
         [Fact]
-        public void GivenBytesAvailable_MessageIsEmitted()
+        public void GivenBytesForExactlyOneMessage_MessageIsEmitted()
         {
-            GivenBytesOnNetwork();
+            GivenBytesOnNetwork(new byte[] { 0x2, 0x3, 0x4 });
+
+            WhenReceivingMessage();
+            Thread.Sleep(50);
+            _messageEmitter
+                .Messages
+                .Single()
+                .Should()
+                .BeEquivalentTo(new byte[] {0x2, 0x3, 0x4 });
+        }
+
+        [Fact]
+        public void GivenBytesForTwoMessages_TwoMessageAreEmitted()
+        {
+            GivenBytesOnNetwork(new byte[] { 0x2, 0x3, 0x4 }, new byte[] { 0x5, 0x6});
 
             WhenReceivingMessage();
 
             _messageEmitter
                 .Messages
                 .Should()
-                .HaveCount(1);
+                .HaveCount(2);
+        }
+
+        [Fact]
+        public void GivenBytesForTwoMessages_SecondMessageBytesMatch()
+        {
+            GivenBytesOnNetwork(new byte[] { 0x2, 0x3, 0x4 }, new byte[] { 0x5, 0x6});
+
+            WhenReceivingMessage();
+
+            _messageEmitter
+                .Messages[1]
+                .Should()
+                .BeEquivalentTo(new byte[] { 0x5, 0x6 });
         }
 
         private void WhenReceivingMessage()
         {
-            _useCase.Execute(new CancellationToken(true)); // Always in cancelled state because otherwise the usecasse remains in an infinite loop
+            var cancellationTokenSource = new CancellationTokenSource(50);
+
+            try
+            {
+                _useCase
+                    .ExecuteAsync(cancellationTokenSource.Token) // Always in cancelled state because otherwise the usecasse remains in an infinite loop
+                    .GetAwaiter()
+                    .GetResult();
+            }
+            catch (OperationCanceledException)
+            {
+                // Nop
+            }
         }
 
-        private void GivenBytesOnNetwork()
+        private void GivenBytesOnNetwork(params byte[][] bytes)
         {
-            _messageReceiver.AvailableBytes = new byte[] { 0x1, 0x2, 0x3 };
+            var total = bytes
+                .Select(CreatePacketPayload)
+                .SelectMany(b => b)
+                .ToArray();
+
+            _messageReceiver.AvailableBytes = total;
+        }
+
+        private static byte[] CreatePacketPayload(byte[] payload)
+        {
+            if (BitConverter.IsLittleEndian)
+            {
+                return BitConverter.GetBytes((Int16)payload.Length)
+                    .Reverse()
+                    .Concat(payload)
+                    .ToArray();
+            }
+
+            return BitConverter.GetBytes((Int16)payload.Length)
+                .Concat(payload)
+                .ToArray();
         }
     }
 }

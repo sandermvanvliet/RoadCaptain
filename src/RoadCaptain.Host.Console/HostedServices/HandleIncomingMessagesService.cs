@@ -24,7 +24,7 @@ namespace RoadCaptain.Host.Console.HostedServices
 
         public Task StartAsync(CancellationToken cancellationToken)
         {
-            Task.Factory.StartNew(() => _incomingMessageUseCase.Execute(_cancellationTokenSource.Token), _cancellationTokenSource.Token);
+            Task.Factory.StartNew(async () => await _incomingMessageUseCase.ExecuteAsync(_cancellationTokenSource.Token), _cancellationTokenSource.Token);
 
             _monitoringEvents.ServiceStarted(nameof(HandleIncomingMessagesService));
 
