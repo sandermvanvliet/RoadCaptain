@@ -17,16 +17,14 @@ namespace RoadCaptain.UseCases
         private readonly IMessageReceiver _messageReceiver;
         private readonly IMessageEmitter _messageEmitter;
         private readonly Pipe _pipe;
-        private readonly MonitoringEvents _monitoringEvents;
         private long _messageSequenceNumber = 1;
 
         public HandleIncomingMessageUseCase(
             IMessageReceiver messageReceiver,
-            IMessageEmitter messageEmitter, MonitoringEvents monitoringEvents)
+            IMessageEmitter messageEmitter)
         {
             _messageReceiver = messageReceiver;
             _messageEmitter = messageEmitter;
-            _monitoringEvents = monitoringEvents;
             _pipe = new Pipe();
         }
 

@@ -17,7 +17,7 @@ namespace RoadCaptain.Tests.Unit
         {
             _messageReceiver = new InMemoryMessageReceiver();
             _messageEmitter = new InMemoryMessageEmitter();
-            _useCase = new HandleIncomingMessageUseCase(_messageReceiver, _messageEmitter, new NopMonitoringEvents());
+            _useCase = new HandleIncomingMessageUseCase(_messageReceiver, _messageEmitter);
         }
 
         [Fact]
