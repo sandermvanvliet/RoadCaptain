@@ -2,7 +2,6 @@
 using System.Buffers;
 using System.IO;
 using System.IO.Pipelines;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using RoadCaptain.Ports;
@@ -11,6 +10,10 @@ namespace RoadCaptain.UseCases
 {
     public class HandleIncomingMessageUseCase
     {
+        /// <summary>
+        /// Zwift uses a 2 byte length value to indicate the size of the message payload
+        /// </summary>
+        private const int MessageLengthPrefix = 2;
         private readonly IMessageReceiver _messageReceiver;
         private readonly IMessageEmitter _messageEmitter;
         private readonly Pipe _pipe;
@@ -124,26 +127,26 @@ namespace RoadCaptain.UseCases
 
         private static bool TryExtractMessage(ref ReadOnlySequence<byte> buffer, out object message)
         {
-            var payloadLength = ToUInt16(buffer.Slice(0, 2).ToArray(), 0, 2);
+            var payloadLength = ToUInt16(buffer, 0, MessageLengthPrefix);
 
-            if(buffer.Length - 2 < payloadLength)
+            if(buffer.Length - MessageLengthPrefix < payloadLength)
             {
                 // Not enough bytes in the buffer for the message that we expecteds
                 message = null;
                 return false;
             }
 
-            message = buffer.Slice(2, payloadLength).ToArray();
-            buffer = buffer.Slice(2 + payloadLength);
+            message = buffer.Slice(MessageLengthPrefix, payloadLength).ToArray();
+            buffer = buffer.Slice(MessageLengthPrefix + payloadLength);
 
             return true;
         }
         
-        private static int ToUInt16(byte[] buffer, int start, int count)
+        private static int ToUInt16(ReadOnlySequence<byte> buffer, int start, int count)
         {
             if (buffer.Length >= start + count)
             {
-                var b = buffer.Skip(start).Take(count).ToArray();
+                var b = buffer.Slice(start, count).ToArray();
                 if (BitConverter.IsLittleEndian)
                 {
                     Array.Reverse(b);
