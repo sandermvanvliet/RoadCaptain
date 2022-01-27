@@ -1,6 +1,5 @@
 ﻿using System.Net;
 using System.Net.Http;
-using System.Text;
 using System.Threading;
 using Codenizer.HttpClient.Testable;
 using FluentAssertions;
@@ -60,8 +59,7 @@ namespace RoadCaptain.Tests.Unit
             var useCase = new ConnectToZwiftUseCase(
                 new RequestTokenFromApi(new HttpClient(_handler)),
                 new Zwift(new HttpClient(_handler)),
-                new NopMonitoringEvents(),
-                null);
+                new NopMonitoringEvents());
 
             useCase.ExecuteAsync(new ConnectCommand
                     {

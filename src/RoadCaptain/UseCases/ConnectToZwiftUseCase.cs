@@ -10,26 +10,21 @@ namespace RoadCaptain.UseCases
         private readonly IRequestToken _requestToken;
         private readonly IZwift _zwift;
         private readonly MonitoringEvents _monitoringEvents;
-        private readonly IMessageReceiver _messageReceiver;
-        private bool _pingedBefore;
-        private static readonly object SyncRoot = new();
 
         public ConnectToZwiftUseCase(
             IRequestToken requestToken, 
             IZwift zwift, 
-            MonitoringEvents monitoringEvents, 
-            IMessageReceiver messageReceiver)
+            MonitoringEvents monitoringEvents)
         {
             _requestToken = requestToken;
             _zwift = zwift;
             _monitoringEvents = monitoringEvents;
-            _messageReceiver = messageReceiver;
         }
 
         public async Task ExecuteAsync(ConnectCommand connectCommand, CancellationToken cancellationToken)
         {
             // TODO: Work out what the correct IP address should be
-            var ipAddress = "192.168.1.70";
+            var ipAddress = "192.168.1.53";
 
             var tokens = await _requestToken.RequestAsync(connectCommand.Username, connectCommand.Password);
 
@@ -51,24 +46,6 @@ namespace RoadCaptain.UseCases
                 }
 
                 Thread.Sleep(5 * 1000);
-            }
-        }
-
-        private void HandlePing(int riderId)
-        {
-            if (!_pingedBefore)
-            {
-                lock (SyncRoot)
-                {
-                    if (_pingedBefore)
-                    {
-                        return;
-                    }
-
-                    _pingedBefore = true;
-                }
-
-                _messageReceiver.SendInitialPairingMessage(riderId);
             }
         }
     }

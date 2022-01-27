@@ -13,8 +13,7 @@
 
     public sealed class ZwiftCommandAvailableMessage : ZwiftMessage
     {
-        // TODO: Introduce proper enum for this
-        public object CommandType { get; set; }
+        public string Type { get; set; }
     }
 
     public sealed class ZwiftPowerUpMessage : ZwiftMessage

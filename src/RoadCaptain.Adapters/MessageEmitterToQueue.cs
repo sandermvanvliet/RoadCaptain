@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
+using System.Threading;
 using Google.Protobuf;
 using RoadCaptain.Adapters.Protobuf;
 using RoadCaptain.Ports;
@@ -12,6 +12,8 @@ namespace RoadCaptain.Adapters
     {
         private readonly MonitoringEvents _monitoringEvents;
         private readonly Queue<ZwiftMessage> _queue = new();
+        private readonly AutoResetEvent _autoResetEvent = new(false);
+        private readonly TimeSpan _queueWaitTimeout = new(250);
 
         public MessageEmitterToQueue(
             MonitoringEvents monitoringEvents)
@@ -46,7 +48,6 @@ namespace RoadCaptain.Adapters
             catch (Exception e)
             {
                 _monitoringEvents.Error(e, "Failed to decode incoming message");
-                Debugger.Break();
             }
         }
 
@@ -58,7 +59,6 @@ namespace RoadCaptain.Adapters
                 // back to Zwift so that it will start feeding us the actual data.
                 OnZwiftPing(packetData);
 
-                _monitoringEvents.Debug("Ignoring message with empty item collection");
                 return;
             }
 
@@ -185,7 +185,7 @@ namespace RoadCaptain.Adapters
 
         private void OnZwiftPing(ZwiftAppToCompanion zwiftAppToCompanion)
         {
-            _queue.Enqueue(new ZwiftPingMessage
+            Enqueue(new ZwiftPingMessage
             {
                 RiderId = zwiftAppToCompanion.RiderId
             });
@@ -193,7 +193,7 @@ namespace RoadCaptain.Adapters
 
         private void OnActivityDetails(ulong activityId)
         {
-            _queue.Enqueue(new ZwiftActivityDetailsMessage
+            Enqueue(new ZwiftActivityDetailsMessage
             {
                 ActivityId = activityId
             });
@@ -201,7 +201,7 @@ namespace RoadCaptain.Adapters
 
         private void OnPowerUp(string type)
         {
-            _queue.Enqueue(new ZwiftPowerUpMessage { Type = type });
+            Enqueue(new ZwiftPowerUpMessage { Type = type });
         }
 
         private void OnCommandAvailable(uint numericalCommandType, string description)
@@ -222,20 +222,46 @@ namespace RoadCaptain.Adapters
                 _monitoringEvents.Warning($"Did not recognise command {numericalCommandType} ({description})");
             }
 
-            _queue.Enqueue(new ZwiftCommandAvailableMessage
+            Enqueue(new ZwiftCommandAvailableMessage
             {
-                CommandType = commandType
+                Type = commandType.ToString()
             });
         }
 
         private void OnRiderPosition(float latitude, float longitude, float altitude)
         {
-            _queue.Enqueue(new ZwiftRiderPositionMessage
+            Enqueue(new ZwiftRiderPositionMessage
             {
                 Latitude = latitude,
                 Longitude = longitude,
                 Altitude = altitude
             });
+        }
+
+        private void Enqueue(ZwiftMessage message)
+        {
+            _queue.Enqueue(message);
+            _autoResetEvent.Set();
+        }
+
+        public ZwiftMessage Dequeue(CancellationToken token)
+        {
+            if (_queue.TryDequeue(out var message))
+            {
+                return message;
+            }
+
+            while (!token.IsCancellationRequested)
+            {
+                _autoResetEvent.WaitOne(_queueWaitTimeout);
+
+                if (_queue.TryDequeue(out message))
+                {
+                    return message;
+                }
+            }
+
+            return null;
         }
     }
 }

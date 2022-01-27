@@ -168,14 +168,14 @@ namespace RoadCaptain.Adapters
             }
         }
 
-        public void SendInitialPairingMessage(int riderId)
+        public void SendInitialPairingMessage(uint riderId)
         {
             var message = new ZwiftCompanionToAppRiderMessage
             {
-                MyId = (uint)riderId,
+                MyId = riderId,
                 Details = new ZwiftCompanionToAppRiderMessage.Types.RiderMessage
                 {
-                    RiderId = (uint)riderId,
+                    RiderId = riderId,
                     Tag1 = 1,
                     Type = 28
                 },
@@ -185,6 +185,7 @@ namespace RoadCaptain.Adapters
             var memoryStream = new MemoryStream();
             var outputStream = new CodedOutputStream(memoryStream);
             message.WriteTo(outputStream);
+            outputStream.Flush(); // Need to flush otherwise GetBuffer() returns an empty array...
             var bytes = memoryStream.GetBuffer().Take((int)memoryStream.Position).ToArray();
             
             SendMessageBytes(bytes);

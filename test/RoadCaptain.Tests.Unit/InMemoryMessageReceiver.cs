@@ -33,7 +33,7 @@ namespace RoadCaptain.Tests.Unit
         {
         }
 
-        public void SendInitialPairingMessage(int riderId)
+        public void SendInitialPairingMessage(uint riderId)
         {
         }
 

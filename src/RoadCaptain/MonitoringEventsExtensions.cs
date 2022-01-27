@@ -26,7 +26,23 @@ namespace RoadCaptain
 
         public static void WaitingForConnection(this MonitoringEvents monitoringEvents)
         {
-            monitoringEvents.Error("Waiting for inbound TCP connection");
+            monitoringEvents.Information("Waiting for inbound TCP connection");
+        }
+
+        public static void RiderPositionReceived(this MonitoringEvents monitoringEvents, float latitude,
+            float longitude)
+        {
+            monitoringEvents.Information("Received rider position {Latitude} {Longitude}", latitude, longitude);
+        }
+
+        public static void CommandAvailable(this MonitoringEvents monitoringEvents, string type)
+        {
+            monitoringEvents.Information("Received available command {Type}", type);
+        }
+
+        public static void PowerUpAvailable(this MonitoringEvents monitoringEvents, string type)
+        {
+            monitoringEvents.Information("Received available power-up {Type}", type);
         }
     }
 }
