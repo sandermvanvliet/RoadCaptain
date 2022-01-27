@@ -14,8 +14,7 @@ namespace RoadCaptain.UseCases
         private readonly IMessageReceiver _messageReceiver;
         private readonly IMessageEmitter _messageEmitter;
         private readonly Pipe _pipe;
-        private readonly PipeWriter _writer;
-        
+
         public HandleIncomingMessageUseCase(
             IMessageReceiver messageReceiver,
             IMessageEmitter messageEmitter)
@@ -23,7 +22,6 @@ namespace RoadCaptain.UseCases
             _messageReceiver = messageReceiver;
             _messageEmitter = messageEmitter;
             _pipe = new Pipe();
-            _writer = _pipe.Writer;
         }
 
         public async Task ExecuteAsync(CancellationToken token)
@@ -59,19 +57,26 @@ namespace RoadCaptain.UseCases
                 if (bytes != null && bytes.Length > 0)
                 {
                     // TODO: Consider to supply this to ReceiveMessageBytes above to remove allocations
-                    var mem = _writer.GetMemory(bytes.Length);
+                    var mem = _pipe.Writer.GetMemory(bytes.Length);
 
                     // Ugly, but see ^^^
                     bytes.CopyTo(mem);
                     
-                    _writer.Advance(bytes.Length);
+                    _pipe.Writer.Advance(bytes.Length);
                     
                     // Tell the reader there are bytes available to consume
-                    await _writer.FlushAsync(token);
+                    await _pipe.Writer.FlushAsync(token);
                 }
             } while (!token.IsCancellationRequested);
-            
-            await processBytesTask;
+
+            try
+            {
+                await processBytesTask;
+            }
+            catch (OperationCanceledException)
+            {
+                // Nop
+            }
         }
 
         async Task ProcessMessagesAsync(PipeReader reader, CancellationToken cancellationToken = default)
@@ -80,8 +85,8 @@ namespace RoadCaptain.UseCases
             {
                 while (!cancellationToken.IsCancellationRequested)
                 {
-                    ReadResult result = await reader.ReadAsync(cancellationToken);
-                    ReadOnlySequence<byte> buffer = result.Buffer;
+                    var result = await reader.ReadAsync(cancellationToken);
+                    var buffer = result.Buffer;
 
                     try
                     {
