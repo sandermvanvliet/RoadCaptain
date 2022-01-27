@@ -1,6 +1,4 @@
-﻿using System.IO;
-using System.Linq;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 using RoadCaptain.Commands;
 using RoadCaptain.Ports;
@@ -27,8 +25,6 @@ namespace RoadCaptain.UseCases
             _zwift = zwift;
             _monitoringEvents = monitoringEvents;
             _messageReceiver = messageReceiver;
-
-            messageEmitter?.SubscribeOnPing(HandlePing);
         }
 
         public async Task ExecuteAsync(ConnectCommand connectCommand, CancellationToken cancellationToken)

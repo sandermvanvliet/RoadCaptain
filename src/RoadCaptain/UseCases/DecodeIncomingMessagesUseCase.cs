@@ -8,7 +8,7 @@ using RoadCaptain.Ports;
 
 namespace RoadCaptain.UseCases
 {
-    public class HandleIncomingMessageUseCase
+    public class DecodeIncomingMessagesUseCase
     {
         /// <summary>
         /// Zwift uses a 2 byte length value to indicate the size of the message payload
@@ -19,7 +19,7 @@ namespace RoadCaptain.UseCases
         private readonly Pipe _pipe;
         private long _messageSequenceNumber = 1;
 
-        public HandleIncomingMessageUseCase(
+        public DecodeIncomingMessagesUseCase(
             IMessageReceiver messageReceiver,
             IMessageEmitter messageEmitter)
         {

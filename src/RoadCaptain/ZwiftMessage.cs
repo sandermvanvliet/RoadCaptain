@@ -1,0 +1,34 @@
+﻿namespace RoadCaptain
+{
+    public abstract class ZwiftMessage
+    {
+    }
+
+    public sealed class ZwiftRiderPositionMessage : ZwiftMessage
+    {
+        public float Latitude { get; set; }
+        public float Longitude { get; set; }
+        public float Altitude { get; set; }
+    }
+
+    public sealed class ZwiftCommandAvailableMessage : ZwiftMessage
+    {
+        // TODO: Introduce proper enum for this
+        public object CommandType { get; set; }
+    }
+
+    public sealed class ZwiftPowerUpMessage : ZwiftMessage
+    {
+        public string Type { get; set; }
+    }
+
+    public sealed class ZwiftPingMessage : ZwiftMessage
+    {
+        public uint RiderId { get; set; }
+    }
+
+    public sealed class ZwiftActivityDetailsMessage : ZwiftMessage
+    {
+        public ulong ActivityId { get; set; }
+    }
+}

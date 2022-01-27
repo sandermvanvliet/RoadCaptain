@@ -7,17 +7,17 @@ using Xunit;
 
 namespace RoadCaptain.Tests.Unit
 {
-    public class WhenHandlingMessages
+    public class WheDecodingMessages
     {
         private readonly InMemoryMessageReceiver _messageReceiver;
-        private readonly HandleIncomingMessageUseCase _useCase;
+        private readonly DecodeIncomingMessagesUseCase _useCase;
         private readonly InMemoryMessageEmitter _messageEmitter;
 
-        public WhenHandlingMessages()
+        public WheDecodingMessages()
         {
             _messageReceiver = new InMemoryMessageReceiver();
             _messageEmitter = new InMemoryMessageEmitter();
-            _useCase = new HandleIncomingMessageUseCase(_messageReceiver, _messageEmitter);
+            _useCase = new DecodeIncomingMessagesUseCase(_messageReceiver, _messageEmitter);
         }
 
         [Fact]

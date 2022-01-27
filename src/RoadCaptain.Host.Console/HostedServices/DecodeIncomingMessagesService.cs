@@ -6,27 +6,27 @@ using RoadCaptain.UseCases;
 
 namespace RoadCaptain.Host.Console.HostedServices
 {
-    internal class HandleIncomingMessagesService : IHostedService
+    internal class DecodeIncomingMessagesService : IHostedService
     {
         private readonly MonitoringEvents _monitoringEvents;
         private readonly CancellationTokenSource _cancellationTokenSource;
-        private readonly HandleIncomingMessageUseCase _incomingMessageUseCase;
+        private readonly DecodeIncomingMessagesUseCase _incomingMessagesUseCase;
 
-        public HandleIncomingMessagesService(
+        public DecodeIncomingMessagesService(
             MonitoringEvents monitoringEvents,
-            HandleIncomingMessageUseCase incomingMessageUseCase)
+            DecodeIncomingMessagesUseCase incomingMessagesUseCase)
         {
             _monitoringEvents = monitoringEvents;
-            _incomingMessageUseCase = incomingMessageUseCase;
+            _incomingMessagesUseCase = incomingMessagesUseCase;
 
             _cancellationTokenSource = new CancellationTokenSource();
         }
 
         public Task StartAsync(CancellationToken cancellationToken)
         {
-            Task.Factory.StartNew(async () => await _incomingMessageUseCase.ExecuteAsync(_cancellationTokenSource.Token), _cancellationTokenSource.Token);
+            Task.Factory.StartNew(async () => await _incomingMessagesUseCase.ExecuteAsync(_cancellationTokenSource.Token), _cancellationTokenSource.Token);
 
-            _monitoringEvents.ServiceStarted(nameof(HandleIncomingMessagesService));
+            _monitoringEvents.ServiceStarted(nameof(DecodeIncomingMessagesService));
 
             return Task.CompletedTask;
         }
@@ -42,7 +42,7 @@ namespace RoadCaptain.Host.Console.HostedServices
             }
             finally
             {
-                _monitoringEvents.ServiceStopped(nameof(HandleIncomingMessagesService));
+                _monitoringEvents.ServiceStopped(nameof(DecodeIncomingMessagesService));
             }
 
             return Task.CompletedTask;

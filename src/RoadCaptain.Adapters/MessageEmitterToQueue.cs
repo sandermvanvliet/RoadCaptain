@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using Google.Protobuf;
@@ -10,33 +11,10 @@ namespace RoadCaptain.Adapters
     internal class MessageEmitterToQueue : IMessageEmitter
     {
         private readonly MonitoringEvents _monitoringEvents;
+        private readonly Queue<ZwiftMessage> _queue = new();
 
-        /// <summary>
-        /// Raised when the Zwift desktop app indicates that a command has become available to the companion app
-        /// </summary>
-        public event EventHandler<CommandAvailableEventArgs> CommandAvailable;
-
-        /// <summary>
-        /// Raised when the position of the rider is sent to the companion app
-        /// </summary>
-        public event EventHandler<RiderPositionEventArgs> RiderPosition;
-
-        /// <summary>
-        /// Raised when a power up is rewarded in the game
-        /// </summary>
-        public event EventHandler<PowerUpEventArgs> PowerUp;
-
-        /// <summary>
-        /// Raised when activity details are received
-        /// </summary>
-        public event EventHandler<ActivityDetailsEventArgs> ActivityDetails;
-        
-        /// <summary>
-        /// Raised when Zwift pings the companion app
-        /// </summary>
-        public event EventHandler<PingEventArgs> Ping;
-
-        public MessageEmitterToQueue(MonitoringEvents monitoringEvents)
+        public MessageEmitterToQueue(
+            MonitoringEvents monitoringEvents)
         {
             _monitoringEvents = monitoringEvents;
         }
@@ -72,11 +50,6 @@ namespace RoadCaptain.Adapters
             }
         }
 
-        public void SubscribeOnPing(Action<int> callback)
-        {
-            Ping += (_, e) => callback((int)e.RiderId);
-        }
-
         private void DecodeIncomingCore(ZwiftAppToCompanion packetData)
         {
             if (packetData.Items == null || !packetData.Items.Any())
@@ -102,7 +75,7 @@ namespace RoadCaptain.Adapters
                         break;
                     case 2:
                         var powerUp = ZwiftAppToCompanionPowerUpMessage.Parser.ParseFrom(byteArray);
-                        
+
                         OnPowerUp(powerUp.PowerUp);
 
                         break;
@@ -212,44 +185,23 @@ namespace RoadCaptain.Adapters
 
         private void OnZwiftPing(ZwiftAppToCompanion zwiftAppToCompanion)
         {
-            try
+            _queue.Enqueue(new ZwiftPingMessage
             {
-                Ping?.Invoke(this, new PingEventArgs
-                {
-                    RiderId = zwiftAppToCompanion.RiderId
-                });
-            }
-            catch
-            {
-                // Ignore exceptions from event handlers.
-            }
+                RiderId = zwiftAppToCompanion.RiderId
+            });
         }
 
         private void OnActivityDetails(ulong activityId)
         {
-            try
+            _queue.Enqueue(new ZwiftActivityDetailsMessage
             {
-                ActivityDetails?.Invoke(this, new ActivityDetailsEventArgs
-                {
-                    ActivityId = activityId
-                });
-            }
-            catch
-            {
-                // Ignore exceptions from event handlers.
-            }
+                ActivityId = activityId
+            });
         }
 
         private void OnPowerUp(string type)
         {
-            try
-            {
-                PowerUp?.Invoke(this, new PowerUpEventArgs { Type = type });
-            }
-            catch
-            {
-                // Ignore exceptions from event handlers.
-            }
+            _queue.Enqueue(new ZwiftPowerUpMessage { Type = type });
         }
 
         private void OnCommandAvailable(uint numericalCommandType, string description)
@@ -270,27 +222,20 @@ namespace RoadCaptain.Adapters
                 _monitoringEvents.Warning($"Did not recognise command {numericalCommandType} ({description})");
             }
 
-            try
+            _queue.Enqueue(new ZwiftCommandAvailableMessage
             {
-                CommandAvailable?.Invoke(this, new CommandAvailableEventArgs { CommandType = commandType });
-            }
-            catch
-            {
-                // Ignore exceptions from event handlers.
-            }
+                CommandType = commandType
+            });
         }
 
         private void OnRiderPosition(float latitude, float longitude, float altitude)
         {
-            try
+            _queue.Enqueue(new ZwiftRiderPositionMessage
             {
-                RiderPosition?.Invoke(this,
-                    new RiderPositionEventArgs { Latitude = latitude, Longitude = longitude, Altitude = altitude });
-            }
-            catch
-            {
-                // Ignore exceptions from event handlers.
-            }
+                Latitude = latitude,
+                Longitude = longitude,
+                Altitude = altitude
+            });
         }
     }
 }
