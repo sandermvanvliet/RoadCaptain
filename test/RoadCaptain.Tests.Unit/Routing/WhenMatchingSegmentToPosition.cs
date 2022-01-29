@@ -24,14 +24,14 @@ namespace RoadCaptain.Tests.Unit.Routing
                     new(0, 0.5f, 0),
                     new(0, 0.6f, 0),
                 },
-                new List<KeyValuePair<Turns, string>>
+                new List<Turn>
                 {
-                    new(Turns.StraightOn, "S2"),
-                    new(Turns.Left, "S3"),
+                    new(TurnDirection.StraightOn, "S2"),
+                    new(TurnDirection.Left, "S3"),
                 },
-                new List<KeyValuePair<Turns, string>>
+                new List<Turn>
                 {
-                    new(Turns.StraightOn, "S4"),
+                    new(TurnDirection.StraightOn, "S4"),
                 }
             );
         }
@@ -78,7 +78,7 @@ namespace RoadCaptain.Tests.Unit.Routing
             _segment
                 .DirectionOf(first, second)
                 .Should()
-                .Be(Direction.AtoB);
+                .Be(SegmentDirection.AtoB);
         }
 
         [Fact]
@@ -90,27 +90,27 @@ namespace RoadCaptain.Tests.Unit.Routing
             _segment
                 .DirectionOf(first, second)
                 .Should()
-                .Be(Direction.BtoA);
+                .Be(SegmentDirection.BtoA);
         }
 
         [Fact]
         public void GivenSegmentWithSingleSegmentAfterB_StraightTurnWithNextSegmentIsReturned()
         {
             _segment
-                .NextSegments(Direction.AtoB)
-                .Select(kv => kv.Key)
+                .NextSegments(SegmentDirection.AtoB)
+                .Select(kv => kv.Direction)
                 .Should()
-                .BeEquivalentTo(new[] { Turns.StraightOn });
+                .BeEquivalentTo(new[] { TurnDirection.StraightOn });
         }
 
         [Fact]
         public void GivenSegmentWithTwoSegmentAfterA_StraightOnAndLeftAreReturned()
         {
             _segment
-                .NextSegments(Direction.BtoA)
-                .Select(kv => kv.Key)
+                .NextSegments(SegmentDirection.BtoA)
+                .Select(kv => kv.Direction)
                 .Should()
-                .BeEquivalentTo(new[] { Turns.Left, Turns.StraightOn });
+                .BeEquivalentTo(new[] { TurnDirection.Left, TurnDirection.StraightOn });
         }
     }
 
@@ -120,13 +120,13 @@ namespace RoadCaptain.Tests.Unit.Routing
         public Position A => _points.First();
         public Position B => _points.Last();
         private readonly List<Position> _points;
-        private readonly List<KeyValuePair<Turns, string>> _nextSegmentsNodeA;
-        private readonly List<KeyValuePair<Turns, string>> _nextSegmentsNodeB;
+        private readonly List<Turn> _nextSegmentsNodeA;
+        private readonly List<Turn> _nextSegmentsNodeB;
 
         public Segment(string id,
             List<Position> points,
-            List<KeyValuePair<Turns, string>> nextSegmentsNodeA,
-            List<KeyValuePair<Turns, string>> nextSegmentsNodeB)
+            List<Turn> nextSegmentsNodeA,
+            List<Turn> nextSegmentsNodeB)
         {
             Id = id;
             _points = points;
@@ -139,47 +139,104 @@ namespace RoadCaptain.Tests.Unit.Routing
             return _points.Contains(position);
         }
 
-        public Direction DirectionOf(Position first, Position second)
+        public SegmentDirection DirectionOf(Position first, Position second)
         {
             var firstIndex = _points.IndexOf(first);
             var secondIndex = _points.IndexOf(second);
 
             if (firstIndex == -1 || secondIndex == -1)
             {
-                return Direction.Unknown;
+                return SegmentDirection.Unknown;
             }
 
             return firstIndex < secondIndex
-                ? Direction.AtoB
-                : Direction.BtoA;
+                ? SegmentDirection.AtoB
+                : SegmentDirection.BtoA;
         }
 
-        public List<KeyValuePair<Turns, string>> NextSegments(Direction direction)
+        public List<Turn> NextSegments(SegmentDirection segmentDirection)
         {
-            if (direction == Direction.AtoB)
+            if (segmentDirection == SegmentDirection.AtoB)
             {
                 return _nextSegmentsNodeB;
             }
 
-            if (direction == Direction.BtoA)
+            if (segmentDirection == SegmentDirection.BtoA)
             {
                 return _nextSegmentsNodeA;
             }
 
             throw new ArgumentException(
-                "Can't determine next segments for an unknown direction",
-                nameof(direction));
+                "Can't determine next segments for an unknown segmentDirection",
+                nameof(segmentDirection));
         }
     }
 
-    public enum Turns
+    public class Turn : IEquatable<Turn>
     {
-        Left,
-        Right,
-        StraightOn,
+        public Turn(TurnDirection direction, string segmentId)
+        {
+            Direction = direction;
+            SegmentId = segmentId;
+        }
+
+        public TurnDirection Direction { get; }
+        public string SegmentId { get; }
+
+        public bool Equals(Turn other)
+        {
+            if (ReferenceEquals(null, other))
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(this, other))
+            {
+                return true;
+            }
+
+            return Direction == other.Direction && SegmentId == other.SegmentId;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+
+            return Equals((Turn)obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine((int)Direction, SegmentId);
+        }
+
+        public override string ToString()
+        {
+            return $"{Direction} to {SegmentId}";
+        }
     }
 
-    public enum Direction
+    public enum TurnDirection
+    {
+        StraightOn,
+        Left,
+        Right,
+    }
+
+    public enum SegmentDirection
     {
         Unknown,
         AtoB,
