@@ -48,6 +48,24 @@ namespace RoadCaptain.SegmentBuilder
                 }
             }
 
+            /*
+             * When we have a set of segments we can see where we have T-junctions,
+             * A route start/end that is close to a point in another segment where
+             * that point is somehwere in the middle of that segment.
+             * For those matches we want to split up the larger segment.
+             */
+            foreach(var segment in _segments)
+            {
+                var startOverlaps = FindOverlappingExistingSegments(segment.Start);
+
+                if (startOverlaps.Any())
+                {
+
+                }
+
+                var endOverlaps = FindOverlappingExistingSegments(segment.End);
+            }
+
             foreach (var segment in _segments)
             {
                 File.WriteAllText(
@@ -184,14 +202,6 @@ namespace RoadCaptain.SegmentBuilder
             return deg * PiRad;
         }
 
-        private static bool CloseMatch(TrackPoint x, TrackPoint y, decimal marginLat, decimal marginLon)
-        {
-            // Should do something fancy with overlapping circles or something
-            return Math.Abs(x.Latitude - y.Latitude) < marginLat &&
-                   Math.Abs(x.Longitude - y.Longitude) < marginLon &&
-                   Math.Abs(x.Altitude - y.Altitude) < 1m;
-        }
-
         private static string BuildGpx(string name, double distance, List<TrackPoint> points)
         {
             var trkptList = points
@@ -207,62 +217,6 @@ namespace RoadCaptain.SegmentBuilder
                    $"<trkseg>{string.Join(Environment.NewLine, trkptList)}</trkseg>" +
                    "</trk>" +
                    "</gpx>";
-        }
-
-        private static void FindIntersections(Route routeOne, Route routeTwo)
-        {
-            var routeOneBox = routeOne.BoundingBox();
-            var routeTwoBox = routeTwo.BoundingBox();
-
-            Console.WriteLine("Box 1 " + routeOneBox);
-            Console.WriteLine("Box 2 " + routeTwoBox);
-
-            if (routeOneBox.Overlaps(routeTwoBox))
-            {
-                var overlaps = SubdivideAndFindOverlaps(routeOneBox, routeTwoBox);
-
-                foreach (var o in overlaps)
-                {
-                    foreach (var overlapWith in o.OverlapsWith)
-                    {
-                        var subs = SubdivideAndFindOverlaps(o.Box, overlapWith);
-
-
-                    }
-                }
-            }
-            else
-            {
-                Console.WriteLine("Doesn't overlap");
-            }
-        }
-
-        private static List<BoxOverlap> SubdivideAndFindOverlaps(Box routeOneBox, Box routeTwoBox)
-        {
-            var boxesOne = routeOneBox.Subdivide();
-            var boxesTwo = routeTwoBox.Subdivide();
-
-            var overlaps = new List<BoxOverlap>();
-
-            foreach (var box in boxesOne)
-            {
-                Console.WriteLine(box);
-
-                var boxOverlaps = boxesTwo
-                    .Where(x => box.Overlaps(x))
-                    .ToList();
-
-                if (boxOverlaps.Any())
-                {
-                    overlaps.Add(new BoxOverlap
-                    {
-                        Box = box,
-                        OverlapsWith = boxOverlaps
-                    });
-                }
-            }
-
-            return overlaps;
         }
 
         private static Route LoadRouteFromGpx(string filePath)
@@ -294,16 +248,10 @@ namespace RoadCaptain.SegmentBuilder
 
     internal class Segment
     {
-        public List<TrackPoint> Points { get; } = new List<TrackPoint>();
+        public List<TrackPoint> Points { get; } = new();
         public TrackPoint Start => Points.First();
         public TrackPoint End => Points.Last();
         public string Id { get; set; }
-    }
-
-    internal class BoxOverlap
-    {
-        public Box Box { get; set; }
-        public List<Box> OverlapsWith { get; set; }
     }
 
     internal class Route
@@ -311,107 +259,6 @@ namespace RoadCaptain.SegmentBuilder
         public string Name { get; set; }
         public List<TrackPoint> TrackPoints { get; set; }
         public string Slug { get; set; }
-
-        public Box BoundingBox()
-        {
-            var minLon = TrackPoints.Min(t => t.Longitude);
-            var minLat = TrackPoints.Min(t => t.Latitude);
-
-            var maxLon = TrackPoints.Max(t => t.Longitude);
-            var maxLat = TrackPoints.Max(t => t.Latitude);
-
-            if (minLat < 0 && maxLat < 0)
-            {
-                (minLat, maxLat) = (maxLat, minLat);
-            }
-
-            return new Box
-            {
-                X1 = minLon,
-                Y1 = minLat,
-                X2 = maxLon,
-                Y2 = maxLat,
-                Id = "Main",
-                Level = 1
-            };
-        }
-    }
-
-    internal class Box
-    {
-        public decimal X1 { get; set; }
-        public decimal Y1 { get; set; }
-        public decimal X2 { get; set; }
-        public decimal Y2 { get; set; }
-        public string Id { get; set; }
-        public int Level { get; set; }
-
-        public bool Overlaps(Box other)
-        {
-            if (X1 <= other.X2 && X2 >= other.X1)
-            {
-                // Because negative coordinates...
-                if (Y1 >= other.Y2 && Y2 <= other.Y1)
-                {
-                    return true;
-                }
-            }
-
-            return false;
-        }
-
-        public Box[] Subdivide()
-        {
-            var width = X2 - X1;
-            var height = Y2 - Y1;
-            var centerX = width / 2;
-            var centerY = height / 2;
-
-            return new[]
-            {
-                new Box
-                {
-                    Id = "LeftTop",
-                    X1 = X1,
-                    Y1 = Y1,
-                    X2 = X1 + centerX,
-                    Y2 = Y1 + centerY,
-                    Level = Level + 1
-                },
-                new Box
-                {
-                    Id = "RightTop",
-                    X1 = X1 + centerX,
-                    Y1 = Y1,
-                    X2 = X2,
-                    Y2 = Y1 + centerY,
-                    Level = Level + 1
-                },
-                new Box
-                {
-                    Id = "LeftBottom",
-                    X1 = X1,
-                    Y1 = Y1 + centerY,
-                    X2 = X1 + centerX,
-                    Y2 = Y2,
-                    Level = Level + 1
-                },
-                new Box
-                {
-                    Id = "RightBottom",
-                    X1 = X1 + centerX,
-                    Y1 = Y1 + centerY,
-                    X2 = X2,
-                    Y2 = Y2,
-                    Level = Level + 1
-                },
-            };
-        }
-
-        public override string ToString()
-        {
-            return $"[{Id}] ({Level}) {X1} x {Y1} => {X2} x {Y2}";
-        }
     }
 
     internal class TrackPoint
