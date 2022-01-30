@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Text.Json.Serialization;
 using System.Xml.Linq;
+using Newtonsoft.Json;
 
 namespace RoadCaptain.SegmentBuilder
 {
@@ -18,34 +20,50 @@ namespace RoadCaptain.SegmentBuilder
             new Program().Run(gpxDirectory);
         }
 
-        private readonly List<Segment> _segments = new List<Segment>();
+        private List<Segment> _segments = new List<Segment>();
         private static readonly double PiRad = Math.PI / 180d;
 
         public void Run(string gpxDirectory)
         {
-            /*
-             * - Load the first route
-             * - Create a single segment from that route
-             * - Load the next route
-             * - Walk points and see if there is an existing segment that overlaps
-             *   - If so, ignore this point
-             *   - If not, start building a new segment
-             */
-            var gpxFiles = Directory.GetFiles(gpxDirectory, "*.gpx");
-
-            foreach (var filePath in gpxFiles)
+            if (!File.Exists(Path.Combine(gpxDirectory, "segments", "snapshot-1.json")))
             {
-                var route = LoadRouteFromGpx(Path.Combine(gpxDirectory, filePath));
+                /*
+                 * - Load the first route
+                 * - Create a single segment from that route
+                 * - Load the next route
+                 * - Walk points and see if there is an existing segment that overlaps
+                 *   - If so, ignore this point
+                 *   - If not, start building a new segment
+                 */
+                var gpxFiles = Directory.GetFiles(gpxDirectory, "*.gpx");
 
-                Console.WriteLine($"Splitting {route.Slug} into segments");
-
-                var newSegments = SplitToSegments(route);
-
-                if (newSegments.Any())
+                foreach (var filePath in gpxFiles)
                 {
-                    Console.WriteLine($"Found {newSegments.Count} new segments");
-                    _segments.AddRange(newSegments);
+                    var route = LoadRouteFromGpx(Path.Combine(gpxDirectory, filePath));
+
+                    Console.WriteLine($"Splitting {route.Slug} into segments");
+
+                    var newSegments = SplitToSegments(route);
+
+                    if (newSegments.Any())
+                    {
+                        Console.WriteLine($"Found {newSegments.Count} new segments");
+                        _segments.AddRange(newSegments);
+                    }
                 }
+
+                File.WriteAllText(Path.Combine(gpxDirectory, "segments", "snapshot-1.json"), JsonConvert.SerializeObject(_segments));
+            }
+            else
+            {
+                _segments = JsonConvert.DeserializeObject<List<Segment>>(File.ReadAllText(Path.Combine(gpxDirectory, "segments", "snapshot-1.json")));
+            }
+
+            // Poplulate distance, index and parent properties
+            // of track points on the segment.
+            foreach (var segment in _segments)
+            {
+                segment.CalculateDistances();
             }
 
             /*
@@ -54,24 +72,38 @@ namespace RoadCaptain.SegmentBuilder
              * that point is somehwere in the middle of that segment.
              * For those matches we want to split up the larger segment.
              */
-            foreach(var segment in _segments)
-            {
-                var startOverlaps = FindOverlappingExistingSegments(segment.Start);
-
-                if (startOverlaps.Any())
-                {
-
-                }
-
-                var endOverlaps = FindOverlappingExistingSegments(segment.End);
-            }
-
             foreach (var segment in _segments)
             {
-                File.WriteAllText(
-                    Path.Combine(gpxDirectory, "segments", segment.Id + ".gpx"),
-                    BuildGpx(segment.Id, segment.Points.Count, segment.Points));
+                var startOverlaps = FindOverlappingPointsInSegments(segment.Start);
+
+                foreach (var overlap in startOverlaps)
+                {
+                    if (overlap.DistanceOnSegment >= 15 &&
+                        overlap.Segment.End.DistanceOnSegment - overlap.DistanceOnSegment >= 15)
+                    {
+                        Console.WriteLine($"Found junction of start of {segment.Id} with {overlap.Segment.Id} {overlap.DistanceOnSegment:0}m along the segment");
+                        
+                    }
+                }
+
+                var endOverlaps = FindOverlappingPointsInSegments(segment.End);
+
+                foreach (var overlap in endOverlaps)
+                {
+                    if (overlap.DistanceOnSegment >= 15 &&
+                        overlap.Segment.End.DistanceOnSegment - overlap.DistanceOnSegment >= 15)
+                    {
+                        Console.WriteLine($"Found junction of end of {segment.Id} with {overlap.Segment.Id} {overlap.DistanceOnSegment:0}m along the segment");
+                    }
+                }
             }
+
+            //foreach (var segment in _segments)
+            //{
+            //    File.WriteAllText(
+            //        Path.Combine(gpxDirectory, "segments", segment.Id + ".gpx"),
+            //        BuildGpx(segment.Id, segment.Points.Count, segment.Points));
+            //}
         }
 
         private List<Segment> SplitToSegments(Route route)
@@ -166,6 +198,16 @@ namespace RoadCaptain.SegmentBuilder
                 .ToList();
         }
 
+        private List<TrackPoint> FindOverlappingPointsInSegments(TrackPoint point)
+        {
+            return _segments
+                .AsParallel()
+                .Select(segment => segment.Points.Where(p => CloseMatchMeters(p, point)))
+                .Where(points => points.Any())
+                .SelectMany(points => points)
+                .ToList();
+        }
+
         private static bool CloseMatchMeters(TrackPoint a, TrackPoint b)
         {
             var distance = GetDistanceFromLatLonInMeters(
@@ -180,7 +222,7 @@ namespace RoadCaptain.SegmentBuilder
             return false;
         }
 
-        private static decimal GetDistanceFromLatLonInMeters(double lat1, double lon1, double lat2, double lon2)
+        public static decimal GetDistanceFromLatLonInMeters(double lat1, double lon1, double lat2, double lon2)
         {
             const double R = 6371; // Radius of the earth in km
             var dLat = Deg2Rad(lat2 - lat1);  // deg2rad below
@@ -252,6 +294,30 @@ namespace RoadCaptain.SegmentBuilder
         public TrackPoint Start => Points.First();
         public TrackPoint End => Points.Last();
         public string Id { get; set; }
+
+        public void CalculateDistances()
+        {
+            for (var index = 1; index < Points.Count; index++)
+            {
+                var previousPoint = Points[index - 1];
+                var point = Points[index];
+
+                point.Index = index;
+
+                point.DistanceFromLast = Program.GetDistanceFromLatLonInMeters(
+                    (double)previousPoint.Latitude, (double)previousPoint.Longitude,
+                    (double)point.Latitude, (double)point.Longitude);
+
+                point.DistanceOnSegment = previousPoint.DistanceOnSegment + point.DistanceFromLast;
+
+                if (index == 1)
+                {
+                    previousPoint.Segment = this;
+                }
+
+                point.Segment = this;
+            }
+        }
     }
 
     internal class Route
@@ -273,6 +339,10 @@ namespace RoadCaptain.SegmentBuilder
         public decimal Latitude { get; }
         public decimal Longitude { get; }
         public decimal Altitude { get; }
+        public int Index { get; set; }
+        public decimal DistanceOnSegment { get; set; }
+        public decimal DistanceFromLast { get; set; }
+        public Segment Segment { get; set; }
 
         public override string ToString()
         {
