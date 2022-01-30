@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -65,7 +64,10 @@ namespace RoadCaptain.SegmentBuilder
 
             foreach (var point in route.TrackPoints)
             {
-                if (_segments.Any(s => s.Points.Any(p => CloseMatchMeters(p, point))))
+                var overlappingExistingSegments = FindOverlappingExistingSegments(point);
+                var overlappingNewSegments = result.Where(s => s.Points.Any(p => CloseMatchMeters(p, point))).ToList();
+
+                if (overlappingExistingSegments.Any())
                 {
                     // We've found an overlap with an existing route so we can
                     // skip points until we no longer have a match. THat's where
@@ -85,17 +87,11 @@ namespace RoadCaptain.SegmentBuilder
                 else if (currentSegment != null &&
                          currentSegment.Points.Any(p => CloseMatchMeters(p, point)))
                 {
-                    var matches = currentSegment.Points.Where(p => CloseMatchMeters(p, point)).ToList();
-                    
                     // If we find a single match and that was the last added 
                     // point on this segment then we can add the current point.
-                    if (matches.Count == 1 && matches.Single() == currentSegment.End)
+                    if (CloseMatchMeters(currentSegment.End, point))
                     {
                         currentSegment.Points.Add(point);
-                    }
-                    else if (matches.Count > 1)
-                    {
-                        Debugger.Break();
                     }
                     else
                     {
@@ -111,7 +107,7 @@ namespace RoadCaptain.SegmentBuilder
                         currentSegment = null;
                     }
                 }
-                else if (result.Any(s => s.Points.Any(p => CloseMatchMeters(p, point))))
+                else if (overlappingNewSegments.Any())
                 {
                     // We've found an overlap with a segment of this route that
                     // was detected previously so we can
@@ -144,17 +140,23 @@ namespace RoadCaptain.SegmentBuilder
             return result;
         }
 
+        private List<Segment> FindOverlappingExistingSegments(TrackPoint point)
+        {
+            return _segments
+                .AsParallel()
+                .Where(s => s.Points.Any(p => CloseMatchMeters(p, point)))
+                .ToList();
+        }
+
         private static bool CloseMatchMeters(TrackPoint a, TrackPoint b)
         {
-            if (CloseMatch(a, b, 0.001m, 0.001m))
-            {
-                var distance = GetDistanceFromLatLonInMeters((double)a.Latitude, (double)a.Longitude,
-                    (double)b.Latitude, (double)b.Longitude);
+            var distance = GetDistanceFromLatLonInMeters(
+                (double)a.Latitude, (double)a.Longitude,
+                (double)b.Latitude, (double)b.Longitude);
 
-                if (distance < 10)
-                {
-                    return true;
-                }
+            if (distance < 15 && Math.Abs(a.Altitude - b.Altitude) <= 1)
+            {
+                return true;
             }
 
             return false;
