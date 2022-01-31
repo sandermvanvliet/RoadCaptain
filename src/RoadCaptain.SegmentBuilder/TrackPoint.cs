@@ -18,11 +18,8 @@ namespace RoadCaptain.SegmentBuilder
         public decimal Latitude { get; }
         public decimal Longitude { get; }
         public decimal Altitude { get; }
-        [JsonIgnore]
         public int Index { get; set; }
-        [JsonIgnore]
         public decimal DistanceOnSegment { get; set; }
-        [JsonIgnore]
         public decimal DistanceFromLast { get; set; }
         [JsonIgnore]
         public Segment Segment { get; set; }
