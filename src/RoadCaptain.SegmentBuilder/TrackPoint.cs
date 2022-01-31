@@ -33,6 +33,11 @@ namespace RoadCaptain.SegmentBuilder
             return $"{Latitude.ToString("0.00000", CultureInfo.InvariantCulture)}, {Longitude.ToString("0.00000", CultureInfo.InvariantCulture)}, {Altitude.ToString("0.0", CultureInfo.InvariantCulture)}";
         }
 
+        public TrackPoint Clone()
+        {
+            return new TrackPoint(Latitude, Longitude, Altitude);
+        }
+
         public bool IsCloseTo(TrackPoint point)
         {
             var distance = GetDistanceFromLatLonInMeters(

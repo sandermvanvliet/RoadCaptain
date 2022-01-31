@@ -72,6 +72,15 @@ namespace RoadCaptain.SegmentBuilder
             
             slicedSegement.Points.AddRange(Points.Skip(start).Take(end).ToList());
             
+            // To prevent gaps in sliced segments we want to add the last point of the
+            // first slice as the start of the second slice. We need to be use a clone
+            // of that point to prevent the index/segment/etc being overwritten on the
+            // same reference of that point...
+            if (start > 0)
+            {
+                slicedSegement.Points.Insert(0, Points[start - 1].Clone());
+            }
+
             slicedSegement.CalculateDistances();
 
             return slicedSegement;
