@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 
 namespace RoadCaptain.SegmentBuilder
 {
-    public class TrackPoint
+    public class TrackPoint : IEquatable<TrackPoint>
     {
         private static readonly double PiRad = Math.PI / 180d;
 
@@ -70,6 +70,46 @@ namespace RoadCaptain.SegmentBuilder
         private static double Deg2Rad(double deg)
         {
             return deg * PiRad;
+        }
+
+        public bool Equals(TrackPoint other)
+        {
+            if (ReferenceEquals(null, other))
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(this, other))
+            {
+                return true;
+            }
+
+            return Latitude == other.Latitude && Longitude == other.Longitude && Altitude == other.Altitude;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+
+            return Equals((TrackPoint)obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(Latitude, Longitude, Altitude, Segment);
         }
     }
 }
