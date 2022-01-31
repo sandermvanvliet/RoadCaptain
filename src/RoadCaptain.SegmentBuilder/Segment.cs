@@ -17,6 +17,13 @@ namespace RoadCaptain.SegmentBuilder
 
         public void CalculateDistances()
         {
+            // We need to set this to 0 when this method is invoked through Slice() as
+            // the original first point might be somewhere halfway the source segment.
+            Points[0].Index = 0; 
+            Points[0].Segment = this;
+            Points[0].DistanceOnSegment = 0;
+            Points[0].DistanceFromLast = 0;
+
             for (var index = 1; index < Points.Count; index++)
             {
                 var previousPoint = Points[index - 1];
@@ -29,11 +36,6 @@ namespace RoadCaptain.SegmentBuilder
                     (double)point.Latitude, (double)point.Longitude);
 
                 point.DistanceOnSegment = previousPoint.DistanceOnSegment + point.DistanceFromLast;
-
-                if (index == 1)
-                {
-                    previousPoint.Segment = this;
-                }
 
                 point.Segment = this;
             }
@@ -54,6 +56,25 @@ namespace RoadCaptain.SegmentBuilder
                    $"<trkseg>{string.Join(Environment.NewLine, trkptList)}</trkseg>" +
                    "</trk>" +
                    "</gpx>";
+        }
+
+        public Segment Slice(string suffix, int start)
+        {
+            return Slice(suffix, start, Points.Count);
+        }
+
+        public Segment Slice(string suffix, int start, int end)
+        {
+            var slicedSegement = new Segment
+            {
+                Id = Id + $"-{suffix}"
+            };
+            
+            slicedSegement.Points.AddRange(Points.Skip(start).Take(end).ToList());
+            
+            slicedSegement.CalculateDistances();
+
+            return slicedSegement;
         }
     }
 }
