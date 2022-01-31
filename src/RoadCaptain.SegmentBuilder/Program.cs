@@ -57,13 +57,13 @@ namespace RoadCaptain.SegmentBuilder
             else
             {
                 _segments = JsonConvert.DeserializeObject<List<Segment>>(File.ReadAllText(Path.Combine(gpxDirectory, "segments", "snapshot-1.json")));
-            }
 
-            // Poplulate distance, index and parent properties
-            // of track points on the segment.
-            foreach (var segment in _segments)
-            {
-                segment.CalculateDistances();
+                // Poplulate distance, index and parent properties
+                // of track points on the segment.
+                foreach (var segment in _segments)
+                {
+                    segment.CalculateDistances();
+                }
             }
 
             /*
@@ -72,16 +72,16 @@ namespace RoadCaptain.SegmentBuilder
              * that point is somehwere in the middle of that segment.
              * For those matches we want to split up the larger segment.
              */
-            //var splitSteps = 1;
+            var splitSteps = 1;
 
-            //while (splitSteps++ < 30)
-            //{
-            //    Console.WriteLine($"\n========\nStarting segment split step: {splitSteps}\n");
-            //    if (!SplitSegmentsAndUpdateSegmentList())
-            //    {
-            //        break;
-            //    }
-            //}
+            while (splitSteps++ < 30)
+            {
+                Console.WriteLine($"\n========\nStarting segment split step: {splitSteps}\n");
+                if (!SplitSegmentsAndUpdateSegmentList())
+                {
+                    break;
+                }
+            }
 
             foreach (var segment in _segments)
             {
@@ -179,6 +179,18 @@ namespace RoadCaptain.SegmentBuilder
 
                 if (toRemove.Any())
                 {
+                    // In situations where we have intersections on
+                    // segments that we just added we need to ensure
+                    // that we're not re-adding them later on. That
+                    // will cause overlapping segments in the end result.
+                    foreach (var segmentToRemove in toRemove)
+                    {
+                        if (toAdd.Any(t => t == segmentToRemove))
+                        {
+                            toAdd.Remove(segmentToRemove);
+                        }
+                    }
+
                     break;
                 }
             }
