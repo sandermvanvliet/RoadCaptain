@@ -138,6 +138,11 @@ namespace RoadCaptain.SegmentBuilder
                 result.Add(currentSegment);
             }
 
+            foreach (var segment in result)
+            {
+                segment.CalculateDistances();
+            }
+
             return result;
         }
     }
