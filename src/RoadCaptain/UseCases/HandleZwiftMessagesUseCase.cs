@@ -77,7 +77,7 @@ namespace RoadCaptain.UseCases
 
             if (!matchingSegments.Any())
             {
-                _monitoringEvents.Information("Could not find a segment for current position {Position}", position);
+                _monitoringEvents.Warning("Could not find a segment for current position {Position}", position);
                 
                 _currentSegment = null;
                 _currentDirection = SegmentDirection.Unknown;
@@ -130,6 +130,10 @@ namespace RoadCaptain.UseCases
                                 }
                             }
                         }
+                    }
+                    else
+                    {
+                        _monitoringEvents.Information("Did not have previous position in segment");
                     }
 
                     // Set for the next position update
