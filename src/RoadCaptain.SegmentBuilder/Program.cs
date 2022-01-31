@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Text.Json.Serialization;
 using System.Xml.Linq;
 using Newtonsoft.Json;
 
@@ -72,7 +71,29 @@ namespace RoadCaptain.SegmentBuilder
              * that point is somehwere in the middle of that segment.
              * For those matches we want to split up the larger segment.
              */
+            var result = SplitSegmentsForOverlaps(_segments);
+        
+            foreach(var segment in result.toRemove)
+            {
+                _segments.Remove(segment);
+            }
+
+            _segments.AddRange(result.toAdd);
+
             foreach (var segment in _segments)
+            {
+                File.WriteAllText(
+                    Path.Combine(gpxDirectory, "segments", segment.Id + ".gpx"),
+                    BuildGpx(segment.Id, segment.Points.Count, segment.Points));
+            }
+        }
+
+        private (List<Segment> toRemove, List<Segment> toAdd) SplitSegmentsForOverlaps(List<Segment> segments)
+        {
+            var toRemove = new List<Segment>();
+            var toAdd = new List<Segment>();
+
+            foreach (var segment in segments)
             {
                 var startOverlaps = FindOverlappingPointsInSegments(segment.Start);
 
@@ -81,8 +102,27 @@ namespace RoadCaptain.SegmentBuilder
                     if (overlap.DistanceOnSegment >= 15 &&
                         overlap.Segment.End.DistanceOnSegment - overlap.DistanceOnSegment >= 15)
                     {
-                        Console.WriteLine($"Found junction of start of {segment.Id} with {overlap.Segment.Id} {overlap.DistanceOnSegment:0}m along the segment");
-                        
+                        Console.WriteLine(
+                            $"Found junction of start of {segment.Id} with {overlap.Segment.Id} {overlap.DistanceOnSegment:0}m along the segment");
+
+                        var overlapIndex = overlap.Segment.Points.IndexOf(overlap);
+                        Console.WriteLine($"Splitting {overlap.Segment.Id} at index {overlapIndex}");
+
+                        var beforeSplit = new Segment
+                        {
+                            Id = overlap.Segment.Id + "-before"
+                        };
+                        beforeSplit.Points.AddRange(overlap.Segment.Points.Take(overlapIndex).ToList());
+
+                        var afterSplit = new Segment
+                        {
+                            Id = overlap.Segment.Id + "-after"
+                        };
+                        afterSplit.Points.AddRange(overlap.Segment.Points.Skip(overlapIndex).ToList());
+
+                        toRemove.Add(overlap.Segment);
+                        toAdd.Add(beforeSplit);
+                        toAdd.Add(afterSplit);
                     }
                 }
 
@@ -93,17 +133,32 @@ namespace RoadCaptain.SegmentBuilder
                     if (overlap.DistanceOnSegment >= 15 &&
                         overlap.Segment.End.DistanceOnSegment - overlap.DistanceOnSegment >= 15)
                     {
-                        Console.WriteLine($"Found junction of end of {segment.Id} with {overlap.Segment.Id} {overlap.DistanceOnSegment:0}m along the segment");
+                        Console.WriteLine(
+                            $"Found junction of end of {segment.Id} with {overlap.Segment.Id} {overlap.DistanceOnSegment:0}m along the segment");
+
+                        var overlapIndex = overlap.Segment.Points.IndexOf(overlap);
+                        Console.WriteLine($"Splitting {overlap.Segment.Id} at index {overlapIndex}");
+
+                        var beforeSplit = new Segment
+                        {
+                            Id = overlap.Segment.Id + "-before"
+                        };
+                        beforeSplit.Points.AddRange(overlap.Segment.Points.Take(overlapIndex).ToList());
+
+                        var afterSplit = new Segment
+                        {
+                            Id = overlap.Segment.Id + "-after"
+                        };
+                        afterSplit.Points.AddRange(overlap.Segment.Points.Skip(overlapIndex).ToList());
+
+                        toRemove.Add(overlap.Segment);
+                        toAdd.Add(beforeSplit);
+                        toAdd.Add(afterSplit);
                     }
                 }
             }
 
-            //foreach (var segment in _segments)
-            //{
-            //    File.WriteAllText(
-            //        Path.Combine(gpxDirectory, "segments", segment.Id + ".gpx"),
-            //        BuildGpx(segment.Id, segment.Points.Count, segment.Points));
-            //}
+            return (toRemove, toAdd);
         }
 
         private List<Segment> SplitToSegments(Route route)
