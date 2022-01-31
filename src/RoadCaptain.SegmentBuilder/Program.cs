@@ -121,12 +121,12 @@ namespace RoadCaptain.SegmentBuilder
 
             foreach (var segment in segments)
             {
-                var startOverlaps = FindOverlappingPointsInSegments(segment.Start, _segments);
+                var startOverlaps = FindOverlappingPointsInSegments(segment.A, _segments);
 
                 foreach (var overlap in startOverlaps)
                 {
                     if (overlap.DistanceOnSegment >= MinimumDistanceAlongSegment &&
-                        overlap.Segment.End.DistanceOnSegment - overlap.DistanceOnSegment >= MinimumDistanceAlongSegment)
+                        overlap.Segment.B.DistanceOnSegment - overlap.DistanceOnSegment >= MinimumDistanceAlongSegment)
                     {
                         Console.WriteLine(
                             $"Found junction of start of {segment.Id} with {overlap.Segment.Id} {overlap.DistanceOnSegment:0}m along the segment");
@@ -149,12 +149,12 @@ namespace RoadCaptain.SegmentBuilder
                     }
                 }
 
-                var endOverlaps = FindOverlappingPointsInSegments(segment.End, _segments);
+                var endOverlaps = FindOverlappingPointsInSegments(segment.B, _segments);
 
                 foreach (var overlap in endOverlaps)
                 {
                     if (overlap.DistanceOnSegment >= MinimumDistanceAlongSegment &&
-                        overlap.Segment.End.DistanceOnSegment - overlap.DistanceOnSegment >= MinimumDistanceAlongSegment)
+                        overlap.Segment.B.DistanceOnSegment - overlap.DistanceOnSegment >= MinimumDistanceAlongSegment)
                     {
                         Console.WriteLine(
                             $"Found junction of end of {segment.Id} with {overlap.Segment.Id} {overlap.DistanceOnSegment:0}m along the segment");

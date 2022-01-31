@@ -83,7 +83,7 @@ namespace RoadCaptain.SegmentBuilder
                 {
                     // If we find a single match and that was the last added 
                     // point on this segment then we can add the current point.
-                    if (currentSegment.End.IsCloseTo(point))
+                    if (currentSegment.B.IsCloseTo(point))
                     {
                         currentSegment.Points.Add(point);
                     }

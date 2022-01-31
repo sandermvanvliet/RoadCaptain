@@ -8,11 +8,14 @@ namespace RoadCaptain
 {
     public class Segment
     {
+        public List<Turn> NextSegmentsNodeA { get; } = new();
+        public List<Turn> NextSegmentsNodeB { get; } = new();
+
         public List<TrackPoint> Points { get; } = new();
         [JsonIgnore]
-        public TrackPoint Start => Points.First();
+        public TrackPoint A => Points.First();
         [JsonIgnore]
-        public TrackPoint End => Points.Last();
+        public TrackPoint B => Points.Last();
         public string Id { get; set; }
 
         public void CalculateDistances()
@@ -51,7 +54,7 @@ namespace RoadCaptain
                    "<gpx creator=\"Codenizer:ZwiftRouteDownloader\" version=\"1.1\" xmlns=\"http://www.topografix.com/GPX/1/1\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd http://www.garmin.com/xmlschemas/TrackPointExtension/v1 http://www.garmin.com/xmlschemas/TrackPointExtensionv1.xsd http://www.garmin.com/xmlschemas/GpxExtensions/v3 http://www.garmin.com/xmlschemas/GpxExtensionsv3.xsd\" xmlns:gpxtpx=\"http://www.garmin.com/xmlschemas/TrackPointExtension/v1\" xmlns:gpxx=\"http://www.garmin.com/xmlschemas/GpxExtensions/v3\">" +
                    "<trk>" +
                    $"<name>{Id}</name>" +
-                   $"<desc>{End.DistanceOnSegment}</desc>" +
+                   $"<desc>{B.DistanceOnSegment}</desc>" +
                    "<type>Strava segment</type>" +
                    $"<trkseg>{string.Join(Environment.NewLine, trkptList)}</trkseg>" +
                    "</trk>" +
@@ -84,6 +87,43 @@ namespace RoadCaptain
             slicedSegement.CalculateDistances();
 
             return slicedSegement;
+        }
+
+        public SegmentDirection DirectionOf(TrackPoint first, TrackPoint second)
+        {
+            var firstIndex = Points.IndexOf(first);
+            var secondIndex = Points.IndexOf(second);
+
+            if (firstIndex == -1 || secondIndex == -1)
+            {
+                return SegmentDirection.Unknown;
+            }
+
+            return firstIndex < secondIndex
+                ? SegmentDirection.AtoB
+                : SegmentDirection.BtoA;
+        }
+
+        public List<Turn> NextSegments(SegmentDirection segmentDirection)
+        {
+            if (segmentDirection == SegmentDirection.AtoB)
+            {
+                return NextSegmentsNodeB;
+            }
+
+            if (segmentDirection == SegmentDirection.BtoA)
+            {
+                return NextSegmentsNodeA;
+            }
+
+            throw new ArgumentException(
+                "Can't determine next segments for an unknown segment direction",
+                nameof(segmentDirection));
+        }
+
+        public bool Contains(TrackPoint position)
+        {
+            return Points.Any(p => p.IsCloseTo(position));
         }
     }
 }
