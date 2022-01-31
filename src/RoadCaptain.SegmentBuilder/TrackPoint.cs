@@ -33,7 +33,7 @@ namespace RoadCaptain.SegmentBuilder
 
         public override string ToString()
         {
-            return $"{Latitude} x {Longitude}";
+            return $"{Latitude.ToString("0.00000", CultureInfo.InvariantCulture)}, {Longitude.ToString("0.00000", CultureInfo.InvariantCulture)}, {Altitude.ToString("0.0", CultureInfo.InvariantCulture)}";
         }
 
         public bool IsCloseTo(TrackPoint point)
@@ -42,7 +42,7 @@ namespace RoadCaptain.SegmentBuilder
                 (double)this.Latitude, (double)this.Longitude,
                 (double)point.Latitude, (double)point.Longitude);
 
-            if (distance < 15 && Math.Abs(this.Altitude - point.Altitude) <= 1)
+            if (distance < 15 && Math.Abs(this.Altitude - point.Altitude) <= 2m)
             {
                 return true;
             }
