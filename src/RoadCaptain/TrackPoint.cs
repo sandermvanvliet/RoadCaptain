@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Globalization;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
-namespace RoadCaptain.SegmentBuilder
+namespace RoadCaptain
 {
     public class TrackPoint : IEquatable<TrackPoint>
     {
