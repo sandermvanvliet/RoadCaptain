@@ -72,16 +72,16 @@ namespace RoadCaptain.SegmentBuilder
              * that point is somehwere in the middle of that segment.
              * For those matches we want to split up the larger segment.
              */
-            var splitSteps = 1;
+            //var splitSteps = 1;
 
-            while (splitSteps++ < 30)
-            {
-                Console.WriteLine($"\n\n========\nStarting segment split step: {splitSteps}\n");
-                if (!SplitSegmentsAndUpdateSegmentList())
-                {
-                    break;
-                }
-            }
+            //while (splitSteps++ < 30)
+            //{
+            //    Console.WriteLine($"\n========\nStarting segment split step: {splitSteps}\n");
+            //    if (!SplitSegmentsAndUpdateSegmentList())
+            //    {
+            //        break;
+            //    }
+            //}
 
             foreach (var segment in _segments)
             {
@@ -191,6 +191,7 @@ namespace RoadCaptain.SegmentBuilder
             var result = new List<Segment>();
 
             var currentSegment = new Segment { Id = $"{route.Slug}-{result.Count + 1:000}" };
+            TrackPoint previousPoint = null;
 
             foreach (var point in route.TrackPoints)
             {
@@ -256,10 +257,17 @@ namespace RoadCaptain.SegmentBuilder
                     if (currentSegment == null)
                     {
                         currentSegment = new Segment { Id = $"{route.Slug}-{result.Count + 1:000}" };
+
+                        if (previousPoint != null)
+                        {
+                            currentSegment.Points.Add(previousPoint);
+                        }
                     }
 
                     currentSegment.Points.Add(point);
                 }
+
+                previousPoint = point;
             }
 
             if (currentSegment != null && currentSegment.Points.Count > 1)
