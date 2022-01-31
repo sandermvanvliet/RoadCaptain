@@ -87,6 +87,10 @@ namespace RoadCaptain.SegmentBuilder
             {
                 File.WriteAllText(Path.Combine(gpxDirectory, "segments", segment.Id + ".gpx"), segment.AsGpx());
             }
+
+            File.WriteAllText(
+                Path.Combine(gpxDirectory, "segments", "segments.json"),
+                JsonConvert.SerializeObject(_segments));
         }
 
         private bool SplitSegmentsAndUpdateSegmentList()

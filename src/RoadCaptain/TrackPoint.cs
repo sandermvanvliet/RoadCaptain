@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Globalization;
-using System.Text.Json.Serialization;
+using Newtonsoft.Json;
 
 namespace RoadCaptain
 {
