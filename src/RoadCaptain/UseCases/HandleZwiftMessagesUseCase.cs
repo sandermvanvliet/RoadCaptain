@@ -61,7 +61,7 @@ namespace RoadCaptain.UseCases
         private void HandleRiderPositionMessage(ZwiftRiderPositionMessage riderPosition)
         {
             _monitoringEvents.RiderPositionReceived(riderPosition.Latitude, riderPosition.Longitude);
-
+            
             /*
              * Next steps:
              * - Determine which segment we're on based on the position

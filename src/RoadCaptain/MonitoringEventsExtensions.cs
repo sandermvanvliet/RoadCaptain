@@ -1,4 +1,5 @@
-﻿using System.Net.Sockets;
+﻿using System.Globalization;
+using System.Net.Sockets;
 
 namespace RoadCaptain
 {
@@ -32,7 +33,7 @@ namespace RoadCaptain
         public static void RiderPositionReceived(this MonitoringEvents monitoringEvents, float latitude,
             float longitude)
         {
-            monitoringEvents.Information("Received rider position {Latitude} {Longitude}", latitude, longitude);
+            monitoringEvents.Information("Received rider position {Latitude} {Longitude}", latitude.ToString("0.00000000", CultureInfo.InvariantCulture), longitude.ToString("0.00000000", CultureInfo.InvariantCulture));
         }
 
         public static void CommandAvailable(this MonitoringEvents monitoringEvents, string type)
