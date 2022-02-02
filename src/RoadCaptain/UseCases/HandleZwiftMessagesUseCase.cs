@@ -29,7 +29,7 @@ namespace RoadCaptain.UseCases
             _messageReceiver = messageReceiver;
             _segmentStore = segmentStore;
         }
-
+        
         public void Execute(CancellationToken token)
         {
             _segments = _segmentStore.LoadSegments();
@@ -69,7 +69,7 @@ namespace RoadCaptain.UseCases
              * - Determine next turn action (left/straight/right)
              */
 
-            var position = new TrackPoint((decimal)riderPosition.Latitude, (decimal)riderPosition.Longitude, (decimal)riderPosition.Altitude);
+            var position = TrackPoint.FromGameLocation((decimal)riderPosition.Latitude, (decimal)riderPosition.Longitude, (decimal)riderPosition.Altitude);
 
             var matchingSegments = _segments
                 .Where(s => s.Contains(position))
@@ -95,7 +95,7 @@ namespace RoadCaptain.UseCases
 
                 if (segment != _currentSegment)
                 {
-                    _monitoringEvents.Information("Moved from {CurrentSegment} to {NewSegment}", _currentSegment.Id, segment.Id);
+                    _monitoringEvents.Information("Moved from {CurrentSegment} to {NewSegment}", _currentSegment?.Id, segment.Id);
                     _currentSegment = segment;
                     _previousPositionOnSegment = null;
                 }
