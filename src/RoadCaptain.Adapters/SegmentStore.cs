@@ -12,6 +12,7 @@ namespace RoadCaptain.Adapters
     {
         private readonly string _segmentPath;
         private readonly string _tracksPath;
+        private List<Segment> _loadedSegemnts;
 
         public SegmentStore() : this(Environment.CurrentDirectory)
         {
@@ -25,6 +26,11 @@ namespace RoadCaptain.Adapters
 
         public List<Segment> LoadSegments()
         {
+            if (_loadedSegemnts != null)
+            {
+                return _loadedSegemnts;
+            }
+
             var segments = JsonConvert.DeserializeObject<List<Segment>>(File.ReadAllText(_segmentPath));
             List<SegmentTurns> turns;
             try
@@ -39,8 +45,6 @@ namespace RoadCaptain.Adapters
 
             foreach (var segment in segments)
             {
-                segment.TranslateToGameCoordinates();
-
                 var turnsForSegment = turns.SingleOrDefault(t => t.SegmentId == segment.Id);
 
                 if (turnsForSegment != null)
@@ -49,6 +53,8 @@ namespace RoadCaptain.Adapters
                     segment.NextSegmentsNodeB.AddRange(turnsForSegment.TurnsB);
                 }
             }
+
+            _loadedSegemnts = segments;
 
             return segments;
         }
