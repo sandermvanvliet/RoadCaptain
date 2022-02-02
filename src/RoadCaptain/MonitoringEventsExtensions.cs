@@ -31,9 +31,12 @@ namespace RoadCaptain
         }
 
         public static void RiderPositionReceived(this MonitoringEvents monitoringEvents, float latitude,
-            float longitude)
+            float longitude, float altitude)
         {
-            monitoringEvents.Information("Received rider position {Latitude} {Longitude}", latitude.ToString("0.00000000", CultureInfo.InvariantCulture), longitude.ToString("0.00000000", CultureInfo.InvariantCulture));
+            monitoringEvents.Debug("Received rider position {Latitude} {Longitude} {Altitude}",
+                latitude.ToString("0.00000000", CultureInfo.InvariantCulture), 
+                longitude.ToString("0.00000000", CultureInfo.InvariantCulture),
+                altitude.ToString("0.00000000", CultureInfo.InvariantCulture));
         }
 
         public static void CommandAvailable(this MonitoringEvents monitoringEvents, string type)

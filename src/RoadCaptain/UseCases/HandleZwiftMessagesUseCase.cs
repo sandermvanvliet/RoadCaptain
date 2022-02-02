@@ -60,7 +60,7 @@ namespace RoadCaptain.UseCases
 
         private void HandleRiderPositionMessage(ZwiftRiderPositionMessage riderPosition)
         {
-            _monitoringEvents.RiderPositionReceived(riderPosition.Latitude, riderPosition.Longitude);
+            _monitoringEvents.RiderPositionReceived(riderPosition.Latitude, riderPosition.Longitude, riderPosition.Altitude);
             
             /*
              * Next steps:
@@ -77,7 +77,7 @@ namespace RoadCaptain.UseCases
 
             if (!matchingSegments.Any())
             {
-                _monitoringEvents.Warning("Could not find a segment for current position {Position}", position);
+                _monitoringEvents.Warning("Could not find a segment for current position {Position}", position.CoordinatesDecimal);
                 
                 _currentSegment = null;
                 _currentDirection = SegmentDirection.Unknown;
