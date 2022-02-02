@@ -44,7 +44,8 @@ namespace RoadCaptain
                 (double)this.Latitude, (double)this.Longitude,
                 (double)point.Latitude, (double)point.Longitude);
 
-            if (distance < 15 && Math.Abs(this.Altitude - point.Altitude) <= 2m)
+            // TODO: re-enable altitude matching
+            if (distance < 15 /*&& Math.Abs(this.Altitude - point.Altitude) <= 2m*/)
             {
                 return true;
             }
