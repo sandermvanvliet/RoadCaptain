@@ -113,5 +113,53 @@ namespace RoadCaptain
         {
             return HashCode.Combine(Latitude, Longitude, Altitude, Segment);
         }
+        
+        public static TrackPoint LatLongToGame(decimal latitude, decimal longitude, decimal altitude)
+        {
+            var fArr = new[] { -11.644904m, 166.95293m };
+            var fArr2 = new[] { 110614.71m, 109287.52m };
+
+            var watopiaCenterLatitude = fArr[0];
+            var watopiaCenterLongitude = fArr[1];
+
+            var metersBetweenLatitudeDegree = fArr2[0];
+            var metersBetweenLongitudeDegree = fArr2[1];
+
+            var watopiaCenterLatitudeAsCentimetersFromOrigin = watopiaCenterLatitude * metersBetweenLatitudeDegree * 100.0m;
+            var watopiaCenterLongitudeAsCentimetersFromOrigin = watopiaCenterLongitude * metersBetweenLongitudeDegree * 100.0m;
+
+            const decimal f7 = 100;
+
+            var latitudeAsCentimetersFromOrigin = (latitude * metersBetweenLatitudeDegree * f7);
+            var latitudeOffsetCentimeters = latitudeAsCentimetersFromOrigin - watopiaCenterLatitudeAsCentimetersFromOrigin;
+
+            var longitudeAsCentimetersFromOrigin = longitude * metersBetweenLongitudeDegree * f7;
+            var longitudeOffsetCentimeters = longitudeAsCentimetersFromOrigin - watopiaCenterLongitudeAsCentimetersFromOrigin;
+
+            return new TrackPoint(latitudeOffsetCentimeters, longitudeOffsetCentimeters, altitude);
+        }
+
+        public static TrackPoint FromGameLocation(decimal latitudeOffsetCentimeters, decimal longitudeOffsetCentimeters, decimal altitude)
+        {
+            var fArr = new[] { -11.644904m, 166.95293m };
+            var fArr2 = new[] { 110614.71m, 109287.52m };
+
+            var watopiaCenterLatitude = fArr[0];
+            var watopiaCenterLongitude = fArr[1];
+
+            var metersBetweenLatitudeDegree = fArr2[0];
+            var metersBetweenLongitudeDegree = fArr2[1];
+
+            var watopiaCenterLatitudeAsCentimetersFromOrigin = watopiaCenterLatitude * metersBetweenLatitudeDegree * 100.0m;
+            var watopiaCenterLongitudeAsCentimetersFromOrigin = watopiaCenterLongitude * metersBetweenLongitudeDegree * 100.0m;
+
+            var latitudeAsCentimetersFromOrigin = latitudeOffsetCentimeters + watopiaCenterLatitudeAsCentimetersFromOrigin;
+            var latitude = latitudeAsCentimetersFromOrigin / metersBetweenLatitudeDegree / 100;
+
+            var longitudeAsCentimetersFromOrigin = longitudeOffsetCentimeters + watopiaCenterLongitudeAsCentimetersFromOrigin;
+            var longitude = longitudeAsCentimetersFromOrigin / metersBetweenLongitudeDegree / 100;
+
+            return new TrackPoint(latitude, longitude, altitude);
+        }
     }
 }
