@@ -350,3 +350,4 @@ MigrationBackup/
 .ionide/
 
 appsettings.json
+autofac.json
