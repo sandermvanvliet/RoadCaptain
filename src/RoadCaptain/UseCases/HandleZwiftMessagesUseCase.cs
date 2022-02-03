@@ -110,12 +110,15 @@ namespace RoadCaptain.UseCases
                     // of the game position because otherwise we can't determine
                     // direction on the segment later on
                     _previousPositionOnSegment = segment.GetClosestPositionOnSegment(position);
+
+                    // Reset the direction
+                    _currentDirection = SegmentDirection.Unknown;
                 }
                 else
                 {
                     // When we have a previous position on this segment
                     // we can determine the direction on the segment.
-                    if (_previousPositionOnSegment != null)
+                    if (_previousPositionOnSegment != null && _currentDirection == SegmentDirection.Unknown)
                     {
                         var currentPositionOnSegment = segment.GetClosestPositionOnSegment(position);
                         var direction = _currentSegment.DirectionOf(_previousPositionOnSegment, currentPositionOnSegment);
