@@ -36,7 +36,12 @@ namespace RoadCaptain.UseCases
 
                 if (message is ZwiftRiderPositionMessage riderPosition)
                 {
-                    _handleRiderPositionUseCase.Execute(riderPosition);
+                    _monitoringEvents.RiderPositionReceived(riderPosition.Latitude, riderPosition.Longitude, riderPosition.Altitude);
+
+                    // Convert from Zwift game coordinates to a lat/lon coordinate
+                    var position = TrackPoint.FromGameLocation((decimal)riderPosition.Latitude, (decimal)riderPosition.Longitude, (decimal)riderPosition.Altitude);
+
+                    _handleRiderPositionUseCase.Execute(position);
                 }
                 else if (message is ZwiftPingMessage ping)
                 {

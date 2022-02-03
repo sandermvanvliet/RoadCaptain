@@ -20,11 +20,9 @@ namespace RoadCaptain.UseCases
             _segmentStore = segmentStore;
         }
 
-        public void Execute(ZwiftRiderPositionMessage riderPosition)
+        public void Execute(TrackPoint position)
         {
             _segments = _segmentStore.LoadSegments();
-
-            _monitoringEvents.RiderPositionReceived(riderPosition.Latitude, riderPosition.Longitude, riderPosition.Altitude);
             
             /*
              * Next steps:
@@ -32,9 +30,6 @@ namespace RoadCaptain.UseCases
              * - Determine direction on that segment (to which end of the segment are we moving)
              * - Determine next turn action (left/straight/right)
              */
-
-            var position = TrackPoint.FromGameLocation((decimal)riderPosition.Latitude, (decimal)riderPosition.Longitude, (decimal)riderPosition.Altitude);
-
             var matchingSegments = _segments
                 .Where(s => s.Contains(position))
                 .ToList();
