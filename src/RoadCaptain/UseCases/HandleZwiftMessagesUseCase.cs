@@ -17,6 +17,7 @@ namespace RoadCaptain.UseCases
         private Segment _currentSegment;
         private TrackPoint _previousPositionOnSegment;
         private SegmentDirection _currentDirection;
+        private readonly List<TurnDirection> _availableTurnCommands = new();
 
         public HandleZwiftMessagesUseCase(
             IMessageEmitter emitter,
@@ -49,7 +50,30 @@ namespace RoadCaptain.UseCases
                 }
                 else if (message is ZwiftCommandAvailableMessage commandAvailable)
                 {
-                    _monitoringEvents.CommandAvailable(commandAvailable.Type);
+                    switch (commandAvailable.Type.Trim().ToLower())
+                    {
+                        case "turnleft":
+                            if (!_availableTurnCommands.Contains(TurnDirection.Left))
+                            {
+                                _availableTurnCommands.Add(TurnDirection.Left);
+                                _monitoringEvents.AvailableTurns(_availableTurnCommands);
+                            }
+                            break;
+                        case "turnright":
+                            if (!_availableTurnCommands.Contains(TurnDirection.Right))
+                            {
+                                _availableTurnCommands.Add(TurnDirection.Right);
+                                _monitoringEvents.AvailableTurns(_availableTurnCommands);
+                            }
+                            break;
+                        case "gostraight":
+                            if (!_availableTurnCommands.Contains(TurnDirection.StraightOn))
+                            {
+                                _availableTurnCommands.Add(TurnDirection.StraightOn);
+                                _monitoringEvents.AvailableTurns(_availableTurnCommands);
+                            }
+                            break;
+                    }
                 }
                 else if (message is ZwiftPowerUpMessage powerUp)
                 {
@@ -113,6 +137,9 @@ namespace RoadCaptain.UseCases
 
                     // Reset the direction
                     _currentDirection = SegmentDirection.Unknown;
+
+                    // Reset available turns
+                    _availableTurnCommands.Clear();
                 }
                 else
                 {
@@ -146,10 +173,6 @@ namespace RoadCaptain.UseCases
                                 }
                             }
                         }
-                    }
-                    else
-                    {
-                        _monitoringEvents.Information("Did not have previous position in segment");
                     }
 
                     // Set for the next position update.

@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Net.Sockets;
 
 namespace RoadCaptain
@@ -35,18 +37,17 @@ namespace RoadCaptain
             float longitude, float altitude)
         {
             monitoringEvents.Debug("Received rider position {Latitude} {Longitude} {Altitude}",
-                latitude.ToString("0.00000000", CultureInfo.InvariantCulture), 
+                latitude.ToString("0.00000000", CultureInfo.InvariantCulture),
                 longitude.ToString("0.00000000", CultureInfo.InvariantCulture),
                 altitude.ToString("0.00000000", CultureInfo.InvariantCulture));
         }
 
-        public static void CommandAvailable(this MonitoringEvents monitoringEvents, string type)
+        public static void AvailableTurns(this MonitoringEvents monitoringEvents, List<TurnDirection> turns)
         {
-            // The SomethingEmpty command is received a _lot_ so ignore that to
-            // prevent log spamming
-            if (!"somethingempty".Equals(type, StringComparison.InvariantCultureIgnoreCase))
+            // Turns on a segment are always at least 2
+            if (turns.Count >= 2)
             {
-                monitoringEvents.Information("Received available command {Type}", type);
+                monitoringEvents.Information("Currently available turns are now: {Turns}", string.Join(", ", turns.Select(t => t.ToString())));
             }
         }
 
