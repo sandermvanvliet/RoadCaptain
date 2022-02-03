@@ -41,7 +41,7 @@ namespace RoadCaptain
         public bool IsCloseTo(TrackPoint point)
         {
             var distance = GetDistanceFromLatLonInMeters(
-                (double)this.Latitude, (double)this.Longitude,
+                (double)Latitude, (double)Longitude,
                 (double)point.Latitude, (double)point.Longitude);
 
             // TODO: re-enable altitude matching
@@ -51,6 +51,13 @@ namespace RoadCaptain
             }
 
             return false;
+        }
+
+        public decimal DistanceTo(TrackPoint point)
+        {
+            return GetDistanceFromLatLonInMeters(
+                (double)Latitude, (double)Longitude,
+                (double)point.Latitude, (double)point.Longitude);
         }
 
         public static decimal GetDistanceFromLatLonInMeters(double lat1, double lon1, double lat2, double lon2)
@@ -102,7 +109,7 @@ namespace RoadCaptain
                 return true;
             }
 
-            if (obj.GetType() != this.GetType())
+            if (obj.GetType() != GetType())
             {
                 return false;
             }

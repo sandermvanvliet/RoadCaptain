@@ -127,5 +127,14 @@ namespace RoadCaptain
         {
             return Points.Any(p => p.IsCloseTo(position));
         }
+
+        public TrackPoint GetClosestPositionOnSegment(TrackPoint position)
+        {
+            return Points
+                .Select(p => new { Point = p, Distance = p.DistanceTo(position) })
+                .OrderBy(x => x.Distance)
+                .FirstOrDefault()
+                ?.Point;
+        }
     }
 }

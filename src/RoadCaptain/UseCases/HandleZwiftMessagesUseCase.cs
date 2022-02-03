@@ -104,7 +104,12 @@ namespace RoadCaptain.UseCases
                         _monitoringEvents.Information("Moved from {CurrentSegment} to {NewSegment}", _currentSegment?.Id, segment.Id);
                     }
                     _currentSegment = segment;
-                    _previousPositionOnSegment = null;
+
+                    // Set for the next position update.
+                    // For this we need to use the TrackPoint on the segment instead
+                    // of the game position because otherwise we can't determine
+                    // direction on the segment later on
+                    _previousPositionOnSegment = segment.GetClosestPositionOnSegment(position);
                 }
                 else
                 {
@@ -112,7 +117,8 @@ namespace RoadCaptain.UseCases
                     // we can determine the direction on the segment.
                     if (_previousPositionOnSegment != null)
                     {
-                        var direction = _currentSegment.DirectionOf(_previousPositionOnSegment, position);
+                        var currentPositionOnSegment = segment.GetClosestPositionOnSegment(position);
+                        var direction = _currentSegment.DirectionOf(_previousPositionOnSegment, currentPositionOnSegment);
 
                         // If we have a direction then check if we changed
                         // direction on the segment (a U-turn in the game).
@@ -143,8 +149,11 @@ namespace RoadCaptain.UseCases
                         _monitoringEvents.Information("Did not have previous position in segment");
                     }
 
-                    // Set for the next position update
-                    _previousPositionOnSegment = position;
+                    // Set for the next position update.
+                    // For this we need to use the TrackPoint on the segment instead
+                    // of the game position because otherwise we can't determine
+                    // direction on the segment later on
+                    _previousPositionOnSegment = segment.GetClosestPositionOnSegment(position);
                 }
             }
         }
