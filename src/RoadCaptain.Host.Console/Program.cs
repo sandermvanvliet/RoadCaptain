@@ -49,7 +49,8 @@ namespace RoadCaptain.Host.Console
 
                     var configurationRoot = new ConfigurationBuilder()
                         .AddJsonFile("appsettings.json", true)
-                        .AddJsonFile("autofac.json", true)
+                        .AddJsonFile("autofac.json")
+                        .AddJsonFile("autofac.development.json", true)
                         .Build();
 
                     var configuration = new Configuration();
