@@ -23,8 +23,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RoadCaptain.Adapters", "src
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RoadCaptain.SegmentBuilder", "src\RoadCaptain.SegmentBuilder\RoadCaptain.SegmentBuilder.csproj", "{D320E3EB-6D78-4F99-A038-68804BDBCD4E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Debug", "src\Debug\Debug.csproj", "{B3D83E4C-9D24-450D-9ABB-F7968389DB2E}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -95,18 +93,6 @@ Global
 		{D320E3EB-6D78-4F99-A038-68804BDBCD4E}.Release|x64.Build.0 = Release|Any CPU
 		{D320E3EB-6D78-4F99-A038-68804BDBCD4E}.Release|x86.ActiveCfg = Release|Any CPU
 		{D320E3EB-6D78-4F99-A038-68804BDBCD4E}.Release|x86.Build.0 = Release|Any CPU
-		{B3D83E4C-9D24-450D-9ABB-F7968389DB2E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B3D83E4C-9D24-450D-9ABB-F7968389DB2E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B3D83E4C-9D24-450D-9ABB-F7968389DB2E}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{B3D83E4C-9D24-450D-9ABB-F7968389DB2E}.Debug|x64.Build.0 = Debug|Any CPU
-		{B3D83E4C-9D24-450D-9ABB-F7968389DB2E}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{B3D83E4C-9D24-450D-9ABB-F7968389DB2E}.Debug|x86.Build.0 = Debug|Any CPU
-		{B3D83E4C-9D24-450D-9ABB-F7968389DB2E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B3D83E4C-9D24-450D-9ABB-F7968389DB2E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B3D83E4C-9D24-450D-9ABB-F7968389DB2E}.Release|x64.ActiveCfg = Release|Any CPU
-		{B3D83E4C-9D24-450D-9ABB-F7968389DB2E}.Release|x64.Build.0 = Release|Any CPU
-		{B3D83E4C-9D24-450D-9ABB-F7968389DB2E}.Release|x86.ActiveCfg = Release|Any CPU
-		{B3D83E4C-9D24-450D-9ABB-F7968389DB2E}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -117,7 +103,6 @@ Global
 		{1AB4A083-6DAA-4CE4-B0E0-03C5B1636EB4} = {E3C458CE-58E7-4E56-BC08-A5AA17B898B1}
 		{2E2ECA2F-F51E-468E-A92D-20F82660E0E1} = {BEA7E74A-4BB1-47E5-864C-8F017CD224BB}
 		{D320E3EB-6D78-4F99-A038-68804BDBCD4E} = {BEA7E74A-4BB1-47E5-864C-8F017CD224BB}
-		{B3D83E4C-9D24-450D-9ABB-F7968389DB2E} = {BEA7E74A-4BB1-47E5-864C-8F017CD224BB}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {EFDBED01-0D64-4ACF-89AA-107DDFD90387}
