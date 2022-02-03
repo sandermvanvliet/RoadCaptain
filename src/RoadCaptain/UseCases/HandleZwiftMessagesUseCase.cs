@@ -95,7 +95,14 @@ namespace RoadCaptain.UseCases
 
                 if (segment != _currentSegment)
                 {
-                    _monitoringEvents.Information("Moved from {CurrentSegment} to {NewSegment}", _currentSegment?.Id, segment.Id);
+                    if (_currentSegment == null)
+                    {
+                        _monitoringEvents.Information("Starting in {Segment}", segment.Id);
+                    }
+                    else
+                    {
+                        _monitoringEvents.Information("Moved from {CurrentSegment} to {NewSegment}", _currentSegment?.Id, segment.Id);
+                    }
                     _currentSegment = segment;
                     _previousPositionOnSegment = null;
                 }
