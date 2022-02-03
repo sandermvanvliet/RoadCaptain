@@ -98,7 +98,10 @@ namespace RoadCaptain.UseCases
                         // iteration.
                         while (TryExtractMessage(ref buffer, out byte[] payload))
                         {
-                            _messageEmitter.EmitMessageFromBytes(payload, _messageSequenceNumber);
+                            if (payload.Length > 0)
+                            {
+                                _messageEmitter.EmitMessageFromBytes(payload, _messageSequenceNumber);
+                            }
                         }
 
                         // There's no more data to be processed.
