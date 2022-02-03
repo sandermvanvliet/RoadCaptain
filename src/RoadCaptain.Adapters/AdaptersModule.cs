@@ -26,6 +26,8 @@ namespace RoadCaptain.Adapters
                 .Except<MessageReceiverFromSocket>()
                 .Except<MessageEmitterToQueue>();
 
+            // TODO: Replace Zwift adapter for testing/replay
+
             if("socket".Equals(MessageReceiverSource,StringComparison.InvariantCultureIgnoreCase))
             {
                 builder
