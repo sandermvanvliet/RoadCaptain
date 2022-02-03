@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using System;
+using System.Globalization;
 using System.Net.Sockets;
 
 namespace RoadCaptain
@@ -41,7 +42,12 @@ namespace RoadCaptain
 
         public static void CommandAvailable(this MonitoringEvents monitoringEvents, string type)
         {
-            monitoringEvents.Information("Received available command {Type}", type);
+            // The SomethingEmpty command is received a _lot_ so ignore that to
+            // prevent log spamming
+            if (!"somethingempty".Equals(type, StringComparison.InvariantCultureIgnoreCase))
+            {
+                monitoringEvents.Information("Received available command {Type}", type);
+            }
         }
 
         public static void PowerUpAvailable(this MonitoringEvents monitoringEvents, string type)
