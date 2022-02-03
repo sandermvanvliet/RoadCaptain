@@ -13,6 +13,7 @@ namespace RoadCaptain.Tests.Unit.Routing
         private readonly HandleZwiftMessagesUseCase _useCase;
         private readonly InMemoryMessageEmitter _messageEmitter;
         private readonly FieldInfo _currentSegmentFieldInfo;
+        private readonly HandleRiderPositionUseCase _handleRiderPositionUseCase;
 
         public WhenHandlingIncomingRiderPositionMessage()
         {
@@ -20,13 +21,16 @@ namespace RoadCaptain.Tests.Unit.Routing
             var segmentStore = new SegmentStore(@"c:\git\RoadCaptain\src\RoadCaptain.Adapters");
             segmentStore.LoadSegments();
 
+            var monitoringEvents = new NopMonitoringEvents();
+
+            _handleRiderPositionUseCase = new HandleRiderPositionUseCase(monitoringEvents, segmentStore);
             _useCase = new HandleZwiftMessagesUseCase(
                 _messageEmitter,
-                new NopMonitoringEvents(),
+                monitoringEvents,
                 new InMemoryMessageReceiver(),
-                segmentStore);
+                _handleRiderPositionUseCase);
 
-            _currentSegmentFieldInfo = _useCase.GetType().GetField("_currentSegment", BindingFlags.NonPublic | BindingFlags.Instance);
+            _currentSegmentFieldInfo = _handleRiderPositionUseCase.GetType().GetField("_currentSegment", BindingFlags.NonPublic | BindingFlags.Instance);
         }
 
         [Fact]
@@ -76,7 +80,7 @@ namespace RoadCaptain.Tests.Unit.Routing
         {
             get
             {
-                var value = _currentSegmentFieldInfo.GetValue(_useCase);
+                var value = _currentSegmentFieldInfo.GetValue(_handleRiderPositionUseCase);
                 return value as Segment;
             }
         }
