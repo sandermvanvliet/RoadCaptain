@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading;
-using RoadCaptain.Adapters;
 using RoadCaptain.Ports;
 
 namespace RoadCaptain.Tests.Unit
