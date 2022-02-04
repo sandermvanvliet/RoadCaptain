@@ -30,20 +30,15 @@ namespace RoadCaptain.Adapters
         {
             _subscriberSocket.Connect("tcp://localhost:7001");
 
-            _subscriberSocket.Subscribe("positionChanged");
-            _subscriberSocket.Subscribe("segmentChanged");
-            _subscriberSocket.Subscribe("turnsAvailable");
-            _subscriberSocket.Subscribe("directionChanged");
-            _subscriberSocket.Subscribe("turnCommandsAvailable");
+            _subscriberSocket.SubscribeToAnyTopic();
 
             try
             {
                 while (!token.IsCancellationRequested)
                 {
-                    var topic = _subscriberSocket.ReceiveFrameString();
                     var serializedContent = _subscriberSocket.ReceiveFrameString();
 
-                    InvokeHandlers(topic, serializedContent);
+                    InvokeHandlers(serializedContent);
                 }
             }
             finally
@@ -66,24 +61,30 @@ namespace RoadCaptain.Adapters
             _turnCommandsAvailableHandlers.Add(turnCommandsAvailable);
         }
 
-        private void InvokeHandlers(string topic, string serializedContent)
+        private void InvokeHandlers(string serializedContent)
         {
-            switch (topic)
+            var message = JsonConvert.DeserializeObject<Message>(serializedContent);
+            if (message == null)
+            {
+                return;
+            }
+
+            switch (message.Topic)
             {
                 case "positionChanged":
-                    _positionChangedHandlers.ForEach(h => InvokeHandler(h, serializedContent));
+                    _positionChangedHandlers.ForEach(h => InvokeHandler(h, message.Data));
                     break;
                 case "segmentChanged":
-                    _segmentChangedHandlers.ForEach(h => InvokeHandler(h, serializedContent));
+                    _segmentChangedHandlers.ForEach(h => InvokeHandler(h, message.Data));
                     break;
                 case "turnsAvailable":
-                    _turnsAvailableHandlers.ForEach(h => InvokeHandler(h, serializedContent));
+                    _turnsAvailableHandlers.ForEach(h => InvokeHandler(h, message.Data));
                     break;
                 case "directionChanged":
-                    _directionChangedHandlers.ForEach(h => InvokeHandler(h, serializedContent));
+                    _directionChangedHandlers.ForEach(h => InvokeHandler(h, message.Data));
                     break;
                 case "turnCommandsAvailable":
-                    _turnCommandsAvailableHandlers.ForEach(h => InvokeHandler(h, serializedContent));
+                    _turnCommandsAvailableHandlers.ForEach(h => InvokeHandler(h, message.Data));
                     break;
             }
         }
@@ -92,9 +93,7 @@ namespace RoadCaptain.Adapters
         {
             try
             {
-                var message = JsonConvert.DeserializeObject<Message>(serializedContent);
-
-                handle(JsonConvert.DeserializeObject<TMessage>(message.Data));
+                handle(JsonConvert.DeserializeObject<TMessage>(serializedContent));
             }
             catch (Exception e)
             {

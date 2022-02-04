@@ -19,15 +19,14 @@ namespace RoadCaptain.Adapters
         {
             var message = new Message
             {
+                Topic = topic,
                 TimeStamp = DateTime.UtcNow,
                 Data = JsonConvert.SerializeObject(data)
             };
 
             var serializedContent = JsonConvert.SerializeObject(message);
 
-            _publishSocket
-                .SendMoreFrame(topic)
-                .SendFrame(serializedContent);
+            _publishSocket.SendFrame(serializedContent);
         }
     }
 
@@ -36,5 +35,6 @@ namespace RoadCaptain.Adapters
         public string Version => "0.1";
         public DateTime TimeStamp { get; set; }
         public string Data { get; set; }
+        public string Topic { get; set; }
     }
 }
