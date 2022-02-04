@@ -87,6 +87,12 @@ namespace RoadCaptain.Adapters
                     TurnsAvailable(turns);
                 }
             }
+            else if(AvailableTurns.Any())
+            {
+                // If we don't have a direction then we also don't
+                // know which turns are available.
+                TurnsAvailable(new List<Turn>());
+            }
 
             CurrentDirection = direction;
             Enqueue("directionChanged", CurrentDirection);
