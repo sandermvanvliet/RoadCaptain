@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using RoadCaptain.Ports;
 
@@ -12,17 +13,38 @@ namespace RoadCaptain.UseCases
         private SegmentDirection _currentDirection;
         private readonly MonitoringEvents _monitoringEvents;
         private readonly ISegmentStore _segmentStore;
-        private readonly List<TurnDirection> _availableTurnCommands = new();
+        private readonly IGameStateDispatcher _dispatcher;
+        private TrackPoint _previousPositionInGame;
 
-        public HandleRiderPositionUseCase(MonitoringEvents monitoringEvents, ISegmentStore segmentStore)
+        public HandleRiderPositionUseCase(MonitoringEvents monitoringEvents, ISegmentStore segmentStore, IGameStateDispatcher dispatcher)
         {
             _monitoringEvents = monitoringEvents;
             _segmentStore = segmentStore;
+            _dispatcher = dispatcher;
         }
 
         public void Execute(TrackPoint position)
         {
-            _segments = _segmentStore.LoadSegments();
+            if (position == null)
+            {
+                throw new ArgumentNullException(nameof(position));
+            }
+
+            // Debounce position updates.
+            // Especially when the rider is not yet moving this usually
+            // stays at the same location for a long time (world origin mostly)
+            if (position.Equals(_previousPositionInGame))
+            {
+                return;
+            }
+
+            // Store previous position so we can debounce on the next update.
+            _previousPositionInGame = position;
+
+            // We don't want to load this in the constructor as that
+            // may happen way too soon before initialisation is fully
+            // complete and that leads to weird errors.
+            _segments ??= _segmentStore.LoadSegments();
             
             /*
              * Next steps:
@@ -39,7 +61,10 @@ namespace RoadCaptain.UseCases
                 _monitoringEvents.Warning("Could not find a segment for current position {Position}", position.CoordinatesDecimal);
                 
                 _currentSegment = null;
+                _dispatcher.SegmentChanged(_currentSegment);
+
                 _currentDirection = SegmentDirection.Unknown;
+                _dispatcher.DirectionChanged(_currentDirection);
                 _previousPositionOnSegment = null;
             }
             else
@@ -54,15 +79,8 @@ namespace RoadCaptain.UseCases
 
                 if (segment != _currentSegment)
                 {
-                    if (_currentSegment == null)
-                    {
-                        _monitoringEvents.Information("Starting in {Segment}", segment.Id);
-                    }
-                    else
-                    {
-                        _monitoringEvents.Information("Moved from {CurrentSegment} to {NewSegment}", _currentSegment?.Id, segment.Id);
-                    }
                     _currentSegment = segment;
+                    _dispatcher.SegmentChanged(_currentSegment);
 
                     // Set for the next position update.
                     // For this we need to use the TrackPoint on the segment instead
@@ -70,11 +88,11 @@ namespace RoadCaptain.UseCases
                     // direction on the segment later on
                     _previousPositionOnSegment = segment.GetClosestPositionOnSegment(position);
 
-                    // Reset the direction
+                    // TODO: Determine this from the segment we came from
+                    // as we have a turn in the opposite direction of the
+                    // current segment
                     _currentDirection = SegmentDirection.Unknown;
-
-                    // Reset available turns
-                    _availableTurnCommands.Clear();
+                    _dispatcher.DirectionChanged(_currentDirection);
                 }
                 else
                 {
@@ -91,22 +109,8 @@ namespace RoadCaptain.UseCases
                         // are available.
                         if (direction != SegmentDirection.Unknown && direction != _currentDirection)
                         {
-                            _monitoringEvents.Information("Direction is now {Direction}", direction);
                             _currentDirection = direction;
-                            
-                            var turns = _currentSegment.NextSegments(_currentDirection);
-                            
-                            // Only show turns if we have actual options.
-                            if (turns.Any(t => t.Direction != TurnDirection.StraightOn))
-                            {
-                                _monitoringEvents.Information("Upcoming turns: ");
-
-                                foreach (var turn in turns)
-                                {
-                                    _monitoringEvents.Information("{Direction} onto {Segment}", turn.Direction,
-                                        turn.SegmentId);
-                                }
-                            }
+                            _dispatcher.DirectionChanged(_currentDirection);
                         }
                     }
 

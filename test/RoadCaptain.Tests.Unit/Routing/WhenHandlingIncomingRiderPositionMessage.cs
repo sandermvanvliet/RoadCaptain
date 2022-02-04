@@ -23,7 +23,11 @@ namespace RoadCaptain.Tests.Unit.Routing
 
             var monitoringEvents = new NopMonitoringEvents();
 
-            _handleRiderPositionUseCase = new HandleRiderPositionUseCase(monitoringEvents, segmentStore);
+            _handleRiderPositionUseCase = new HandleRiderPositionUseCase(
+                monitoringEvents, 
+                segmentStore,
+                new InMemoryGameStateDispatcher(monitoringEvents)
+            );
             _useCase = new HandleZwiftMessagesUseCase(
                 _messageEmitter,
                 monitoringEvents,
