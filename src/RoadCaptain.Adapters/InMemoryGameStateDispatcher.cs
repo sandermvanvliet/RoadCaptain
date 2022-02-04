@@ -26,6 +26,8 @@ namespace RoadCaptain.Adapters
         public void PositionChanged(TrackPoint position)
         {
             CurrentPosition = position;
+
+            Enqueue("positionChanged", CurrentPosition);
         }
 
         public void SegmentChanged(Segment segment)
@@ -42,11 +44,16 @@ namespace RoadCaptain.Adapters
                         segment.Id);
                 }
             }
+            else if (CurrentSegment != null)
+            {
+                _monitoringEvents.Warning("Lost segment lock for rider");
+            }
 
             CurrentSegment = segment;
-            AvailableTurnCommands.Clear();
-            
+            Enqueue("segmentChanged", CurrentSegment?.Id);
+
             // TODO: clear available turns, available turn commands and direction (although direction follows very quickly after)
+            TurnCommandsAvailable(new List<TurnDirection>());
         }
 
         public void TurnsAvailable(List<Turn> turns)
@@ -63,6 +70,7 @@ namespace RoadCaptain.Adapters
             }
 
             AvailableTurns = turns;
+            Enqueue("turnsAvailable", AvailableTurns);
         }
 
         public void DirectionChanged(SegmentDirection direction)
@@ -81,11 +89,17 @@ namespace RoadCaptain.Adapters
             }
 
             CurrentDirection = direction;
+            Enqueue("directionChanged", CurrentDirection);
         }
 
         public void TurnCommandsAvailable(List<TurnDirection> turns)
         {
             AvailableTurnCommands = turns;
+            Enqueue("turnCommandsAvailable", AvailableTurnCommands);
+        }
+
+        protected virtual void Enqueue(string topic, object data)
+        {
         }
     }
 }
