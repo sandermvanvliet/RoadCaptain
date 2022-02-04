@@ -23,16 +23,18 @@ namespace RoadCaptain.Tests.Unit.Routing
 
             var monitoringEvents = new NopMonitoringEvents();
 
+            var gameStateDispatcher = new InMemoryGameStateDispatcher(monitoringEvents);
             _handleRiderPositionUseCase = new HandleRiderPositionUseCase(
                 monitoringEvents, 
                 segmentStore,
-                new InMemoryGameStateDispatcher(monitoringEvents)
+                gameStateDispatcher
             );
             _useCase = new HandleZwiftMessagesUseCase(
                 _messageEmitter,
                 monitoringEvents,
                 new InMemoryMessageReceiver(),
-                _handleRiderPositionUseCase);
+                _handleRiderPositionUseCase,
+                new HandleAvailableTurnsUseCase(monitoringEvents, gameStateDispatcher));
 
             _currentSegmentFieldInfo = _handleRiderPositionUseCase.GetType().GetField("_currentSegment", BindingFlags.NonPublic | BindingFlags.Instance);
         }

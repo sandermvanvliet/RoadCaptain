@@ -3,7 +3,10 @@
 namespace RoadCaptain.Ports
 {
     /*
-     * Use this either as a singleton in-memory approach or implement this on both the sending and consuming sides of a queue
+     * Use this either as a singleton in-memory approach or implement this on both the sending and consuming sides of a queue.
+     *
+     * The use cases calling this are responsible for detecting the changes. Implementations of IGameStateDispatcher should not
+     * have to perform debouncing.
      */
     public interface IGameStateDispatcher
     {
@@ -21,7 +24,7 @@ namespace RoadCaptain.Ports
         void SegmentChanged(Segment segment);
 
         /// <summary>
-        /// The rider is coming up to the end of a segment and there are options to turn onto another segment
+        /// The rider entered a segment and there are options to turn onto another segment
         /// </summary>
         /// <param name="turns">The available turns (direction + next segment)</param>
         /// <remarks>If the current segment is a direct connection to only one segment this is not called</remarks>
@@ -33,5 +36,12 @@ namespace RoadCaptain.Ports
         /// <param name="direction">The direction the rider is heading in</param>
         /// <remarks>This happens when a u-turn is executed. Otherwise it should not occcur much</remarks>
         void DirectionChanged(SegmentDirection direction);
+
+        /// <summary>
+        /// The rider is coming up to the end of a segment and the game has presented turn options
+        /// </summary>
+        /// <param name="turns">The directions in which turns can be made</param>
+        /// <remarks>The turns received here _should_ correspond to what has been provided in <see cref="TurnsAvailable"/>.</remarks>
+        void TurnCommandsAvailable(List<TurnDirection> turns);
     }
 }

@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Threading;
+﻿using System.Threading;
 using RoadCaptain.Ports;
 
 namespace RoadCaptain.UseCases
@@ -11,24 +10,25 @@ namespace RoadCaptain.UseCases
         private readonly IMessageReceiver _messageReceiver;
         private bool _pingedBefore;
         private static readonly object SyncRoot = new();
-        private readonly List<TurnDirection> _availableTurnCommands = new();
         private readonly HandleRiderPositionUseCase _handleRiderPositionUseCase;
+        private readonly HandleAvailableTurnsUseCase _handleAvailableTurnsUseCase;
 
         public HandleZwiftMessagesUseCase(
             IMessageEmitter emitter,
             MonitoringEvents monitoringEvents,
             IMessageReceiver messageReceiver, 
-            HandleRiderPositionUseCase handleRiderPositionUseCase)
+            HandleRiderPositionUseCase handleRiderPositionUseCase, 
+            HandleAvailableTurnsUseCase handleAvailableTurnsUseCase)
         {
             _emitter = emitter;
             _monitoringEvents = monitoringEvents;
             _messageReceiver = messageReceiver;
             _handleRiderPositionUseCase = handleRiderPositionUseCase;
+            _handleAvailableTurnsUseCase = handleAvailableTurnsUseCase;
         }
-        
+
         public void Execute(CancellationToken token)
         {
-
             while (!token.IsCancellationRequested)
             {
                 // Dequeue will block if there are no messages in the queue
@@ -49,30 +49,7 @@ namespace RoadCaptain.UseCases
                 }
                 else if (message is ZwiftCommandAvailableMessage commandAvailable)
                 {
-                    switch (commandAvailable.Type.Trim().ToLower())
-                    {
-                        case "turnleft":
-                            if (!_availableTurnCommands.Contains(TurnDirection.Left))
-                            {
-                                _availableTurnCommands.Add(TurnDirection.Left);
-                                _monitoringEvents.AvailableTurns(_availableTurnCommands);
-                            }
-                            break;
-                        case "turnright":
-                            if (!_availableTurnCommands.Contains(TurnDirection.Right))
-                            {
-                                _availableTurnCommands.Add(TurnDirection.Right);
-                                _monitoringEvents.AvailableTurns(_availableTurnCommands);
-                            }
-                            break;
-                        case "gostraight":
-                            if (!_availableTurnCommands.Contains(TurnDirection.StraightOn))
-                            {
-                                _availableTurnCommands.Add(TurnDirection.StraightOn);
-                                _monitoringEvents.AvailableTurns(_availableTurnCommands);
-                            }
-                            break;
-                    }
+                    _handleAvailableTurnsUseCase.Execute(commandAvailable);
                 }
                 else if (message is ZwiftPowerUpMessage powerUp)
                 {

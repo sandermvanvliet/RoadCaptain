@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Net.Sockets;
@@ -53,7 +52,7 @@ namespace RoadCaptain
 
         public static void PowerUpAvailable(this MonitoringEvents monitoringEvents, string type)
         {
-            monitoringEvents.Information("Received available power-up {Type}", type);
+            monitoringEvents.Debug("Received available power-up {Type}", type);
         }
     }
 }
