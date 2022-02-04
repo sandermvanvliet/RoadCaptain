@@ -46,7 +46,7 @@ namespace RoadCaptain.Adapters
         /// <param name="packet">The packet to process</param>
         public void Assemble(TcpPacket packet)
         {
-            packet = packet ?? throw new ArgumentException(nameof(packet));
+            packet = packet ?? throw new ArgumentNullException(nameof(packet));
 
             if (_startingSequenceNumber == 0)
             {

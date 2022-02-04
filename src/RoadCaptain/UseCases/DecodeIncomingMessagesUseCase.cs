@@ -17,7 +17,6 @@ namespace RoadCaptain.UseCases
         private readonly IMessageReceiver _messageReceiver;
         private readonly IMessageEmitter _messageEmitter;
         private readonly Pipe _pipe;
-        private long _messageSequenceNumber = 1;
 
         public DecodeIncomingMessagesUseCase(
             IMessageReceiver messageReceiver,
@@ -100,7 +99,7 @@ namespace RoadCaptain.UseCases
                         {
                             if (payload.Length > 0)
                             {
-                                _messageEmitter.EmitMessageFromBytes(payload, _messageSequenceNumber);
+                                _messageEmitter.EmitMessageFromBytes(payload);
                             }
                         }
 

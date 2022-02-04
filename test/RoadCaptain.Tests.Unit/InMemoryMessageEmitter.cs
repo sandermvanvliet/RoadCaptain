@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading;
 using RoadCaptain.Ports;
 
@@ -17,7 +16,7 @@ namespace RoadCaptain.Tests.Unit
         private readonly Queue<ZwiftMessage> _messagesToEmit = new();
         private readonly AutoResetEvent _autoResetEvent;
 
-        public void EmitMessageFromBytes(byte[] payload, long sequenceNumber)
+        public void EmitMessageFromBytes(byte[] payload)
         {
             Messages.Add(payload);
         }
@@ -41,10 +40,6 @@ namespace RoadCaptain.Tests.Unit
         {
             _messagesToEmit.Enqueue(message);
             _autoResetEvent.Set();
-        }
-
-        public void SubscribeOnPing(Action<int> callback)
-        {
         }
     }
 }

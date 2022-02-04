@@ -37,7 +37,7 @@ namespace RoadCaptain.Adapters
             {
                 turns = JsonConvert.DeserializeObject<List<SegmentTurns>>(File.ReadAllText(_tracksPath));
             }
-            catch (Exception e)
+            catch 
             {
                 Debugger.Break();
                 throw;

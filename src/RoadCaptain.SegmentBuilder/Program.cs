@@ -21,7 +21,7 @@ namespace RoadCaptain.SegmentBuilder
             new Program().Run(gpxDirectory);
         }
 
-        private List<Segment> _segments = new List<Segment>();
+        private List<Segment> _segments = new();
 
         public void Run(string gpxDirectory)
         {
@@ -95,9 +95,9 @@ namespace RoadCaptain.SegmentBuilder
 
         private bool SplitSegmentsAndUpdateSegmentList()
         {
-            var result = SplitSegmentsForOverlaps(_segments);
+            var (toRemove, toAdd) = SplitSegmentsForOverlaps(_segments);
 
-            foreach (var segment in result.toRemove)
+            foreach (var segment in toRemove)
             {
                 if (_segments.Remove(segment))
                 {
@@ -109,13 +109,13 @@ namespace RoadCaptain.SegmentBuilder
                 }
             }
 
-            foreach (var segment in result.toAdd)
+            foreach (var segment in toAdd)
             {
                 Console.WriteLine($"{segment.Id} was added");
                 _segments.Add(segment);
             }
 
-            return result.toRemove.Any();
+            return toRemove.Any();
         }
 
         private (List<Segment> toRemove, List<Segment> toAdd) SplitSegmentsForOverlaps(List<Segment> segments)

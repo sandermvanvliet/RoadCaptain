@@ -21,11 +21,11 @@ namespace RoadCaptain.Adapters
             _monitoringEvents = monitoringEvents;
         }
 
-        public void EmitMessageFromBytes(byte[] payload, long sequenceNumber)
+        public void EmitMessageFromBytes(byte[] payload)
         {
             if (payload == null || payload.Length == 0)
             {
-                _monitoringEvents.Debug("Ignoring empty message payload for sequence no {SequenceNumber}", sequenceNumber);
+                _monitoringEvents.Debug("Ignoring empty message payload");
                 return;
             }
 
