@@ -2,7 +2,7 @@
 
 namespace RoadCaptain.Adapters
 {
-    public class TokenResponse
+    internal class TokenResponse
     {
         [JsonProperty("access_token")]
         public string AccessToken { get; set; }

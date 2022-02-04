@@ -7,7 +7,7 @@ using RoadCaptain.Ports;
 
 namespace RoadCaptain.Adapters
 {
-    public class RequestTokenFromApi : IRequestToken
+    internal class RequestTokenFromApi : IRequestToken
     {
         private readonly HttpClient _httpClient;
 

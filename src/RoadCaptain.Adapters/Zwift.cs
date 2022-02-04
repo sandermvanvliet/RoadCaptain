@@ -8,7 +8,7 @@ using RoadCaptain.Ports;
 
 namespace RoadCaptain.Adapters
 {
-    public class Zwift : IZwift
+    internal class Zwift : IZwift
     {
         private const string RelayRequestPayload = "{\"mobileEnvironment\":{\"appBuild\":1276,\"appDisplayName\":\"Companion\",\"appVersion\":\"3.29.0\",\"systemHardware\":\"Google sdk_gphone_x86_64\",\"systemOS\":\"Android\",\"systemOSVersion\":\"11 (API 30)\"},\"phoneAddress\":\"##IP##\",\"port\":21587,\"protocol\":\"TCP\"}";
         private readonly HttpClient _httpClient;
