@@ -1,0 +1,7 @@
+{
+    "modules": [
+        {
+            "type": "RoadCaptain.Adapters.AdaptersModule, RoadCaptain.Adapters"
+        }
+    ]
+}
