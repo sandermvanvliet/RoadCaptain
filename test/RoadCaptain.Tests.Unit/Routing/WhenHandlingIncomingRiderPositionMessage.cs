@@ -34,7 +34,7 @@ namespace RoadCaptain.Tests.Unit.Routing
                 monitoringEvents,
                 new InMemoryMessageReceiver(),
                 _handleRiderPositionUseCase,
-                new HandleAvailableTurnsUseCase(monitoringEvents, gameStateDispatcher));
+                new HandleAvailableTurnsUseCase(gameStateDispatcher));
 
             _currentSegmentFieldInfo = _handleRiderPositionUseCase.GetType().GetField("_currentSegment", BindingFlags.NonPublic | BindingFlags.Instance);
         }

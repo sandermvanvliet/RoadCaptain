@@ -6,12 +6,10 @@ namespace RoadCaptain.UseCases
     public class HandleAvailableTurnsUseCase
     {
         private readonly List<TurnDirection> _availableTurnCommands = new();
-        private readonly MonitoringEvents _monitoringEvents;
         private readonly IGameStateDispatcher _dispatcher;
 
-        public HandleAvailableTurnsUseCase(MonitoringEvents monitoringEvents, IGameStateDispatcher dispatcher)
+        public HandleAvailableTurnsUseCase(IGameStateDispatcher dispatcher)
         {
-            _monitoringEvents = monitoringEvents;
             _dispatcher = dispatcher;
         }
 
