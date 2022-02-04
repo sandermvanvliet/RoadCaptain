@@ -30,14 +30,17 @@ namespace RoadCaptain.Adapters
 
         public void SegmentChanged(Segment segment)
         {
-            if (CurrentSegment == null)
+            if(segment != null)
             {
-                _monitoringEvents.Information("Starting in {Segment}", segment.Id);
-            }
-            else
-            {
-                _monitoringEvents.Information("Moved from {CurrentSegment} to {NewSegment}", CurrentSegment?.Id,
-                    segment.Id);
+                if (CurrentSegment == null)
+                {
+                    _monitoringEvents.Information("Starting in {Segment}", segment.Id);
+                }
+                else
+                {
+                    _monitoringEvents.Information("Moved from {CurrentSegment} to {NewSegment}", CurrentSegment?.Id,
+                        segment.Id);
+                }
             }
 
             CurrentSegment = segment;
@@ -64,10 +67,10 @@ namespace RoadCaptain.Adapters
 
         public void DirectionChanged(SegmentDirection direction)
         {
-            _monitoringEvents.Information("Direction is now {Direction}", direction);
-
             if (direction != SegmentDirection.Unknown)
             {
+                _monitoringEvents.Information("Direction is now {Direction}", direction);
+
                 var turns = CurrentSegment.NextSegments(direction);
 
                 // Only show turns if we have actual options.
