@@ -34,12 +34,14 @@ namespace RoadCaptain.Monitor
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pictureBoxMap = new System.Windows.Forms.PictureBox();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.label1 = new System.Windows.Forms.Label();
-            this.textBoxCurrentSegment = new System.Windows.Forms.TextBox();
+            this.label3 = new System.Windows.Forms.Label();
+            this.textBoxAvailableTurns = new System.Windows.Forms.TextBox();
             this.textBoxCurrentDirection = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
-            this.textBoxAvailableTurns = new System.Windows.Forms.TextBox();
-            this.label3 = new System.Windows.Forms.Label();
+            this.textBoxCurrentSegment = new System.Windows.Forms.TextBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.textBoxAvailableCommands = new System.Windows.Forms.TextBox();
+            this.label4 = new System.Windows.Forms.Label();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxMap)).BeginInit();
             this.panel1.SuspendLayout();
@@ -87,6 +89,8 @@ namespace RoadCaptain.Monitor
             // 
             this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.panel1.Controls.Add(this.label4);
+            this.panel1.Controls.Add(this.textBoxAvailableCommands);
             this.panel1.Controls.Add(this.label3);
             this.panel1.Controls.Add(this.textBoxAvailableTurns);
             this.panel1.Controls.Add(this.textBoxCurrentDirection);
@@ -98,26 +102,27 @@ namespace RoadCaptain.Monitor
             this.panel1.Size = new System.Drawing.Size(2273, 222);
             this.panel1.TabIndex = 2;
             // 
-            // label1
+            // label3
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(23, 23);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(148, 25);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "Current segment:";
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(63, 91);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(132, 25);
+            this.label3.TabIndex = 5;
+            this.label3.Text = "Available turns:";
+            this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // textBoxCurrentSegment
+            // textBoxAvailableTurns
             // 
-            this.textBoxCurrentSegment.Location = new System.Drawing.Point(177, 20);
-            this.textBoxCurrentSegment.Name = "textBoxCurrentSegment";
-            this.textBoxCurrentSegment.ReadOnly = true;
-            this.textBoxCurrentSegment.Size = new System.Drawing.Size(761, 31);
-            this.textBoxCurrentSegment.TabIndex = 1;
+            this.textBoxAvailableTurns.Location = new System.Drawing.Point(201, 88);
+            this.textBoxAvailableTurns.Name = "textBoxAvailableTurns";
+            this.textBoxAvailableTurns.ReadOnly = true;
+            this.textBoxAvailableTurns.Size = new System.Drawing.Size(761, 31);
+            this.textBoxAvailableTurns.TabIndex = 4;
             // 
             // textBoxCurrentDirection
             // 
-            this.textBoxCurrentDirection.Location = new System.Drawing.Point(177, 57);
+            this.textBoxCurrentDirection.Location = new System.Drawing.Point(201, 51);
             this.textBoxCurrentDirection.Name = "textBoxCurrentDirection";
             this.textBoxCurrentDirection.ReadOnly = true;
             this.textBoxCurrentDirection.Size = new System.Drawing.Size(761, 31);
@@ -126,28 +131,48 @@ namespace RoadCaptain.Monitor
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(23, 60);
+            this.label2.Location = new System.Drawing.Point(47, 54);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(148, 25);
             this.label2.TabIndex = 2;
             this.label2.Text = "Current direction:";
+            this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // textBoxAvailableTurns
+            // textBoxCurrentSegment
             // 
-            this.textBoxAvailableTurns.Location = new System.Drawing.Point(177, 94);
-            this.textBoxAvailableTurns.Name = "textBoxAvailableTurns";
-            this.textBoxAvailableTurns.ReadOnly = true;
-            this.textBoxAvailableTurns.Size = new System.Drawing.Size(761, 31);
-            this.textBoxAvailableTurns.TabIndex = 4;
+            this.textBoxCurrentSegment.Location = new System.Drawing.Point(201, 14);
+            this.textBoxCurrentSegment.Name = "textBoxCurrentSegment";
+            this.textBoxCurrentSegment.ReadOnly = true;
+            this.textBoxCurrentSegment.Size = new System.Drawing.Size(761, 31);
+            this.textBoxCurrentSegment.TabIndex = 1;
             // 
-            // label3
+            // label1
             // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(23, 97);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(132, 25);
-            this.label3.TabIndex = 5;
-            this.label3.Text = "Available turns:";
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(47, 17);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(148, 25);
+            this.label1.TabIndex = 0;
+            this.label1.Text = "Current segment:";
+            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // textBoxAvailableCommands
+            // 
+            this.textBoxAvailableCommands.Location = new System.Drawing.Point(201, 125);
+            this.textBoxAvailableCommands.Name = "textBoxAvailableCommands";
+            this.textBoxAvailableCommands.ReadOnly = true;
+            this.textBoxAvailableCommands.Size = new System.Drawing.Size(761, 31);
+            this.textBoxAvailableCommands.TabIndex = 6;
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(14, 128);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(181, 25);
+            this.label4.TabIndex = 7;
+            this.label4.Text = "Available commands:";
+            this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // MainWindow
             // 
@@ -160,6 +185,7 @@ namespace RoadCaptain.Monitor
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "MainWindow";
             this.Text = "RoadCaptain";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainWindow_FormClosing);
             this.Load += new System.EventHandler(this.MainWindow_Load);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
@@ -184,6 +210,8 @@ namespace RoadCaptain.Monitor
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox textBoxCurrentSegment;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.TextBox textBoxAvailableCommands;
     }
 }
 

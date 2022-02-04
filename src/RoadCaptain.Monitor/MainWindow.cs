@@ -2,7 +2,10 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using RoadCaptain.Ports;
 
@@ -10,16 +13,27 @@ namespace RoadCaptain.Monitor
 {
     public partial class MainWindow : Form
     {
-        private readonly MonitoringEvents _monitoringEvents;
         private readonly ISegmentStore _segmentStore;
+        private readonly IGameStateReceiver _gameStateReceiver;
         private List<Segment> _segments;
+        private readonly CancellationTokenSource _tokenSource = new();
+        private Task _receiverTask;
+        private TrackPoint _previousPoint;
+        private Offsets _overallOffsets;
 
         public MainWindow(
-            MonitoringEvents monitoringEvents,
-            ISegmentStore segmentStore)
+            ISegmentStore segmentStore,
+            IGameStateReceiver gameStateReceiver)
         {
-            _monitoringEvents = monitoringEvents;
             _segmentStore = segmentStore;
+            _gameStateReceiver = gameStateReceiver;
+
+            _gameStateReceiver.Register(
+                UpdatePosition,
+                UpdateCurrentSegemnt,
+                UpdateAvailableTurns,
+                UpdateDirection,
+                UpdateTurnCommands);
 
             InitializeComponent();
         }
@@ -36,12 +50,18 @@ namespace RoadCaptain.Monitor
 
             // Paint segments
             DrawSegments();
+
+            _receiverTask = Task.Factory.StartNew(() =>
+            {
+                _gameStateReceiver.Start(_tokenSource.Token);
+            });
         }
 
         private void DrawSegments()
         {
             var image = new Bitmap(pictureBoxMap.Width, pictureBoxMap.Height);
-            var graphics = Graphics.FromImage(image);
+
+            using var graphics = Graphics.FromImage(image);
 
             var segmentsWithOffsets = _segments
                 .Select(seg => new
@@ -58,13 +78,13 @@ namespace RoadCaptain.Monitor
                 })
                 .ToList();
 
-            var overallOffsets = new Offsets(
+            _overallOffsets = new Offsets(
                 pictureBoxMap.Width,
                 segmentsWithOffsets.SelectMany(s => s.GameCoordinates).ToList());
 
             foreach (var segment in segmentsWithOffsets)
             {
-                DrawSegment(overallOffsets, segment.GameCoordinates, graphics);
+                DrawSegment(_overallOffsets, segment.GameCoordinates, graphics);
             }
 
             pictureBoxMap.Image = image;
@@ -76,65 +96,105 @@ namespace RoadCaptain.Monitor
             {
                 var previousPoint = data[index-1];
                 var point = data[index];
-                var translatedX = (offsets.OffsetX + (float)point.Latitude);
-                var translatedY = (offsets.OffsetY + (float)point.Longitude);
-
-                var scaledX = (translatedX * offsets.ScaleFactor);
-                var scaledY = (translatedY * offsets.ScaleFactor);
-
-                var previousTranslatedX = (offsets.OffsetX + (float)previousPoint.Latitude);
-                var previousTranslatedY = (offsets.OffsetY + (float)previousPoint.Longitude);
-                var previousScaledX = (previousTranslatedX * offsets.ScaleFactor);
-                var previousScaledY = (previousTranslatedY * offsets.ScaleFactor);
-
-                try
-                {
-                    graphics.DrawLine(Pens.Red, (int)previousScaledX, (int)previousScaledY, (int)scaledX, (int)scaledY);
-                }
-                catch (ArgumentOutOfRangeException)
-                {
-                    Debugger.Break();
-                }
+                
+                DrawSegmentLine(offsets, graphics, point, previousPoint, Pens.Red);
             }
         }
-    }
 
-    public class Offsets
-    {
-        public Offsets(float imageWidth, List<TrackPoint> data)
+        private static void DrawSegmentLine(Offsets offsets, Graphics graphics, TrackPoint point, TrackPoint previousPoint, Pen pen)
         {
-            ImageWidth = imageWidth;
+            var translatedX = (offsets.OffsetX + (float)point.Latitude);
+            var translatedY = (offsets.OffsetY + (float)point.Longitude);
 
-            MinX = (float)data.Min(p => p.Latitude);
-            MaxX = (float)data.Max(p => p.Latitude);
-                   
-            MinY = (float)data.Min(p => p.Longitude);
-            MaxY = (float)data.Max(p => p.Longitude);
+            var scaledX = (translatedX * offsets.ScaleFactor);
+            var scaledY = (translatedY * offsets.ScaleFactor);
+
+            var previousTranslatedX = (offsets.OffsetX + (float)previousPoint.Latitude);
+            var previousTranslatedY = (offsets.OffsetY + (float)previousPoint.Longitude);
+            var previousScaledX = (previousTranslatedX * offsets.ScaleFactor);
+            var previousScaledY = (previousTranslatedY * offsets.ScaleFactor);
+
+            try
+            {
+                graphics.DrawLine(pen, (int)previousScaledX, (int)previousScaledY, (int)scaledX, (int)scaledY);
+            }
+            catch (ArgumentOutOfRangeException)
+            {
+                Debugger.Break();
+            }
         }
 
-        public float ImageWidth { get; }
-
-        public float MinX { get; }
-        public float MaxX { get; }
-        public float MinY { get; }
-        public float MaxY { get; }
-        public float RangeX => MaxX - MinX;
-        public float RangeY => MaxY - MinY;
-
-        // If minX is negative the offset is positive because we shift everything to the right, if it is positive the offset is negative beause we shift to the left
-        public float OffsetX => -MinX;
-        public float OffsetY => -MinY;
-
-        public float ScaleFactor
+        private void UpdateAvailableTurns(List<Turn> turns)
         {
-            get
+            var text = string.Join(
+                ", ",
+                turns.Select(t => $"{t.Direction} => {t.SegmentId}"));
+
+            textBoxAvailableTurns.Invoke((Action)(() => textBoxAvailableTurns.Text = text));
+        }
+
+        private void UpdateCurrentSegemnt(string segmentId)
+        {
+            var text = string.Empty;
+
+            var segment = _segments.SingleOrDefault(s => s.Id == segmentId);
+
+            if (segment != null)
             {
-                if (RangeY > RangeX)
+                text = segment.Id;
+            }
+            
+            textBoxCurrentSegment.Invoke((Action)(() => textBoxCurrentSegment.Text = text));
+        }
+
+        private void UpdatePosition(TrackPoint point)
+        {
+            pictureBoxMap.Invoke((Action)(() => DrawPosition(point)));
+        }
+
+        private void DrawPosition(TrackPoint point)
+        {
+            var gamePoint = TrackPoint.LatLongToGame(point.Longitude, -point.Latitude, point.Altitude);
+
+            if (_previousPoint != null)
+            {
+                var image = pictureBoxMap.Image;
+
+                using (var graphics = Graphics.FromImage(image))
                 {
-                    return (ImageWidth - 1) / RangeY;
+                    DrawSegmentLine(_overallOffsets, graphics, gamePoint, _previousPoint, Pens.Green);
                 }
 
-                return (ImageWidth - 1) / RangeX;
+                pictureBoxMap.Image = image;
+            }
+
+            _previousPoint = gamePoint;
+        }
+
+        private void UpdateTurnCommands(List<TurnDirection> commands)
+        {
+            var text = string.Join(
+                ", ",
+                commands.Select(t =>t.ToString()));
+
+            textBoxAvailableCommands.Invoke((Action)(() => textBoxAvailableCommands.Text = text));
+        }
+
+        private void UpdateDirection(SegmentDirection direction)
+        {
+            textBoxCurrentDirection.Invoke((Action)(() => textBoxCurrentDirection.Text = direction.ToString()));
+        }
+
+        private void MainWindow_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            _tokenSource.Cancel();
+
+            try
+            {
+                _receiverTask.Wait(TimeSpan.FromSeconds(2));
+            }
+            catch (OperationCanceledException)
+            {   
             }
         }
     }

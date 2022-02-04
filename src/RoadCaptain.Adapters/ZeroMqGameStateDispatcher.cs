@@ -11,7 +11,8 @@ namespace RoadCaptain.Adapters
 
         public ZeroMqGameStateDispatcher(MonitoringEvents monitoringEvents) : base(monitoringEvents)
         {
-            _publishSocket = new PublisherSocket("tcp://*:7001");
+            _publishSocket = new PublisherSocket();
+            _publishSocket.Bind("tcp://localhost:7001");
         }
 
         protected override void Enqueue(string topic, object data)
@@ -19,7 +20,7 @@ namespace RoadCaptain.Adapters
             var message = new Message
             {
                 TimeStamp = DateTime.UtcNow,
-                Data = data
+                Data = JsonConvert.SerializeObject(data)
             };
 
             var serializedContent = JsonConvert.SerializeObject(message);
@@ -34,6 +35,6 @@ namespace RoadCaptain.Adapters
     {
         public string Version => "0.1";
         public DateTime TimeStamp { get; set; }
-        public object Data { get; set; }
+        public string Data { get; set; }
     }
 }

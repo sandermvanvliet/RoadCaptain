@@ -20,13 +20,16 @@ namespace RoadCaptain.Adapters
         /// </summary>
         public string CaptureFilePath { get; set; }
 
+        public string GameStateBacking { get; set; } = "in-memory";
+
         protected override void Load(ContainerBuilder builder)
         {
             builder
                 .RegisterAssemblyTypes(ThisAssembly)
                 .AsImplementedInterfaces()
                 .Except<MessageReceiverFromSocket>()
-                .Except<MessageEmitterToQueue>();
+                .Except<MessageEmitterToQueue>()
+                .Except<IGameStateDispatcher>();
 
             if ("socket".Equals(MessageReceiverSource, StringComparison.InvariantCultureIgnoreCase))
             {
@@ -57,6 +60,26 @@ namespace RoadCaptain.Adapters
             {
                 throw new InvalidOperationException(
                     $"{nameof(MessageReceiverSource)} must be set to either 'socket' or 'file'");
+            }
+
+            if ("in-memory".Equals(GameStateBacking, StringComparison.InvariantCultureIgnoreCase))
+            {
+                builder
+                    .RegisterType<InMemoryGameStateDispatcher>()
+                    .As<IGameStateDispatcher>()
+                    .SingleInstance();
+            }
+            else if ("zeromq".Equals(GameStateBacking, StringComparison.InvariantCultureIgnoreCase))
+            {
+                builder
+                    .RegisterType<ZeroMqGameStateDispatcher>()
+                    .As<IGameStateDispatcher>()
+                    .SingleInstance();
+            }
+            else
+            {
+                throw new InvalidOperationException(
+                    $"{nameof(GameStateBacking)} must be set to either 'in-memory' or 'zeromq'");
             }
 
             builder

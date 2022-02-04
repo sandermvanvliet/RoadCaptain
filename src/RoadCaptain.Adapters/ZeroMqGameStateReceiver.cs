@@ -28,7 +28,7 @@ namespace RoadCaptain.Adapters
 
         public void Start(CancellationToken token)
         {
-            _subscriberSocket.Connect("tcp://*:7001");
+            _subscriberSocket.Connect("tcp://localhost:7001");
 
             _subscriberSocket.Subscribe("positionChanged");
             _subscriberSocket.Subscribe("segmentChanged");
@@ -94,7 +94,7 @@ namespace RoadCaptain.Adapters
             {
                 var message = JsonConvert.DeserializeObject<Message>(serializedContent);
 
-                handle((TMessage)message.Data);
+                handle(JsonConvert.DeserializeObject<TMessage>(message.Data));
             }
             catch (Exception e)
             {

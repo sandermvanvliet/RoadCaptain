@@ -41,6 +41,9 @@ namespace RoadCaptain.UseCases
             // Store previous position so we can debounce on the next update.
             _previousPositionInGame = position;
 
+            // Update game state
+            _dispatcher.PositionChanged(position);
+
             // We don't want to load this in the constructor as that
             // may happen way too soon before initialisation is fully
             // complete and that leads to weird errors.
