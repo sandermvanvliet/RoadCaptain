@@ -7,21 +7,28 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using RoadCaptain.Ports;
 using SkiaSharp;
+using SkiaSharp.Views.Desktop;
 
 namespace RoadCaptain.Monitor
 {
     public partial class MainWindow : Form
     {
-        private readonly ISegmentStore _segmentStore;
         private readonly IGameStateReceiver _gameStateReceiver;
-        private List<Segment> _segments;
-        private readonly CancellationTokenSource _tokenSource = new();
-        private Task _receiverTask;
-        private Offsets _overallOffsets;
-        private readonly List<SKPath> _segmentPaths = new();
-        private readonly SKPaint _segmentPathPaint = new() { Color = SKColor.Parse("#ff0000"), Style = SKPaintStyle.Stroke, StrokeWidth = 4 };
-        private readonly SKPaint _riderPathPaint = new() { Color = SKColor.Parse("#0000ff"), Style = SKPaintStyle.Stroke, StrokeWidth = 2 };
         private readonly SKPath _riderPath = new();
+
+        private readonly SKPaint _riderPathPaint = new()
+            { Color = SKColor.Parse("#0000ff"), Style = SKPaintStyle.Stroke, StrokeWidth = 2 };
+
+        private readonly SKPaint _segmentPathPaint = new()
+            { Color = SKColor.Parse("#ff0000"), Style = SKPaintStyle.Stroke, StrokeWidth = 4 };
+
+        private readonly List<SKPath> _segmentPaths = new();
+        private readonly ISegmentStore _segmentStore;
+        private readonly CancellationTokenSource _tokenSource = new();
+        private Offsets _overallOffsets;
+        private TrackPoint _previousRiderPosition;
+        private Task _receiverTask;
+        private List<Segment> _segments;
 
         public MainWindow(
             ISegmentStore segmentStore,
@@ -53,10 +60,7 @@ namespace RoadCaptain.Monitor
             // Paint segments
             CreatePathsForSegments();
 
-            _receiverTask = Task.Factory.StartNew(() =>
-            {
-                _gameStateReceiver.Start(_tokenSource.Token);
-            });
+            _receiverTask = Task.Factory.StartNew(() => { _gameStateReceiver.Start(_tokenSource.Token); });
         }
 
         private void CreatePathsForSegments()
@@ -104,11 +108,11 @@ namespace RoadCaptain.Monitor
 
         private static PointF ScaleAndTranslate(TrackPoint point, Offsets offsets)
         {
-            var translatedX = (offsets.OffsetX + (float)point.Latitude);
-            var translatedY = (offsets.OffsetY + (float)point.Longitude);
+            var translatedX = offsets.OffsetX + (float)point.Latitude;
+            var translatedY = offsets.OffsetY + (float)point.Longitude;
 
-            var scaledX = (translatedX * offsets.ScaleFactor);
-            var scaledY = (translatedY * offsets.ScaleFactor);
+            var scaledX = translatedX * offsets.ScaleFactor;
+            var scaledY = translatedY * offsets.ScaleFactor;
 
             return new PointF(scaledX, scaledY);
         }
@@ -132,22 +136,39 @@ namespace RoadCaptain.Monitor
             {
                 text = segment.Id;
             }
-            
+
             textBoxCurrentSegment.Invoke((Action)(() => textBoxCurrentSegment.Text = text));
         }
 
         private void UpdatePosition(TrackPoint point)
         {
-            var scaledAndTranslated = ScaleAndTranslate(point, _overallOffsets);
+            var currentPoint = TrackPoint.LatLongToGame(point.Longitude, -point.Latitude, point.Altitude);
 
-            _riderPath.MoveTo(scaledAndTranslated.X, scaledAndTranslated.Y);
+            if (_previousRiderPosition != null)
+            {
+                var scaledAndTranslated = ScaleAndTranslate(currentPoint, _overallOffsets);
+                var scaledAndTranslatedPrevious = ScaleAndTranslate(_previousRiderPosition, _overallOffsets);
+
+                _riderPath.AddPoly(
+                    new[]
+                    {
+                        new SKPoint(scaledAndTranslatedPrevious.X, scaledAndTranslatedPrevious.Y),
+                        new SKPoint(scaledAndTranslated.X, scaledAndTranslated.Y)
+                    },
+                    false);
+            }
+
+            _previousRiderPosition = currentPoint;
+
+            // Force redraw of the canvas
+            skControl1.Invalidate();
         }
 
         private void UpdateTurnCommands(List<TurnDirection> commands)
         {
             var text = string.Join(
                 ", ",
-                commands.Select(t =>t.ToString()));
+                commands.Select(t => t.ToString()));
 
             textBoxAvailableCommands.Invoke((Action)(() => textBoxAvailableCommands.Text = text));
         }
@@ -166,13 +187,14 @@ namespace RoadCaptain.Monitor
                 _receiverTask.Wait(TimeSpan.FromSeconds(2));
             }
             catch (OperationCanceledException)
-            {   
+            {
             }
         }
 
-        private void skControl1_PaintSurface(object sender, SkiaSharp.Views.Desktop.SKPaintSurfaceEventArgs args)
+        private void skControl1_PaintSurface(object sender, SKPaintSurfaceEventArgs args)
         {
             args.Surface.Canvas.Clear();
+
             foreach (var skPath in _segmentPaths)
             {
                 args.Surface.Canvas.DrawPath(skPath, _segmentPathPaint);
@@ -181,36 +203,6 @@ namespace RoadCaptain.Monitor
             args.Surface.Canvas.DrawPath(_riderPath, _riderPathPaint);
 
             args.Surface.Canvas.Flush();
-
-            //SKImageInfo info = args.Info;
-            //SKSurface surface = args.Surface;
-            //SKCanvas canvas = surface.Canvas;
-
-            //canvas.Clear();
-
-            //SKPaint paint = new SKPaint
-            //{
-            //    Style = SKPaintStyle.Stroke,
-            //    Color = Color.Red.ToSKColor(),
-            //    StrokeWidth = 25
-            //};
-
-            //var path = new SKPath();
-            //path.AddPoly(new []
-            //{
-            //    new SKPoint(100, 100),
-            //    new SKPoint(100, 150),
-            //    new SKPoint(150, 150)
-            //}, false);
-
-            //canvas.DrawPath(path, _segmentPathPaint);
-            //canvas.DrawCircle(info.Width / 2, info.Height / 2, 100, paint);
-
-            //paint.Style = SKPaintStyle.Fill;
-            //paint.Color = SKColors.Blue;
-            //canvas.DrawCircle(args.Info.Width / 2, args.Info.Height / 2, 100, paint);
-
-            //canvas.Flush();
         }
 
         private void skControl1_SizeChanged(object sender, EventArgs e)
