@@ -20,8 +20,11 @@ namespace RoadCaptain.Monitor
             { Color = SKColor.Parse("#0000ff"), Style = SKPaintStyle.Stroke, StrokeWidth = 2 };
 
         private readonly SKPaint _segmentPathPaint = new()
-            { Color = SKColor.Parse("#ff0000"), Style = SKPaintStyle.Stroke, StrokeWidth = 4 };
+            { Color = SKColor.Parse("#000000"), Style = SKPaintStyle.Stroke, StrokeWidth = 4 };
 
+        private readonly SKPaint _riderPositionPaint = new()
+            { Color = SKColor.Parse("#ff0000"), Style = SKPaintStyle.Stroke, StrokeWidth = 4 };
+        
         private readonly List<SKPath> _segmentPaths = new();
         private readonly ISegmentStore _segmentStore;
         private readonly CancellationTokenSource _tokenSource = new();
@@ -201,6 +204,14 @@ namespace RoadCaptain.Monitor
             }
 
             args.Surface.Canvas.DrawPath(_riderPath, _riderPathPaint);
+
+            if (_previousRiderPosition != null)
+            {
+                // At this point the previous position is already the current position. See UpdatePosition()
+                var scaledAndTranslated = ScaleAndTranslate(_previousRiderPosition, _overallOffsets);
+                const int radius = 15;
+                args.Surface.Canvas.DrawCircle(scaledAndTranslated.X, scaledAndTranslated.Y, radius, _riderPositionPaint);
+            }
 
             args.Surface.Canvas.Flush();
         }
