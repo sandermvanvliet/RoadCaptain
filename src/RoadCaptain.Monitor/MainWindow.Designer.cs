@@ -32,18 +32,17 @@ namespace RoadCaptain.Monitor
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.pictureBoxMap = new System.Windows.Forms.PictureBox();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.label4 = new System.Windows.Forms.Label();
+            this.textBoxAvailableCommands = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
             this.textBoxAvailableTurns = new System.Windows.Forms.TextBox();
             this.textBoxCurrentDirection = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.textBoxCurrentSegment = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
-            this.textBoxAvailableCommands = new System.Windows.Forms.TextBox();
-            this.label4 = new System.Windows.Forms.Label();
+            this.skControl1 = new SkiaSharp.Views.Desktop.SKControl();
             this.menuStrip1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxMap)).BeginInit();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -73,18 +72,6 @@ namespace RoadCaptain.Monitor
             this.exitToolStripMenuItem.Text = "E&xit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
-            // pictureBoxMap
-            // 
-            this.pictureBoxMap.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.pictureBoxMap.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pictureBoxMap.Location = new System.Drawing.Point(12, 36);
-            this.pictureBoxMap.Name = "pictureBoxMap";
-            this.pictureBoxMap.Size = new System.Drawing.Size(2273, 1173);
-            this.pictureBoxMap.TabIndex = 1;
-            this.pictureBoxMap.TabStop = false;
-            // 
             // panel1
             // 
             this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
@@ -101,6 +88,24 @@ namespace RoadCaptain.Monitor
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(2273, 222);
             this.panel1.TabIndex = 2;
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(14, 128);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(181, 25);
+            this.label4.TabIndex = 7;
+            this.label4.Text = "Available commands:";
+            this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // textBoxAvailableCommands
+            // 
+            this.textBoxAvailableCommands.Location = new System.Drawing.Point(201, 125);
+            this.textBoxAvailableCommands.Name = "textBoxAvailableCommands";
+            this.textBoxAvailableCommands.ReadOnly = true;
+            this.textBoxAvailableCommands.Size = new System.Drawing.Size(761, 31);
+            this.textBoxAvailableCommands.TabIndex = 6;
             // 
             // label3
             // 
@@ -156,31 +161,26 @@ namespace RoadCaptain.Monitor
             this.label1.Text = "Current segment:";
             this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // textBoxAvailableCommands
+            // skControl1
             // 
-            this.textBoxAvailableCommands.Location = new System.Drawing.Point(201, 125);
-            this.textBoxAvailableCommands.Name = "textBoxAvailableCommands";
-            this.textBoxAvailableCommands.ReadOnly = true;
-            this.textBoxAvailableCommands.Size = new System.Drawing.Size(761, 31);
-            this.textBoxAvailableCommands.TabIndex = 6;
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(14, 128);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(181, 25);
-            this.label4.TabIndex = 7;
-            this.label4.Text = "Available commands:";
-            this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.skControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.skControl1.Location = new System.Drawing.Point(12, 36);
+            this.skControl1.Name = "skControl1";
+            this.skControl1.Size = new System.Drawing.Size(2273, 1173);
+            this.skControl1.TabIndex = 3;
+            this.skControl1.Text = "skControl1";
+            this.skControl1.PaintSurface += new System.EventHandler<SkiaSharp.Views.Desktop.SKPaintSurfaceEventArgs>(this.skControl1_PaintSurface);
+            this.skControl1.SizeChanged += new System.EventHandler(this.skControl1_SizeChanged);
             // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(2297, 1449);
+            this.Controls.Add(this.skControl1);
             this.Controls.Add(this.panel1);
-            this.Controls.Add(this.pictureBoxMap);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "MainWindow";
@@ -189,7 +189,6 @@ namespace RoadCaptain.Monitor
             this.Load += new System.EventHandler(this.MainWindow_Load);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxMap)).EndInit();
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             this.ResumeLayout(false);
@@ -202,7 +201,6 @@ namespace RoadCaptain.Monitor
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
-        private System.Windows.Forms.PictureBox pictureBoxMap;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TextBox textBoxAvailableTurns;
@@ -212,6 +210,7 @@ namespace RoadCaptain.Monitor
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.TextBox textBoxAvailableCommands;
+        private SkiaSharp.Views.Desktop.SKControl skControl1;
     }
 }
 

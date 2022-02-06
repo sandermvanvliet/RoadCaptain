@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Drawing;
-using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using RoadCaptain.Ports;
+using SkiaSharp;
 
 namespace RoadCaptain.Monitor
 {
@@ -18,8 +17,11 @@ namespace RoadCaptain.Monitor
         private List<Segment> _segments;
         private readonly CancellationTokenSource _tokenSource = new();
         private Task _receiverTask;
-        private TrackPoint _previousPoint;
         private Offsets _overallOffsets;
+        private readonly List<SKPath> _segmentPaths = new();
+        private readonly SKPaint _segmentPathPaint = new() { Color = SKColor.Parse("#ff0000"), Style = SKPaintStyle.Stroke, StrokeWidth = 4 };
+        private readonly SKPaint _riderPathPaint = new() { Color = SKColor.Parse("#0000ff"), Style = SKPaintStyle.Stroke, StrokeWidth = 2 };
+        private readonly SKPath _riderPath = new();
 
         public MainWindow(
             ISegmentStore segmentStore,
@@ -49,7 +51,7 @@ namespace RoadCaptain.Monitor
             _segments = _segmentStore.LoadSegments();
 
             // Paint segments
-            DrawSegments();
+            CreatePathsForSegments();
 
             _receiverTask = Task.Factory.StartNew(() =>
             {
@@ -57,11 +59,9 @@ namespace RoadCaptain.Monitor
             });
         }
 
-        private void DrawSegments()
+        private void CreatePathsForSegments()
         {
-            var image = new Bitmap(pictureBoxMap.Width, pictureBoxMap.Height);
-
-            using var graphics = Graphics.FromImage(image);
+            _segmentPaths.Clear();
 
             var segmentsWithOffsets = _segments
                 .Select(seg => new
@@ -74,34 +74,35 @@ namespace RoadCaptain.Monitor
                 {
                     x.Segment,
                     x.GameCoordinates,
-                    Offsets = new Offsets(pictureBoxMap.Width, x.GameCoordinates)
+                    Offsets = new Offsets(skControl1.Width, x.GameCoordinates)
                 })
                 .ToList();
 
             _overallOffsets = new Offsets(
-                pictureBoxMap.Width,
+                skControl1.Width,
                 segmentsWithOffsets.SelectMany(s => s.GameCoordinates).ToList());
 
             foreach (var segment in segmentsWithOffsets)
             {
-                DrawSegment(_overallOffsets, segment.GameCoordinates, graphics);
+                _segmentPaths.Add(SkiaPathFromSegment(_overallOffsets, segment.GameCoordinates));
             }
-
-            pictureBoxMap.Image = image;
         }
 
-        private void DrawSegment(Offsets offsets, List<TrackPoint> data, Graphics graphics)
+        private static SKPath SkiaPathFromSegment(Offsets offsets, List<TrackPoint> data)
         {
-            for (var index = 1; index < data.Count; index++)
-            {
-                var previousPoint = data[index-1];
-                var point = data[index];
-                
-                DrawSegmentLine(offsets, graphics, point, previousPoint, Pens.Red);
-            }
+            var path = new SKPath();
+
+            path.AddPoly(
+                data
+                    .Select(point => ScaleAndTranslate(point, offsets))
+                    .Select(point => new SKPoint(point.X, point.Y))
+                    .ToArray(),
+                false);
+
+            return path;
         }
 
-        private static void DrawSegmentLine(Offsets offsets, Graphics graphics, TrackPoint point, TrackPoint previousPoint, Pen pen)
+        private static PointF ScaleAndTranslate(TrackPoint point, Offsets offsets)
         {
             var translatedX = (offsets.OffsetX + (float)point.Latitude);
             var translatedY = (offsets.OffsetY + (float)point.Longitude);
@@ -109,19 +110,7 @@ namespace RoadCaptain.Monitor
             var scaledX = (translatedX * offsets.ScaleFactor);
             var scaledY = (translatedY * offsets.ScaleFactor);
 
-            var previousTranslatedX = (offsets.OffsetX + (float)previousPoint.Latitude);
-            var previousTranslatedY = (offsets.OffsetY + (float)previousPoint.Longitude);
-            var previousScaledX = (previousTranslatedX * offsets.ScaleFactor);
-            var previousScaledY = (previousTranslatedY * offsets.ScaleFactor);
-
-            try
-            {
-                graphics.DrawLine(pen, (int)previousScaledX, (int)previousScaledY, (int)scaledX, (int)scaledY);
-            }
-            catch (ArgumentOutOfRangeException)
-            {
-                Debugger.Break();
-            }
+            return new PointF(scaledX, scaledY);
         }
 
         private void UpdateAvailableTurns(List<Turn> turns)
@@ -149,26 +138,9 @@ namespace RoadCaptain.Monitor
 
         private void UpdatePosition(TrackPoint point)
         {
-            pictureBoxMap.Invoke((Action)(() => DrawPosition(point)));
-        }
+            var scaledAndTranslated = ScaleAndTranslate(point, _overallOffsets);
 
-        private void DrawPosition(TrackPoint point)
-        {
-            var gamePoint = TrackPoint.LatLongToGame(point.Longitude, -point.Latitude, point.Altitude);
-
-            if (_previousPoint != null)
-            {
-                var image = pictureBoxMap.Image;
-
-                using (var graphics = Graphics.FromImage(image))
-                {
-                    DrawSegmentLine(_overallOffsets, graphics, gamePoint, _previousPoint, Pens.Green);
-                }
-
-                pictureBoxMap.Image = image;
-            }
-
-            _previousPoint = gamePoint;
+            _riderPath.MoveTo(scaledAndTranslated.X, scaledAndTranslated.Y);
         }
 
         private void UpdateTurnCommands(List<TurnDirection> commands)
@@ -196,6 +168,54 @@ namespace RoadCaptain.Monitor
             catch (OperationCanceledException)
             {   
             }
+        }
+
+        private void skControl1_PaintSurface(object sender, SkiaSharp.Views.Desktop.SKPaintSurfaceEventArgs args)
+        {
+            args.Surface.Canvas.Clear();
+            foreach (var skPath in _segmentPaths)
+            {
+                args.Surface.Canvas.DrawPath(skPath, _segmentPathPaint);
+            }
+
+            args.Surface.Canvas.DrawPath(_riderPath, _riderPathPaint);
+
+            args.Surface.Canvas.Flush();
+
+            //SKImageInfo info = args.Info;
+            //SKSurface surface = args.Surface;
+            //SKCanvas canvas = surface.Canvas;
+
+            //canvas.Clear();
+
+            //SKPaint paint = new SKPaint
+            //{
+            //    Style = SKPaintStyle.Stroke,
+            //    Color = Color.Red.ToSKColor(),
+            //    StrokeWidth = 25
+            //};
+
+            //var path = new SKPath();
+            //path.AddPoly(new []
+            //{
+            //    new SKPoint(100, 100),
+            //    new SKPoint(100, 150),
+            //    new SKPoint(150, 150)
+            //}, false);
+
+            //canvas.DrawPath(path, _segmentPathPaint);
+            //canvas.DrawCircle(info.Width / 2, info.Height / 2, 100, paint);
+
+            //paint.Style = SKPaintStyle.Fill;
+            //paint.Color = SKColors.Blue;
+            //canvas.DrawCircle(args.Info.Width / 2, args.Info.Height / 2, 100, paint);
+
+            //canvas.Flush();
+        }
+
+        private void skControl1_SizeChanged(object sender, EventArgs e)
+        {
+            CreatePathsForSegments();
         }
     }
 }
