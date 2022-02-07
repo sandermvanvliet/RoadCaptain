@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Collections.Concurrent;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
@@ -12,89 +12,33 @@ namespace RoadCaptain.Adapters
 {
     internal class MessageReceiverFromCaptureFile : IMessageReceiver
     {
-        private readonly string _captureFilePath;
-        private CaptureFileReaderDevice _device;
-        private readonly MonitoringEvents _monitoringEvents;
-        private DateTime? _offset;
-        private readonly PacketAssembler _companionPacketAssemblerPcToApp;
-        private readonly CancellationTokenSource _tokenSource = new();
-        private readonly AutoResetEvent _autoResetEvent;
-        private readonly Queue<byte[]> _payloads = new();
+        private const int PayloadHighWaterMark = 1000;
 
         /// <summary>
-        /// The default Zwift TCP data port used by Zwift Companion
+        ///     The default Zwift TCP data port used by Zwift Companion
         /// </summary>
-        // ReSharper disable once InconsistentNaming
-        private const int ZWIFT_COMPANION_TCP_PORT = 21587;
+        private const int ZwiftCompanionTcpPort = 21587;
+
+        private readonly string _captureFilePath;
+        private readonly PacketAssembler _companionPacketAssemblerPcToApp;
+        private readonly AutoResetEvent _enqueueResetEvent;
+        private readonly MonitoringEvents _monitoringEvents;
+        private readonly ConcurrentQueue<byte[]> _payloads = new();
+        private readonly AutoResetEvent _receiveQueueResetEvent;
+        private readonly CancellationTokenSource _tokenSource = new();
+        private CaptureFileReaderDevice _device;
 
         public MessageReceiverFromCaptureFile(string captureFilePath, MonitoringEvents monitoringEvents)
         {
             _captureFilePath = captureFilePath;
             _monitoringEvents = monitoringEvents;
-            _autoResetEvent = new AutoResetEvent(false);
+            _receiveQueueResetEvent = new AutoResetEvent(false);
+            _enqueueResetEvent = new AutoResetEvent(true);
 
             _companionPacketAssemblerPcToApp = new PacketAssembler(_monitoringEvents);
             _companionPacketAssemblerPcToApp.PayloadReady += (_, e) => EnqueueForReceive(e.Payload);
 
             Task.Factory.StartNew(async () => await StartCaptureFromFileAsync(_tokenSource.Token));
-        }
-
-        private void EnqueueForReceive(byte[] payload)
-        {
-            // Put the payload on a queue and signal ReceiveMessageBytes() that it can unblock
-            _payloads.Enqueue(payload);
-            _autoResetEvent.Set();
-        }
-
-        private async Task StartCaptureFromFileAsync(CancellationToken cancellationToken = default)
-        {
-            if(File.Exists(_captureFilePath))
-            {
-                _device = new CaptureFileReaderDevice(_captureFilePath);
-            }
-            else
-            {
-                throw new FileNotFoundException("Capture file not found", _captureFilePath);
-            }
-
-            // Open the device for capturing
-            // ReSharper disable once RedundantArgumentDefaultValue
-            _device.Open(DeviceModes.None);
-            _device.Filter = $"tcp port {ZWIFT_COMPANION_TCP_PORT}";
-
-            _device.OnPacketArrival += OnPacketArrival;
-            
-            // Start capture 'INFINTE' number of packets
-            await Task.Run(() => { _device.Capture(); }, cancellationToken);
-        }
-
-        protected void OnPacketArrival(object sender, PacketCapture eventArgs)
-        {
-            try
-            {
-                var packet = Packet.ParsePacket(eventArgs.Device.LinkType, eventArgs.Data.ToArray());
-                var tcpPacket = packet.Extract<TcpPacket>();
-                
-                if (tcpPacket != null)
-                {
-                    _offset ??= eventArgs.Header.Timeval.Date;
-
-                    tcpPacket.SequenceNumber = (uint)(eventArgs.Header.Timeval.Date - _offset.Value).TotalSeconds;
-                    
-                    int dstPort = tcpPacket.DestinationPort;
-
-                    // Only care about packets from the game to the app,
-                    // the app to game packets we're sending ourselves anyway.
-                    if (dstPort == ZWIFT_COMPANION_TCP_PORT)
-                    {
-                        _companionPacketAssemblerPcToApp.Assemble(tcpPacket);
-                    }
-                }
-            }
-            catch (Exception exception)
-            {
-                _monitoringEvents.Error(exception, "Unable to parse packet");
-            }
         }
 
         public byte[] ReceiveMessageBytes()
@@ -103,10 +47,16 @@ namespace RoadCaptain.Adapters
             {
                 if (_payloads.TryDequeue(out var message))
                 {
+                    if (_payloads.Count < PayloadHighWaterMark - 100)
+                    {
+                        // Unblock enqueueing of payloads
+                        _enqueueResetEvent.Set();
+                    }
+
                     return message;
                 }
 
-                _autoResetEvent.WaitOne(250);
+                _receiveQueueResetEvent.WaitOne(250);
             }
 
             return null;
@@ -133,6 +83,73 @@ namespace RoadCaptain.Adapters
         public void SendInitialPairingMessage(uint riderId)
         {
             // Ignore for now
+        }
+
+        private void EnqueueForReceive(byte[] payload)
+        {
+            // Put the payload on a queue and signal ReceiveMessageBytes() that it can unblock
+            _payloads.Enqueue(payload);
+            _receiveQueueResetEvent.Set();
+        }
+
+        private async Task StartCaptureFromFileAsync(CancellationToken cancellationToken = default)
+        {
+            if (File.Exists(_captureFilePath))
+            {
+                _device = new CaptureFileReaderDevice(_captureFilePath);
+            }
+            else
+            {
+                throw new FileNotFoundException("Capture file not found", _captureFilePath);
+            }
+
+            // Open the device for capturing
+            // ReSharper disable once RedundantArgumentDefaultValue
+            _device.Open(DeviceModes.None);
+            _device.Filter = $"tcp port {ZwiftCompanionTcpPort}";
+
+            _device.OnPacketArrival += OnPacketArrival;
+
+            // Start capture 'INFINTE' number of packets
+            await Task.Factory.StartNew(() => { _device.Capture(); }, cancellationToken);
+        }
+
+        protected void OnPacketArrival(object sender, PacketCapture eventArgs)
+        {
+            // To prevent filling up the queue we check if we can enqueue.
+            // The AutoResetEvent blocks us if the payload queue count
+            // goes over the PAYLOAD_HIGH_WATER_MARK. Once it's in that
+            // state we loop and block 250ms every time until signalled
+            // by ReceiveMessageBytes() when the count goes below the
+            // PAYLOAD_HIGH_WATER_MARK
+            while (!_enqueueResetEvent.WaitOne(250))
+            {
+                if (_payloads.Count < PayloadHighWaterMark)
+                {
+                    break;
+                }
+            }
+
+            try
+            {
+                var packet = Packet.ParsePacket(eventArgs.Device.LinkType, eventArgs.Data.ToArray());
+                var tcpPacket = packet.Extract<TcpPacket>();
+
+                // Only care about packets from the game to the app,
+                // the app to game packets we're sending ourselves anyway.                
+                if (tcpPacket != null && tcpPacket.DestinationPort == ZwiftCompanionTcpPort)
+                {
+                    _companionPacketAssemblerPcToApp.Assemble(tcpPacket);
+                }
+            }
+            catch (Exception exception)
+            {
+                _monitoringEvents.Error(exception, "Unable to parse packet");
+            }
+            finally
+            {
+                _enqueueResetEvent.Set();
+            }
         }
     }
 }
