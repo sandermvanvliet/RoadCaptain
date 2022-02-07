@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Collections.Concurrent;
 using System.Linq;
 using System.Threading;
 using Google.Protobuf;
@@ -11,7 +11,7 @@ namespace RoadCaptain.Adapters
     internal class MessageEmitterToQueue : IMessageEmitter
     {
         private readonly MonitoringEvents _monitoringEvents;
-        private readonly Queue<ZwiftMessage> _queue = new();
+        private readonly ConcurrentQueue<ZwiftMessage> _queue = new();
         private readonly AutoResetEvent _autoResetEvent = new(false);
         private readonly TimeSpan _queueWaitTimeout = new(250);
 
