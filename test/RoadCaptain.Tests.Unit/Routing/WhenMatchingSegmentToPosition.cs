@@ -15,11 +15,11 @@ namespace RoadCaptain.Tests.Unit.Routing
             {
                 Id = "S1",
                 NextSegmentsNodeA = {
-                            new(TurnDirection.StraightOn, "S2"),
+                            new(TurnDirection.GoStraight, "S2"),
                             new(TurnDirection.Left, "S3"),
                 },
                 NextSegmentsNodeB = {
-                            new(TurnDirection.StraightOn, "S4"),
+                            new(TurnDirection.GoStraight, "S4"),
                 }
             };
             _segment.Points.AddRange(
@@ -88,7 +88,7 @@ namespace RoadCaptain.Tests.Unit.Routing
                 .NextSegments(SegmentDirection.AtoB)
                 .Select(kv => kv.Direction)
                 .Should()
-                .BeEquivalentTo(new[] { TurnDirection.StraightOn });
+                .BeEquivalentTo(new[] { TurnDirection.GoStraight });
         }
 
         [Fact]
@@ -98,7 +98,7 @@ namespace RoadCaptain.Tests.Unit.Routing
                 .NextSegments(SegmentDirection.BtoA)
                 .Select(kv => kv.Direction)
                 .Should()
-                .BeEquivalentTo(new[] { TurnDirection.Left, TurnDirection.StraightOn });
+                .BeEquivalentTo(new[] { TurnDirection.Left, TurnDirection.GoStraight });
         }
     }
 }
