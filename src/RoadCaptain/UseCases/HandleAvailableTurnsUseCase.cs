@@ -17,14 +17,6 @@ namespace RoadCaptain.UseCases
 
         public void Execute(ZwiftCommandAvailableMessage commandAvailable)
         {
-            if ("somethingempty".Equals(commandAvailable.Type, StringComparison.InvariantCultureIgnoreCase) &&
-                _availableTurnCommands.Any())
-            {
-                _availableTurnCommands.Clear();
-                _dispatcher.TurnCommandsAvailable(_availableTurnCommands);
-                return;
-            }
-
             var startCount = _availableTurnCommands.Count;
 
             switch (commandAvailable.Type.Trim().ToLower())
