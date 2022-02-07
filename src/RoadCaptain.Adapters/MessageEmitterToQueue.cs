@@ -37,7 +37,7 @@ namespace RoadCaptain.Adapters
             }
             catch (InvalidProtocolBufferException ex)
             {
-                _monitoringEvents.Warning(ex, "Invalid protobuf message: {Message}", ex.Message);
+                _monitoringEvents.Warning("Invalid protobuf message: {Message}", ex.Message);
                 return;
             }
 
