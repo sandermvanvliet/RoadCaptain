@@ -44,9 +44,9 @@ namespace RoadCaptain.UseCases
 
                     break;
                 case "gostraight":
-                    if (!_availableTurnCommands.Contains(TurnDirection.StraightOn))
+                    if (!_availableTurnCommands.Contains(TurnDirection.GoStraight))
                     {
-                        _availableTurnCommands.Add(TurnDirection.StraightOn);
+                        _availableTurnCommands.Add(TurnDirection.GoStraight);
                     }
 
                     break;

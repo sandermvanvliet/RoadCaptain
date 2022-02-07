@@ -177,7 +177,7 @@ namespace RoadCaptain.Monitor
 
             SetPictureBoxVisibility(pictureBoxTurnLeft, commands.Any(c => c == TurnDirection.Left));
             SetPictureBoxVisibility(pictureBoxTurnRight, commands.Any(c => c == TurnDirection.Right));
-            SetPictureBoxVisibility(pictureBoxGoStraight, commands.Any(c => c == TurnDirection.StraightOn));
+            SetPictureBoxVisibility(pictureBoxGoStraight, commands.Any(c => c == TurnDirection.GoStraight));
         }
 
         private static void SetPictureBoxVisibility(PictureBox pictureBox, bool isVisible)

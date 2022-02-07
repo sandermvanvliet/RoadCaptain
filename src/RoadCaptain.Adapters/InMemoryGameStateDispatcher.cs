@@ -82,7 +82,7 @@ namespace RoadCaptain.Adapters
                 var turns = CurrentSegment.NextSegments(direction);
 
                 // Only show turns if we have actual options.
-                if (turns.Any(t => t.Direction != TurnDirection.StraightOn))
+                if (turns.Any(t => t.Direction != TurnDirection.GoStraight))
                 {
                     TurnsAvailable(turns);
                 }
