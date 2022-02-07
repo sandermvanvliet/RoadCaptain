@@ -7,6 +7,18 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="gostraight.jpg" />
+    <None Remove="turnleft.jpg" />
+    <None Remove="turnright.jpg" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="gostraight.jpg" />
+    <EmbeddedResource Include="turnleft.jpg" />
+    <EmbeddedResource Include="turnright.jpg" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\RoadCaptain.Adapters\RoadCaptain.Adapters.csproj" />
     <ProjectReference Include="..\RoadCaptain\RoadCaptain.csproj" />
   </ItemGroup>
@@ -21,6 +33,21 @@
     <PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
     <PackageReference Include="SkiaSharp" Version="2.80.3" />
     <PackageReference Include="SkiaSharp.Views.WindowsForms" Version="2.80.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Properties\Resources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
 
   <ItemGroup>

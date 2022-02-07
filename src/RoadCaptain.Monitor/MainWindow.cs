@@ -174,6 +174,15 @@ namespace RoadCaptain.Monitor
                 commands.Select(t => t.ToString()));
 
             textBoxAvailableCommands.Invoke((Action)(() => textBoxAvailableCommands.Text = text));
+
+            SetPictureBoxVisibility(pictureBoxTurnLeft, commands.Any(c => c == TurnDirection.Left));
+            SetPictureBoxVisibility(pictureBoxTurnRight, commands.Any(c => c == TurnDirection.Right));
+            SetPictureBoxVisibility(pictureBoxGoStraight, commands.Any(c => c == TurnDirection.StraightOn));
+        }
+
+        private static void SetPictureBoxVisibility(PictureBox pictureBox, bool isVisible)
+        {
+            pictureBox.Invoke((Action)(() => pictureBox.Visible = isVisible));
         }
 
         private void UpdateDirection(SegmentDirection direction)

@@ -29,6 +29,7 @@ namespace RoadCaptain.Monitor
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainWindow));
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -42,8 +43,16 @@ namespace RoadCaptain.Monitor
             this.textBoxCurrentSegment = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.skControl1 = new SkiaSharp.Views.Desktop.SKControl();
+            this.panel2 = new System.Windows.Forms.Panel();
+            this.pictureBoxTurnLeft = new System.Windows.Forms.PictureBox();
+            this.pictureBoxGoStraight = new System.Windows.Forms.PictureBox();
+            this.pictureBoxTurnRight = new System.Windows.Forms.PictureBox();
             this.menuStrip1.SuspendLayout();
             this.panel1.SuspendLayout();
+            this.panel2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxTurnLeft)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxGoStraight)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxTurnRight)).BeginInit();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -74,8 +83,7 @@ namespace RoadCaptain.Monitor
             // 
             // panel1
             // 
-            this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.panel1.Controls.Add(this.label4);
             this.panel1.Controls.Add(this.textBoxAvailableCommands);
             this.panel1.Controls.Add(this.label3);
@@ -84,9 +92,9 @@ namespace RoadCaptain.Monitor
             this.panel1.Controls.Add(this.label2);
             this.panel1.Controls.Add(this.textBoxCurrentSegment);
             this.panel1.Controls.Add(this.label1);
-            this.panel1.Location = new System.Drawing.Point(12, 1215);
+            this.panel1.Location = new System.Drawing.Point(12, 1227);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(2273, 222);
+            this.panel1.Size = new System.Drawing.Size(986, 210);
             this.panel1.TabIndex = 2;
             // 
             // label4
@@ -174,11 +182,57 @@ namespace RoadCaptain.Monitor
             this.skControl1.PaintSurface += new System.EventHandler<SkiaSharp.Views.Desktop.SKPaintSurfaceEventArgs>(this.skControl1_PaintSurface);
             this.skControl1.SizeChanged += new System.EventHandler(this.skControl1_SizeChanged);
             // 
+            // panel2
+            // 
+            this.panel2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.panel2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel2.Controls.Add(this.pictureBoxTurnRight);
+            this.panel2.Controls.Add(this.pictureBoxGoStraight);
+            this.panel2.Controls.Add(this.pictureBoxTurnLeft);
+            this.panel2.Location = new System.Drawing.Point(1005, 1227);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(622, 210);
+            this.panel2.TabIndex = 4;
+            // 
+            // pictureBoxTurnLeft
+            // 
+            this.pictureBoxTurnLeft.Image = ((System.Drawing.Image)(resources.GetObject("pictureBoxTurnLeft.Image")));
+            this.pictureBoxTurnLeft.Location = new System.Drawing.Point(4, 4);
+            this.pictureBoxTurnLeft.Name = "pictureBoxTurnLeft";
+            this.pictureBoxTurnLeft.Size = new System.Drawing.Size(200, 200);
+            this.pictureBoxTurnLeft.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBoxTurnLeft.TabIndex = 0;
+            this.pictureBoxTurnLeft.TabStop = false;
+            this.pictureBoxTurnLeft.Visible = false;
+            // 
+            // pictureBoxGoStraight
+            // 
+            this.pictureBoxGoStraight.Image = ((System.Drawing.Image)(resources.GetObject("pictureBoxGoStraight.Image")));
+            this.pictureBoxGoStraight.Location = new System.Drawing.Point(208, 4);
+            this.pictureBoxGoStraight.Name = "pictureBoxGoStraight";
+            this.pictureBoxGoStraight.Size = new System.Drawing.Size(200, 200);
+            this.pictureBoxGoStraight.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBoxGoStraight.TabIndex = 1;
+            this.pictureBoxGoStraight.TabStop = false;
+            this.pictureBoxGoStraight.Visible = false;
+            // 
+            // pictureBoxTurnRight
+            // 
+            this.pictureBoxTurnRight.Image = ((System.Drawing.Image)(resources.GetObject("pictureBoxTurnRight.Image")));
+            this.pictureBoxTurnRight.Location = new System.Drawing.Point(416, 4);
+            this.pictureBoxTurnRight.Name = "pictureBoxTurnRight";
+            this.pictureBoxTurnRight.Size = new System.Drawing.Size(200, 200);
+            this.pictureBoxTurnRight.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBoxTurnRight.TabIndex = 2;
+            this.pictureBoxTurnRight.TabStop = false;
+            this.pictureBoxTurnRight.Visible = false;
+            // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(2297, 1449);
+            this.Controls.Add(this.panel2);
             this.Controls.Add(this.skControl1);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.menuStrip1);
@@ -191,6 +245,10 @@ namespace RoadCaptain.Monitor
             this.menuStrip1.PerformLayout();
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
+            this.panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxTurnLeft)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxGoStraight)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxTurnRight)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -211,6 +269,10 @@ namespace RoadCaptain.Monitor
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.TextBox textBoxAvailableCommands;
         private SkiaSharp.Views.Desktop.SKControl skControl1;
+        private System.Windows.Forms.Panel panel2;
+        private System.Windows.Forms.PictureBox pictureBoxTurnLeft;
+        private System.Windows.Forms.PictureBox pictureBoxTurnRight;
+        private System.Windows.Forms.PictureBox pictureBoxGoStraight;
     }
 }
 
