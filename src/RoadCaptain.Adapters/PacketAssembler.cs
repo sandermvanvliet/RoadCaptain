@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using PacketDotNet;
 
@@ -18,6 +19,10 @@ namespace RoadCaptain.Adapters
         private bool _complete;
         private uint _startingSequenceNumber;
         private readonly MonitoringEvents _monitoringEvents;
+        private ulong _expectedNextSequenceNumber;
+        private readonly List<TcpPacket> _packetBuffer = new();
+        private bool _lastOnlyAck;
+        private ulong _lastSequenceNumber;
 
         public PacketAssembler(MonitoringEvents monitoringEvents)
         {
@@ -36,7 +41,57 @@ namespace RoadCaptain.Adapters
                     // Don't let downstream exceptions bubble up
                 }
             }
-        }  
+        } 
+
+        public void Assemble(TcpPacket packet)
+        {
+            if (packet.Synchronize)
+            {
+                return;
+            }
+
+            if (_expectedNextSequenceNumber == 0 || packet.SequenceNumber == _expectedNextSequenceNumber)
+            {
+                InnerAssemble(packet);
+                _expectedNextSequenceNumber = packet.SequenceNumber + (uint)packet.PayloadData.Length;
+                _lastSequenceNumber = packet.SequenceNumber;
+
+                _lastOnlyAck = packet.Acknowledgment && !packet.Push;
+            }
+            else if (packet.SequenceNumber == _lastSequenceNumber && _lastOnlyAck)
+            {
+                if (packet.PayloadData.Length > 0)
+                {
+                    InnerAssemble(packet);
+                    _expectedNextSequenceNumber = packet.SequenceNumber + (uint)(packet.PayloadData.Length);
+                    _lastSequenceNumber = packet.SequenceNumber;
+
+                    _lastOnlyAck = packet.Acknowledgment && !packet.Push;
+                }
+            }
+            else if (packet.SequenceNumber > _expectedNextSequenceNumber)
+            {
+                _monitoringEvents.Warning("Received a packet to far ahead, buffering {SequenceNumber}, expected {ExpectedSequenceNumber}", packet.SequenceNumber, _expectedNextSequenceNumber);
+                _packetBuffer.Add(packet);
+
+                var expectedPacket =
+                    _packetBuffer.SingleOrDefault(p => p.SequenceNumber == _expectedNextSequenceNumber);
+
+                if (expectedPacket != null)
+                {
+                    _packetBuffer.Remove(expectedPacket);
+                    InnerAssemble(expectedPacket);
+                    _expectedNextSequenceNumber = expectedPacket.SequenceNumber + (uint)expectedPacket.PayloadData.Length;
+                    _lastSequenceNumber = packet.SequenceNumber;
+                    _lastOnlyAck = packet.Acknowledgment && !packet.Push;
+
+                }
+            }
+            else
+            {
+                _monitoringEvents.Warning("Received a packet with a sequence number {SequenceNumber} that we've already passed ({LastSequenceNumber}) Skipping it because it's (most likely) a TCP retransmission.", packet.SequenceNumber, _lastSequenceNumber);
+            }
+        } 
 
         /// <summary>
         /// Processes the current packet. If this packet is part of a fragmented sequence,
@@ -44,14 +99,9 @@ namespace RoadCaptain.Adapters
         /// been loaded. When the packet sequence has been fully loaded, the <c>PayloadReady</c> event is invoked.
         /// </summary>
         /// <param name="packet">The packet to process</param>
-        public void Assemble(TcpPacket packet)
+        private void InnerAssemble(TcpPacket packet)
         {
             packet = packet ?? throw new ArgumentNullException(nameof(packet));
-
-            if (_startingSequenceNumber == 0)
-            {
-                _startingSequenceNumber = packet.SequenceNumber;
-            }
 
             try
             {
@@ -61,6 +111,7 @@ namespace RoadCaptain.Adapters
                     _payload = packet.PayloadData;
                     _assembledLen = packet.PayloadData.Length;
                     _complete = true;
+                    _startingSequenceNumber = packet.SequenceNumber;
                 }
                 else if (packet.Push && packet.Acknowledgment)
                 {
@@ -74,6 +125,7 @@ namespace RoadCaptain.Adapters
                     // First packet in a sequence
                     _payload = packet.PayloadData;
                     _assembledLen = packet.PayloadData.Length;
+                    _startingSequenceNumber = packet.SequenceNumber;
                 }
                 else if (packet.Acknowledgment) {
                     // Middle packet in a sequence
@@ -102,6 +154,12 @@ namespace RoadCaptain.Adapters
                                     SequenceNumber = _startingSequenceNumber
                                 });
                             }
+                        }
+                        else
+                        {
+                            _monitoringEvents.Warning("Got length {Length} but there are not enough bytes left!", length);
+                            Reset();
+                            return;
                         }
 
                         offset += 2 + length;
