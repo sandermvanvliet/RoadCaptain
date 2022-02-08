@@ -12,19 +12,22 @@ namespace RoadCaptain.UseCases
         private static readonly object SyncRoot = new();
         private readonly HandleRiderPositionUseCase _handleRiderPositionUseCase;
         private readonly HandleAvailableTurnsUseCase _handleAvailableTurnsUseCase;
+        private readonly HandleActivityDetailsUseCase _handleActivityDetailsUseCase;
 
         public HandleZwiftMessagesUseCase(
             IMessageEmitter emitter,
             MonitoringEvents monitoringEvents,
             IMessageReceiver messageReceiver, 
             HandleRiderPositionUseCase handleRiderPositionUseCase, 
-            HandleAvailableTurnsUseCase handleAvailableTurnsUseCase)
+            HandleAvailableTurnsUseCase handleAvailableTurnsUseCase, 
+            HandleActivityDetailsUseCase handleActivityDetailsUseCase)
         {
             _emitter = emitter;
             _monitoringEvents = monitoringEvents;
             _messageReceiver = messageReceiver;
             _handleRiderPositionUseCase = handleRiderPositionUseCase;
             _handleAvailableTurnsUseCase = handleAvailableTurnsUseCase;
+            _handleActivityDetailsUseCase = handleActivityDetailsUseCase;
         }
 
         public void Execute(CancellationToken token)
@@ -54,6 +57,10 @@ namespace RoadCaptain.UseCases
                 else if (message is ZwiftPowerUpMessage powerUp)
                 {
                     _monitoringEvents.PowerUpAvailable(powerUp.Type);
+                }
+                else if (message is ZwiftActivityDetailsMessage activityDetails)
+                {
+                    _handleActivityDetailsUseCase.Execute(activityDetails);
                 }
             }
         }

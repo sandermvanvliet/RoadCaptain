@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using RoadCaptain.Ports;
 
 namespace RoadCaptain.Adapters
@@ -23,11 +24,16 @@ namespace RoadCaptain.Adapters
 
         public List<TurnDirection> AvailableTurnCommands { get; private set; } = new();
 
+        public bool InGame { get; private set; }
+
         public void PositionChanged(TrackPoint position)
         {
-            CurrentPosition = position;
+            if (InGame)
+            {
+                CurrentPosition = position;
 
-            Enqueue("positionChanged", CurrentPosition);
+                Enqueue("positionChanged", CurrentPosition);
+            }
         }
 
         public void SegmentChanged(Segment segment)
@@ -53,6 +59,8 @@ namespace RoadCaptain.Adapters
             Enqueue("segmentChanged", CurrentSegment?.Id);
 
             // TODO: clear available turns, available turn commands and direction (although direction follows very quickly after)
+            // This can most likely be removed here and handled by the SoemthingEmpty
+            // command we receive from Zwift.
             TurnCommandsAvailable(new List<TurnDirection>());
         }
 
@@ -102,6 +110,18 @@ namespace RoadCaptain.Adapters
         {
             AvailableTurnCommands = turns;
             Enqueue("turnCommandsAvailable", AvailableTurnCommands);
+        }
+
+        public void EnterGame()
+        {
+            InGame = true;
+            Enqueue("inGame", InGame);
+        }
+
+        public void LeaveGame()
+        {
+            InGame = false;
+            Enqueue("inGame", InGame);
         }
 
         protected virtual void Enqueue(string topic, object data)

@@ -43,6 +43,13 @@ namespace RoadCaptain.UseCases
 
             // Update game state
             _dispatcher.PositionChanged(position);
+            
+            // If the user is not in-game then set the current segment to null
+            if (!_dispatcher.InGame)
+            {
+                _dispatcher.SegmentChanged(null);
+                return;
+            }
 
             // We don't want to load this in the constructor as that
             // may happen way too soon before initialisation is fully

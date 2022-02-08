@@ -48,5 +48,8 @@ namespace RoadCaptain.Ports
         // Because exposing the state like this is a bit ugly...
         List<TurnDirection> AvailableTurnCommands { get; }
         Segment CurrentSegment { get; }
+        bool InGame { get; }
+        void EnterGame();
+        void LeaveGame();
     }
 }
