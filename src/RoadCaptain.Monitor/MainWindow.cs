@@ -14,7 +14,7 @@ namespace RoadCaptain.Monitor
     public partial class MainWindow : Form
     {
         private readonly IGameStateReceiver _gameStateReceiver;
-        private readonly SKPath _riderPath = new();
+        private SKPath _riderPath = new();
 
         private readonly SKPaint _riderPathPaint = new()
             { Color = SKColor.Parse("#0000ff"), Style = SKPaintStyle.Stroke, StrokeWidth = 2 };
@@ -45,7 +45,9 @@ namespace RoadCaptain.Monitor
                 UpdateCurrentSegemnt,
                 UpdateAvailableTurns,
                 UpdateDirection,
-                UpdateTurnCommands);
+                UpdateTurnCommands,
+                EnteredGame,
+                LeftGame);
 
             InitializeComponent();
         }
@@ -188,6 +190,17 @@ namespace RoadCaptain.Monitor
         private void UpdateDirection(SegmentDirection direction)
         {
             textBoxCurrentDirection.Invoke((Action)(() => textBoxCurrentDirection.Text = direction.ToString()));
+        }
+
+        private void LeftGame(ulong activityId)
+        {
+            
+        }
+
+        private void EnteredGame(ulong activityId)
+        {
+            _previousRiderPosition = null;
+            _riderPath = new SKPath();
         }
 
         private void MainWindow_FormClosing(object sender, FormClosingEventArgs e)

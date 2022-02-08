@@ -19,6 +19,8 @@ namespace RoadCaptain.Adapters
         private readonly List<Action<string>> _segmentChangedHandlers = new();
         private readonly List<Action<List<TurnDirection>>> _turnCommandsAvailableHandlers = new();
         private readonly List<Action<List<Turn>>> _turnsAvailableHandlers = new();
+        private readonly List<Action<ulong>> _enteredGameHandlers = new();
+        private readonly List<Action<ulong>> _leftGameHandlers = new();
 
         public ZeroMqGameStateReceiver(MonitoringEvents monitoringEvents)
         {
@@ -52,13 +54,22 @@ namespace RoadCaptain.Adapters
             Action<string> segmentChanged,
             Action<List<Turn>> turnsAvailable,
             Action<SegmentDirection> directionChanged,
-            Action<List<TurnDirection>> turnCommandsAvailable)
+            Action<List<TurnDirection>> turnCommandsAvailable,
+            Action<ulong> enteredGame,
+            Action<ulong> leftGame)
         {
-            _positionChangedHandlers.Add(positionChanged);
-            _segmentChangedHandlers.Add(segmentChanged);
-            _turnsAvailableHandlers.Add(turnsAvailable);
-            _directionChangedHandlers.Add(directionChanged);
-            _turnCommandsAvailableHandlers.Add(turnCommandsAvailable);
+            AddHandlerIfNotNull(_positionChangedHandlers, positionChanged);
+            AddHandlerIfNotNull(_segmentChangedHandlers, segmentChanged);
+            AddHandlerIfNotNull(_turnsAvailableHandlers, turnsAvailable);
+            AddHandlerIfNotNull(_directionChangedHandlers, directionChanged);
+            AddHandlerIfNotNull(_turnCommandsAvailableHandlers, turnCommandsAvailable);
+            AddHandlerIfNotNull(_enteredGameHandlers, enteredGame);
+            AddHandlerIfNotNull(_leftGameHandlers, leftGame);
+        }
+
+        private static void AddHandlerIfNotNull<TMessage>(List<Action<TMessage>> collection, Action<TMessage> handler)
+        {
+            collection.Add(handler);
         }
 
         private void InvokeHandlers(string serializedContent)
@@ -85,6 +96,12 @@ namespace RoadCaptain.Adapters
                     break;
                 case "turnCommandsAvailable":
                     _turnCommandsAvailableHandlers.ForEach(h => InvokeHandler(h, message.Data));
+                    break;
+                case "enteredGame":
+                    _enteredGameHandlers.ForEach(h => InvokeHandler(h, message.Data));
+                    break;
+                case "leftGame":
+                    _leftGameHandlers.ForEach(h => InvokeHandler(h, message.Data));
                     break;
             }
         }

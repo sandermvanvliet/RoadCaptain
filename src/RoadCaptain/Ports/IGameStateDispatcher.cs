@@ -44,12 +44,21 @@ namespace RoadCaptain.Ports
         /// <remarks>The turns received here _should_ correspond to what has been provided in <see cref="TurnsAvailable"/>.</remarks>
         void TurnCommandsAvailable(List<TurnDirection> turns);
 
+        /// <summary>
+        /// The rider started an activity and is now considered to be in-game
+        /// </summary>
+        /// <param name="activityId"></param>
+        void EnterGame(ulong activityId);
+
+        /// <summary>
+        /// The rider completed an activity and is now no longer considered in-game
+        /// </summary>
+        void LeaveGame();
+
         // TODO: Make this architectually sound
         // Because exposing the state like this is a bit ugly...
         List<TurnDirection> AvailableTurnCommands { get; }
         Segment CurrentSegment { get; }
         bool InGame { get; }
-        void EnterGame();
-        void LeaveGame();
     }
 }

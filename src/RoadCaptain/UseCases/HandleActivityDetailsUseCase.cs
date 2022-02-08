@@ -23,7 +23,7 @@ namespace RoadCaptain.UseCases
             }
             else if (!_dispatcher.InGame && activityDetails.ActivityId != 0)
             {
-                _dispatcher.EnterGame();
+                _dispatcher.EnterGame(activityDetails.ActivityId);
             }
         }
     }

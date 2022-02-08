@@ -12,6 +12,8 @@ namespace RoadCaptain.Ports
             Action<string> segmentChanged,
             Action<List<Turn>> turnsAvailable,
             Action<SegmentDirection> directionChanged,
-            Action<List<TurnDirection>> turnCommandsAvailable);
+            Action<List<TurnDirection>> turnCommandsAvailable,
+            Action<ulong> enteredGame,
+            Action<ulong> leftGame);
     }
 }

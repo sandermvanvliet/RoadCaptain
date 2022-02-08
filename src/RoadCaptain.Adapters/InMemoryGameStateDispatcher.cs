@@ -112,16 +112,16 @@ namespace RoadCaptain.Adapters
             Enqueue("turnCommandsAvailable", AvailableTurnCommands);
         }
 
-        public void EnterGame()
+        public void EnterGame(ulong activityId)
         {
             InGame = true;
-            Enqueue("inGame", InGame);
+            Enqueue("enteredGame", activityId);
         }
 
         public void LeaveGame()
         {
             InGame = false;
-            Enqueue("inGame", InGame);
+            Enqueue("leftGame", 0 /* when leaving the game the activity id is always zero */);
         }
 
         protected virtual void Enqueue(string topic, object data)
