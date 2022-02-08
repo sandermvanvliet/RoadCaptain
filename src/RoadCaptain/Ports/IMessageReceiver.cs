@@ -8,5 +8,6 @@
 
         void SendMessageBytes(byte[] payload);
         void SendInitialPairingMessage(uint riderId);
+        void SendTurnCommand(TurnDirection direction);
     }
 }

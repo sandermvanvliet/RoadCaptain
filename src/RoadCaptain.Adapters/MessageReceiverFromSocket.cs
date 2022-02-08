@@ -191,6 +191,11 @@ namespace RoadCaptain.Adapters
             SendMessageBytes(bytes);
         }
 
+        public void SendTurnCommand(TurnDirection direction)
+        {
+            throw new NotImplementedException();
+        }
+
         private static byte[] WrapWithLength(byte[] payload)
         {
             var prefix = BitConverter.GetBytes(payload.Length);

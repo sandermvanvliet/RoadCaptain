@@ -37,6 +37,10 @@ namespace RoadCaptain.Tests.Unit
         {
         }
 
+        public void SendTurnCommand(TurnDirection direction)
+        {
+        }
+
         public byte[] AvailableBytes { get; set; }
     }
 }

@@ -77,12 +77,17 @@ namespace RoadCaptain.Adapters
 
         public void SendMessageBytes(byte[] payload)
         {
-            // Ignore for now
+            // Ignore for now, nobody is listening
         }
 
         public void SendInitialPairingMessage(uint riderId)
         {
-            // Ignore for now
+            // Ignore for now, nobody is listening
+        }
+
+        public void SendTurnCommand(TurnDirection direction)
+        {
+            // Ignore for now, nobody is listening
         }
 
         private void EnqueueForReceive(byte[] payload)
