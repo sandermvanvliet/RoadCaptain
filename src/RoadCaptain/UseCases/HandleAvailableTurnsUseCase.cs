@@ -1,12 +1,15 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using RoadCaptain.Ports;
 
 namespace RoadCaptain.UseCases
 {
     public class HandleAvailableTurnsUseCase
     {
-        private readonly List<TurnDirection> _availableTurnCommands = new();
         private readonly IGameStateDispatcher _dispatcher;
+        private readonly List<TurnDirection> _commands = new();
+        private string _currentSegmentId;
 
         public HandleAvailableTurnsUseCase(IGameStateDispatcher dispatcher)
         {
@@ -15,35 +18,42 @@ namespace RoadCaptain.UseCases
 
         public void Execute(ZwiftCommandAvailableMessage commandAvailable)
         {
-            if (commandAvailable.Type == "somethingempty")
+            if ("somethingempty".Equals(commandAvailable.Type, StringComparison.InvariantCultureIgnoreCase) && 
+                _commands.Any())
             {
-                _availableTurnCommands.Clear();
-                _dispatcher.TurnCommandsAvailable(_availableTurnCommands);
-                return;
+                // Reset available commands by dispatching an empty list.
+                // But only when the segment changed because we're seeing SomethingEmpty + new commands repeat a lot
+                if (_currentSegmentId != _dispatcher.CurrentSegment.Id)
+                {
+                    _commands.Clear();
+                    _dispatcher.TurnCommandsAvailable(new List<TurnDirection>());
+                    return;
+                }
             }
-
-            var startCount = _availableTurnCommands.Count;
+            
+            // Track changes by simply counting the number of items
+            var startCount = _commands.Count;
 
             switch (commandAvailable.Type.Trim().ToLower())
             {
                 case "turnleft":
-                    if (!_availableTurnCommands.Contains(TurnDirection.Left))
+                    if (!_commands.Contains(TurnDirection.Left))
                     {
-                        _availableTurnCommands.Add(TurnDirection.Left);
+                        _commands.Add(TurnDirection.Left);
                     }
 
                     break;
                 case "turnright":
-                    if (!_availableTurnCommands.Contains(TurnDirection.Right))
+                    if (!_commands.Contains(TurnDirection.Right))
                     {
-                        _availableTurnCommands.Add(TurnDirection.Right);
+                        _commands.Add(TurnDirection.Right);
                     }
 
                     break;
                 case "gostraight":
-                    if (!_availableTurnCommands.Contains(TurnDirection.GoStraight))
+                    if (!_commands.Contains(TurnDirection.GoStraight))
                     {
-                        _availableTurnCommands.Add(TurnDirection.GoStraight);
+                        _commands.Add(TurnDirection.GoStraight);
                     }
 
                     break;
@@ -51,9 +61,10 @@ namespace RoadCaptain.UseCases
 
             // Only call the dispatcher when the number of turns changed and
             // there are at least two turns available.
-            if (startCount != _availableTurnCommands.Count && _availableTurnCommands.Count >= 2)
+            if (startCount != _commands.Count && _commands.Count >= 2)
             {
-                _dispatcher.TurnCommandsAvailable(_availableTurnCommands);
+                _currentSegmentId = _dispatcher.CurrentSegment.Id;
+                _dispatcher.TurnCommandsAvailable(_commands);
             }
         }
     }

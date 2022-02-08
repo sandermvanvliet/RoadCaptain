@@ -43,5 +43,10 @@ namespace RoadCaptain.Ports
         /// <param name="turns">The directions in which turns can be made</param>
         /// <remarks>The turns received here _should_ correspond to what has been provided in <see cref="TurnsAvailable"/>.</remarks>
         void TurnCommandsAvailable(List<TurnDirection> turns);
+
+        // TODO: Make this architectually sound
+        // Because exposing the state like this is a bit ugly...
+        List<TurnDirection> AvailableTurnCommands { get; }
+        Segment CurrentSegment { get; }
     }
 }
