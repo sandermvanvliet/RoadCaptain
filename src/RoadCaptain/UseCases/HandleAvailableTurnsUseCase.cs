@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using RoadCaptain.Ports;
 
 namespace RoadCaptain.UseCases
@@ -17,6 +15,13 @@ namespace RoadCaptain.UseCases
 
         public void Execute(ZwiftCommandAvailableMessage commandAvailable)
         {
+            if (commandAvailable.Type == "somethingempty")
+            {
+                _availableTurnCommands.Clear();
+                _dispatcher.TurnCommandsAvailable(_availableTurnCommands);
+                return;
+            }
+
             var startCount = _availableTurnCommands.Count;
 
             switch (commandAvailable.Type.Trim().ToLower())
@@ -50,11 +55,6 @@ namespace RoadCaptain.UseCases
             {
                 _dispatcher.TurnCommandsAvailable(_availableTurnCommands);
             }
-
-            // TODO: reset on segment changes
-            // Or perhaps don't because on a new segment the dispatcher already
-            // clears these and we'll receive new ones when the rider gets to 
-            // upcoming turns on the new segment...
         }
     }
 }
