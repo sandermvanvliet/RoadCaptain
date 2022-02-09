@@ -2,8 +2,9 @@
 {
     public enum TurnDirection
     {
+        None,
         GoStraight,
         Left,
-        Right,
+        Right
     }
 }

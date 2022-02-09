@@ -13,15 +13,23 @@ namespace RoadCaptain.UseCases
         private readonly PlannedRoute _plannedRoute;
 
         public NavigationUseCase(
-            IGameStateReceiver gameStateReceiver, 
+            IGameStateReceiver gameStateReceiver,
             MonitoringEvents monitoringEvents,
             IMessageReceiver messageReceiver)
         {
             _gameStateReceiver = gameStateReceiver;
             _monitoringEvents = monitoringEvents;
             _messageReceiver = messageReceiver;
+        }
 
-            _plannedRoute = new PlannedRoute();
+        internal NavigationUseCase(
+            IGameStateReceiver gameStateReceiver,
+            MonitoringEvents monitoringEvents,
+            IMessageReceiver messageReceiver,
+            PlannedRoute plannedRoute)
+            : this(gameStateReceiver, monitoringEvents, messageReceiver)
+        {
+            _plannedRoute = plannedRoute;
         }
 
         public void Execute(CancellationToken token)
@@ -47,27 +55,26 @@ namespace RoadCaptain.UseCases
         {
             if (commands.Any())
             {
-                if (CommandsMatchTurnsToNextSegment(commands, _plannedRoute.TurnsToNextSegment))
+                if (CommandsMatchTurnToNextSegment(commands, _plannedRoute.TurnToNextSegment))
                 {
                     _monitoringEvents.Information("Executing turn {TurnDirection}", _plannedRoute.TurnToNextSegment);
                     _messageReceiver.SendTurnCommand(_plannedRoute.TurnToNextSegment);
                 }
-                else 
+                else
                 {
                     _monitoringEvents.Error(
-                        "Expected turn commands: {ExpectedTurnCommands} but instead got: {TurnCommands}",
-                        string.Join(", ", _plannedRoute.TurnsToNextSegment),
+                        "Expected turn command {ExpectedTurnCommand} to be present but instead got: {TurnCommands}",
+                        _plannedRoute.TurnToNextSegment,
                         string.Join(", ", commands));
                 }
             }
         }
 
-        private static bool CommandsMatchTurnsToNextSegment(
-            List<TurnDirection> commands, 
-            List<TurnDirection> turnsToNextSegemnt)
+        private static bool CommandsMatchTurnToNextSegment(
+            List<TurnDirection> commands,
+            TurnDirection turnToNextSegemnt)
         {
-            return commands.Count == turnsToNextSegemnt.Count && 
-                   commands.All(turnsToNextSegemnt.Contains);
+            return commands.Contains(turnToNextSegemnt);
         }
 
         private void HandleTurnsAvailable(List<Turn> turns)
@@ -77,7 +84,7 @@ namespace RoadCaptain.UseCases
         private void HandleSegmentChanged(string segmentId)
         {
             // Are we already in a segment?
-            if (_plannedRoute.CurrentSegment == null)
+            if (_plannedRoute.CurrentSegmentId == null)
             {
                 // - Check if we've dropped into the start segment
                 if (segmentId == _plannedRoute.StartingSegmentId)
@@ -89,7 +96,7 @@ namespace RoadCaptain.UseCases
                     _monitoringEvents.Warning("Rider entered segment {SegmentId} but it's not the start of the route", segmentId);
                 }
             }
-            else if(_plannedRoute.NextSegmentId == segmentId)
+            else if (_plannedRoute.NextSegmentId == segmentId)
             {
                 // We moved into the next expected segment
                 _plannedRoute.EnteredSegment(segmentId);

@@ -1,4 +1,5 @@
-﻿using RoadCaptain.Ports;
+﻿using System.Collections.Generic;
+using RoadCaptain.Ports;
 
 namespace RoadCaptain.Tests.Unit
 {
@@ -39,8 +40,10 @@ namespace RoadCaptain.Tests.Unit
 
         public void SendTurnCommand(TurnDirection direction)
         {
+            SentCommands.Add(direction.ToString());
         }
 
         public byte[] AvailableBytes { get; set; }
+        public List<string> SentCommands { get; } = new();
     }
 }
