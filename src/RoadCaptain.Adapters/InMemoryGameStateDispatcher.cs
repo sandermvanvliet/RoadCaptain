@@ -25,6 +25,8 @@ namespace RoadCaptain.Adapters
 
         public bool InGame { get; private set; }
 
+        public PlannedRoute CurrentRoute { get; private set; }
+
         public void PositionChanged(TrackPoint position)
         {
             if (InGame)
@@ -121,6 +123,12 @@ namespace RoadCaptain.Adapters
         {
             InGame = false;
             Enqueue("leftGame", 0 /* when leaving the game the activity id is always zero */);
+        }
+
+        public void RouteSelected(PlannedRoute route)
+        {
+            CurrentRoute = route;
+            Enqueue("plannedRoute", route);
         }
 
         protected virtual void Enqueue(string topic, object data)

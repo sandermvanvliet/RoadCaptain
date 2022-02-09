@@ -55,6 +55,12 @@ namespace RoadCaptain.Ports
         /// </summary>
         void LeaveGame();
 
+        /// <summary>
+        /// The rider has selected a route to follow
+        /// </summary>
+        /// <param name="route"></param>
+        void RouteSelected(PlannedRoute route);
+
         // TODO: Make this architectually sound
         // Because exposing the state like this is a bit ugly...
         List<TurnDirection> AvailableTurnCommands { get; }

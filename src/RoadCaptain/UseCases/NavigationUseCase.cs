@@ -10,7 +10,7 @@ namespace RoadCaptain.UseCases
         private readonly IGameStateReceiver _gameStateReceiver;
         private readonly MonitoringEvents _monitoringEvents;
         private readonly IMessageReceiver _messageReceiver;
-        private readonly PlannedRoute _plannedRoute;
+        private PlannedRoute _plannedRoute;
 
         public NavigationUseCase(
             IGameStateReceiver gameStateReceiver,
@@ -20,16 +20,6 @@ namespace RoadCaptain.UseCases
             _gameStateReceiver = gameStateReceiver;
             _monitoringEvents = monitoringEvents;
             _messageReceiver = messageReceiver;
-        }
-
-        internal NavigationUseCase(
-            IGameStateReceiver gameStateReceiver,
-            MonitoringEvents monitoringEvents,
-            IMessageReceiver messageReceiver,
-            PlannedRoute plannedRoute)
-            : this(gameStateReceiver, monitoringEvents, messageReceiver)
-        {
-            _plannedRoute = plannedRoute;
         }
 
         public void Execute(CancellationToken token)
@@ -43,12 +33,18 @@ namespace RoadCaptain.UseCases
                     null,
                     HandleCommandsAvailable,
                     null,
-                    null);
+                    null, 
+                    RouteSelected);
 
             // Start listening for game state updates,
             // the Start() method will block until token
             // is cancelled
             _gameStateReceiver.Start(token);
+        }
+
+        private void RouteSelected(PlannedRoute route)
+        {
+            _plannedRoute = route;
         }
 
         private void HandleCommandsAvailable(List<TurnDirection> commands)

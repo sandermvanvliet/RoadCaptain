@@ -7,13 +7,12 @@ namespace RoadCaptain.Ports
     public interface IGameStateReceiver
     {
         void Start(CancellationToken token);
-        void Register(
-            Action<TrackPoint> positionChanged,
+        void Register(Action<TrackPoint> positionChanged,
             Action<string> segmentChanged,
             Action<List<Turn>> turnsAvailable,
             Action<SegmentDirection> directionChanged,
             Action<List<TurnDirection>> turnCommandsAvailable,
             Action<ulong> enteredGame,
-            Action<ulong> leftGame);
+            Action<ulong> leftGame, Action<PlannedRoute> routeSelected);
     }
 }

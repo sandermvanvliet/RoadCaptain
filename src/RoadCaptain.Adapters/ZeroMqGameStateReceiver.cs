@@ -21,6 +21,7 @@ namespace RoadCaptain.Adapters
         private readonly List<Action<List<Turn>>> _turnsAvailableHandlers = new();
         private readonly List<Action<ulong>> _enteredGameHandlers = new();
         private readonly List<Action<ulong>> _leftGameHandlers = new();
+        private readonly List<Action<PlannedRoute>> _routeSelectedHandlers = new();
 
         public ZeroMqGameStateReceiver(MonitoringEvents monitoringEvents)
         {
@@ -49,14 +50,13 @@ namespace RoadCaptain.Adapters
             }
         }
 
-        public void Register(
-            Action<TrackPoint> positionChanged,
+        public void Register(Action<TrackPoint> positionChanged,
             Action<string> segmentChanged,
             Action<List<Turn>> turnsAvailable,
             Action<SegmentDirection> directionChanged,
             Action<List<TurnDirection>> turnCommandsAvailable,
             Action<ulong> enteredGame,
-            Action<ulong> leftGame)
+            Action<ulong> leftGame, Action<PlannedRoute> routeSelected)
         {
             AddHandlerIfNotNull(_positionChangedHandlers, positionChanged);
             AddHandlerIfNotNull(_segmentChangedHandlers, segmentChanged);
@@ -65,6 +65,7 @@ namespace RoadCaptain.Adapters
             AddHandlerIfNotNull(_turnCommandsAvailableHandlers, turnCommandsAvailable);
             AddHandlerIfNotNull(_enteredGameHandlers, enteredGame);
             AddHandlerIfNotNull(_leftGameHandlers, leftGame);
+            AddHandlerIfNotNull(_routeSelectedHandlers, routeSelected);
         }
 
         private static void AddHandlerIfNotNull<TMessage>(List<Action<TMessage>> collection, Action<TMessage> handler)
@@ -105,6 +106,9 @@ namespace RoadCaptain.Adapters
                     break;
                 case "leftGame":
                     _leftGameHandlers.ForEach(h => InvokeHandler(h, message.Data));
+                    break;
+                case "routeSelected":
+                    _routeSelectedHandlers.ForEach(h => InvokeHandler(h, message.Data));
                     break;
             }
         }

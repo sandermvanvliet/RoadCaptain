@@ -20,6 +20,7 @@ namespace RoadCaptain.Tests.Unit
         private readonly MonitoringEvents _monitoringEvents;
         private readonly ConcurrentQueue<string> _messages = new();
         private readonly AutoResetEvent _autoResetEvent = new(false);
+        private readonly List<Action<PlannedRoute>> _routeSelectedHandlers = new();
 
         public InMemoryGameStateReceiver(MonitoringEvents monitoringEvents)
         {
@@ -39,14 +40,13 @@ namespace RoadCaptain.Tests.Unit
             }
         }
 
-        public void Register(
-            Action<TrackPoint> positionChanged, 
+        public void Register(Action<TrackPoint> positionChanged,
             Action<string> segmentChanged,
-            Action<List<Turn>> turnsAvailable, 
+            Action<List<Turn>> turnsAvailable,
             Action<SegmentDirection> directionChanged,
-            Action<List<TurnDirection>> turnCommandsAvailable, 
-            Action<ulong> enteredGame, 
-            Action<ulong> leftGame)
+            Action<List<TurnDirection>> turnCommandsAvailable,
+            Action<ulong> enteredGame,
+            Action<ulong> leftGame, Action<PlannedRoute> routeSelected)
         {
             AddHandlerIfNotNull(_positionChangedHandlers, positionChanged);
             AddHandlerIfNotNull(_segmentChangedHandlers, segmentChanged);
@@ -55,6 +55,7 @@ namespace RoadCaptain.Tests.Unit
             AddHandlerIfNotNull(_turnCommandsAvailableHandlers, turnCommandsAvailable);
             AddHandlerIfNotNull(_enteredGameHandlers, enteredGame);
             AddHandlerIfNotNull(_leftGameHandlers, leftGame);
+            AddHandlerIfNotNull(_routeSelectedHandlers, routeSelected);
         }
         
         public void Enqueue(string topic, object data)
@@ -101,6 +102,9 @@ namespace RoadCaptain.Tests.Unit
                     break;
                 case "leftGame":
                     _leftGameHandlers.ForEach(h => InvokeHandler(h, message.Data));
+                    break;
+                case "routeSelected":
+                    _routeSelectedHandlers.ForEach(h => InvokeHandler(h, message.Data));
                     break;
             }
         }

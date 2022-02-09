@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Reflection;
 using System.Threading;
 using FluentAssertions;
 using RoadCaptain.UseCases;
@@ -11,24 +12,33 @@ namespace RoadCaptain.Tests.Unit
     public class WhenNavigating
     {
         private readonly InMemoryGameStateReceiver _gameStateReceiver;
-        private readonly PlannedRoute _plannedRoute;
         private readonly NavigationUseCase _useCase;
-        private InMemoryMessageReceiver _inMemoryMessageReceiver;
+        private readonly InMemoryMessageReceiver _inMemoryMessageReceiver;
+        private readonly FieldInfo _plannedRouteFieldInfo;
 
         public WhenNavigating()
         {
             var monitoringEvents = new NopMonitoringEvents();
             _gameStateReceiver = new InMemoryGameStateReceiver(monitoringEvents);
 
-            _plannedRoute = FixedForTesting();
+            var plannedRoute = FixedForTesting();
 
             _inMemoryMessageReceiver = new InMemoryMessageReceiver();
             _useCase = new NavigationUseCase(
                 _gameStateReceiver,
                 monitoringEvents,
-                _inMemoryMessageReceiver,
-                _plannedRoute);
+                _inMemoryMessageReceiver);
+
+            _gameStateReceiver.Enqueue("routeSelected", plannedRoute);
+
+            // We need to use reflection here because sending the route
+            // through the dispatcher does a serialize/deserialize which
+            // means we don't have a reference to the planed route anymore.
+            _plannedRouteFieldInfo = _useCase.GetType()
+                .GetField("_plannedRoute", BindingFlags.Instance | BindingFlags.NonPublic);
         }
+
+        private PlannedRoute PlannedRoute => _plannedRouteFieldInfo.GetValue(_useCase) as PlannedRoute;
 
         public static PlannedRoute FixedForTesting()
         {
@@ -53,7 +63,7 @@ namespace RoadCaptain.Tests.Unit
 
             WhenHandlingNavigation();
 
-            _plannedRoute
+            PlannedRoute
                 .CurrentSegmentId
                 .Should()
                 .Be("seg-1");
@@ -66,7 +76,7 @@ namespace RoadCaptain.Tests.Unit
 
             WhenHandlingNavigation();
 
-            _plannedRoute
+            PlannedRoute
                 .CurrentSegmentId
                 .Should()
                 .BeNull();
@@ -75,12 +85,12 @@ namespace RoadCaptain.Tests.Unit
         [Fact]
         public void GivenStartedRouteAndRiderEntersNextExpectedSegment_CurrentSegmentIsUpdated()
         {
-            _plannedRoute.EnteredSegment("seg-1");
+            _gameStateReceiver.Enqueue("segmentChanged", "seg-1");
             _gameStateReceiver.Enqueue("segmentChanged", "seg-2");
 
             WhenHandlingNavigation();
 
-            _plannedRoute
+            PlannedRoute
                 .CurrentSegmentId
                 .Should()
                 .Be("seg-2");
@@ -89,12 +99,12 @@ namespace RoadCaptain.Tests.Unit
         [Fact]
         public void GivenStartedRouteAndRiderEntersNextExpectedSegment_NextSegmentIsUpdated()
         {
-            _plannedRoute.EnteredSegment("seg-1");
+            _gameStateReceiver.Enqueue("segmentChanged", "seg-1");
             _gameStateReceiver.Enqueue("segmentChanged", "seg-2");
 
             WhenHandlingNavigation();
 
-            _plannedRoute
+            PlannedRoute
                 .NextSegmentId
                 .Should()
                 .Be("seg-3");
@@ -103,12 +113,12 @@ namespace RoadCaptain.Tests.Unit
         [Fact]
         public void GivenStartedRouteAndRiderEntersNextExpectedSegment_ExpectedTurnIsUpdated()
         {
-            _plannedRoute.EnteredSegment("seg-1");
+            _gameStateReceiver.Enqueue("segmentChanged", "seg-1");
             _gameStateReceiver.Enqueue("segmentChanged", "seg-2");
 
             WhenHandlingNavigation();
 
-            _plannedRoute
+            PlannedRoute
                 .TurnToNextSegment
                 .Should()
                 .Be(TurnDirection.GoStraight);
@@ -117,10 +127,10 @@ namespace RoadCaptain.Tests.Unit
         [Fact]
         public void GivenStartedRouteOnSegmentThreeAndLeftAndGoStraightCommandsAvailable_NoCommandIsSent()
         {
-            _plannedRoute.EnteredSegment("seg-1");
-            _plannedRoute.EnteredSegment("seg-2");
-            _plannedRoute.EnteredSegment("seg-3");
-            _gameStateReceiver.Enqueue("turnCommandsAvailable", new List<TurnDirection> { TurnDirection.Left , TurnDirection.GoStraight});
+            _gameStateReceiver.Enqueue("segmentChanged", "seg-1");
+            _gameStateReceiver.Enqueue("segmentChanged", "seg-2");
+            _gameStateReceiver.Enqueue("segmentChanged", "seg-3");
+            _gameStateReceiver.Enqueue("turnCommandsAvailable", new List<TurnDirection> { TurnDirection.Left, TurnDirection.GoStraight });
 
             WhenHandlingNavigation();
 
@@ -133,10 +143,10 @@ namespace RoadCaptain.Tests.Unit
         [Fact]
         public void GivenStartedRouteOnSegmentThreeAndLeftAndRightCommandsAvailable_TurnRightCommandIsSent()
         {
-            _plannedRoute.EnteredSegment("seg-1");
-            _plannedRoute.EnteredSegment("seg-2");
-            _plannedRoute.EnteredSegment("seg-3");
-            _gameStateReceiver.Enqueue("turnCommandsAvailable", new List<TurnDirection> { TurnDirection.Left , TurnDirection.Right});
+            _gameStateReceiver.Enqueue("segmentChanged", "seg-1");
+            _gameStateReceiver.Enqueue("segmentChanged", "seg-2");
+            _gameStateReceiver.Enqueue("segmentChanged", "seg-3");
+            _gameStateReceiver.Enqueue("turnCommandsAvailable", new List<TurnDirection> { TurnDirection.Left, TurnDirection.Right });
 
             WhenHandlingNavigation();
 
@@ -151,15 +161,17 @@ namespace RoadCaptain.Tests.Unit
         [Fact]
         public void GivenStartedRouteOnLastSegment_NextSegmentIsEmpty()
         {
-            _plannedRoute.EnteredSegment("seg-1");
-            _plannedRoute.EnteredSegment("seg-2");
-            _plannedRoute.EnteredSegment("seg-3");
-            _plannedRoute.EnteredSegment("seg-4");
-            _plannedRoute.EnteredSegment("seg-5");
-            _plannedRoute.EnteredSegment("seg-6");
-            _plannedRoute.EnteredSegment("seg-7");
+            var plannedRoute = FixedForTesting();
 
-            _plannedRoute
+            plannedRoute.EnteredSegment("seg-1");
+            plannedRoute.EnteredSegment("seg-2");
+            plannedRoute.EnteredSegment("seg-3");
+            plannedRoute.EnteredSegment("seg-4");
+            plannedRoute.EnteredSegment("seg-5");
+            plannedRoute.EnteredSegment("seg-6");
+            plannedRoute.EnteredSegment("seg-7");
+
+            plannedRoute
                 .NextSegmentId
                 .Should()
                 .BeNull();
@@ -168,16 +180,17 @@ namespace RoadCaptain.Tests.Unit
         [Fact]
         public void GivenStartedRouteOnSegmentThreeAndEnteringSegmentFive_ArgumentExceptionIsThrown()
         {
-            _plannedRoute.EnteredSegment("seg-1");
-            _plannedRoute.EnteredSegment("seg-2");
-            _plannedRoute.EnteredSegment("seg-3");
+            var plannedRoute = FixedForTesting();
+            plannedRoute.EnteredSegment("seg-1");
+            plannedRoute.EnteredSegment("seg-2");
+            plannedRoute.EnteredSegment("seg-3");
 
-            Action act = () => _plannedRoute.EnteredSegment("seg-5");
+            Action act = () => plannedRoute.EnteredSegment("seg-5");
 
             act.Should()
                 .Throw<ArgumentException>();
 
-            _plannedRoute
+            plannedRoute
                 .NextSegmentId
                 .Should()
                 .Be("seg-4");
@@ -186,15 +199,16 @@ namespace RoadCaptain.Tests.Unit
         [Fact]
         public void GivenStartedRouteOnLastSegment_TurnToNextSegmentIsNone()
         {
-            _plannedRoute.EnteredSegment("seg-1");
-            _plannedRoute.EnteredSegment("seg-2");
-            _plannedRoute.EnteredSegment("seg-3");
-            _plannedRoute.EnteredSegment("seg-4");
-            _plannedRoute.EnteredSegment("seg-5");
-            _plannedRoute.EnteredSegment("seg-6");
-            _plannedRoute.EnteredSegment("seg-7");
-            
-            _plannedRoute
+            var plannedRoute = FixedForTesting();
+            plannedRoute.EnteredSegment("seg-1");
+            plannedRoute.EnteredSegment("seg-2");
+            plannedRoute.EnteredSegment("seg-3");
+            plannedRoute.EnteredSegment("seg-4");
+            plannedRoute.EnteredSegment("seg-5");
+            plannedRoute.EnteredSegment("seg-6");
+            plannedRoute.EnteredSegment("seg-7");
+
+            plannedRoute
                 .TurnToNextSegment
                 .Should()
                 .Be(TurnDirection.None);
@@ -203,15 +217,17 @@ namespace RoadCaptain.Tests.Unit
         [Fact]
         public void GivenStartedRouteOnLastSegmentAndEnteringSegment_ArgumentExceptionIsThrown()
         {
-            _plannedRoute.EnteredSegment("seg-1");
-            _plannedRoute.EnteredSegment("seg-2");
-            _plannedRoute.EnteredSegment("seg-3");
-            _plannedRoute.EnteredSegment("seg-4");
-            _plannedRoute.EnteredSegment("seg-5");
-            _plannedRoute.EnteredSegment("seg-6");
-            _plannedRoute.EnteredSegment("seg-7");
-            
-            Action act = () => _plannedRoute.EnteredSegment("seg-5");
+            var plannedRoute = FixedForTesting();
+
+            plannedRoute.EnteredSegment("seg-1");
+            plannedRoute.EnteredSegment("seg-2");
+            plannedRoute.EnteredSegment("seg-3");
+            plannedRoute.EnteredSegment("seg-4");
+            plannedRoute.EnteredSegment("seg-5");
+            plannedRoute.EnteredSegment("seg-6");
+            plannedRoute.EnteredSegment("seg-7");
+
+            Action act = () => plannedRoute.EnteredSegment("seg-5");
 
             act
                 .Should()
@@ -223,7 +239,7 @@ namespace RoadCaptain.Tests.Unit
         {
             var tokenSource = Debugger.IsAttached
                 ? new CancellationTokenSource()
-                : new CancellationTokenSource(50);
+                : new CancellationTokenSource(100);
 
             try
             {

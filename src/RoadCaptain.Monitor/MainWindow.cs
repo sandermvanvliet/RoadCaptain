@@ -47,7 +47,8 @@ namespace RoadCaptain.Monitor
                 UpdateDirection,
                 UpdateTurnCommands,
                 EnteredGame,
-                LeftGame);
+                LeftGame, 
+                null);
 
             InitializeComponent();
         }
