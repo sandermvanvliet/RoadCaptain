@@ -16,7 +16,8 @@ namespace RoadCaptain.Host.Console.HostedServices
 
         public NavigationService(
             MonitoringEvents monitoringEvents,
-            NavigationUseCase useCase, IGameStateDispatcher gameStateDispatcher)
+            NavigationUseCase useCase, 
+            IGameStateDispatcher gameStateDispatcher)
         {
             _monitoringEvents = monitoringEvents;
             _useCase = useCase;
@@ -27,6 +28,12 @@ namespace RoadCaptain.Host.Console.HostedServices
 
         public Task StartAsync(CancellationToken cancellationToken)
         {
+            Task.Factory.StartNew(
+                () => _useCase.Execute(_cancellationTokenSource.Token),
+                _cancellationTokenSource.Token);
+
+            _monitoringEvents.ServiceStarted(nameof(NavigationService));
+            
             var route = new SegmentSequenceBuilder()
                 .StartingAt("watopia-bambino-fondo-001-after-after-after-after-after")
                 .GoingStraightTo("watopia-bambino-fondo-001-after-after-after-after-before-after")
@@ -51,12 +58,6 @@ namespace RoadCaptain.Host.Console.HostedServices
                 .Build();
 
             _gameStateDispatcher.RouteSelected(route);
-
-            Task.Factory.StartNew(
-                () => _useCase.Execute(_cancellationTokenSource.Token),
-                _cancellationTokenSource.Token);
-
-            _monitoringEvents.ServiceStarted(nameof(NavigationService));
 
             return Task.CompletedTask;
         }
