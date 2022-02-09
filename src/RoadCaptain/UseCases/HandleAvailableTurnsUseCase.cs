@@ -19,7 +19,8 @@ namespace RoadCaptain.UseCases
         public void Execute(ZwiftCommandAvailableMessage commandAvailable)
         {
             if ("somethingempty".Equals(commandAvailable.Type, StringComparison.InvariantCultureIgnoreCase) && 
-                _commands.Any())
+                _commands.Any() && 
+                _dispatcher.CurrentSegment != null)
             {
                 // Reset available commands by dispatching an empty list.
                 // But only when the segment changed because we're seeing SomethingEmpty + new commands repeat a lot
