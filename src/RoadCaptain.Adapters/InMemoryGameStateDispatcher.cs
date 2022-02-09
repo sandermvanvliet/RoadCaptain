@@ -128,7 +128,7 @@ namespace RoadCaptain.Adapters
         public void RouteSelected(PlannedRoute route)
         {
             CurrentRoute = route;
-            Enqueue("plannedRoute", route);
+            Enqueue("routeSelected", route);
         }
 
         protected virtual void Enqueue(string topic, object data)
