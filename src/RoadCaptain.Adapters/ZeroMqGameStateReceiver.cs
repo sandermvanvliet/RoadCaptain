@@ -69,7 +69,10 @@ namespace RoadCaptain.Adapters
 
         private static void AddHandlerIfNotNull<TMessage>(List<Action<TMessage>> collection, Action<TMessage> handler)
         {
-            collection.Add(handler);
+            if (handler != null)
+            {
+                collection.Add(handler);
+            }
         }
 
         private void InvokeHandlers(string serializedContent)
