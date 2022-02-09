@@ -1,44 +1,44 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace RoadCaptain
 {
     public class PlannedRoute
     {
-        private int _segmentIndex;
-        private bool _hasStarted;
-        private bool _hasCompleted;
+        public bool HasCompleted { get; private set; }
+        public bool HasStarted { get; private set; }
 
-        public string StartingSegmentId => RouteSegmentSequence[_segmentIndex].SegmentId;
-        public string NextSegmentId => RouteSegmentSequence[_segmentIndex].NextSegmentId;
-        public TurnDirection TurnToNextSegment => RouteSegmentSequence[_segmentIndex].TurnToNextSegment;
-        public string CurrentSegmentId => _hasStarted ? RouteSegmentSequence[_segmentIndex].SegmentId : null;
+        public int SegmentSequenceIndex { get; private set; }
+
+        public string StartingSegmentId => RouteSegmentSequence[SegmentSequenceIndex].SegmentId;
+        public string NextSegmentId => RouteSegmentSequence[SegmentSequenceIndex].NextSegmentId;
+        public TurnDirection TurnToNextSegment => RouteSegmentSequence[SegmentSequenceIndex].TurnToNextSegment;
+        public string CurrentSegmentId => HasStarted ? RouteSegmentSequence[SegmentSequenceIndex].SegmentId : null;
 
         public List<SegmentSequence> RouteSegmentSequence { get; } = new();
 
         public void EnteredSegment(string segmentId)
         {
-            if (_hasCompleted)
+            if (HasCompleted)
             {
                 throw new ArgumentException("Route has already completed, can't enter new segment");
             }
 
             if (CurrentSegmentId == null && segmentId == StartingSegmentId)
             {
-                _hasStarted = true;
+                HasStarted = true;
             }
             else if (CurrentSegmentId != null && NextSegmentId == segmentId)
             {
-                _segmentIndex++;
-                
+                SegmentSequenceIndex++;
+
                 // Use the segment index instead of comparing the segment
                 // id with the id of the last segment because we may pass
                 // the same segment multiple times in the course of this
                 // route.
-                if(_segmentIndex == RouteSegmentSequence.Count -1)
+                if (SegmentSequenceIndex == RouteSegmentSequence.Count - 1)
                 {
-                    _hasCompleted = true;
+                    HasCompleted = true;
                 }
             }
             else
