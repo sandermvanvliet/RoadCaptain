@@ -28,7 +28,7 @@ namespace RoadCaptain.Host.Console.HostedServices
                 () => _useCase.Execute(_cancellationTokenSource.Token),
                 _cancellationTokenSource.Token);
 
-            _monitoringEvents.ServiceStarted(nameof(HandleZwiftMessagesService));
+            _monitoringEvents.ServiceStarted(nameof(NavigationService));
 
             return Task.CompletedTask;
         }
@@ -44,7 +44,7 @@ namespace RoadCaptain.Host.Console.HostedServices
             }
             finally
             {
-                _monitoringEvents.ServiceStopped(nameof(HandleZwiftMessagesService));
+                _monitoringEvents.ServiceStopped(nameof(NavigationService));
             }
 
             return Task.CompletedTask;
