@@ -193,7 +193,37 @@ namespace RoadCaptain.Adapters
 
         public void SendTurnCommand(TurnDirection direction)
         {
-            throw new NotImplementedException();
+            var message = new ZwiftCompanionToAppRiderMessage
+            {
+                MyId = 3089151, /*riderId*/ // TODO: inject this value
+                Details = new ZwiftCompanionToAppRiderMessage.Types.RiderMessage
+                {
+                    CommandType = (uint)GetCommandTypeForTurnDirection(direction),
+                    Tag1 = 194, // No clue
+                    Type = 22, // Tag2
+                    Tag3 = 0,
+                    Tag5 = 0,
+                    Tag7 = 0
+                },
+                Sequence = 27014 // No idea how this is counted or if it's an echo of an incoming message perhaps?
+            };
+
+            SendMessageBytes(message.ToByteArray());
+        }
+
+        private static CommandType GetCommandTypeForTurnDirection(TurnDirection direction)
+        {
+            switch (direction)
+            {
+                case TurnDirection.Left:
+                    return CommandType.TurnLeft;
+                case TurnDirection.GoStraight:
+                    return CommandType.GoStraight;
+                case TurnDirection.Right:
+                    return CommandType.TurnRight;
+                default:
+                    return CommandType.Unknown;
+            }
         }
 
         private static byte[] WrapWithLength(byte[] payload)
@@ -209,5 +239,21 @@ namespace RoadCaptain.Adapters
                 .Concat(payload)
                 .ToArray();
         }
+    }
+
+    internal enum CommandType
+    {
+        Unknown = 0,
+        ElbowFlick = 4,
+        Wave = 5,
+        RideOn = 6,
+        SomethingEmpty = 23, // I suspect this is a  "reset" type thing
+        TurnLeft = 1010,
+        GoStraight = 1011,
+        TurnRight = 1012,
+        DiscardAero = 1030,
+        DiscardLightweight = 1034,
+        PowerGraph = 1060,
+        HeadsUpDisplay = 1081,
     }
 }
