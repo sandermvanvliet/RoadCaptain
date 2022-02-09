@@ -37,27 +37,28 @@ namespace RoadCaptain.UseCases
                     null,
                     null);
 
-            // Start listening for game state updates
+            // Start listening for game state updates,
+            // the Start() method will block until token
+            // is cancelled
             _gameStateReceiver.Start(token);
-
-            // Block until the hosting service is stopped.
-            // That cancels the CancellationToken.
-            token.WaitHandle.WaitOne();
         }
 
         private void HandleCommandsAvailable(List<TurnDirection> commands)
         {
-            if (CommandsMatchTurnsToNextSegment(commands, _plannedRoute.TurnsToNextSegment))
+            if (commands.Any())
             {
-                _monitoringEvents.Information("Executing turn {TurnDirection}", _plannedRoute.TurnToNextSegment);
-                _messageReceiver.SendTurnCommand(_plannedRoute.TurnToNextSegment);
-            }
-            else
-            {
-                _monitoringEvents.Error(
-                    "Expected turn commands {ExpectedTurnCommands} but instead got {TurnCommands}",
-                    string.Join(", ", _plannedRoute.TurnsToNextSegment),
-                    string.Join(", ", commands));
+                if (CommandsMatchTurnsToNextSegment(commands, _plannedRoute.TurnsToNextSegment))
+                {
+                    _monitoringEvents.Information("Executing turn {TurnDirection}", _plannedRoute.TurnToNextSegment);
+                    _messageReceiver.SendTurnCommand(_plannedRoute.TurnToNextSegment);
+                }
+                else 
+                {
+                    _monitoringEvents.Error(
+                        "Expected turn commands: {ExpectedTurnCommands} but instead got: {TurnCommands}",
+                        string.Join(", ", _plannedRoute.TurnsToNextSegment),
+                        string.Join(", ", commands));
+                }
             }
         }
 
@@ -85,7 +86,7 @@ namespace RoadCaptain.UseCases
                 }
                 else
                 {
-                    _monitoringEvents.Warning("Rider entered segment {SegmentId} but it's not the start of the route");
+                    _monitoringEvents.Warning("Rider entered segment {SegmentId} but it's not the start of the route", segmentId);
                 }
             }
             else if(_plannedRoute.NextSegmentId == segmentId)
