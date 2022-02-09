@@ -33,8 +33,8 @@ namespace RoadCaptain.Host.Console
         private static Logger CreateLogger()
         {
             return new LoggerConfiguration()
-                .WriteTo.Console()
-                .WriteTo.File($"roadcaptain-log-{DateTime.UtcNow:yyyy-MM-ddTHHmmss}.log")
+                .WriteTo.Console().MinimumLevel.Information()
+                .WriteTo.File($"roadcaptain-log-{DateTime.UtcNow:yyyy-MM-ddTHHmmss}.log").MinimumLevel.Debug()
                 .Enrich.FromLogContext()
                 .CreateLogger();
         }
