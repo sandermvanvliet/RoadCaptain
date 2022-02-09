@@ -47,7 +47,7 @@ namespace RoadCaptain.Adapters
         {
             packet = packet ?? throw new ArgumentException(nameof(packet));
 
-            if (packet.Synchronize && packet.Acknowledgment)
+            if (packet.Synchronize || (packet.Synchronize && packet.Acknowledgment))
             {
                 _lastSequenceNumber = 0;
                 _expectedNextSequenceNumber = 0;
