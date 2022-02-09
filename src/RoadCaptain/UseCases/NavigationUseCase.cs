@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using RoadCaptain.Ports;
@@ -85,7 +86,14 @@ namespace RoadCaptain.UseCases
                 // - Check if we've dropped into the start segment
                 if (segmentId == _plannedRoute.StartingSegmentId)
                 {
-                    _plannedRoute.EnteredSegment(segmentId);
+                    try
+                    {
+                        _plannedRoute.EnteredSegment(segmentId);
+                    }
+                    catch (ArgumentException e)
+                    {
+                        _monitoringEvents.Error("Failed to enter segment because {Reason}", e.Message);
+                    }
                 }
                 else
                 {
@@ -95,7 +103,14 @@ namespace RoadCaptain.UseCases
             else if (_plannedRoute.NextSegmentId == segmentId)
             {
                 // We moved into the next expected segment
-                _plannedRoute.EnteredSegment(segmentId);
+                try
+                {
+                    _plannedRoute.EnteredSegment(segmentId);
+                }
+                catch (ArgumentException e)
+                {
+                    _monitoringEvents.Error("Failed to enter segment because {Reason}", e.Message);
+                }
             }
             else
             {
