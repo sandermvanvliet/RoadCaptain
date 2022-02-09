@@ -1,6 +1,7 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 
-namespace RoadCaptain.Tests.Unit
+namespace RoadCaptain
 {
     public class SegmentSequenceBuilder
     {
@@ -72,6 +73,12 @@ namespace RoadCaptain.Tests.Unit
 
         public SegmentSequenceBuilder EndingAt(string segmentId)
         {
+            if (Last.SegmentId != segmentId)
+            {
+                throw new ArgumentException(
+                    "Can't end on a segment that the route did not enter. Did you call any of the turns?");
+            }
+
             Last.NextSegmentId = null;
             Last.TurnToNextSegment = TurnDirection.None;
             

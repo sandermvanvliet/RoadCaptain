@@ -167,10 +167,6 @@
     "segmentId": "watopia-bambino-fondo-001-after-after-after-after-before-after",
     "turnsA": [
       {
-        "direction": "left",
-        "segmentId": "watopia-beach-island-loop-004"
-      },
-      {
         "direction": "goStraight",
         "segmentId": "watopia-bambino-fondo-001-after-after-after-after-before-before"
       }
@@ -183,6 +179,71 @@
       {
         "direction": "left",
         "segmentId": "watopia-gran-fondo-001"
+      }
+    ]
+  },
+  {
+    "segmentId": "watopia-bambino-fondo-001-after-after-after-after-before-before",
+    "turnsA": [
+      {
+        "direction": "goStraight",
+        "segmentId": "watopia-bambino-fondo-001-after-after-after-before"
+      },
+      {
+        "direction": "right",
+        "segmentId": "watopia-bambino-fondo-004-before-before"
+      }
+    ],
+    "turnsB": [
+      {
+        "direction": "goStraight",
+        "segmentId": "watopia-bambino-fondo-001-after-after-after-after-before-after"
+      }
+    ]
+  },
+  {
+    "segmentId": "watopia-bambino-fondo-001-after-after-after-before",
+    "turnsA": [
+      {
+        "direction": "right",
+        "segmentId": "watopia-bambino-fondo-001-after-after-before-after"
+      },
+      {
+        "direction": "goStraight",
+        "segmentId": "watopia-bambino-fondo-002-after"
+      }
+    ],
+    "turnsB": [
+      {
+        "direction": "goStraight",
+        "segmentId": "watopia-bambino-fondo-001-after-after-after-after-before-before"
+      },
+      {
+        "direction": "left",
+        "segmentId": "watopia-bambino-fondo-004-before-before"
+      }
+    ]
+  },
+  {
+    "segmentId": "watopia-bambino-fondo-002-after",
+    "turnsA": [
+      {
+        "direction": "left",
+        "segmentId": "watopia-beach-island-loop-004"
+      },
+      {
+        "direction": "goStraight",
+        "segmentId": "watopia-bambino-fondo-002-before-after"
+      }
+    ],
+    "turnsB": [
+      {
+        "direction": "goStraight",
+        "segmentId": "watopia-bambino-fondo-001-after-after-after-before"
+      },
+      {
+        "direction": "left",
+        "segmentId": "watopia-bambino-fondo-001-after-after-before-after"
       }
     ]
   }
