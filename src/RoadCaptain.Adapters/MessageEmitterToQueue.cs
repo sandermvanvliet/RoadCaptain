@@ -122,21 +122,6 @@ namespace RoadCaptain.Adapters
                                 rider.Position.Latitude,
                                 rider.Position.Longitude,
                                 rider.Position.Altitude);
-
-                            break;
-                        }
-
-                        foreach (var s in activityDetails.Details.RiderData.Sub)
-                        {
-                            if (s?.Riders != null && s.Riders.Any())
-                            {
-                                foreach (var rider in s.Riders)
-                                {
-                                    var subject = $"{rider.Description} ({rider.RiderId})";
-
-                                    _monitoringEvents.Debug($"Received rider information: {subject}");
-                                }
-                            }
                         }
 
                         break;
@@ -156,20 +141,7 @@ namespace RoadCaptain.Adapters
                 case 17:
                 case 19:
                     // Rider nearby?
-                    {
-                        var rider = activityDetails
-                            .Details
-                            ?.OtherRider;
-
-                        if (rider != null)
-                        {
-                            var subject = $"{rider.FirstName?.Trim()} {rider.LastName?.Trim()} ({rider.RiderId})";
-
-                            _monitoringEvents.Debug("Received rider nearby position for {Subject}", subject);
-                        }
-
-                        break;
-                    }
+                    break;
                 case 20:
                     // Ignore, contains very little data and is similar to type 21
                     break;
