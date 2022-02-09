@@ -45,7 +45,17 @@ namespace RoadCaptain.Adapters
 
         public void Assemble(TcpPacket packet)
         {
-            if (packet.Synchronize)
+            packet = packet ?? throw new ArgumentException(nameof(packet));
+
+            if (packet.Synchronize && packet.Acknowledgment)
+            {
+                _lastSequenceNumber = 0;
+                _expectedNextSequenceNumber = 0;
+                _startingSequenceNumber = 0;
+                return;
+            }
+
+            if (packet.Reset || packet.Finished)
             {
                 return;
             }
@@ -71,20 +81,28 @@ namespace RoadCaptain.Adapters
             }
             else if (packet.SequenceNumber > _expectedNextSequenceNumber)
             {
+                if (_packetBuffer.Any(p => p.SequenceNumber == packet.SequenceNumber))
+                {
+                    _monitoringEvents.Warning("Packet {SequenceNumber} has been seen before, not buffering it again", packet.SequenceNumber);
+                    return;
+                }
+
                 _monitoringEvents.Warning("Received a packet to far ahead, buffering {SequenceNumber}, expected {ExpectedSequenceNumber}", packet.SequenceNumber, _expectedNextSequenceNumber);
                 _packetBuffer.Add(packet);
 
                 var expectedPacket =
                     _packetBuffer.SingleOrDefault(p => p.SequenceNumber == _expectedNextSequenceNumber);
 
-                if (expectedPacket != null)
+                while (expectedPacket != null)
                 {
-                    _packetBuffer.Remove(expectedPacket);
-                    InnerAssemble(expectedPacket);
-                    _expectedNextSequenceNumber = expectedPacket.SequenceNumber + (uint)expectedPacket.PayloadData.Length;
-                    _lastSequenceNumber = packet.SequenceNumber;
-                    _lastOnlyAck = packet.Acknowledgment && !packet.Push;
+                    _monitoringEvents.Information("Unbuffering {SequenceNumber}", expectedPacket.SequenceNumber);
 
+                    _packetBuffer.Remove(expectedPacket);
+
+                    Assemble(expectedPacket);
+
+                    expectedPacket =
+                        _packetBuffer.SingleOrDefault(p => p.SequenceNumber == _expectedNextSequenceNumber);
                 }
             }
             else
