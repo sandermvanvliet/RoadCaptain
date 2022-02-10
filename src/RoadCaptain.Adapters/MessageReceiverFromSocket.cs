@@ -19,6 +19,7 @@ namespace RoadCaptain.Adapters
         private readonly Mutex _mutex = new Mutex(false);
         private readonly TimeSpan _mutextTimeout = TimeSpan.FromMilliseconds(250);
         private readonly MonitoringEvents _monitoringEvents;
+        private uint _commandCounter = 1;
 
         public MessageReceiverFromSocket(MonitoringEvents monitoringEvents)
         {
@@ -176,7 +177,7 @@ namespace RoadCaptain.Adapters
                 Details = new ZwiftCompanionToAppRiderMessage.Types.RiderMessage
                 {
                     RiderId = riderId,
-                    Tag1 = 1,
+                    Tag1 = _commandCounter++,
                     Type = 28
                 },
                 Sequence = 0
@@ -199,7 +200,7 @@ namespace RoadCaptain.Adapters
                 Details = new ZwiftCompanionToAppRiderMessage.Types.RiderMessage
                 {
                     CommandType = (uint)GetCommandTypeForTurnDirection(direction),
-                    Tag1 = 194, // No clue
+                    Tag1 = _commandCounter++, // This is a sequence of the number of commands we've sent to the game
                     Type = 22, // Tag2
                     Tag3 = 0,
                     Tag5 = 0,
