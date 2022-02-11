@@ -6,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Serilog;
 using Serilog.Core;
+using Serilog.Events;
 
 namespace RoadCaptain.Host.Console
 {
@@ -14,11 +15,11 @@ namespace RoadCaptain.Host.Console
         public static void Main(string[] args)
         {
             var logger = CreateLogger();
-            
+
             try
             {
                 var host = CreateHostBuilder(args, logger).Build();
-                
+
                 RegisterLifetimeEvents(host);
 
                 host.Run();
@@ -33,8 +34,8 @@ namespace RoadCaptain.Host.Console
         private static Logger CreateLogger()
         {
             return new LoggerConfiguration()
-                .WriteTo.Console().MinimumLevel.Information()
-                .WriteTo.File($"roadcaptain-log-{DateTime.UtcNow:yyyy-MM-ddTHHmmss}.log").MinimumLevel.Debug()
+                .WriteTo.Console(restrictedToMinimumLevel: LogEventLevel.Information)
+                .WriteTo.File($"roadcaptain-log-{DateTime.UtcNow:yyyy-MM-ddTHHmmss}.log", restrictedToMinimumLevel: LogEventLevel.Debug)
                 .Enrich.FromLogContext()
                 .CreateLogger();
         }
