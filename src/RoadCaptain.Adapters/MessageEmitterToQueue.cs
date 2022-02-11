@@ -14,11 +14,15 @@ namespace RoadCaptain.Adapters
         private readonly ConcurrentQueue<ZwiftMessage> _queue = new();
         private readonly AutoResetEvent _autoResetEvent = new(false);
         private readonly TimeSpan _queueWaitTimeout = new(250);
+        private ulong _lastIncomingSequenceNumber;
+        private readonly IGameStateDispatcher _dispatcher;
 
         public MessageEmitterToQueue(
-            MonitoringEvents monitoringEvents)
+            MonitoringEvents monitoringEvents, 
+            IGameStateDispatcher dispatcher)
         {
             _monitoringEvents = monitoringEvents;
+            _dispatcher = dispatcher;
         }
 
         public void EmitMessageFromBytes(byte[] payload)
@@ -39,6 +43,12 @@ namespace RoadCaptain.Adapters
             {
                 _monitoringEvents.Warning("Invalid protobuf message: {Message}", ex.Message);
                 return;
+            }
+
+            if (packetData.Sequence > _lastIncomingSequenceNumber)
+            {
+                _lastIncomingSequenceNumber = packetData.Sequence;
+                _dispatcher.UpdateLastSequenceNumber(_lastIncomingSequenceNumber);
             }
 
             try
@@ -86,7 +96,7 @@ namespace RoadCaptain.Adapters
 
                         break;
                     case 9:
-                        _monitoringEvents.Information("Received a type 9 message that we don't understand yet");
+                        _monitoringEvents.Information("Received a pairing status message");
                         break;
                     case 13:
                         var activityDetails = ZwiftAppToCompanionActivityDetailsMessage.Parser.ParseFrom(byteArray);

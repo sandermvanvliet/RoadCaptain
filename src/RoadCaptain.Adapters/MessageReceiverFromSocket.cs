@@ -169,7 +169,7 @@ namespace RoadCaptain.Adapters
             }
         }
 
-        public void SendInitialPairingMessage(uint riderId)
+        public void SendInitialPairingMessage(uint riderId, uint sequenceNumber)
         {
             var message = new ZwiftCompanionToAppRiderMessage
             {
@@ -180,7 +180,7 @@ namespace RoadCaptain.Adapters
                     Tag1 = _commandCounter++,
                     Type = 28
                 },
-                Sequence = 0
+                Sequence = sequenceNumber
             };
 
             var memoryStream = new MemoryStream();
@@ -192,7 +192,7 @@ namespace RoadCaptain.Adapters
             SendMessageBytes(bytes);
         }
 
-        public void SendTurnCommand(TurnDirection direction)
+        public void SendTurnCommand(TurnDirection direction, uint sequenceNumber)
         {
             var message = new ZwiftCompanionToAppRiderMessage
             {
@@ -206,7 +206,7 @@ namespace RoadCaptain.Adapters
                     Tag5 = 0,
                     Tag7 = 0
                 },
-                Sequence = 27014 // No idea how this is counted or if it's an echo of an incoming message perhaps?
+                Sequence = sequenceNumber // No idea how this is counted or if it's an echo of an incoming message perhaps?
             };
 
             SendMessageBytes(message.ToByteArray());

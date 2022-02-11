@@ -7,7 +7,7 @@
         void Shutdown();
 
         void SendMessageBytes(byte[] payload);
-        void SendInitialPairingMessage(uint riderId);
-        void SendTurnCommand(TurnDirection direction);
+        void SendInitialPairingMessage(uint riderId, uint sequenceNumber);
+        void SendTurnCommand(TurnDirection direction, uint sequenceNumber);
     }
 }

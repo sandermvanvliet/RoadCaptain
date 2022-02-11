@@ -36,7 +36,7 @@ namespace RoadCaptain.UseCases
             {
                 // Dequeue will block if there are no messages in the queue
                 var message = _emitter.Dequeue(token);
-
+                
                 if (message is ZwiftRiderPositionMessage riderPosition)
                 {
                     _monitoringEvents.RiderPositionReceived(riderPosition.Latitude, riderPosition.Longitude, riderPosition.Altitude);
@@ -79,7 +79,7 @@ namespace RoadCaptain.UseCases
                     _pingedBefore = true;
                 }
 
-                _messageReceiver.SendInitialPairingMessage(ping.RiderId);
+                _messageReceiver.SendInitialPairingMessage(ping.RiderId, 0);
             }
         }
     }

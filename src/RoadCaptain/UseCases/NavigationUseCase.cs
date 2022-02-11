@@ -12,6 +12,7 @@ namespace RoadCaptain.UseCases
         private readonly MonitoringEvents _monitoringEvents;
         private readonly IMessageReceiver _messageReceiver;
         private PlannedRoute _plannedRoute;
+        private uint _lastSequenceNumber;
 
         public NavigationUseCase(
             IGameStateReceiver gameStateReceiver,
@@ -35,12 +36,18 @@ namespace RoadCaptain.UseCases
                     HandleCommandsAvailable,
                     null,
                     null, 
-                    RouteSelected);
+                    RouteSelected,
+                    LastSequenceNumberUpdated);
 
             // Start listening for game state updates,
             // the Start() method will block until token
             // is cancelled
             _gameStateReceiver.Start(token);
+        }
+
+        private void LastSequenceNumberUpdated(uint sequenceNumber)
+        {
+            _lastSequenceNumber = sequenceNumber;
         }
 
         private void RouteSelected(PlannedRoute route)
@@ -55,7 +62,7 @@ namespace RoadCaptain.UseCases
                 if (CommandsMatchTurnToNextSegment(commands, _plannedRoute.TurnToNextSegment))
                 {
                     _monitoringEvents.Information("Executing turn {TurnDirection}", _plannedRoute.TurnToNextSegment);
-                    _messageReceiver.SendTurnCommand(_plannedRoute.TurnToNextSegment);
+                    _messageReceiver.SendTurnCommand(_plannedRoute.TurnToNextSegment, _lastSequenceNumber);
                 }
                 else
                 {

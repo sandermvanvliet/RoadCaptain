@@ -21,6 +21,8 @@ namespace RoadCaptain.Adapters
 
         public SegmentDirection CurrentDirection { get; private set; } = SegmentDirection.Unknown;
 
+        public ulong LastSequenceNumber { get; private set; }
+
         public List<TurnDirection> AvailableTurnCommands { get; private set; } = new();
 
         public bool InGame { get; private set; }
@@ -129,6 +131,15 @@ namespace RoadCaptain.Adapters
         {
             CurrentRoute = route;
             Enqueue("routeSelected", route);
+        }
+
+        public void UpdateLastSequenceNumber(ulong sequenceNumber)
+        {
+            if (sequenceNumber > LastSequenceNumber)
+            {
+                LastSequenceNumber = sequenceNumber;
+                Enqueue("lastSequenceNumber", sequenceNumber);
+            }
         }
 
         protected virtual void Enqueue(string topic, object data)

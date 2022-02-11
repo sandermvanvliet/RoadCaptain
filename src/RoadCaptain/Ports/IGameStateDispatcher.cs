@@ -61,6 +61,12 @@ namespace RoadCaptain.Ports
         /// <param name="route"></param>
         void RouteSelected(PlannedRoute route);
 
+        /// <summary>
+        /// Update the last known incoming message sequence number
+        /// </summary>
+        /// <param name="sequenceNumber"></param>
+        void UpdateLastSequenceNumber(ulong sequenceNumber);
+
         // TODO: Make this architectually sound
         // Because exposing the state like this is a bit ugly...
         List<TurnDirection> AvailableTurnCommands { get; }

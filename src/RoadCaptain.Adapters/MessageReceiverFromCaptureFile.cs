@@ -80,12 +80,12 @@ namespace RoadCaptain.Adapters
             // Ignore for now, nobody is listening
         }
 
-        public void SendInitialPairingMessage(uint riderId)
+        public void SendInitialPairingMessage(uint riderId, uint sequenceNumber)
         {
             // Ignore for now, nobody is listening
         }
 
-        public void SendTurnCommand(TurnDirection direction)
+        public void SendTurnCommand(TurnDirection direction, uint sequenceNumber)
         {
             // Ignore for now, nobody is listening
         }

@@ -34,11 +34,11 @@ namespace RoadCaptain.Tests.Unit
         {
         }
 
-        public void SendInitialPairingMessage(uint riderId)
+        public void SendInitialPairingMessage(uint riderId, uint sequenceNumber)
         {
         }
 
-        public void SendTurnCommand(TurnDirection direction)
+        public void SendTurnCommand(TurnDirection direction, uint sequenceNumber)
         {
             SentCommands.Add(direction.ToString());
         }

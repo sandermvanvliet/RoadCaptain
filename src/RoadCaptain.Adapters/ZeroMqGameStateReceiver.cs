@@ -22,6 +22,7 @@ namespace RoadCaptain.Adapters
         private readonly List<Action<ulong>> _enteredGameHandlers = new();
         private readonly List<Action<ulong>> _leftGameHandlers = new();
         private readonly List<Action<PlannedRoute>> _routeSelectedHandlers = new();
+        private readonly List<Action<uint>> _lastSequenceNumberHandlers = new();
 
         public ZeroMqGameStateReceiver(MonitoringEvents monitoringEvents)
         {
@@ -56,7 +57,9 @@ namespace RoadCaptain.Adapters
             Action<SegmentDirection> directionChanged,
             Action<List<TurnDirection>> turnCommandsAvailable,
             Action<ulong> enteredGame,
-            Action<ulong> leftGame, Action<PlannedRoute> routeSelected)
+            Action<ulong> leftGame, 
+            Action<PlannedRoute> routeSelected, 
+            Action<uint> lastSequenceNumber)
         {
             AddHandlerIfNotNull(_positionChangedHandlers, positionChanged);
             AddHandlerIfNotNull(_segmentChangedHandlers, segmentChanged);
@@ -66,6 +69,7 @@ namespace RoadCaptain.Adapters
             AddHandlerIfNotNull(_enteredGameHandlers, enteredGame);
             AddHandlerIfNotNull(_leftGameHandlers, leftGame);
             AddHandlerIfNotNull(_routeSelectedHandlers, routeSelected);
+            AddHandlerIfNotNull(_lastSequenceNumberHandlers, lastSequenceNumber);
         }
 
         private static void AddHandlerIfNotNull<TMessage>(List<Action<TMessage>> collection, Action<TMessage> handler)
@@ -110,6 +114,10 @@ namespace RoadCaptain.Adapters
                 case "routeSelected":
                     _routeSelectedHandlers.ForEach(h => InvokeHandler(h, message.Data));
                     break;
+                case "lastSequenceNumber":
+                    _lastSequenceNumberHandlers.ForEach(h => InvokeHandler(h, message.Data));
+                    break;
+
             }
         }
 

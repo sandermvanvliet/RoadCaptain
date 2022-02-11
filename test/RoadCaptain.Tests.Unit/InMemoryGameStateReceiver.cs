@@ -21,6 +21,7 @@ namespace RoadCaptain.Tests.Unit
         private readonly ConcurrentQueue<string> _messages = new();
         private readonly AutoResetEvent _autoResetEvent = new(false);
         private readonly List<Action<PlannedRoute>> _routeSelectedHandlers = new();
+        private readonly List<Action<uint>> _lastSequenceNumberHandlers = new();
 
         public InMemoryGameStateReceiver(MonitoringEvents monitoringEvents)
         {
@@ -46,7 +47,9 @@ namespace RoadCaptain.Tests.Unit
             Action<SegmentDirection> directionChanged,
             Action<List<TurnDirection>> turnCommandsAvailable,
             Action<ulong> enteredGame,
-            Action<ulong> leftGame, Action<PlannedRoute> routeSelected)
+            Action<ulong> leftGame, 
+            Action<PlannedRoute> routeSelected, 
+            Action<uint> lastSequenceNumber)
         {
             AddHandlerIfNotNull(_positionChangedHandlers, positionChanged);
             AddHandlerIfNotNull(_segmentChangedHandlers, segmentChanged);
@@ -56,6 +59,7 @@ namespace RoadCaptain.Tests.Unit
             AddHandlerIfNotNull(_enteredGameHandlers, enteredGame);
             AddHandlerIfNotNull(_leftGameHandlers, leftGame);
             AddHandlerIfNotNull(_routeSelectedHandlers, routeSelected);
+            AddHandlerIfNotNull(_lastSequenceNumberHandlers, lastSequenceNumber);
         }
         
         public void Enqueue(string topic, object data)
@@ -105,6 +109,9 @@ namespace RoadCaptain.Tests.Unit
                     break;
                 case "routeSelected":
                     _routeSelectedHandlers.ForEach(h => InvokeHandler(h, message.Data));
+                    break;
+                case "lastSequenceNumber":
+                    _lastSequenceNumberHandlers.ForEach(h => InvokeHandler(h, message.Data));
                     break;
             }
         }
