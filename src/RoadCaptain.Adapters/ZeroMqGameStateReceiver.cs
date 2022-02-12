@@ -40,9 +40,21 @@ namespace RoadCaptain.Adapters
             {
                 while (!token.IsCancellationRequested)
                 {
-                    var serializedContent = _subscriberSocket.ReceiveFrameString();
+                    string serializedContent = null;
 
-                    InvokeHandlers(serializedContent);
+                    try
+                    {
+                        serializedContent = _subscriberSocket.ReceiveFrameString();
+                    }
+                    catch (NetMQException e)
+                    {
+                        _monitoringEvents.Error(e, "Failed to receive data from ZeroMQ queue");
+                    }
+
+                    if (serializedContent != null)
+                    {
+                        InvokeHandlers(serializedContent);
+                    }
                 }
             }
             finally
