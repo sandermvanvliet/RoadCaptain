@@ -17,13 +17,15 @@ namespace RoadCaptain.UseCases
         private readonly IMessageReceiver _messageReceiver;
         private readonly IMessageEmitter _messageEmitter;
         private readonly Pipe _pipe;
+        private readonly MonitoringEvents _monitoringEvents;
 
         public DecodeIncomingMessagesUseCase(
             IMessageReceiver messageReceiver,
-            IMessageEmitter messageEmitter)
+            IMessageEmitter messageEmitter, MonitoringEvents monitoringEvents)
         {
             _messageReceiver = messageReceiver;
             _messageEmitter = messageEmitter;
+            _monitoringEvents = monitoringEvents;
             _pipe = new Pipe();
         }
 
@@ -48,7 +50,7 @@ namespace RoadCaptain.UseCases
              * adapter and message spitting & parsing is in the use case. This should allow us to test properly
              * as we can simply create a IMessageReceiver that spits out bytes how we want them.
              */
-            
+
             var processBytesTask = Task.Factory.StartNew(async () => await ProcessMessagesAsync(_pipe.Reader, token), TaskCreationOptions.LongRunning);
 
             // do-while to at least attempt one receive action
@@ -64,9 +66,9 @@ namespace RoadCaptain.UseCases
 
                     // Ugly, but see ^^^
                     bytes.CopyTo(mem);
-                    
+
                     _pipe.Writer.Advance(bytes.Length);
-                    
+
                     // Tell the reader there are bytes available to consume
                     await _pipe.Writer.FlushAsync(token);
                 }
@@ -95,12 +97,19 @@ namespace RoadCaptain.UseCases
                     {
                         // Process all messages from the buffer, modifying the input buffer on each
                         // iteration.
-                        while (TryExtractMessage(ref buffer, out byte[] payload))
+                        try
                         {
-                            if (payload.Length > 0)
+                            while (TryExtractMessage(ref buffer, out byte[] payload))
                             {
-                                _messageEmitter.EmitMessageFromBytes(payload);
+                                if (payload.Length > 0)
+                                {
+                                    _messageEmitter.EmitMessageFromBytes(payload);
+                                }
                             }
+                        }
+                        catch (Exception e)
+                        {
+                            _monitoringEvents.Error(e, "Failed to extract message");
                         }
 
                         // There's no more data to be processed.
@@ -132,7 +141,7 @@ namespace RoadCaptain.UseCases
         {
             var payloadLength = ToUInt16(buffer, 0, MessageLengthPrefix);
 
-            if(buffer.Length - MessageLengthPrefix < payloadLength)
+            if (buffer.Length - MessageLengthPrefix < payloadLength)
             {
                 // Not enough bytes in the buffer for the message that we expecteds
                 payload = default;
@@ -144,7 +153,7 @@ namespace RoadCaptain.UseCases
 
             return true;
         }
-        
+
         private static int ToUInt16(ReadOnlySequence<byte> buffer, int start, int count)
         {
             if (buffer.Length >= start + count)

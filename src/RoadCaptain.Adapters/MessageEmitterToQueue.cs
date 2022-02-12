@@ -222,22 +222,41 @@ namespace RoadCaptain.Adapters
 
         private void Enqueue(ZwiftMessage message)
         {
-            _queue.Enqueue(message);
-
-            // Unblock the Dequeue method
-            _autoResetEvent.Set();
+            try
+            {
+                _queue.Enqueue(message);
+            }
+            catch (Exception e)
+            {
+                _monitoringEvents.Error(e, "Failed to enqueue message");
+            }
+            finally
+            {
+                // Unblock the Dequeue method
+                _autoResetEvent.Set();
+            }
         }
 
         public ZwiftMessage Dequeue(CancellationToken token)
         {
             do
             {
-                if (_queue.TryDequeue(out var message))
+                try
                 {
-                    return message;
-                }
+                    if (_queue.TryDequeue(out var message))
+                    {
+                        return message;
+                    }
 
-                _autoResetEvent.WaitOne(_queueWaitTimeout);
+                }
+                catch (Exception e)
+                {
+                    _monitoringEvents.Error(e, "Failed to dequeue message");
+                }
+                finally
+                {
+                    _autoResetEvent.WaitOne(_queueWaitTimeout);
+                }
             } while (!token.IsCancellationRequested);
             
             return null;
