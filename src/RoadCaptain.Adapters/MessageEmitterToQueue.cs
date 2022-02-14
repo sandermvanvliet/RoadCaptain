@@ -13,7 +13,7 @@ namespace RoadCaptain.Adapters
         private readonly MonitoringEvents _monitoringEvents;
         private readonly ConcurrentQueue<ZwiftMessage> _queue = new();
         private readonly AutoResetEvent _autoResetEvent = new(false);
-        private readonly TimeSpan _queueWaitTimeout = new(250);
+        private readonly TimeSpan _queueWaitTimeout = TimeSpan.FromMilliseconds(2000);
         private ulong _lastIncomingSequenceNumber;
         private readonly IGameStateDispatcher _dispatcher;
 
