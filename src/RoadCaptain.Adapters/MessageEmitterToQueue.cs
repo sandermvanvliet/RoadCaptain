@@ -247,16 +247,13 @@ namespace RoadCaptain.Adapters
                     {
                         return message;
                     }
-
                 }
                 catch (Exception e)
                 {
                     _monitoringEvents.Error(e, "Failed to dequeue message");
                 }
-                finally
-                {
-                    _autoResetEvent.WaitOne(_queueWaitTimeout);
-                }
+
+                _autoResetEvent.WaitOne(_queueWaitTimeout);
             } while (!token.IsCancellationRequested);
             
             return null;
