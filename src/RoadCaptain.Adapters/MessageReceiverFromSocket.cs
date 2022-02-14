@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
-using System.Threading;
-using System.Threading.Tasks;
 using Google.Protobuf;
 using RoadCaptain.Adapters.Protobuf;
 using RoadCaptain.Ports;
@@ -16,198 +13,185 @@ namespace RoadCaptain.Adapters
     {
         private readonly Socket _socket;
         private Socket _acceptedSocket;
-        private readonly Mutex _mutex = new Mutex(false);
-        private readonly TimeSpan _mutextTimeout = TimeSpan.FromMilliseconds(250);
         private readonly MonitoringEvents _monitoringEvents;
         private uint _commandCounter = 1;
-        private Task _waitForConnectionTask;
 
         public MessageReceiverFromSocket(MonitoringEvents monitoringEvents)
         {
             _monitoringEvents = monitoringEvents;
+            
             _socket = new Socket(
                 AddressFamily.InterNetwork,
                 SocketType.Stream,
-                ProtocolType.Tcp);
-            
-            // TODO: Bind/Listen/Accept should not start from within the constructor
-            _socket.Bind(new IPEndPoint(IPAddress.Any, 21587));
-
-            _socket.Listen();
-
-            _waitForConnectionTask = Task.Factory.StartNew(WaitForConnection);
+                ProtocolType.Tcp)
+            {
+                NoDelay = true
+            };
         }
 
-        private void WaitForConnection()
-        {
-            // TODO: Split accept and reading into separate components
-            // That way we can have an accept loop that kicks off new processing use cases
-            // and not bother with that thing closing on the same mutex which is why currently
-            // we have this time-out here.
-            try
-            {
-                if (_mutex.WaitOne(_mutextTimeout))
-                {
-                    if (_acceptedSocket != null)
-                    {
-                        // If an accepted socket exists we should
-                        // immediately release the mutex and exit.
-                        // Accepting the next connection will happen
-                        // automatically when receiving fails and the
-                        // socket is cleaned up.
-                        // WaitForConnection will be restarted from
-                        // that path.
-                        _mutex.ReleaseMutex();
-                        return;
-                    }
-                }
-                else
-                {
-                    // We did not get exclusive access, how come?
-                    Task.Factory.StartNew(WaitForConnection);
-                    return;
-                }
-
-                _monitoringEvents.WaitingForConnection();
-
-                // This blocks until a connection is made
-                _acceptedSocket = _socket.Accept();
-
-                _monitoringEvents.AcceptedConnection();
-            }
-            catch (Exception e)
-            {
-                _monitoringEvents.Error(e, "Failed to accept connection");
-            }
-            finally
-            {
-                // Allow ReceiveMessagesBytes to unblock
-                _mutex.ReleaseMutex();
-            }
-
-        }
-
+        /*
+         * ReceiveMessageBytes
+         *
+         * The purpose here is to read bytes from an established network connection with
+         * the Zwift game.
+         *
+         * The intent of this method is that it blocks until data is available to be read.
+         * That means that we block when:
+         *
+         * - there is no established connection, we want to Accept() a new one
+         * - there is an established connection but no data to Receive()
+         *
+         * The caller should be able to call ReceiveMessageBytes in a loop and expect
+         * that when there are many bytes to be read this method returns as quickly as
+         * possible.
+         *
+         * Therefore we will check if there is an established connection when entering
+         * this method, if not we call Accept() and block. If there is we call Receive().
+         * If there are pending bytes on the socket we will read all the bytes we can.
+         * When no bytes are pending on the socket, Receive() will block.
+         *
+         * When Receive() fails with a socket error we clear the established connection
+         * so that the next call to ReceiveMessageBytes will block again on Accept()
+         */
         public byte[] ReceiveMessageBytes()
         {
-            var buffer = new byte[512];
-            var total = new List<byte>();
-            
-            // Block here until a connection is Accept()-ed and we can read.
-            try
-            {
-                while (!_mutex.WaitOne(_mutextTimeout))
-                {
-                    // Additional sleep here?
-                }
-            }
-            catch (AbandonedMutexException e)
-            {
-                _monitoringEvents.Error(e, "Mutex was abandoned, can't continue with receiving data");
-
-                if (_waitForConnectionTask != null &&
-                    (_waitForConnectionTask.IsCompleted || _waitForConnectionTask.IsFaulted))
-                {
-                    RestartWaitForConnectionTask();
-                } 
-                else if (_waitForConnectionTask == null)
-                {
-                    // This is weird because _waitForConnectionTask is initialized
-                    // in the constructor but hey...
-                    RestartWaitForConnectionTask();
-                }
-
-                return null;
-            }
-
+            // Do we have an established connection?
             if (_acceptedSocket == null)
             {
-                return null;
+                // No, try to Accept() a new one
+                try
+                {
+                    if (!_socket.IsBound)
+                    {
+                        // If the socket hasn't been bound before we also 
+                        // assume that it's not listening yet.
+                        // This should only happen when ReceiveMessageBytes
+                        // is called the first time.
+                        _socket.Bind(new IPEndPoint(IPAddress.Any, 21587));
+                        _socket.Listen();
+                    }
+                    
+                    _monitoringEvents.WaitingForConnection();
+                    
+                    _acceptedSocket = _socket.Accept();
+
+                    _monitoringEvents.AcceptedConnection();
+                }
+                catch (ObjectDisposedException)
+                {
+                    _monitoringEvents.Warning("Listening socket has been closed");
+                    throw new InvalidOperationException("Listening socket has been closed. ReceiveMessageBytes can't be called again");
+                }
+                catch (SocketException ex)
+                {
+                    _monitoringEvents.Warning(ex, "Failed to accept new connection because of a socket error {Error}", ex.SocketErrorCode.ToString());
+                    throw new InvalidOperationException("Failed to accept new connection because of a socket error. ReceiveMessageBytes can't be called again");
+                }
             }
 
-            var socketErrorOccurred = false;
+            var buffer = new byte[_acceptedSocket.ReceiveBufferSize];
+            var total = new List<byte>(buffer.Length); // At least the same as buffer to prevent reallocations
 
-            try
+            while (true)
             {
-                while (true)
+                // Receive will block until bytes are available to read.
+                var received =
+                    _acceptedSocket.Receive(buffer, 0, buffer.Length, SocketFlags.None, out var socketError);
+
+                if (socketError != SocketError.Success)
                 {
-                    // Receive will block until bytes are available to read.
-                    var received =
-                        _acceptedSocket.Receive(buffer, 0, buffer.Length, SocketFlags.None, out var socketError);
+                    // Sonmething went wrong...
+                    _monitoringEvents.ReceiveFailed(socketError);
 
-                    if (socketError != SocketError.Success)
+                    try
                     {
-                        socketErrorOccurred = true;
+                        _acceptedSocket.Shutdown(SocketShutdown.Both);
+                    }
+                    catch (SocketException)
+                    {
+                        // Don't care
+                    }
 
-                        // Shit went wrong...
-                        _monitoringEvents.ReceiveFailed(socketError);
-
+                    try
+                    {
                         _acceptedSocket.Close();
-                        _acceptedSocket = null;
-
-                        RestartWaitForConnectionTask();
-
-                        return null;
                     }
-
-                    if (received == 0)
+                    catch (SocketException)
                     {
-                        // Nothing more in the buffer
-                        break;
+                        // Don't care
                     }
 
-                    total.AddRange(buffer.Take(received));
+                    // Clear this so that the next call to ReceiveMessageBytes() will block
+                    // on accepting a new connection.
+                    _acceptedSocket = null;
 
-                    if (received < buffer.Length)
-                    {
-                        // Less bytes in the socket buffer than our buffer which
-                        // means this should be everything and we can return the
-                        // total received bytes.
-                        break;
-                    }
-
-                    // The number of bytes received was exactly our buffer
-                    // size, so wrap around and try to read some more bytes.
-                    // When the next Receive() call returns zero bytes read
-                    // we can return some more bytes.
+                    return null;
                 }
 
-                return total.ToArray();
-            }
-            finally
-            {
-                if (socketErrorOccurred)
+                if (received == 0)
                 {
-                    // As we have the lock at this point we can release here and be done.
-                    // This _must_ happen after we start the task for WaitFOrConnection
-                    // otherwise that will bork because it acquires the lock too soon.
-                    _mutex.ReleaseMutex();
+                    // Nothing more in the buffer
+                    break;
                 }
-            }
-        }
 
-        private void RestartWaitForConnectionTask()
-        {
-            _monitoringEvents.Information("Attempting to restart WaitForConnection task");
-            _waitForConnectionTask = Task.Factory.StartNew(WaitForConnection);
+                total.AddRange(buffer.Take(received));
 
-            if (_waitForConnectionTask.Status == TaskStatus.Running ||
-                _waitForConnectionTask.Status == TaskStatus.WaitingForActivation ||
-                _waitForConnectionTask.Status == TaskStatus.WaitingToRun)
-            {
-                _monitoringEvents.Information("WaitForConnection task restarted successfully");
+                if (received < buffer.Length)
+                {
+                    // Less bytes in the socket buffer than our buffer which
+                    // means this should be everything and we can return the
+                    // total received bytes.
+                    break;
+                }
+
+                // The number of bytes received was exactly our buffer
+                // size, so wrap around and try to read some more bytes.
+                // When the next Receive() call returns zero bytes read
+                // we can return some more bytes.
             }
-            else
-            {
-                _monitoringEvents.Error("Failed to start WaitForConnection task, its state is now {State}",
-                    _waitForConnectionTask.Status);
-            }
+
+            return total.ToArray();
         }
 
         public void Shutdown()
         {
-            _acceptedSocket?.Close();
+            try
+            {
+                _acceptedSocket?.Shutdown(SocketShutdown.Both);
+            }
+            catch (SocketException)
+            {
+                // Don't care
+            }
 
-            _socket.Close();
+            try
+            {
+                _acceptedSocket?.Close();
+            }
+            catch (SocketException)
+            {
+                // Don't care
+            }
+
+            _acceptedSocket = null;
+
+            try
+            {
+                _socket.Shutdown(SocketShutdown.Both);
+            }
+            catch (SocketException)
+            {
+                // Don't care
+            }
+
+            try
+            {
+                _socket.Close();
+            }
+            catch (SocketException)
+            {
+                // Don't care
+            }
         }
 
         public void SendMessageBytes(byte[] payload)
@@ -247,14 +231,8 @@ namespace RoadCaptain.Adapters
                 },
                 Sequence = sequenceNumber
             };
-
-            var memoryStream = new MemoryStream();
-            var outputStream = new CodedOutputStream(memoryStream);
-            message.WriteTo(outputStream);
-            outputStream.Flush(); // Need to flush otherwise GetBuffer() returns an empty array...
-            var bytes = memoryStream.GetBuffer().Take((int)memoryStream.Position).ToArray();
             
-            SendMessageBytes(bytes);
+            SendMessageBytes(message.ToByteArray());
         }
 
         public void SendTurnCommand(TurnDirection direction, uint sequenceNumber)
