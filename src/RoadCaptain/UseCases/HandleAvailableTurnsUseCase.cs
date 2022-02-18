@@ -10,6 +10,7 @@ namespace RoadCaptain.UseCases
         private readonly IGameStateDispatcher _dispatcher;
         private readonly List<TurnDirection> _commands = new();
         private string _currentSegmentId;
+        private ulong _lastIncomingSequenceNumber;
 
         public HandleAvailableTurnsUseCase(IGameStateDispatcher dispatcher)
         {
@@ -18,6 +19,17 @@ namespace RoadCaptain.UseCases
 
         public void Execute(ZwiftCommandAvailableMessage commandAvailable)
         {
+            if ("somethingempty".Equals(commandAvailable.Type, StringComparison.InvariantCultureIgnoreCase))
+            {
+                if (commandAvailable.SequenceNumber > _lastIncomingSequenceNumber)
+                {
+                    // Take new sequence number from here as the "SomethingEmpty"
+                    // appears to be a synchronization mechanism
+                    _lastIncomingSequenceNumber = commandAvailable.SequenceNumber;
+                    _dispatcher.UpdateLastSequenceNumber(commandAvailable.SequenceNumber);
+                }
+            }
+
             if ("somethingempty".Equals(commandAvailable.Type, StringComparison.InvariantCultureIgnoreCase) && 
                 _commands.Any() && 
                 _dispatcher.CurrentSegment != null)

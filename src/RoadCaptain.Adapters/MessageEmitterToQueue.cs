@@ -14,15 +14,11 @@ namespace RoadCaptain.Adapters
         private readonly ConcurrentQueue<ZwiftMessage> _queue = new();
         private readonly AutoResetEvent _autoResetEvent = new(false);
         private readonly TimeSpan _queueWaitTimeout = TimeSpan.FromMilliseconds(2000);
-        private ulong _lastIncomingSequenceNumber;
-        private readonly IGameStateDispatcher _dispatcher;
 
         public MessageEmitterToQueue(
-            MonitoringEvents monitoringEvents, 
-            IGameStateDispatcher dispatcher)
+            MonitoringEvents monitoringEvents)
         {
             _monitoringEvents = monitoringEvents;
-            _dispatcher = dispatcher;
         }
 
         public void EmitMessageFromBytes(byte[] payload)
@@ -43,12 +39,6 @@ namespace RoadCaptain.Adapters
             {
                 _monitoringEvents.Warning("Invalid protobuf message: {Message}", ex.Message);
                 return;
-            }
-
-            if (packetData.Sequence > _lastIncomingSequenceNumber)
-            {
-                _lastIncomingSequenceNumber = packetData.Sequence;
-                _dispatcher.UpdateLastSequenceNumber(_lastIncomingSequenceNumber);
             }
 
             try
@@ -92,7 +82,7 @@ namespace RoadCaptain.Adapters
                     case 4:
                         var buttonMessage = ZwiftAppToCompanionButtonMessage.Parser.ParseFrom(byteArray);
 
-                        OnCommandAvailable(buttonMessage.TypeId, buttonMessage.Title);
+                        OnCommandAvailable(buttonMessage.TypeId, buttonMessage.Title, buttonMessage.Tag1);
 
                         break;
                     case 9:
@@ -186,7 +176,7 @@ namespace RoadCaptain.Adapters
             Enqueue(new ZwiftPowerUpMessage { Type = type });
         }
 
-        private void OnCommandAvailable(uint numericalCommandType, string description)
+        private void OnCommandAvailable(uint numericalCommandType, string description, ulong sequenceNumber)
         {
             var commandType = CommandType.Unknown;
 
@@ -206,7 +196,8 @@ namespace RoadCaptain.Adapters
 
             Enqueue(new ZwiftCommandAvailableMessage
             {
-                Type = commandType.ToString()
+                Type = commandType.ToString(),
+                SequenceNumber = sequenceNumber
             });
         }
 

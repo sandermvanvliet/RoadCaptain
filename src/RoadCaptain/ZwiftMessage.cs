@@ -14,6 +14,7 @@
     public sealed class ZwiftCommandAvailableMessage : ZwiftMessage
     {
         public string Type { get; set; }
+        public ulong SequenceNumber { get; set; }
     }
 
     public sealed class ZwiftPowerUpMessage : ZwiftMessage

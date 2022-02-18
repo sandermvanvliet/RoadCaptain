@@ -249,7 +249,7 @@ namespace RoadCaptain.Adapters
                     Tag5 = 0,
                     Tag7 = 0
                 },
-                Sequence = sequenceNumber // No idea how this is counted or if it's an echo of an incoming message perhaps?
+                Sequence = sequenceNumber // This value is provided via the SomethingEmpty synchronisation command
             };
 
             SendMessageBytes(message.ToByteArray());
