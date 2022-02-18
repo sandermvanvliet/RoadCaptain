@@ -29,7 +29,8 @@ namespace RoadCaptain.Adapters
                 .AsImplementedInterfaces()
                 .Except<MessageReceiverFromSocket>()
                 .Except<MessageEmitterToQueue>()
-                .Except<IGameStateDispatcher>();
+                .Except<IGameStateDispatcher>()
+                .Except<IGameStateReceiver>();
 
             if ("socket".Equals(MessageReceiverSource, StringComparison.InvariantCultureIgnoreCase))
             {
@@ -67,6 +68,7 @@ namespace RoadCaptain.Adapters
                 builder
                     .RegisterType<InMemoryGameStateDispatcher>()
                     .As<IGameStateDispatcher>()
+                    .As<IGameStateReceiver>()
                     .SingleInstance();
             }
             else if ("zeromq".Equals(GameStateBacking, StringComparison.InvariantCultureIgnoreCase))
@@ -74,6 +76,11 @@ namespace RoadCaptain.Adapters
                 builder
                     .RegisterType<ZeroMqGameStateDispatcher>()
                     .As<IGameStateDispatcher>()
+                    .SingleInstance();
+                
+                builder
+                    .RegisterType<ZeroMqGameStateReceiver>()
+                    .As<IGameStateReceiver>()
                     .SingleInstance();
             }
             else
