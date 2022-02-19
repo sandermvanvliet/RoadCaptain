@@ -93,7 +93,8 @@ namespace RoadCaptain.Tests.Unit.Routing
                 tokenSource.Cancel();
             }
 
-            CurrentSegment
+            _dispatcher
+                .CurrentPosition
                 .Should()
                 .BeNull();
         }
