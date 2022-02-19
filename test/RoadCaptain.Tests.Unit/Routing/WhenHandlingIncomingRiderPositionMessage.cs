@@ -39,8 +39,6 @@ namespace RoadCaptain.Tests.Unit.Routing
                 _handleRiderPositionUseCase,
                 new HandleAvailableTurnsUseCase(_dispatcher),
                 new HandleActivityDetailsUseCase(_dispatcher));
-
-            _currentSegmentFieldInfo = _handleRiderPositionUseCase.GetType().GetField("_currentSegment", BindingFlags.NonPublic | BindingFlags.Instance);
         }
 
         [Fact]
@@ -66,7 +64,8 @@ namespace RoadCaptain.Tests.Unit.Routing
                 tokenSource.Cancel();
             }
 
-            CurrentSegment
+            _dispatcher
+                .CurrentSegment
                 .Id
                 .Should()
                 .Be("watopia-big-foot-hills-004-before");
@@ -240,15 +239,6 @@ namespace RoadCaptain.Tests.Unit.Routing
         private void GivenActivityDetails(ulong activityId)
         {
             _messageEmitter.Enqueue(new ZwiftActivityDetailsMessage { ActivityId = activityId });
-        }
-
-        private Segment CurrentSegment
-        {
-            get
-            {
-                var value = _currentSegmentFieldInfo.GetValue(_handleRiderPositionUseCase);
-                return value as Segment;
-            }
         }
 
         private void GivenRiderInGameAndOnSegment()

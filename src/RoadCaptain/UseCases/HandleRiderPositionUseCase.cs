@@ -8,7 +8,6 @@ namespace RoadCaptain.UseCases
     public class HandleRiderPositionUseCase
     {
         private List<Segment> _segments;
-        private Segment _currentSegment;
         private TrackPoint _previousPositionOnSegment;
         private SegmentDirection _currentDirection;
         private readonly MonitoringEvents _monitoringEvents;
@@ -63,8 +62,7 @@ namespace RoadCaptain.UseCases
             {
                 _monitoringEvents.Warning("Could not find a segment for current position {Position}", position.CoordinatesDecimal);
                 
-                _currentSegment = null;
-                _dispatcher.SegmentChanged(_currentSegment);
+                _dispatcher.SegmentChanged(null);
 
                 _currentDirection = SegmentDirection.Unknown;
                 _dispatcher.DirectionChanged(_currentDirection);
@@ -80,10 +78,9 @@ namespace RoadCaptain.UseCases
                 // the target segment somewhere and use that value here.
                 var segment = matchingSegments.First();
 
-                if (segment != _currentSegment)
+                if (segment != _dispatcher.CurrentSegment)
                 {
-                    _currentSegment = segment;
-                    _dispatcher.SegmentChanged(_currentSegment);
+                    _dispatcher.SegmentChanged(segment);
 
                     // Set for the next position update.
                     // For this we need to use the TrackPoint on the segment instead
@@ -104,7 +101,7 @@ namespace RoadCaptain.UseCases
                     if (_previousPositionOnSegment != null && _currentDirection == SegmentDirection.Unknown)
                     {
                         var currentPositionOnSegment = segment.GetClosestPositionOnSegment(position);
-                        var direction = _currentSegment.DirectionOf(_previousPositionOnSegment, currentPositionOnSegment);
+                        var direction = _dispatcher.CurrentSegment.DirectionOf(_previousPositionOnSegment, currentPositionOnSegment);
 
                         // If we have a direction then check if we changed
                         // direction on the segment (a U-turn in the game).
