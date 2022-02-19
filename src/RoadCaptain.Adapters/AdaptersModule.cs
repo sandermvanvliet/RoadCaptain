@@ -124,7 +124,7 @@ namespace RoadCaptain.Adapters
             // Initiate relay
             handler
                 .RespondTo()
-                .Post()
+                .Put()
                 .ForUrl("/relay/profiles/me/phone")
                 .With(HttpStatusCode.OK);
 
