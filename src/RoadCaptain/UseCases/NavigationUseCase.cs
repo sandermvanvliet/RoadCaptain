@@ -31,10 +31,10 @@ namespace RoadCaptain.UseCases
                 .Register(
                     null,
                     HandleSegmentChanged,
-                    HandleTurnsAvailable,
+                    null,
                     null,
                     HandleCommandsAvailable,
-                    null,
+                    HandleEnteredGame,
                     null, 
                     RouteSelected,
                     LastSequenceNumberUpdated);
@@ -43,6 +43,12 @@ namespace RoadCaptain.UseCases
             // the Start() method will block until token
             // is cancelled
             _gameStateReceiver.Start(token);
+        }
+
+        private void HandleEnteredGame(ulong obj)
+        {
+            // Reset the route when the user enters the game
+            _plannedRoute.Reset();
         }
 
         private void LastSequenceNumberUpdated(uint sequenceNumber)
@@ -86,10 +92,6 @@ namespace RoadCaptain.UseCases
             return commands.Contains(turnToNextSegemnt);
         }
 
-        private void HandleTurnsAvailable(List<Turn> turns)
-        {
-        }
-
         private void HandleSegmentChanged(string segmentId)
         {
             // Are we already in a segment?
@@ -100,23 +102,7 @@ namespace RoadCaptain.UseCases
                 {
                     try
                     {
-                        if (_plannedRoute.HasCompleted)
-                        {
-                            _monitoringEvents.Information("Route has completed, reverting to free-roam mode.");
-                            return;
-                        }
-
                         _plannedRoute.EnteredSegment(segmentId);
-
-                        if (_plannedRoute.HasCompleted)
-                        {
-                            _monitoringEvents.Information("Entered the final segment of the route!");
-                        }
-                        else
-                        {
-                            _monitoringEvents.Information(
-                                $"On segment {_plannedRoute.SegmentSequenceIndex} of {_plannedRoute.RouteSegmentSequence.Count}. Next turn will be {_plannedRoute.TurnToNextSegment} onto {_plannedRoute.NextSegmentId}");
-                        }
                     }
                     catch (ArgumentException e)
                     {
@@ -133,7 +119,28 @@ namespace RoadCaptain.UseCases
                 // We moved into the next expected segment
                 try
                 {
+                    if (_plannedRoute.HasCompleted)
+                    {
+                        _monitoringEvents.Information("Route has completed, reverting to free-roam mode.");
+                        return;
+                    }
+
                     _plannedRoute.EnteredSegment(segmentId);
+
+                    if (_plannedRoute.HasCompleted)
+                    {
+                        _monitoringEvents.Information("Entered the final segment of the route!");
+                    }
+                    else
+                    {
+                        _monitoringEvents.Information(
+                            "On segment {Step} of {TotalSteps}. Next turn will be {Turn} onto {SegmentId}",
+                            _plannedRoute.SegmentSequenceIndex,
+                            _plannedRoute.RouteSegmentSequence.Count,
+                            _plannedRoute.TurnToNextSegment,
+                            _plannedRoute.NextSegmentId
+                        );
+                    }
                 }
                 catch (ArgumentException e)
                 {
@@ -142,7 +149,10 @@ namespace RoadCaptain.UseCases
             }
             else
             {
-                _monitoringEvents.Warning("Rider entered segment {SegmentId} but it's not the expected next segment on the route ({NextSegmentId})", segmentId, _plannedRoute.NextSegmentId);
+                _monitoringEvents.Warning(
+                    "Rider entered segment {SegmentId} but it's not the expected next segment on the route ({NextSegmentId})",
+                    segmentId,
+                    _plannedRoute.NextSegmentId);
             }
         }
     }
