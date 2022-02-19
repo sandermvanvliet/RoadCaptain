@@ -298,7 +298,7 @@ namespace RoadCaptain.Adapters
         ElbowFlick = 4,
         Wave = 5,
         RideOn = 6,
-        SomethingEmpty = 23, // I suspect this is a  "reset" type thing
+        SomethingEmpty = 23, // This is the synchronisation event for command sequence numbers that are sent to back to the game
         TurnLeft = 1010,
         GoStraight = 1011,
         TurnRight = 1012,
