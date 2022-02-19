@@ -261,7 +261,7 @@
     ],
     "turnsB": [
       {
-        "direction": "goStraight",
+        "direction": "left",
         "segmentId": "watopia-beach-island-loop-002"
       },
       {
@@ -354,34 +354,15 @@
     "turnsB": [
       {
         "direction": "left",
-        "segmentId": "watopia-big-loop-rev-001-before-before"
-      },
-      {
-        "direction": "right",
-        "segmentId": "watopia-bambino-fondo-003-before-after"
-      }
-    ]
-  },
-  {
-    "segmentId": "watopia-big-loop-rev-001-before-before",
-    "turnsA": [
-      {
-        "direction": "goStraight",
-        "segmentId": "watopia-bambino-fondo-003-before-after"
-      },
-      {
-        "direction": "right",
-        "segmentId": "watopia-bambino-fondo-003-before-before"
-      }
-    ],
-    "turnsB": [
-      {
-        "direction": "left",
         "segmentId": "watopia-ocean-lava-cliffside-loop-001"
       },
       {
         "direction": "goStraight",
         "segmentId": "watopia-big-loop-rev-001-before-after"
+      },
+      {
+        "direction": "right",
+        "segmentId": "watopia-bambino-fondo-003-before-after"
       }
     ]
   },
@@ -399,7 +380,7 @@
     ],
     "turnsB": [
       {
-        "direction": "goStraight",
+        "direction": "left",
         "segmentId": "watopia-big-loop-rev-001-after-after"
       },
       {
