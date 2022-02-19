@@ -84,7 +84,7 @@ namespace RoadCaptain.UseCases
             }
         }
 
-        async Task ProcessMessagesAsync(PipeReader reader, CancellationToken cancellationToken = default)
+        private async Task ProcessMessagesAsync(PipeReader reader, CancellationToken cancellationToken = default)
         {
             try
             {
