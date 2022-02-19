@@ -100,8 +100,15 @@ namespace RoadCaptain.Adapters
 
                 if (socketError != SocketError.Success)
                 {
-                    // Sonmething went wrong...
-                    _monitoringEvents.ReceiveFailed(socketError);
+                    if (socketError == SocketError.ConnectionReset)
+                    {
+                        _monitoringEvents.Information("Zwift closed the connection");
+                    }
+                    else
+                    {
+                        // Sonmething went wrong...
+                        _monitoringEvents.ReceiveFailed(socketError);
+                    }
 
                     try
                     {
