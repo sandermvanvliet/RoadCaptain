@@ -57,6 +57,11 @@ namespace RoadCaptain.UseCases
 
         private void HandleCommandsAvailable(List<TurnDirection> commands)
         {
+            if (!_plannedRoute.HasCompleted && !_plannedRoute.HasStarted)
+            {
+                return;
+            }
+
             if (commands.Any())
             {
                 if (CommandsMatchTurnToNextSegment(commands, _plannedRoute.TurnToNextSegment))
