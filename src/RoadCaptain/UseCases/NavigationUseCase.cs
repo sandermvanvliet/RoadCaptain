@@ -96,6 +96,8 @@ namespace RoadCaptain.UseCases
                     try
                     {
                         _plannedRoute.EnteredSegment(segmentId);
+
+                        _monitoringEvents.Information($"On segment {_plannedRoute.SegmentSequenceIndex} of {_plannedRoute.RouteSegmentSequence.Count}. Next turn will be {_plannedRoute.TurnToNextSegment} onto {_plannedRoute.NextSegmentId}");
                     }
                     catch (ArgumentException e)
                     {
