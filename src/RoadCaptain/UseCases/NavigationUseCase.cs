@@ -95,9 +95,23 @@ namespace RoadCaptain.UseCases
                 {
                     try
                     {
+                        if (_plannedRoute.HasCompleted)
+                        {
+                            _monitoringEvents.Information("Route has completed, reverting to free-roam mode.");
+                            return;
+                        }
+
                         _plannedRoute.EnteredSegment(segmentId);
 
-                        _monitoringEvents.Information($"On segment {_plannedRoute.SegmentSequenceIndex} of {_plannedRoute.RouteSegmentSequence.Count}. Next turn will be {_plannedRoute.TurnToNextSegment} onto {_plannedRoute.NextSegmentId}");
+                        if (_plannedRoute.HasCompleted)
+                        {
+                            _monitoringEvents.Information("Entered the final segment of the route!");
+                        }
+                        else
+                        {
+                            _monitoringEvents.Information(
+                                $"On segment {_plannedRoute.SegmentSequenceIndex} of {_plannedRoute.RouteSegmentSequence.Count}. Next turn will be {_plannedRoute.TurnToNextSegment} onto {_plannedRoute.NextSegmentId}");
+                        }
                     }
                     catch (ArgumentException e)
                     {
