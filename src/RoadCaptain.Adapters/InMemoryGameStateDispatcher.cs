@@ -106,7 +106,9 @@ namespace RoadCaptain.Adapters
         {
             if (direction != SegmentDirection.Unknown)
             {
-                _monitoringEvents.Information("Direction is now {Direction}", direction);
+                var formattedDirection = FormatDirection(direction);
+
+                _monitoringEvents.Information("Direction is now {Direction}", formattedDirection);
 
                 var turns = CurrentSegment.NextSegments(direction);
 
@@ -125,6 +127,16 @@ namespace RoadCaptain.Adapters
 
             CurrentDirection = direction;
             Enqueue("directionChanged", CurrentDirection);
+        }
+
+        private static string FormatDirection(SegmentDirection direction)
+        {
+            return direction switch
+            {
+                SegmentDirection.AtoB => "A -> B",
+                SegmentDirection.BtoA => "B -> A",
+                _ => "Unknown"
+            };
         }
 
         public void TurnCommandsAvailable(List<TurnDirection> turns)
