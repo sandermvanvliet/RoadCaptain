@@ -44,7 +44,7 @@ namespace RoadCaptain.Tests.Unit
         {
             var route = new SegmentSequenceBuilder()
                 .StartingAt("seg-1")
-                .TuringLeftTo("seg-2")
+                .TurningLeftTo("seg-2")
                 .GoingStraightTo("seg-3")
                 .TurningRightTo("seg-4")
                 .GoingStraightTo("seg-5")

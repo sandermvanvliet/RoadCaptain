@@ -26,7 +26,7 @@ namespace RoadCaptain
             return this;
         }
 
-        public SegmentSequenceBuilder TuringLeftTo(string segmentId)
+        public SegmentSequenceBuilder TurningLeftTo(string segmentId)
         {
             Last.NextSegmentId = segmentId;
             Last.TurnToNextSegment = TurnDirection.Left;
