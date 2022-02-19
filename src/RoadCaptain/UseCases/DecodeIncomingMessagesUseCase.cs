@@ -139,6 +139,12 @@ namespace RoadCaptain.UseCases
 
         private static bool TryExtractMessage(ref ReadOnlySequence<byte> buffer, out byte[] payload)
         {
+            if (buffer.Length == 0)
+            {
+                payload = default;
+                return false;
+            }
+
             var payloadLength = ToUInt16(buffer, 0, MessageLengthPrefix);
 
             if (buffer.Length - MessageLengthPrefix < payloadLength)

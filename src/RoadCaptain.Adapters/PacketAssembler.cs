@@ -13,8 +13,7 @@ namespace RoadCaptain.Adapters
     internal class PacketAssembler
     {
         public event EventHandler<PayloadReadyEventArgs> PayloadReady;
-        
-        private int _assembledLen;
+
         private byte[] _payload;
         private bool _complete;
         private uint _startingSequenceNumber;
@@ -120,14 +119,13 @@ namespace RoadCaptain.Adapters
         private void InnerAssemble(TcpPacket packet)
         {
             packet = packet ?? throw new ArgumentNullException(nameof(packet));
-
+            
             try
             {
                 if (packet.Push && packet.Acknowledgment && _payload == null)
                 {
                     // No reassembly required
                     _payload = packet.PayloadData;
-                    _assembledLen = packet.PayloadData.Length;
                     _complete = true;
                     _startingSequenceNumber = packet.SequenceNumber;
                 }
@@ -135,53 +133,26 @@ namespace RoadCaptain.Adapters
                 {
                     // Last packet in the sequence
                     _payload = _payload.Concat(packet.PayloadData).ToArray();
-                    _assembledLen += packet.PayloadData.Length;
                     _complete = true;
                 }
                 else if (packet.Acknowledgment && _payload == null)
                 {
                     // First packet in a sequence
                     _payload = packet.PayloadData;
-                    _assembledLen = packet.PayloadData.Length;
                     _startingSequenceNumber = packet.SequenceNumber;
                 }
                 else if (packet.Acknowledgment) {
                     // Middle packet in a sequence
                     _payload = _payload.Concat(packet.PayloadData).ToArray();
-                    _assembledLen += packet.PayloadData.Length;
                 }
 
                 if (_complete && _payload?.Length > 0)
                 {
-                    // Break apart any concatenated payloads
-                    var offset = 0;
-
-                    while (offset < _assembledLen)
+                    OnPayloadReady(new PayloadReadyEventArgs
                     {
-                        var length = ToUInt16(_payload, offset, 2);
-
-                        if (offset + length < _assembledLen)
-                        {
-                            var payload = _payload.Skip(offset).Take(length + 2).ToArray();
-
-                            if (payload.Length > 0)
-                            {
-                                OnPayloadReady(new PayloadReadyEventArgs
-                                {
-                                    Payload = payload, 
-                                    SequenceNumber = _startingSequenceNumber
-                                });
-                            }
-                        }
-                        else
-                        {
-                            _monitoringEvents.Warning("Got length {Length} but there are not enough bytes left!", length);
-                            Reset();
-                            return;
-                        }
-
-                        offset += 2 + length;
-                    }
+                        Payload = _payload,
+                        SequenceNumber = _startingSequenceNumber
+                    });
 
                     Reset();
                 }
@@ -199,30 +170,8 @@ namespace RoadCaptain.Adapters
         public void Reset()
         {
             _payload = null;
-            _assembledLen = 0;
             _complete = false;
             _startingSequenceNumber = 0;
-        }
-
-        private static int ToUInt16(byte[] buffer, int start, int count)
-        {
-            if (buffer.Length > 2)
-            {
-                var b = buffer.Skip(start).Take(count).ToArray();
-                if (BitConverter.IsLittleEndian)
-                {
-                    Array.Reverse(b);
-                }
-
-                if (b.Length == count)
-                {
-                    return (BitConverter.ToUInt16(b, 0));
-                }
-
-                return 0;
-            }
-
-            return 0;
         }
     }
 }
