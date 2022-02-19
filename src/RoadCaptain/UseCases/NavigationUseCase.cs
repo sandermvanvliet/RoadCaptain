@@ -142,7 +142,7 @@ namespace RoadCaptain.UseCases
             }
             else
             {
-                _monitoringEvents.Error("Rider entered segment {SegmentId} but it's not the expected next segment on the route ({NextSegmentId})", segmentId, _plannedRoute.NextSegmentId);
+                _monitoringEvents.Warning("Rider entered segment {SegmentId} but it's not the expected next segment on the route ({NextSegmentId})", segmentId, _plannedRoute.NextSegmentId);
             }
         }
     }
