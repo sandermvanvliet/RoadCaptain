@@ -47,5 +47,12 @@ namespace RoadCaptain
                     $"Was expecting {NextSegmentId} but got {segmentId} and that's not a valid route progression");
             }
         }
+
+        public void Reset()
+        {
+            HasStarted = false;
+            HasCompleted = false;
+            SegmentSequenceIndex = 0;
+        }
     }
 }
