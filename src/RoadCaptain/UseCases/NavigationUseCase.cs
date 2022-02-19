@@ -94,6 +94,12 @@ namespace RoadCaptain.UseCases
 
         private void HandleSegmentChanged(string segmentId)
         {
+            // Ignore empty segment and pretend nothing happened
+            if (segmentId == null)
+            {
+                return;
+            }
+
             // Are we already in a segment?
             if (_plannedRoute.CurrentSegmentId == null)
             {

@@ -17,9 +17,6 @@ namespace RoadCaptain.UseCases
             if (_dispatcher.InGame && activityDetails.ActivityId == 0)
             {
                 _dispatcher.LeaveGame();
-                _dispatcher.SegmentChanged(null);
-                _dispatcher.TurnsAvailable(new List<Turn>());
-                _dispatcher.DirectionChanged(SegmentDirection.Unknown);
             }
             else if (!_dispatcher.InGame && activityDetails.ActivityId != 0)
             {

@@ -49,16 +49,23 @@ namespace RoadCaptain.Adapters
 
         public void PositionChanged(TrackPoint position)
         {
-            if (InGame)
+            if (!InGame)
             {
-                CurrentPosition = position;
-
-                Enqueue("positionChanged", CurrentPosition);
+                return;
             }
+
+            CurrentPosition = position;
+
+            Enqueue("positionChanged", CurrentPosition);
         }
 
         public void SegmentChanged(Segment segment)
         {
+            if (!InGame)
+            {
+                return;
+            }
+
             if(segment != null)
             {
                 if (CurrentSegment == null)
@@ -87,6 +94,11 @@ namespace RoadCaptain.Adapters
 
         public void TurnsAvailable(List<Turn> turns)
         {
+            if (!InGame)
+            {
+                return;
+            }
+
             if (turns.Any())
             {
                 _monitoringEvents.Information("Upcoming turns: ");
@@ -104,6 +116,11 @@ namespace RoadCaptain.Adapters
 
         public void DirectionChanged(SegmentDirection direction)
         {
+            if (!InGame)
+            {
+                return;
+            }
+
             if (direction != SegmentDirection.Unknown)
             {
                 var formattedDirection = FormatDirection(direction);
@@ -148,13 +165,32 @@ namespace RoadCaptain.Adapters
         public void EnterGame(ulong activityId)
         {
             InGame = true;
+
+            // Reset state so that we start with a clean slate
+            ResetGameState();
+
             Enqueue("enteredGame", activityId);
         }
 
         public void LeaveGame()
         {
             InGame = false;
+
+            // Reset state
+            ResetGameState();
+
             Enqueue("leftGame", 0 /* when leaving the game the activity id is always zero */);
+        }
+
+        private void ResetGameState()
+        {
+            CurrentSegment = null;
+            CurrentDirection = SegmentDirection.Unknown;
+            CurrentPosition = null;
+            AvailableTurnCommands = new List<TurnDirection>();
+            AvailableTurns = new List<Turn>();
+            LastSequenceNumber =
+                0; // TODO: figure out if we need this, it might be that Zwift maintains the sequence number across activities
         }
 
         public void RouteSelected(PlannedRoute route)
