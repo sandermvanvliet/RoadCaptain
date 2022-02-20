@@ -24,6 +24,8 @@ namespace RoadCaptain.Adapters
         private readonly List<Action<uint>> _lastSequenceNumberHandlers = new();
         private readonly AutoResetEvent _autoResetEvent = new(false);
         private readonly TimeSpan _queueWaitTimeout = TimeSpan.FromMilliseconds(2000);
+        private bool _started;
+        private static readonly object SyncRoot = new();
 
         public InMemoryGameStateDispatcher(MonitoringEvents monitoringEvents)
         {
@@ -46,6 +48,18 @@ namespace RoadCaptain.Adapters
         public bool InGame { get; private set; }
 
         public PlannedRoute CurrentRoute { get; private set; }
+
+        private bool Started
+        {
+            get => _started;
+            set
+            {
+                lock (SyncRoot)
+                {
+                    _started = value;
+                }
+            }
+        }
 
         public void PositionChanged(TrackPoint position)
         {
@@ -234,20 +248,40 @@ namespace RoadCaptain.Adapters
 
         public void Start(CancellationToken token)
         {
-            do
+            // Only have one running at a time,
+            // it's possible that this call is 
+            // made from various consumers and
+            // that would cause threading issues
+            // becuase we'd be dequeueing messages
+            // from multiple threads.
+            if (Started)
             {
-                if (_queue.TryDequeue(out var message))
+                return;
+            }
+
+            Started = true;
+
+            try
+            {
+                do
                 {
-                    InvokeHandlers(message);
-                }
-                else
-                {
-                    // Only wait if nothing is in the queue,
-                    // otherwise loop aroud and take the next
-                    // item from the queue without waiting.
-                    _autoResetEvent.WaitOne(_queueWaitTimeout);
-                }
-            } while (!token.IsCancellationRequested);
+                    if (_queue.TryDequeue(out var message))
+                    {
+                        InvokeHandlers(message);
+                    }
+                    else
+                    {
+                        // Only wait if nothing is in the queue,
+                        // otherwise loop aroud and take the next
+                        // item from the queue without waiting.
+                        _autoResetEvent.WaitOne(_queueWaitTimeout);
+                    }
+                } while (!token.IsCancellationRequested);
+            }
+            finally
+            {
+                Started = false;
+            }
         }
 
         public void Register(Action<TrackPoint> positionChanged, Action<string> segmentChanged, Action<List<Turn>> turnsAvailable, Action<SegmentDirection> directionChanged,
