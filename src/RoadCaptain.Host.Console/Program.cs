@@ -51,7 +51,6 @@ namespace RoadCaptain.Host.Console
                         .AddJsonFile("autofac.json")
                         .AddJsonFile("autofac.development.json", true);
                 })
-                .UseServiceProviderFactory(new AutofacServiceProviderFactory())
                 .ConfigureContainer<ContainerBuilder>((_, builder) =>
                 {
                     builder.Register(_ => logger).SingleInstance();
@@ -65,6 +64,7 @@ namespace RoadCaptain.Host.Console
                     // Wire up registrations through the autofac.json file
                     builder.RegisterModule(new ConfigurationModule(_.Configuration));
                 })
+                .UseServiceProviderFactory(new AutofacServiceProviderFactory())
                 .UseSerilog(logger);
 
         private static void RegisterLifetimeEvents(IHost host)
