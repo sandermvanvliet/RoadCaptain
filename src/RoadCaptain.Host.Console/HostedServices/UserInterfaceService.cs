@@ -49,7 +49,7 @@ namespace RoadCaptain.Host.Console.HostedServices
             Application.ApplicationExit += (_, _) => 
             {
                 /* stop the host */
-                
+                _synchronizer.Stop();
             };
 
             _monitoringEvents.ServiceStarted(nameof(UserInterfaceService));

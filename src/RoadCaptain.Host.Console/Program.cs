@@ -5,6 +5,7 @@ using Autofac.Configuration;
 using Autofac.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
+using RoadCaptain.Host.Console.HostedServices;
 using Serilog;
 using Serilog.Core;
 using Serilog.Events;
@@ -18,12 +19,15 @@ namespace RoadCaptain.Host.Console
             var logger = CreateLogger();
 
             IHost host;
+            ISynchronizer synchronizer;
 
             try
             {
                 host = CreateHost(args, logger);
 
                 RegisterLifetimeEvents(host);
+                
+                synchronizer = (ISynchronizer)host.Services.GetService(typeof(ISynchronizer));
             }
             catch (Exception ex)
             {
@@ -42,6 +46,8 @@ namespace RoadCaptain.Host.Console
 
             try
             {
+                synchronizer.RegisterStop(() => host.StopAsync().GetAwaiter().GetResult());
+
                 host.Run();
             }
             catch (Exception ex)

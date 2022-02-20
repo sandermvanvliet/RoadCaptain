@@ -10,6 +10,26 @@ namespace RoadCaptain.Host.Console.HostedServices
         private readonly List<Tuple<Func<CancellationToken, Task>, CancellationToken>> _synchronizedStarts = new();
         private bool _synchronized;
         private static readonly object SyncRoot = new();
+        private readonly List<Action> _stopCallbacks = new();
+
+        public void RegisterStop(Action action)
+        {
+            _stopCallbacks.Add(action);
+        }
+
+        public void Stop()
+        {
+            foreach (var callback in _stopCallbacks)
+            {
+                try
+                {
+                    callback();
+                }
+                catch 
+                {
+                }
+            }
+        }
 
         public void RegisterStart(Func<CancellationToken, Task> func, CancellationToken cancellationToken)
         {
