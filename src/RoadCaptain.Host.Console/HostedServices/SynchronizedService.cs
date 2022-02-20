@@ -1,13 +1,11 @@
-﻿using System.Diagnostics;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Hosting;
 
 namespace RoadCaptain.Host.Console.HostedServices
 {
     /// <summary>
-    /// Base type for hosted services that need to be delay-started whenever
-    /// a synchronization event happens
+    /// Base type for hosted services that should delay starting until signalled by the <see cref="ISynchronizer"/>
     /// </summary>
     internal abstract class SynchronizedService : IHostedService
     {
@@ -22,21 +20,23 @@ namespace RoadCaptain.Host.Console.HostedServices
             _synchronizer = synchronizer;
         }
 
+        /// <inheritdoc cref="IHostedService.StartAsync"/>
         public Task StartAsync(CancellationToken cancellationToken)
         {
             // Register with the synchronizer, that will
             // call the actual start when the synchronization
             // event happens.
-            _synchronizer.RegisterStart(SynchronizedStartCoreAsync, cancellationToken);
+            _synchronizer.RegisterStart(async token =>
+            {
+                await StartCoreAsync(token);
+
+                _monitoringEvents.ServiceStarted(Name);
+            }, cancellationToken);
 
             return Task.CompletedTask;
         }
 
-        // This method is a shim only to ensure a consistent
-        // interface is presented to classes that derive from this.
-        // Otherwise we'd end up with StartCoreAsync() and StopAsync()
-        // to implement which just looks weird.
-        [DebuggerStepThrough]
+        /// <inheritdoc cref="IHostedService.StopAsync"/>
         public Task StopAsync(CancellationToken cancellationToken)
         {
             var task = StopCoreAsync(cancellationToken);
@@ -44,13 +44,6 @@ namespace RoadCaptain.Host.Console.HostedServices
             _monitoringEvents.ServiceStopped(Name);
 
             return task;
-        }
-
-        private async Task SynchronizedStartCoreAsync(CancellationToken cancellationToken)
-        {
-            await StartCoreAsync(cancellationToken);
-
-            _monitoringEvents.ServiceStarted(Name);
         }
 
         protected abstract Task StartCoreAsync(CancellationToken cancellationToken);
