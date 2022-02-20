@@ -13,7 +13,6 @@
     <PackageReference Include="Codenizer.HttpClient.Testable" Version="2.1.0" />
     <PackageReference Include="Google.Protobuf" Version="3.19.4" />
     <PackageReference Include="Google.Protobuf.Tools" Version="3.19.4" />
-    <PackageReference Include="NetMQ" Version="4.0.1.8" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="System.IO.Pipelines" Version="6.0.1" />
     <PackageReference Include="PacketDotNet" Version="1.4.0" />

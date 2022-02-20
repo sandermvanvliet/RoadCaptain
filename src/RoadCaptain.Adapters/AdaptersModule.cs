@@ -63,31 +63,11 @@ namespace RoadCaptain.Adapters
                     $"{nameof(MessageReceiverSource)} must be set to either 'socket' or 'file'");
             }
 
-            if ("in-memory".Equals(GameStateBacking, StringComparison.InvariantCultureIgnoreCase))
-            {
-                builder
-                    .RegisterType<InMemoryGameStateDispatcher>()
-                    .As<IGameStateDispatcher>()
-                    .As<IGameStateReceiver>()
-                    .SingleInstance();
-            }
-            else if ("zeromq".Equals(GameStateBacking, StringComparison.InvariantCultureIgnoreCase))
-            {
-                builder
-                    .RegisterType<ZeroMqGameStateDispatcher>()
-                    .As<IGameStateDispatcher>()
-                    .SingleInstance();
-                
-                builder
-                    .RegisterType<ZeroMqGameStateReceiver>()
-                    .As<IGameStateReceiver>()
-                    .SingleInstance();
-            }
-            else
-            {
-                throw new InvalidOperationException(
-                    $"{nameof(GameStateBacking)} must be set to either 'in-memory' or 'zeromq'");
-            }
+            builder
+                .RegisterType<InMemoryGameStateDispatcher>()
+                .As<IGameStateDispatcher>()
+                .As<IGameStateReceiver>()
+                .SingleInstance();
 
             builder
                 .RegisterType<MessageEmitterToQueue>()
