@@ -5,6 +5,7 @@ using Autofac.Configuration;
 using Microsoft.Extensions.Configuration;
 using Serilog;
 using Serilog.Core;
+using Serilog.Events;
 
 namespace RoadCaptain.Monitor
 {
@@ -52,8 +53,9 @@ namespace RoadCaptain.Monitor
         private static Logger CreateLogger()
         {
             return new LoggerConfiguration()
-                .WriteTo.Console()
-                .WriteTo.File($"roadcaptain-log-{DateTime.UtcNow:yyyy-MM-ddTHHmmss}.log")
+                .WriteTo.Console(restrictedToMinimumLevel: LogEventLevel.Information)
+                .WriteTo.File($"roadcaptain-log-{DateTime.UtcNow:yyyy-MM-ddTHHmmss}.log", restrictedToMinimumLevel: LogEventLevel.Debug)
+                .MinimumLevel.Debug()
                 .Enrich.FromLogContext()
                 .CreateLogger();
         }
