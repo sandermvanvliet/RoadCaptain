@@ -21,8 +21,9 @@ namespace RoadCaptain.Host.Console
                 .SingleInstance();
 
             // There should only ever be one synchronizer
+            var synchronizer = new Synchronizer();
             builder
-                .RegisterType<Synchronizer>()
+                .Register(_ => synchronizer)
                 .As<ISynchronizer>()
                 .SingleInstance();
 
@@ -42,6 +43,9 @@ namespace RoadCaptain.Host.Console
             {
                 // ... and exclude the UI service when we're using console mode...
                 registrationBuilder = registrationBuilder.Except<UserInterfaceService>();
+
+                // Ensure that services start immediately
+                synchronizer.Start();
             }
             
             // ... and finally build up the hosted services
