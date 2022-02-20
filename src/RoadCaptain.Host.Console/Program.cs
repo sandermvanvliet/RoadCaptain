@@ -16,13 +16,34 @@ namespace RoadCaptain.Host.Console
         {
             var logger = CreateLogger();
 
+            IHost host;
+
             try
             {
-                var host = CreateHostBuilder(args, logger).Build();
-                
-                RegisterLifetimeEvents(host);
+                host = CreateHost(args, logger);
 
+                RegisterLifetimeEvents(host);
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex, "Failed to configure host");
+                Environment.ExitCode = 1;
+                return;
+            }
+            finally
+            {
+                // Flush the logger
+                logger.Dispose();
+            }
+
+            try
+            {
                 host.Run();
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex, "Unhandled exception caught");
+                Environment.ExitCode = 1;
             }
             finally
             {
@@ -34,16 +55,19 @@ namespace RoadCaptain.Host.Console
         private static Logger CreateLogger()
         {
             return new LoggerConfiguration()
-                .WriteTo.Console(restrictedToMinimumLevel: LogEventLevel.Information)
-                .WriteTo.File($"roadcaptain-log-{DateTime.UtcNow:yyyy-MM-ddTHHmmss}.log", restrictedToMinimumLevel: LogEventLevel.Debug)
+                .WriteTo.Console(LogEventLevel.Information)
+                .WriteTo.File($"roadcaptain-log-{DateTime.UtcNow:yyyy-MM-ddTHHmmss}.log", LogEventLevel.Debug)
                 .MinimumLevel.Debug()
                 .Enrich.FromLogContext()
                 .CreateLogger();
         }
 
-        // The logger instance is passed in because it needs to go into the IoC container and is used directly by UseSerilog
-        private static IHostBuilder CreateHostBuilder(string[] args, ILogger logger) =>
-            Microsoft.Extensions.Hosting.Host.CreateDefaultBuilder(args)
+        // The logger instance is passed in because it needs to go into the IoC container
+        // and is used directly by UseSerilog()
+        private static IHost CreateHost(string[] args, ILogger logger)
+        {
+            return Microsoft.Extensions.Hosting.Host
+                .CreateDefaultBuilder(args)
                 .ConfigureHostConfiguration(builder =>
                 {
                     builder
@@ -65,7 +89,9 @@ namespace RoadCaptain.Host.Console
                     builder.RegisterModule(new ConfigurationModule(_.Configuration));
                 })
                 .UseServiceProviderFactory(new AutofacServiceProviderFactory())
-                .UseSerilog(logger);
+                .UseSerilog(logger)
+                .Build();
+        }
 
         private static void RegisterLifetimeEvents(IHost host)
         {
