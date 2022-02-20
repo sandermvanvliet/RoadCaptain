@@ -4,6 +4,7 @@ using Autofac;
 using Autofac.Configuration;
 using Autofac.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using RoadCaptain.Host.Console.HostedServices;
 using Serilog;
@@ -26,8 +27,8 @@ namespace RoadCaptain.Host.Console
                 host = CreateHost(args, logger);
 
                 RegisterLifetimeEvents(host);
-                
-                synchronizer = (ISynchronizer)host.Services.GetService(typeof(ISynchronizer));
+
+                synchronizer = host.Services.GetRequiredService<ISynchronizer>();
             }
             catch (Exception ex)
             {
@@ -46,6 +47,8 @@ namespace RoadCaptain.Host.Console
 
             try
             {
+                // Register a callback to get notified of when the UI
+                // closes and the user intends to exit the app.
                 synchronizer.RegisterStop(() => host.StopAsync().GetAwaiter().GetResult());
 
                 host.Run();
