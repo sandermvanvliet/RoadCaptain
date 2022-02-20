@@ -62,8 +62,8 @@ namespace RoadCaptain.Host.Console
 
                     builder.RegisterAssemblyModules(typeof(Program).Assembly);
 
-                    var configurationModule = new ConfigurationModule(_.Configuration);
-                    builder.RegisterModule(configurationModule);
+                    // Wire up registrations through the autofac.json file
+                    builder.RegisterModule(new ConfigurationModule(_.Configuration));
                 })
                 .UseSerilog(logger);
 
