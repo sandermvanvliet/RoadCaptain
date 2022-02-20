@@ -26,12 +26,12 @@ namespace RoadCaptain.Host.Console.HostedServices
             // Register with the synchronizer, that will
             // call the actual start when the synchronization
             // event happens.
-            _synchronizer.RegisterStart(async token =>
+            _synchronizer.RegisterStart(async () =>
             {
-                await StartCoreAsync(token);
+                await StartCoreAsync(cancellationToken);
 
                 _monitoringEvents.ServiceStarted(Name);
-            }, cancellationToken);
+            });
 
             return Task.CompletedTask;
         }
