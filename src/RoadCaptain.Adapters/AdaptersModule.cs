@@ -20,8 +20,6 @@ namespace RoadCaptain.Adapters
         /// </summary>
         public string CaptureFilePath { get; set; }
 
-        public string GameStateBacking { get; set; } = "in-memory";
-
         protected override void Load(ContainerBuilder builder)
         {
             builder

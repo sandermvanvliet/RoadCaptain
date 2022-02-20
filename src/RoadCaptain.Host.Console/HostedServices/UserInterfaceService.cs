@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Autofac;
 using Microsoft.Extensions.Hosting;
-using RoadCaptain.Monitor;
 
 namespace RoadCaptain.Host.Console.HostedServices
 {
