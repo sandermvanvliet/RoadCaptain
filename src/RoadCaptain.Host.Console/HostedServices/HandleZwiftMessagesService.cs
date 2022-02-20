@@ -1,39 +1,36 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Hosting;
 using RoadCaptain.UseCases;
 
 namespace RoadCaptain.Host.Console.HostedServices
 {
-    internal class HandleZwiftMessagesService : IHostedService
+    internal class HandleZwiftMessagesService : SynchronizedService
     {
-        private readonly MonitoringEvents _monitoringEvents;
         private readonly HandleZwiftMessagesUseCase _useCase;
         private readonly CancellationTokenSource _cancellationTokenSource;
 
-        public HandleZwiftMessagesService(
-            MonitoringEvents monitoringEvents,
-            HandleZwiftMessagesUseCase useCase)
+        public HandleZwiftMessagesService(MonitoringEvents monitoringEvents,
+            HandleZwiftMessagesUseCase useCase, ISynchronizer synchronizer)
+        :base(monitoringEvents, synchronizer)
         {
-            _monitoringEvents = monitoringEvents;
             _useCase = useCase;
 
             _cancellationTokenSource = new CancellationTokenSource();
         }
 
-        public Task StartAsync(CancellationToken cancellationToken)
+        protected override string Name => nameof(HandleZwiftMessagesUseCase);
+
+        protected override Task StartCoreAsync(CancellationToken cancellationToken)
         {
             Task.Factory.StartNew(
                 () => _useCase.Execute(_cancellationTokenSource.Token),
                 _cancellationTokenSource.Token);
 
-            _monitoringEvents.ServiceStarted(nameof(HandleZwiftMessagesService));
-
             return Task.CompletedTask;
         }
 
-        public Task StopAsync(CancellationToken cancellationToken)
+        protected override Task StopCoreAsync(CancellationToken cancellationToken)
         {
             try
             {
@@ -41,10 +38,6 @@ namespace RoadCaptain.Host.Console.HostedServices
             }
             catch (OperationCanceledException)
             {
-            }
-            finally
-            {
-                _monitoringEvents.ServiceStopped(nameof(HandleZwiftMessagesService));
             }
 
             return Task.CompletedTask;

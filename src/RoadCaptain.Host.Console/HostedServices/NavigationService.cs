@@ -1,38 +1,35 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Hosting;
 using RoadCaptain.Ports;
 using RoadCaptain.UseCases;
 
 namespace RoadCaptain.Host.Console.HostedServices
 {
-    internal class NavigationService: IHostedService
+    internal class NavigationService: SynchronizedService
     {
-        private readonly MonitoringEvents _monitoringEvents;
         private readonly NavigationUseCase _useCase;
         private readonly CancellationTokenSource _cancellationTokenSource;
         private readonly IGameStateDispatcher _gameStateDispatcher;
 
-        public NavigationService(
-            MonitoringEvents monitoringEvents,
-            NavigationUseCase useCase, 
-            IGameStateDispatcher gameStateDispatcher)
+        public NavigationService(MonitoringEvents monitoringEvents,
+            NavigationUseCase useCase,
+            IGameStateDispatcher gameStateDispatcher, ISynchronizer synchronizer)
+        :base(monitoringEvents, synchronizer)
         {
-            _monitoringEvents = monitoringEvents;
             _useCase = useCase;
             _gameStateDispatcher = gameStateDispatcher;
 
             _cancellationTokenSource = new CancellationTokenSource();
         }
 
-        public Task StartAsync(CancellationToken cancellationToken)
+        protected override string Name => nameof(NavigationService);
+
+        protected override Task StartCoreAsync(CancellationToken cancellationToken)
         {
             Task.Factory.StartNew(
                 () => _useCase.Execute(_cancellationTokenSource.Token),
                 _cancellationTokenSource.Token);
-
-            _monitoringEvents.ServiceStarted(nameof(NavigationService));
             
             var route = new SegmentSequenceBuilder()
                 .StartingAt("watopia-bambino-fondo-001-after-after-after-after-after")
@@ -74,7 +71,7 @@ namespace RoadCaptain.Host.Console.HostedServices
             return Task.CompletedTask;
         }
 
-        public Task StopAsync(CancellationToken cancellationToken)
+        protected override Task StopCoreAsync(CancellationToken cancellationToken)
         {
             try
             {
@@ -82,10 +79,6 @@ namespace RoadCaptain.Host.Console.HostedServices
             }
             catch (OperationCanceledException)
             {
-            }
-            finally
-            {
-                _monitoringEvents.ServiceStopped(nameof(NavigationService));
             }
 
             return Task.CompletedTask;

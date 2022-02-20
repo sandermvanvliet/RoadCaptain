@@ -1,32 +1,29 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Hosting;
 using RoadCaptain.Commands;
-using RoadCaptain.Ports;
 using RoadCaptain.UseCases;
 
 namespace RoadCaptain.Host.Console.HostedServices
 {
-    internal class ConnectToZwiftService : IHostedService
+    internal class ConnectToZwiftService : SynchronizedService
     {
-        private readonly MonitoringEvents _monitoringEvents;
         private readonly ConnectToZwiftUseCase _useCase;
         private readonly CancellationTokenSource _cancellationTokenSource;
         private readonly Configuration _configuration;
 
-        public ConnectToZwiftService(
-            MonitoringEvents monitoringEvents,
-            ConnectToZwiftUseCase useCase, Configuration configuration)
+        public ConnectToZwiftService(MonitoringEvents monitoringEvents,
+            ConnectToZwiftUseCase useCase, Configuration configuration, ISynchronizer synchronizer) : base(monitoringEvents, synchronizer)
         {
-            _monitoringEvents = monitoringEvents;
             _useCase = useCase;
             _configuration = configuration;
 
             _cancellationTokenSource = new CancellationTokenSource();
         }
 
-        public Task StartAsync(CancellationToken cancellationToken)
+        protected override string Name => nameof(ConnectToZwiftService);
+
+        protected override Task StartCoreAsync(CancellationToken cancellationToken)
         {
             Task.Factory.StartNew(async () => await _useCase.ExecuteAsync(new ConnectCommand
                     {
@@ -36,12 +33,10 @@ namespace RoadCaptain.Host.Console.HostedServices
                     _cancellationTokenSource.Token),
                 _cancellationTokenSource.Token);
 
-            _monitoringEvents.ServiceStarted(nameof(ConnectToZwiftService));
-
             return Task.CompletedTask;
         }
 
-        public Task StopAsync(CancellationToken cancellationToken)
+        protected override Task StopCoreAsync(CancellationToken cancellationToken)
         {
             try
             {
@@ -49,10 +44,6 @@ namespace RoadCaptain.Host.Console.HostedServices
             }
             catch (OperationCanceledException)
             {
-            }
-            finally
-            {
-                _monitoringEvents.ServiceStopped(nameof(ConnectToZwiftService));
             }
 
             return Task.CompletedTask;

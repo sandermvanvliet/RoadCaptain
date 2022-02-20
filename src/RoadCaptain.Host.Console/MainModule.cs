@@ -1,5 +1,6 @@
 ﻿using System;
 using Autofac;
+using Microsoft.Extensions.Hosting;
 using RoadCaptain.Host.Console.HostedServices;
 
 namespace RoadCaptain.Host.Console
@@ -17,6 +18,12 @@ namespace RoadCaptain.Host.Console
             builder
                 .RegisterType<MonitoringEventsWithSerilog>()
                 .As<MonitoringEvents>()
+                .SingleInstance();
+
+            // There should only ever be one synchronizer
+            builder
+                .RegisterType<Synchronizer>()
+                .As<ISynchronizer>()
                 .SingleInstance();
 
             // Register the hosted services...
@@ -38,7 +45,7 @@ namespace RoadCaptain.Host.Console
             }
             
             // ... and finally build up the hosted services
-            registrationBuilder.AsImplementedInterfaces();
+            registrationBuilder.As<IHostedService>();
         }
     }
 }
