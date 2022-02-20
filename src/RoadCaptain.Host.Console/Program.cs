@@ -19,7 +19,7 @@ namespace RoadCaptain.Host.Console
             try
             {
                 var host = CreateHostBuilder(args, logger).Build();
-
+                
                 RegisterLifetimeEvents(host);
 
                 host.Run();
@@ -44,24 +44,25 @@ namespace RoadCaptain.Host.Console
         // The logger instance is passed in because it needs to go into the IoC container and is used directly by UseSerilog
         private static IHostBuilder CreateHostBuilder(string[] args, ILogger logger) =>
             Microsoft.Extensions.Hosting.Host.CreateDefaultBuilder(args)
+                .ConfigureHostConfiguration(builder =>
+                {
+                    builder
+                        .AddJsonFile("appsettings.json", true)
+                        .AddJsonFile("autofac.json")
+                        .AddJsonFile("autofac.development.json", true);
+                })
                 .UseServiceProviderFactory(new AutofacServiceProviderFactory())
                 .ConfigureContainer<ContainerBuilder>((_, builder) =>
                 {
                     builder.Register(_ => logger).SingleInstance();
 
-                    var configurationRoot = new ConfigurationBuilder()
-                        .AddJsonFile("appsettings.json", true)
-                        .AddJsonFile("autofac.json")
-                        .AddJsonFile("autofac.development.json", true)
-                        .Build();
-
                     var configuration = new Configuration();
-                    configurationRoot.Bind(configuration);
+                    _.Configuration.Bind(configuration);
                     builder.Register(_ => configuration).SingleInstance();
 
                     builder.RegisterAssemblyModules(typeof(Program).Assembly);
 
-                    var configurationModule = new ConfigurationModule(configurationRoot);
+                    var configurationModule = new ConfigurationModule(_.Configuration);
                     builder.RegisterModule(configurationModule);
                 })
                 .UseSerilog(logger);
@@ -74,7 +75,7 @@ namespace RoadCaptain.Host.Console
             {
                 return;
             }
-
+            
             lifetime.ApplicationStarted.Register(() => monitoringEvents.ApplicationStarted());
             lifetime.ApplicationStopping.Register(() => monitoringEvents.ApplicationStopping());
             lifetime.ApplicationStopped.Register(() => monitoringEvents.ApplicationStopped());
