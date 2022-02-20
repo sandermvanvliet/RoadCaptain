@@ -7,41 +7,10 @@ namespace RoadCaptain.Host.Console.HostedServices
 {
     internal class Synchronizer : ISynchronizer
     {
-        private readonly List<Tuple<Func<CancellationToken, Task>, CancellationToken>> _synchronizedStarts = new();
-        private bool _synchronized;
         private static readonly object SyncRoot = new();
         private readonly List<Action> _stopCallbacks = new();
-
-        public void RegisterStop(Action action)
-        {
-            _stopCallbacks.Add(action);
-        }
-
-        public void Stop()
-        {
-            foreach (var callback in _stopCallbacks)
-            {
-                try
-                {
-                    callback();
-                }
-                catch 
-                {
-                }
-            }
-        }
-
-        public void RegisterStart(Func<CancellationToken, Task> func, CancellationToken cancellationToken)
-        {
-            if (Synchronized)
-            {
-                Task.Factory.StartNew(() => func(cancellationToken));
-            }
-            else
-            {
-                _synchronizedStarts.Add(new(func, cancellationToken));
-            }
-        }
+        private readonly List<Tuple<Func<CancellationToken, Task>, CancellationToken>> _synchronizedStarts = new();
+        private bool _synchronized;
 
         public bool Synchronized
         {
@@ -55,13 +24,54 @@ namespace RoadCaptain.Host.Console.HostedServices
             }
         }
 
-        public void Start()
+        public void RegisterStop(Action action)
         {
+            _stopCallbacks.Add(action);
+        }
+
+        public void RequestApplicationStop()
+        {
+            foreach (var callback in _stopCallbacks)
+            {
+                try
+                {
+                    callback();
+                }
+                catch
+                {
+                    // Ignore this
+                }
+            }
+        }
+
+        public void RegisterStart(Func<CancellationToken, Task> func, CancellationToken cancellationToken)
+        {
+            // When a service attempts to register after the synchronization event
+            // was triggered, the callback can be invoked immediately.
+            if (Synchronized)
+            {
+                func(cancellationToken);
+            }
+            else
+            {
+                _synchronizedStarts.Add(
+                    new Tuple<Func<CancellationToken, Task>, CancellationToken>(func, cancellationToken));
+            }
+        }
+
+        public void TriggerSynchronizationEvent()
+        {
+            if (Synchronized)
+            {
+                // We will only trigger the event once
+                return;
+            }
+
             Synchronized = true;
 
             foreach (var x in _synchronizedStarts)
             {
-                Task.Factory.StartNew(() => x.Item1(x.Item2));
+                x.Item1(x.Item2);
             }
         }
     }

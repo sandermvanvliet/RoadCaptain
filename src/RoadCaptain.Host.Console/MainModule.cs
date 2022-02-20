@@ -45,7 +45,7 @@ namespace RoadCaptain.Host.Console
                 registrationBuilder = registrationBuilder.Except<UserInterfaceService>();
 
                 // Ensure that services start immediately
-                synchronizer.Start();
+                synchronizer.TriggerSynchronizationEvent();
             }
             
             // ... and finally build up the hosted services

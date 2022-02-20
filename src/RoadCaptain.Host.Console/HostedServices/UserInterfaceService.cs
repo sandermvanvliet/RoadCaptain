@@ -41,7 +41,7 @@ namespace RoadCaptain.Host.Console.HostedServices
 
                 _shownBefore = true;
 
-                _synchronizer.Start();
+                _synchronizer.TriggerSynchronizationEvent();
             };
 
             // As the form is visible but the console is not we
@@ -49,7 +49,7 @@ namespace RoadCaptain.Host.Console.HostedServices
             Application.ApplicationExit += (_, _) => 
             {
                 /* stop the host */
-                _synchronizer.Stop();
+                _synchronizer.RequestApplicationStop();
             };
 
             _monitoringEvents.ServiceStarted(nameof(UserInterfaceService));
