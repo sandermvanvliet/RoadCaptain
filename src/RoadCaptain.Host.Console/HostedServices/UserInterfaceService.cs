@@ -32,8 +32,13 @@ namespace RoadCaptain.Host.Console.HostedServices
             // to happen before any WinForm calls are done from
             // within the form itself.
             _mainWindow = _context.Resolve<MainWindow>();
+
             _mainWindow.Shown += (_, _) =>
             {
+                // We're using the Shown event here but that
+                // triggers every time the form is shown,
+                // therefore we need to debounce and only
+                // trigger the synchronization event once.
                 if (_shownBefore)
                 {
                     return;
@@ -54,7 +59,9 @@ namespace RoadCaptain.Host.Console.HostedServices
 
             _monitoringEvents.ServiceStarted(nameof(UserInterfaceService));
 
-            Application.Run(_mainWindow);
+            // Application.Run() blocks but we don't want this service to
+            // block. To counter that we'll run it in a task.
+            Task.Factory.StartNew(() => Application.Run(_mainWindow), cancellationToken);
 
             return Task.CompletedTask;
         }
