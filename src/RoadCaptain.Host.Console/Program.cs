@@ -60,7 +60,6 @@ namespace RoadCaptain.Host.Console
                     builder.Register(_ => configuration).SingleInstance();
 
                     builder.RegisterAssemblyModules(typeof(Program).Assembly);
-                    builder.RegisterAssemblyModules(typeof(MonitoringEvents).Assembly);
 
                     var configurationModule = new ConfigurationModule(configurationRoot);
                     builder.RegisterModule(configurationModule);
