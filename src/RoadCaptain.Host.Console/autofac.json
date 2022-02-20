@@ -5,6 +5,9 @@
     },
     {
       "type": "RoadCaptain.Adapters.AdaptersModule, RoadCaptain.Adapters"
+    },
+    {
+      "type": "RoadCaptain.Host.Console.MainModule, RoadCaptain.Host.Console"
     }
   ]
 }

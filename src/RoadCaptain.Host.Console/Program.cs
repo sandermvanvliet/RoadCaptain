@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using Autofac;
 using Autofac.Configuration;
 using Autofac.Extensions.DependencyInjection;
@@ -26,14 +27,17 @@ namespace RoadCaptain.Host.Console
             }
             catch (Exception ex)
             {
+                Debugger.Break();
+
                 logger.Error(ex, "Failed to configure host");
                 Environment.ExitCode = 1;
-                return;
-            }
-            finally
-            {
-                // Flush the logger
+                
+                // Flush the logger, note that this doesn't happen
+                // in the finally because we need the logger in the
+                // run phase if no exception occurs.
                 logger.Dispose();
+
+                return;
             }
 
             try
@@ -42,6 +46,8 @@ namespace RoadCaptain.Host.Console
             }
             catch (Exception ex)
             {
+                Debugger.Break();
+
                 logger.Error(ex, "Unhandled exception caught");
                 Environment.ExitCode = 1;
             }
@@ -82,8 +88,6 @@ namespace RoadCaptain.Host.Console
                     var configuration = new Configuration();
                     _.Configuration.Bind(configuration);
                     builder.Register(_ => configuration).SingleInstance();
-
-                    builder.RegisterAssemblyModules(typeof(Program).Assembly);
 
                     // Wire up registrations through the autofac.json file
                     builder.RegisterModule(new ConfigurationModule(_.Configuration));

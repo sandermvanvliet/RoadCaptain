@@ -32,6 +32,7 @@ namespace RoadCaptain.Monitor
         private TrackPoint _previousRiderPosition;
         private Task _receiverTask;
         private List<Segment> _segments;
+        private bool _isInitialized;
 
         public MainWindow(
             ISegmentStore segmentStore,
@@ -39,17 +40,6 @@ namespace RoadCaptain.Monitor
         {
             _segmentStore = segmentStore;
             _gameStateReceiver = gameStateReceiver;
-
-            _gameStateReceiver.Register(
-                UpdatePosition,
-                UpdateCurrentSegemnt,
-                UpdateAvailableTurns,
-                UpdateDirection,
-                UpdateTurnCommands,
-                EnteredGame,
-                LeftGame, 
-                null,
-                null);
 
             InitializeComponent();
         }
@@ -68,6 +58,22 @@ namespace RoadCaptain.Monitor
             CreatePathsForSegments();
 
             _receiverTask = Task.Factory.StartNew(() => { _gameStateReceiver.Start(_tokenSource.Token); });
+            
+            // Only register callbacks after the form is initialized
+            // otherwise we may get callback invocation before we're
+            // ready to handle them.
+            _gameStateReceiver.Register(
+                UpdatePosition,
+                UpdateCurrentSegemnt,
+                UpdateAvailableTurns,
+                UpdateDirection,
+                UpdateTurnCommands,
+                EnteredGame,
+                LeftGame, 
+                null,
+                null);
+
+            _isInitialized = true;
         }
 
         private void CreatePathsForSegments()
@@ -242,6 +248,11 @@ namespace RoadCaptain.Monitor
 
         private void skControl1_SizeChanged(object sender, EventArgs e)
         {
+            if (!_isInitialized)
+            {
+                return;
+            }
+
             CreatePathsForSegments();
         }
     }
