@@ -5,11 +5,12 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using RoadCaptain.Monitor;
 using RoadCaptain.Ports;
 using SkiaSharp;
 using SkiaSharp.Views.Desktop;
 
-namespace RoadCaptain.Monitor
+namespace RoadCaptain.Host.Console
 {
     public partial class MainWindow : Form
     {

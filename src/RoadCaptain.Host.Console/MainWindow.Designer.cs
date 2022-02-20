@@ -1,5 +1,5 @@
 ﻿
-namespace RoadCaptain.Monitor
+namespace RoadCaptain.Host.Console
 {
     partial class MainWindow
     {

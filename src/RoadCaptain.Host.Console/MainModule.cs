@@ -1,7 +1,6 @@
 ﻿using System;
 using Autofac;
 using RoadCaptain.Host.Console.HostedServices;
-using RoadCaptain.Monitor;
 
 namespace RoadCaptain.Host.Console
 {
