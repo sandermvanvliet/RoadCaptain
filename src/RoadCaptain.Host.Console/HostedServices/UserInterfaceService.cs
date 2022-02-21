@@ -46,7 +46,7 @@ namespace RoadCaptain.Host.Console.HostedServices
 
                 _shownBefore = true;
 
-                _synchronizer.TriggerSynchronizationEvent();
+                //_synchronizer.TriggerSynchronizationEvent();
             };
 
             // As the form is visible but the console is not we

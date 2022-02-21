@@ -44,15 +44,21 @@ namespace RoadCaptain.Host.Console
             this.label1 = new System.Windows.Forms.Label();
             this.skControl1 = new SkiaSharp.Views.Desktop.SKControl();
             this.panel2 = new System.Windows.Forms.Panel();
-            this.pictureBoxTurnLeft = new System.Windows.Forms.PictureBox();
-            this.pictureBoxGoStraight = new System.Windows.Forms.PictureBox();
             this.pictureBoxTurnRight = new System.Windows.Forms.PictureBox();
+            this.pictureBoxGoStraight = new System.Windows.Forms.PictureBox();
+            this.pictureBoxTurnLeft = new System.Windows.Forms.PictureBox();
+            this.buttonStart = new System.Windows.Forms.Button();
+            this.dataGridViewRoute = new System.Windows.Forms.DataGridView();
+            this.columnStep = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.columnDirection = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.columnSegment = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.menuStrip1.SuspendLayout();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxTurnLeft)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxGoStraight)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxTurnRight)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxGoStraight)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxTurnLeft)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewRoute)).BeginInit();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -176,7 +182,7 @@ namespace RoadCaptain.Host.Console
             | System.Windows.Forms.AnchorStyles.Right)));
             this.skControl1.Location = new System.Drawing.Point(12, 36);
             this.skControl1.Name = "skControl1";
-            this.skControl1.Size = new System.Drawing.Size(2273, 1173);
+            this.skControl1.Size = new System.Drawing.Size(1615, 1173);
             this.skControl1.TabIndex = 3;
             this.skControl1.Text = "skControl1";
             this.skControl1.PaintSurface += new System.EventHandler<SkiaSharp.Views.Desktop.SKPaintSurfaceEventArgs>(this.skControl1_PaintSurface);
@@ -194,16 +200,16 @@ namespace RoadCaptain.Host.Console
             this.panel2.Size = new System.Drawing.Size(622, 210);
             this.panel2.TabIndex = 4;
             // 
-            // pictureBoxTurnLeft
+            // pictureBoxTurnRight
             // 
-            this.pictureBoxTurnLeft.Image = ((System.Drawing.Image)(resources.GetObject("pictureBoxTurnLeft.Image")));
-            this.pictureBoxTurnLeft.Location = new System.Drawing.Point(4, 4);
-            this.pictureBoxTurnLeft.Name = "pictureBoxTurnLeft";
-            this.pictureBoxTurnLeft.Size = new System.Drawing.Size(200, 200);
-            this.pictureBoxTurnLeft.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBoxTurnLeft.TabIndex = 0;
-            this.pictureBoxTurnLeft.TabStop = false;
-            this.pictureBoxTurnLeft.Visible = false;
+            this.pictureBoxTurnRight.Image = ((System.Drawing.Image)(resources.GetObject("pictureBoxTurnRight.Image")));
+            this.pictureBoxTurnRight.Location = new System.Drawing.Point(416, 4);
+            this.pictureBoxTurnRight.Name = "pictureBoxTurnRight";
+            this.pictureBoxTurnRight.Size = new System.Drawing.Size(200, 200);
+            this.pictureBoxTurnRight.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBoxTurnRight.TabIndex = 2;
+            this.pictureBoxTurnRight.TabStop = false;
+            this.pictureBoxTurnRight.Visible = false;
             // 
             // pictureBoxGoStraight
             // 
@@ -216,22 +222,83 @@ namespace RoadCaptain.Host.Console
             this.pictureBoxGoStraight.TabStop = false;
             this.pictureBoxGoStraight.Visible = false;
             // 
-            // pictureBoxTurnRight
+            // pictureBoxTurnLeft
             // 
-            this.pictureBoxTurnRight.Image = ((System.Drawing.Image)(resources.GetObject("pictureBoxTurnRight.Image")));
-            this.pictureBoxTurnRight.Location = new System.Drawing.Point(416, 4);
-            this.pictureBoxTurnRight.Name = "pictureBoxTurnRight";
-            this.pictureBoxTurnRight.Size = new System.Drawing.Size(200, 200);
-            this.pictureBoxTurnRight.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBoxTurnRight.TabIndex = 2;
-            this.pictureBoxTurnRight.TabStop = false;
-            this.pictureBoxTurnRight.Visible = false;
+            this.pictureBoxTurnLeft.Image = ((System.Drawing.Image)(resources.GetObject("pictureBoxTurnLeft.Image")));
+            this.pictureBoxTurnLeft.Location = new System.Drawing.Point(4, 4);
+            this.pictureBoxTurnLeft.Name = "pictureBoxTurnLeft";
+            this.pictureBoxTurnLeft.Size = new System.Drawing.Size(200, 200);
+            this.pictureBoxTurnLeft.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBoxTurnLeft.TabIndex = 0;
+            this.pictureBoxTurnLeft.TabStop = false;
+            this.pictureBoxTurnLeft.Visible = false;
+            // 
+            // buttonStart
+            // 
+            this.buttonStart.Location = new System.Drawing.Point(1634, 1227);
+            this.buttonStart.Name = "buttonStart";
+            this.buttonStart.Size = new System.Drawing.Size(112, 34);
+            this.buttonStart.TabIndex = 6;
+            this.buttonStart.Text = "Start";
+            this.buttonStart.UseVisualStyleBackColor = true;
+            this.buttonStart.Click += new System.EventHandler(this.buttonStart_Click);
+            // 
+            // dataGridViewRoute
+            // 
+            this.dataGridViewRoute.AllowUserToAddRows = false;
+            this.dataGridViewRoute.AllowUserToDeleteRows = false;
+            this.dataGridViewRoute.AllowUserToResizeColumns = false;
+            this.dataGridViewRoute.AllowUserToResizeRows = false;
+            this.dataGridViewRoute.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridViewRoute.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.columnStep,
+            this.columnDirection,
+            this.columnSegment});
+            this.dataGridViewRoute.Location = new System.Drawing.Point(1634, 36);
+            this.dataGridViewRoute.MultiSelect = false;
+            this.dataGridViewRoute.Name = "dataGridViewRoute";
+            this.dataGridViewRoute.ReadOnly = true;
+            this.dataGridViewRoute.RowHeadersVisible = false;
+            this.dataGridViewRoute.RowHeadersWidth = 62;
+            this.dataGridViewRoute.RowTemplate.Height = 33;
+            this.dataGridViewRoute.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.dataGridViewRoute.Size = new System.Drawing.Size(651, 1173);
+            this.dataGridViewRoute.TabIndex = 7;
+            // 
+            // columnStep
+            // 
+            this.columnStep.DataPropertyName = "Step";
+            this.columnStep.HeaderText = "Step";
+            this.columnStep.MinimumWidth = 8;
+            this.columnStep.Name = "columnStep";
+            this.columnStep.ReadOnly = true;
+            this.columnStep.Width = 30;
+            // 
+            // columnDirection
+            // 
+            this.columnDirection.DataPropertyName = "Direction";
+            this.columnDirection.HeaderText = "";
+            this.columnDirection.MinimumWidth = 8;
+            this.columnDirection.Name = "columnDirection";
+            this.columnDirection.ReadOnly = true;
+            this.columnDirection.Width = 70;
+            // 
+            // columnSegment
+            // 
+            this.columnSegment.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.columnSegment.DataPropertyName = "Segment";
+            this.columnSegment.HeaderText = "Segment";
+            this.columnSegment.MinimumWidth = 8;
+            this.columnSegment.Name = "columnSegment";
+            this.columnSegment.ReadOnly = true;
             // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(2297, 1449);
+            this.Controls.Add(this.dataGridViewRoute);
+            this.Controls.Add(this.buttonStart);
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.skControl1);
             this.Controls.Add(this.panel1);
@@ -246,9 +313,10 @@ namespace RoadCaptain.Host.Console
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             this.panel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxTurnLeft)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxGoStraight)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxTurnRight)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxGoStraight)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxTurnLeft)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewRoute)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -273,6 +341,11 @@ namespace RoadCaptain.Host.Console
         private System.Windows.Forms.PictureBox pictureBoxTurnLeft;
         private System.Windows.Forms.PictureBox pictureBoxTurnRight;
         private System.Windows.Forms.PictureBox pictureBoxGoStraight;
+        private System.Windows.Forms.Button buttonStart;
+        private System.Windows.Forms.DataGridView dataGridViewRoute;
+        private System.Windows.Forms.DataGridViewTextBoxColumn columnStep;
+        private System.Windows.Forms.DataGridViewTextBoxColumn columnDirection;
+        private System.Windows.Forms.DataGridViewTextBoxColumn columnSegment;
     }
 }
 

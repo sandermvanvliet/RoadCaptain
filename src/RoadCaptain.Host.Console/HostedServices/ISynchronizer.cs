@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace RoadCaptain.Host.Console.HostedServices
 {
-    internal interface ISynchronizer
+    public interface ISynchronizer
     {
         /// <summary>
         /// Register a callback to invoke when the synchronization event (<see cref="TriggerSynchronizationEvent"/>) happens

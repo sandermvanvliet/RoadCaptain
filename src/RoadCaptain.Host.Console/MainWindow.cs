@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using RoadCaptain.Host.Console.HostedServices;
 using RoadCaptain.Ports;
 using SkiaSharp;
 using SkiaSharp.Views.Desktop;
@@ -14,6 +15,7 @@ namespace RoadCaptain.Host.Console
     public partial class MainWindow : Form
     {
         private readonly IGameStateReceiver _gameStateReceiver;
+        private readonly ISynchronizer _synchronizer;
         private SKPath _riderPath = new();
 
         private readonly SKPaint _riderPathPaint = new()
@@ -36,10 +38,12 @@ namespace RoadCaptain.Host.Console
 
         public MainWindow(
             ISegmentStore segmentStore,
-            IGameStateReceiver gameStateReceiver)
+            IGameStateReceiver gameStateReceiver,
+            ISynchronizer synchronizer)
         {
             _segmentStore = segmentStore;
             _gameStateReceiver = gameStateReceiver;
+            _synchronizer = synchronizer;
 
             InitializeComponent();
         }
@@ -56,8 +60,6 @@ namespace RoadCaptain.Host.Console
 
             // Paint segments
             CreatePathsForSegments();
-
-            _receiverTask = Task.Factory.StartNew(() => { _gameStateReceiver.Start(_tokenSource.Token); });
             
             // Only register callbacks after the form is initialized
             // otherwise we may get callback invocation before we're
@@ -70,10 +72,35 @@ namespace RoadCaptain.Host.Console
                 UpdateTurnCommands,
                 EnteredGame,
                 LeftGame, 
-                null,
+                RouteSelected,
                 null);
 
+            // This starts the receiver if that has not yet been
+            // done by another consumer.
+            _receiverTask = Task.Factory.StartNew(() => { _gameStateReceiver.Start(_tokenSource.Token); });
+
             _isInitialized = true;
+        }
+
+        private void RouteSelected(PlannedRoute route)
+        {
+            dataGridViewRoute.Invoke(() => PopulateListBox(route));
+        }
+
+        private void PopulateListBox(PlannedRoute route)
+        {
+            dataGridViewRoute.DataSource = route
+                .RouteSegmentSequence
+                .Select((segment, index) => new RouteItem
+                {
+                    Step = index + 1,
+                    Segment = segment.SegmentId,
+                    Direction = segment.TurnToNextSegment == TurnDirection.Left ? "🡄" : 
+                        segment.TurnToNextSegment == TurnDirection.Right
+                        ? "🡆"
+                        : "🡅"
+                })
+                .ToList();
         }
 
         private void CreatePathsForSegments()
@@ -192,7 +219,7 @@ namespace RoadCaptain.Host.Console
 
         private static void SetPictureBoxVisibility(PictureBox pictureBox, bool isVisible)
         {
-            pictureBox.Invoke((Action)(() => pictureBox.Visible = isVisible));
+            pictureBox.Invoke(() => pictureBox.Visible = isVisible);
         }
 
         private void UpdateDirection(SegmentDirection direction)
@@ -255,5 +282,17 @@ namespace RoadCaptain.Host.Console
 
             CreatePathsForSegments();
         }
+
+        private void buttonStart_Click(object sender, EventArgs e)
+        {
+            _synchronizer.TriggerSynchronizationEvent();
+        }
+    }
+
+    internal class RouteItem
+    {
+        public int Step { get; set; }
+        public string Segment { get; set; }
+        public string Direction { get; set; }
     }
 }
