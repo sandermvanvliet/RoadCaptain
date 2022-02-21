@@ -93,6 +93,15 @@ namespace RoadCaptain
 
         public SegmentDirection DirectionOf(TrackPoint first, TrackPoint second)
         {
+            // If Index is provided use that instead of looking
+            // up the index of each point in the segment.
+            if (first.Index.HasValue && second.Index.HasValue)
+            {
+                return first.Index < second.Index
+                    ? SegmentDirection.AtoB
+                    : SegmentDirection.BtoA;
+            }
+
             var firstIndex = Points.IndexOf(first);
             var secondIndex = Points.IndexOf(second);
 

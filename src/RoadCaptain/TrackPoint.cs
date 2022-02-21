@@ -18,7 +18,7 @@ namespace RoadCaptain
         public decimal Latitude { get; }
         public decimal Longitude { get; }
         public decimal Altitude { get; }
-        public int Index { get; set; }
+        public int? Index { get; set; }
         public decimal DistanceOnSegment { get; set; }
         public decimal DistanceFromLast { get; set; }
         [JsonIgnore]
