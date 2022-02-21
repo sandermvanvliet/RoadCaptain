@@ -39,12 +39,22 @@ namespace RoadCaptain.Host.Console.HostedServices
         /// <inheritdoc cref="IHostedService.StopAsync"/>
         public Task StopAsync(CancellationToken cancellationToken)
         {
+            // Prevent re-entry
+            if (IsStopped)
+            {
+                return Task.CompletedTask;
+            }
+
+            IsStopped = true;
+
             var task = StopCoreAsync(cancellationToken);
 
             _monitoringEvents.ServiceStopped(Name);
 
             return task;
         }
+
+        public bool IsStopped { get; private set; }
 
         protected abstract Task StartCoreAsync(CancellationToken cancellationToken);
         

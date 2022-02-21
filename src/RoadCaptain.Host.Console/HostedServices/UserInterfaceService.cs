@@ -73,6 +73,12 @@ namespace RoadCaptain.Host.Console.HostedServices
 
         public Task StopAsync(CancellationToken cancellationToken)
         {
+            // Prevent re-entry
+            if (_stopping)
+            {
+                return Task.CompletedTask;
+            }
+
             _stopping = true;
 
             if (_mainWindow.InvokeRequired)
