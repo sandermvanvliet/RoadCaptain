@@ -76,7 +76,7 @@ namespace RoadCaptain.UseCases
             // there are at least two turns available.
             if (startCount != _commands.Count && _commands.Count >= 2)
             {
-                _currentSegmentId = _dispatcher.CurrentSegment.Id;
+                _currentSegmentId = _dispatcher.CurrentSegment?.Id;
                 _dispatcher.TurnCommandsAvailable(_commands);
             }
         }
