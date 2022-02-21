@@ -70,13 +70,7 @@ namespace RoadCaptain.UseCases
             }
             else
             {
-                // This'll get messy when approaching an intersection
-                // but we should be able to solve that because we're
-                // telling the game where to go and we know which segment
-                // that is.
-                // So when we set up the turn to make we should also set
-                // the target segment somewhere and use that value here.
-                var segment = matchingSegments.First();
+                var (segment, closestOnSegment) = GetClosestMatchingSegment(matchingSegments, position);
 
                 if (segment != _dispatcher.CurrentSegment)
                 {
@@ -86,7 +80,7 @@ namespace RoadCaptain.UseCases
                     // For this we need to use the TrackPoint on the segment instead
                     // of the game position because otherwise we can't determine
                     // direction on the segment later on
-                    _previousPositionOnSegment = segment.GetClosestPositionOnSegment(position);
+                    _previousPositionOnSegment = closestOnSegment;
 
                     // TODO: Determine this from the segment we came from
                     // as we have a turn in the opposite direction of the
@@ -100,7 +94,7 @@ namespace RoadCaptain.UseCases
                     // we can determine the direction on the segment.
                     if (_previousPositionOnSegment != null && _currentDirection == SegmentDirection.Unknown)
                     {
-                        var currentPositionOnSegment = segment.GetClosestPositionOnSegment(position);
+                        var currentPositionOnSegment = closestOnSegment;
                         var direction = _dispatcher.CurrentSegment.DirectionOf(_previousPositionOnSegment, currentPositionOnSegment);
 
                         // If we have a direction then check if we changed
@@ -118,9 +112,54 @@ namespace RoadCaptain.UseCases
                     // For this we need to use the TrackPoint on the segment instead
                     // of the game position because otherwise we can't determine
                     // direction on the segment later on
-                    _previousPositionOnSegment = segment.GetClosestPositionOnSegment(position);
+                    _previousPositionOnSegment = closestOnSegment;
                 }
             }
+        }
+
+        private static (Segment,TrackPoint) GetClosestMatchingSegment(List<Segment> segments, TrackPoint position)
+        {
+            // If there is only one segment then we can
+            // do a quick exist and not bother to figure
+            // out which point is actually closest.
+            if (segments.Count == 1)
+            {
+                return (segments[0], segments[0].GetClosestPositionOnSegment(position));
+            }
+
+            // For each segment find the closest track point in that segment
+            // in relation to the current position
+            TrackPoint closest = null;
+            decimal? closestDistance = null;
+            Segment closestSegment = null;
+
+            foreach (var segment in segments)
+            {
+                // This is very suboptimal as this needs to traverse
+                // all the points of the segment whereas finding if
+                // the point is on the segment can stop at the first
+                // hit.
+                var closestOnSegment = segment
+                    .Points
+                    .Select(p => new { Point = p, Distance = p.DistanceTo(position) })
+                    .OrderBy(d => d.Distance)
+                    .First();
+
+                if (closest == null)
+                {
+                    closest = closestOnSegment.Point;
+                    closestDistance = closestOnSegment.Distance;
+                    closestSegment = segment;
+                }
+                else if (closestOnSegment.Distance < closestDistance)
+                {
+                    closest = closestOnSegment.Point;
+                    closestDistance = closestOnSegment.Distance;
+                    closestSegment = segment;
+                }
+            }
+
+            return (closestSegment, closest);
         }
     }
 }
