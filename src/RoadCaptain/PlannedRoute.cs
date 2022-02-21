@@ -17,7 +17,7 @@ namespace RoadCaptain
 
         public List<SegmentSequence> RouteSegmentSequence { get; } = new();
 
-        public void EnteredSegment(string segmentId)
+        public RouteMoveResult EnteredSegment(string segmentId)
         {
             if (HasCompleted)
             {
@@ -27,8 +27,11 @@ namespace RoadCaptain
             if (CurrentSegmentId == null && segmentId == StartingSegmentId)
             {
                 HasStarted = true;
+
+                return RouteMoveResult.StartedRoute;
             }
-            else if (CurrentSegmentId != null && NextSegmentId == segmentId)
+
+            if (CurrentSegmentId != null && NextSegmentId == segmentId)
             {
                 SegmentSequenceIndex++;
 
@@ -39,13 +42,15 @@ namespace RoadCaptain
                 if (SegmentSequenceIndex == RouteSegmentSequence.Count - 1)
                 {
                     HasCompleted = true;
+
+                    return RouteMoveResult.CompletedRoute;
                 }
+
+                return RouteMoveResult.EnteredNextSegment;
             }
-            else
-            {
-                throw new ArgumentException(
-                    $"Was expecting {NextSegmentId} but got {segmentId} and that's not a valid route progression");
-            }
+
+            throw new ArgumentException(
+                $"Was expecting {NextSegmentId} but got {segmentId} and that's not a valid route progression");
         }
 
         public void Reset()
@@ -54,5 +59,13 @@ namespace RoadCaptain
             HasCompleted = false;
             SegmentSequenceIndex = 0;
         }
+    }
+
+    public enum RouteMoveResult
+    {
+        Unknown,
+        StartedRoute,
+        EnteredNextSegment,
+        CompletedRoute
     }
 }

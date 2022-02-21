@@ -22,6 +22,9 @@ namespace RoadCaptain.Adapters
         private readonly List<Action<ulong>> _leftGameHandlers = new();
         private readonly List<Action<PlannedRoute>> _routeSelectedHandlers = new();
         private readonly List<Action<uint>> _lastSequenceNumberHandlers = new();
+        private readonly List<Action> _routeStartedHandlers = new();
+        private readonly List<Action> _routeCompletedHandlers = new();
+        private readonly List<Action<int>> _routeProgressionHandlers = new();
         private readonly AutoResetEvent _autoResetEvent = new(false);
         private readonly TimeSpan _queueWaitTimeout = TimeSpan.FromMilliseconds(2000);
         private bool _started;
@@ -222,6 +225,21 @@ namespace RoadCaptain.Adapters
             }
         }
 
+        public void RouteStarted()
+        {
+            Enqueue("routeStarted", "");
+        }
+
+        public void RouteProgression(int step, string segmentId)
+        {
+            Enqueue("routeProgression", step);
+        }
+
+        public void RouteCompleted()
+        {
+            Enqueue("routeCompleted", "");
+        }
+
         protected virtual void Enqueue(string topic, object data)
         {
             try
@@ -298,7 +316,25 @@ namespace RoadCaptain.Adapters
             AddHandlerIfNotNull(_lastSequenceNumberHandlers, lastSequenceNumber);
         }
 
+        public void RegisterRouteEvents(
+            Action routeStarted,
+            Action<int> routeProgression,
+            Action routeCompleted)
+        {
+            AddHandlerIfNotNull(_routeStartedHandlers, routeStarted);
+            AddHandlerIfNotNull(_routeProgressionHandlers, routeProgression);
+            AddHandlerIfNotNull(_routeCompletedHandlers, routeCompleted);
+        }
+
         private static void AddHandlerIfNotNull<TMessage>(List<Action<TMessage>> collection, Action<TMessage> handler)
+        {
+            if (handler != null)
+            {
+                collection.Add(handler);
+            }
+        }
+
+        private static void AddHandlerIfNotNull(List<Action> collection, Action handler)
         {
             if (handler != null)
             {
@@ -342,6 +378,15 @@ namespace RoadCaptain.Adapters
                 case "lastSequenceNumber":
                     _lastSequenceNumberHandlers.ForEach(h => InvokeHandler(h, message.Data));
                     break;
+                case "routeStarted":
+                    _routeStartedHandlers.ForEach(InvokeHandler);
+                    break;
+                case "routeProgression":
+                    _routeProgressionHandlers.ForEach(h => InvokeHandler(h, message.Data));
+                    break;
+                case "routeCompleted":
+                    _routeCompletedHandlers.ForEach(InvokeHandler);
+                    break;
             }
         }
 
@@ -350,6 +395,18 @@ namespace RoadCaptain.Adapters
             try
             {
                 handle(JsonConvert.DeserializeObject<TMessage>(serializedContent));
+            }
+            catch (Exception e)
+            {
+                _monitoringEvents.Error(e, "Failed to invoke handler");
+            }
+        }
+
+        private void InvokeHandler(Action handle)
+        {
+            try
+            {
+                handle();
             }
             catch (Exception e)
             {

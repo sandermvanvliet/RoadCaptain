@@ -72,5 +72,22 @@ namespace RoadCaptain.Ports
         List<TurnDirection> AvailableTurnCommands { get; }
         Segment CurrentSegment { get; }
         bool InGame { get; }
+
+        /// <summary>
+        /// The rider started the planned route
+        /// </summary>
+        void RouteStarted();
+
+        /// <summary>
+        /// The rider entered the next segment of the planned route
+        /// </summary>
+        /// <param name="step"></param>
+        /// <param name="segmentId"></param>
+        void RouteProgression(int step, string segmentId);
+
+        /// <summary>
+        /// The rider ocmpleted the planned route
+        /// </summary>
+        void RouteCompleted();
     }
 }

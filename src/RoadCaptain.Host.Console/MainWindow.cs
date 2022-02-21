@@ -75,11 +75,32 @@ namespace RoadCaptain.Host.Console
                 RouteSelected,
                 null);
 
+            _gameStateReceiver.RegisterRouteEvents(
+                RouteStarted,
+                RouteProgression,
+                RouteCompleted);
+
             // This starts the receiver if that has not yet been
             // done by another consumer.
             _receiverTask = Task.Factory.StartNew(() => { _gameStateReceiver.Start(_tokenSource.Token); });
 
             _isInitialized = true;
+        }
+
+        private void RouteProgression(int step)
+        {
+            dataGridViewRoute.ClearSelection();
+            dataGridViewRoute.Rows[step - 1].Selected = true;
+        }
+
+        private void RouteCompleted()
+        {
+            
+        }
+
+        private void RouteStarted()
+        {
+            dataGridViewRoute.ClearSelection();
         }
 
         private void RouteSelected(PlannedRoute route)

@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Reflection;
 using System.Threading;
 using FluentAssertions;
+using RoadCaptain.Adapters;
 using RoadCaptain.UseCases;
 using Xunit;
 
@@ -11,34 +12,35 @@ namespace RoadCaptain.Tests.Unit
 {
     public class WhenNavigating
     {
-        private readonly InMemoryGameStateReceiver _gameStateReceiver;
         private readonly NavigationUseCase _useCase;
         private readonly InMemoryMessageReceiver _inMemoryMessageReceiver;
+        private readonly InMemoryGameStateDispatcher _gameStateDispatcher;
         private readonly FieldInfo _plannedRouteFieldInfo;
 
         public WhenNavigating()
         {
             var monitoringEvents = new NopMonitoringEvents();
-            _gameStateReceiver = new InMemoryGameStateReceiver(monitoringEvents);
-
+            _gameStateDispatcher = new InMemoryGameStateDispatcher(monitoringEvents);
             var plannedRoute = FixedForTesting();
 
             _inMemoryMessageReceiver = new InMemoryMessageReceiver();
             _useCase = new NavigationUseCase(
-                _gameStateReceiver,
+                _gameStateDispatcher,
                 monitoringEvents,
-                _inMemoryMessageReceiver);
-
-            _gameStateReceiver.Enqueue("routeSelected", plannedRoute);
+                _inMemoryMessageReceiver,
+                _gameStateDispatcher);
+            
 
             // We need to use reflection here because sending the route
             // through the dispatcher does a serialize/deserialize which
             // means we don't have a reference to the planed route anymore.
             _plannedRouteFieldInfo = _useCase.GetType()
                 .GetField("_plannedRoute", BindingFlags.Instance | BindingFlags.NonPublic);
+            _gameStateDispatcher.EnterGame(1);
+            _gameStateDispatcher.RouteSelected(plannedRoute);
         }
 
-        private PlannedRoute PlannedRoute => _plannedRouteFieldInfo.GetValue(_useCase) as PlannedRoute;
+        private PlannedRoute CurrentRoute => _plannedRouteFieldInfo.GetValue(_useCase) as PlannedRoute;
 
         public static PlannedRoute FixedForTesting()
         {
@@ -59,11 +61,11 @@ namespace RoadCaptain.Tests.Unit
         [Fact]
         public void GivenNotStartedRouteAndRiderIsOnStartingSegment_PlannedRouteIsStarted()
         {
-            _gameStateReceiver.Enqueue("segmentChanged", "seg-1");
+            _gameStateDispatcher.SegmentChanged(new Segment { Id = "seg-1" });
 
             WhenHandlingNavigation();
 
-            PlannedRoute
+            CurrentRoute
                 .CurrentSegmentId
                 .Should()
                 .Be("seg-1");
@@ -72,11 +74,11 @@ namespace RoadCaptain.Tests.Unit
         [Fact]
         public void GivenNotStartedRouteAndRiderIsNotOnStartingSegment_CurrentSegmentRemainsEmpty()
         {
-            _gameStateReceiver.Enqueue("segmentChanged", "seg-NOT-ON-SEG");
+            _gameStateDispatcher.SegmentChanged(new Segment { Id = "seg-NOT-ON-SEG" });
 
             WhenHandlingNavigation();
-
-            PlannedRoute
+            
+            CurrentRoute
                 .CurrentSegmentId
                 .Should()
                 .BeNull();
@@ -85,12 +87,12 @@ namespace RoadCaptain.Tests.Unit
         [Fact]
         public void GivenStartedRouteAndRiderEntersNextExpectedSegment_CurrentSegmentIsUpdated()
         {
-            _gameStateReceiver.Enqueue("segmentChanged", "seg-1");
-            _gameStateReceiver.Enqueue("segmentChanged", "seg-2");
+            _gameStateDispatcher.SegmentChanged(new Segment { Id = "seg-1" });
+            _gameStateDispatcher.SegmentChanged(new Segment { Id = "seg-2" });
 
             WhenHandlingNavigation();
-
-            PlannedRoute
+            
+            CurrentRoute
                 .CurrentSegmentId
                 .Should()
                 .Be("seg-2");
@@ -99,12 +101,12 @@ namespace RoadCaptain.Tests.Unit
         [Fact]
         public void GivenStartedRouteAndRiderEntersNextExpectedSegment_NextSegmentIsUpdated()
         {
-            _gameStateReceiver.Enqueue("segmentChanged", "seg-1");
-            _gameStateReceiver.Enqueue("segmentChanged", "seg-2");
+            _gameStateDispatcher.SegmentChanged(new Segment { Id = "seg-1" });
+            _gameStateDispatcher.SegmentChanged(new Segment { Id = "seg-2" });
 
             WhenHandlingNavigation();
-
-            PlannedRoute
+            
+            CurrentRoute
                 .NextSegmentId
                 .Should()
                 .Be("seg-3");
@@ -113,12 +115,12 @@ namespace RoadCaptain.Tests.Unit
         [Fact]
         public void GivenStartedRouteAndRiderEntersNextExpectedSegment_ExpectedTurnIsUpdated()
         {
-            _gameStateReceiver.Enqueue("segmentChanged", "seg-1");
-            _gameStateReceiver.Enqueue("segmentChanged", "seg-2");
+            _gameStateDispatcher.SegmentChanged(new Segment { Id = "seg-1" });
+            _gameStateDispatcher.SegmentChanged(new Segment { Id = "seg-2" });
 
             WhenHandlingNavigation();
-
-            PlannedRoute
+            
+            CurrentRoute
                 .TurnToNextSegment
                 .Should()
                 .Be(TurnDirection.GoStraight);
@@ -127,10 +129,10 @@ namespace RoadCaptain.Tests.Unit
         [Fact]
         public void GivenStartedRouteOnSegmentThreeAndLeftAndGoStraightCommandsAvailable_NoCommandIsSent()
         {
-            _gameStateReceiver.Enqueue("segmentChanged", "seg-1");
-            _gameStateReceiver.Enqueue("segmentChanged", "seg-2");
-            _gameStateReceiver.Enqueue("segmentChanged", "seg-3");
-            _gameStateReceiver.Enqueue("turnCommandsAvailable", new List<TurnDirection> { TurnDirection.Left, TurnDirection.GoStraight });
+            _gameStateDispatcher.SegmentChanged(new Segment { Id = "seg-1" });
+            _gameStateDispatcher.SegmentChanged(new Segment { Id = "seg-2" });
+            _gameStateDispatcher.SegmentChanged(new Segment { Id = "seg-3" });
+            _gameStateDispatcher.TurnCommandsAvailable(new List<TurnDirection> { TurnDirection.Left, TurnDirection.GoStraight });
 
             WhenHandlingNavigation();
 
@@ -143,10 +145,10 @@ namespace RoadCaptain.Tests.Unit
         [Fact]
         public void GivenStartedRouteOnSegmentThreeAndLeftAndRightCommandsAvailable_TurnRightCommandIsSent()
         {
-            _gameStateReceiver.Enqueue("segmentChanged", "seg-1");
-            _gameStateReceiver.Enqueue("segmentChanged", "seg-2");
-            _gameStateReceiver.Enqueue("segmentChanged", "seg-3");
-            _gameStateReceiver.Enqueue("turnCommandsAvailable", new List<TurnDirection> { TurnDirection.Left, TurnDirection.Right });
+            _gameStateDispatcher.SegmentChanged(new Segment { Id = "seg-1" });
+            _gameStateDispatcher.SegmentChanged(new Segment { Id = "seg-2" });
+            _gameStateDispatcher.SegmentChanged(new Segment { Id = "seg-3" });
+            _gameStateDispatcher.TurnCommandsAvailable(new List<TurnDirection> { TurnDirection.Left, TurnDirection.Right });
 
             WhenHandlingNavigation();
 

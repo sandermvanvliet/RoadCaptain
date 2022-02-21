@@ -13,15 +13,18 @@ namespace RoadCaptain.UseCases
         private readonly IMessageReceiver _messageReceiver;
         private PlannedRoute _plannedRoute;
         private uint _lastSequenceNumber;
+        private readonly IGameStateDispatcher _dispatcher;
 
         public NavigationUseCase(
             IGameStateReceiver gameStateReceiver,
             MonitoringEvents monitoringEvents,
-            IMessageReceiver messageReceiver)
+            IMessageReceiver messageReceiver, 
+            IGameStateDispatcher dispatcher)
         {
             _gameStateReceiver = gameStateReceiver;
             _monitoringEvents = monitoringEvents;
             _messageReceiver = messageReceiver;
+            _dispatcher = dispatcher;
         }
 
         public void Execute(CancellationToken token)
@@ -108,7 +111,9 @@ namespace RoadCaptain.UseCases
                 {
                     try
                     {
-                        _plannedRoute.EnteredSegment(segmentId);
+                        var result = _plannedRoute.EnteredSegment(segmentId);
+
+                        DispatchRouteState(result);
                     }
                     catch (ArgumentException e)
                     {
@@ -131,7 +136,9 @@ namespace RoadCaptain.UseCases
                         return;
                     }
 
-                    _plannedRoute.EnteredSegment(segmentId);
+                    var result = _plannedRoute.EnteredSegment(segmentId);
+
+                    DispatchRouteState(result);
 
                     if (_plannedRoute.HasCompleted)
                     {
@@ -159,6 +166,22 @@ namespace RoadCaptain.UseCases
                     "Rider entered segment {SegmentId} but it's not the expected next segment on the route ({NextSegmentId})",
                     segmentId,
                     _plannedRoute.NextSegmentId);
+            }
+        }
+
+        private void DispatchRouteState(RouteMoveResult result)
+        {
+            if (result == RouteMoveResult.StartedRoute)
+            {
+                _dispatcher.RouteStarted();
+            }
+            else if (result == RouteMoveResult.EnteredNextSegment)
+            {
+                _dispatcher.RouteProgression(_plannedRoute.SegmentSequenceIndex, _plannedRoute.CurrentSegmentId);
+            }
+            else if (result == RouteMoveResult.CompletedRoute)
+            {
+                _dispatcher.RouteCompleted();
             }
         }
     }

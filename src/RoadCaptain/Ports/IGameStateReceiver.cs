@@ -16,5 +16,10 @@ namespace RoadCaptain.Ports
             Action<ulong> leftGame, 
             Action<PlannedRoute> routeSelected, 
             Action<uint> lastSequenceNumber);
+
+        void RegisterRouteEvents(
+            Action routeStarted,
+            Action<int> routeProgression,
+            Action routeCompleted);
     }
 }
