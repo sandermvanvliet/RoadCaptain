@@ -264,6 +264,7 @@ namespace RoadCaptain.Host.Console
             this.dataGridViewRoute.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dataGridViewRoute.Size = new System.Drawing.Size(651, 1173);
             this.dataGridViewRoute.TabIndex = 7;
+            this.dataGridViewRoute.SelectionChanged += new System.EventHandler(this.dataGridViewRoute_SelectionChanged);
             // 
             // columnStep
             // 

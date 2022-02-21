@@ -19,15 +19,18 @@ namespace RoadCaptain.Host.Console
         private SKPath _riderPath = new();
 
         private readonly SKPaint _riderPathPaint = new()
-            { Color = SKColor.Parse("#0000ff"), Style = SKPaintStyle.Stroke, StrokeWidth = 2 };
+        { Color = SKColor.Parse("#0000ff"), Style = SKPaintStyle.Stroke, StrokeWidth = 2 };
 
         private readonly SKPaint _segmentPathPaint = new()
-            { Color = SKColor.Parse("#000000"), Style = SKPaintStyle.Stroke, StrokeWidth = 4 };
+        { Color = SKColor.Parse("#000000"), Style = SKPaintStyle.Stroke, StrokeWidth = 4 };
+
+        private readonly SKPaint _selectedSegmentPathPaint = new()
+        { Color = SKColor.Parse("#ffcc00"), Style = SKPaintStyle.Stroke, StrokeWidth = 4 };
 
         private readonly SKPaint _riderPositionPaint = new()
-            { Color = SKColor.Parse("#ff0000"), Style = SKPaintStyle.Stroke, StrokeWidth = 4 };
-        
-        private readonly List<SKPath> _segmentPaths = new();
+        { Color = SKColor.Parse("#ff0000"), Style = SKPaintStyle.Stroke, StrokeWidth = 4 };
+
+        private readonly Dictionary<string, SKPath> _segmentPaths = new();
         private readonly ISegmentStore _segmentStore;
         private readonly CancellationTokenSource _tokenSource = new();
         private Offsets _overallOffsets;
@@ -35,6 +38,7 @@ namespace RoadCaptain.Host.Console
         private Task _receiverTask;
         private List<Segment> _segments;
         private bool _isInitialized;
+        private Segment _selectedSegment;
 
         public MainWindow(
             ISegmentStore segmentStore,
@@ -60,7 +64,7 @@ namespace RoadCaptain.Host.Console
 
             // Paint segments
             CreatePathsForSegments();
-            
+
             // Only register callbacks after the form is initialized
             // otherwise we may get callback invocation before we're
             // ready to handle them.
@@ -71,7 +75,7 @@ namespace RoadCaptain.Host.Console
                 UpdateDirection,
                 UpdateTurnCommands,
                 EnteredGame,
-                LeftGame, 
+                LeftGame,
                 RouteSelected,
                 null);
 
@@ -95,7 +99,7 @@ namespace RoadCaptain.Host.Console
 
         private void RouteCompleted()
         {
-            
+
         }
 
         private void RouteStarted()
@@ -116,7 +120,7 @@ namespace RoadCaptain.Host.Console
                 {
                     Step = index + 1,
                     Segment = segment.SegmentId,
-                    Direction = segment.TurnToNextSegment == TurnDirection.Left ? "🡄" : 
+                    Direction = segment.TurnToNextSegment == TurnDirection.Left ? "🡄" :
                         segment.TurnToNextSegment == TurnDirection.Right
                         ? "🡆"
                         : "🡅"
@@ -149,7 +153,7 @@ namespace RoadCaptain.Host.Console
 
             foreach (var segment in segmentsWithOffsets)
             {
-                _segmentPaths.Add(SkiaPathFromSegment(_overallOffsets, segment.GameCoordinates));
+                _segmentPaths.Add(segment.Segment.Id, SkiaPathFromSegment(_overallOffsets, segment.GameCoordinates));
             }
         }
 
@@ -250,7 +254,7 @@ namespace RoadCaptain.Host.Console
 
         private void LeftGame(ulong activityId)
         {
-            
+
         }
 
         private void EnteredGame(ulong activityId)
@@ -278,7 +282,7 @@ namespace RoadCaptain.Host.Console
 
             foreach (var skPath in _segmentPaths)
             {
-                args.Surface.Canvas.DrawPath(skPath, _segmentPathPaint);
+                args.Surface.Canvas.DrawPath(skPath.Value, _segmentPathPaint);
             }
 
             args.Surface.Canvas.DrawPath(_riderPath, _riderPathPaint);
@@ -289,6 +293,13 @@ namespace RoadCaptain.Host.Console
                 var scaledAndTranslated = ScaleAndTranslate(_previousRiderPosition, _overallOffsets);
                 const int radius = 15;
                 args.Surface.Canvas.DrawCircle(scaledAndTranslated.X, scaledAndTranslated.Y, radius, _riderPositionPaint);
+            }
+
+            if (_selectedSegment != null)
+            {
+                var selectedSegmentPath = _segmentPaths[_selectedSegment.Id];
+
+                args.Surface.Canvas.DrawPath(selectedSegmentPath, _selectedSegmentPathPaint);
             }
 
             args.Surface.Canvas.Flush();
@@ -307,6 +318,27 @@ namespace RoadCaptain.Host.Console
         private void buttonStart_Click(object sender, EventArgs e)
         {
             _synchronizer.TriggerSynchronizationEvent();
+        }
+
+        private void dataGridViewRoute_SelectionChanged(object sender, EventArgs e)
+        {
+            if (dataGridViewRoute.SelectedRows.Count == 1)
+            {
+                if (dataGridViewRoute.SelectedRows[0].Index >= 0)
+                {
+                    var routeItem = (RouteItem)dataGridViewRoute.SelectedRows[0].DataBoundItem;
+
+                    var segment = _segments.SingleOrDefault(s => s.Id == routeItem.Segment);
+
+                    if (segment != null)
+                    {
+                        _selectedSegment = segment;
+
+                        // Force redraw of the canvas
+                        skControl1.Invalidate();
+                    }
+                }
+            }
         }
     }
 
