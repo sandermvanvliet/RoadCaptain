@@ -25,7 +25,7 @@ namespace RoadCaptain.Host.Console
         { Color = SKColor.Parse("#000000"), Style = SKPaintStyle.Stroke, StrokeWidth = 4 };
 
         private readonly SKPaint _selectedSegmentPathPaint = new()
-        { Color = SKColor.Parse("#ffcc00"), Style = SKPaintStyle.Stroke, StrokeWidth = 4 };
+        { Color = SKColor.Parse("#ffcc00"), Style = SKPaintStyle.Stroke, StrokeWidth = 6 };
 
         private readonly SKPaint _riderPositionPaint = new()
         { Color = SKColor.Parse("#ff0000"), Style = SKPaintStyle.Stroke, StrokeWidth = 4 };
@@ -279,27 +279,35 @@ namespace RoadCaptain.Host.Console
         private void skControl1_PaintSurface(object sender, SKPaintSurfaceEventArgs args)
         {
             args.Surface.Canvas.Clear();
-
+            
+            // Lowest layer are the segments
             foreach (var skPath in _segmentPaths)
             {
-                args.Surface.Canvas.DrawPath(skPath.Value, _segmentPathPaint);
+                SKPaint segmentPaint;
+
+                // Use a different color for the selected segment
+                if (_selectedSegment != null && skPath.Key == _selectedSegment.Id)
+                {
+                    segmentPaint = _selectedSegmentPathPaint;
+                }
+                else
+                {
+                    segmentPaint = _segmentPathPaint;
+                }
+
+                args.Surface.Canvas.DrawPath(skPath.Value, segmentPaint);
             }
 
+            // Upon that we draw the path as the rider took it
             args.Surface.Canvas.DrawPath(_riderPath, _riderPathPaint);
 
+            // And finally draw the rider position circle
             if (_previousRiderPosition != null)
             {
                 // At this point the previous position is already the current position. See UpdatePosition()
                 var scaledAndTranslated = ScaleAndTranslate(_previousRiderPosition, _overallOffsets);
                 const int radius = 15;
                 args.Surface.Canvas.DrawCircle(scaledAndTranslated.X, scaledAndTranslated.Y, radius, _riderPositionPaint);
-            }
-
-            if (_selectedSegment != null)
-            {
-                var selectedSegmentPath = _segmentPaths[_selectedSegment.Id];
-
-                args.Surface.Canvas.DrawPath(selectedSegmentPath, _selectedSegmentPathPaint);
             }
 
             args.Surface.Canvas.Flush();

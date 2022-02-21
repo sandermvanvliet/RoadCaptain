@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Autofac;
@@ -13,6 +14,7 @@ namespace RoadCaptain.Host.Console.HostedServices
         private MainWindow _mainWindow;
         private readonly ISynchronizer _synchronizer;
         private bool _shownBefore;
+        private bool _stopping;
 
         public UserInterfaceService(IComponentContext context, MonitoringEvents monitoringEvents, ISynchronizer synchronizer)
         {
@@ -53,8 +55,11 @@ namespace RoadCaptain.Host.Console.HostedServices
             // need a callback from closing the form to the host
             Application.ApplicationExit += (_, _) => 
             {
-                /* stop the host */
-                _synchronizer.RequestApplicationStop();
+                if (!_stopping)
+                {
+                    /* stop the host */
+                    _synchronizer.RequestApplicationStop();
+                }
             };
 
             _monitoringEvents.ServiceStarted(nameof(UserInterfaceService));
@@ -68,7 +73,16 @@ namespace RoadCaptain.Host.Console.HostedServices
 
         public Task StopAsync(CancellationToken cancellationToken)
         {
-            _mainWindow?.Close();
+            _stopping = true;
+
+            if (_mainWindow.InvokeRequired)
+            {
+                _mainWindow.Invoke((Action)(() => _mainWindow.Close()));
+            }
+            else
+            {
+                _mainWindow?.Close();
+            }
 
             _monitoringEvents.ServiceStopped(nameof(UserInterfaceService));
 
