@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using RoadCaptain.GameStates;
 using RoadCaptain.Host.Console.HostedServices;
 using RoadCaptain.Ports;
 using SkiaSharp;
@@ -39,6 +40,7 @@ namespace RoadCaptain.Host.Console
         private List<Segment> _segments;
         private bool _isInitialized;
         private Segment _selectedSegment;
+        private GameState _previousState;
 
         public MainWindow(
             ISegmentStore segmentStore,
@@ -69,20 +71,16 @@ namespace RoadCaptain.Host.Console
             // otherwise we may get callback invocation before we're
             // ready to handle them.
             _gameStateReceiver.Register(
-                UpdatePosition,
-                UpdateCurrentSegemnt,
+                null,
+                null,
                 UpdateAvailableTurns,
                 UpdateDirection,
                 UpdateTurnCommands,
-                EnteredGame,
-                LeftGame,
+                null,
+                null,
                 RouteSelected,
-                null);
-
-            _gameStateReceiver.RegisterRouteEvents(
-                RouteStarted,
-                RouteProgression,
-                RouteCompleted);
+                null, 
+                GameStateUpdated);
 
             // This starts the receiver if that has not yet been
             // done by another consumer.
@@ -91,15 +89,45 @@ namespace RoadCaptain.Host.Console
             _isInitialized = true;
         }
 
+        private void GameStateUpdated(GameState gameState)
+        {
+            if (_previousState is NotInGameState && gameState is InGameState state)
+            {
+                // Entered game
+                EnteredGame(state.ActivityId);
+            }
+
+            if (gameState is PositionedState positioned)
+            {
+                UpdatePosition(positioned.CurrentPosition);
+            }
+
+            if (gameState is OnSegmentState segmentState)
+            {
+                UpdateCurrentSegemnt(segmentState.CurrentSegment.Id);
+            }
+
+            if (gameState is OnRouteState routeState)
+            {
+                if (_previousState is not OnRouteState && routeState.Route.HasStarted &&
+                    routeState.Route.SegmentSequenceIndex == 0)
+                {
+                    RouteStarted();
+                }
+
+                if(_previousState is OnRouteState previousRouteState && previousRouteState.Route.SegmentSequenceIndex < routeState.Route.SegmentSequenceIndex)
+                {
+                    RouteProgression(routeState.Route.SegmentSequenceIndex);
+                }
+            }
+
+            _previousState = gameState;
+        }
+
         private void RouteProgression(int step)
         {
             dataGridViewRoute.ClearSelection();
             dataGridViewRoute.Rows[step - 1].Selected = true;
-        }
-
-        private void RouteCompleted()
-        {
-
         }
 
         private void RouteStarted()
@@ -250,11 +278,6 @@ namespace RoadCaptain.Host.Console
         private void UpdateDirection(SegmentDirection direction)
         {
             textBoxCurrentDirection.Invoke((Action)(() => textBoxCurrentDirection.Text = direction.ToString()));
-        }
-
-        private void LeftGame(ulong activityId)
-        {
-
         }
 
         private void EnteredGame(ulong activityId)

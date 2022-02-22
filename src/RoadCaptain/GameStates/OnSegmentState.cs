@@ -1,8 +1,11 @@
-﻿namespace RoadCaptain.GameStates
+﻿using Newtonsoft.Json;
+
+namespace RoadCaptain.GameStates
 {
     public class OnSegmentState : PositionedState
     {
-        public Segment CurrentSegment { get; }
+        [JsonProperty]
+        public Segment CurrentSegment { get; private set; }
 
         public OnSegmentState(ulong activityId, TrackPoint currentPosition, Segment segment) 
             : base(activityId, currentPosition)

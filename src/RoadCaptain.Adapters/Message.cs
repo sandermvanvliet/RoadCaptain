@@ -7,5 +7,6 @@ namespace RoadCaptain.Adapters
         public string Topic { get; set; }
         public string Data { get; set; }
         public DateTime TimeStamp { get; set; }
+        public Type Type { get; set; }
     }
 }

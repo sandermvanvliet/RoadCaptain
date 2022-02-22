@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
-using System.Reflection;
 using System.Threading;
 using FluentAssertions;
 using RoadCaptain.Adapters;
@@ -13,8 +12,6 @@ namespace RoadCaptain.Tests.Unit.Routing
     {
         private readonly HandleZwiftMessagesUseCase _useCase;
         private readonly InMemoryMessageEmitter _messageEmitter;
-        private readonly FieldInfo _currentSegmentFieldInfo;
-        private readonly HandleRiderPositionUseCase _handleRiderPositionUseCase;
         private readonly InMemoryGameStateDispatcher _dispatcher;
 
         public WhenHandlingIncomingRiderPositionMessage()
@@ -26,19 +23,15 @@ namespace RoadCaptain.Tests.Unit.Routing
             var monitoringEvents = new NopMonitoringEvents();
 
             _dispatcher = new InMemoryGameStateDispatcher(monitoringEvents);
-
-            _handleRiderPositionUseCase = new HandleRiderPositionUseCase(
-                monitoringEvents, 
-                segmentStore,
-                _dispatcher
-            );
+            
             _useCase = new HandleZwiftMessagesUseCase(
                 _messageEmitter,
                 monitoringEvents,
                 new InMemoryMessageReceiver(),
-                _handleRiderPositionUseCase,
                 new HandleAvailableTurnsUseCase(_dispatcher),
-                new HandleActivityDetailsUseCase(_dispatcher));
+                new HandleActivityDetailsUseCase(_dispatcher),
+                segmentStore,
+                _dispatcher);
         }
 
         [Fact]

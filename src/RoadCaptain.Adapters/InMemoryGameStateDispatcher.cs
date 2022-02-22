@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using Newtonsoft.Json;
+using RoadCaptain.GameStates;
 using RoadCaptain.Ports;
 
 namespace RoadCaptain.Adapters
@@ -25,6 +26,7 @@ namespace RoadCaptain.Adapters
         private readonly List<Action> _routeStartedHandlers = new();
         private readonly List<Action> _routeCompletedHandlers = new();
         private readonly List<Action<int>> _routeProgressionHandlers = new();
+        private readonly List<Action<GameState>> _gameStateHandlers = new();
         private readonly AutoResetEvent _autoResetEvent = new(false);
         private readonly TimeSpan _queueWaitTimeout = TimeSpan.FromMilliseconds(2000);
         private bool _started;
@@ -243,6 +245,11 @@ namespace RoadCaptain.Adapters
             Enqueue("routeCompleted", "");
         }
 
+        public void Dispatch(GameState gameState)
+        {
+            Enqueue("gameState", gameState);
+        }
+
         protected virtual void Enqueue(string topic, object data)
         {
             try
@@ -251,6 +258,7 @@ namespace RoadCaptain.Adapters
                 {
                     Topic = topic,
                     TimeStamp = DateTime.UtcNow,
+                    Type = data.GetType(),
                     Data = JsonConvert.SerializeObject(data)
                 };
 
@@ -305,8 +313,10 @@ namespace RoadCaptain.Adapters
             }
         }
 
-        public void Register(Action<TrackPoint> positionChanged, Action<string> segmentChanged, Action<List<Turn>> turnsAvailable, Action<SegmentDirection> directionChanged,
-            Action<List<TurnDirection>> turnCommandsAvailable, Action<ulong> enteredGame, Action<ulong> leftGame, Action<PlannedRoute> routeSelected, Action<uint> lastSequenceNumber)
+        public void Register(Action<TrackPoint> positionChanged, Action<string> segmentChanged,
+            Action<List<Turn>> turnsAvailable, Action<SegmentDirection> directionChanged,
+            Action<List<TurnDirection>> turnCommandsAvailable, Action<ulong> enteredGame, Action<ulong> leftGame,
+            Action<PlannedRoute> routeSelected, Action<uint> lastSequenceNumber, Action<GameState> gameState)
         {
             AddHandlerIfNotNull(_positionChangedHandlers, positionChanged);
             AddHandlerIfNotNull(_segmentChangedHandlers, segmentChanged);
@@ -317,6 +327,7 @@ namespace RoadCaptain.Adapters
             AddHandlerIfNotNull(_leftGameHandlers, leftGame);
             AddHandlerIfNotNull(_routeSelectedHandlers, routeSelected);
             AddHandlerIfNotNull(_lastSequenceNumberHandlers, lastSequenceNumber);
+            AddHandlerIfNotNull(_gameStateHandlers, gameState);
         }
 
         public void RegisterRouteEvents(
@@ -355,49 +366,54 @@ namespace RoadCaptain.Adapters
             switch (message.Topic)
             {
                 case "positionChanged":
-                    _positionChangedHandlers.ForEach(h => InvokeHandler(h, message.Data));
+                    _positionChangedHandlers.ForEach(h => InvokeHandler(h, message.Data, message.Type));
                     break;
                 case "segmentChanged":
-                    _segmentChangedHandlers.ForEach(h => InvokeHandler(h, message.Data));
+                    _segmentChangedHandlers.ForEach(h => InvokeHandler(h, message.Data, message.Type));
                     break;
                 case "turnsAvailable":
-                    _turnsAvailableHandlers.ForEach(h => InvokeHandler(h, message.Data));
+                    _turnsAvailableHandlers.ForEach(h => InvokeHandler(h, message.Data, message.Type));
                     break;
                 case "directionChanged":
-                    _directionChangedHandlers.ForEach(h => InvokeHandler(h, message.Data));
+                    _directionChangedHandlers.ForEach(h => InvokeHandler(h, message.Data, message.Type));
                     break;
                 case "turnCommandsAvailable":
-                    _turnCommandsAvailableHandlers.ForEach(h => InvokeHandler(h, message.Data));
+                    _turnCommandsAvailableHandlers.ForEach(h => InvokeHandler(h, message.Data, message.Type));
                     break;
                 case "enteredGame":
-                    _enteredGameHandlers.ForEach(h => InvokeHandler(h, message.Data));
+                    _enteredGameHandlers.ForEach(h => InvokeHandler(h, message.Data, message.Type));
                     break;
                 case "leftGame":
-                    _leftGameHandlers.ForEach(h => InvokeHandler(h, message.Data));
+                    _leftGameHandlers.ForEach(h => InvokeHandler(h, message.Data, message.Type));
                     break;
                 case "routeSelected":
-                    _routeSelectedHandlers.ForEach(h => InvokeHandler(h, message.Data));
+                    _routeSelectedHandlers.ForEach(h => InvokeHandler(h, message.Data, message.Type));
                     break;
                 case "lastSequenceNumber":
-                    _lastSequenceNumberHandlers.ForEach(h => InvokeHandler(h, message.Data));
+                    _lastSequenceNumberHandlers.ForEach(h => InvokeHandler(h, message.Data, message.Type));
                     break;
                 case "routeStarted":
                     _routeStartedHandlers.ForEach(InvokeHandler);
                     break;
                 case "routeProgression":
-                    _routeProgressionHandlers.ForEach(h => InvokeHandler(h, message.Data));
+                    _routeProgressionHandlers.ForEach(h => InvokeHandler(h, message.Data, message.Type));
                     break;
                 case "routeCompleted":
                     _routeCompletedHandlers.ForEach(InvokeHandler);
                     break;
+                case "gameState":
+                    _gameStateHandlers.ForEach(h => InvokeHandler(h, message.Data, message.Type));
+                    break;
             }
         }
 
-        private void InvokeHandler<TMessage>(Action<TMessage> handle, string serializedContent)
+        private void InvokeHandler<TMessage>(Action<TMessage> handle, string serializedContent, Type payloadType)
         {
             try
             {
-                handle(JsonConvert.DeserializeObject<TMessage>(serializedContent));
+                var payload = JsonConvert.DeserializeObject(serializedContent, payloadType);
+
+                handle.DynamicInvoke(payload);
             }
             catch (Exception e)
             {

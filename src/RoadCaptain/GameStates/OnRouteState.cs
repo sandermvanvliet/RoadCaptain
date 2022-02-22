@@ -1,18 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Newtonsoft.Json;
 
 namespace RoadCaptain.GameStates
 {
     public class OnRouteState : OnSegmentState
     {
-        public PlannedRoute Route { get; }
-
-        public OnRouteState(ulong activityId, TrackPoint currentPosition, Segment segment, PlannedRoute plannedRoute) 
+        public OnRouteState(ulong activityId, TrackPoint currentPosition, Segment segment, PlannedRoute plannedRoute)
             : base(activityId, currentPosition, segment)
         {
             Route = plannedRoute;
         }
+
+        [JsonProperty]
+        public PlannedRoute Route { get; private set; }
 
         public override GameState UpdatePosition(TrackPoint position, List<Segment> segments, PlannedRoute plannedRoute)
         {
@@ -50,6 +52,17 @@ namespace RoadCaptain.GameStates
             if (segment.Id == Route.CurrentSegmentId)
             {
                 return new OnRouteState(ActivityId, position, segment, Route);
+            }
+
+            var distance = position.DistanceTo(CurrentPosition);
+
+            if (distance < 100)
+            {
+                return new OnRouteState(
+                    ActivityId,
+                    CurrentPosition, // Use the last known position on the segment
+                    CurrentSegment, // Use the current segment of the route
+                    Route);
             }
 
             return new OnSegmentState(ActivityId, position, segment);

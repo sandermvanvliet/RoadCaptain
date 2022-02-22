@@ -1,11 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Newtonsoft.Json;
 
 namespace RoadCaptain.GameStates
 {
     public class InGameState : GameState
     {
-        public ulong ActivityId { get; }
+        [JsonProperty]
+        public ulong ActivityId { get; private set; }
 
         public InGameState(ulong activityId)
         {
@@ -31,7 +33,7 @@ namespace RoadCaptain.GameStates
 
             var (segment, closestOnSegment) = GetClosestMatchingSegment(matchingSegments, position);
 
-            if (plannedRoute.StartingSegmentId == segment.Id)
+            if (!plannedRoute.HasStarted && plannedRoute.StartingSegmentId == segment.Id)
             {
                 plannedRoute.EnteredSegment(segment.Id);
                 return new OnRouteState(ActivityId, position, segment, plannedRoute);

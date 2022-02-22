@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using RoadCaptain.GameStates;
 
 namespace RoadCaptain.Ports
 {
@@ -89,5 +90,7 @@ namespace RoadCaptain.Ports
         /// The rider ocmpleted the planned route
         /// </summary>
         void RouteCompleted();
+
+        void Dispatch(GameState gameState);
     }
 }

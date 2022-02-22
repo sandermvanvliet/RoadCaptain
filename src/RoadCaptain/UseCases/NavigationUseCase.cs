@@ -40,7 +40,8 @@ namespace RoadCaptain.UseCases
                     HandleEnteredGame,
                     null, 
                     RouteSelected,
-                    LastSequenceNumberUpdated);
+                    LastSequenceNumberUpdated, 
+                    null);
 
             // Start listening for game state updates,
             // the Start() method will block until token

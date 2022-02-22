@@ -218,12 +218,17 @@ namespace RoadCaptain.Tests.Unit.GameState
         }
 
         [Fact]
-        public void GivenOnRouteStateAndPositionIsUpdatedAndPositionIsOnSegmentButNotTheNextOnRoute_ResultingStateIsOnSegmentState()
+        public void GivenOnSegmentStateAndRouteIsInProgressAndPositionIsInStartingSegment_OnSegmentStateIsReturned()
         {
-            _route.EnteredSegment("route-segment-1");
-            var state = new OnRouteState(ActivityId, RoutePosition1, new Segment { Id = "route-segment-1" }, _route);
+            // This test verifies that if we come across the starting segment again
+            // and the route has been started before that we don't attempt to restart
+            // the route.
 
-            var result = state.UpdatePosition(PositionOnSegment, _segments, _route);
+            _route.EnteredSegment("route-segment-1");
+            GameStates.GameState state = new OnRouteState(ActivityId, RoutePosition1, new Segment { Id = "route-segment-1" }, _route);
+            state = state.UpdatePosition(RoutePosition3, _segments, ((OnRouteState)state).Route);
+
+            var result = state.UpdatePosition(RoutePosition1, _segments, _route);
 
             result
                 .Should()
@@ -232,8 +237,9 @@ namespace RoadCaptain.Tests.Unit.GameState
                 .CurrentSegment
                 .Id
                 .Should()
-                .Be("segment-1");
+                .Be("route-segment-1");
         }
+
 
         private readonly List<Segment> _segments = new()
         {
