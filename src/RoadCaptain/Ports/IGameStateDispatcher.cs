@@ -12,17 +12,9 @@ namespace RoadCaptain.Ports
     public interface IGameStateDispatcher
     {
         /// <summary>
-        /// The rider entered a segment and there are options to turn onto another segment
-        /// </summary>
-        /// <param name="turns">The available turns (direction + next segment)</param>
-        /// <remarks>If the current segment is a direct connection to only one segment this is not called</remarks>
-        void TurnsAvailable(List<Turn> turns);
-
-        /// <summary>
         /// The rider is coming up to the end of a segment and the game has presented turn options
         /// </summary>
         /// <param name="turns">The directions in which turns can be made</param>
-        /// <remarks>The turns received here _should_ correspond to what has been provided in <see cref="TurnsAvailable"/>.</remarks>
         void TurnCommandsAvailable(List<TurnDirection> turns);
 
         /// <summary>

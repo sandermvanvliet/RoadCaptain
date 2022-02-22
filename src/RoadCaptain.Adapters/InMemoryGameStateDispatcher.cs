@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using RoadCaptain.GameStates;
 using RoadCaptain.Ports;
@@ -57,10 +56,6 @@ namespace RoadCaptain.Adapters
             }
         }
 
-        public List<Turn> AvailableTurns { get; private set; } = new();
-
-        public SegmentDirection CurrentDirection { get; private set; } = SegmentDirection.Unknown;
-
         public ulong LastSequenceNumber { get; private set; }
 
         public List<TurnDirection> AvailableTurnCommands { get; private set; } = new();
@@ -77,28 +72,6 @@ namespace RoadCaptain.Adapters
                     _started = value;
                 }
             }
-        }
-
-        public void TurnsAvailable(List<Turn> turns)
-        {
-            if (!InGame)
-            {
-                return;
-            }
-
-            if (turns.Any())
-            {
-                _monitoringEvents.Information("Upcoming turns: ");
-
-                foreach (var turn in turns)
-                {
-                    _monitoringEvents.Information("{Direction} onto {Segment}", turn.Direction,
-                        turn.SegmentId);
-                }
-            }
-
-            AvailableTurns = turns;
-            Enqueue("turnsAvailable", AvailableTurns);
         }
 
         public void TurnCommandsAvailable(List<TurnDirection> turns)
