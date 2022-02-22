@@ -12,19 +12,6 @@ namespace RoadCaptain.Ports
     public interface IGameStateDispatcher
     {
         /// <summary>
-        /// The position of the rider in the game has changed.
-        /// </summary>
-        /// <remarks>Only fired when the position is different from the last</remarks>
-        /// <param name="position"></param>
-        void PositionChanged(TrackPoint position);
-
-        /// <summary>
-        /// The segment that the rider is on has changed
-        /// </summary>
-        /// <param name="segment"></param>
-        void SegmentChanged(Segment segment);
-
-        /// <summary>
         /// The rider entered a segment and there are options to turn onto another segment
         /// </summary>
         /// <param name="turns">The available turns (direction + next segment)</param>
@@ -44,17 +31,6 @@ namespace RoadCaptain.Ports
         /// <param name="turns">The directions in which turns can be made</param>
         /// <remarks>The turns received here _should_ correspond to what has been provided in <see cref="TurnsAvailable"/>.</remarks>
         void TurnCommandsAvailable(List<TurnDirection> turns);
-
-        /// <summary>
-        /// The rider started an activity and is now considered to be in-game
-        /// </summary>
-        /// <param name="activityId"></param>
-        void EnterGame(ulong activityId);
-
-        /// <summary>
-        /// The rider completed an activity and is now no longer considered in-game
-        /// </summary>
-        void LeaveGame();
 
         /// <summary>
         /// The rider has selected a route to follow

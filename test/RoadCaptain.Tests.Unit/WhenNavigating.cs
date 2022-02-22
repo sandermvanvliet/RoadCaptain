@@ -36,7 +36,6 @@ namespace RoadCaptain.Tests.Unit
             // means we don't have a reference to the planed route anymore.
             _plannedRouteFieldInfo = _useCase.GetType()
                 .GetField("_plannedRoute", BindingFlags.Instance | BindingFlags.NonPublic);
-            _gameStateDispatcher.EnterGame(1);
             _gameStateDispatcher.RouteSelected(plannedRoute);
         }
 
@@ -61,8 +60,6 @@ namespace RoadCaptain.Tests.Unit
         [Fact]
         public void GivenNotStartedRouteAndRiderIsOnStartingSegment_PlannedRouteIsStarted()
         {
-            _gameStateDispatcher.SegmentChanged(new Segment { Id = "seg-1" });
-
             WhenHandlingNavigation();
 
             CurrentRoute
@@ -74,8 +71,6 @@ namespace RoadCaptain.Tests.Unit
         [Fact]
         public void GivenNotStartedRouteAndRiderIsNotOnStartingSegment_CurrentSegmentRemainsEmpty()
         {
-            _gameStateDispatcher.SegmentChanged(new Segment { Id = "seg-NOT-ON-SEG" });
-
             WhenHandlingNavigation();
             
             CurrentRoute
@@ -87,9 +82,6 @@ namespace RoadCaptain.Tests.Unit
         [Fact]
         public void GivenStartedRouteAndRiderEntersNextExpectedSegment_CurrentSegmentIsUpdated()
         {
-            _gameStateDispatcher.SegmentChanged(new Segment { Id = "seg-1" });
-            _gameStateDispatcher.SegmentChanged(new Segment { Id = "seg-2" });
-
             WhenHandlingNavigation();
             
             CurrentRoute
@@ -101,9 +93,6 @@ namespace RoadCaptain.Tests.Unit
         [Fact]
         public void GivenStartedRouteAndRiderEntersNextExpectedSegment_NextSegmentIsUpdated()
         {
-            _gameStateDispatcher.SegmentChanged(new Segment { Id = "seg-1" });
-            _gameStateDispatcher.SegmentChanged(new Segment { Id = "seg-2" });
-
             WhenHandlingNavigation();
             
             CurrentRoute
@@ -115,9 +104,6 @@ namespace RoadCaptain.Tests.Unit
         [Fact]
         public void GivenStartedRouteAndRiderEntersNextExpectedSegment_ExpectedTurnIsUpdated()
         {
-            _gameStateDispatcher.SegmentChanged(new Segment { Id = "seg-1" });
-            _gameStateDispatcher.SegmentChanged(new Segment { Id = "seg-2" });
-
             WhenHandlingNavigation();
             
             CurrentRoute
@@ -129,9 +115,6 @@ namespace RoadCaptain.Tests.Unit
         [Fact]
         public void GivenStartedRouteOnSegmentThreeAndLeftAndGoStraightCommandsAvailable_NoCommandIsSent()
         {
-            _gameStateDispatcher.SegmentChanged(new Segment { Id = "seg-1" });
-            _gameStateDispatcher.SegmentChanged(new Segment { Id = "seg-2" });
-            _gameStateDispatcher.SegmentChanged(new Segment { Id = "seg-3" });
             _gameStateDispatcher.TurnCommandsAvailable(new List<TurnDirection> { TurnDirection.Left, TurnDirection.GoStraight });
 
             WhenHandlingNavigation();
@@ -145,9 +128,6 @@ namespace RoadCaptain.Tests.Unit
         [Fact]
         public void GivenStartedRouteOnSegmentThreeAndLeftAndRightCommandsAvailable_TurnRightCommandIsSent()
         {
-            _gameStateDispatcher.SegmentChanged(new Segment { Id = "seg-1" });
-            _gameStateDispatcher.SegmentChanged(new Segment { Id = "seg-2" });
-            _gameStateDispatcher.SegmentChanged(new Segment { Id = "seg-3" });
             _gameStateDispatcher.TurnCommandsAvailable(new List<TurnDirection> { TurnDirection.Left, TurnDirection.Right });
 
             WhenHandlingNavigation();

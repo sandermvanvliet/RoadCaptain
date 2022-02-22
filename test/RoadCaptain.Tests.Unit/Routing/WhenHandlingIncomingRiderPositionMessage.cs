@@ -29,7 +29,6 @@ namespace RoadCaptain.Tests.Unit.Routing
                 monitoringEvents,
                 new InMemoryMessageReceiver(),
                 new HandleAvailableTurnsUseCase(_dispatcher),
-                new HandleActivityDetailsUseCase(_dispatcher),
                 segmentStore,
                 _dispatcher);
         }
@@ -43,8 +42,6 @@ namespace RoadCaptain.Tests.Unit.Routing
             var tokenSource =Debugger.IsAttached
                 ? new CancellationTokenSource()
                 : new CancellationTokenSource(50);
-            
-            _dispatcher.EnterGame(1234);
 
             GivenRiderPosition(gameLat, gameLon, 13);
 
@@ -236,8 +233,6 @@ namespace RoadCaptain.Tests.Unit.Routing
 
         private void GivenRiderInGameAndOnSegment()
         {
-            _dispatcher.EnterGame(1234);
-
             const float gameLat = 93536.016f;
             const float gameLon = 212496.77f;
             GivenRiderPosition(gameLat, gameLon, 13);

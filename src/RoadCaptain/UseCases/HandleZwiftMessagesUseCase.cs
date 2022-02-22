@@ -13,7 +13,6 @@ namespace RoadCaptain.UseCases
         private bool _pingedBefore;
         private static readonly object SyncRoot = new();
         private readonly HandleAvailableTurnsUseCase _handleAvailableTurnsUseCase;
-        private readonly HandleActivityDetailsUseCase _handleActivityDetailsUseCase;
 
         private GameState _gameState = new NotInGameState();
         private List<Segment> _segments;
@@ -26,7 +25,6 @@ namespace RoadCaptain.UseCases
             MonitoringEvents monitoringEvents,
             IMessageReceiver messageReceiver, 
             HandleAvailableTurnsUseCase handleAvailableTurnsUseCase, 
-            HandleActivityDetailsUseCase handleActivityDetailsUseCase, 
             ISegmentStore segmentStore, 
             IGameStateDispatcher gameStateDispatcher)
         {
@@ -34,7 +32,6 @@ namespace RoadCaptain.UseCases
             _monitoringEvents = monitoringEvents;
             _messageReceiver = messageReceiver;
             _handleAvailableTurnsUseCase = handleAvailableTurnsUseCase;
-            _handleActivityDetailsUseCase = handleActivityDetailsUseCase;
             _segmentStore = segmentStore;
             _gameStateDispatcher = gameStateDispatcher;
 
@@ -117,7 +114,7 @@ namespace RoadCaptain.UseCases
                 }
                 else if (message is ZwiftCommandAvailableMessage commandAvailable)
                 {
-                    //_handleAvailableTurnsUseCase.Execute(commandAvailable);
+                    _handleAvailableTurnsUseCase.Execute(commandAvailable);
                 }
                 else if (message is ZwiftActivityDetailsMessage activityDetails)
                 {

@@ -70,14 +70,9 @@ namespace RoadCaptain.Host.Console
             // Only register callbacks after the form is initialized
             // otherwise we may get callback invocation before we're
             // ready to handle them.
-            _gameStateReceiver.Register(
-                null,
-                null,
-                UpdateAvailableTurns,
+            _gameStateReceiver.Register(UpdateAvailableTurns,
                 UpdateDirection,
                 UpdateTurnCommands,
-                null,
-                null,
                 RouteSelected,
                 null, 
                 GameStateUpdated);

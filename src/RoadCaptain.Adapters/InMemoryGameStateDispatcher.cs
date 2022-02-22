@@ -15,22 +15,16 @@ namespace RoadCaptain.Adapters
         private readonly ConcurrentQueue<Message> _queue;
         
         private readonly List<Action<SegmentDirection>> _directionChangedHandlers = new();
-        private readonly List<Action<TrackPoint>> _positionChangedHandlers = new();
-        private readonly List<Action<string>> _segmentChangedHandlers = new();
         private readonly List<Action<List<TurnDirection>>> _turnCommandsAvailableHandlers = new();
         private readonly List<Action<List<Turn>>> _turnsAvailableHandlers = new();
-        private readonly List<Action<ulong>> _enteredGameHandlers = new();
-        private readonly List<Action<ulong>> _leftGameHandlers = new();
         private readonly List<Action<PlannedRoute>> _routeSelectedHandlers = new();
         private readonly List<Action<uint>> _lastSequenceNumberHandlers = new();
-        private readonly List<Action> _routeStartedHandlers = new();
-        private readonly List<Action> _routeCompletedHandlers = new();
-        private readonly List<Action<int>> _routeProgressionHandlers = new();
         private readonly List<Action<GameState>> _gameStateHandlers = new();
         private readonly AutoResetEvent _autoResetEvent = new(false);
         private readonly TimeSpan _queueWaitTimeout = TimeSpan.FromMilliseconds(2000);
         private bool _started;
         private static readonly object SyncRoot = new();
+        private GameState _gameState;
 
         public InMemoryGameStateDispatcher(MonitoringEvents monitoringEvents)
         {
@@ -38,9 +32,31 @@ namespace RoadCaptain.Adapters
             _queue = new ConcurrentQueue<Message>();
         }
 
-        public TrackPoint CurrentPosition { get; private set; }
+        public TrackPoint CurrentPosition
+        {
+            get
+            {
+                if (_gameState is PositionedState positionedState)
+                {
+                    return positionedState.CurrentPosition;
+                }
 
-        public Segment CurrentSegment { get; private set; }
+                return null;
+            }
+        }
+
+        public Segment CurrentSegment  
+        {
+            get
+            {
+                if (_gameState is OnSegmentState segmentState)
+                {
+                    return segmentState.CurrentSegment;
+                }
+
+                return null;
+            }
+        }
 
         public List<Turn> AvailableTurns { get; private set; } = new();
 
@@ -52,8 +68,6 @@ namespace RoadCaptain.Adapters
 
         public bool InGame { get; private set; }
 
-        public PlannedRoute CurrentRoute { get; private set; }
-
         private bool Started
         {
             get => _started;
@@ -63,54 +77,6 @@ namespace RoadCaptain.Adapters
                 {
                     _started = value;
                 }
-            }
-        }
-
-        public void PositionChanged(TrackPoint position)
-        {
-            if (!InGame)
-            {
-                return;
-            }
-
-            CurrentPosition = position;
-
-            Enqueue("positionChanged", CurrentPosition);
-        }
-
-        public void SegmentChanged(Segment segment)
-        {
-            if (!InGame)
-            {
-                return;
-            }
-
-            if(segment != null)
-            {
-                if (CurrentSegment == null)
-                {
-                    _monitoringEvents.Information("Starting in {Segment}", segment.Id);
-                }
-                else
-                {
-                    _monitoringEvents.Information("Moved from {CurrentSegment} to {NewSegment}", CurrentSegment?.Id,
-                        segment.Id);
-                }
-            }
-            else if (CurrentSegment != null)
-            {
-                _monitoringEvents.Warning("Lost segment lock for rider");
-            }
-
-            if (CurrentSegment != segment)
-            {
-                CurrentSegment = segment;
-                Enqueue("segmentChanged", CurrentSegment?.Id);
-
-                // TODO: clear available turns, available turn commands and direction (although direction follows very quickly after)
-                // This can most likely be removed here and handled by the SoemthingEmpty
-                // command we receive from Zwift.
-                TurnCommandsAvailable(new List<TurnDirection>());
             }
         }
 
@@ -184,40 +150,8 @@ namespace RoadCaptain.Adapters
             Enqueue("turnCommandsAvailable", AvailableTurnCommands);
         }
 
-        public void EnterGame(ulong activityId)
-        {
-            InGame = true;
-
-            // Reset state so that we start with a clean slate
-            ResetGameState();
-
-            Enqueue("enteredGame", activityId);
-        }
-
-        public void LeaveGame()
-        {
-            InGame = false;
-
-            // Reset state
-            ResetGameState();
-
-            Enqueue("leftGame", 0 /* when leaving the game the activity id is always zero */);
-        }
-
-        private void ResetGameState()
-        {
-            CurrentSegment = null;
-            CurrentDirection = SegmentDirection.Unknown;
-            CurrentPosition = null;
-            AvailableTurnCommands = new List<TurnDirection>();
-            AvailableTurns = new List<Turn>();
-            LastSequenceNumber =
-                0; // TODO: figure out if we need this, it might be that Zwift maintains the sequence number across activities
-        }
-
         public void RouteSelected(PlannedRoute route)
         {
-            CurrentRoute = route;
             Enqueue("routeSelected", route);
         }
 
@@ -247,6 +181,17 @@ namespace RoadCaptain.Adapters
 
         public void Dispatch(GameState gameState)
         {
+            if (gameState is InGameState)
+            {
+                InGame = true;
+            }
+            else
+            {
+                InGame = false;
+            }
+
+            _gameState = gameState;
+
             Enqueue("gameState", gameState);
         }
 
@@ -313,42 +258,19 @@ namespace RoadCaptain.Adapters
             }
         }
 
-        public void Register(Action<TrackPoint> positionChanged, Action<string> segmentChanged,
-            Action<List<Turn>> turnsAvailable, Action<SegmentDirection> directionChanged,
-            Action<List<TurnDirection>> turnCommandsAvailable, Action<ulong> enteredGame, Action<ulong> leftGame,
+        public void Register(Action<List<Turn>> turnsAvailable, Action<SegmentDirection> directionChanged,
+            Action<List<TurnDirection>> turnCommandsAvailable,
             Action<PlannedRoute> routeSelected, Action<uint> lastSequenceNumber, Action<GameState> gameState)
         {
-            AddHandlerIfNotNull(_positionChangedHandlers, positionChanged);
-            AddHandlerIfNotNull(_segmentChangedHandlers, segmentChanged);
             AddHandlerIfNotNull(_turnsAvailableHandlers, turnsAvailable);
             AddHandlerIfNotNull(_directionChangedHandlers, directionChanged);
             AddHandlerIfNotNull(_turnCommandsAvailableHandlers, turnCommandsAvailable);
-            AddHandlerIfNotNull(_enteredGameHandlers, enteredGame);
-            AddHandlerIfNotNull(_leftGameHandlers, leftGame);
             AddHandlerIfNotNull(_routeSelectedHandlers, routeSelected);
             AddHandlerIfNotNull(_lastSequenceNumberHandlers, lastSequenceNumber);
             AddHandlerIfNotNull(_gameStateHandlers, gameState);
         }
 
-        public void RegisterRouteEvents(
-            Action routeStarted,
-            Action<int> routeProgression,
-            Action routeCompleted)
-        {
-            AddHandlerIfNotNull(_routeStartedHandlers, routeStarted);
-            AddHandlerIfNotNull(_routeProgressionHandlers, routeProgression);
-            AddHandlerIfNotNull(_routeCompletedHandlers, routeCompleted);
-        }
-
         private static void AddHandlerIfNotNull<TMessage>(List<Action<TMessage>> collection, Action<TMessage> handler)
-        {
-            if (handler != null)
-            {
-                collection.Add(handler);
-            }
-        }
-
-        private static void AddHandlerIfNotNull(List<Action> collection, Action handler)
         {
             if (handler != null)
             {
@@ -365,12 +287,6 @@ namespace RoadCaptain.Adapters
 
             switch (message.Topic)
             {
-                case "positionChanged":
-                    _positionChangedHandlers.ForEach(h => InvokeHandler(h, message.Data, message.Type));
-                    break;
-                case "segmentChanged":
-                    _segmentChangedHandlers.ForEach(h => InvokeHandler(h, message.Data, message.Type));
-                    break;
                 case "turnsAvailable":
                     _turnsAvailableHandlers.ForEach(h => InvokeHandler(h, message.Data, message.Type));
                     break;
@@ -380,26 +296,11 @@ namespace RoadCaptain.Adapters
                 case "turnCommandsAvailable":
                     _turnCommandsAvailableHandlers.ForEach(h => InvokeHandler(h, message.Data, message.Type));
                     break;
-                case "enteredGame":
-                    _enteredGameHandlers.ForEach(h => InvokeHandler(h, message.Data, message.Type));
-                    break;
-                case "leftGame":
-                    _leftGameHandlers.ForEach(h => InvokeHandler(h, message.Data, message.Type));
-                    break;
                 case "routeSelected":
                     _routeSelectedHandlers.ForEach(h => InvokeHandler(h, message.Data, message.Type));
                     break;
                 case "lastSequenceNumber":
                     _lastSequenceNumberHandlers.ForEach(h => InvokeHandler(h, message.Data, message.Type));
-                    break;
-                case "routeStarted":
-                    _routeStartedHandlers.ForEach(InvokeHandler);
-                    break;
-                case "routeProgression":
-                    _routeProgressionHandlers.ForEach(h => InvokeHandler(h, message.Data, message.Type));
-                    break;
-                case "routeCompleted":
-                    _routeCompletedHandlers.ForEach(InvokeHandler);
                     break;
                 case "gameState":
                     _gameStateHandlers.ForEach(h => InvokeHandler(h, message.Data, message.Type));
@@ -414,18 +315,6 @@ namespace RoadCaptain.Adapters
                 var payload = JsonConvert.DeserializeObject(serializedContent, payloadType);
 
                 handle.DynamicInvoke(payload);
-            }
-            catch (Exception e)
-            {
-                _monitoringEvents.Error(e, "Failed to invoke handler");
-            }
-        }
-
-        private void InvokeHandler(Action handle)
-        {
-            try
-            {
-                handle();
             }
             catch (Exception e)
             {
