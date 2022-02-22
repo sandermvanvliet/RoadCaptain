@@ -101,48 +101,6 @@ namespace RoadCaptain.Adapters
             Enqueue("turnsAvailable", AvailableTurns);
         }
 
-        public void DirectionChanged(SegmentDirection direction)
-        {
-            if (!InGame)
-            {
-                return;
-            }
-
-            if (direction != SegmentDirection.Unknown)
-            {
-                var formattedDirection = FormatDirection(direction);
-
-                _monitoringEvents.Information("Direction is now {Direction}", formattedDirection);
-
-                var turns = CurrentSegment.NextSegments(direction);
-
-                // Only show turns if we have actual options.
-                if (turns.Any(t => t.Direction != TurnDirection.GoStraight))
-                {
-                    TurnsAvailable(turns);
-                }
-            }
-            else if(AvailableTurns.Any())
-            {
-                // If we don't have a direction then we also don't
-                // know which turns are available.
-                TurnsAvailable(new List<Turn>());
-            }
-
-            CurrentDirection = direction;
-            Enqueue("directionChanged", CurrentDirection);
-        }
-
-        private static string FormatDirection(SegmentDirection direction)
-        {
-            return direction switch
-            {
-                SegmentDirection.AtoB => "A -> B",
-                SegmentDirection.BtoA => "B -> A",
-                _ => "Unknown"
-            };
-        }
-
         public void TurnCommandsAvailable(List<TurnDirection> turns)
         {
             AvailableTurnCommands = turns;
@@ -161,21 +119,6 @@ namespace RoadCaptain.Adapters
                 LastSequenceNumber = sequenceNumber;
                 Enqueue("lastSequenceNumber", sequenceNumber);
             }
-        }
-
-        public void RouteStarted()
-        {
-            Enqueue("routeStarted", "");
-        }
-
-        public void RouteProgression(int step, string segmentId)
-        {
-            Enqueue("routeProgression", step);
-        }
-
-        public void RouteCompleted()
-        {
-            Enqueue("routeCompleted", "");
         }
 
         public void Dispatch(GameState gameState)

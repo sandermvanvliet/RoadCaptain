@@ -19,13 +19,6 @@ namespace RoadCaptain.Ports
         void TurnsAvailable(List<Turn> turns);
 
         /// <summary>
-        /// The direction of the rider on the segment has changed
-        /// </summary>
-        /// <param name="direction">The direction the rider is heading in</param>
-        /// <remarks>This happens when a u-turn is executed. Otherwise it should not occcur much</remarks>
-        void DirectionChanged(SegmentDirection direction);
-
-        /// <summary>
         /// The rider is coming up to the end of a segment and the game has presented turn options
         /// </summary>
         /// <param name="turns">The directions in which turns can be made</param>
@@ -48,24 +41,6 @@ namespace RoadCaptain.Ports
         // Because exposing the state like this is a bit ugly...
         List<TurnDirection> AvailableTurnCommands { get; }
         Segment CurrentSegment { get; }
-        bool InGame { get; }
-
-        /// <summary>
-        /// The rider started the planned route
-        /// </summary>
-        void RouteStarted();
-
-        /// <summary>
-        /// The rider entered the next segment of the planned route
-        /// </summary>
-        /// <param name="step"></param>
-        /// <param name="segmentId"></param>
-        void RouteProgression(int step, string segmentId);
-
-        /// <summary>
-        /// The rider ocmpleted the planned route
-        /// </summary>
-        void RouteCompleted();
 
         void Dispatch(GameState gameState);
     }

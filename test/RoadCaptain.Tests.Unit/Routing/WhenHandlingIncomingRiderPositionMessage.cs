@@ -249,7 +249,6 @@ namespace RoadCaptain.Tests.Unit.Routing
                 tokenSource.Cancel();
             }
 
-            _dispatcher.DirectionChanged(SegmentDirection.AtoB);
             _dispatcher.TurnCommandsAvailable(new List<TurnDirection> { TurnDirection.Left, TurnDirection.Right });
         }
     }

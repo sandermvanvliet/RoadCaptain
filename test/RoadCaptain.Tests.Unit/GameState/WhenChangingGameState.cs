@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using FluentAssertions;
 using RoadCaptain.GameStates;
 using Xunit;
@@ -240,6 +241,43 @@ namespace RoadCaptain.Tests.Unit.GameState
                 .Be("route-segment-1");
         }
 
+        [Fact]
+        public void GivenOnSegmentStateAndPositionIsUpdatedFromOneToTwo_OnSegmentStateIsReturnedWithDirectionAtoB()
+        {
+            var state = new OnSegmentState(ActivityId, RoutePosition1, SegmentById("route-segment-1"));
+
+            var result = state.UpdatePosition(RoutePosition1Point2, _segments, _route);
+
+            result
+                .Should()
+                .BeAssignableTo<OnSegmentState>()
+                .Which
+                .Direction
+                .Should()
+                .Be(SegmentDirection.AtoB);
+        }
+
+        [Fact]
+        public void GivenOnSegmentStateWithDirectionAtoBAndNextPositionIsSameAsLast_DirectionRemainsAtoB()
+        {
+            GameStates.GameState state = new OnSegmentState(ActivityId, RoutePosition1, SegmentById("route-segment-1"));
+            state = state.UpdatePosition(RoutePosition1Point2, _segments, _route);
+            
+            var result = state.UpdatePosition(RoutePosition1Point2, _segments, _route);
+
+            result
+                .Should()
+                .BeAssignableTo<OnSegmentState>()
+                .Which
+                .Direction
+                .Should()
+                .Be(SegmentDirection.AtoB);
+        }
+
+        private Segment SegmentById(string id)
+        {
+            return _segments.SingleOrDefault(s => s.Id == id);
+        }
 
         private readonly List<Segment> _segments = new()
         {

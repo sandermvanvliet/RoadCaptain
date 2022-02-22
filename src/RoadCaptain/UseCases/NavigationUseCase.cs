@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using RoadCaptain.Ports;
@@ -89,96 +88,6 @@ namespace RoadCaptain.UseCases
             TurnDirection turnToNextSegemnt)
         {
             return commands.Contains(turnToNextSegemnt);
-        }
-
-        private void HandleSegmentChanged(string segmentId)
-        {
-            // Ignore empty segment and pretend nothing happened
-            if (segmentId == null)
-            {
-                return;
-            }
-
-            // Are we already in a segment?
-            if (_plannedRoute.CurrentSegmentId == null)
-            {
-                // - Check if we've dropped into the start segment
-                if (segmentId == _plannedRoute.StartingSegmentId)
-                {
-                    try
-                    {
-                        var result = _plannedRoute.EnteredSegment(segmentId);
-
-                        DispatchRouteState(result);
-                    }
-                    catch (ArgumentException e)
-                    {
-                        _monitoringEvents.Error("Failed to enter segment because {Reason}", e.Message);
-                    }
-                }
-                else
-                {
-                    _monitoringEvents.Warning("Rider entered segment {SegmentId} but it's not the start of the route", segmentId);
-                }
-            }
-            else if (_plannedRoute.NextSegmentId == segmentId)
-            {
-                // We moved into the next expected segment
-                try
-                {
-                    if (_plannedRoute.HasCompleted)
-                    {
-                        _monitoringEvents.Information("Route has completed, reverting to free-roam mode.");
-                        return;
-                    }
-
-                    var result = _plannedRoute.EnteredSegment(segmentId);
-
-                    DispatchRouteState(result);
-
-                    if (_plannedRoute.HasCompleted)
-                    {
-                        _monitoringEvents.Information("Entered the final segment of the route!");
-                    }
-                    else
-                    {
-                        _monitoringEvents.Information(
-                            "On segment {Step} of {TotalSteps}. Next turn will be {Turn} onto {SegmentId}",
-                            _plannedRoute.SegmentSequenceIndex,
-                            _plannedRoute.RouteSegmentSequence.Count,
-                            _plannedRoute.TurnToNextSegment,
-                            _plannedRoute.NextSegmentId
-                        );
-                    }
-                }
-                catch (ArgumentException e)
-                {
-                    _monitoringEvents.Error("Failed to enter segment because {Reason}", e.Message);
-                }
-            }
-            else
-            {
-                _monitoringEvents.Warning(
-                    "Rider entered segment {SegmentId} but it's not the expected next segment on the route ({NextSegmentId})",
-                    segmentId,
-                    _plannedRoute.NextSegmentId);
-            }
-        }
-
-        private void DispatchRouteState(RouteMoveResult result)
-        {
-            if (result == RouteMoveResult.StartedRoute)
-            {
-                _dispatcher.RouteStarted();
-            }
-            else if (result == RouteMoveResult.EnteredNextSegment)
-            {
-                _dispatcher.RouteProgression(_plannedRoute.SegmentSequenceIndex, _plannedRoute.CurrentSegmentId);
-            }
-            else if (result == RouteMoveResult.CompletedRoute)
-            {
-                _dispatcher.RouteCompleted();
-            }
         }
     }
 }

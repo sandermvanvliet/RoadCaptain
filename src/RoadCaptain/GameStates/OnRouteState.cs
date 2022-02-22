@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using Newtonsoft.Json;
 
 namespace RoadCaptain.GameStates
@@ -13,59 +12,56 @@ namespace RoadCaptain.GameStates
             Route = plannedRoute;
         }
 
+        private OnRouteState(ulong activityId, TrackPoint currentPosition, Segment segment, PlannedRoute plannedRoute, SegmentDirection direction) 
+            : base(activityId, currentPosition, segment, direction)
+        {
+            Route = plannedRoute;
+        }
+
         [JsonProperty]
         public PlannedRoute Route { get; private set; }
 
         public override GameState UpdatePosition(TrackPoint position, List<Segment> segments, PlannedRoute plannedRoute)
         {
-            /*
-             * Next steps:
-             * - Determine which segment we're on based on the position
-             * - Determine direction on that segment (to which end of the segment are we moving)
-             * - Determine next turn action (left/straight/right)
-             */
-            var matchingSegments = segments
-                .Where(s => s.Contains(position))
-                .ToList();
+            var result = base.UpdatePosition(position, segments, plannedRoute);
 
-            if (!matchingSegments.Any())
+            if (result is OnSegmentState segmentState)
             {
-                return new PositionedState(ActivityId, position);
-            }
-
-            var (segment, closestOnSegment) = GetClosestMatchingSegment(matchingSegments, position);
-
-            if (segment.Id == Route.NextSegmentId)
-            {
-                try
+                if (segmentState.CurrentSegment.Id == Route.NextSegmentId)
                 {
-                    Route.EnteredSegment(segment.Id);
-                }
-                catch (ArgumentException e)
-                {
-                    // The segment is not the expected next one so we lost lock somewhere...
+                    try
+                    {
+                        Route.EnteredSegment(segmentState.CurrentSegment.Id);
+                    }
+                    catch (ArgumentException)
+                    {
+                        // The segment is not the expected next one so we lost lock somewhere...
+                    }
+
+                    return new OnRouteState(ActivityId, position, segmentState.CurrentSegment, Route);
                 }
 
-                return new OnRouteState(ActivityId, position, segment, Route);
+                if (segmentState.CurrentSegment.Id == Route.CurrentSegmentId)
+                {
+                    return new OnRouteState(ActivityId, position, segmentState.CurrentSegment, Route, segmentState.Direction);
+                }
+
+                var distance = position.DistanceTo(CurrentPosition);
+
+                if (distance < 100)
+                {
+                    return new OnRouteState(
+                        ActivityId,
+                        CurrentPosition, // Use the last known position on the segment
+                        CurrentSegment, // Use the current segment of the route
+                        Route,
+                        Direction);
+                }
+
+                return segmentState;
             }
 
-            if (segment.Id == Route.CurrentSegmentId)
-            {
-                return new OnRouteState(ActivityId, position, segment, Route);
-            }
-
-            var distance = position.DistanceTo(CurrentPosition);
-
-            if (distance < 100)
-            {
-                return new OnRouteState(
-                    ActivityId,
-                    CurrentPosition, // Use the last known position on the segment
-                    CurrentSegment, // Use the current segment of the route
-                    Route);
-            }
-
-            return new OnSegmentState(ActivityId, position, segment);
+            return result;
         }
     }
 }
