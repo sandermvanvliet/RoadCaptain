@@ -11,14 +11,17 @@ namespace RoadCaptain.Adapters
     internal class MessageEmitterToQueue : IMessageEmitter
     {
         private readonly MonitoringEvents _monitoringEvents;
+        private readonly MessageEmitterConfiguration _configuration;
         private readonly ConcurrentQueue<ZwiftMessage> _queue = new();
         private readonly AutoResetEvent _autoResetEvent = new(false);
         private readonly TimeSpan _queueWaitTimeout = TimeSpan.FromMilliseconds(2000);
 
         public MessageEmitterToQueue(
-            MonitoringEvents monitoringEvents)
+            MonitoringEvents monitoringEvents,
+            MessageEmitterConfiguration configuration)
         {
             _monitoringEvents = monitoringEvents;
+            _configuration = configuration;
         }
 
         public void EmitMessageFromBytes(byte[] payload)
@@ -216,6 +219,12 @@ namespace RoadCaptain.Adapters
             try
             {
                 _queue.Enqueue(message);
+                
+                if (_configuration.ThrottleMessages && 
+                    _queue.Count > _configuration.MessageThrottleHighWaterMark)
+                {
+                    Thread.Sleep(_configuration.MessageThrottleDelayMilliseconds);
+                }
             }
             catch (Exception e)
             {

@@ -90,16 +90,15 @@ namespace RoadCaptain.Host.Console
                         .AddJsonFile("autofac.json")
                         .AddJsonFile("autofac.development.json", true);
                 })
-                .ConfigureContainer<ContainerBuilder>((_, builder) =>
+                .ConfigureContainer<ContainerBuilder>((hostBuilderContext, builder) =>
                 {
                     builder.Register(_ => logger).SingleInstance();
 
-                    var configuration = new Configuration();
-                    _.Configuration.Bind(configuration);
-                    builder.Register(_ => configuration).SingleInstance();
+                    builder.Register(_ => hostBuilderContext.Configuration).SingleInstance();
+                    builder.RegisterType<Configuration>().AsSelf();
 
                     // Wire up registrations through the autofac.json file
-                    builder.RegisterModule(new ConfigurationModule(_.Configuration));
+                    builder.RegisterModule(new ConfigurationModule(hostBuilderContext.Configuration));
                 })
                 .UseServiceProviderFactory(new AutofacServiceProviderFactory())
                 .UseSerilog(logger)

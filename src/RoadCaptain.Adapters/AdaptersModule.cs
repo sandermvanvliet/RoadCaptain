@@ -26,9 +26,12 @@ namespace RoadCaptain.Adapters
                 .RegisterAssemblyTypes(ThisAssembly)
                 .AsImplementedInterfaces()
                 .Except<MessageReceiverFromSocket>()
+                .Except<MessageReceiverFromCaptureFile>()
                 .Except<MessageEmitterToQueue>()
                 .Except<IGameStateDispatcher>()
                 .Except<IGameStateReceiver>();
+
+            builder.RegisterType<MessageEmitterConfiguration>().AsSelf();
 
             if ("socket".Equals(MessageReceiverSource, StringComparison.InvariantCultureIgnoreCase))
             {
