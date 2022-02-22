@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
+using RoadCaptain.GameStates;
 using RoadCaptain.Ports;
 
 namespace RoadCaptain.UseCases
@@ -10,29 +10,26 @@ namespace RoadCaptain.UseCases
         private readonly IGameStateReceiver _gameStateReceiver;
         private readonly MonitoringEvents _monitoringEvents;
         private readonly IMessageReceiver _messageReceiver;
-        private PlannedRoute _plannedRoute;
         private ulong _lastSequenceNumber;
-        private readonly IGameStateDispatcher _dispatcher;
 
         public NavigationUseCase(
             IGameStateReceiver gameStateReceiver,
             MonitoringEvents monitoringEvents,
-            IMessageReceiver messageReceiver, 
-            IGameStateDispatcher dispatcher)
+            IMessageReceiver messageReceiver)
         {
             _gameStateReceiver = gameStateReceiver;
             _monitoringEvents = monitoringEvents;
             _messageReceiver = messageReceiver;
-            _dispatcher = dispatcher;
         }
 
         public void Execute(CancellationToken token)
         {
             // Set up handlers
             _gameStateReceiver
-                .Register(RouteSelected,
+                .Register(
+                    null,
                     LastSequenceNumberUpdated, 
-                    null);
+                    GameStateUpdated);
 
             // Start listening for game state updates,
             // the Start() method will block until token
@@ -40,44 +37,28 @@ namespace RoadCaptain.UseCases
             _gameStateReceiver.Start(token);
         }
 
-        private void HandleEnteredGame(ulong obj)
+        private void GameStateUpdated(GameState gameState)
         {
-            // Reset the route when the user enters the game
-            _plannedRoute.Reset();
-        }
-
-        private void LastSequenceNumberUpdated(ulong sequenceNumber)
-        {
-            _lastSequenceNumber = sequenceNumber;
-        }
-
-        private void RouteSelected(PlannedRoute route)
-        {
-            _plannedRoute = route;
-        }
-
-        private void HandleCommandsAvailable(List<TurnDirection> commands)
-        {
-            if (!_plannedRoute.HasCompleted && !_plannedRoute.HasStarted)
+            if (gameState is UpcomingTurnState turnState)
             {
-                return;
-            }
-
-            if (commands.Any())
-            {
-                if (CommandsMatchTurnToNextSegment(commands, _plannedRoute.TurnToNextSegment))
+                if (CommandsMatchTurnToNextSegment(turnState.Directions, turnState.Route.TurnToNextSegment))
                 {
-                    _monitoringEvents.Information("Executing turn {TurnDirection}", _plannedRoute.TurnToNextSegment);
-                    _messageReceiver.SendTurnCommand(_plannedRoute.TurnToNextSegment, _lastSequenceNumber);
+                    _monitoringEvents.Information("Executing turn {TurnDirection}", turnState.Route.TurnToNextSegment);
+                    _messageReceiver.SendTurnCommand(turnState.Route.TurnToNextSegment, _lastSequenceNumber);
                 }
                 else
                 {
                     _monitoringEvents.Error(
                         "Expected turn command {ExpectedTurnCommand} to be present but instead got: {TurnCommands}",
-                        _plannedRoute.TurnToNextSegment,
-                        string.Join(", ", commands));
+                        turnState.Route.TurnToNextSegment,
+                        string.Join(", ", turnState.Directions));
                 }
             }
+        }
+
+        private void LastSequenceNumberUpdated(ulong sequenceNumber)
+        {
+            _lastSequenceNumber = sequenceNumber;
         }
 
         private static bool CommandsMatchTurnToNextSegment(

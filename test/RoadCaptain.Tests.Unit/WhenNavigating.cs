@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Reflection;
 using System.Threading;
@@ -27,8 +26,7 @@ namespace RoadCaptain.Tests.Unit
             _useCase = new NavigationUseCase(
                 _gameStateDispatcher,
                 monitoringEvents,
-                _inMemoryMessageReceiver,
-                _gameStateDispatcher);
+                _inMemoryMessageReceiver);
             
 
             // We need to use reflection here because sending the route
