@@ -100,13 +100,16 @@ namespace RoadCaptain.Adapters
                 _monitoringEvents.Warning("Lost segment lock for rider");
             }
 
-            CurrentSegment = segment;
-            Enqueue("segmentChanged", CurrentSegment?.Id);
+            if (CurrentSegment != segment)
+            {
+                CurrentSegment = segment;
+                Enqueue("segmentChanged", CurrentSegment?.Id);
 
-            // TODO: clear available turns, available turn commands and direction (although direction follows very quickly after)
-            // This can most likely be removed here and handled by the SoemthingEmpty
-            // command we receive from Zwift.
-            TurnCommandsAvailable(new List<TurnDirection>());
+                // TODO: clear available turns, available turn commands and direction (although direction follows very quickly after)
+                // This can most likely be removed here and handled by the SoemthingEmpty
+                // command we receive from Zwift.
+                TurnCommandsAvailable(new List<TurnDirection>());
+            }
         }
 
         public void TurnsAvailable(List<Turn> turns)
