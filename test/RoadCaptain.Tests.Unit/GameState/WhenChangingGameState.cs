@@ -182,6 +182,24 @@ namespace RoadCaptain.Tests.Unit.GameState
         }
 
         [Fact]
+        public void GivenOnRouteStateAndPositionIsUpdatedAndPositionIsInSameSegment_ResultingStateIsOnRouteState()
+        {
+            _route.EnteredSegment("route-segment-1");
+            var state = new OnRouteState(ActivityId, RoutePosition1, new Segment { Id = "route-segment-1" }, _route);
+
+            var result = state.UpdatePosition(RoutePosition1Point2, _segments, _route);
+
+            result
+                .Should()
+                .BeOfType<OnRouteState>()
+                .Which
+                .CurrentSegment
+                .Id
+                .Should()
+                .Be("route-segment-1");
+        }
+
+        [Fact]
         public void GivenOnRouteStateAndPositionIsUpdatedAndPositionIsOnNextSegmentInRoute_ResultingStateIsOnRouteState()
         {
             _route.EnteredSegment("route-segment-1");
@@ -241,7 +259,8 @@ namespace RoadCaptain.Tests.Unit.GameState
                 Id = "route-segment-1",
                 Points =
                 {
-                    RoutePosition1
+                    RoutePosition1,
+                    RoutePosition1Point2
                 }
             },
             new Segment
@@ -254,7 +273,7 @@ namespace RoadCaptain.Tests.Unit.GameState
             },
             new Segment
             {
-                Id = "route-segment-1",
+                Id = "route-segment-3",
                 Points =
                 {
                     RoutePosition3
@@ -262,14 +281,18 @@ namespace RoadCaptain.Tests.Unit.GameState
             },
         };
 
+        // Note on the positions: Keep them far away from eachother otherwise you'll
+        // get some interesting test failures because they are too close together
+        // and you'll end up with the wrong segment....
         private readonly TrackPoint _positionNotOnSegment = new(2, 2 , 0);
         private static readonly TrackPoint PositionOnSegment = new(1, 2, 3);
         private static readonly TrackPoint OtherOnSegment = new(3, 2, 3);
         private static readonly TrackPoint PositionOnAnotherSegment = new(4, 2, 3);
         
         private static readonly TrackPoint RoutePosition1 = new(10, 1, 3);
-        private static readonly TrackPoint RoutePosition2 = new(10, 2, 3);
-        private static readonly TrackPoint RoutePosition3 = new(10, 3, 3);
+        private static readonly TrackPoint RoutePosition1Point2 = new(10, 2, 3);
+        private static readonly TrackPoint RoutePosition2 = new(12, 2, 3);
+        private static readonly TrackPoint RoutePosition3 = new(13, 3, 3);
 
         private readonly PlannedRoute _route = new()
         {
