@@ -307,6 +307,22 @@ namespace RoadCaptain.Tests.Unit.GameState
                 .BeEquivalentTo(new List<TurnDirection> { TurnDirection.Left, TurnDirection.Right });
         }
 
+        [Fact]
+        public void GivenUpcomingTurnStateAndPositionIsOnSameSegmentBeforeTurn_ResultingStateIsUpcomingTurnState()
+        {
+            _route.EnteredSegment("route-segment-1");
+            GameStates.GameState state = new OnRouteState(ActivityId, RoutePosition1, SegmentById("route-segment-1"), _route);
+            state = state.UpdatePosition(RoutePosition1Point2, _segments, _route);
+            state = state.TurnCommandAvailable("TurnLeft");
+            state = state.TurnCommandAvailable("TurnRight");
+
+            var result = state.UpdatePosition(RoutePosition1Point2, _segments, _route);
+
+            result
+                .Should()
+                .BeOfType<UpcomingTurnState>();
+        }
+
         private Segment SegmentById(string id)
         {
             return _segments.SingleOrDefault(s => s.Id == id);
