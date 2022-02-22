@@ -5,14 +5,14 @@ namespace RoadCaptain.GameStates
 {
     public class InGameState : GameState
     {
-        public int ActivityId { get; }
+        public ulong ActivityId { get; }
 
-        public InGameState(int activityId)
+        public InGameState(ulong activityId)
         {
             ActivityId = activityId;
         }
 
-        public virtual GameState UpdatePosition(TrackPoint position, List<Segment> segments, PlannedRoute plannedRoute)
+        public override GameState UpdatePosition(TrackPoint position, List<Segment> segments, PlannedRoute plannedRoute)
         {
             /*
              * Next steps:
@@ -40,7 +40,7 @@ namespace RoadCaptain.GameStates
             return new OnSegmentState(ActivityId, position, segment);
         }
 
-        public GameState EnterGame(int activityId)
+        public override GameState EnterGame(ulong activityId)
         {
             if (ActivityId == activityId)
             {
@@ -50,7 +50,7 @@ namespace RoadCaptain.GameStates
             return new InGameState(activityId);
         }
 
-        public GameState LeaveGame()
+        public override GameState LeaveGame()
         {
             return new NotInGameState();
         }

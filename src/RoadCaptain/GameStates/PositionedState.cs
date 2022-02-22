@@ -4,7 +4,7 @@
     {
         public TrackPoint CurrentPosition { get; }
 
-        public PositionedState(int activityId, TrackPoint currentPosition)
+        public PositionedState(ulong activityId, TrackPoint currentPosition)
             : base(activityId)
         {
             CurrentPosition = currentPosition;
