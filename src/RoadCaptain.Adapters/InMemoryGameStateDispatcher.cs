@@ -19,7 +19,6 @@ namespace RoadCaptain.Adapters
         private readonly TimeSpan _queueWaitTimeout = TimeSpan.FromMilliseconds(2000);
         private bool _started;
         private static readonly object SyncRoot = new();
-        private GameState _gameState;
 
         public InMemoryGameStateDispatcher(MonitoringEvents monitoringEvents)
         {
@@ -28,8 +27,6 @@ namespace RoadCaptain.Adapters
         }
 
         public ulong LastSequenceNumber { get; private set; }
-
-        public bool InGame { get; private set; }
 
         private bool Started
         {
@@ -59,17 +56,6 @@ namespace RoadCaptain.Adapters
 
         public void Dispatch(GameState gameState)
         {
-            if (gameState is InGameState)
-            {
-                InGame = true;
-            }
-            else
-            {
-                InGame = false;
-            }
-
-            _gameState = gameState;
-
             Enqueue("gameState", gameState);
         }
 
