@@ -8,19 +8,7 @@ namespace RoadCaptain.Tests.Unit.GameState
     public class WhenChangingGameState
     {
         private const int ActivityId = 1234;
-
-        [Fact]
-        public void GivenNotInGameStateAndPositionIsUpdated_ResultingStateIsNotInGameState()
-        {
-            var state = new NotInGameState();
-
-            var result = state.UpdatePosition(new TrackPoint(0, 0, 0), _segments, _route);
-
-            result
-                .Should()
-                .BeOfType<NotInGameState>();
-        }
-
+        
         [Fact]
         public void GivenNotInGameStateAndGameIsEntered_ResultingStateIsInGameStateWithActivityIdSet()
         {
@@ -38,30 +26,6 @@ namespace RoadCaptain.Tests.Unit.GameState
         }
 
         [Fact]
-        public void GivenNotInGameStateAndSegmentIsEntered_ResultingStateIsNotInGameState()
-        {
-            var state = new NotInGameState();
-
-            var result = state.EnterSegment();
-
-            result
-                .Should()
-                .BeOfType<NotInGameState>();
-        }
-
-        [Fact]
-        public void GivenNotInGameStateAndGameIsExited_ResultingStateIsNotInGameState()
-        {
-            var state = new NotInGameState();
-
-            var result = state.LeaveGame();
-
-            result
-                .Should()
-                .BeOfType<NotInGameState>();
-        }
-
-        [Fact]
         public void GivenInGameStateAndGameIsExited_ResultingStateIsNotInGameState()
         {
             var state = new InGameState(ActivityId);
@@ -71,6 +35,34 @@ namespace RoadCaptain.Tests.Unit.GameState
             result
                 .Should()
                 .BeOfType<NotInGameState>();
+        }
+
+        [Fact]
+        public void GivenInGameStateAndGameIsEnteredWithSameActivityId_SameStateIsReturned()
+        {
+            var state = new InGameState(ActivityId);
+
+            var result = state.EnterGame(ActivityId);
+
+            result
+                .Should()
+                .BeEquivalentTo(state);
+        }
+
+        [Fact]
+        public void GivenInGameStateAndGameIsEnteredWithSameActivityId_InGameStateIsReturnedWithNewActivityId()
+        {
+            var state = new InGameState(ActivityId);
+
+            var result = state.EnterGame(5678);
+
+            result
+                .Should()
+                .BeOfType<InGameState>()
+                .Which
+                .ActivityId
+                .Should()
+                .Be(5678);
         }
 
         [Fact]

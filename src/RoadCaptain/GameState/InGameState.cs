@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 
 namespace RoadCaptain.GameState
@@ -13,7 +12,7 @@ namespace RoadCaptain.GameState
             ActivityId = activityId;
         }
 
-        public override GameState UpdatePosition(TrackPoint position, List<Segment> segments, PlannedRoute plannedRoute)
+        public virtual GameState UpdatePosition(TrackPoint position, List<Segment> segments, PlannedRoute plannedRoute)
         {
             /*
              * Next steps:
@@ -41,17 +40,17 @@ namespace RoadCaptain.GameState
             return new OnSegmentState(ActivityId, position, segment);
         }
 
-        public override GameState EnterGame(int activityId)
+        public GameState EnterGame(int activityId)
         {
-            throw new NotImplementedException();
+            if (ActivityId == activityId)
+            {
+                return this;
+            }
+
+            return new InGameState(activityId);
         }
 
-        public override GameState EnterSegment()
-        {
-            throw new NotImplementedException();
-        }
-
-        public override GameState LeaveGame()
+        public GameState LeaveGame()
         {
             return new NotInGameState();
         }

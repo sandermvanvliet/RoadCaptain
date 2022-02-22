@@ -1,12 +1,6 @@
-﻿using System.Collections.Generic;
-
-namespace RoadCaptain.GameState
+﻿namespace RoadCaptain.GameState
 {
     public abstract class GameState
     {
-        public abstract GameState UpdatePosition(TrackPoint position, List<Segment> segments, PlannedRoute plannedRoute);
-        public abstract GameState EnterGame(int activityId);
-        public abstract GameState EnterSegment();
-        public abstract GameState LeaveGame();
     }
 }
