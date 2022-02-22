@@ -13,7 +13,6 @@ namespace RoadCaptain.UseCases
         private readonly IMessageReceiver _messageReceiver;
         private bool _pingedBefore;
         private static readonly object SyncRoot = new();
-        private readonly HandleAvailableTurnsUseCase _handleAvailableTurnsUseCase;
 
         private GameState _gameState = new NotInGameState();
         private List<Segment> _segments;
@@ -26,14 +25,12 @@ namespace RoadCaptain.UseCases
             IMessageEmitter emitter,
             MonitoringEvents monitoringEvents,
             IMessageReceiver messageReceiver, 
-            HandleAvailableTurnsUseCase handleAvailableTurnsUseCase, 
             ISegmentStore segmentStore, 
             IGameStateDispatcher gameStateDispatcher)
         {
             _emitter = emitter;
             _monitoringEvents = monitoringEvents;
             _messageReceiver = messageReceiver;
-            _handleAvailableTurnsUseCase = handleAvailableTurnsUseCase;
             _segmentStore = segmentStore;
             _gameStateDispatcher = gameStateDispatcher;
 
