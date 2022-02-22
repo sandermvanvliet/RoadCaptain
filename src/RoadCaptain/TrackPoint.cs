@@ -56,8 +56,8 @@ namespace RoadCaptain
         public decimal DistanceTo(TrackPoint point)
         {
             return GetDistanceFromLatLonInMeters(
-                (double)Latitude, (double)Longitude,
-                (double)point.Latitude, (double)point.Longitude);
+                (double)Math.Round(Latitude, 5), (double)Math.Round(Longitude, 5),
+                (double)Math.Round(point.Latitude, 5), (double)Math.Round(point.Longitude, 5));
         }
 
         public static decimal GetDistanceFromLatLonInMeters(double lat1, double lon1, double lat2, double lon2)
