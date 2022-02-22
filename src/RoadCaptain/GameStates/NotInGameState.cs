@@ -18,5 +18,10 @@ namespace RoadCaptain.GameStates
         {
             return this;
         }
+
+        public override GameState TurnCommandAvailable(string type)
+        {
+            return this;
+        }
     }
 }

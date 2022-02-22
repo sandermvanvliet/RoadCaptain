@@ -12,14 +12,22 @@ namespace RoadCaptain.GameStates
             Route = plannedRoute;
         }
 
-        private OnRouteState(ulong activityId, TrackPoint currentPosition, Segment segment, PlannedRoute plannedRoute, SegmentDirection direction) 
+        protected OnRouteState(ulong activityId, TrackPoint currentPosition, Segment segment, PlannedRoute plannedRoute, SegmentDirection direction)
             : base(activityId, currentPosition, segment, direction)
         {
             Route = plannedRoute;
         }
 
+        private OnRouteState(ulong activityId, TrackPoint currentPosition, Segment segment, PlannedRoute plannedRoute, SegmentDirection direction, List<TurnDirection> turnDirections) 
+            : this(activityId, currentPosition, segment, plannedRoute, direction)
+        {
+            TurnCommands = turnDirections;
+        }
+
         [JsonProperty]
         public PlannedRoute Route { get; private set; }
+
+        private List<TurnDirection> TurnCommands { get; } = new();
 
         public override GameState UpdatePosition(TrackPoint position, List<Segment> segments, PlannedRoute plannedRoute)
         {
@@ -62,6 +70,65 @@ namespace RoadCaptain.GameStates
             }
 
             return result;
+        }
+
+        public override GameState TurnCommandAvailable(string type)
+        {
+            var turnDirection = GetTurnDirectionFor(type);
+
+            if (turnDirection == TurnDirection.None)
+            {
+                return this;
+            }
+
+            if (Direction == SegmentDirection.Unknown)
+            {
+                // As long as we don't know the direction we're 
+                // heading in the turn directions won't make any
+                // sense.
+                return this;
+            }
+
+            if (!TurnCommands.Contains(turnDirection))
+            {
+                var x = new List<TurnDirection>{ turnDirection};
+                x.AddRange(TurnCommands);
+
+                if (x.Count == CurrentSegment.NextSegments(Direction).Count)
+                {
+                    // We've got all the turn commands for this segment
+                    return new UpcomingTurnState(
+                        ActivityId,
+                        CurrentPosition,
+                        CurrentSegment,
+                        Route,
+                        Direction,
+                        x);
+                }
+
+                // Add the new list of turn directions to
+                // a new state.
+                return new OnRouteState(
+                    ActivityId,
+                    CurrentPosition,
+                    CurrentSegment,
+                    Route,
+                    Direction,
+                    x);
+            }
+
+            return this;
+        }
+
+        private static TurnDirection GetTurnDirectionFor(string type)
+        {
+            return type.Trim().ToLower() switch
+            {
+                "turnleft" => TurnDirection.Left,
+                "turnright" => TurnDirection.Right,
+                "gostraight" => TurnDirection.GoStraight,
+                _ => TurnDirection.None
+            };
         }
     }
 }

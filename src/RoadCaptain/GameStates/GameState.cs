@@ -7,5 +7,6 @@ namespace RoadCaptain.GameStates
         public abstract GameState UpdatePosition(TrackPoint position, List<Segment> segments, PlannedRoute plannedRoute);
         public abstract GameState EnterGame(ulong activityId);
         public abstract GameState LeaveGame();
+        public abstract GameState TurnCommandAvailable(string type);
     }
 }

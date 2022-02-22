@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 using RoadCaptain.GameStates;
 using RoadCaptain.Ports;
@@ -19,6 +20,7 @@ namespace RoadCaptain.UseCases
         private readonly ISegmentStore _segmentStore;
         private readonly PlannedRoute _route;
         private readonly IGameStateDispatcher _gameStateDispatcher;
+        private static ulong _lastIncomingSequenceNumber;
 
         public HandleZwiftMessagesUseCase(
             IMessageEmitter emitter,
@@ -76,6 +78,11 @@ namespace RoadCaptain.UseCases
             get => _gameState;
             set
             {
+                if (ReferenceEquals(_gameState, value))
+                {
+                    return;
+                }
+
                 if (_gameState.GetType() != value.GetType())
                 {
                     _monitoringEvents.Information("Game state changed from {OldState} to {NewState}", _gameState.GetType().Name, value.GetType().Name);
@@ -114,7 +121,7 @@ namespace RoadCaptain.UseCases
                 }
                 else if (message is ZwiftCommandAvailableMessage commandAvailable)
                 {
-                    _handleAvailableTurnsUseCase.Execute(commandAvailable);
+                    State = HandleAvailableTurns(commandAvailable, State);
                 }
                 else if (message is ZwiftActivityDetailsMessage activityDetails)
                 {
@@ -127,6 +134,34 @@ namespace RoadCaptain.UseCases
                         State = State.LeaveGame();
                     }
                 }
+            }
+        }
+
+        private GameState HandleAvailableTurns(ZwiftCommandAvailableMessage commandAvailable, GameState state)
+        {
+            if ("somethingempty".Equals(commandAvailable.Type, StringComparison.InvariantCultureIgnoreCase))
+            {
+                DispatchLastSequenceNumber(commandAvailable);
+
+                return state;
+            }
+
+            if (state is OnRouteState routeState)
+            {
+                return routeState.TurnCommandAvailable(commandAvailable.Type);
+            }
+
+            return state;
+        }
+
+        private void DispatchLastSequenceNumber(ZwiftCommandAvailableMessage commandAvailable)
+        {
+            if (commandAvailable.SequenceNumber > _lastIncomingSequenceNumber)
+            {
+                // Take new sequence number from here as the "SomethingEmpty"
+                // appears to be a synchronization mechanism
+                _lastIncomingSequenceNumber = commandAvailable.SequenceNumber;
+                _gameStateDispatcher.UpdateLastSequenceNumber(commandAvailable.SequenceNumber);
             }
         }
 

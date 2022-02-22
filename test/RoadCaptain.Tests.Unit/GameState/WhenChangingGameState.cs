@@ -9,7 +9,7 @@ namespace RoadCaptain.Tests.Unit.GameState
     public class WhenChangingGameState
     {
         private const int ActivityId = 1234;
-        
+
         [Fact]
         public void GivenNotInGameStateAndGameIsEntered_ResultingStateIsInGameStateWithActivityIdSet()
         {
@@ -262,7 +262,7 @@ namespace RoadCaptain.Tests.Unit.GameState
         {
             GameStates.GameState state = new OnSegmentState(ActivityId, RoutePosition1, SegmentById("route-segment-1"));
             state = state.UpdatePosition(RoutePosition1Point2, _segments, _route);
-            
+
             var result = state.UpdatePosition(RoutePosition1Point2, _segments, _route);
 
             result
@@ -272,6 +272,39 @@ namespace RoadCaptain.Tests.Unit.GameState
                 .Direction
                 .Should()
                 .Be(SegmentDirection.AtoB);
+        }
+
+        [Fact]
+        public void GivenOnRouteStateAndLeftTurnAvailable_ResultingStateIsOnRouteState()
+        {
+            _route.EnteredSegment("route-segment-1");
+            GameStates.GameState state = new OnRouteState(ActivityId, RoutePosition1, new Segment { Id = "route-segment-1" }, _route);
+            state = state.UpdatePosition(RoutePosition1Point2, _segments, _route);
+
+            var result = state.TurnCommandAvailable("TurnLeft");
+
+            result
+                .Should()
+                .BeOfType<OnRouteState>();
+        }
+
+        [Fact]
+        public void GivenOnRouteStateWithLeftTurnAndRightTurnAvailable_ResultingStateIsUpcomingTurnStateWithLeftAndRight()
+        {
+            _route.EnteredSegment("route-segment-1");
+            GameStates.GameState state = new OnRouteState(ActivityId, RoutePosition1, SegmentById("route-segment-1"), _route);
+            state = state.UpdatePosition(RoutePosition1Point2, _segments, _route);
+            state = state.TurnCommandAvailable("TurnLeft");
+
+            var result = state.TurnCommandAvailable("TurnRight");
+
+            result
+                .Should()
+                .BeOfType<UpcomingTurnState>()
+                .Which
+                .Directions
+                .Should()
+                .BeEquivalentTo(new List<TurnDirection> { TurnDirection.Left, TurnDirection.Right });
         }
 
         private Segment SegmentById(string id)
@@ -305,6 +338,11 @@ namespace RoadCaptain.Tests.Unit.GameState
                 {
                     RoutePosition1,
                     RoutePosition1Point2
+                },
+                NextSegmentsNodeB =
+                {
+                    new Turn(TurnDirection.Left, "route-segment-2"),
+                    new Turn(TurnDirection.Right, "route-segment-3")
                 }
             },
             new Segment
@@ -328,11 +366,11 @@ namespace RoadCaptain.Tests.Unit.GameState
         // Note on the positions: Keep them far away from eachother otherwise you'll
         // get some interesting test failures because they are too close together
         // and you'll end up with the wrong segment....
-        private readonly TrackPoint _positionNotOnSegment = new(2, 2 , 0);
+        private readonly TrackPoint _positionNotOnSegment = new(2, 2, 0);
         private static readonly TrackPoint PositionOnSegment = new(1, 2, 3);
         private static readonly TrackPoint OtherOnSegment = new(3, 2, 3);
         private static readonly TrackPoint PositionOnAnotherSegment = new(4, 2, 3);
-        
+
         private static readonly TrackPoint RoutePosition1 = new(10, 1, 3);
         private static readonly TrackPoint RoutePosition1Point2 = new(10, 2, 3);
         private static readonly TrackPoint RoutePosition2 = new(12, 2, 3);

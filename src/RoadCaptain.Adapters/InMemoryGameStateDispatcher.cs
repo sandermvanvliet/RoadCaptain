@@ -30,19 +30,6 @@ namespace RoadCaptain.Adapters
             _queue = new ConcurrentQueue<Message>();
         }
 
-        public TrackPoint CurrentPosition
-        {
-            get
-            {
-                if (_gameState is PositionedState positionedState)
-                {
-                    return positionedState.CurrentPosition;
-                }
-
-                return null;
-            }
-        }
-
         public Segment CurrentSegment  
         {
             get

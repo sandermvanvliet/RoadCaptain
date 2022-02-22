@@ -57,6 +57,11 @@ namespace RoadCaptain.GameStates
             return new NotInGameState();
         }
 
+        public override GameState TurnCommandAvailable(string type)
+        {
+            return this;
+        }
+
         protected static (Segment,TrackPoint) GetClosestMatchingSegment(List<Segment> segments, TrackPoint position)
         {
             // If there is only one segment then we can
