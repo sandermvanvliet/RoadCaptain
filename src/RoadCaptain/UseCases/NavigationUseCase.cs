@@ -30,10 +30,7 @@ namespace RoadCaptain.UseCases
         {
             // Set up handlers
             _gameStateReceiver
-                .Register(null,
-                    null,
-                    HandleCommandsAvailable, 
-                    RouteSelected,
+                .Register(RouteSelected,
                     LastSequenceNumberUpdated, 
                     null);
 

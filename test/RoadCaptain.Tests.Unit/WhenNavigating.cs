@@ -115,8 +115,6 @@ namespace RoadCaptain.Tests.Unit
         [Fact]
         public void GivenStartedRouteOnSegmentThreeAndLeftAndGoStraightCommandsAvailable_NoCommandIsSent()
         {
-            _gameStateDispatcher.TurnCommandsAvailable(new List<TurnDirection> { TurnDirection.Left, TurnDirection.GoStraight });
-
             WhenHandlingNavigation();
 
             _inMemoryMessageReceiver
@@ -128,8 +126,6 @@ namespace RoadCaptain.Tests.Unit
         [Fact]
         public void GivenStartedRouteOnSegmentThreeAndLeftAndRightCommandsAvailable_TurnRightCommandIsSent()
         {
-            _gameStateDispatcher.TurnCommandsAvailable(new List<TurnDirection> { TurnDirection.Left, TurnDirection.Right });
-
             WhenHandlingNavigation();
 
             _inMemoryMessageReceiver

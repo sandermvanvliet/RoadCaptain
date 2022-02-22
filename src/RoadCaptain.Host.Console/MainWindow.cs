@@ -70,10 +70,7 @@ namespace RoadCaptain.Host.Console
             // Only register callbacks after the form is initialized
             // otherwise we may get callback invocation before we're
             // ready to handle them.
-            _gameStateReceiver.Register(UpdateAvailableTurns,
-                UpdateDirection,
-                UpdateTurnCommands,
-                RouteSelected,
+            _gameStateReceiver.Register(RouteSelected,
                 null, 
                 GameStateUpdated);
 
@@ -86,10 +83,10 @@ namespace RoadCaptain.Host.Console
 
         private void GameStateUpdated(GameState gameState)
         {
-            if (_previousState is NotInGameState && gameState is InGameState state)
+            if (_previousState is NotInGameState && gameState is InGameState)
             {
                 // Entered game
-                EnteredGame(state.ActivityId);
+                EnteredGame();
             }
 
             if (gameState is PositionedState positioned)
@@ -113,7 +110,18 @@ namespace RoadCaptain.Host.Console
                 if(_previousState is OnRouteState previousRouteState && previousRouteState.Route.SegmentSequenceIndex < routeState.Route.SegmentSequenceIndex)
                 {
                     RouteProgression(routeState.Route.SegmentSequenceIndex);
+
+                    if (routeState.Direction != SegmentDirection.Unknown && previousRouteState.Direction != routeState.Direction)
+                    {
+                        UpdateDirection(routeState.Direction);
+                        UpdateAvailableTurns(routeState.CurrentSegment.NextSegments(routeState.Direction));
+                    }
                 }
+            }
+
+            if (gameState is UpcomingTurnState turnsState)
+            {
+                UpdateTurnCommands(turnsState.Directions);
             }
 
             _previousState = gameState;
@@ -275,7 +283,7 @@ namespace RoadCaptain.Host.Console
             textBoxCurrentDirection.Invoke((Action)(() => textBoxCurrentDirection.Text = direction.ToString()));
         }
 
-        private void EnteredGame(ulong activityId)
+        private void EnteredGame()
         {
             _previousRiderPosition = null;
             _riderPath = new SKPath();

@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using RoadCaptain.GameStates;
+﻿using RoadCaptain.GameStates;
 
 namespace RoadCaptain.Ports
 {
@@ -12,12 +11,6 @@ namespace RoadCaptain.Ports
     public interface IGameStateDispatcher
     {
         /// <summary>
-        /// The rider is coming up to the end of a segment and the game has presented turn options
-        /// </summary>
-        /// <param name="turns">The directions in which turns can be made</param>
-        void TurnCommandsAvailable(List<TurnDirection> turns);
-
-        /// <summary>
         /// The rider has selected a route to follow
         /// </summary>
         /// <param name="route"></param>
@@ -29,11 +22,10 @@ namespace RoadCaptain.Ports
         /// <param name="sequenceNumber"></param>
         void UpdateLastSequenceNumber(ulong sequenceNumber);
 
-        // TODO: Make this architectually sound
-        // Because exposing the state like this is a bit ugly...
-        List<TurnDirection> AvailableTurnCommands { get; }
-        Segment CurrentSegment { get; }
-
+        /// <summary>
+        /// The state of the game has changed
+        /// </summary>
+        /// <param name="gameState"></param>
         void Dispatch(GameState gameState);
     }
 }

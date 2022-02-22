@@ -12,9 +12,6 @@ namespace RoadCaptain.Adapters
         private readonly MonitoringEvents _monitoringEvents;
         private readonly ConcurrentQueue<Message> _queue;
         
-        private readonly List<Action<SegmentDirection>> _directionChangedHandlers = new();
-        private readonly List<Action<List<TurnDirection>>> _turnCommandsAvailableHandlers = new();
-        private readonly List<Action<List<Turn>>> _turnsAvailableHandlers = new();
         private readonly List<Action<PlannedRoute>> _routeSelectedHandlers = new();
         private readonly List<Action<ulong>> _lastSequenceNumberHandlers = new();
         private readonly List<Action<GameState>> _gameStateHandlers = new();
@@ -30,22 +27,7 @@ namespace RoadCaptain.Adapters
             _queue = new ConcurrentQueue<Message>();
         }
 
-        public Segment CurrentSegment  
-        {
-            get
-            {
-                if (_gameState is OnSegmentState segmentState)
-                {
-                    return segmentState.CurrentSegment;
-                }
-
-                return null;
-            }
-        }
-
         public ulong LastSequenceNumber { get; private set; }
-
-        public List<TurnDirection> AvailableTurnCommands { get; private set; } = new();
 
         public bool InGame { get; private set; }
 
@@ -59,12 +41,6 @@ namespace RoadCaptain.Adapters
                     _started = value;
                 }
             }
-        }
-
-        public void TurnCommandsAvailable(List<TurnDirection> turns)
-        {
-            AvailableTurnCommands = turns;
-            Enqueue("turnCommandsAvailable", AvailableTurnCommands);
         }
 
         public void RouteSelected(PlannedRoute route)
@@ -159,13 +135,8 @@ namespace RoadCaptain.Adapters
             }
         }
 
-        public void Register(Action<List<Turn>> turnsAvailable, Action<SegmentDirection> directionChanged,
-            Action<List<TurnDirection>> turnCommandsAvailable,
-            Action<PlannedRoute> routeSelected, Action<ulong> lastSequenceNumber, Action<GameState> gameState)
+        public void Register(Action<PlannedRoute> routeSelected, Action<ulong> lastSequenceNumber, Action<GameState> gameState)
         {
-            AddHandlerIfNotNull(_turnsAvailableHandlers, turnsAvailable);
-            AddHandlerIfNotNull(_directionChangedHandlers, directionChanged);
-            AddHandlerIfNotNull(_turnCommandsAvailableHandlers, turnCommandsAvailable);
             AddHandlerIfNotNull(_routeSelectedHandlers, routeSelected);
             AddHandlerIfNotNull(_lastSequenceNumberHandlers, lastSequenceNumber);
             AddHandlerIfNotNull(_gameStateHandlers, gameState);
@@ -188,15 +159,6 @@ namespace RoadCaptain.Adapters
 
             switch (message.Topic)
             {
-                case "turnsAvailable":
-                    _turnsAvailableHandlers.ForEach(h => InvokeHandler(h, message.Data));
-                    break;
-                case "directionChanged":
-                    _directionChangedHandlers.ForEach(h => InvokeHandler(h, message.Data));
-                    break;
-                case "turnCommandsAvailable":
-                    _turnCommandsAvailableHandlers.ForEach(h => InvokeHandler(h, message.Data));
-                    break;
                 case "routeSelected":
                     _routeSelectedHandlers.ForEach(h => InvokeHandler(h, message.Data));
                     break;
