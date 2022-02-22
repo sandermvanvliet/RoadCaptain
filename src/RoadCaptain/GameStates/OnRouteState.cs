@@ -18,7 +18,7 @@ namespace RoadCaptain.GameStates
             Route = plannedRoute;
         }
 
-        private OnRouteState(ulong activityId, TrackPoint currentPosition, Segment segment, PlannedRoute plannedRoute, SegmentDirection direction, List<TurnDirection> turnDirections) 
+        protected OnRouteState(ulong activityId, TrackPoint currentPosition, Segment segment, PlannedRoute plannedRoute, SegmentDirection direction, List<TurnDirection> turnDirections) 
             : this(activityId, currentPosition, segment, plannedRoute, direction)
         {
             TurnCommands = turnDirections;

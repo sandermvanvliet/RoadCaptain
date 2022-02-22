@@ -12,7 +12,7 @@ namespace RoadCaptain.GameStates
             PlannedRoute plannedRoute,
             SegmentDirection direction,
             List<TurnDirection> directions)
-            : base(activityId, currentPosition, segment, plannedRoute, direction)
+            : base(activityId, currentPosition, segment, plannedRoute, direction, directions)
         {
             Directions = directions;
         }
