@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using FluentAssertions;
-using RoadCaptain.GameState;
+using RoadCaptain.GameStates;
 using Xunit;
 
 namespace RoadCaptain.Tests.Unit.GameState
