@@ -85,7 +85,7 @@ namespace RoadCaptain.Adapters
             // Ignore for now, nobody is listening
         }
 
-        public void SendTurnCommand(TurnDirection direction, uint sequenceNumber)
+        public void SendTurnCommand(TurnDirection direction, ulong sequenceNumber)
         {
             // Ignore for now, nobody is listening
         }

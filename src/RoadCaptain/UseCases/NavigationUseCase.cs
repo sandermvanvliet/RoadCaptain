@@ -12,7 +12,7 @@ namespace RoadCaptain.UseCases
         private readonly MonitoringEvents _monitoringEvents;
         private readonly IMessageReceiver _messageReceiver;
         private PlannedRoute _plannedRoute;
-        private uint _lastSequenceNumber;
+        private ulong _lastSequenceNumber;
         private readonly IGameStateDispatcher _dispatcher;
 
         public NavigationUseCase(
@@ -50,7 +50,7 @@ namespace RoadCaptain.UseCases
             _plannedRoute.Reset();
         }
 
-        private void LastSequenceNumberUpdated(uint sequenceNumber)
+        private void LastSequenceNumberUpdated(ulong sequenceNumber)
         {
             _lastSequenceNumber = sequenceNumber;
         }

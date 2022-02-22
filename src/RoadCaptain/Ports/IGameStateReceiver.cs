@@ -12,6 +12,6 @@ namespace RoadCaptain.Ports
             Action<SegmentDirection> directionChanged,
             Action<List<TurnDirection>> turnCommandsAvailable,
             Action<PlannedRoute> routeSelected,
-            Action<uint> lastSequenceNumber, Action<GameState> gameState);
+            Action<ulong> lastSequenceNumber, Action<GameState> gameState);
     }
 }
