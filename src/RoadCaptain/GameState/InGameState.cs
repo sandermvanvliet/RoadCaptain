@@ -13,7 +13,7 @@ namespace RoadCaptain.GameState
             ActivityId = activityId;
         }
 
-        public override GameState UpdatePosition(TrackPoint position, List<Segment> segments)
+        public override GameState UpdatePosition(TrackPoint position, List<Segment> segments, PlannedRoute plannedRoute)
         {
             /*
              * Next steps:
@@ -31,6 +31,12 @@ namespace RoadCaptain.GameState
             }
 
             var (segment, closestOnSegment) = GetClosestMatchingSegment(matchingSegments, position);
+
+            if (plannedRoute.StartingSegmentId == segment.Id)
+            {
+                plannedRoute.EnteredSegment(segment.Id);
+                return new OnRouteState(ActivityId, position, segment, plannedRoute);
+            }
 
             return new OnSegmentState(ActivityId, position, segment);
         }
@@ -50,7 +56,7 @@ namespace RoadCaptain.GameState
             return new NotInGameState();
         }
 
-        private static (Segment,TrackPoint) GetClosestMatchingSegment(List<Segment> segments, TrackPoint position)
+        protected static (Segment,TrackPoint) GetClosestMatchingSegment(List<Segment> segments, TrackPoint position)
         {
             // If there is only one segment then we can
             // do a quick exist and not bother to figure

@@ -4,7 +4,7 @@ namespace RoadCaptain.GameState
 {
     public class NotInGameState : GameState
     {
-        public override GameState UpdatePosition(TrackPoint position, List<Segment> segments)
+        public override GameState UpdatePosition(TrackPoint position, List<Segment> segments, PlannedRoute plannedRoute)
         {
             return new NotInGameState();
         }
