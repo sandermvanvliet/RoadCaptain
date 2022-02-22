@@ -51,7 +51,7 @@ namespace RoadCaptain.GameStates
 
                 if (segmentState.CurrentSegment.Id == Route.CurrentSegmentId)
                 {
-                    return new OnRouteState(ActivityId, position, segmentState.CurrentSegment, Route, segmentState.Direction);
+                    return new OnRouteState(ActivityId, segmentState.CurrentPosition, segmentState.CurrentSegment, Route, segmentState.Direction);
                 }
 
                 var distance = position.DistanceTo(CurrentPosition);
@@ -94,7 +94,8 @@ namespace RoadCaptain.GameStates
                 var x = new List<TurnDirection>{ turnDirection};
                 x.AddRange(TurnCommands);
 
-                if (x.Count == CurrentSegment.NextSegments(Direction).Count)
+                if (x.Count == CurrentSegment.NextSegments(Direction).Count &&
+                    x.Count != 1) // If there is only 1 command then it means there are two segments joining without any intersection
                 {
                     // We've got all the turn commands for this segment
                     return new UpcomingTurnState(

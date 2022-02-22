@@ -36,10 +36,10 @@ namespace RoadCaptain.GameStates
             if (!plannedRoute.HasStarted && plannedRoute.StartingSegmentId == segment.Id)
             {
                 plannedRoute.EnteredSegment(segment.Id);
-                return new OnRouteState(ActivityId, position, segment, plannedRoute);
+                return new OnRouteState(ActivityId, closestOnSegment, segment, plannedRoute);
             }
 
-            return new OnSegmentState(ActivityId, position, segment);
+            return new OnSegmentState(ActivityId, closestOnSegment, segment);
         }
 
         public override GameState EnterGame(ulong activityId)

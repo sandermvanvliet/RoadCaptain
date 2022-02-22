@@ -29,44 +29,51 @@ namespace RoadCaptain.GameStates
 
             if (result is OnSegmentState segmentState)
             {
-                UpdateDirection(position, segmentState);
+                UpdateDirection(segmentState);
             }
 
             return result;
         }
 
-        private void UpdateDirection(TrackPoint position, OnSegmentState segmentState)
+        private void UpdateDirection(OnSegmentState segmentState)
         {
             if (segmentState.CurrentSegment.Id == CurrentSegment.Id)
             {
                 int previousPositionIndex;
                 int currentPositionIndex;
 
-                if (CurrentPosition.Index.HasValue && position.Index.HasValue)
+                if (CurrentPosition.Index.HasValue && segmentState.CurrentPosition.Index.HasValue)
                 {
                     previousPositionIndex = CurrentPosition.Index.Value;
-                    currentPositionIndex = position.Index.Value;
+                    currentPositionIndex = segmentState.CurrentPosition.Index.Value;
                 }
                 else
                 {
                     previousPositionIndex = segmentState.CurrentSegment.Points.IndexOf(CurrentPosition);
-                    currentPositionIndex = segmentState.CurrentSegment.Points.IndexOf(position);
+                    currentPositionIndex = segmentState.CurrentSegment.Points.IndexOf(segmentState.CurrentPosition);
                 }
 
-                if (previousPositionIndex < currentPositionIndex)
+                if (previousPositionIndex == -1 || currentPositionIndex == -1)
                 {
-                    segmentState.Direction = SegmentDirection.AtoB;
-                }
-                else if (previousPositionIndex > currentPositionIndex)
-                {
-                    segmentState.Direction = SegmentDirection.BtoA;
+                    segmentState.Direction = SegmentDirection.Unknown;
                 }
                 else
                 {
-                    // If the indexes of the positions are the same then 
-                    // keep the same direction as before to ensure we
-                    // don't revert to Unknown unnecessarily.
-                    segmentState.Direction = Direction;
+                    if (previousPositionIndex < currentPositionIndex)
+                    {
+                        segmentState.Direction = SegmentDirection.AtoB;
+                    }
+                    else if (previousPositionIndex > currentPositionIndex)
+                    {
+                        segmentState.Direction = SegmentDirection.BtoA;
+                    }
+                    else
+                    {
+                        // If the indexes of the positions are the same then 
+                        // keep the same direction as before to ensure we
+                        // don't revert to Unknown unnecessarily.
+                        segmentState.Direction = Direction;
+                    }
                 }
             }
             else
