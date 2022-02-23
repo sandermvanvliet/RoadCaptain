@@ -1,5 +1,6 @@
 ﻿using System;
 using Serilog;
+using Serilog.Events;
 
 namespace RoadCaptain.Host.Console
 {
@@ -14,7 +15,10 @@ namespace RoadCaptain.Host.Console
 
         public override void Debug(string message, params object[] arguments)
         {
-            _logger.Debug(message, arguments);
+            if (_logger.IsEnabled(LogEventLevel.Debug))
+            {
+                _logger.Debug(message, arguments);
+            }
         }
 
         public override void Information(string messageTemplate, params object[] propertyValues)
