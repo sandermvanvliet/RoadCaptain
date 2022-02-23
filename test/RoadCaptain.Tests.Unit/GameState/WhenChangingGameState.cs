@@ -218,6 +218,24 @@ namespace RoadCaptain.Tests.Unit.GameState
                 .Be("route-segment-2");
         }
 
+        [Fact]
+        public void GivenOnSegmentStateAndPositionIsUpdatedAndPositionIsOnNextSegmentInRoute_ResultingStateIsOnRouteState()
+        {
+            _route.EnteredSegment("route-segment-1");
+            var state = new OnSegmentState(ActivityId, RoutePosition1, SegmentById("route-segment-1"));
+
+            var result = state.UpdatePosition(RoutePosition2, _segments, _route);
+
+            result
+                .Should()
+                .BeOfType<OnRouteState>()
+                .Which
+                .CurrentSegment
+                .Id
+                .Should()
+                .Be("route-segment-2");
+        }
+
         // TODO: Revisit this case
         //[Fact]
         public void GivenOnSegmentStateAndRouteIsInProgressAndPositionIsInStartingSegment_OnSegmentStateIsReturned()

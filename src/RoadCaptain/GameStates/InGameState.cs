@@ -43,6 +43,11 @@ namespace RoadCaptain.GameStates
             {
                 return new OnRouteState(ActivityId, closestOnSegment, segment, plannedRoute);
             }
+            
+            if (plannedRoute.HasStarted && plannedRoute.NextSegmentId == segment.Id)
+            {
+                return new OnRouteState(ActivityId, closestOnSegment, segment, plannedRoute);
+            }
 
             return new OnSegmentState(ActivityId, closestOnSegment, segment);
         }
