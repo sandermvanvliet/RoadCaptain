@@ -11,7 +11,16 @@ namespace RoadCaptain.Tests.Unit.Routing
 
         public WhenMatchingSegmentToPosition()
         {
-            _segment = new Segment
+            _segment = new Segment(new List<TrackPoint>
+            {
+                new(0, 0, 0),
+                new(0, 0.1m, 0),
+                new(0, 0.2m, 0),
+                new(0, 0.3m, 0),
+                new(0, 0.4m, 0),
+                new(0, 0.5m, 0),
+                new(0, 0.6m, 0),
+            })
             {
                 Id = "S1",
                 NextSegmentsNodeA = {
@@ -22,17 +31,6 @@ namespace RoadCaptain.Tests.Unit.Routing
                             new(TurnDirection.GoStraight, "S4"),
                 }
             };
-            _segment.Points.AddRange(
-                new List<TrackPoint>
-                {
-                    new(0, 0, 0),
-                    new(0, 0.1m, 0),
-                    new(0, 0.2m, 0),
-                    new(0, 0.3m, 0),
-                    new(0, 0.4m, 0),
-                    new(0, 0.5m, 0),
-                    new(0, 0.6m, 0),
-                });
         }
 
         [Fact]

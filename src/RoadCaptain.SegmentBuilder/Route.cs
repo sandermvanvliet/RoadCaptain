@@ -53,7 +53,7 @@ namespace RoadCaptain.SegmentBuilder
         {
             var result = new List<Segment>();
 
-            var currentSegment = new Segment { Id = $"{Slug}-{result.Count + 1:000}" };
+            var currentSegment = new Segment(new List<TrackPoint>()) { Id = $"{Slug}-{result.Count + 1:000}" };
             TrackPoint previousPoint = null;
 
             foreach (var point in TrackPoints)
@@ -119,7 +119,7 @@ namespace RoadCaptain.SegmentBuilder
                 {
                     if (currentSegment == null)
                     {
-                        currentSegment = new Segment { Id = $"{Slug}-{result.Count + 1:000}" };
+                        currentSegment = new Segment(new List<TrackPoint>()) { Id = $"{Slug}-{result.Count + 1:000}" };
 
                         if (previousPoint != null)
                         {

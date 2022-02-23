@@ -10,14 +10,21 @@ namespace RoadCaptain
     {
         public List<Turn> NextSegmentsNodeA { get; } = new();
         public List<Turn> NextSegmentsNodeB { get; } = new();
-
-        public List<TrackPoint> Points { get; } = new();
+        
+        public List<TrackPoint> Points { get; }
 
         [JsonIgnore] public TrackPoint A => Points.First();
 
         [JsonIgnore] public TrackPoint B => Points.Last();
 
         public string Id { get; set; }
+        public BoundingBox BoundingBox { get; }
+
+        public Segment(List<TrackPoint> points)
+        {
+            Points = points;
+            BoundingBox = BoundingBox.From(Points);
+        }
 
         public void CalculateDistances()
         {
@@ -70,12 +77,12 @@ namespace RoadCaptain
 
         public Segment Slice(string suffix, int start, int end)
         {
-            var slicedSegement = new Segment
+            var slicedPoints = Points.Skip(start).Take(end).ToList();
+
+            var slicedSegement = new Segment(slicedPoints)
             {
                 Id = Id + $"-{suffix}"
             };
-
-            slicedSegement.Points.AddRange(Points.Skip(start).Take(end).ToList());
 
             // To prevent gaps in sliced segments we want to add the last point of the
             // first slice as the start of the second slice. We need to be use a clone
@@ -134,7 +141,32 @@ namespace RoadCaptain
 
         public bool Contains(TrackPoint position)
         {
-            return Points.Any(p => p.IsCloseTo(position));
+            // Short-circuit matching by first checking against the bounding box of this segment
+            if (!BoundingBox.IsIn(position))
+            {
+                return false;
+            }
+            
+            var reverseIndex = Points.Count - 1;
+            for (var index = 0; index < Points.Count; index++)
+            {
+                // Lookup from both sides of the collection
+                // at once. This should converge halfway
+                if (Points[index].IsCloseTo(position) ||
+                    Points[reverseIndex--].IsCloseTo(position))
+                {
+                    return true;
+                }
+
+                // Converged but didn't find any match which
+                // means we now have covered the whole collection.
+                if (index == reverseIndex)
+                {
+                    break;
+                }
+            }
+
+            return false;
         }
 
         public TrackPoint GetClosestPositionOnSegment(TrackPoint position)

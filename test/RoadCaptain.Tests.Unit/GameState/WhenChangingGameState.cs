@@ -134,7 +134,7 @@ namespace RoadCaptain.Tests.Unit.GameState
         [Fact]
         public void GivenOnSegmentStateAndPositionIsUpdatedWhichIsOnSameSegment_ResultingStateIsOnSegmentStateWithSameSegmentid()
         {
-            var state = new OnSegmentState(ActivityId, PositionOnSegment, new Segment { Id = "segment-1" });
+            var state = new OnSegmentState(ActivityId, PositionOnSegment, SegmentById("segment-1"));
 
             var result = state.UpdatePosition(OtherOnSegment, _segments, _route);
 
@@ -151,7 +151,7 @@ namespace RoadCaptain.Tests.Unit.GameState
         [Fact]
         public void GivenOnSegmentStateAndPositionIsUpdatedWhichIsOnAnotherSegment_ResultingStateIsOnSegmentStateWithNewSegmentid()
         {
-            var state = new OnSegmentState(ActivityId, PositionOnSegment, new Segment { Id = "segment-1" });
+            var state = new OnSegmentState(ActivityId, PositionOnSegment, SegmentById("segment-1"));
 
             var result = state.UpdatePosition(PositionOnAnotherSegment, _segments, _route);
 
@@ -186,7 +186,7 @@ namespace RoadCaptain.Tests.Unit.GameState
         public void GivenOnRouteStateAndPositionIsUpdatedAndPositionIsInSameSegment_ResultingStateIsOnRouteState()
         {
             _route.EnteredSegment("route-segment-1");
-            var state = new OnRouteState(ActivityId, RoutePosition1, new Segment { Id = "route-segment-1" }, _route);
+            var state = new OnRouteState(ActivityId, RoutePosition1, SegmentById("route-segment-1"), _route);
 
             var result = state.UpdatePosition(RoutePosition1Point2, _segments, _route);
 
@@ -204,7 +204,7 @@ namespace RoadCaptain.Tests.Unit.GameState
         public void GivenOnRouteStateAndPositionIsUpdatedAndPositionIsOnNextSegmentInRoute_ResultingStateIsOnRouteState()
         {
             _route.EnteredSegment("route-segment-1");
-            var state = new OnRouteState(ActivityId, RoutePosition1, new Segment { Id = "route-segment-1" }, _route);
+            var state = new OnRouteState(ActivityId, RoutePosition1, SegmentById("route-segment-1"), _route);
 
             var result = state.UpdatePosition(RoutePosition2, _segments, _route);
 
@@ -227,7 +227,7 @@ namespace RoadCaptain.Tests.Unit.GameState
             // the route.
 
             _route.EnteredSegment("route-segment-1");
-            GameStates.GameState state = new OnRouteState(ActivityId, RoutePosition1, new Segment { Id = "route-segment-1" }, _route);
+            GameStates.GameState state = new OnRouteState(ActivityId, RoutePosition1, SegmentById("route-segment-1"), _route);
             state = state.UpdatePosition(RoutePosition3, _segments, ((OnRouteState)state).Route);
 
             var result = state.UpdatePosition(RoutePosition1, _segments, _route);
@@ -279,7 +279,7 @@ namespace RoadCaptain.Tests.Unit.GameState
         public void GivenOnRouteStateAndLeftTurnAvailable_ResultingStateIsOnRouteState()
         {
             _route.EnteredSegment("route-segment-1");
-            GameStates.GameState state = new OnRouteState(ActivityId, RoutePosition1, new Segment { Id = "route-segment-1" }, _route);
+            GameStates.GameState state = new OnRouteState(ActivityId, RoutePosition1, SegmentById("route-segment-1"), _route);
             state = state.UpdatePosition(RoutePosition1Point2, _segments, _route);
 
             var result = state.TurnCommandAvailable("TurnLeft");
@@ -351,52 +351,47 @@ namespace RoadCaptain.Tests.Unit.GameState
 
         private readonly List<Segment> _segments = new()
         {
-            new Segment
+            new Segment(new List<TrackPoint>
             {
-                Id = "segment-1",
-                Points =
-                {
-                    PositionOnSegment,
-                    OtherOnSegment
-                }
+                PositionOnSegment,
+                OtherOnSegment
+            })
+            {
+                Id = "segment-1"
             },
-            new Segment
-            {
-                Id = "segment-2",
-                Points =
+            new Segment(new List<TrackPoint>
                 {
                     PositionOnAnotherSegment
-                }
+                })
+            {
+                Id = "segment-2"
             },
-            new Segment
+            new Segment(new List<TrackPoint>()
+            {
+                RoutePosition1,
+                RoutePosition1Point2
+            })
             {
                 Id = "route-segment-1",
-                Points =
-                {
-                    RoutePosition1,
-                    RoutePosition1Point2
-                },
                 NextSegmentsNodeB =
                 {
                     new Turn(TurnDirection.Left, "route-segment-2"),
                     new Turn(TurnDirection.Right, "route-segment-3")
                 }
             },
-            new Segment
+            new Segment(new List<TrackPoint>()
             {
-                Id = "route-segment-2",
-                Points =
-                {
-                    RoutePosition2
-                }
+                RoutePosition2
+            })
+            {
+                Id = "route-segment-2"
             },
-            new Segment
+            new Segment(new List<TrackPoint>()
             {
-                Id = "route-segment-3",
-                Points =
-                {
-                    RoutePosition3
-                }
+                RoutePosition3
+            })
+            {
+                Id = "route-segment-3"
             },
         };
 

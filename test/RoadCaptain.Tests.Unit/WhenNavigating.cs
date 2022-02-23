@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading;
@@ -184,7 +185,7 @@ namespace RoadCaptain.Tests.Unit
             return new UpcomingTurnState(
                 1234, 
                 new TrackPoint(0, 0, 0), 
-                new Segment { Id = _plannedRoute.CurrentSegmentId },
+                new Segment(new List<TrackPoint>()) { Id = _plannedRoute.CurrentSegmentId },
                 _plannedRoute, 
                 SegmentDirection.AtoB, 
                 directions.ToList());
