@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Buffers;
-using System.IO;
-using System.IO.Pipelines;
 using System.Threading;
 using System.Threading.Tasks;
 using RoadCaptain.Ports;
@@ -16,7 +14,6 @@ namespace RoadCaptain.UseCases
         private const int MessageLengthPrefix = 2;
         private readonly IMessageReceiver _messageReceiver;
         private readonly IMessageEmitter _messageEmitter;
-        private readonly Pipe _pipe;
         private readonly MonitoringEvents _monitoringEvents;
 
         public DecodeIncomingMessagesUseCase(
@@ -26,138 +23,63 @@ namespace RoadCaptain.UseCases
             _messageReceiver = messageReceiver;
             _messageEmitter = messageEmitter;
             _monitoringEvents = monitoringEvents;
-            _pipe = new Pipe();
         }
 
-        public async Task ExecuteAsync(CancellationToken token)
+        public Task ExecuteAsync(CancellationToken token)
         {
-            /* DESIGN NOTES:
-             *
-             * Because we know that we're receiving length-delimited Protobuf messages in a continuous byte
-             * stream. That means that we can't simply read all data from the socket until it runs out because
-             * the remaining bytes of a particular Protobuf message may yet arrive...
-             * Therefore we'll go with the following approach:
-             * - IMessageReceiver will return all bytes _it_ can currently read
-             * - This use case will then:
-             *   - assemble those into a stream
-             *   - attempt to detect Protobuf message boundaries
-             *   - split out the relevant bytes
-             *   - attempt to parse a Protobuf message from those bytes
-             *   - emit the message if that was successful on the IMessageEmitter
-             * and then rinse & repeat until the cancellation token is flagged.
-             *
-             * That _should_ apply some logical splits in the right places, network stuff is in the IMessageReceiver
-             * adapter and message spitting & parsing is in the use case. This should allow us to test properly
-             * as we can simply create a IMessageReceiver that spits out bytes how we want them.
-             */
-
-            var processBytesTask = Task.Factory.StartNew(async () => await ProcessMessagesAsync(_pipe.Reader, token), TaskCreationOptions.LongRunning);
-
             // do-while to at least attempt one receive action
             do
             {
                 // Note: this call will block when using an actual network socket
                 var bytes = _messageReceiver.ReceiveMessageBytes();
 
-                if (bytes != null && bytes.Length > 0)
+                if (bytes == null || bytes.Length <= 0)
                 {
-                    // TODO: Consider to supply this to ReceiveMessageBytes above to remove allocations
-                    var mem = _pipe.Writer.GetMemory(bytes.Length);
+                    // Nothing to do, wrap around and expect ReceiveMessageBytes to block
+                    continue;
+                }
 
-                    // Ugly, but see ^^^
-                    bytes.CopyTo(mem);
+                var offset = 0;
+                var readOnlySequence = new ReadOnlySequence<byte>(bytes);
 
-                    _pipe.Writer.Advance(bytes.Length);
+                // Now that we have a sequence of bytes we need to detect
+                // message lengths and then proceed to split the buffer
+                // into the relevant actual payloads. 
+                // The message emitter expects _only_ the payload so what
+                // we'll do here is read 2 bytes (MessageLengthPrefix) and
+                // from that take the length of the payload. Then we call
+                // the emitter with the sliced payload and then proceed to
+                // check if there is another message in bytes we've received.
+                while (offset < bytes.Length)
+                {
+                    var payloadLength = ToUInt16(readOnlySequence, offset, MessageLengthPrefix);
 
-                    // Tell the reader there are bytes available to consume
-                    await _pipe.Writer.FlushAsync(token);
+                    var end = offset + MessageLengthPrefix + payloadLength;
+
+                    if (end > readOnlySequence.Length)
+                    {
+                        _monitoringEvents.Warning(
+                            "Buffer does not contain enough data. Expected {PayloadLength} but only have {DataLength} left",
+                            payloadLength,
+                            readOnlySequence.Length - offset - MessageLengthPrefix);
+
+                        break;
+                    }
+
+                    var toSend = readOnlySequence.Slice(offset + MessageLengthPrefix, payloadLength);
+
+                    // Note: A payload of 1 is invalid because that would mean there
+                    //       is only a tag index + wire type which can't happen.
+                    if (toSend.Length > 1)
+                    {
+                        _messageEmitter.EmitMessageFromBytes(toSend.ToArray());
+                    }
+
+                    offset += (MessageLengthPrefix + (int)toSend.Length);
                 }
             } while (!token.IsCancellationRequested);
 
-            try
-            {
-                await processBytesTask;
-            }
-            catch (OperationCanceledException)
-            {
-                // Nop
-            }
-        }
-
-        private async Task ProcessMessagesAsync(PipeReader reader, CancellationToken cancellationToken = default)
-        {
-            try
-            {
-                while (!cancellationToken.IsCancellationRequested)
-                {
-                    var result = await reader.ReadAsync(cancellationToken);
-                    var buffer = result.Buffer;
-
-                    try
-                    {
-                        // Process all messages from the buffer, modifying the input buffer on each
-                        // iteration.
-                        try
-                        {
-                            while (TryExtractMessage(ref buffer, out byte[] payload))
-                            {
-                                if (payload.Length > 0)
-                                {
-                                    _messageEmitter.EmitMessageFromBytes(payload);
-                                }
-                            }
-                        }
-                        catch (Exception e)
-                        {
-                            _monitoringEvents.Error(e, "Failed to extract message");
-                        }
-
-                        // There's no more data to be processed.
-                        if (result.IsCompleted)
-                        {
-                            if (buffer.Length > 0)
-                            {
-                                // The message is incomplete and there's no more data to process.
-                                throw new InvalidDataException("Incomplete message.");
-                            }
-                            break;
-                        }
-                    }
-                    finally
-                    {
-                        // Since all messages in the buffer are being processed, you can use the
-                        // remaining buffer's Start and End position to determine consumed and examined.
-                        reader.AdvanceTo(buffer.Start, buffer.End);
-                    }
-                }
-            }
-            finally
-            {
-                await reader.CompleteAsync();
-            }
-        }
-
-        private static bool TryExtractMessage(ref ReadOnlySequence<byte> buffer, out byte[] payload)
-        {
-            if (buffer.Length == 0)
-            {
-                payload = default;
-                return false;
-            }
-
-            var payloadLength = ToUInt16(buffer, 0, MessageLengthPrefix);
-
-            if (buffer.Length - MessageLengthPrefix < payloadLength)
-            {
-                // Not enough bytes in the buffer for the message that we expecteds
-                payload = default;
-                return false;
-            }
-
-            payload = buffer.Slice(MessageLengthPrefix, payloadLength).ToArray();
-            buffer = buffer.Slice(MessageLengthPrefix + payloadLength);
-
-            return true;
+            return Task.CompletedTask;
         }
 
         private static int ToUInt16(ReadOnlySequence<byte> buffer, int start, int count)
