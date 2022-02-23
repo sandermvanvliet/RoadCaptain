@@ -72,7 +72,7 @@ namespace RoadCaptain.Host.Console
             return new LoggerConfiguration()
                 .WriteTo.Console(LogEventLevel.Information)
                 .WriteTo.File($"roadcaptain-log-{DateTime.UtcNow:yyyy-MM-ddTHHmmss}.log", LogEventLevel.Debug)
-                .MinimumLevel.Debug()
+                .MinimumLevel.Information()
                 .Enrich.FromLogContext()
                 .CreateLogger();
         }
