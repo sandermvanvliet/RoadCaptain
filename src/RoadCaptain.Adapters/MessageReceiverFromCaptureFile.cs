@@ -27,6 +27,7 @@ namespace RoadCaptain.Adapters
         private readonly AutoResetEvent _receiveQueueResetEvent;
         private readonly CancellationTokenSource _tokenSource = new();
         private CaptureFileReaderDevice _device;
+        private Task<Task> _receiveTask;
 
         public MessageReceiverFromCaptureFile(string captureFilePath, MonitoringEvents monitoringEvents)
         {
@@ -37,12 +38,15 @@ namespace RoadCaptain.Adapters
 
             _companionPacketAssemblerPcToApp = new PacketAssembler(_monitoringEvents);
             _companionPacketAssemblerPcToApp.PayloadReady += (_, e) => EnqueueForReceive(e.Payload);
-
-            Task.Factory.StartNew(async () => await StartCaptureFromFileAsync(_tokenSource.Token));
         }
 
         public byte[] ReceiveMessageBytes()
         {
+            if (_receiveTask == null)
+            {
+                _receiveTask = Task.Factory.StartNew(() => StartCaptureFromFileAsync(_tokenSource.Token));
+            }
+
             while (!_tokenSource.IsCancellationRequested)
             {
                 if (_payloads.TryDequeue(out var message))
@@ -142,7 +146,7 @@ namespace RoadCaptain.Adapters
 
                 // Only care about packets from the game to the app,
                 // the app to game packets we're sending ourselves anyway.                
-                if (tcpPacket != null && tcpPacket.DestinationPort == ZwiftCompanionTcpPort)
+                if (tcpPacket != null && (tcpPacket.DestinationPort == ZwiftCompanionTcpPort || tcpPacket.SourcePort == ZwiftCompanionTcpPort))
                 {
                     _companionPacketAssemblerPcToApp.Assemble(tcpPacket);
                 }

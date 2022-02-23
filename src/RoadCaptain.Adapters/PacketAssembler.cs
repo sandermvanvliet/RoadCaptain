@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using PacketDotNet;
 
@@ -13,165 +14,200 @@ namespace RoadCaptain.Adapters
     internal class PacketAssembler
     {
         public event EventHandler<PayloadReadyEventArgs> PayloadReady;
+        
+        private void OnPayloadReady(PayloadReadyEventArgs e)
+        {
+            var handler = PayloadReady;
 
-        private byte[] _payload;
-        private bool _complete;
-        private uint _startingSequenceNumber;
+            if (handler != null)
+            {
+                try
+                {   
+                    handler(this, e);
+                }
+                catch
+                {
+                    // Don't let downstream exceptions bubble up
+                }
+            }
+        }
+
+        private readonly List<uint> _pendingClientAcks = new();
+        private readonly List<uint> _pendingServerAcks = new();
+        
+        private bool _handshakeComplete;
+        private int _handshakeStep;
+        private readonly DirectionalAssembler _clientToServerAssembler;
+        private readonly DirectionalAssembler _serverToClientAssembler;
+        private bool _closing;
         private readonly MonitoringEvents _monitoringEvents;
-        private ulong _expectedNextSequenceNumber;
-        private readonly List<TcpPacket> _packetBuffer = new();
-        private bool _lastOnlyAck;
-        private ulong _lastSequenceNumber;
 
         public PacketAssembler(MonitoringEvents monitoringEvents)
         {
             _monitoringEvents = monitoringEvents;
-        }
-
-        private void OnPayloadReady(PayloadReadyEventArgs e)
-        {
-            EventHandler<PayloadReadyEventArgs> handler = PayloadReady;
-            if (handler != null)
+            _serverToClientAssembler = new(monitoringEvents);
+            _clientToServerAssembler = new(monitoringEvents);
+            _clientToServerAssembler.PayloadReady += (_, args) =>
             {
-                try {
-                    handler(this, e);
-                }
-                catch {
-                    // Don't let downstream exceptions bubble up
-                }
-            }
-        } 
+                args.ClientToServer = true;
+                OnPayloadReady(args);
+            };
+            _serverToClientAssembler.PayloadReady += (_, args) =>
+            {
+                args.ClientToServer = false;
+                OnPayloadReady(args);
+            };
+        }
 
         public void Assemble(TcpPacket packet)
         {
             packet = packet ?? throw new ArgumentException(nameof(packet));
 
-            if (packet.Synchronize || (packet.Synchronize && packet.Acknowledgment))
+            if (!_handshakeComplete)
             {
-                _lastSequenceNumber = 0;
-                _expectedNextSequenceNumber = 0;
-                _startingSequenceNumber = 0;
-                return;
-            }
-
-            if (packet.Reset || packet.Finished)
-            {
-                return;
-            }
-
-            if (_expectedNextSequenceNumber == 0 || packet.SequenceNumber == _expectedNextSequenceNumber)
-            {
-                InnerAssemble(packet);
-                _expectedNextSequenceNumber = packet.SequenceNumber + (uint)packet.PayloadData.Length;
-                _lastSequenceNumber = packet.SequenceNumber;
-
-                _lastOnlyAck = packet.Acknowledgment && !packet.Push;
-            }
-            else if (packet.SequenceNumber == _lastSequenceNumber && _lastOnlyAck)
-            {
-                if (packet.PayloadData.Length > 0)
+                if (_closing)
                 {
-                    InnerAssemble(packet);
-                    _expectedNextSequenceNumber = packet.SequenceNumber + (uint)(packet.PayloadData.Length);
-                    _lastSequenceNumber = packet.SequenceNumber;
-
-                    _lastOnlyAck = packet.Acknowledgment && !packet.Push;
+                    if (packet.Synchronize)
+                    {
+                        // Starting a new connection
+                        _closing = false;
+                    }
+                    else if (packet.Acknowledgment || 
+                        (packet.Finished && packet.Acknowledgment) ||
+                        packet.Reset)
+                    {
+                        return;
+                    }
                 }
-            }
-            else if (packet.SequenceNumber > _expectedNextSequenceNumber)
-            {
-                if (_packetBuffer.Any(p => p.SequenceNumber == packet.SequenceNumber))
+
+                // If the connection isn't closing and the handshake
+                // is not complete then we treat a RST as a true reset
+                // and re-initialize the handshake
+                if (packet.Reset)
                 {
-                    _monitoringEvents.Warning("Packet {SequenceNumber} has been seen before, not buffering it again", packet.SequenceNumber);
+                    _handshakeStep = 0;
                     return;
                 }
 
-                _monitoringEvents.Warning("Received a packet to far ahead, buffering {SequenceNumber}, expected {ExpectedSequenceNumber}", packet.SequenceNumber, _expectedNextSequenceNumber);
-                _packetBuffer.Add(packet);
+                PerformHandshake(packet);
 
-                var expectedPacket =
-                    _packetBuffer.SingleOrDefault(p => p.SequenceNumber == _expectedNextSequenceNumber);
-
-                while (expectedPacket != null)
+                if (_handshakeComplete)
                 {
-                    _monitoringEvents.Information("Unbuffering {SequenceNumber}", expectedPacket.SequenceNumber);
+                    // Add the last sequence number because
+                    // we can get a TCP window update with 
+                    // that ACK number
+                    _pendingServerAcks.Add(packet.SequenceNumber);
+                }
 
-                    _packetBuffer.Remove(expectedPacket);
+                return;
+            }
 
-                    Assemble(expectedPacket);
+            if (packet.Finished)
+            {
+                // Connection force closed, reset everything
+                _handshakeComplete = false;
+                _handshakeStep = 0;
+                _closing = true;
 
-                    expectedPacket =
-                        _packetBuffer.SingleOrDefault(p => p.SequenceNumber == _expectedNextSequenceNumber);
+                // If the TCP packet has the PSH flag set that
+                // means that there is still data in the packet
+                // that we should capture.
+                if (!packet.Push)
+                {
+                    return;
                 }
             }
-            else
+            if (packet.Reset)
             {
-                _monitoringEvents.Warning("Received a packet with a sequence number {SequenceNumber} that we've already passed ({LastSequenceNumber}) Skipping it because it's (most likely) a TCP retransmission.", packet.SequenceNumber, _lastSequenceNumber);
+                // Connection force closed, reset everything
+                _handshakeComplete = false;
+                _handshakeStep = 0;
+                _pendingClientAcks.Clear();
+                _pendingServerAcks.Clear();
+                return;
             }
-        } 
 
-        /// <summary>
-        /// Processes the current packet. If this packet is part of a fragmented sequence,
-        /// its payload will be added to the internal buffer until the entire sequence payload has
-        /// been loaded. When the packet sequence has been fully loaded, the <c>PayloadReady</c> event is invoked.
-        /// </summary>
-        /// <param name="packet">The packet to process</param>
-        private void InnerAssemble(TcpPacket packet)
-        {
-            packet = packet ?? throw new ArgumentNullException(nameof(packet));
-            
-            try
+            Debug($"{(packet.DestinationPort == 21587 ? "C -> S" : "S -> C")} {packet.SequenceNumber,14} {packet.AcknowledgmentNumber,14} {(packet.Synchronize ? "SYN " : "")}{(packet.Push ? "PSH " : "")}{(packet.Acknowledgment ? "ACK " : "")}");
+
+            if (packet.DestinationPort == 21587)
             {
-                if (packet.Push && packet.Acknowledgment && _payload == null)
+                if (_pendingClientAcks.Any() && !_pendingClientAcks.Contains(packet.AcknowledgmentNumber))
                 {
-                    // No reassembly required
-                    _payload = packet.PayloadData;
-                    _complete = true;
-                    _startingSequenceNumber = packet.SequenceNumber;
+                    Error($"{packet.AcknowledgmentNumber} was not expected from the client");
+                    
+                    Debugger.Break();
                 }
-                else if (packet.Push && packet.Acknowledgment)
+                else
                 {
-                    // Last packet in the sequence
-                    _payload = _payload.Concat(packet.PayloadData).ToArray();
-                    _complete = true;
-                }
-                else if (packet.Acknowledgment && _payload == null)
-                {
-                    // First packet in a sequence
-                    _payload = packet.PayloadData;
-                    _startingSequenceNumber = packet.SequenceNumber;
-                }
-                else if (packet.Acknowledgment) {
-                    // Middle packet in a sequence
-                    _payload = _payload.Concat(packet.PayloadData).ToArray();
-                }
+                    _pendingServerAcks.Add(packet.SequenceNumber + PayloadDataLength(packet));
 
-                if (_complete && _payload?.Length > 0)
-                {
-                    OnPayloadReady(new PayloadReadyEventArgs
-                    {
-                        Payload = _payload,
-                        SequenceNumber = _startingSequenceNumber
-                    });
-
-                    Reset();
+                    _clientToServerAssembler.Assemble(packet);
                 }
             }
-            catch (Exception ex)
+            else if (packet.SourcePort == 21587)
             {
-                _monitoringEvents.Error(ex, "Failed to assemble packets");
-                Reset();
+                // Server-to-client
+                if (!_pendingServerAcks.Contains(packet.AcknowledgmentNumber))
+                {
+                    Error($"{packet.AcknowledgmentNumber} was not expected from the server");
+                    Debugger.Break();
+                }
+                else
+                {
+                    _pendingClientAcks.Add(packet.SequenceNumber + PayloadDataLength(packet));
+                    
+                    _serverToClientAssembler.Assemble(packet);
+                }
             }
         }
 
-        /// <summary>
-        /// Resets the internal state to start over
-        /// </summary>
-        public void Reset()
+        private void PerformHandshake(TcpPacket packet)
         {
-            _payload = null;
-            _complete = false;
-            _startingSequenceNumber = 0;
+            if (packet.Synchronize && !packet.Acknowledgment)
+            {
+                _handshakeStep = 1;
+            }
+            else if (packet.Synchronize && packet.Acknowledgment && _handshakeStep == 1)
+            {
+                _handshakeStep = 2;
+            }
+            else if (_handshakeStep == 2 && packet.Acknowledgment)
+            {
+                _handshakeStep = 3;
+            }
+            else
+            {
+                Error($"Handshake failed at step {_handshakeStep} with sequence no {packet.SequenceNumber}");
+            }
+
+            if (_handshakeStep == 3)
+            {
+                Info("Handshake complete");
+                _handshakeComplete = true;
+                _closing = false;
+            }
+        }
+
+        private void Debug(string message)
+        {
+            _monitoringEvents.Debug(message);
+        }
+
+        private void Info(string message)
+        {
+            _monitoringEvents.Information(message);
+        }
+
+        private void Error(string message)
+        {
+            _monitoringEvents.Error(message);
+        }
+
+        private static uint PayloadDataLength(TcpPacket packet)
+        {
+            return packet.HasPayloadData
+                ? (uint)packet.PayloadData.Length
+                : 0;
         }
     }
 }
