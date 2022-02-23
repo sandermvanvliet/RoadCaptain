@@ -11,6 +11,7 @@ namespace RoadCaptain.UseCases
         private readonly MonitoringEvents _monitoringEvents;
         private readonly IMessageReceiver _messageReceiver;
         private ulong _lastSequenceNumber;
+        private int _lastRouteSequenceIndex;
 
         public NavigationUseCase(
             IGameStateReceiver gameStateReceiver,
@@ -28,7 +29,7 @@ namespace RoadCaptain.UseCases
             _gameStateReceiver
                 .Register(
                     null,
-                    LastSequenceNumberUpdated, 
+                    LastSequenceNumberUpdated,
                     GameStateUpdated);
 
             // Start listening for game state updates,
@@ -53,6 +54,19 @@ namespace RoadCaptain.UseCases
                         turnState.Route.TurnToNextSegment,
                         string.Join(", ", turnState.Directions));
                 }
+            }
+
+            if (gameState is OnRouteState routeState)
+            {
+                if (routeState.Route.SegmentSequenceIndex != _lastRouteSequenceIndex)
+                {
+                    _monitoringEvents.Information(
+                        "Moved to {CurrentSegment} ({CurrentIndex})",
+                        routeState.Route.CurrentSegmentId,
+                        routeState.Route.SegmentSequenceIndex);
+                }
+
+                _lastRouteSequenceIndex = routeState.Route.SegmentSequenceIndex;
             }
         }
 
