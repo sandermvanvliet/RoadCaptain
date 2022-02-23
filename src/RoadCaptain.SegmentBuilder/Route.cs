@@ -26,9 +26,9 @@ namespace RoadCaptain.SegmentBuilder
 
             var trackPoints = trkpt
                 .Select(trackPoint => new TrackPoint(
-                    decimal.Parse(trackPoint.Attribute(XName.Get("lat")).Value, CultureInfo.InvariantCulture),
-                    decimal.Parse(trackPoint.Attribute(XName.Get("lon")).Value, CultureInfo.InvariantCulture),
-                    decimal.Parse(trackPoint.Element(XName.Get("ele", GpxNamespace)).Value,
+                    double.Parse(trackPoint.Attribute(XName.Get("lat")).Value, CultureInfo.InvariantCulture),
+                    double.Parse(trackPoint.Attribute(XName.Get("lon")).Value, CultureInfo.InvariantCulture),
+                    double.Parse(trackPoint.Element(XName.Get("ele", GpxNamespace)).Value,
                         CultureInfo.InvariantCulture)
                 ))
                 .ToList();
@@ -53,7 +53,7 @@ namespace RoadCaptain.SegmentBuilder
         {
             var result = new List<Segment>();
 
-            var currentSegment = new Segment { Id = $"{Slug}-{result.Count + 1:000}" };
+            var currentSegment = new Segment(new List<TrackPoint>()) { Id = $"{Slug}-{result.Count + 1:000}" };
             TrackPoint previousPoint = null;
 
             foreach (var point in TrackPoints)
@@ -119,7 +119,7 @@ namespace RoadCaptain.SegmentBuilder
                 {
                     if (currentSegment == null)
                     {
-                        currentSegment = new Segment { Id = $"{Slug}-{result.Count + 1:000}" };
+                        currentSegment = new Segment(new List<TrackPoint>()) { Id = $"{Slug}-{result.Count + 1:000}" };
 
                         if (previousPoint != null)
                         {

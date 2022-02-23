@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using RoadCaptain.GameStates;
 using RoadCaptain.Host.Console.HostedServices;
 using RoadCaptain.Ports;
 using SkiaSharp;
@@ -39,6 +40,10 @@ namespace RoadCaptain.Host.Console
         private List<Segment> _segments;
         private bool _isInitialized;
         private Segment _selectedSegment;
+        private GameState _previousState;
+        private int _previousRouteSequenceIndex;
+        private string _previousSegmentId;
+        private TrackPoint _previousPosition;
 
         public MainWindow(
             ISegmentStore segmentStore,
@@ -68,21 +73,9 @@ namespace RoadCaptain.Host.Console
             // Only register callbacks after the form is initialized
             // otherwise we may get callback invocation before we're
             // ready to handle them.
-            _gameStateReceiver.Register(
-                UpdatePosition,
-                UpdateCurrentSegemnt,
-                UpdateAvailableTurns,
-                UpdateDirection,
-                UpdateTurnCommands,
-                EnteredGame,
-                LeftGame,
-                RouteSelected,
-                null);
-
-            _gameStateReceiver.RegisterRouteEvents(
-                RouteStarted,
-                RouteProgression,
-                RouteCompleted);
+            _gameStateReceiver.Register(RouteSelected,
+                null, 
+                GameStateUpdated);
 
             // This starts the receiver if that has not yet been
             // done by another consumer.
@@ -91,15 +84,87 @@ namespace RoadCaptain.Host.Console
             _isInitialized = true;
         }
 
+        private void GameStateUpdated(GameState gameState)
+        {
+            if (_previousState is NotInGameState && gameState is InGameState)
+            {
+                // Entered game
+                EnteredGame();
+            }
+
+            if (gameState is PositionedState positioned)
+            {
+                if (!positioned.CurrentPosition.Equals(_previousPosition))
+                {
+                    UpdatePosition(positioned.CurrentPosition);
+
+                    _previousPosition = positioned.CurrentPosition;
+                }
+            }
+
+            if (gameState is OnSegmentState segmentState)
+            {
+                if (segmentState.CurrentSegment.Id != _previousSegmentId)
+                {
+                    UpdateCurrentSegemnt(segmentState.CurrentSegment.Id);
+                }
+                
+                if (_previousState is OnSegmentState previousSegmentState)
+                {
+                    if (segmentState.Direction != SegmentDirection.Unknown &&
+                        previousSegmentState.Direction != segmentState.Direction)
+                    {
+                        UpdateDirection(segmentState.Direction);
+                        UpdateAvailableTurns(segmentState.CurrentSegment.NextSegments(segmentState.Direction));
+                    }
+                }
+
+                _previousSegmentId = segmentState.CurrentSegment.Id;
+            }
+
+            if (gameState is OnRouteState routeState)
+            {
+                if (_previousState is not OnRouteState && 
+                    routeState.Route.HasStarted &&
+                    routeState.Route.SegmentSequenceIndex == 0)
+                {
+                    RouteStarted();
+                }
+
+                if(_previousRouteSequenceIndex != routeState.Route.SegmentSequenceIndex)
+                {
+                    // Moved to next segment on route
+                    RouteProgression(routeState.Route.SegmentSequenceIndex);
+                }
+
+                if (_previousState is OnSegmentState)
+                {
+                    // Back on route again
+                    RouteProgression(routeState.Route.SegmentSequenceIndex);
+                }
+
+                if (_previousState is UpcomingTurnState)
+                {
+                    // We've moved to another segment
+                    UpdateAvailableTurns(new List<Turn>());
+                    UpdateTurnCommands(new List<TurnDirection>());
+                }
+
+                _previousRouteSequenceIndex = routeState.Route.SegmentSequenceIndex;
+            }
+
+            if (gameState is UpcomingTurnState turnsState && _previousState is not UpcomingTurnState)
+            {
+                UpdateTurnCommands(turnsState.Directions);
+            }
+
+            _previousState = gameState;
+        }
+
         private void RouteProgression(int step)
         {
             dataGridViewRoute.ClearSelection();
-            dataGridViewRoute.Rows[step - 1].Selected = true;
-        }
-
-        private void RouteCompleted()
-        {
-
+            dataGridViewRoute.Rows[step].Selected = true;
         }
 
         private void RouteStarted()
@@ -252,12 +317,7 @@ namespace RoadCaptain.Host.Console
             textBoxCurrentDirection.Invoke((Action)(() => textBoxCurrentDirection.Text = direction.ToString()));
         }
 
-        private void LeftGame(ulong activityId)
-        {
-
-        }
-
-        private void EnteredGame(ulong activityId)
+        private void EnteredGame()
         {
             _previousRiderPosition = null;
             _riderPath = new SKPath();

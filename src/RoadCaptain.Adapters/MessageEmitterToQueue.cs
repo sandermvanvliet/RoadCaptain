@@ -61,7 +61,7 @@ namespace RoadCaptain.Adapters
                 // We need to capture the first one to send an initialization message
                 // back to Zwift so that it will start feeding us the actual data.
                 OnZwiftPing(packetData);
-
+                
                 return;
             }
 
@@ -150,10 +150,6 @@ namespace RoadCaptain.Adapters
                     break;
                 case 21:
                     // Ignore, contains very little data
-                    break;
-                default:
-                    _monitoringEvents.Debug($"Received a activity details subtype with {activityDetails.Details.Type} that we don't understand yet");
-
                     break;
             }
         }

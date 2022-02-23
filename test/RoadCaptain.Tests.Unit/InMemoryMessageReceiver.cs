@@ -38,7 +38,7 @@ namespace RoadCaptain.Tests.Unit
         {
         }
 
-        public void SendTurnCommand(TurnDirection direction, uint sequenceNumber)
+        public void SendTurnCommand(TurnDirection direction, ulong sequenceNumber)
         {
             SentCommands.Add(direction.ToString());
         }

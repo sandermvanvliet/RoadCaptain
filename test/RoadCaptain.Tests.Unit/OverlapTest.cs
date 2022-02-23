@@ -9,7 +9,7 @@ namespace RoadCaptain.Tests.Unit
 {
     public class OverlapTest
     {
-        private readonly TrackPoint _point = new TrackPoint(-11.64775m, 166.94357m, 0.0m);
+        private readonly TrackPoint _point = new TrackPoint(-11.64775d, 166.94357d, 0.0d);
 
         [Fact]
         public void Other()

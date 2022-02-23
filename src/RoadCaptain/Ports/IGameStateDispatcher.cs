@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿using RoadCaptain.GameStates;
 
 namespace RoadCaptain.Ports
 {
@@ -11,51 +11,6 @@ namespace RoadCaptain.Ports
     public interface IGameStateDispatcher
     {
         /// <summary>
-        /// The position of the rider in the game has changed.
-        /// </summary>
-        /// <remarks>Only fired when the position is different from the last</remarks>
-        /// <param name="position"></param>
-        void PositionChanged(TrackPoint position);
-
-        /// <summary>
-        /// The segment that the rider is on has changed
-        /// </summary>
-        /// <param name="segment"></param>
-        void SegmentChanged(Segment segment);
-
-        /// <summary>
-        /// The rider entered a segment and there are options to turn onto another segment
-        /// </summary>
-        /// <param name="turns">The available turns (direction + next segment)</param>
-        /// <remarks>If the current segment is a direct connection to only one segment this is not called</remarks>
-        void TurnsAvailable(List<Turn> turns);
-
-        /// <summary>
-        /// The direction of the rider on the segment has changed
-        /// </summary>
-        /// <param name="direction">The direction the rider is heading in</param>
-        /// <remarks>This happens when a u-turn is executed. Otherwise it should not occcur much</remarks>
-        void DirectionChanged(SegmentDirection direction);
-
-        /// <summary>
-        /// The rider is coming up to the end of a segment and the game has presented turn options
-        /// </summary>
-        /// <param name="turns">The directions in which turns can be made</param>
-        /// <remarks>The turns received here _should_ correspond to what has been provided in <see cref="TurnsAvailable"/>.</remarks>
-        void TurnCommandsAvailable(List<TurnDirection> turns);
-
-        /// <summary>
-        /// The rider started an activity and is now considered to be in-game
-        /// </summary>
-        /// <param name="activityId"></param>
-        void EnterGame(ulong activityId);
-
-        /// <summary>
-        /// The rider completed an activity and is now no longer considered in-game
-        /// </summary>
-        void LeaveGame();
-
-        /// <summary>
         /// The rider has selected a route to follow
         /// </summary>
         /// <param name="route"></param>
@@ -67,27 +22,10 @@ namespace RoadCaptain.Ports
         /// <param name="sequenceNumber"></param>
         void UpdateLastSequenceNumber(ulong sequenceNumber);
 
-        // TODO: Make this architectually sound
-        // Because exposing the state like this is a bit ugly...
-        List<TurnDirection> AvailableTurnCommands { get; }
-        Segment CurrentSegment { get; }
-        bool InGame { get; }
-
         /// <summary>
-        /// The rider started the planned route
+        /// The state of the game has changed
         /// </summary>
-        void RouteStarted();
-
-        /// <summary>
-        /// The rider entered the next segment of the planned route
-        /// </summary>
-        /// <param name="step"></param>
-        /// <param name="segmentId"></param>
-        void RouteProgression(int step, string segmentId);
-
-        /// <summary>
-        /// The rider ocmpleted the planned route
-        /// </summary>
-        void RouteCompleted();
+        /// <param name="gameState"></param>
+        void Dispatch(GameState gameState);
     }
 }

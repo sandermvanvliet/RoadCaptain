@@ -242,7 +242,7 @@ namespace RoadCaptain.Adapters
             SendMessageBytes(message.ToByteArray());
         }
 
-        public void SendTurnCommand(TurnDirection direction, uint sequenceNumber)
+        public void SendTurnCommand(TurnDirection direction, ulong sequenceNumber)
         {
             var message = new ZwiftCompanionToAppRiderMessage
             {
@@ -256,7 +256,8 @@ namespace RoadCaptain.Adapters
                     Tag5 = 0,
                     Tag7 = 0
                 },
-                Sequence = sequenceNumber // This value is provided via the SomethingEmpty synchronisation command
+                Sequence = (uint)sequenceNumber // This value is provided via the SomethingEmpty synchronisation command
+                // TODO: figure out if sequence is ulong or uint
             };
 
             SendMessageBytes(message.ToByteArray());

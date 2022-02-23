@@ -1,7 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Threading;
+using RoadCaptain.GameStates;
 using RoadCaptain.Ports;
 
 namespace RoadCaptain.UseCases
@@ -11,20 +10,17 @@ namespace RoadCaptain.UseCases
         private readonly IGameStateReceiver _gameStateReceiver;
         private readonly MonitoringEvents _monitoringEvents;
         private readonly IMessageReceiver _messageReceiver;
-        private PlannedRoute _plannedRoute;
-        private uint _lastSequenceNumber;
-        private readonly IGameStateDispatcher _dispatcher;
+        private ulong _lastSequenceNumber;
+        private int _lastRouteSequenceIndex;
 
         public NavigationUseCase(
             IGameStateReceiver gameStateReceiver,
             MonitoringEvents monitoringEvents,
-            IMessageReceiver messageReceiver, 
-            IGameStateDispatcher dispatcher)
+            IMessageReceiver messageReceiver)
         {
             _gameStateReceiver = gameStateReceiver;
             _monitoringEvents = monitoringEvents;
             _messageReceiver = messageReceiver;
-            _dispatcher = dispatcher;
         }
 
         public void Execute(CancellationToken token)
@@ -33,14 +29,8 @@ namespace RoadCaptain.UseCases
             _gameStateReceiver
                 .Register(
                     null,
-                    HandleSegmentChanged,
-                    null,
-                    null,
-                    HandleCommandsAvailable,
-                    HandleEnteredGame,
-                    null, 
-                    RouteSelected,
-                    LastSequenceNumberUpdated);
+                    LastSequenceNumberUpdated,
+                    GameStateUpdated);
 
             // Start listening for game state updates,
             // the Start() method will block until token
@@ -48,44 +38,41 @@ namespace RoadCaptain.UseCases
             _gameStateReceiver.Start(token);
         }
 
-        private void HandleEnteredGame(ulong obj)
+        private void GameStateUpdated(GameState gameState)
         {
-            // Reset the route when the user enters the game
-            _plannedRoute.Reset();
-        }
-
-        private void LastSequenceNumberUpdated(uint sequenceNumber)
-        {
-            _lastSequenceNumber = sequenceNumber;
-        }
-
-        private void RouteSelected(PlannedRoute route)
-        {
-            _plannedRoute = route;
-        }
-
-        private void HandleCommandsAvailable(List<TurnDirection> commands)
-        {
-            if (!_plannedRoute.HasCompleted && !_plannedRoute.HasStarted)
+            if (gameState is UpcomingTurnState turnState)
             {
-                return;
-            }
-
-            if (commands.Any())
-            {
-                if (CommandsMatchTurnToNextSegment(commands, _plannedRoute.TurnToNextSegment))
+                if (CommandsMatchTurnToNextSegment(turnState.Directions, turnState.Route.TurnToNextSegment))
                 {
-                    _monitoringEvents.Information("Executing turn {TurnDirection}", _plannedRoute.TurnToNextSegment);
-                    _messageReceiver.SendTurnCommand(_plannedRoute.TurnToNextSegment, _lastSequenceNumber);
+                    _monitoringEvents.Information("Executing turn {TurnDirection}", turnState.Route.TurnToNextSegment);
+                    _messageReceiver.SendTurnCommand(turnState.Route.TurnToNextSegment, _lastSequenceNumber);
                 }
                 else
                 {
                     _monitoringEvents.Error(
                         "Expected turn command {ExpectedTurnCommand} to be present but instead got: {TurnCommands}",
-                        _plannedRoute.TurnToNextSegment,
-                        string.Join(", ", commands));
+                        turnState.Route.TurnToNextSegment,
+                        string.Join(", ", turnState.Directions));
                 }
             }
+
+            if (gameState is OnRouteState routeState)
+            {
+                if (routeState.Route.SegmentSequenceIndex != _lastRouteSequenceIndex)
+                {
+                    _monitoringEvents.Information(
+                        "Moved to {CurrentSegment} ({CurrentIndex})",
+                        routeState.Route.CurrentSegmentId,
+                        routeState.Route.SegmentSequenceIndex);
+                }
+
+                _lastRouteSequenceIndex = routeState.Route.SegmentSequenceIndex;
+            }
+        }
+
+        private void LastSequenceNumberUpdated(ulong sequenceNumber)
+        {
+            _lastSequenceNumber = sequenceNumber;
         }
 
         private static bool CommandsMatchTurnToNextSegment(
@@ -93,96 +80,6 @@ namespace RoadCaptain.UseCases
             TurnDirection turnToNextSegemnt)
         {
             return commands.Contains(turnToNextSegemnt);
-        }
-
-        private void HandleSegmentChanged(string segmentId)
-        {
-            // Ignore empty segment and pretend nothing happened
-            if (segmentId == null)
-            {
-                return;
-            }
-
-            // Are we already in a segment?
-            if (_plannedRoute.CurrentSegmentId == null)
-            {
-                // - Check if we've dropped into the start segment
-                if (segmentId == _plannedRoute.StartingSegmentId)
-                {
-                    try
-                    {
-                        var result = _plannedRoute.EnteredSegment(segmentId);
-
-                        DispatchRouteState(result);
-                    }
-                    catch (ArgumentException e)
-                    {
-                        _monitoringEvents.Error("Failed to enter segment because {Reason}", e.Message);
-                    }
-                }
-                else
-                {
-                    _monitoringEvents.Warning("Rider entered segment {SegmentId} but it's not the start of the route", segmentId);
-                }
-            }
-            else if (_plannedRoute.NextSegmentId == segmentId)
-            {
-                // We moved into the next expected segment
-                try
-                {
-                    if (_plannedRoute.HasCompleted)
-                    {
-                        _monitoringEvents.Information("Route has completed, reverting to free-roam mode.");
-                        return;
-                    }
-
-                    var result = _plannedRoute.EnteredSegment(segmentId);
-
-                    DispatchRouteState(result);
-
-                    if (_plannedRoute.HasCompleted)
-                    {
-                        _monitoringEvents.Information("Entered the final segment of the route!");
-                    }
-                    else
-                    {
-                        _monitoringEvents.Information(
-                            "On segment {Step} of {TotalSteps}. Next turn will be {Turn} onto {SegmentId}",
-                            _plannedRoute.SegmentSequenceIndex,
-                            _plannedRoute.RouteSegmentSequence.Count,
-                            _plannedRoute.TurnToNextSegment,
-                            _plannedRoute.NextSegmentId
-                        );
-                    }
-                }
-                catch (ArgumentException e)
-                {
-                    _monitoringEvents.Error("Failed to enter segment because {Reason}", e.Message);
-                }
-            }
-            else
-            {
-                _monitoringEvents.Warning(
-                    "Rider entered segment {SegmentId} but it's not the expected next segment on the route ({NextSegmentId})",
-                    segmentId,
-                    _plannedRoute.NextSegmentId);
-            }
-        }
-
-        private void DispatchRouteState(RouteMoveResult result)
-        {
-            if (result == RouteMoveResult.StartedRoute)
-            {
-                _dispatcher.RouteStarted();
-            }
-            else if (result == RouteMoveResult.EnteredNextSegment)
-            {
-                _dispatcher.RouteProgression(_plannedRoute.SegmentSequenceIndex, _plannedRoute.CurrentSegmentId);
-            }
-            else if (result == RouteMoveResult.CompletedRoute)
-            {
-                _dispatcher.RouteCompleted();
-            }
         }
     }
 }

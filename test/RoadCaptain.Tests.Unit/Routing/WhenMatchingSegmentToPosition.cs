@@ -11,7 +11,16 @@ namespace RoadCaptain.Tests.Unit.Routing
 
         public WhenMatchingSegmentToPosition()
         {
-            _segment = new Segment
+            _segment = new Segment(new List<TrackPoint>
+            {
+                new(0, 0, 0),
+                new(0, 0.1d, 0),
+                new(0, 0.2d, 0),
+                new(0, 0.3d, 0),
+                new(0, 0.4d, 0),
+                new(0, 0.5d, 0),
+                new(0, 0.6d, 0),
+            })
             {
                 Id = "S1",
                 NextSegmentsNodeA = {
@@ -22,17 +31,6 @@ namespace RoadCaptain.Tests.Unit.Routing
                             new(TurnDirection.GoStraight, "S4"),
                 }
             };
-            _segment.Points.AddRange(
-                new List<TrackPoint>
-                {
-                    new(0, 0, 0),
-                    new(0, 0.1m, 0),
-                    new(0, 0.2m, 0),
-                    new(0, 0.3m, 0),
-                    new(0, 0.4m, 0),
-                    new(0, 0.5m, 0),
-                    new(0, 0.6m, 0),
-                });
         }
 
         [Fact]
@@ -49,7 +47,7 @@ namespace RoadCaptain.Tests.Unit.Routing
         [Fact]
         public void GivenPositionOnSegment_MatchIsReturned()
         {
-            var position = new TrackPoint(0, 0.5m, 0);
+            var position = new TrackPoint(0, 0.5d, 0);
 
             _segment
                 .Contains(position)
@@ -60,8 +58,8 @@ namespace RoadCaptain.Tests.Unit.Routing
         [Fact]
         public void GivenPointsInSequenceAtoB_DirectionShouldBeAtoB()
         {
-            var first = new TrackPoint(0, 0.5m, 0);
-            var second = new TrackPoint(0, 0.6m, 0);
+            var first = new TrackPoint(0, 0.5d, 0);
+            var second = new TrackPoint(0, 0.6d, 0);
 
             _segment
                 .DirectionOf(first, second)
@@ -72,8 +70,8 @@ namespace RoadCaptain.Tests.Unit.Routing
         [Fact]
         public void GivenPointsInSequenceBtoA_DirectionShouldBeBtoA()
         {
-            var first = new TrackPoint(0, 0.6m, 0);
-            var second = new TrackPoint(0, 0.5m, 0);
+            var first = new TrackPoint(0, 0.6d, 0);
+            var second = new TrackPoint(0, 0.5d, 0);
 
             _segment
                 .DirectionOf(first, second)

@@ -8,6 +8,6 @@
 
         void SendMessageBytes(byte[] payload);
         void SendInitialPairingMessage(uint riderId, uint sequenceNumber);
-        void SendTurnCommand(TurnDirection direction, uint sequenceNumber);
+        void SendTurnCommand(TurnDirection direction, ulong sequenceNumber);
     }
 }

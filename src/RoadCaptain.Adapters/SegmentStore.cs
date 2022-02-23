@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using Newtonsoft.Json;
@@ -32,16 +31,7 @@ namespace RoadCaptain.Adapters
             }
 
             var segments = JsonConvert.DeserializeObject<List<Segment>>(File.ReadAllText(_segmentPath));
-            List<SegmentTurns> turns;
-            try
-            {
-                turns = JsonConvert.DeserializeObject<List<SegmentTurns>>(File.ReadAllText(_tracksPath));
-            }
-            catch 
-            {
-                Debugger.Break();
-                throw;
-            }
+            var turns = JsonConvert.DeserializeObject<List<SegmentTurns>>(File.ReadAllText(_tracksPath));
 
             foreach (var segment in segments)
             {

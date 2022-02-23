@@ -6,21 +6,22 @@ namespace RoadCaptain
 {
     public class TrackPoint : IEquatable<TrackPoint>
     {
+        private const double CoordinateEqualityTolerance = 0.0001d;
         private static readonly double PiRad = Math.PI / 180d;
 
-        public TrackPoint(decimal latitude, decimal longitude, decimal altitude)
+        public TrackPoint(double latitude, double longitude, double altitude)
         {
             Latitude = latitude;
             Longitude = longitude;
             Altitude = altitude;
         }
 
-        public decimal Latitude { get; }
-        public decimal Longitude { get; }
-        public decimal Altitude { get; }
+        public double Latitude { get; }
+        public double Longitude { get; }
+        public double Altitude { get; }
         public int? Index { get; set; }
-        public decimal DistanceOnSegment { get; set; }
-        public decimal DistanceFromLast { get; set; }
+        public double DistanceOnSegment { get; set; }
+        public double DistanceFromLast { get; set; }
         [JsonIgnore]
         public Segment Segment { get; set; }
         
@@ -41,8 +42,10 @@ namespace RoadCaptain
         public bool IsCloseTo(TrackPoint point)
         {
             var distance = GetDistanceFromLatLonInMeters(
-                (double)Latitude, (double)Longitude,
-                (double)point.Latitude, (double)point.Longitude);
+                Latitude, 
+                Longitude,
+                Math.Round(point.Latitude, 5), 
+                Math.Round(point.Longitude, 5));
 
             // TODO: re-enable altitude matching
             if (distance < 15 /*&& Math.Abs(this.Altitude - point.Altitude) <= 2m*/)
@@ -53,14 +56,14 @@ namespace RoadCaptain
             return false;
         }
 
-        public decimal DistanceTo(TrackPoint point)
+        public double DistanceTo(TrackPoint point)
         {
             return GetDistanceFromLatLonInMeters(
-                (double)Latitude, (double)Longitude,
-                (double)point.Latitude, (double)point.Longitude);
+                Math.Round(Latitude, 5), Math.Round(Longitude, 5),
+                Math.Round(point.Latitude, 5), Math.Round(point.Longitude, 5));
         }
 
-        public static decimal GetDistanceFromLatLonInMeters(double lat1, double lon1, double lat2, double lon2)
+        public static double GetDistanceFromLatLonInMeters(double lat1, double lon1, double lat2, double lon2)
         {
             const double radiusOfEarth = 6371; // Radius of the earth in km
             var dLat = Deg2Rad(lat2 - lat1); // deg2rad below
@@ -74,7 +77,7 @@ namespace RoadCaptain
             var c = 2 * Math.Atan2(Math.Sqrt(a), Math.Sqrt(1 - a));
             var d = radiusOfEarth * c; // Distance in km
 
-            return (decimal)d * 1000;
+            return d * 1000;
         }
 
         private static double Deg2Rad(double deg)
@@ -94,7 +97,9 @@ namespace RoadCaptain
                 return true;
             }
 
-            return Latitude == other.Latitude && Longitude == other.Longitude && Altitude == other.Altitude;
+            return Math.Abs(Latitude - other.Latitude) < CoordinateEqualityTolerance && 
+                   Math.Abs(Longitude - other.Longitude) < CoordinateEqualityTolerance && 
+                   Math.Abs(Altitude - other.Altitude) < CoordinateEqualityTolerance;
         }
 
         public override bool Equals(object obj)
@@ -122,10 +127,10 @@ namespace RoadCaptain
             return HashCode.Combine(Latitude, Longitude, Altitude, Segment);
         }
         
-        public static TrackPoint LatLongToGame(decimal latitude, decimal longitude, decimal altitude)
+        public static TrackPoint LatLongToGame(double latitude, double longitude, double altitude)
         {
-            var fArr = new[] { -11.644904m, 166.95293m };
-            var fArr2 = new[] { 110614.71m, 109287.52m };
+            var fArr = new[] { -11.644904d, 166.95293d };
+            var fArr2 = new[] { 110614.71d, 109287.52d };
 
             var watopiaCenterLatitude = fArr[0];
             var watopiaCenterLongitude = fArr[1];
@@ -133,10 +138,10 @@ namespace RoadCaptain
             var metersBetweenLatitudeDegree = fArr2[0];
             var metersBetweenLongitudeDegree = fArr2[1];
 
-            var watopiaCenterLatitudeAsCentimetersFromOrigin = watopiaCenterLatitude * metersBetweenLatitudeDegree * 100.0m;
-            var watopiaCenterLongitudeAsCentimetersFromOrigin = watopiaCenterLongitude * metersBetweenLongitudeDegree * 100.0m;
+            var watopiaCenterLatitudeAsCentimetersFromOrigin = watopiaCenterLatitude * metersBetweenLatitudeDegree * 100.0d;
+            var watopiaCenterLongitudeAsCentimetersFromOrigin = watopiaCenterLongitude * metersBetweenLongitudeDegree * 100.0d;
 
-            const decimal f7 = 100;
+            const double f7 = 100;
 
             var latitudeAsCentimetersFromOrigin = (latitude * metersBetweenLatitudeDegree * f7);
             var latitudeOffsetCentimeters = latitudeAsCentimetersFromOrigin - watopiaCenterLatitudeAsCentimetersFromOrigin;
@@ -147,10 +152,10 @@ namespace RoadCaptain
             return new TrackPoint(latitudeOffsetCentimeters, longitudeOffsetCentimeters, altitude);
         }
 
-        public static TrackPoint FromGameLocation(decimal latitudeOffsetCentimeters, decimal longitudeOffsetCentimeters, decimal altitude)
+        public static TrackPoint FromGameLocation(double latitudeOffsetCentimeters, double longitudeOffsetCentimeters, double altitude)
         {
-            var fArr = new[] { -11.644904m, 166.95293m };
-            var fArr2 = new[] { 110614.71m, 109287.52m };
+            var fArr = new[] { -11.644904d, 166.95293d };
+            var fArr2 = new[] { 110614.71d, 109287.52d };
 
             var watopiaCenterLatitude = fArr[0];
             var watopiaCenterLongitude = fArr[1];
@@ -158,8 +163,8 @@ namespace RoadCaptain
             var metersBetweenLatitudeDegree = fArr2[0];
             var metersBetweenLongitudeDegree = fArr2[1];
 
-            var watopiaCenterLatitudeAsCentimetersFromOrigin = watopiaCenterLatitude * metersBetweenLatitudeDegree * 100.0m;
-            var watopiaCenterLongitudeAsCentimetersFromOrigin = watopiaCenterLongitude * metersBetweenLongitudeDegree * 100.0m;
+            var watopiaCenterLatitudeAsCentimetersFromOrigin = watopiaCenterLatitude * metersBetweenLatitudeDegree * 100.0d;
+            var watopiaCenterLongitudeAsCentimetersFromOrigin = watopiaCenterLongitude * metersBetweenLongitudeDegree * 100.0d;
 
             var latitudeAsCentimetersFromOrigin = latitudeOffsetCentimeters + watopiaCenterLatitudeAsCentimetersFromOrigin;
             var latitude = latitudeAsCentimetersFromOrigin / metersBetweenLatitudeDegree / 100;

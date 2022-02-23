@@ -273,7 +273,7 @@ namespace RoadCaptain.Host.Console
             this.columnStep.MinimumWidth = 8;
             this.columnStep.Name = "columnStep";
             this.columnStep.ReadOnly = true;
-            this.columnStep.Width = 30;
+            this.columnStep.Width = 40;
             // 
             // columnDirection
             // 
