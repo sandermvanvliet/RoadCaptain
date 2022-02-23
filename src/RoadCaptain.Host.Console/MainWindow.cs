@@ -97,6 +97,15 @@ namespace RoadCaptain.Host.Console
             if (gameState is OnSegmentState segmentState)
             {
                 UpdateCurrentSegemnt(segmentState.CurrentSegment.Id);
+
+                if (_previousState is OnSegmentState previousSegmentState)
+                {
+                    if (segmentState.Direction != SegmentDirection.Unknown && previousSegmentState.Direction != segmentState.Direction)
+                    {
+                        UpdateDirection(segmentState.Direction);
+                        UpdateAvailableTurns(segmentState.CurrentSegment.NextSegments(segmentState.Direction));
+                    }
+                }
             }
 
             if (gameState is OnRouteState routeState)
@@ -107,15 +116,23 @@ namespace RoadCaptain.Host.Console
                     RouteStarted();
                 }
 
-                if(_previousState is OnRouteState previousRouteState && previousRouteState.Route.SegmentSequenceIndex < routeState.Route.SegmentSequenceIndex)
+                if(_previousState is OnRouteState previousRouteState && previousRouteState.Route.SegmentSequenceIndex != routeState.Route.SegmentSequenceIndex)
                 {
+                    // Moved to next segment on route
                     RouteProgression(routeState.Route.SegmentSequenceIndex);
+                }
 
-                    if (routeState.Direction != SegmentDirection.Unknown && previousRouteState.Direction != routeState.Direction)
-                    {
-                        UpdateDirection(routeState.Direction);
-                        UpdateAvailableTurns(routeState.CurrentSegment.NextSegments(routeState.Direction));
-                    }
+                if (_previousState is OnSegmentState)
+                {
+                    // Back on route again
+                    RouteProgression(routeState.Route.SegmentSequenceIndex);
+                }
+
+                if (_previousState is UpcomingTurnState)
+                {
+                    // We've moved to another segment
+                    UpdateAvailableTurns(new List<Turn>());
+                    UpdateTurnCommands(new List<TurnDirection>());
                 }
             }
 
