@@ -4,19 +4,19 @@ namespace RoadCaptain
 {
     public class BoundingBox
     {
-        public decimal MinLatitude { get; }
-        public decimal MaxLatitude { get; }
+        public double MinLatitude { get; }
+        public double MaxLatitude { get; }
 
-        public decimal MinLongitude { get; }
-        public decimal MaxLongitude { get; }
+        public double MinLongitude { get; }
+        public double MaxLongitude { get; }
         
         // Make the bounding box larger than the points on the segment.
         // That ensures that we can still match game positions properly
         // as they are never exactly aligned with the segment positions.
-        private const decimal LatitudeMargin = 0.01m;
-        private const decimal LongitudeMargin = 0.01m;
+        private const double LatitudeMargin = 0.01d;
+        private const double LongitudeMargin = 0.01d;
 
-        public BoundingBox(decimal minLongitude, decimal minLatitude, decimal maxLongitude, decimal maxLatitude)
+        public BoundingBox(double minLongitude, double minLatitude, double maxLongitude, double maxLatitude)
         {
             MinLongitude = minLongitude - LongitudeMargin;
             MinLatitude = minLatitude - LatitudeMargin;
@@ -34,10 +34,10 @@ namespace RoadCaptain
 
         public static BoundingBox From(List<TrackPoint> points)
         {
-            decimal? minLongitude = null;
-            decimal? minLatitude = null;
-            decimal? maxLatitude = null;
-            decimal? maxLongitude = null;
+            double? minLongitude = null;
+            double? minLatitude = null;
+            double? maxLatitude = null;
+            double? maxLongitude = null;
 
             foreach (var point in points)
             {

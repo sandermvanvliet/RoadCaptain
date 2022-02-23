@@ -80,7 +80,7 @@ namespace RoadCaptain.GameStates
             // For each segment find the closest track point in that segment
             // in relation to the current position
             TrackPoint closest = null;
-            decimal? closestDistance = null;
+            double? closestDistance = null;
             Segment closestSegment = null;
 
             foreach (var segment in segments)

@@ -93,21 +93,22 @@ namespace RoadCaptain.Tests.Unit.Routing
         [Fact]
         public void ConvertLatLonToGameAndBack()
         {
-            var trackPoint = new TrackPoint(-11.640437m, 166.946204m, 13.2m);
+            var trackPoint = new TrackPoint(-11.640437d, 166.946204d, 13.2d);
 
             var gamePoint = TrackPoint.LatLongToGame(trackPoint.Latitude, trackPoint.Longitude, trackPoint.Altitude);
             var reverted = TrackPoint.FromGameLocation(gamePoint.Latitude, gamePoint.Longitude, gamePoint.Altitude);
 
             reverted
+                .Equals(trackPoint)
                 .Should()
-                .BeEquivalentTo(trackPoint);
+                .BeTrue();
         }
 
         [Fact]
         public void ConvertGameToLatLon()
         {
-            var gameLat = 93536.016m;
-            var gameLon = 212496.77m;
+            var gameLat = 93536.016d;
+            var gameLon = 212496.77d;
             var gamePoint = new TrackPoint(gameLat, gameLon, 0);
 
             var reverted = TrackPoint.FromGameLocation(gamePoint.Latitude, gamePoint.Longitude, gamePoint.Altitude);

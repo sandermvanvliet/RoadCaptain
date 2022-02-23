@@ -43,8 +43,8 @@ namespace RoadCaptain
                 point.Index = index;
 
                 point.DistanceFromLast = TrackPoint.GetDistanceFromLatLonInMeters(
-                    (double)previousPoint.Latitude, (double)previousPoint.Longitude,
-                    (double)point.Latitude, (double)point.Longitude);
+                    previousPoint.Latitude, previousPoint.Longitude,
+                    point.Latitude, point.Longitude);
 
                 point.DistanceOnSegment = previousPoint.DistanceOnSegment + point.DistanceFromLast;
 

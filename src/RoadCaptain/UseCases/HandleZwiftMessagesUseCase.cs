@@ -103,7 +103,7 @@ namespace RoadCaptain.UseCases
                     _monitoringEvents.RiderPositionReceived(riderPosition.Latitude, riderPosition.Longitude, riderPosition.Altitude);
 
                     // Convert from Zwift game coordinates to a lat/lon coordinate
-                    var position = TrackPoint.FromGameLocation((decimal)riderPosition.Latitude, (decimal)riderPosition.Longitude, (decimal)riderPosition.Altitude);
+                    var position = TrackPoint.FromGameLocation(riderPosition.Latitude, riderPosition.Longitude, riderPosition.Altitude);
 
                     if (_segments == null)
                     {

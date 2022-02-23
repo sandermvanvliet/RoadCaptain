@@ -26,9 +26,9 @@ namespace RoadCaptain.SegmentBuilder
 
             var trackPoints = trkpt
                 .Select(trackPoint => new TrackPoint(
-                    decimal.Parse(trackPoint.Attribute(XName.Get("lat")).Value, CultureInfo.InvariantCulture),
-                    decimal.Parse(trackPoint.Attribute(XName.Get("lon")).Value, CultureInfo.InvariantCulture),
-                    decimal.Parse(trackPoint.Element(XName.Get("ele", GpxNamespace)).Value,
+                    double.Parse(trackPoint.Attribute(XName.Get("lat")).Value, CultureInfo.InvariantCulture),
+                    double.Parse(trackPoint.Attribute(XName.Get("lon")).Value, CultureInfo.InvariantCulture),
+                    double.Parse(trackPoint.Element(XName.Get("ele", GpxNamespace)).Value,
                         CultureInfo.InvariantCulture)
                 ))
                 .ToList();
