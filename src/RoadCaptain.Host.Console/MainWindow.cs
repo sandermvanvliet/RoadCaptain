@@ -41,6 +41,9 @@ namespace RoadCaptain.Host.Console
         private bool _isInitialized;
         private Segment _selectedSegment;
         private GameState _previousState;
+        private int _previousRouteSequenceIndex;
+        private string _previousSegmentId;
+        private TrackPoint _previousPosition;
 
         public MainWindow(
             ISegmentStore segmentStore,
@@ -91,32 +94,44 @@ namespace RoadCaptain.Host.Console
 
             if (gameState is PositionedState positioned)
             {
-                UpdatePosition(positioned.CurrentPosition);
+                if (!positioned.CurrentPosition.Equals(_previousPosition))
+                {
+                    UpdatePosition(positioned.CurrentPosition);
+
+                    _previousPosition = positioned.CurrentPosition;
+                }
             }
 
             if (gameState is OnSegmentState segmentState)
             {
-                UpdateCurrentSegemnt(segmentState.CurrentSegment.Id);
-
+                if (segmentState.CurrentSegment.Id != _previousSegmentId)
+                {
+                    UpdateCurrentSegemnt(segmentState.CurrentSegment.Id);
+                }
+                
                 if (_previousState is OnSegmentState previousSegmentState)
                 {
-                    if (segmentState.Direction != SegmentDirection.Unknown && previousSegmentState.Direction != segmentState.Direction)
+                    if (segmentState.Direction != SegmentDirection.Unknown &&
+                        previousSegmentState.Direction != segmentState.Direction)
                     {
                         UpdateDirection(segmentState.Direction);
                         UpdateAvailableTurns(segmentState.CurrentSegment.NextSegments(segmentState.Direction));
                     }
                 }
+
+                _previousSegmentId = segmentState.CurrentSegment.Id;
             }
 
             if (gameState is OnRouteState routeState)
             {
-                if (_previousState is not OnRouteState && routeState.Route.HasStarted &&
+                if (_previousState is not OnRouteState && 
+                    routeState.Route.HasStarted &&
                     routeState.Route.SegmentSequenceIndex == 0)
                 {
                     RouteStarted();
                 }
 
-                if(_previousState is OnRouteState previousRouteState && previousRouteState.Route.SegmentSequenceIndex != routeState.Route.SegmentSequenceIndex)
+                if(_previousRouteSequenceIndex != routeState.Route.SegmentSequenceIndex)
                 {
                     // Moved to next segment on route
                     RouteProgression(routeState.Route.SegmentSequenceIndex);
@@ -134,9 +149,11 @@ namespace RoadCaptain.Host.Console
                     UpdateAvailableTurns(new List<Turn>());
                     UpdateTurnCommands(new List<TurnDirection>());
                 }
+
+                _previousRouteSequenceIndex = routeState.Route.SegmentSequenceIndex;
             }
 
-            if (gameState is UpcomingTurnState turnsState)
+            if (gameState is UpcomingTurnState turnsState && _previousState is not UpcomingTurnState)
             {
                 UpdateTurnCommands(turnsState.Directions);
             }
@@ -147,7 +164,7 @@ namespace RoadCaptain.Host.Console
         private void RouteProgression(int step)
         {
             dataGridViewRoute.ClearSelection();
-            dataGridViewRoute.Rows[step - 1].Selected = true;
+            dataGridViewRoute.Rows[step].Selected = true;
         }
 
         private void RouteStarted()
