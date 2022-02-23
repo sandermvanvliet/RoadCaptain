@@ -219,6 +219,7 @@ namespace RoadCaptain.Adapters
                 if (_configuration.ThrottleMessages && 
                     _queue.Count > _configuration.MessageThrottleHighWaterMark)
                 {
+                    _autoResetEvent.Set();
                     Thread.Sleep(_configuration.MessageThrottleDelayMilliseconds);
                 }
             }
