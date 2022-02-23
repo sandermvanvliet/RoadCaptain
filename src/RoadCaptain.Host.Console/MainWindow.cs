@@ -163,6 +163,14 @@ namespace RoadCaptain.Host.Console
 
         private void RouteProgression(int step)
         {
+            if (dataGridViewRoute.SelectedRows.Count == 1)
+            {
+                if (dataGridViewRoute.SelectedRows[0].Index == step)
+                {
+                    return;
+                }
+            }
+
             dataGridViewRoute.ClearSelection();
             dataGridViewRoute.Rows[step].Selected = true;
         }
