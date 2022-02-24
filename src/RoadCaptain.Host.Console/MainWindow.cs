@@ -44,6 +44,9 @@ namespace RoadCaptain.Host.Console
         private int _previousRouteSequenceIndex;
         private string _previousSegmentId;
         private TrackPoint _previousPosition;
+        private SegmentDirection _previousDirection;
+        private List<TurnDirection> _previousTurnCommands;
+        private List<Turn> _previousAvailableTurns;
 
         public MainWindow(
             ISegmentStore segmentStore,
@@ -112,8 +115,11 @@ namespace RoadCaptain.Host.Console
                 if (_previousState is OnSegmentState previousSegmentState)
                 {
                     if (segmentState.Direction != SegmentDirection.Unknown &&
-                        previousSegmentState.Direction != segmentState.Direction)
+                        previousSegmentState.Direction != segmentState.Direction &&
+                        _previousDirection != segmentState.Direction)
                     {
+                        _previousDirection = segmentState.Direction;
+
                         UpdateDirection(segmentState.Direction);
                         UpdateAvailableTurns(segmentState.CurrentSegment.NextSegments(segmentState.Direction));
                     }
@@ -257,6 +263,20 @@ namespace RoadCaptain.Host.Console
 
         private void UpdateAvailableTurns(List<Turn> turns)
         {
+            if (_previousAvailableTurns != null)
+            {
+                if (_previousAvailableTurns.Count == turns.Count)
+                {
+                    if (turns.All(c => _previousAvailableTurns.Contains(c)))
+                    {
+                        // All commands are the same as before so ignore this update
+                        return;
+                    }
+                }
+            }
+
+            _previousAvailableTurns = turns;
+
             var text = string.Join(
                 ", ",
                 turns.Select(t => $"{t.Direction} => {t.SegmentId}"));
@@ -266,16 +286,7 @@ namespace RoadCaptain.Host.Console
 
         private void UpdateCurrentSegemnt(string segmentId)
         {
-            var text = string.Empty;
-
-            var segment = _segments.SingleOrDefault(s => s.Id == segmentId);
-
-            if (segment != null)
-            {
-                text = segment.Id;
-            }
-
-            textBoxCurrentSegment.Invoke((Action)(() => textBoxCurrentSegment.Text = text));
+           textBoxCurrentSegment.Invoke((Action)(() => textBoxCurrentSegment.Text = segmentId));
         }
 
         private void UpdatePosition(TrackPoint point)
@@ -304,6 +315,20 @@ namespace RoadCaptain.Host.Console
 
         private void UpdateTurnCommands(List<TurnDirection> commands)
         {
+            if (_previousTurnCommands != null)
+            {
+                if (_previousTurnCommands.Count == commands.Count)
+                {
+                    if (commands.All(c => _previousTurnCommands.Contains(c)))
+                    {
+                        // All commands are the same as before so ignore this update
+                        return;
+                    }
+                }
+            }
+
+            _previousTurnCommands = commands;
+
             var text = string.Join(
                 ", ",
                 commands.Select(t => t.ToString()));
