@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Globalization;
+using System.Runtime.CompilerServices;
 using Newtonsoft.Json;
 
 namespace RoadCaptain
@@ -11,8 +12,8 @@ namespace RoadCaptain
 
         public TrackPoint(double latitude, double longitude, double altitude)
         {
-            Latitude = latitude;
-            Longitude = longitude;
+            Latitude = Math.Round(latitude, 5);
+            Longitude = Math.Round(longitude, 5);
             Altitude = altitude;
         }
 
@@ -54,8 +55,8 @@ namespace RoadCaptain
             var distance = GetDistanceFromLatLonInMeters(
                 Latitude, 
                 Longitude,
-                Math.Round(point.Latitude, 5), 
-                Math.Round(point.Longitude, 5));
+                point.Latitude, 
+                point.Longitude);
 
             // TODO: re-enable altitude matching
             if (distance < 15 /*&& Math.Abs(this.Altitude - point.Altitude) <= 2m*/)
@@ -69,30 +70,25 @@ namespace RoadCaptain
         public double DistanceTo(TrackPoint point)
         {
             return GetDistanceFromLatLonInMeters(
-                Math.Round(Latitude, 5), Math.Round(Longitude, 5),
-                Math.Round(point.Latitude, 5), Math.Round(point.Longitude, 5));
+                Latitude, Longitude,
+                point.Latitude, point.Longitude);
         }
 
         public static double GetDistanceFromLatLonInMeters(double lat1, double lon1, double lat2, double lon2)
         {
             const double radiusOfEarth = 6371; // Radius of the earth in km
-            var dLat = Deg2Rad(lat2 - lat1); // deg2rad below
-            var dLon = Deg2Rad(lon2 - lon1);
+            var dLat = (lat2 - lat1) * PiRad;
+            var dLon = (lon2 - lon1) * PiRad;
 
             var a =
                 Math.Sin(dLat / 2d) * Math.Sin(dLat / 2d) +
-                Math.Cos(Deg2Rad(lat1)) * Math.Cos(Deg2Rad(lat2)) *
+                Math.Cos(lat1 * PiRad) * Math.Cos(lat2 * PiRad) *
                 Math.Sin(dLon / 2d) * Math.Sin(dLon / 2d);
 
             var c = 2 * Math.Atan2(Math.Sqrt(a), Math.Sqrt(1 - a));
             var d = radiusOfEarth * c; // Distance in km
 
             return d * 1000;
-        }
-
-        private static double Deg2Rad(double deg)
-        {
-            return deg * PiRad;
         }
 
         public bool Equals(TrackPoint other)
@@ -139,17 +135,14 @@ namespace RoadCaptain
         
         public static TrackPoint LatLongToGame(double latitude, double longitude, double altitude)
         {
-            var fArr = new[] { -11.644904d, 166.95293d };
-            var fArr2 = new[] { 110614.71d, 109287.52d };
+            const double watopiaCenterLatitude = -11.644904d;
+            const double watopiaCenterLongitude = 166.95293d;
 
-            var watopiaCenterLatitude = fArr[0];
-            var watopiaCenterLongitude = fArr[1];
+            const double metersBetweenLatitudeDegree = 110614.71d;
+            const double metersBetweenLongitudeDegree = 109287.52d;
 
-            var metersBetweenLatitudeDegree = fArr2[0];
-            var metersBetweenLongitudeDegree = fArr2[1];
-
-            var watopiaCenterLatitudeAsCentimetersFromOrigin = watopiaCenterLatitude * metersBetweenLatitudeDegree * 100.0d;
-            var watopiaCenterLongitudeAsCentimetersFromOrigin = watopiaCenterLongitude * metersBetweenLongitudeDegree * 100.0d;
+            const double watopiaCenterLatitudeAsCentimetersFromOrigin = watopiaCenterLatitude * metersBetweenLatitudeDegree * 100.0d;
+            const double watopiaCenterLongitudeAsCentimetersFromOrigin = watopiaCenterLongitude * metersBetweenLongitudeDegree * 100.0d;
 
             const double f7 = 100;
 
@@ -164,17 +157,14 @@ namespace RoadCaptain
 
         public static TrackPoint FromGameLocation(double latitudeOffsetCentimeters, double longitudeOffsetCentimeters, double altitude)
         {
-            var fArr = new[] { -11.644904d, 166.95293d };
-            var fArr2 = new[] { 110614.71d, 109287.52d };
+            const double watopiaCenterLatitude = -11.644904d;
+            const double watopiaCenterLongitude = 166.95293d;
 
-            var watopiaCenterLatitude = fArr[0];
-            var watopiaCenterLongitude = fArr[1];
+            const double metersBetweenLatitudeDegree = 110614.71d;
+            const double metersBetweenLongitudeDegree = 109287.52d;
 
-            var metersBetweenLatitudeDegree = fArr2[0];
-            var metersBetweenLongitudeDegree = fArr2[1];
-
-            var watopiaCenterLatitudeAsCentimetersFromOrigin = watopiaCenterLatitude * metersBetweenLatitudeDegree * 100.0d;
-            var watopiaCenterLongitudeAsCentimetersFromOrigin = watopiaCenterLongitude * metersBetweenLongitudeDegree * 100.0d;
+            const double watopiaCenterLatitudeAsCentimetersFromOrigin = watopiaCenterLatitude * metersBetweenLatitudeDegree * 100.0d;
+            const double watopiaCenterLongitudeAsCentimetersFromOrigin = watopiaCenterLongitude * metersBetweenLongitudeDegree * 100.0d;
 
             var latitudeAsCentimetersFromOrigin = latitudeOffsetCentimeters + watopiaCenterLatitudeAsCentimetersFromOrigin;
             var latitude = latitudeAsCentimetersFromOrigin / metersBetweenLatitudeDegree / 100;
@@ -183,6 +173,17 @@ namespace RoadCaptain
             var longitude = longitudeAsCentimetersFromOrigin / metersBetweenLongitudeDegree / 100;
 
             return new TrackPoint(latitude, longitude, altitude);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool IsCloseToQuick(double longitude, TrackPoint position)
+        {
+            // 0.00013 degrees equivalent to 15 meters between degrees at latitude -11 
+            // That means that if the difference in longitude between
+            // the two points is more than 0.00013 then we're definitely
+            // going to be more than 15 meters apart and that means
+            // we're not close.
+            return Math.Abs(longitude - position.Longitude) < 0.00013;
         }
     }
 }
