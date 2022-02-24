@@ -147,20 +147,30 @@ namespace RoadCaptain
                 return false;
             }
             
+            // Some segments may have a lot of points, especially on longer
+            // segments. Because the points are in sequence but not ordered
+            // based on their values it means that we need to iterate over
+            // the entire collection.
+            // To speed up this process the lookup will proceed from both
+            // ends of the collection so that we reduce the amount of
+            // iterations that would be needed if the point we seek is at
+            // the end of the Points collection.
+            // If index and reverseIndex converge we exit as in that case
+            // we haven't found a match.
             var reverseIndex = Points.Count - 1;
             for (var index = 0; index < Points.Count; index++)
             {
-                // Lookup from both sides of the collection
-                // at once. This should converge halfway
                 if (Points[index].IsCloseTo(position) ||
                     Points[reverseIndex--].IsCloseTo(position))
                 {
                     return true;
                 }
-
-                // Converged but didn't find any match which
-                // means we now have covered the whole collection.
-                if (index == reverseIndex)
+                
+                // Note: Use greater-than-or-equal to deal with collections
+                //       that have an odd number of items as in that case
+                //       the indexes won't ever be equal and we'd still
+                //       iterate over the entire collection.
+                if (index >= reverseIndex)
                 {
                     break;
                 }
