@@ -135,21 +135,16 @@ namespace RoadCaptain
         
         public static TrackPoint LatLongToGame(double latitude, double longitude, double altitude)
         {
-            const double watopiaCenterLatitude = -11.644904d;
-            const double watopiaCenterLongitude = 166.95293d;
-
             const double metersBetweenLatitudeDegree = 110614.71d;
             const double metersBetweenLongitudeDegree = 109287.52d;
 
-            const double watopiaCenterLatitudeAsCentimetersFromOrigin = watopiaCenterLatitude * metersBetweenLatitudeDegree * 100.0d;
-            const double watopiaCenterLongitudeAsCentimetersFromOrigin = watopiaCenterLongitude * metersBetweenLongitudeDegree * 100.0d;
+            const double watopiaCenterLatitudeAsCentimetersFromOrigin = -128809767.893784d;
+            const double watopiaCenterLongitudeAsCentimetersFromOrigin = 1824587167.6433601d;
 
-            const double f7 = 100;
-
-            var latitudeAsCentimetersFromOrigin = (latitude * metersBetweenLatitudeDegree * f7);
+            var latitudeAsCentimetersFromOrigin = (latitude * metersBetweenLatitudeDegree * 100);
             var latitudeOffsetCentimeters = latitudeAsCentimetersFromOrigin - watopiaCenterLatitudeAsCentimetersFromOrigin;
 
-            var longitudeAsCentimetersFromOrigin = longitude * metersBetweenLongitudeDegree * f7;
+            var longitudeAsCentimetersFromOrigin = longitude * metersBetweenLongitudeDegree * 100;
             var longitudeOffsetCentimeters = longitudeAsCentimetersFromOrigin - watopiaCenterLongitudeAsCentimetersFromOrigin;
 
             return new TrackPoint(latitudeOffsetCentimeters, longitudeOffsetCentimeters, altitude);
@@ -157,14 +152,11 @@ namespace RoadCaptain
 
         public static TrackPoint FromGameLocation(double latitudeOffsetCentimeters, double longitudeOffsetCentimeters, double altitude)
         {
-            const double watopiaCenterLatitude = -11.644904d;
-            const double watopiaCenterLongitude = 166.95293d;
-
             const double metersBetweenLatitudeDegree = 110614.71d;
             const double metersBetweenLongitudeDegree = 109287.52d;
 
-            const double watopiaCenterLatitudeAsCentimetersFromOrigin = watopiaCenterLatitude * metersBetweenLatitudeDegree * 100.0d;
-            const double watopiaCenterLongitudeAsCentimetersFromOrigin = watopiaCenterLongitude * metersBetweenLongitudeDegree * 100.0d;
+            const double watopiaCenterLatitudeAsCentimetersFromOrigin = -128809767.893784d;
+            const double watopiaCenterLongitudeAsCentimetersFromOrigin = 1824587167.6433601d;
 
             var latitudeAsCentimetersFromOrigin = latitudeOffsetCentimeters + watopiaCenterLatitudeAsCentimetersFromOrigin;
             var latitude = latitudeAsCentimetersFromOrigin / metersBetweenLatitudeDegree / 100;
