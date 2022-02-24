@@ -62,7 +62,7 @@ namespace RoadCaptain.Host.Console.HostedServices
                 .TurningRightTo("watopia-bambino-fondo-003-before-before")
                 .TurningLeftTo("watopia-big-loop-rev-001-before-before")
                 .TurningLeftTo("watopia-ocean-lava-cliffside-loop-001")
-                .GoingStraightTo("watopia-big-loop-rev-001-after-after")
+                .TurningLeftTo("watopia-big-loop-rev-001-after-after")
                 .EndingAt("watopia-big-loop-rev-001-after-after")
                 .Build();
 
