@@ -16,22 +16,18 @@ namespace RoadCaptain.GameStates
 
         public override GameState UpdatePosition(TrackPoint position, List<Segment> segments, PlannedRoute plannedRoute)
         {
-            /*
-             * Next steps:
-             * - Determine which segment we're on based on the position
-             * - Determine direction on that segment (to which end of the segment are we moving)
-             * - Determine next turn action (left/straight/right)
-             */
-            var matchingSegments = segments
-                .Where(s => s.Contains(position))
-                .ToList();
+            // Note: We're using an IEnumerable<T> here to prevent
+            //       unnecessary ToList() calls because the foreach
+            //       loop in GetClosestMatchingSegment handles that
+            //       for us.
+            var matchingSegments = segments.Where(s => s.Contains(position));
 
-            if (!matchingSegments.Any())
+            var (segment, closestOnSegment) = GetClosestMatchingSegment(matchingSegments, position);
+
+            if (segment == null)
             {
                 return new PositionedState(ActivityId, position);
             }
-
-            var (segment, closestOnSegment) = GetClosestMatchingSegment(matchingSegments, position);
 
             if (!plannedRoute.HasStarted && plannedRoute.StartingSegmentId == segment.Id)
             {
@@ -72,20 +68,12 @@ namespace RoadCaptain.GameStates
             return this;
         }
 
-        protected static (Segment,TrackPoint) GetClosestMatchingSegment(List<Segment> segments, TrackPoint position)
+        private static (Segment,TrackPoint) GetClosestMatchingSegment(IEnumerable<Segment> segments, TrackPoint position)
         {
-            // If there is only one segment then we can
-            // do a quick exist and not bother to figure
-            // out which point is actually closest.
-            if (segments.Count == 1)
-            {
-                return (segments[0], segments[0].GetClosestPositionOnSegment(position));
-            }
-
             // For each segment find the closest track point in that segment
             // in relation to the current position
-            TrackPoint closest = null;
-            double? closestDistance = null;
+            TrackPoint closestPoint = null;
+            double? distanceToClosestPoint = null;
             Segment closestSegment = null;
 
             foreach (var segment in segments)
@@ -100,21 +88,21 @@ namespace RoadCaptain.GameStates
                     .OrderBy(d => d.Distance)
                     .First();
 
-                if (closest == null)
+                if (closestPoint == null)
                 {
-                    closest = closestOnSegment.Point;
-                    closestDistance = closestOnSegment.Distance;
+                    closestPoint = closestOnSegment.Point;
+                    distanceToClosestPoint = closestOnSegment.Distance;
                     closestSegment = segment;
                 }
-                else if (closestOnSegment.Distance < closestDistance)
+                else if (closestOnSegment.Distance < distanceToClosestPoint)
                 {
-                    closest = closestOnSegment.Point;
-                    closestDistance = closestOnSegment.Distance;
+                    closestPoint = closestOnSegment.Point;
+                    distanceToClosestPoint = closestOnSegment.Distance;
                     closestSegment = segment;
                 }
             }
 
-            return (closestSegment, closest);
+            return (closestSegment, closestPoint);
         }
     }
 }

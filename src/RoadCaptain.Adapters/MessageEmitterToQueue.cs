@@ -15,6 +15,7 @@ namespace RoadCaptain.Adapters
         private readonly ConcurrentQueue<ZwiftMessage> _queue = new();
         private readonly AutoResetEvent _autoResetEvent = new(false);
         private readonly TimeSpan _queueWaitTimeout = TimeSpan.FromMilliseconds(2000);
+        private readonly AutoResetEvent _throttleResetEvent = new(false);
 
         public MessageEmitterToQueue(
             MonitoringEvents monitoringEvents,
@@ -220,7 +221,8 @@ namespace RoadCaptain.Adapters
                     _queue.Count > _configuration.MessageThrottleHighWaterMark)
                 {
                     _autoResetEvent.Set();
-                    Thread.Sleep(_configuration.MessageThrottleDelayMilliseconds);
+
+                    _throttleResetEvent.WaitOne();
                 }
             }
             catch (Exception e)
@@ -244,6 +246,8 @@ namespace RoadCaptain.Adapters
                     {
                         return message;
                     }
+                    
+                    _throttleResetEvent.Set();
                 }
                 catch (Exception e)
                 {
