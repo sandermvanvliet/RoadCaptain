@@ -8,7 +8,7 @@ namespace RoadCaptain
     public class TrackPoint : IEquatable<TrackPoint>
     {
         private const double CoordinateEqualityTolerance = 0.0001d;
-        private static readonly double PiRad = Math.PI / 180d;
+        private const double PiRad = Math.PI / 180d;
 
         public TrackPoint(double latitude, double longitude, double altitude)
         {
