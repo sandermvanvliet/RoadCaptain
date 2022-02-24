@@ -82,9 +82,14 @@ namespace RoadCaptain.GameStates
                 // all the points of the segment whereas finding if
                 // the point is on the segment can stop at the first
                 // hit.
+                // The optimization here is to at least exclude points
+                // which we know are too far away using IsCloseToQuick()
+                // however that still enumerates all points in the 
+                // segment.
                 var closestOnSegment = segment
                     .Points
-                    .Select(p => new { Point = p, Distance = p.DistanceTo(position) })
+                    .Where(p => TrackPoint.IsCloseToQuick(p.Longitude, position))
+                    .Select(p => new { Point = p, Distance = p.DistanceTo(position)})                         
                     .OrderBy(d => d.Distance)
                     .First();
 
