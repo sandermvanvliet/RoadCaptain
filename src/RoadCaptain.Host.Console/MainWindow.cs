@@ -342,7 +342,10 @@ namespace RoadCaptain.Host.Console
 
         private static void SetPictureBoxVisibility(PictureBox pictureBox, bool isVisible)
         {
-            pictureBox.Invoke(() => pictureBox.Visible = isVisible);
+            if (pictureBox.Visible != isVisible)
+            {
+                pictureBox.Invoke(() => pictureBox.Visible = isVisible);
+            }
         }
 
         private void UpdateDirection(SegmentDirection direction)
