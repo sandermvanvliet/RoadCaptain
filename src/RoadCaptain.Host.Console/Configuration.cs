@@ -6,7 +6,7 @@ namespace RoadCaptain.Host.Console
     {
         public Configuration(IConfiguration configuration)
         {
-            configuration.Bind(this);
+            configuration.GetSection("Zwift").Bind(this);
         }
 
         public string Username { get; set; }
