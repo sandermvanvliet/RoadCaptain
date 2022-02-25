@@ -127,5 +127,30 @@ namespace RoadCaptain
                 .EndingAt("watopia-big-loop-rev-001-after-after")
                 .Build();
         }
+
+        public static PlannedRoute TestLoopTwo()
+        {
+            return new SegmentSequenceBuilder()
+                .StartingAt("watopia-bambino-fondo-001-after-after-after-after-after")
+                .GoingStraightTo("watopia-bambino-fondo-001-after-before")
+                .GoingStraightTo("watopia-bambino-fondo-002-before-before-before")
+                .TurningRightTo("watopia-climbers-gambit-001")
+                .TurningRightTo("watopia-bambino-fondo-002-before-after")
+                .TurningRightTo("watopia-beach-island-loop-004")
+                .TurningLeftTo("watopia-bambino-fondo-001-after-after-after-after-before-before")
+                .GoingStraightTo("watopia-bambino-fondo-001-after-after-after-before")
+                .GoingStraightTo("watopia-bambino-fondo-002-after")
+                .GoingStraightTo("watopia-bambino-fondo-002-before-after")
+                .GoingStraightTo("watopia-bambino-fondo-002-before-before-after")
+                .GoingStraightTo("watopia-bambino-fondo-002-before-before-before")
+                .TurningRightTo("watopia-bambino-fondo-001-after-after-before-before-before")
+                .TurningLeftTo("watopia-big-foot-hills-001-after-after")
+                .TurningRightTo("watopia-big-foot-hills-001-after-before")
+                .TurningRightTo("watopia-big-foot-hills-003-before")
+                .TurningLeftTo("watopia-big-loop-rev-001-after-after")
+                .TurningRightTo("watopia-ocean-lava-cliffside-loop-001")
+                .EndingAt("watopia-ocean-lava-cliffside-loop-001")
+                .Build();
+        }
     }
 }

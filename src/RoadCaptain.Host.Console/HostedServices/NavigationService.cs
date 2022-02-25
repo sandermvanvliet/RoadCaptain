@@ -31,7 +31,7 @@ namespace RoadCaptain.Host.Console.HostedServices
                 () => _useCase.Execute(_cancellationTokenSource.Token),
                 _cancellationTokenSource.Token);
 
-            var route = SegmentSequenceBuilder.TestLoopOne();
+            var route = SegmentSequenceBuilder.TestLoopTwo();
 
             _gameStateDispatcher.RouteSelected(route);
 

@@ -34,7 +34,7 @@ namespace RoadCaptain.UseCases
             _segmentStore = segmentStore;
             _gameStateDispatcher = gameStateDispatcher;
 
-            _route = SegmentSequenceBuilder.TestLoopOne();
+            _route = SegmentSequenceBuilder.TestLoopTwo();
         }
 
         public GameState State
