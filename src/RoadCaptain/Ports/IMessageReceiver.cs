@@ -1,6 +1,8 @@
 ﻿namespace RoadCaptain.Ports
 {
-    // TODO: rename this port because we're now also sending on it
+    /// <summary>
+    /// Read raw input from Zwift as it sends it to companion apps
+    /// </summary>
     public interface IMessageReceiver
     {
         byte[] ReceiveMessageBytes();
