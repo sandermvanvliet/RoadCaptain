@@ -222,6 +222,8 @@ namespace RoadCaptain.Adapters
                 {
                     _autoResetEvent.Set();
 
+                    Thread.Sleep(_configuration.MessageThrottleDelayMilliseconds);
+
                     _throttleResetEvent.WaitOne();
                 }
             }
@@ -247,7 +249,17 @@ namespace RoadCaptain.Adapters
                         return message;
                     }
                     
-                    _throttleResetEvent.Set();
+                    // Signal Enqueue() so that new messages can
+                    // be put on the queue again and the throttle
+                    // window has cleared.
+                    // Additional check on queue count because
+                    // TryDequeue also returns false if it couldn't
+                    // obtain a lock and in that case the queue 
+                    // might not yet be empty.
+                    if (_queue.Count == 0)
+                    {
+                        _throttleResetEvent.Set();
+                    }
                 }
                 catch (Exception e)
                 {
