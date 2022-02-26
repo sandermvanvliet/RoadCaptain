@@ -28,8 +28,19 @@ namespace RoadCaptain.GameStates
             {
                 if (routeState.CurrentSegment.Id == CurrentSegment.Id)
                 {
-                    // We're still on the same segment
-                    return this;
+                    if (routeState.CurrentPosition.Equals(CurrentPosition))
+                    {
+                        // We're still on the same segment
+                        return this;
+                    }
+
+                    return new UpcomingTurnState(
+                        ActivityId,
+                        routeState.CurrentPosition,
+                        routeState.CurrentSegment,
+                        plannedRoute,
+                        routeState.Direction,
+                        Directions);
                 }
             }
 

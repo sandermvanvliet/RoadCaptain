@@ -12,6 +12,7 @@ namespace RoadCaptain.UseCases
         private readonly IMessageReceiver _messageReceiver;
         private ulong _lastSequenceNumber;
         private int _lastRouteSequenceIndex;
+        private GameState _previousState;
 
         public NavigationUseCase(
             IGameStateReceiver gameStateReceiver,
@@ -40,7 +41,7 @@ namespace RoadCaptain.UseCases
 
         private void GameStateUpdated(GameState gameState)
         {
-            if (gameState is UpcomingTurnState turnState)
+            if (gameState is UpcomingTurnState turnState && _previousState is not UpcomingTurnState)
             {
                 if (CommandsMatchTurnToNextSegment(turnState.Directions, turnState.Route.TurnToNextSegment))
                 {
@@ -68,6 +69,8 @@ namespace RoadCaptain.UseCases
 
                 _lastRouteSequenceIndex = routeState.Route.SegmentSequenceIndex;
             }
+
+            _previousState = gameState;
         }
 
         private void LastSequenceNumberUpdated(ulong sequenceNumber)

@@ -362,6 +362,27 @@ namespace RoadCaptain.Tests.Unit.GameState
                 .Be("route-segment-2");
         }
 
+        [Fact]
+        public void
+            GivenUpcomingTurnStateAndPositionIsUpdatedOnRouteBeforeTurn_ResultingStateIsUpcomingTurnWithNewPosition()
+        {
+            _route.EnteredSegment("route-segment-1");
+            GameStates.GameState state = new OnRouteState(ActivityId, RoutePosition1, SegmentById("route-segment-1"), _route);
+            state = state.UpdatePosition(RoutePosition1Point2, _segments, _route);
+            state = state.TurnCommandAvailable("TurnLeft");
+            state = state.TurnCommandAvailable("TurnRight");
+
+            var result = state.UpdatePosition(RoutePosition1Point3, _segments, _route);
+
+            result
+                .Should()
+                .BeOfType<UpcomingTurnState>()
+                .Which
+                .CurrentPosition
+                .Should()
+                .Be(RoutePosition1Point3);
+        }
+
         private Segment SegmentById(string id)
         {
             return _segments.SingleOrDefault(s => s.Id == id);
@@ -387,7 +408,8 @@ namespace RoadCaptain.Tests.Unit.GameState
             new Segment(new List<TrackPoint>()
             {
                 RoutePosition1,
-                RoutePosition1Point2
+                RoutePosition1Point2,
+                RoutePosition1Point3
             })
             {
                 Id = "route-segment-1",
@@ -423,6 +445,7 @@ namespace RoadCaptain.Tests.Unit.GameState
 
         private static readonly TrackPoint RoutePosition1 = new(10, 1, 3);
         private static readonly TrackPoint RoutePosition1Point2 = new(10, 2, 3);
+        private static readonly TrackPoint RoutePosition1Point3 = new(10, 3, 3);
         private static readonly TrackPoint RoutePosition2 = new(12, 2, 3);
         private static readonly TrackPoint RoutePosition3 = new(13, 3, 3);
 
