@@ -33,14 +33,31 @@ namespace RoadCaptain.Adapters
             var segments = JsonConvert.DeserializeObject<List<Segment>>(File.ReadAllText(_segmentPath));
             var turns = JsonConvert.DeserializeObject<List<SegmentTurns>>(File.ReadAllText(_tracksPath));
 
+            if (segments == null)
+            {
+                throw new Exception("Was unable to deserialize segments from file");
+            }
+
+            if (turns == null)
+            {
+                throw new Exception("Was unable to deserialize turns from file");
+            }
+
             foreach (var segment in segments)
             {
                 var turnsForSegment = turns.SingleOrDefault(t => t.SegmentId == segment.Id);
 
                 if (turnsForSegment != null)
                 {
-                    segment.NextSegmentsNodeA.AddRange(turnsForSegment.TurnsA.AsTurns());
-                    segment.NextSegmentsNodeB.AddRange(turnsForSegment.TurnsB.AsTurns());
+                    if (turnsForSegment.TurnsA != null)
+                    {
+                        segment.NextSegmentsNodeA.AddRange(turnsForSegment.TurnsA.AsTurns());
+                    }
+
+                    if (turnsForSegment.TurnsB != null)
+                    {
+                        segment.NextSegmentsNodeB.AddRange(turnsForSegment.TurnsB.AsTurns());
+                    }
                 }
             }
 
