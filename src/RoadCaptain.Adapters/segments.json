@@ -51462,5 +51462,3873 @@
             }
         ],
         "Id": "watopia-big-foot-hills-004-after-after"
+    },
+    {
+        "NextSegmentsNodeA": [],
+        "NextSegmentsNodeB": [],
+        "Points": [
+            {
+                "Latitude": -11.64657,
+                "Longitude": 166.97423,
+                "Altitude": 43.0,
+                "Index": 0,
+                "DistanceOnSegment": 0.0,
+                "DistanceFromLast": 0.0,
+                "CoordinatesDecimal": "S11.64657° E166.97423°"
+            },
+            {
+                "Latitude": -11.64653,
+                "Longitude": 166.97413,
+                "Altitude": 43.0,
+                "Index": 1,
+                "DistanceOnSegment": 11.763808417605256,
+                "DistanceFromLast": 11.763808417605256,
+                "CoordinatesDecimal": "S11.64653° E166.97413°"
+            },
+            {
+                "Latitude": -11.64649,
+                "Longitude": 166.97406,
+                "Altitude": 43.0,
+                "Index": 2,
+                "DistanceOnSegment": 20.589850419895573,
+                "DistanceFromLast": 8.826042002290317,
+                "CoordinatesDecimal": "S11.64649° E166.97406°"
+            },
+            {
+                "Latitude": -11.64643,
+                "Longitude": 166.97401,
+                "Altitude": 43.0,
+                "Index": 3,
+                "DistanceOnSegment": 29.20162223610371,
+                "DistanceFromLast": 8.611771816208135,
+                "CoordinatesDecimal": "S11.64643° E166.97401°"
+            },
+            {
+                "Latitude": -11.64638,
+                "Longitude": 166.97397,
+                "Altitude": 43.0,
+                "Index": 4,
+                "DistanceOnSegment": 36.26472958481181,
+                "DistanceFromLast": 7.063107348708101,
+                "CoordinatesDecimal": "S11.64638° E166.97397°"
+            },
+            {
+                "Latitude": -11.64634,
+                "Longitude": 166.97393,
+                "Altitude": 43.0,
+                "Index": 5,
+                "DistanceOnSegment": 42.49045131408731,
+                "DistanceFromLast": 6.225721729275502,
+                "CoordinatesDecimal": "S11.64634° E166.97393°"
+            },
+            {
+                "Latitude": -11.64632,
+                "Longitude": 166.9739,
+                "Altitude": 43.0,
+                "Index": 6,
+                "DistanceOnSegment": 46.44268203412756,
+                "DistanceFromLast": 3.9522307200402516,
+                "CoordinatesDecimal": "S11.64632° E166.97390°"
+            },
+            {
+                "Latitude": -11.64629,
+                "Longitude": 166.97386,
+                "Altitude": 43.0,
+                "Index": 7,
+                "DistanceOnSegment": 51.92944796074818,
+                "DistanceFromLast": 5.486765926620623,
+                "CoordinatesDecimal": "S11.64629° E166.97386°"
+            },
+            {
+                "Latitude": -11.64626,
+                "Longitude": 166.97382,
+                "Altitude": 43.0,
+                "Index": 8,
+                "DistanceOnSegment": 57.41621426320338,
+                "DistanceFromLast": 5.486766302455203,
+                "CoordinatesDecimal": "S11.64626° E166.97382°"
+            },
+            {
+                "Latitude": -11.64622,
+                "Longitude": 166.97378,
+                "Altitude": 43.0,
+                "Index": 9,
+                "DistanceOnSegment": 63.64193730612851,
+                "DistanceFromLast": 6.225723042925132,
+                "CoordinatesDecimal": "S11.64622° E166.97378°"
+            },
+            {
+                "Latitude": -11.64618,
+                "Longitude": 166.97372,
+                "Altitude": 43.0,
+                "Index": 10,
+                "DistanceOnSegment": 71.5464012722282,
+                "DistanceFromLast": 7.904463966099684,
+                "CoordinatesDecimal": "S11.64618° E166.97372°"
+            },
+            {
+                "Latitude": -11.64615,
+                "Longitude": 166.97367,
+                "Altitude": 42.6,
+                "Index": 11,
+                "DistanceOnSegment": 77.93224773861336,
+                "DistanceFromLast": 6.385846466385157,
+                "CoordinatesDecimal": "S11.64615° E166.97367°"
+            },
+            {
+                "Latitude": -11.64612,
+                "Longitude": 166.9736,
+                "Altitude": 42.0,
+                "Index": 12,
+                "DistanceOnSegment": 86.25355508943103,
+                "DistanceFromLast": 8.321307350817671,
+                "CoordinatesDecimal": "S11.64612° E166.97360°"
+            },
+            {
+                "Latitude": -11.64611,
+                "Longitude": 166.97353,
+                "Altitude": 41.4,
+                "Index": 13,
+                "DistanceOnSegment": 93.95762641694749,
+                "DistanceFromLast": 7.704071327516464,
+                "CoordinatesDecimal": "S11.64611° E166.97353°"
+            },
+            {
+                "Latitude": -11.64607,
+                "Longitude": 166.97343,
+                "Altitude": 40.8,
+                "Index": 14,
+                "DistanceOnSegment": 105.72145151830715,
+                "DistanceFromLast": 11.763825101359656,
+                "CoordinatesDecimal": "S11.64607° E166.97343°"
+            },
+            {
+                "Latitude": -11.64604,
+                "Longitude": 166.97335,
+                "Altitude": 40.0,
+                "Index": 15,
+                "DistanceOnSegment": 115.05070102195036,
+                "DistanceFromLast": 9.32924950364321,
+                "CoordinatesDecimal": "S11.64604° E166.97335°"
+            },
+            {
+                "Latitude": -11.64596,
+                "Longitude": 166.97328,
+                "Altitude": 40.0,
+                "Index": 16,
+                "DistanceOnSegment": 126.76598705902391,
+                "DistanceFromLast": 11.715286037073556,
+                "CoordinatesDecimal": "S11.64596° E166.97328°"
+            },
+            {
+                "Latitude": -11.64587,
+                "Longitude": 166.97327,
+                "Altitude": 40.0,
+                "Index": 17,
+                "DistanceOnSegment": 136.83261376181576,
+                "DistanceFromLast": 10.06662670279185,
+                "CoordinatesDecimal": "S11.64587° E166.97327°"
+            },
+            {
+                "Latitude": -11.64577,
+                "Longitude": 166.97324,
+                "Altitude": 40.0,
+                "Index": 18,
+                "DistanceOnSegment": 148.42215901866058,
+                "DistanceFromLast": 11.58954525684483,
+                "CoordinatesDecimal": "S11.64577° E166.97324°"
+            },
+            {
+                "Latitude": -11.64568,
+                "Longitude": 166.97324,
+                "Altitude": 40.2,
+                "Index": 19,
+                "DistanceOnSegment": 158.42970241668704,
+                "DistanceFromLast": 10.007543398026467,
+                "CoordinatesDecimal": "S11.64568° E166.97324°"
+            },
+            {
+                "Latitude": -11.64559,
+                "Longitude": 166.97321,
+                "Altitude": 40.6,
+                "Index": 20,
+                "DistanceOnSegment": 168.95706586708127,
+                "DistanceFromLast": 10.527363450394239,
+                "CoordinatesDecimal": "S11.64559° E166.97321°"
+            },
+            {
+                "Latitude": -11.64552,
+                "Longitude": 166.97313,
+                "Altitude": 41.2,
+                "Index": 21,
+                "DistanceOnSegment": 180.64006275147233,
+                "DistanceFromLast": 11.682996884391052,
+                "CoordinatesDecimal": "S11.64552° E166.97313°"
+            },
+            {
+                "Latitude": -11.64547,
+                "Longitude": 166.97307,
+                "Altitude": 41.4,
+                "Index": 22,
+                "DistanceOnSegment": 189.21961097129764,
+                "DistanceFromLast": 8.5795482198253,
+                "CoordinatesDecimal": "S11.64547° E166.97307°"
+            },
+            {
+                "Latitude": -11.64543,
+                "Longitude": 166.97299,
+                "Altitude": 39.6,
+                "Index": 23,
+                "DistanceOnSegment": 199.00175004672923,
+                "DistanceFromLast": 9.782139075431596,
+                "CoordinatesDecimal": "S11.64543° E166.97299°"
+            },
+            {
+                "Latitude": -11.64538,
+                "Longitude": 166.97292,
+                "Altitude": 37.0,
+                "Index": 24,
+                "DistanceOnSegment": 208.43718114616922,
+                "DistanceFromLast": 9.435431099439983,
+                "CoordinatesDecimal": "S11.64538° E166.97292°"
+            },
+            {
+                "Latitude": -11.6454,
+                "Longitude": 166.97281,
+                "Altitude": 35.4,
+                "Index": 25,
+                "DistanceOnSegment": 220.62151998358894,
+                "DistanceFromLast": 12.184338837419713,
+                "CoordinatesDecimal": "S11.64540° E166.97281°"
+            },
+            {
+                "Latitude": -11.64549,
+                "Longitude": 166.97275,
+                "Altitude": 34.4,
+                "Index": 26,
+                "DistanceOnSegment": 232.5734574265452,
+                "DistanceFromLast": 11.951937442956241,
+                "CoordinatesDecimal": "S11.64549° E166.97275°"
+            },
+            {
+                "Latitude": -11.6456,
+                "Longitude": 166.97275,
+                "Altitude": 34.2,
+                "Index": 27,
+                "DistanceOnSegment": 244.80489935737864,
+                "DistanceFromLast": 12.23144193083345,
+                "CoordinatesDecimal": "S11.64560° E166.97275°"
+            },
+            {
+                "Latitude": -11.64563,
+                "Longitude": 166.97277,
+                "Altitude": 34.2,
+                "Index": 28,
+                "DistanceOnSegment": 248.78887777689,
+                "DistanceFromLast": 3.983978419511344,
+                "CoordinatesDecimal": "S11.64563° E166.97277°"
+            },
+            {
+                "Latitude": -11.64567,
+                "Longitude": 166.97277,
+                "Altitude": 34.2,
+                "Index": 29,
+                "DistanceOnSegment": 253.2366748427015,
+                "DistanceFromLast": 4.447797065811488,
+                "CoordinatesDecimal": "S11.64567° E166.97277°"
+            },
+            {
+                "Latitude": -11.64571,
+                "Longitude": 166.97277,
+                "Altitude": 34.4,
+                "Index": 30,
+                "DistanceOnSegment": 257.68447190831546,
+                "DistanceFromLast": 4.447797065613965,
+                "CoordinatesDecimal": "S11.64571° E166.97277°"
+            },
+            {
+                "Latitude": -11.64575,
+                "Longitude": 166.97278,
+                "Altitude": 34.4,
+                "Index": 31,
+                "DistanceOnSegment": 262.2636583681518,
+                "DistanceFromLast": 4.579186459836381,
+                "CoordinatesDecimal": "S11.64575° E166.97278°"
+            },
+            {
+                "Latitude": -11.6458,
+                "Longitude": 166.9728,
+                "Altitude": 34.4,
+                "Index": 32,
+                "DistanceOnSegment": 268.2348372571062,
+                "DistanceFromLast": 5.971178888954402,
+                "CoordinatesDecimal": "S11.64580° E166.97280°"
+            },
+            {
+                "Latitude": -11.64585,
+                "Longitude": 166.97281,
+                "Altitude": 34.6,
+                "Index": 33,
+                "DistanceOnSegment": 273.90024354114826,
+                "DistanceFromLast": 5.665406284042025,
+                "CoordinatesDecimal": "S11.64585° E166.97281°"
+            },
+            {
+                "Latitude": -11.64591,
+                "Longitude": 166.97283,
+                "Altitude": 34.6,
+                "Index": 34,
+                "DistanceOnSegment": 280.91848524482833,
+                "DistanceFromLast": 7.01824170368005,
+                "CoordinatesDecimal": "S11.64591° E166.97283°"
+            },
+            {
+                "Latitude": -11.64597,
+                "Longitude": 166.97284,
+                "Altitude": 34.6,
+                "Index": 35,
+                "DistanceOnSegment": 287.6784830454213,
+                "DistanceFromLast": 6.75999780059296,
+                "CoordinatesDecimal": "S11.64597° E166.97284°"
+            },
+            {
+                "Latitude": -11.64603,
+                "Longitude": 166.97285,
+                "Altitude": 34.6,
+                "Index": 36,
+                "DistanceOnSegment": 294.43848080814587,
+                "DistanceFromLast": 6.759997762724592,
+                "CoordinatesDecimal": "S11.64603° E166.97285°"
+            },
+            {
+                "Latitude": -11.64609,
+                "Longitude": 166.97283,
+                "Altitude": 34.0,
+                "Index": 37,
+                "DistanceOnSegment": 301.45672207489923,
+                "DistanceFromLast": 7.0182412667533844,
+                "CoordinatesDecimal": "S11.64609° E166.97283°"
+            },
+            {
+                "Latitude": -11.64614,
+                "Longitude": 166.97278,
+                "Altitude": 33.0,
+                "Index": 38,
+                "DistanceOnSegment": 309.23887759248686,
+                "DistanceFromLast": 7.782155517587631,
+                "CoordinatesDecimal": "S11.64614° E166.97278°"
+            },
+            {
+                "Latitude": -11.64613,
+                "Longitude": 166.9727,
+                "Altitude": 31.8,
+                "Index": 39,
+                "DistanceOnSegment": 318.0220093370579,
+                "DistanceFromLast": 8.783131744571069,
+                "CoordinatesDecimal": "S11.64613° E166.97270°"
+            },
+            {
+                "Latitude": -11.64607,
+                "Longitude": 166.97266,
+                "Altitude": 31.6,
+                "Index": 40,
+                "DistanceOnSegment": 325.98996202080264,
+                "DistanceFromLast": 7.967952683744742,
+                "CoordinatesDecimal": "S11.64607° E166.97266°"
+            },
+            {
+                "Latitude": -11.646,
+                "Longitude": 166.9726,
+                "Altitude": 31.2,
+                "Index": 41,
+                "DistanceOnSegment": 336.1527780618267,
+                "DistanceFromLast": 10.162816041024065,
+                "CoordinatesDecimal": "S11.64600° E166.97260°"
+            },
+            {
+                "Latitude": -11.64597,
+                "Longitude": 166.97251,
+                "Altitude": 30.4,
+                "Index": 42,
+                "DistanceOnSegment": 346.50641248421636,
+                "DistanceFromLast": 10.353634422389652,
+                "CoordinatesDecimal": "S11.64597° E166.97251°"
+            },
+            {
+                "Latitude": -11.64602,
+                "Longitude": 166.97241,
+                "Altitude": 28.4,
+                "Index": 43,
+                "DistanceOnSegment": 358.73406731330414,
+                "DistanceFromLast": 12.227654829087808,
+                "CoordinatesDecimal": "S11.64602° E166.97241°"
+            },
+            {
+                "Latitude": -11.64613,
+                "Longitude": 166.97238,
+                "Altitude": 26.8,
+                "Index": 44,
+                "DistanceOnSegment": 371.394343545294,
+                "DistanceFromLast": 12.66027623198987,
+                "CoordinatesDecimal": "S11.64613° E166.97238°"
+            },
+            {
+                "Latitude": -11.64624,
+                "Longitude": 166.97235,
+                "Altitude": 24.8,
+                "Index": 45,
+                "DistanceOnSegment": 384.0546194430425,
+                "DistanceFromLast": 12.660275897748505,
+                "CoordinatesDecimal": "S11.64624° E166.97235°"
+            },
+            {
+                "Latitude": -11.64626,
+                "Longitude": 166.97234,
+                "Altitude": 24.6,
+                "Index": 46,
+                "DistanceOnSegment": 386.53086057475,
+                "DistanceFromLast": 2.4762411317075155,
+                "CoordinatesDecimal": "S11.64626° E166.97234°"
+            },
+            {
+                "Latitude": -11.64629,
+                "Longitude": 166.97234,
+                "Altitude": 25.0,
+                "Index": 47,
+                "DistanceOnSegment": 389.866708374158,
+                "DistanceFromLast": 3.3358477994079965,
+                "CoordinatesDecimal": "S11.64629° E166.97234°"
+            },
+            {
+                "Latitude": -11.6463,
+                "Longitude": 166.97231,
+                "Altitude": 25.0,
+                "Index": 48,
+                "DistanceOnSegment": 393.3179164001043,
+                "DistanceFromLast": 3.4512080259462947,
+                "CoordinatesDecimal": "S11.64630° E166.97231°"
+            },
+            {
+                "Latitude": -11.64631,
+                "Longitude": 166.97226,
+                "Altitude": 25.0,
+                "Index": 49,
+                "DistanceOnSegment": 398.87557380747046,
+                "DistanceFromLast": 5.557657407366123,
+                "CoordinatesDecimal": "S11.64631° E166.97226°"
+            },
+            {
+                "Latitude": -11.64631,
+                "Longitude": 166.97222,
+                "Altitude": 25.0,
+                "Index": 50,
+                "DistanceOnSegment": 403.2318014344818,
+                "DistanceFromLast": 4.356227627011339,
+                "CoordinatesDecimal": "S11.64631° E166.97222°"
+            },
+            {
+                "Latitude": -11.6463,
+                "Longitude": 166.97217,
+                "Altitude": 25.2,
+                "Index": 51,
+                "DistanceOnSegment": 408.78945884184793,
+                "DistanceFromLast": 5.557657407366123,
+                "CoordinatesDecimal": "S11.64630° E166.97217°"
+            },
+            {
+                "Latitude": -11.64627,
+                "Longitude": 166.97212,
+                "Altitude": 25.2,
+                "Index": 52,
+                "DistanceOnSegment": 415.1753033065788,
+                "DistanceFromLast": 6.385844464730874,
+                "CoordinatesDecimal": "S11.64627° E166.97212°"
+            },
+            {
+                "Latitude": -11.64624,
+                "Longitude": 166.97208,
+                "Altitude": 25.4,
+                "Index": 53,
+                "DistanceOnSegment": 420.6620698552939,
+                "DistanceFromLast": 5.4867665487150745,
+                "CoordinatesDecimal": "S11.64624° E166.97208°"
+            },
+            {
+                "Latitude": -11.64619,
+                "Longitude": 166.97205,
+                "Altitude": 25.6,
+                "Index": 54,
+                "DistanceOnSegment": 427.11072793971596,
+                "DistanceFromLast": 6.448658084422053,
+                "CoordinatesDecimal": "S11.64619° E166.97205°"
+            },
+            {
+                "Latitude": -11.64614,
+                "Longitude": 166.97202,
+                "Altitude": 25.8,
+                "Index": 55,
+                "DistanceOnSegment": 433.55938632186815,
+                "DistanceFromLast": 6.448658382152179,
+                "CoordinatesDecimal": "S11.64614° E166.97202°"
+            },
+            {
+                "Latitude": -11.64608,
+                "Longitude": 166.97204,
+                "Altitude": 25.4,
+                "Index": 56,
+                "DistanceOnSegment": 440.57762746722494,
+                "DistanceFromLast": 7.018241145356815,
+                "CoordinatesDecimal": "S11.64608° E166.97204°"
+            },
+            {
+                "Latitude": -11.64602,
+                "Longitude": 166.97208,
+                "Altitude": 25.2,
+                "Index": 57,
+                "DistanceOnSegment": 448.54558057933946,
+                "DistanceFromLast": 7.967953112114507,
+                "CoordinatesDecimal": "S11.64602° E166.97208°"
+            },
+            {
+                "Latitude": -11.64594,
+                "Longitude": 166.97208,
+                "Altitude": 24.8,
+                "Index": 58,
+                "DistanceOnSegment": 457.44117471096246,
+                "DistanceFromLast": 8.895594131622977,
+                "CoordinatesDecimal": "S11.64594° E166.97208°"
+            },
+            {
+                "Latitude": -11.64587,
+                "Longitude": 166.97206,
+                "Altitude": 25.2,
+                "Index": 59,
+                "DistanceOnSegment": 465.5238302766157,
+                "DistanceFromLast": 8.082655565653202,
+                "CoordinatesDecimal": "S11.64587° E166.97206°"
+            },
+            {
+                "Latitude": -11.6458,
+                "Longitude": 166.97204,
+                "Altitude": 25.6,
+                "Index": 60,
+                "DistanceOnSegment": 473.60648599025836,
+                "DistanceFromLast": 8.082655713642694,
+                "CoordinatesDecimal": "S11.64580° E166.97204°"
+            },
+            {
+                "Latitude": -11.64573,
+                "Longitude": 166.97202,
+                "Altitude": 25.6,
+                "Index": 61,
+                "DistanceOnSegment": 481.6891418515093,
+                "DistanceFromLast": 8.082655861250919,
+                "CoordinatesDecimal": "S11.64573° E166.97202°"
+            },
+            {
+                "Latitude": -11.64565,
+                "Longitude": 166.97204,
+                "Altitude": 25.4,
+                "Index": 62,
+                "DistanceOnSegment": 490.84751484571774,
+                "DistanceFromLast": 9.158372994208438,
+                "CoordinatesDecimal": "S11.64565° E166.97204°"
+            },
+            {
+                "Latitude": -11.6456,
+                "Longitude": 166.97205,
+                "Altitude": 25.4,
+                "Index": 63,
+                "DistanceOnSegment": 496.51292128037267,
+                "DistanceFromLast": 5.665406434654931,
+                "CoordinatesDecimal": "S11.64560° E166.97205°"
+            },
+            {
+                "Latitude": -11.64556,
+                "Longitude": 166.97205,
+                "Altitude": 25.4,
+                "Index": 64,
+                "DistanceOnSegment": 500.96071834618414,
+                "DistanceFromLast": 4.447797065811488,
+                "CoordinatesDecimal": "S11.64556° E166.97205°"
+            },
+            {
+                "Latitude": -11.64551,
+                "Longitude": 166.97206,
+                "Altitude": 25.4,
+                "Index": 65,
+                "DistanceOnSegment": 506.6261248486141,
+                "DistanceFromLast": 5.66540650242994,
+                "CoordinatesDecimal": "S11.64551° E166.97206°"
+            },
+            {
+                "Latitude": -11.64546,
+                "Longitude": 166.97206,
+                "Altitude": 25.4,
+                "Index": 66,
+                "DistanceOnSegment": 512.185871180829,
+                "DistanceFromLast": 5.55974633221498,
+                "CoordinatesDecimal": "S11.64546° E166.97206°"
+            },
+            {
+                "Latitude": -11.6454,
+                "Longitude": 166.97204,
+                "Altitude": 24.8,
+                "Index": 67,
+                "DistanceOnSegment": 519.2041139795027,
+                "DistanceFromLast": 7.018242798673643,
+                "CoordinatesDecimal": "S11.64540° E166.97204°"
+            },
+            {
+                "Latitude": -11.64537,
+                "Longitude": 166.97197,
+                "Altitude": 23.8,
+                "Index": 68,
+                "DistanceOnSegment": 527.5254401724409,
+                "DistanceFromLast": 8.321326192938136,
+                "CoordinatesDecimal": "S11.64537° E166.97197°"
+            },
+            {
+                "Latitude": -11.64537,
+                "Longitude": 166.97188,
+                "Altitude": 23.2,
+                "Index": 69,
+                "DistanceOnSegment": 537.3269854727047,
+                "DistanceFromLast": 9.801545300263758,
+                "CoordinatesDecimal": "S11.64537° E166.97188°"
+            },
+            {
+                "Latitude": -11.64539,
+                "Longitude": 166.97179,
+                "Altitude": 21.6,
+                "Index": 70,
+                "DistanceOnSegment": 547.377657492367,
+                "DistanceFromLast": 10.050672019662287,
+                "CoordinatesDecimal": "S11.64539° E166.97179°"
+            },
+            {
+                "Latitude": -11.64541,
+                "Longitude": 166.9717,
+                "Altitude": 19.4,
+                "Index": 71,
+                "DistanceOnSegment": 557.4283288243294,
+                "DistanceFromLast": 10.050671331962343,
+                "CoordinatesDecimal": "S11.64541° E166.97170°"
+            },
+            {
+                "Latitude": -11.6454,
+                "Longitude": 166.97165,
+                "Altitude": 18.2,
+                "Index": 72,
+                "DistanceOnSegment": 562.986003504303,
+                "DistanceFromLast": 5.557674679973613,
+                "CoordinatesDecimal": "S11.64540° E166.97165°"
+            },
+            {
+                "Latitude": -11.64538,
+                "Longitude": 166.97159,
+                "Altitude": 17.2,
+                "Index": 73,
+                "DistanceOnSegment": 569.8884396942763,
+                "DistanceFromLast": 6.9024361899733275,
+                "CoordinatesDecimal": "S11.64538° E166.97159°"
+            },
+            {
+                "Latitude": -11.64536,
+                "Longitude": 166.97153,
+                "Altitude": 16.8,
+                "Index": 74,
+                "DistanceOnSegment": 576.7908763262774,
+                "DistanceFromLast": 6.902436632001149,
+                "CoordinatesDecimal": "S11.64536° E166.97153°"
+            },
+            {
+                "Latitude": -11.64531,
+                "Longitude": 166.97147,
+                "Altitude": 16.4,
+                "Index": 75,
+                "DistanceOnSegment": 585.3704274103487,
+                "DistanceFromLast": 8.579551084071394,
+                "CoordinatesDecimal": "S11.64531° E166.97147°"
+            },
+            {
+                "Latitude": -11.64523,
+                "Longitude": 166.97144,
+                "Altitude": 16.0,
+                "Index": 76,
+                "DistanceOnSegment": 594.847034363136,
+                "DistanceFromLast": 9.47660695278729,
+                "CoordinatesDecimal": "S11.64523° E166.97144°"
+            },
+            {
+                "Latitude": -11.64515,
+                "Longitude": 166.97141,
+                "Altitude": 16.0,
+                "Index": 77,
+                "DistanceOnSegment": 604.323641640058,
+                "DistanceFromLast": 9.476607276921927,
+                "CoordinatesDecimal": "S11.64515° E166.97141°"
+            },
+            {
+                "Latitude": -11.64509,
+                "Longitude": 166.97135,
+                "Altitude": 15.4,
+                "Index": 78,
+                "DistanceOnSegment": 613.662244625928,
+                "DistanceFromLast": 9.338602985870013,
+                "CoordinatesDecimal": "S11.64509° E166.97135°"
+            },
+            {
+                "Latitude": -11.64508,
+                "Longitude": 166.97126,
+                "Altitude": 15.0,
+                "Index": 79,
+                "DistanceOnSegment": 623.5266715437314,
+                "DistanceFromLast": 9.864426917803346,
+                "CoordinatesDecimal": "S11.64508° E166.97126°"
+            },
+            {
+                "Latitude": -11.64509,
+                "Longitude": 166.97117,
+                "Altitude": 14.6,
+                "Index": 80,
+                "DistanceOnSegment": 633.3910984615347,
+                "DistanceFromLast": 9.864426917803346,
+                "CoordinatesDecimal": "S11.64509° E166.97117°"
+            },
+            {
+                "Latitude": -11.64512,
+                "Longitude": 166.97106,
+                "Altitude": 14.2,
+                "Index": 81,
+                "DistanceOnSegment": 645.8265543469571,
+                "DistanceFromLast": 12.435455885422348,
+                "CoordinatesDecimal": "S11.64512° E166.97106°"
+            },
+            {
+                "Latitude": -11.64516,
+                "Longitude": 166.97097,
+                "Altitude": 13.8,
+                "Index": 82,
+                "DistanceOnSegment": 656.5900736586126,
+                "DistanceFromLast": 10.763519311655536,
+                "CoordinatesDecimal": "S11.64516° E166.97097°"
+            },
+            {
+                "Latitude": -11.64522,
+                "Longitude": 166.97089,
+                "Altitude": 13.6,
+                "Index": 83,
+                "DistanceOnSegment": 667.5636332586123,
+                "DistanceFromLast": 10.973559599999676,
+                "CoordinatesDecimal": "S11.64522° E166.97089°"
+            },
+            {
+                "Latitude": -11.6453,
+                "Longitude": 166.97083,
+                "Altitude": 13.2,
+                "Index": 84,
+                "DistanceOnSegment": 678.6012750138979,
+                "DistanceFromLast": 11.037641755285582,
+                "CoordinatesDecimal": "S11.64530° E166.97083°"
+            },
+            {
+                "Latitude": -11.64538,
+                "Longitude": 166.97075,
+                "Altitude": 13.0,
+                "Index": 85,
+                "DistanceOnSegment": 691.0527408381702,
+                "DistanceFromLast": 12.451465824272361,
+                "CoordinatesDecimal": "S11.64538° E166.97075°"
+            },
+            {
+                "Latitude": -11.64546,
+                "Longitude": 166.97068,
+                "Altitude": 12.8,
+                "Index": 86,
+                "DistanceOnSegment": 702.7680372252355,
+                "DistanceFromLast": 11.715296387065353,
+                "CoordinatesDecimal": "S11.64546° E166.97068°"
+            },
+            {
+                "Latitude": -11.64553,
+                "Longitude": 166.9706,
+                "Altitude": 12.6,
+                "Index": 87,
+                "DistanceOnSegment": 714.4510355119014,
+                "DistanceFromLast": 11.682998286665917,
+                "CoordinatesDecimal": "S11.64553° E166.97060°"
+            },
+            {
+                "Latitude": -11.64559,
+                "Longitude": 166.97051,
+                "Altitude": 12.4,
+                "Index": 88,
+                "DistanceOnSegment": 726.307750112338,
+                "DistanceFromLast": 11.856714600436536,
+                "CoordinatesDecimal": "S11.64559° E166.97051°"
+            },
+            {
+                "Latitude": -11.64564,
+                "Longitude": 166.97043,
+                "Altitude": 12.2,
+                "Index": 89,
+                "DistanceOnSegment": 736.6430312079691,
+                "DistanceFromLast": 10.33528109563109,
+                "CoordinatesDecimal": "S11.64564° E166.97043°"
+            },
+            {
+                "Latitude": -11.64567,
+                "Longitude": 166.97038,
+                "Altitude": 12.0,
+                "Index": 90,
+                "DistanceOnSegment": 743.0288861929195,
+                "DistanceFromLast": 6.3858549849503685,
+                "CoordinatesDecimal": "S11.64567° E166.97038°"
+            },
+            {
+                "Latitude": -11.64568,
+                "Longitude": 166.97028,
+                "Altitude": 11.8,
+                "Index": 91,
+                "DistanceOnSegment": 753.9760989690052,
+                "DistanceFromLast": 10.947212776085715,
+                "CoordinatesDecimal": "S11.64568° E166.97028°"
+            },
+            {
+                "Latitude": -11.64568,
+                "Longitude": 166.9702,
+                "Altitude": 11.8,
+                "Index": 92,
+                "DistanceOnSegment": 762.6885739647096,
+                "DistanceFromLast": 8.7124749957044,
+                "CoordinatesDecimal": "S11.64568° E166.97020°"
+            },
+            {
+                "Latitude": -11.64569,
+                "Longitude": 166.97013,
+                "Altitude": 11.6,
+                "Index": 93,
+                "DistanceOnSegment": 770.3926569606804,
+                "DistanceFromLast": 7.704082995970753,
+                "CoordinatesDecimal": "S11.64569° E166.97013°"
+            },
+            {
+                "Latitude": -11.64571,
+                "Longitude": 166.97003,
+                "Altitude": 11.4,
+                "Index": 94,
+                "DistanceOnSegment": 781.507995000796,
+                "DistanceFromLast": 11.115338040115615,
+                "CoordinatesDecimal": "S11.64571° E166.97003°"
+            },
+            {
+                "Latitude": -11.64577,
+                "Longitude": 166.96998,
+                "Altitude": 11.2,
+                "Index": 95,
+                "DistanceOnSegment": 790.1197757349263,
+                "DistanceFromLast": 8.611780734130335,
+                "CoordinatesDecimal": "S11.64577° E166.96998°"
+            },
+            {
+                "Latitude": -11.64586,
+                "Longitude": 166.96998,
+                "Altitude": 10.8,
+                "Index": 96,
+                "DistanceOnSegment": 800.1273191329527,
+                "DistanceFromLast": 10.007543398026467,
+                "CoordinatesDecimal": "S11.64586° E166.96998°"
+            },
+            {
+                "Latitude": -11.64595,
+                "Longitude": 166.97,
+                "Altitude": 10.6,
+                "Index": 97,
+                "DistanceOnSegment": 810.369150925539,
+                "DistanceFromLast": 10.241831792586284,
+                "CoordinatesDecimal": "S11.64595° E166.97000°"
+            },
+            {
+                "Latitude": -11.64604,
+                "Longitude": 166.97003,
+                "Altitude": 10.2,
+                "Index": 98,
+                "DistanceOnSegment": 820.8965130628512,
+                "DistanceFromLast": 10.527362137312249,
+                "CoordinatesDecimal": "S11.64604° E166.97003°"
+            },
+            {
+                "Latitude": -11.64613,
+                "Longitude": 166.97006,
+                "Altitude": 10.2,
+                "Index": 99,
+                "DistanceOnSegment": 831.4238748709263,
+                "DistanceFromLast": 10.527361808075113,
+                "CoordinatesDecimal": "S11.64613° E166.97006°"
+            },
+            {
+                "Latitude": -11.64622,
+                "Longitude": 166.9701,
+                "Altitude": 10.6,
+                "Index": 100,
+                "DistanceOnSegment": 842.3384368151093,
+                "DistanceFromLast": 10.91456194418303,
+                "CoordinatesDecimal": "S11.64622° E166.97010°"
+            },
+            {
+                "Latitude": -11.64631,
+                "Longitude": 166.97013,
+                "Altitude": 11.0,
+                "Index": 101,
+                "DistanceOnSegment": 852.8657979675847,
+                "DistanceFromLast": 10.527361152475493,
+                "CoordinatesDecimal": "S11.64631° E166.97013°"
+            },
+            {
+                "Latitude": -11.64639,
+                "Longitude": 166.97016,
+                "Altitude": 11.6,
+                "Index": 102,
+                "DistanceOnSegment": 862.3424005432804,
+                "DistanceFromLast": 9.476602575695646,
+                "CoordinatesDecimal": "S11.64639° E166.97016°"
+            },
+            {
+                "Latitude": -11.64647,
+                "Longitude": 166.97019,
+                "Altitude": 12.2,
+                "Index": 103,
+                "DistanceOnSegment": 871.8190027958779,
+                "DistanceFromLast": 9.476602252597495,
+                "CoordinatesDecimal": "S11.64647° E166.97019°"
+            },
+            {
+                "Latitude": -11.64654,
+                "Longitude": 166.97022,
+                "Altitude": 13.0,
+                "Index": 104,
+                "DistanceOnSegment": 880.2605380190553,
+                "DistanceFromLast": 8.441535223177413,
+                "CoordinatesDecimal": "S11.64654° E166.97022°"
+            },
+            {
+                "Latitude": -11.64661,
+                "Longitude": 166.97025,
+                "Altitude": 13.4,
+                "Index": 105,
+                "DistanceOnSegment": 888.702072922789,
+                "DistanceFromLast": 8.441534903733688,
+                "CoordinatesDecimal": "S11.64661° E166.97025°"
+            },
+            {
+                "Latitude": -11.64668,
+                "Longitude": 166.97027,
+                "Altitude": 14.0,
+                "Index": 106,
+                "DistanceOnSegment": 896.7847269259412,
+                "DistanceFromLast": 8.0826540031522,
+                "CoordinatesDecimal": "S11.64668° E166.97027°"
+            },
+            {
+                "Latitude": -11.64674,
+                "Longitude": 166.97029,
+                "Altitude": 14.4,
+                "Index": 107,
+                "DistanceOnSegment": 903.8029666120595,
+                "DistanceFromLast": 7.018239686118368,
+                "CoordinatesDecimal": "S11.64674° E166.97029°"
+            },
+            {
+                "Latitude": -11.6468,
+                "Longitude": 166.97031,
+                "Altitude": 14.8,
+                "Index": 108,
+                "DistanceOnSegment": 910.8212061524567,
+                "DistanceFromLast": 7.018239540397147,
+                "CoordinatesDecimal": "S11.64680° E166.97031°"
+            },
+            {
+                "Latitude": -11.64687,
+                "Longitude": 166.97032,
+                "Altitude": 15.4,
+                "Index": 109,
+                "DistanceOnSegment": 918.6806697374695,
+                "DistanceFromLast": 7.859463585012757,
+                "CoordinatesDecimal": "S11.64687° E166.97032°"
+            },
+            {
+                "Latitude": -11.64693,
+                "Longitude": 166.97031,
+                "Altitude": 15.4,
+                "Index": 110,
+                "DistanceOnSegment": 925.4406669316478,
+                "DistanceFromLast": 6.759997194178293,
+                "CoordinatesDecimal": "S11.64693° E166.97031°"
+            },
+            {
+                "Latitude": -11.64698,
+                "Longitude": 166.97027,
+                "Altitude": 15.2,
+                "Index": 111,
+                "DistanceOnSegment": 932.5037689662779,
+                "DistanceFromLast": 7.063102034630114,
+                "CoordinatesDecimal": "S11.64698° E166.97027°"
+            },
+            {
+                "Latitude": -11.64703,
+                "Longitude": 166.97022,
+                "Altitude": 14.8,
+                "Index": 112,
+                "DistanceOnSegment": 940.2859122848971,
+                "DistanceFromLast": 7.782143318619174,
+                "CoordinatesDecimal": "S11.64703° E166.97022°"
+            },
+            {
+                "Latitude": -11.64707,
+                "Longitude": 166.97014,
+                "Altitude": 14.4,
+                "Index": 113,
+                "DistanceOnSegment": 950.0680066998964,
+                "DistanceFromLast": 9.78209441499923,
+                "CoordinatesDecimal": "S11.64707° E166.97014°"
+            },
+            {
+                "Latitude": -11.64707,
+                "Longitude": 166.97006,
+                "Altitude": 14.0,
+                "Index": 114,
+                "DistanceOnSegment": 958.7804381303258,
+                "DistanceFromLast": 8.712431430429449,
+                "CoordinatesDecimal": "S11.64707° E166.97006°"
+            },
+            {
+                "Latitude": -11.64703,
+                "Longitude": 166.96998,
+                "Altitude": 13.6,
+                "Index": 115,
+                "DistanceOnSegment": 968.5625325425682,
+                "DistanceFromLast": 9.782094412242417,
+                "CoordinatesDecimal": "S11.64703° E166.96998°"
+            },
+            {
+                "Latitude": -11.64702,
+                "Longitude": 166.96988,
+                "Altitude": 13.2,
+                "Index": 116,
+                "DistanceOnSegment": 979.5096927028329,
+                "DistanceFromLast": 10.947160160264769,
+                "CoordinatesDecimal": "S11.64702° E166.96988°"
+            },
+            {
+                "Latitude": -11.64705,
+                "Longitude": 166.9698,
+                "Altitude": 12.6,
+                "Index": 117,
+                "DistanceOnSegment": 988.8389135216554,
+                "DistanceFromLast": 9.329220818822526,
+                "CoordinatesDecimal": "S11.64705° E166.96980°"
+            },
+            {
+                "Latitude": -11.6471,
+                "Longitude": 166.96971,
+                "Altitude": 12.2,
+                "Index": 118,
+                "DistanceOnSegment": 1000.1074489667451,
+                "DistanceFromLast": 11.268535445089652,
+                "CoordinatesDecimal": "S11.64710° E166.96971°"
+            },
+            {
+                "Latitude": -11.64715,
+                "Longitude": 166.96963,
+                "Altitude": 12.0,
+                "Index": 119,
+                "DistanceOnSegment": 1010.4426901671038,
+                "DistanceFromLast": 10.335241200358718,
+                "CoordinatesDecimal": "S11.64715° E166.96963°"
+            },
+            {
+                "Latitude": -11.64718,
+                "Longitude": 166.96952,
+                "Altitude": 12.4,
+                "Index": 120,
+                "DistanceOnSegment": 1022.8780605320588,
+                "DistanceFromLast": 12.435370364954968,
+                "CoordinatesDecimal": "S11.64718° E166.96952°"
+            },
+            {
+                "Latitude": -11.64722,
+                "Longitude": 166.96942,
+                "Altitude": 12.8,
+                "Index": 121,
+                "DistanceOnSegment": 1034.641845370827,
+                "DistanceFromLast": 11.7637848387682,
+                "CoordinatesDecimal": "S11.64722° E166.96942°"
+            },
+            {
+                "Latitude": -11.6473,
+                "Longitude": 166.96938,
+                "Altitude": 13.2,
+                "Index": 122,
+                "DistanceOnSegment": 1044.5468029365702,
+                "DistanceFromLast": 9.904957565743208,
+                "CoordinatesDecimal": "S11.64730° E166.96938°"
+            },
+            {
+                "Latitude": -11.64739,
+                "Longitude": 166.96938,
+                "Altitude": 13.4,
+                "Index": 123,
+                "DistanceOnSegment": 1054.5543463345966,
+                "DistanceFromLast": 10.007543398026467,
+                "CoordinatesDecimal": "S11.64739° E166.96938°"
+            },
+            {
+                "Latitude": -11.64748,
+                "Longitude": 166.96941,
+                "Altitude": 13.4,
+                "Index": 124,
+                "DistanceOnSegment": 1065.081703219196,
+                "DistanceFromLast": 10.527356884599353,
+                "CoordinatesDecimal": "S11.64748° E166.96941°"
+            },
+            {
+                "Latitude": -11.64756,
+                "Longitude": 166.96944,
+                "Altitude": 13.4,
+                "Index": 125,
+                "DistanceOnSegment": 1074.5583010537637,
+                "DistanceFromLast": 9.476597834567716,
+                "CoordinatesDecimal": "S11.64756° E166.96944°"
+            },
+            {
+                "Latitude": -11.64765,
+                "Longitude": 166.96947,
+                "Altitude": 13.4,
+                "Index": 126,
+                "DistanceOnSegment": 1085.0856573182105,
+                "DistanceFromLast": 10.527356264446768,
+                "CoordinatesDecimal": "S11.64765° E166.96947°"
+            },
+            {
+                "Latitude": -11.64773,
+                "Longitude": 166.96949,
+                "Altitude": 13.6,
+                "Index": 127,
+                "DistanceOnSegment": 1094.2440265851446,
+                "DistanceFromLast": 9.158369266934269,
+                "CoordinatesDecimal": "S11.64773° E166.96949°"
+            },
+            {
+                "Latitude": -11.64782,
+                "Longitude": 166.96952,
+                "Altitude": 13.6,
+                "Index": 128,
+                "DistanceOnSegment": 1104.7713822284695,
+                "DistanceFromLast": 10.527355643324988,
+                "CoordinatesDecimal": "S11.64782° E166.96952°"
+            },
+            {
+                "Latitude": -11.64791,
+                "Longitude": 166.96953,
+                "Altitude": 13.6,
+                "Index": 129,
+                "DistanceOnSegment": 1114.8380081050732,
+                "DistanceFromLast": 10.066625876603716,
+                "CoordinatesDecimal": "S11.64791° E166.96953°"
+            },
+            {
+                "Latitude": -11.648,
+                "Longitude": 166.96955,
+                "Altitude": 13.8,
+                "Index": 130,
+                "DistanceOnSegment": 1125.0798364816628,
+                "DistanceFromLast": 10.241828376589636,
+                "CoordinatesDecimal": "S11.64800° E166.96955°"
+            },
+            {
+                "Latitude": -11.64808,
+                "Longitude": 166.96955,
+                "Altitude": 14.2,
+                "Index": 131,
+                "DistanceOnSegment": 1133.9754306132859,
+                "DistanceFromLast": 8.895594131622977,
+                "CoordinatesDecimal": "S11.64808° E166.96955°"
+            },
+            {
+                "Latitude": -11.64817,
+                "Longitude": 166.96953,
+                "Altitude": 14.4,
+                "Index": 132,
+                "DistanceOnSegment": 1144.217258706556,
+                "DistanceFromLast": 10.241828093270314,
+                "CoordinatesDecimal": "S11.64817° E166.96953°"
+            },
+            {
+                "Latitude": -11.64826,
+                "Longitude": 166.96953,
+                "Altitude": 14.4,
+                "Index": 133,
+                "DistanceOnSegment": 1154.2248021045825,
+                "DistanceFromLast": 10.007543398026467,
+                "CoordinatesDecimal": "S11.64826° E166.96953°"
+            },
+            {
+                "Latitude": -11.64835,
+                "Longitude": 166.96953,
+                "Altitude": 13.4,
+                "Index": 134,
+                "DistanceOnSegment": 1164.232345502609,
+                "DistanceFromLast": 10.007543398026467,
+                "CoordinatesDecimal": "S11.64835° E166.96953°"
+            },
+            {
+                "Latitude": -11.64844,
+                "Longitude": 166.96952,
+                "Altitude": 14.2,
+                "Index": 135,
+                "DistanceOnSegment": 1174.2989711545454,
+                "DistanceFromLast": 10.066625651936407,
+                "CoordinatesDecimal": "S11.64844° E166.96952°"
+            },
+            {
+                "Latitude": -11.64851,
+                "Longitude": 166.96947,
+                "Altitude": 15.4,
+                "Index": 136,
+                "DistanceOnSegment": 1183.798223183136,
+                "DistanceFromLast": 9.499252028590728,
+                "CoordinatesDecimal": "S11.64851° E166.96947°"
+            },
+            {
+                "Latitude": -11.64858,
+                "Longitude": 166.96944,
+                "Altitude": 15.6,
+                "Index": 137,
+                "DistanceOnSegment": 1192.2397491258516,
+                "DistanceFromLast": 8.441525942715506,
+                "CoordinatesDecimal": "S11.64858° E166.96944°"
+            },
+            {
+                "Latitude": -11.64866,
+                "Longitude": 166.96942,
+                "Altitude": 15.8,
+                "Index": 138,
+                "DistanceOnSegment": 1201.39811665875,
+                "DistanceFromLast": 9.158367532898492,
+                "CoordinatesDecimal": "S11.64866° E166.96942°"
+            },
+            {
+                "Latitude": -11.64874,
+                "Longitude": 166.96942,
+                "Altitude": 16.4,
+                "Index": 139,
+                "DistanceOnSegment": 1210.293710790373,
+                "DistanceFromLast": 8.895594131622977,
+                "CoordinatesDecimal": "S11.64874° E166.96942°"
+            },
+            {
+                "Latitude": -11.64881,
+                "Longitude": 166.96945,
+                "Altitude": 16.8,
+                "Index": 140,
+                "DistanceOnSegment": 1218.7352356852646,
+                "DistanceFromLast": 8.441524894891371,
+                "CoordinatesDecimal": "S11.64881° E166.96945°"
+            },
+            {
+                "Latitude": -11.64887,
+                "Longitude": 166.96949,
+                "Altitude": 17.2,
+                "Index": 141,
+                "DistanceOnSegment": 1226.7031648918212,
+                "DistanceFromLast": 7.967929206556644,
+                "CoordinatesDecimal": "S11.64887° E166.96949°"
+            },
+            {
+                "Latitude": -11.64893,
+                "Longitude": 166.96951,
+                "Altitude": 17.8,
+                "Index": 142,
+                "DistanceOnSegment": 1233.7213992517995,
+                "DistanceFromLast": 7.0182343599784645,
+                "CoordinatesDecimal": "S11.64893° E166.96951°"
+            },
+            {
+                "Latitude": -11.649,
+                "Longitude": 166.96952,
+                "Altitude": 18.2,
+                "Index": 143,
+                "DistanceOnSegment": 1241.5808616803631,
+                "DistanceFromLast": 7.85946242856354,
+                "CoordinatesDecimal": "S11.64900° E166.96952°"
+            },
+            {
+                "Latitude": -11.64906,
+                "Longitude": 166.96951,
+                "Altitude": 18.8,
+                "Index": 144,
+                "DistanceOnSegment": 1248.3408575301917,
+                "DistanceFromLast": 6.759995849828498,
+                "CoordinatesDecimal": "S11.64906° E166.96951°"
+            },
+            {
+                "Latitude": -11.64911,
+                "Longitude": 166.96949,
+                "Altitude": 19.4,
+                "Index": 145,
+                "DistanceOnSegment": 1254.3120269578303,
+                "DistanceFromLast": 5.971169427638603,
+                "CoordinatesDecimal": "S11.64911° E166.96949°"
+            },
+            {
+                "Latitude": -11.64915,
+                "Longitude": 166.96944,
+                "Altitude": 20.0,
+                "Index": 146,
+                "DistanceOnSegment": 1261.342917422789,
+                "DistanceFromLast": 7.03089046495869,
+                "CoordinatesDecimal": "S11.64915° E166.96944°"
+            },
+            {
+                "Latitude": -11.64919,
+                "Longitude": 166.9694,
+                "Altitude": 20.4,
+                "Index": 147,
+                "DistanceOnSegment": 1267.5686083341475,
+                "DistanceFromLast": 6.225690911358532,
+                "CoordinatesDecimal": "S11.64919° E166.96940°"
+            },
+            {
+                "Latitude": -11.64922,
+                "Longitude": 166.96937,
+                "Altitude": 21.0,
+                "Index": 148,
+                "DistanceOnSegment": 1272.2378762312815,
+                "DistanceFromLast": 4.669267897133943,
+                "CoordinatesDecimal": "S11.64922° E166.96937°"
+            },
+            {
+                "Latitude": -11.64925,
+                "Longitude": 166.96931,
+                "Altitude": 21.4,
+                "Index": 149,
+                "DistanceOnSegment": 1279.5744012878138,
+                "DistanceFromLast": 7.336525056532306,
+                "CoordinatesDecimal": "S11.64925° E166.96931°"
+            },
+            {
+                "Latitude": -11.64928,
+                "Longitude": 166.96929,
+                "Altitude": 21.8,
+                "Index": 150,
+                "DistanceOnSegment": 1283.5583640699099,
+                "DistanceFromLast": 3.983962782096134,
+                "CoordinatesDecimal": "S11.64928° E166.96929°"
+            },
+            {
+                "Latitude": -11.64931,
+                "Longitude": 166.96924,
+                "Altitude": 22.2,
+                "Index": 151,
+                "DistanceOnSegment": 1289.9441582484615,
+                "DistanceFromLast": 6.385794178551565,
+                "CoordinatesDecimal": "S11.64931° E166.96924°"
+            },
+            {
+                "Latitude": -11.64935,
+                "Longitude": 166.96922,
+                "Altitude": 22.4,
+                "Index": 152,
+                "DistanceOnSegment": 1294.8966298969508,
+                "DistanceFromLast": 4.952471648489442,
+                "CoordinatesDecimal": "S11.64935° E166.96922°"
+            },
+            {
+                "Latitude": -11.64939,
+                "Longitude": 166.96918,
+                "Altitude": 22.4,
+                "Index": 153,
+                "DistanceOnSegment": 1301.1223186169098,
+                "DistanceFromLast": 6.225688719958999,
+                "CoordinatesDecimal": "S11.64939° E166.96918°"
+            },
+            {
+                "Latitude": -11.64944,
+                "Longitude": 166.96916,
+                "Altitude": 22.6,
+                "Index": 154,
+                "DistanceOnSegment": 1307.0934871011352,
+                "DistanceFromLast": 5.971168484225426,
+                "CoordinatesDecimal": "S11.64944° E166.96916°"
+            },
+            {
+                "Latitude": -11.6495,
+                "Longitude": 166.96918,
+                "Altitude": 22.6,
+                "Index": 155,
+                "DistanceOnSegment": 1314.1117200747024,
+                "DistanceFromLast": 7.018232973567125,
+                "CoordinatesDecimal": "S11.64950° E166.96918°"
+            },
+            {
+                "Latitude": -11.64955,
+                "Longitude": 166.96922,
+                "Altitude": 23.2,
+                "Index": 156,
+                "DistanceOnSegment": 1321.17479726598,
+                "DistanceFromLast": 7.06307719127772,
+                "CoordinatesDecimal": "S11.64955° E166.96922°"
+            },
+            {
+                "Latitude": -11.64958,
+                "Longitude": 166.96926,
+                "Altitude": 24.0,
+                "Index": 157,
+                "DistanceOnSegment": 1326.6615226265676,
+                "DistanceFromLast": 5.486725360587509,
+                "CoordinatesDecimal": "S11.64958° E166.96926°"
+            },
+            {
+                "Latitude": -11.64959,
+                "Longitude": 166.9693,
+                "Altitude": 24.6,
+                "Index": 158,
+                "DistanceOnSegment": 1331.1573766175645,
+                "DistanceFromLast": 4.495853990996881,
+                "CoordinatesDecimal": "S11.64959° E166.96930°"
+            },
+            {
+                "Latitude": -11.64958,
+                "Longitude": 166.96935,
+                "Altitude": 25.0,
+                "Index": 159,
+                "DistanceOnSegment": 1336.7149710647502,
+                "DistanceFromLast": 5.557594447185696,
+                "CoordinatesDecimal": "S11.64958° E166.96935°"
+            },
+            {
+                "Latitude": -11.64956,
+                "Longitude": 166.96938,
+                "Altitude": 25.4,
+                "Index": 160,
+                "DistanceOnSegment": 1340.6671703008878,
+                "DistanceFromLast": 3.952199236137669,
+                "CoordinatesDecimal": "S11.64956° E166.96938°"
+            },
+            {
+                "Latitude": -11.64954,
+                "Longitude": 166.96942,
+                "Altitude": 25.6,
+                "Index": 161,
+                "DistanceOnSegment": 1345.5581826093373,
+                "DistanceFromLast": 4.891012308449398,
+                "CoordinatesDecimal": "S11.64954° E166.96942°"
+            },
+            {
+                "Latitude": -11.64953,
+                "Longitude": 166.96947,
+                "Altitude": 26.2,
+                "Index": 162,
+                "DistanceOnSegment": 1351.1157780164128,
+                "DistanceFromLast": 5.557595407075554,
+                "CoordinatesDecimal": "S11.64953° E166.96947°"
+            },
+            {
+                "Latitude": -11.64953,
+                "Longitude": 166.96952,
+                "Altitude": 26.6,
+                "Index": 163,
+                "DistanceOnSegment": 1356.5609994632068,
+                "DistanceFromLast": 5.445221446794019,
+                "CoordinatesDecimal": "S11.64953° E166.96952°"
+            },
+            {
+                "Latitude": -11.64954,
+                "Longitude": 166.96956,
+                "Altitude": 27.0,
+                "Index": 164,
+                "DistanceOnSegment": 1361.0568542136132,
+                "DistanceFromLast": 4.495854750406392,
+                "CoordinatesDecimal": "S11.64954° E166.96956°"
+            },
+            {
+                "Latitude": -11.64956,
+                "Longitude": 166.9696,
+                "Altitude": 27.4,
+                "Index": 165,
+                "DistanceOnSegment": 1365.9478665220627,
+                "DistanceFromLast": 4.891012308449398,
+                "CoordinatesDecimal": "S11.64956° E166.96960°"
+            },
+            {
+                "Latitude": -11.6496,
+                "Longitude": 166.96963,
+                "Altitude": 27.8,
+                "Index": 166,
+                "DistanceOnSegment": 1371.466657337744,
+                "DistanceFromLast": 5.518790815681331,
+                "CoordinatesDecimal": "S11.64960° E166.96963°"
+            },
+            {
+                "Latitude": -11.64964,
+                "Longitude": 166.96963,
+                "Altitude": 28.0,
+                "Index": 167,
+                "DistanceOnSegment": 1375.9144544035555,
+                "DistanceFromLast": 4.447797065811488,
+                "CoordinatesDecimal": "S11.64964° E166.96963°"
+            },
+            {
+                "Latitude": -11.64968,
+                "Longitude": 166.96959,
+                "Altitude": 28.4,
+                "Index": 168,
+                "DistanceOnSegment": 1382.1401399406145,
+                "DistanceFromLast": 6.225685537058976,
+                "CoordinatesDecimal": "S11.64968° E166.96959°"
+            },
+            {
+                "Latitude": -11.64969,
+                "Longitude": 166.96955,
+                "Altitude": 29.0,
+                "Index": 169,
+                "DistanceOnSegment": 1386.6359924127828,
+                "DistanceFromLast": 4.495852472168243,
+                "CoordinatesDecimal": "S11.64969° E166.96955°"
+            },
+            {
+                "Latitude": -11.6497,
+                "Longitude": 166.96952,
+                "Altitude": 29.6,
+                "Index": 170,
+                "DistanceOnSegment": 1390.0871626035448,
+                "DistanceFromLast": 3.451170190762011,
+                "CoordinatesDecimal": "S11.64970° E166.96952°"
+            },
+            {
+                "Latitude": -11.6497,
+                "Longitude": 166.96947,
+                "Altitude": 30.2,
+                "Index": 171,
+                "DistanceOnSegment": 1395.5323807193458,
+                "DistanceFromLast": 5.445218115800927,
+                "CoordinatesDecimal": "S11.64970° E166.96947°"
+            },
+            {
+                "Latitude": -11.6497,
+                "Longitude": 166.96944,
+                "Altitude": 30.6,
+                "Index": 172,
+                "DistanceOnSegment": 1398.7995115906836,
+                "DistanceFromLast": 3.267130871337707,
+                "CoordinatesDecimal": "S11.64970° E166.96944°"
+            },
+            {
+                "Latitude": -11.64971,
+                "Longitude": 166.9694,
+                "Altitude": 31.0,
+                "Index": 173,
+                "DistanceOnSegment": 1403.2953637561343,
+                "DistanceFromLast": 4.495852165450744,
+                "CoordinatesDecimal": "S11.64971° E166.96940°"
+            },
+            {
+                "Latitude": -11.64972,
+                "Longitude": 166.96937,
+                "Altitude": 31.4,
+                "Index": 174,
+                "DistanceOnSegment": 1406.7465337243043,
+                "DistanceFromLast": 3.4511699681700234,
+                "CoordinatesDecimal": "S11.64972° E166.96937°"
+            },
+            {
+                "Latitude": -11.64974,
+                "Longitude": 166.96933,
+                "Altitude": 31.6,
+                "Index": 175,
+                "DistanceOnSegment": 1411.6375435169828,
+                "DistanceFromLast": 4.891009792678435,
+                "CoordinatesDecimal": "S11.64974° E166.96933°"
+            },
+            {
+                "Latitude": -11.64978,
+                "Longitude": 166.96931,
+                "Altitude": 31.8,
+                "Index": 176,
+                "DistanceOnSegment": 1416.5900136832809,
+                "DistanceFromLast": 4.952470166298122,
+                "CoordinatesDecimal": "S11.64978° E166.96931°"
+            },
+            {
+                "Latitude": -11.64982,
+                "Longitude": 166.96933,
+                "Altitude": 32.2,
+                "Index": 177,
+                "DistanceOnSegment": 1421.542483711698,
+                "DistanceFromLast": 4.95247002841721,
+                "CoordinatesDecimal": "S11.64982° E166.96933°"
+            },
+            {
+                "Latitude": -11.64984,
+                "Longitude": 166.96937,
+                "Altitude": 32.6,
+                "Index": 178,
+                "DistanceOnSegment": 1426.4334921082411,
+                "DistanceFromLast": 4.891008396543047,
+                "CoordinatesDecimal": "S11.64984° E166.96937°"
+            },
+            {
+                "Latitude": -11.64985,
+                "Longitude": 166.96941,
+                "Altitude": 32.6,
+                "Index": 179,
+                "DistanceOnSegment": 1430.9293421503057,
+                "DistanceFromLast": 4.495850042064599,
+                "CoordinatesDecimal": "S11.64985° E166.96941°"
+            },
+            {
+                "Latitude": -11.64985,
+                "Longitude": 166.96947,
+                "Altitude": 32.8,
+                "Index": 180,
+                "DistanceOnSegment": 1437.4636003629043,
+                "DistanceFromLast": 6.534258212598526,
+                "CoordinatesDecimal": "S11.64985° E166.96947°"
+            },
+            {
+                "Latitude": -11.64986,
+                "Longitude": 166.96952,
+                "Altitude": 32.8,
+                "Index": 181,
+                "DistanceOnSegment": 1443.0211896266146,
+                "DistanceFromLast": 5.557589263710376,
+                "CoordinatesDecimal": "S11.64986° E166.96952°"
+            },
+            {
+                "Latitude": -11.64987,
+                "Longitude": 166.96958,
+                "Altitude": 32.8,
+                "Index": 182,
+                "DistanceOnSegment": 1449.649383723889,
+                "DistanceFromLast": 6.628194097274377,
+                "CoordinatesDecimal": "S11.64987° E166.96958°"
+            },
+            {
+                "Latitude": -11.64987,
+                "Longitude": 166.96963,
+                "Altitude": 32.8,
+                "Index": 183,
+                "DistanceOnSegment": 1455.094598508649,
+                "DistanceFromLast": 5.445214784759898,
+                "CoordinatesDecimal": "S11.64987° E166.96963°"
+            },
+            {
+                "Latitude": -11.64986,
+                "Longitude": 166.96971,
+                "Altitude": 32.4,
+                "Index": 184,
+                "DistanceOnSegment": 1463.877614272519,
+                "DistanceFromLast": 8.78301576386996,
+                "CoordinatesDecimal": "S11.64986° E166.96971°"
+            },
+            {
+                "Latitude": -11.64982,
+                "Longitude": 166.96977,
+                "Altitude": 31.6,
+                "Index": 185,
+                "DistanceOnSegment": 1471.7820074965966,
+                "DistanceFromLast": 7.904393224077797,
+                "CoordinatesDecimal": "S11.64982° E166.96977°"
+            },
+            {
+                "Latitude": -11.64974,
+                "Longitude": 166.9698,
+                "Altitude": 30.6,
+                "Index": 186,
+                "DistanceOnSegment": 1481.258596171808,
+                "DistanceFromLast": 9.476588675211454,
+                "CoordinatesDecimal": "S11.64974° E166.96980°"
+            },
+            {
+                "Latitude": -11.64965,
+                "Longitude": 166.96976,
+                "Altitude": 29.8,
+                "Index": 187,
+                "DistanceOnSegment": 1492.1731360957428,
+                "DistanceFromLast": 10.914539923934756,
+                "CoordinatesDecimal": "S11.64965° E166.96976°"
+            },
+            {
+                "Latitude": -11.64956,
+                "Longitude": 166.96973,
+                "Altitude": 29.0,
+                "Index": 188,
+                "DistanceOnSegment": 1502.7004850636324,
+                "DistanceFromLast": 10.527348967889502,
+                "CoordinatesDecimal": "S11.64956° E166.96973°"
+            },
+            {
+                "Latitude": -11.64948,
+                "Longitude": 166.96971,
+                "Altitude": 28.2,
+                "Index": 189,
+                "DistanceOnSegment": 1511.8588509197555,
+                "DistanceFromLast": 9.158365856123137,
+                "CoordinatesDecimal": "S11.64948° E166.96971°"
+            },
+            {
+                "Latitude": -11.64943,
+                "Longitude": 166.96976,
+                "Altitude": 26.6,
+                "Index": 190,
+                "DistanceOnSegment": 1519.6409606543236,
+                "DistanceFromLast": 7.782109734568092,
+                "CoordinatesDecimal": "S11.64943° E166.96976°"
+            },
+            {
+                "Latitude": -11.64937,
+                "Longitude": 166.96981,
+                "Altitude": 24.0,
+                "Index": 191,
+                "DistanceOnSegment": 1528.2526960490045,
+                "DistanceFromLast": 8.611735394680935,
+                "CoordinatesDecimal": "S11.64937° E166.96981°"
+            },
+            {
+                "Latitude": -11.64928,
+                "Longitude": 166.96985,
+                "Altitude": 22.2,
+                "Index": 192,
+                "DistanceOnSegment": 1539.1672382889708,
+                "DistanceFromLast": 10.914542239966245,
+                "CoordinatesDecimal": "S11.64928° E166.96985°"
+            },
+            {
+                "Latitude": -11.6492,
+                "Longitude": 166.9699,
+                "Altitude": 20.8,
+                "Index": 193,
+                "DistanceOnSegment": 1549.597103745297,
+                "DistanceFromLast": 10.429865456326354,
+                "CoordinatesDecimal": "S11.64920° E166.96990°"
+            },
+            {
+                "Latitude": -11.6492,
+                "Longitude": 166.96996,
+                "Altitude": 20.0,
+                "Index": 194,
+                "DistanceOnSegment": 1556.1313772411593,
+                "DistanceFromLast": 6.534273495862153,
+                "CoordinatesDecimal": "S11.64920° E166.96996°"
+            },
+            {
+                "Latitude": -11.64924,
+                "Longitude": 166.97,
+                "Altitude": 19.8,
+                "Index": 195,
+                "DistanceOnSegment": 1562.3570676062957,
+                "DistanceFromLast": 6.225690365136393,
+                "CoordinatesDecimal": "S11.64924° E166.97000°"
+            },
+            {
+                "Latitude": -11.6493,
+                "Longitude": 166.97003,
+                "Altitude": 20.0,
+                "Index": 196,
+                "DistanceOnSegment": 1569.785775389161,
+                "DistanceFromLast": 7.4287077828653,
+                "CoordinatesDecimal": "S11.64930° E166.97003°"
+            },
+            {
+                "Latitude": -11.64933,
+                "Longitude": 166.97011,
+                "Altitude": 20.0,
+                "Index": 197,
+                "DistanceOnSegment": 1579.1149294627091,
+                "DistanceFromLast": 9.329154073548073,
+                "CoordinatesDecimal": "S11.64933° E166.97011°"
+            },
+            {
+                "Latitude": -11.6493,
+                "Longitude": 166.97017,
+                "Altitude": 20.2,
+                "Index": 198,
+                "DistanceOnSegment": 1586.45145284395,
+                "DistanceFromLast": 7.336523381240829,
+                "CoordinatesDecimal": "S11.64930° E166.97017°"
+            },
+            {
+                "Latitude": -11.64925,
+                "Longitude": 166.97022,
+                "Altitude": 20.6,
+                "Index": 199,
+                "DistanceOnSegment": 1594.2335650462985,
+                "DistanceFromLast": 7.782112202348488,
+                "CoordinatesDecimal": "S11.64925° E166.97022°"
+            },
+            {
+                "Latitude": -11.64918,
+                "Longitude": 166.97025,
+                "Altitude": 20.8,
+                "Index": 200,
+                "DistanceOnSegment": 1602.6750879394244,
+                "DistanceFromLast": 8.44152289312583,
+                "CoordinatesDecimal": "S11.64918° E166.97025°"
+            },
+            {
+                "Latitude": -11.64911,
+                "Longitude": 166.97027,
+                "Altitude": 20.6,
+                "Index": 201,
+                "DistanceOnSegment": 1610.7577366631615,
+                "DistanceFromLast": 8.082648723737016,
+                "CoordinatesDecimal": "S11.64911° E166.97027°"
+            },
+            {
+                "Latitude": -11.64903,
+                "Longitude": 166.97025,
+                "Altitude": 20.4,
+                "Index": 202,
+                "DistanceOnSegment": 1619.9161033582475,
+                "DistanceFromLast": 9.15836669508607,
+                "CoordinatesDecimal": "S11.64903° E166.97025°"
+            },
+            {
+                "Latitude": -11.64896,
+                "Longitude": 166.97022,
+                "Altitude": 20.8,
+                "Index": 203,
+                "DistanceOnSegment": 1628.357627252174,
+                "DistanceFromLast": 8.44152389392652,
+                "CoordinatesDecimal": "S11.64896° E166.97022°"
+            },
+            {
+                "Latitude": -11.64892,
+                "Longitude": 166.97016,
+                "Altitude": 21.4,
+                "Index": 204,
+                "DistanceOnSegment": 1636.2620379694126,
+                "DistanceFromLast": 7.90441071723858,
+                "CoordinatesDecimal": "S11.64892° E166.97016°"
+            },
+            {
+                "Latitude": -11.64887,
+                "Longitude": 166.9701,
+                "Altitude": 21.4,
+                "Index": 205,
+                "DistanceOnSegment": 1644.8415253149974,
+                "DistanceFromLast": 8.579487345584758,
+                "CoordinatesDecimal": "S11.64887° E166.97010°"
+            },
+            {
+                "Latitude": -11.6488,
+                "Longitude": 166.97011,
+                "Altitude": 21.2,
+                "Index": 206,
+                "DistanceOnSegment": 1652.7009878147726,
+                "DistanceFromLast": 7.859462499775186,
+                "CoordinatesDecimal": "S11.64880° E166.97011°"
+            },
+            {
+                "Latitude": -11.64873,
+                "Longitude": 166.97014,
+                "Altitude": 20.8,
+                "Index": 207,
+                "DistanceOnSegment": 1661.142512755162,
+                "DistanceFromLast": 8.441524940389346,
+                "CoordinatesDecimal": "S11.64873° E166.97014°"
+            },
+            {
+                "Latitude": -11.64865,
+                "Longitude": 166.97011,
+                "Altitude": 20.2,
+                "Index": 208,
+                "DistanceOnSegment": 1670.6191058481497,
+                "DistanceFromLast": 9.47659309298768,
+                "CoordinatesDecimal": "S11.64865° E166.97011°"
+            },
+            {
+                "Latitude": -11.64857,
+                "Longitude": 166.97009,
+                "Altitude": 19.0,
+                "Index": 209,
+                "DistanceOnSegment": 1679.7774734006146,
+                "DistanceFromLast": 9.158367552464805,
+                "CoordinatesDecimal": "S11.64857° E166.97009°"
+            },
+            {
+                "Latitude": -11.64847,
+                "Longitude": 166.97013,
+                "Altitude": 16.4,
+                "Index": 210,
+                "DistanceOnSegment": 1691.7198154862492,
+                "DistanceFromLast": 11.942342085634591,
+                "CoordinatesDecimal": "S11.64847° E166.97013°"
+            },
+            {
+                "Latitude": -11.64837,
+                "Longitude": 166.97017,
+                "Altitude": 15.8,
+                "Index": 211,
+                "DistanceOnSegment": 1703.662158142484,
+                "DistanceFromLast": 11.942342656234732,
+                "CoordinatesDecimal": "S11.64837° E166.97017°"
+            },
+            {
+                "Latitude": -11.64827,
+                "Longitude": 166.97024,
+                "Altitude": 16.0,
+                "Index": 212,
+                "DistanceOnSegment": 1717.1439413673093,
+                "DistanceFromLast": 13.481783224825243,
+                "CoordinatesDecimal": "S11.64827° E166.97024°"
+            },
+            {
+                "Latitude": -11.64819,
+                "Longitude": 166.97031,
+                "Altitude": 16.2,
+                "Index": 213,
+                "DistanceOnSegment": 1728.8591876065568,
+                "DistanceFromLast": 11.715246239247627,
+                "CoordinatesDecimal": "S11.64819° E166.97031°"
+            },
+            {
+                "Latitude": -11.64818,
+                "Longitude": 166.97039,
+                "Altitude": 16.6,
+                "Index": 214,
+                "DistanceOnSegment": 1737.6422556129023,
+                "DistanceFromLast": 8.783068006345468,
+                "CoordinatesDecimal": "S11.64818° E166.97039°"
+            },
+            {
+                "Latitude": -11.64824,
+                "Longitude": 166.97043,
+                "Altitude": 16.8,
+                "Index": 215,
+                "DistanceOnSegment": 1745.6101902161467,
+                "DistanceFromLast": 7.967934603244476,
+                "CoordinatesDecimal": "S11.64824° E166.97043°"
+            },
+            {
+                "Latitude": -11.64831,
+                "Longitude": 166.97045,
+                "Altitude": 17.0,
+                "Index": 216,
+                "DistanceOnSegment": 1753.6928407774321,
+                "DistanceFromLast": 8.082650561285494,
+                "CoordinatesDecimal": "S11.64831° E166.97045°"
+            },
+            {
+                "Latitude": -11.64838,
+                "Longitude": 166.97046,
+                "Altitude": 17.2,
+                "Index": 217,
+                "DistanceOnSegment": 1761.5523035430642,
+                "DistanceFromLast": 7.859462765632078,
+                "CoordinatesDecimal": "S11.64838° E166.97046°"
+            },
+            {
+                "Latitude": -11.64843,
+                "Longitude": 166.97051,
+                "Altitude": 17.2,
+                "Index": 218,
+                "DistanceOnSegment": 1769.3344276703335,
+                "DistanceFromLast": 7.782124127269329,
+                "CoordinatesDecimal": "S11.64843° E166.97051°"
+            },
+            {
+                "Latitude": -11.64848,
+                "Longitude": 166.97057,
+                "Altitude": 17.0,
+                "Index": 219,
+                "DistanceOnSegment": 1777.9139228970882,
+                "DistanceFromLast": 8.579495226754643,
+                "CoordinatesDecimal": "S11.64848° E166.97057°"
+            },
+            {
+                "Latitude": -11.64851,
+                "Longitude": 166.97064,
+                "Altitude": 16.6,
+                "Index": 220,
+                "DistanceOnSegment": 1786.2351709502796,
+                "DistanceFromLast": 8.321248053191264,
+                "CoordinatesDecimal": "S11.64851° E166.97064°"
+            },
+            {
+                "Latitude": -11.64856,
+                "Longitude": 166.97072,
+                "Altitude": 16.4,
+                "Index": 221,
+                "DistanceOnSegment": 1796.570374892888,
+                "DistanceFromLast": 10.335203942608404,
+                "CoordinatesDecimal": "S11.64856° E166.97072°"
+            },
+            {
+                "Latitude": -11.64864,
+                "Longitude": 166.97077,
+                "Altitude": 16.4,
+                "Index": 222,
+                "DistanceOnSegment": 1807.000246895999,
+                "DistanceFromLast": 10.429872003111152,
+                "CoordinatesDecimal": "S11.64864° E166.97077°"
+            },
+            {
+                "Latitude": -11.64871,
+                "Longitude": 166.97078,
+                "Altitude": 16.8,
+                "Index": 223,
+                "DistanceOnSegment": 1814.859709482454,
+                "DistanceFromLast": 7.859462586455019,
+                "CoordinatesDecimal": "S11.64871° E166.97078°"
+            },
+            {
+                "Latitude": -11.64879,
+                "Longitude": 166.97082,
+                "Altitude": 15.8,
+                "Index": 224,
+                "DistanceOnSegment": 1824.7646567777374,
+                "DistanceFromLast": 9.90494729528328,
+                "CoordinatesDecimal": "S11.64879° E166.97082°"
+            },
+            {
+                "Latitude": -11.64889,
+                "Longitude": 166.97083,
+                "Altitude": 14.8,
+                "Index": 225,
+                "DistanceOnSegment": 1835.9373529818392,
+                "DistanceFromLast": 11.172696204101825,
+                "CoordinatesDecimal": "S11.64889° E166.97083°"
+            },
+            {
+                "Latitude": -11.64898,
+                "Longitude": 166.97086,
+                "Altitude": 14.4,
+                "Index": 226,
+                "DistanceOnSegment": 1846.464704393247,
+                "DistanceFromLast": 10.52735141140791,
+                "CoordinatesDecimal": "S11.64898° E166.97086°"
+            },
+            {
+                "Latitude": -11.64909,
+                "Longitude": 166.97088,
+                "Altitude": 13.8,
+                "Index": 227,
+                "DistanceOnSegment": 1858.8885628305188,
+                "DistanceFromLast": 12.423858437271635,
+                "CoordinatesDecimal": "S11.64909° E166.97088°"
+            },
+            {
+                "Latitude": -11.64916,
+                "Longitude": 166.97095,
+                "Altitude": 13.6,
+                "Index": 228,
+                "DistanceOnSegment": 1869.783522790763,
+                "DistanceFromLast": 10.894959960244364,
+                "CoordinatesDecimal": "S11.64916° E166.97095°"
+            },
+            {
+                "Latitude": -11.64918,
+                "Longitude": 166.97106,
+                "Altitude": 14.2,
+                "Index": 229,
+                "DistanceOnSegment": 1881.967701455698,
+                "DistanceFromLast": 12.18417866493494,
+                "CoordinatesDecimal": "S11.64918° E166.97106°"
+            },
+            {
+                "Latitude": -11.64914,
+                "Longitude": 166.97115,
+                "Altitude": 15.0,
+                "Index": 230,
+                "DistanceOnSegment": 1892.7310916832348,
+                "DistanceFromLast": 10.763390227536734,
+                "CoordinatesDecimal": "S11.64914° E166.97115°"
+            },
+            {
+                "Latitude": -11.6491,
+                "Longitude": 166.97124,
+                "Altitude": 15.8,
+                "Index": 231,
+                "DistanceOnSegment": 1903.494483195324,
+                "DistanceFromLast": 10.763391512089054,
+                "CoordinatesDecimal": "S11.64910° E166.97124°"
+            },
+            {
+                "Latitude": -11.64907,
+                "Longitude": 166.97132,
+                "Altitude": 16.4,
+                "Index": 232,
+                "DistanceOnSegment": 1912.8236440025291,
+                "DistanceFromLast": 9.329160807205133,
+                "CoordinatesDecimal": "S11.64907° E166.97132°"
+            },
+            {
+                "Latitude": -11.64905,
+                "Longitude": 166.9714,
+                "Altitude": 16.6,
+                "Index": 233,
+                "DistanceOnSegment": 1921.8153679288037,
+                "DistanceFromLast": 8.991723926274531,
+                "CoordinatesDecimal": "S11.64905° E166.97140°"
+            },
+            {
+                "Latitude": -11.64906,
+                "Longitude": 166.97148,
+                "Altitude": 16.8,
+                "Index": 234,
+                "DistanceOnSegment": 1930.5984088850073,
+                "DistanceFromLast": 8.783040956203676,
+                "CoordinatesDecimal": "S11.64906° E166.97148°"
+            },
+            {
+                "Latitude": -11.64912,
+                "Longitude": 166.97153,
+                "Altitude": 17.0,
+                "Index": 235,
+                "DistanceOnSegment": 1939.2101481201266,
+                "DistanceFromLast": 8.611739235119433,
+                "CoordinatesDecimal": "S11.64912° E166.97153°"
+            },
+            {
+                "Latitude": -11.6492,
+                "Longitude": 166.97157,
+                "Altitude": 17.0,
+                "Index": 236,
+                "DistanceOnSegment": 1949.115092589042,
+                "DistanceFromLast": 9.904944468915238,
+                "CoordinatesDecimal": "S11.64920° E166.97157°"
+            },
+            {
+                "Latitude": -11.64928,
+                "Longitude": 166.97159,
+                "Altitude": 17.0,
+                "Index": 237,
+                "DistanceOnSegment": 1958.2734589663346,
+                "DistanceFromLast": 9.158366377292616,
+                "CoordinatesDecimal": "S11.64928° E166.97159°"
+            },
+            {
+                "Latitude": -11.64936,
+                "Longitude": 166.97161,
+                "Altitude": 17.0,
+                "Index": 238,
+                "DistanceOnSegment": 1967.4318251954405,
+                "DistanceFromLast": 9.158366229105923,
+                "CoordinatesDecimal": "S11.64936° E166.97161°"
+            },
+            {
+                "Latitude": -11.64945,
+                "Longitude": 166.97164,
+                "Altitude": 16.8,
+                "Index": 239,
+                "DistanceOnSegment": 1977.9591748930393,
+                "DistanceFromLast": 10.527349697598687,
+                "CoordinatesDecimal": "S11.64945° E166.97164°"
+            },
+            {
+                "Latitude": -11.64953,
+                "Longitude": 166.97166,
+                "Altitude": 17.0,
+                "Index": 240,
+                "DistanceOnSegment": 1987.1175408052734,
+                "DistanceFromLast": 9.158365912234018,
+                "CoordinatesDecimal": "S11.64953° E166.97166°"
+            },
+            {
+                "Latitude": -11.6496,
+                "Longitude": 166.9717,
+                "Altitude": 17.0,
+                "Index": 241,
+                "DistanceOnSegment": 1996.0372606454073,
+                "DistanceFromLast": 8.919719840133968,
+                "CoordinatesDecimal": "S11.64960° E166.97170°"
+            },
+            {
+                "Latitude": -11.64968,
+                "Longitude": 166.97176,
+                "Altitude": 16.8,
+                "Index": 242,
+                "DistanceOnSegment": 2007.0748414434224,
+                "DistanceFromLast": 11.037580798015181,
+                "CoordinatesDecimal": "S11.64968° E166.97176°"
+            },
+            {
+                "Latitude": -11.64975,
+                "Longitude": 166.9718,
+                "Altitude": 16.8,
+                "Index": 243,
+                "DistanceOnSegment": 2015.9945601367529,
+                "DistanceFromLast": 8.919718693330314,
+                "CoordinatesDecimal": "S11.64975° E166.97180°"
+            },
+            {
+                "Latitude": -11.64983,
+                "Longitude": 166.97186,
+                "Altitude": 17.2,
+                "Index": 244,
+                "DistanceOnSegment": 2027.032138846801,
+                "DistanceFromLast": 11.037578710048132,
+                "CoordinatesDecimal": "S11.64983° E166.97186°"
+            },
+            {
+                "Latitude": -11.6499,
+                "Longitude": 166.9719,
+                "Altitude": 17.6,
+                "Index": 245,
+                "DistanceOnSegment": 2035.9518563919742,
+                "DistanceFromLast": 8.919717545173267,
+                "CoordinatesDecimal": "S11.64990° E166.97190°"
+            },
+            {
+                "Latitude": -11.64999,
+                "Longitude": 166.97188,
+                "Altitude": 17.4,
+                "Index": 246,
+                "DistanceOnSegment": 2046.193681451816,
+                "DistanceFromLast": 10.241825059841837,
+                "CoordinatesDecimal": "S11.64999° E166.97188°"
+            },
+            {
+                "Latitude": -11.65006,
+                "Longitude": 166.97183,
+                "Altitude": 17.4,
+                "Index": 247,
+                "DistanceOnSegment": 2055.6929160715576,
+                "DistanceFromLast": 9.499234619741618,
+                "CoordinatesDecimal": "S11.65006° E166.97183°"
+            },
+            {
+                "Latitude": -11.65012,
+                "Longitude": 166.97177,
+                "Altitude": 17.6,
+                "Index": 248,
+                "DistanceOnSegment": 2065.0314373057213,
+                "DistanceFromLast": 9.338521234163833,
+                "CoordinatesDecimal": "S11.65012° E166.97177°"
+            },
+            {
+                "Latitude": -11.65017,
+                "Longitude": 166.9717,
+                "Altitude": 17.8,
+                "Index": 249,
+                "DistanceOnSegment": 2074.4667633636723,
+                "DistanceFromLast": 9.43532605795094,
+                "CoordinatesDecimal": "S11.65017° E166.97170°"
+            },
+            {
+                "Latitude": -11.65022,
+                "Longitude": 166.97164,
+                "Altitude": 18.0,
+                "Index": 250,
+                "DistanceOnSegment": 2083.0462274292636,
+                "DistanceFromLast": 8.579464065591209,
+                "CoordinatesDecimal": "S11.65022° E166.97164°"
+            },
+            {
+                "Latitude": -11.65027,
+                "Longitude": 166.97157,
+                "Altitude": 18.4,
+                "Index": 251,
+                "DistanceOnSegment": 2092.481551270871,
+                "DistanceFromLast": 9.435323841607575,
+                "CoordinatesDecimal": "S11.65027° E166.97157°"
+            },
+            {
+                "Latitude": -11.65033,
+                "Longitude": 166.97151,
+                "Altitude": 19.0,
+                "Index": 252,
+                "DistanceOnSegment": 2101.8200690499048,
+                "DistanceFromLast": 9.338517779033792,
+                "CoordinatesDecimal": "S11.65033° E166.97151°"
+            },
+            {
+                "Latitude": -11.65038,
+                "Longitude": 166.97146,
+                "Altitude": 19.6,
+                "Index": 253,
+                "DistanceOnSegment": 2109.602166442853,
+                "DistanceFromLast": 7.782097392948524,
+                "CoordinatesDecimal": "S11.65038° E166.97146°"
+            },
+            {
+                "Latitude": -11.65044,
+                "Longitude": 166.97141,
+                "Altitude": 20.6,
+                "Index": 254,
+                "DistanceOnSegment": 2118.213889325762,
+                "DistanceFromLast": 8.611722882908774,
+                "CoordinatesDecimal": "S11.65044° E166.97141°"
+            },
+            {
+                "Latitude": -11.65049,
+                "Longitude": 166.97137,
+                "Altitude": 21.2,
+                "Index": 255,
+                "DistanceOnSegment": 2125.2769574271424,
+                "DistanceFromLast": 7.063068101380505,
+                "CoordinatesDecimal": "S11.65049° E166.97137°"
+            },
+            {
+                "Latitude": -11.65055,
+                "Longitude": 166.97136,
+                "Altitude": 21.8,
+                "Index": 256,
+                "DistanceOnSegment": 2132.0369523367813,
+                "DistanceFromLast": 6.759994909638904,
+                "CoordinatesDecimal": "S11.65055° E166.97136°"
+            },
+            {
+                "Latitude": -11.65061,
+                "Longitude": 166.97136,
+                "Altitude": 22.2,
+                "Index": 257,
+                "DistanceOnSegment": 2138.7086479353998,
+                "DistanceFromLast": 6.67169559861847,
+                "CoordinatesDecimal": "S11.65061° E166.97136°"
+            },
+            {
+                "Latitude": -11.65066,
+                "Longitude": 166.97135,
+                "Altitude": 22.4,
+                "Index": 258,
+                "DistanceOnSegment": 2144.3740505964647,
+                "DistanceFromLast": 5.665402661064725,
+                "CoordinatesDecimal": "S11.65066° E166.97135°"
+            },
+            {
+                "Latitude": -11.65072,
+                "Longitude": 166.97133,
+                "Altitude": 22.8,
+                "Index": 259,
+                "DistanceOnSegment": 2151.392280602409,
+                "DistanceFromLast": 7.0182300059442,
+                "CoordinatesDecimal": "S11.65072° E166.97133°"
+            },
+            {
+                "Latitude": -11.65077,
+                "Longitude": 166.9713,
+                "Altitude": 23.4,
+                "Index": 260,
+                "DistanceOnSegment": 2157.8409117058477,
+                "DistanceFromLast": 6.4486311034388955,
+                "CoordinatesDecimal": "S11.65077° E166.97130°"
+            },
+            {
+                "Latitude": -11.65081,
+                "Longitude": 166.97128,
+                "Altitude": 24.2,
+                "Index": 261,
+                "DistanceOnSegment": 2162.7933783215685,
+                "DistanceFromLast": 4.952466615720986,
+                "CoordinatesDecimal": "S11.65081° E166.97128°"
+            },
+            {
+                "Latitude": -11.65084,
+                "Longitude": 166.97124,
+                "Altitude": 24.4,
+                "Index": 262,
+                "DistanceOnSegment": 2168.280088002718,
+                "DistanceFromLast": 5.486709681149365,
+                "CoordinatesDecimal": "S11.65084° E166.97124°"
+            },
+            {
+                "Latitude": -11.65087,
+                "Longitude": 166.97119,
+                "Altitude": 24.6,
+                "Index": 263,
+                "DistanceOnSegment": 2174.665856115611,
+                "DistanceFromLast": 6.3857681128928965,
+                "CoordinatesDecimal": "S11.65087° E166.97119°"
+            },
+            {
+                "Latitude": -11.65089,
+                "Longitude": 166.97115,
+                "Altitude": 25.0,
+                "Index": 264,
+                "DistanceOnSegment": 2179.556849854872,
+                "DistanceFromLast": 4.890993739260755,
+                "CoordinatesDecimal": "S11.65089° E166.97115°"
+            },
+            {
+                "Latitude": -11.65092,
+                "Longitude": 166.97111,
+                "Altitude": 25.6,
+                "Index": 265,
+                "DistanceOnSegment": 2185.043558537712,
+                "DistanceFromLast": 5.4867086828403275,
+                "CoordinatesDecimal": "S11.65092° E166.97111°"
+            },
+            {
+                "Latitude": -11.65094,
+                "Longitude": 166.97107,
+                "Altitude": 25.8,
+                "Index": 266,
+                "DistanceOnSegment": 2189.9345515788395,
+                "DistanceFromLast": 4.890993041127165,
+                "CoordinatesDecimal": "S11.65094° E166.97107°"
+            },
+            {
+                "Latitude": -11.65098,
+                "Longitude": 166.97103,
+                "Altitude": 25.6,
+                "Index": 267,
+                "DistanceOnSegment": 2196.1602228564957,
+                "DistanceFromLast": 6.225671277656357,
+                "CoordinatesDecimal": "S11.65098° E166.97103°"
+            },
+            {
+                "Latitude": -11.65103,
+                "Longitude": 166.971,
+                "Altitude": 25.4,
+                "Index": 268,
+                "DistanceOnSegment": 2202.6088524127113,
+                "DistanceFromLast": 6.448629556215605,
+                "CoordinatesDecimal": "S11.65103° E166.97100°"
+            },
+            {
+                "Latitude": -11.65109,
+                "Longitude": 166.97097,
+                "Altitude": 25.2,
+                "Index": 269,
+                "DistanceOnSegment": 2210.037550940029,
+                "DistanceFromLast": 7.428698527317839,
+                "CoordinatesDecimal": "S11.65109° E166.97097°"
+            },
+            {
+                "Latitude": -11.65116,
+                "Longitude": 166.97098,
+                "Altitude": 25.2,
+                "Index": 270,
+                "DistanceOnSegment": 2217.8970121962757,
+                "DistanceFromLast": 7.85946125624671,
+                "CoordinatesDecimal": "S11.65116° E166.97098°"
+            },
+            {
+                "Latitude": -11.65121,
+                "Longitude": 166.97103,
+                "Altitude": 25.2,
+                "Index": 271,
+                "DistanceOnSegment": 2225.6790982108564,
+                "DistanceFromLast": 7.782086014580606,
+                "CoordinatesDecimal": "S11.65121° E166.97103°"
+            },
+            {
+                "Latitude": -11.65121,
+                "Longitude": 166.97111,
+                "Altitude": 25.6,
+                "Index": 272,
+                "DistanceOnSegment": 2234.391399855339,
+                "DistanceFromLast": 8.712301644482308,
+                "CoordinatesDecimal": "S11.65121° E166.97111°"
+            },
+            {
+                "Latitude": -11.65117,
+                "Longitude": 166.97117,
+                "Altitude": 25.8,
+                "Index": 273,
+                "DistanceOnSegment": 2242.2957668346517,
+                "DistanceFromLast": 7.9043669793125595,
+                "CoordinatesDecimal": "S11.65117° E166.97117°"
+            },
+            {
+                "Latitude": -11.65113,
+                "Longitude": 166.97122,
+                "Altitude": 26.2,
+                "Index": 274,
+                "DistanceOnSegment": 2249.326626642258,
+                "DistanceFromLast": 7.030859807606084,
+                "CoordinatesDecimal": "S11.65113° E166.97122°"
+            },
+            {
+                "Latitude": -11.6511,
+                "Longitude": 166.97129,
+                "Altitude": 26.8,
+                "Index": 275,
+                "DistanceOnSegment": 2257.647808854085,
+                "DistanceFromLast": 8.321182211826958,
+                "CoordinatesDecimal": "S11.65110° E166.97129°"
+            },
+            {
+                "Latitude": -11.65109,
+                "Longitude": 166.97135,
+                "Altitude": 27.4,
+                "Index": 276,
+                "DistanceOnSegment": 2264.275974435237,
+                "DistanceFromLast": 6.628165581152182,
+                "CoordinatesDecimal": "S11.65109° E166.97135°"
+            },
+            {
+                "Latitude": -11.6511,
+                "Longitude": 166.97141,
+                "Altitude": 27.8,
+                "Index": 277,
+                "DistanceOnSegment": 2270.904140016389,
+                "DistanceFromLast": 6.628165581152182,
+                "CoordinatesDecimal": "S11.65110° E166.97141°"
+            },
+            {
+                "Latitude": -11.65113,
+                "Longitude": 166.97146,
+                "Altitude": 28.0,
+                "Index": 278,
+                "DistanceOnSegment": 2277.2899037874345,
+                "DistanceFromLast": 6.385763771045399,
+                "CoordinatesDecimal": "S11.65113° E166.97146°"
+            },
+            {
+                "Latitude": -11.65118,
+                "Longitude": 166.9715,
+                "Altitude": 28.0,
+                "Index": 279,
+                "DistanceOnSegment": 2284.352965217397,
+                "DistanceFromLast": 7.063061429962327,
+                "CoordinatesDecimal": "S11.65118° E166.97150°"
+            },
+            {
+                "Latitude": -11.65124,
+                "Longitude": 166.97151,
+                "Altitude": 28.0,
+                "Index": 280,
+                "DistanceOnSegment": 2291.112959691182,
+                "DistanceFromLast": 6.7599944737847,
+                "CoordinatesDecimal": "S11.65124° E166.97151°"
+            },
+            {
+                "Latitude": -11.65131,
+                "Longitude": 166.97153,
+                "Altitude": 28.0,
+                "Index": 281,
+                "DistanceOnSegment": 2299.1956039162005,
+                "DistanceFromLast": 8.082644225018617,
+                "CoordinatesDecimal": "S11.65131° E166.97153°"
+            },
+            {
+                "Latitude": -11.65137,
+                "Longitude": 166.97153,
+                "Altitude": 28.4,
+                "Index": 282,
+                "DistanceOnSegment": 2305.867299514819,
+                "DistanceFromLast": 6.67169559861847,
+                "CoordinatesDecimal": "S11.65137° E166.97153°"
+            },
+            {
+                "Latitude": -11.65143,
+                "Longitude": 166.9715,
+                "Altitude": 29.2,
+                "Index": 283,
+                "DistanceOnSegment": 2313.295996283947,
+                "DistanceFromLast": 7.4286967691278365,
+                "CoordinatesDecimal": "S11.65143° E166.97150°"
+            },
+            {
+                "Latitude": -11.65148,
+                "Longitude": 166.97147,
+                "Altitude": 29.8,
+                "Index": 284,
+                "DistanceOnSegment": 2319.7446231579156,
+                "DistanceFromLast": 6.448626873968855,
+                "CoordinatesDecimal": "S11.65148° E166.97147°"
+            },
+            {
+                "Latitude": -11.65153,
+                "Longitude": 166.97143,
+                "Altitude": 29.8,
+                "Index": 285,
+                "DistanceOnSegment": 2326.8076812055892,
+                "DistanceFromLast": 7.063058047673588,
+                "CoordinatesDecimal": "S11.65153° E166.97143°"
+            },
+            {
+                "Latitude": -11.65158,
+                "Longitude": 166.97137,
+                "Altitude": 29.8,
+                "Index": 286,
+                "DistanceOnSegment": 2335.3871209140325,
+                "DistanceFromLast": 8.579439708443312,
+                "CoordinatesDecimal": "S11.65158° E166.97137°"
+            },
+            {
+                "Latitude": -11.65164,
+                "Longitude": 166.97136,
+                "Altitude": 30.0,
+                "Index": 287,
+                "DistanceOnSegment": 2342.147115135445,
+                "DistanceFromLast": 6.759994221412379,
+                "CoordinatesDecimal": "S11.65164° E166.97136°"
+            },
+            {
+                "Latitude": -11.6517,
+                "Longitude": 166.97136,
+                "Altitude": 30.4,
+                "Index": 288,
+                "DistanceOnSegment": 2348.8188107340634,
+                "DistanceFromLast": 6.67169559861847,
+                "CoordinatesDecimal": "S11.65170° E166.97136°"
+            },
+            {
+                "Latitude": -11.65176,
+                "Longitude": 166.97136,
+                "Altitude": 31.2,
+                "Index": 289,
+                "DistanceOnSegment": 2355.490506332682,
+                "DistanceFromLast": 6.67169559861847,
+                "CoordinatesDecimal": "S11.65176° E166.97136°"
+            },
+            {
+                "Latitude": -11.65182,
+                "Longitude": 166.97137,
+                "Altitude": 32.4,
+                "Index": 290,
+                "DistanceOnSegment": 2362.2505004404366,
+                "DistanceFromLast": 6.759994107754438,
+                "CoordinatesDecimal": "S11.65182° E166.97137°"
+            },
+            {
+                "Latitude": -11.65186,
+                "Longitude": 166.9714,
+                "Altitude": 33.2,
+                "Index": 291,
+                "DistanceOnSegment": 2367.769275525319,
+                "DistanceFromLast": 5.518775084882089,
+                "CoordinatesDecimal": "S11.65186° E166.97140°"
+            },
+            {
+                "Latitude": -11.6519,
+                "Longitude": 166.97143,
+                "Altitude": 33.8,
+                "Index": 292,
+                "DistanceOnSegment": 2373.288050333748,
+                "DistanceFromLast": 5.518774808428885,
+                "CoordinatesDecimal": "S11.65190° E166.97143°"
+            },
+            {
+                "Latitude": -11.65193,
+                "Longitude": 166.97144,
+                "Altitude": 34.4,
+                "Index": 293,
+                "DistanceOnSegment": 2376.797163846773,
+                "DistanceFromLast": 3.5091135130250835,
+                "CoordinatesDecimal": "S11.65193° E166.97144°"
+            },
+            {
+                "Latitude": -11.65196,
+                "Longitude": 166.97146,
+                "Altitude": 35.0,
+                "Index": 294,
+                "DistanceOnSegment": 2380.781115144452,
+                "DistanceFromLast": 3.983951297679266,
+                "CoordinatesDecimal": "S11.65196° E166.97146°"
+            },
+            {
+                "Latitude": -11.65198,
+                "Longitude": 166.97148,
+                "Altitude": 35.6,
+                "Index": 295,
+                "DistanceOnSegment": 2383.8939452445334,
+                "DistanceFromLast": 3.1128301000812337,
+                "CoordinatesDecimal": "S11.65198° E166.97148°"
+            },
+            {
+                "Latitude": -11.652,
+                "Longitude": 166.9715,
+                "Altitude": 36.0,
+                "Index": 296,
+                "DistanceOnSegment": 2387.006775232746,
+                "DistanceFromLast": 3.1128299882126025,
+                "CoordinatesDecimal": "S11.65200° E166.97150°"
+            },
+            {
+                "Latitude": -11.65203,
+                "Longitude": 166.97153,
+                "Altitude": 36.4,
+                "Index": 297,
+                "DistanceOnSegment": 2391.6760200127615,
+                "DistanceFromLast": 4.66924478001534,
+                "CoordinatesDecimal": "S11.65203° E166.97153°"
+            },
+            {
+                "Latitude": -11.65204,
+                "Longitude": 166.97157,
+                "Altitude": 36.6,
+                "Index": 298,
+                "DistanceOnSegment": 2396.171836788765,
+                "DistanceFromLast": 4.495816776003544,
+                "CoordinatesDecimal": "S11.65204° E166.97157°"
+            },
+            {
+                "Latitude": -11.65204,
+                "Longitude": 166.97159,
+                "Altitude": 36.8,
+                "Index": 299,
+                "DistanceOnSegment": 2398.3499056912237,
+                "DistanceFromLast": 2.1780689024587137,
+                "CoordinatesDecimal": "S11.65204° E166.97159°"
+            },
+            {
+                "Latitude": -11.65203,
+                "Longitude": 166.97164,
+                "Altitude": 37.4,
+                "Index": 300,
+                "DistanceOnSegment": 2403.9074531018705,
+                "DistanceFromLast": 5.5575474106467055,
+                "CoordinatesDecimal": "S11.65203° E166.97164°"
+            },
+            {
+                "Latitude": -11.65201,
+                "Longitude": 166.97166,
+                "Altitude": 38.0,
+                "Index": 301,
+                "DistanceOnSegment": 2407.020282927694,
+                "DistanceFromLast": 3.112829825823689,
+                "CoordinatesDecimal": "S11.65201° E166.97166°"
+            },
+            {
+                "Latitude": -11.65199,
+                "Longitude": 166.97169,
+                "Altitude": 38.6,
+                "Index": 302,
+                "DistanceOnSegment": 2410.972458542755,
+                "DistanceFromLast": 3.952175615060584,
+                "CoordinatesDecimal": "S11.65199° E166.97169°"
+            },
+            {
+                "Latitude": -11.65196,
+                "Longitude": 166.97172,
+                "Altitude": 39.0,
+                "Index": 303,
+                "DistanceOnSegment": 2415.641703651738,
+                "DistanceFromLast": 4.6692451089832785,
+                "CoordinatesDecimal": "S11.65196° E166.97172°"
+            },
+            {
+                "Latitude": -11.65194,
+                "Longitude": 166.97173,
+                "Altitude": 39.6,
+                "Index": 304,
+                "DistanceOnSegment": 2418.1179349601543,
+                "DistanceFromLast": 2.476231308416118,
+                "CoordinatesDecimal": "S11.65194° E166.97173°"
+            },
+            {
+                "Latitude": -11.65191,
+                "Longitude": 166.97175,
+                "Altitude": 40.2,
+                "Index": 305,
+                "DistanceOnSegment": 2422.101886341691,
+                "DistanceFromLast": 3.983951381536884,
+                "CoordinatesDecimal": "S11.65191° E166.97175°"
+            },
+            {
+                "Latitude": -11.65189,
+                "Longitude": 166.97175,
+                "Altitude": 40.6,
+                "Index": 306,
+                "DistanceOnSegment": 2424.3257848746957,
+                "DistanceFromLast": 2.2238985330045047,
+                "CoordinatesDecimal": "S11.65189° E166.97175°"
+            },
+            {
+                "Latitude": -11.65186,
+                "Longitude": 166.97175,
+                "Altitude": 41.0,
+                "Index": 307,
+                "DistanceOnSegment": 2427.6616326741037,
+                "DistanceFromLast": 3.3358477994079965,
+                "CoordinatesDecimal": "S11.65186° E166.97175°"
+            },
+            {
+                "Latitude": -11.65183,
+                "Longitude": 166.97175,
+                "Altitude": 41.4,
+                "Index": 308,
+                "DistanceOnSegment": 2430.997480473314,
+                "DistanceFromLast": 3.3358477992104754,
+                "CoordinatesDecimal": "S11.65183° E166.97175°"
+            },
+            {
+                "Latitude": -11.6518,
+                "Longitude": 166.97173,
+                "Altitude": 41.6,
+                "Index": 309,
+                "DistanceOnSegment": 2434.9814323264477,
+                "DistanceFromLast": 3.983951853133349,
+                "CoordinatesDecimal": "S11.65180° E166.97173°"
+            },
+            {
+                "Latitude": -11.65177,
+                "Longitude": 166.97172,
+                "Altitude": 42.0,
+                "Index": 310,
+                "DistanceOnSegment": 2438.490545997419,
+                "DistanceFromLast": 3.5091136709711512,
+                "CoordinatesDecimal": "S11.65177° E166.97172°"
+            },
+            {
+                "Latitude": -11.65174,
+                "Longitude": 166.9717,
+                "Altitude": 42.2,
+                "Index": 311,
+                "DistanceOnSegment": 2442.474498109387,
+                "DistanceFromLast": 3.983952111967972,
+                "CoordinatesDecimal": "S11.65174° E166.97170°"
+            },
+            {
+                "Latitude": -11.6517,
+                "Longitude": 166.97169,
+                "Altitude": 42.6,
+                "Index": 312,
+                "DistanceOnSegment": 2447.0536789869943,
+                "DistanceFromLast": 4.579180877607449,
+                "CoordinatesDecimal": "S11.65170° E166.97169°"
+            },
+            {
+                "Latitude": -11.65166,
+                "Longitude": 166.97166,
+                "Altitude": 43.0,
+                "Index": 313,
+                "DistanceOnSegment": 2452.5724551858057,
+                "DistanceFromLast": 5.518776198811158,
+                "CoordinatesDecimal": "S11.65166° E166.97166°"
+            },
+            {
+                "Latitude": -11.65163,
+                "Longitude": 166.97166,
+                "Altitude": 43.6,
+                "Index": 314,
+                "DistanceOnSegment": 2455.9083029850162,
+                "DistanceFromLast": 3.3358477992104754,
+                "CoordinatesDecimal": "S11.65163° E166.97166°"
+            },
+            {
+                "Latitude": -11.65159,
+                "Longitude": 166.97166,
+                "Altitude": 44.2,
+                "Index": 315,
+                "DistanceOnSegment": 2460.3561000508275,
+                "DistanceFromLast": 4.447797065811488,
+                "CoordinatesDecimal": "S11.65159° E166.97166°"
+            },
+            {
+                "Latitude": -11.65156,
+                "Longitude": 166.97169,
+                "Altitude": 44.6,
+                "Index": 316,
+                "DistanceOnSegment": 2465.0253484488167,
+                "DistanceFromLast": 4.6692483979892305,
+                "CoordinatesDecimal": "S11.65156° E166.97169°"
+            },
+            {
+                "Latitude": -11.65153,
+                "Longitude": 166.9717,
+                "Altitude": 45.0,
+                "Index": 317,
+                "DistanceOnSegment": 2468.5344624119107,
+                "DistanceFromLast": 3.5091139630939163,
+                "CoordinatesDecimal": "S11.65153° E166.97170°"
+            },
+            {
+                "Latitude": -11.6515,
+                "Longitude": 166.97173,
+                "Altitude": 45.2,
+                "Index": 318,
+                "DistanceOnSegment": 2473.20371130557,
+                "DistanceFromLast": 4.6692488936590575,
+                "CoordinatesDecimal": "S11.65150° E166.97173°"
+            },
+            {
+                "Latitude": -11.65148,
+                "Longitude": 166.97176,
+                "Altitude": 45.6,
+                "Index": 319,
+                "DistanceOnSegment": 2477.1558918780006,
+                "DistanceFromLast": 3.9521805724309487,
+                "CoordinatesDecimal": "S11.65148° E166.97176°"
+            },
+            {
+                "Latitude": -11.65146,
+                "Longitude": 166.97179,
+                "Altitude": 45.8,
+                "Index": 320,
+                "DistanceOnSegment": 2481.1080726472815,
+                "DistanceFromLast": 3.9521807692808832,
+                "CoordinatesDecimal": "S11.65146° E166.97179°"
+            },
+            {
+                "Latitude": -11.65146,
+                "Longitude": 166.97183,
+                "Altitude": 46.2,
+                "Index": 321,
+                "DistanceOnSegment": 2485.4642195516844,
+                "DistanceFromLast": 4.356146904402783,
+                "CoordinatesDecimal": "S11.65146° E166.97183°"
+            },
+            {
+                "Latitude": -11.65148,
+                "Longitude": 166.97187,
+                "Altitude": 46.4,
+                "Index": 322,
+                "DistanceOnSegment": 2490.3552050499356,
+                "DistanceFromLast": 4.8909854982512,
+                "CoordinatesDecimal": "S11.65148° E166.97187°"
+            },
+            {
+                "Latitude": -11.65151,
+                "Longitude": 166.9719,
+                "Altitude": 46.6,
+                "Index": 323,
+                "DistanceOnSegment": 2495.024454108284,
+                "DistanceFromLast": 4.669249058348023,
+                "CoordinatesDecimal": "S11.65151° E166.97190°"
+            },
+            {
+                "Latitude": -11.65155,
+                "Longitude": 166.97193,
+                "Altitude": 46.6,
+                "Index": 324,
+                "DistanceOnSegment": 2500.543231351241,
+                "DistanceFromLast": 5.5187772429571,
+                "CoordinatesDecimal": "S11.65155° E166.97193°"
+            },
+            {
+                "Latitude": -11.6516,
+                "Longitude": 166.97196,
+                "Altitude": 46.8,
+                "Index": 325,
+                "DistanceOnSegment": 2506.9918575119136,
+                "DistanceFromLast": 6.448626160672685,
+                "CoordinatesDecimal": "S11.65160° E166.97196°"
+            },
+            {
+                "Latitude": -11.65164,
+                "Longitude": 166.97197,
+                "Altitude": 47.0,
+                "Index": 326,
+                "DistanceOnSegment": 2511.5710384827357,
+                "DistanceFromLast": 4.579180970822222,
+                "CoordinatesDecimal": "S11.65164° E166.97197°"
+            },
+            {
+                "Latitude": -11.6517,
+                "Longitude": 166.97199,
+                "Altitude": 47.4,
+                "Index": 327,
+                "DistanceOnSegment": 2518.589266104638,
+                "DistanceFromLast": 7.018227621902505,
+                "CoordinatesDecimal": "S11.65170° E166.97199°"
+            },
+            {
+                "Latitude": -11.65175,
+                "Longitude": 166.97199,
+                "Altitude": 48.0,
+                "Index": 328,
+                "DistanceOnSegment": 2524.1490124368534,
+                "DistanceFromLast": 5.55974633221498,
+                "CoordinatesDecimal": "S11.65175° E166.97199°"
+            },
+            {
+                "Latitude": -11.6518,
+                "Longitude": 166.97197,
+                "Altitude": 48.4,
+                "Index": 329,
+                "DistanceOnSegment": 2530.1201741735053,
+                "DistanceFromLast": 5.97116173665189,
+                "CoordinatesDecimal": "S11.65180° E166.97197°"
+            },
+            {
+                "Latitude": -11.65185,
+                "Longitude": 166.97196,
+                "Altitude": 48.8,
+                "Index": 330,
+                "DistanceOnSegment": 2535.7855759380227,
+                "DistanceFromLast": 5.6654017645172825,
+                "CoordinatesDecimal": "S11.65185° E166.97196°"
+            },
+            {
+                "Latitude": -11.65189,
+                "Longitude": 166.97194,
+                "Altitude": 49.2,
+                "Index": 331,
+                "DistanceOnSegment": 2540.7380388304873,
+                "DistanceFromLast": 4.9524628924646645,
+                "CoordinatesDecimal": "S11.65189° E166.97194°"
+            },
+            {
+                "Latitude": -11.65193,
+                "Longitude": 166.97191,
+                "Altitude": 49.6,
+                "Index": 332,
+                "DistanceOnSegment": 2546.2568134282496,
+                "DistanceFromLast": 5.518774597762345,
+                "CoordinatesDecimal": "S11.65193° E166.97191°"
+            },
+            {
+                "Latitude": -11.65198,
+                "Longitude": 166.9719,
+                "Altitude": 50.0,
+                "Index": 333,
+                "DistanceOnSegment": 2551.9222150948194,
+                "DistanceFromLast": 5.665401666569878,
+                "CoordinatesDecimal": "S11.65198° E166.97190°"
+            },
+            {
+                "Latitude": -11.65203,
+                "Longitude": 166.9719,
+                "Altitude": 50.4,
+                "Index": 334,
+                "DistanceOnSegment": 2557.4819614270345,
+                "DistanceFromLast": 5.55974633221498,
+                "CoordinatesDecimal": "S11.65203° E166.97190°"
+            },
+            {
+                "Latitude": -11.65208,
+                "Longitude": 166.9719,
+                "Altitude": 50.6,
+                "Index": 335,
+                "DistanceOnSegment": 2563.0417077592497,
+                "DistanceFromLast": 5.55974633221498,
+                "CoordinatesDecimal": "S11.65208° E166.97190°"
+            },
+            {
+                "Latitude": -11.65212,
+                "Longitude": 166.97193,
+                "Altitude": 51.0,
+                "Index": 336,
+                "DistanceOnSegment": 2568.5604810343834,
+                "DistanceFromLast": 5.518773275133946,
+                "CoordinatesDecimal": "S11.65212° E166.97193°"
+            },
+            {
+                "Latitude": -11.65216,
+                "Longitude": 166.97196,
+                "Altitude": 51.8,
+                "Index": 337,
+                "DistanceOnSegment": 2574.079254032899,
+                "DistanceFromLast": 5.518772998515591,
+                "CoordinatesDecimal": "S11.65216° E166.97196°"
+            },
+            {
+                "Latitude": -11.65218,
+                "Longitude": 166.97199,
+                "Altitude": 52.6,
+                "Index": 338,
+                "DistanceOnSegment": 2578.0314279979034,
+                "DistanceFromLast": 3.9521739650044294,
+                "CoordinatesDecimal": "S11.65218° E166.97199°"
+            },
+            {
+                "Latitude": -11.6522,
+                "Longitude": 166.97202,
+                "Altitude": 53.2,
+                "Index": 339,
+                "DistanceOnSegment": 2581.9836017660464,
+                "DistanceFromLast": 3.952173768143141,
+                "CoordinatesDecimal": "S11.65220° E166.97202°"
+            },
+            {
+                "Latitude": -11.65221,
+                "Longitude": 166.97205,
+                "Altitude": 53.6,
+                "Index": 340,
+                "DistanceOnSegment": 2585.434744018583,
+                "DistanceFromLast": 3.4511422525364432,
+                "CoordinatesDecimal": "S11.65221° E166.97205°"
+            },
+            {
+                "Latitude": -11.65222,
+                "Longitude": 166.97208,
+                "Altitude": 54.0,
+                "Index": 341,
+                "DistanceOnSegment": 2588.8858861598,
+                "DistanceFromLast": 3.4511421412169527,
+                "CoordinatesDecimal": "S11.65222° E166.97208°"
+            },
+            {
+                "Latitude": -11.65223,
+                "Longitude": 166.97212,
+                "Altitude": 54.2,
+                "Index": 342,
+                "DistanceOnSegment": 2593.3817000464223,
+                "DistanceFromLast": 4.495813886622156,
+                "CoordinatesDecimal": "S11.65223° E166.97212°"
+            },
+            {
+                "Latitude": -11.65224,
+                "Longitude": 166.97216,
+                "Altitude": 54.2,
+                "Index": 343,
+                "DistanceOnSegment": 2597.8775137841762,
+                "DistanceFromLast": 4.495813737753925,
+                "CoordinatesDecimal": "S11.65224° E166.97216°"
+            },
+            {
+                "Latitude": -11.65225,
+                "Longitude": 166.9722,
+                "Altitude": 54.4,
+                "Index": 344,
+                "DistanceOnSegment": 2602.373327366966,
+                "DistanceFromLast": 4.495813582789745,
+                "CoordinatesDecimal": "S11.65225° E166.97220°"
+            },
+            {
+                "Latitude": -11.65225,
+                "Longitude": 166.97225,
+                "Altitude": 54.8,
+                "Index": 345,
+                "DistanceOnSegment": 2607.8184955152133,
+                "DistanceFromLast": 5.44516814824739,
+                "CoordinatesDecimal": "S11.65225° E166.97225°"
+            },
+            {
+                "Latitude": -11.65222,
+                "Longitude": 166.9723,
+                "Altitude": 55.2,
+                "Index": 346,
+                "DistanceOnSegment": 2614.204240567382,
+                "DistanceFromLast": 6.385745052168749,
+                "CoordinatesDecimal": "S11.65222° E166.97230°"
+            },
+            {
+                "Latitude": -11.6522,
+                "Longitude": 166.97234,
+                "Altitude": 55.6,
+                "Index": 347,
+                "DistanceOnSegment": 2619.095215735202,
+                "DistanceFromLast": 4.89097516782028,
+                "CoordinatesDecimal": "S11.65220° E166.97234°"
+            },
+            {
+                "Latitude": -11.65219,
+                "Longitude": 166.97238,
+                "Altitude": 56.0,
+                "Index": 348,
+                "DistanceOnSegment": 2623.591030077621,
+                "DistanceFromLast": 4.495814342418666,
+                "CoordinatesDecimal": "S11.65219° E166.97238°"
+            },
+            {
+                "Latitude": -11.65221,
+                "Longitude": 166.97244,
+                "Altitude": 56.8,
+                "Index": 349,
+                "DistanceOnSegment": 2630.4933146940766,
+                "DistanceFromLast": 6.90228461645591,
+                "CoordinatesDecimal": "S11.65221° E166.97244°"
+            },
+            {
+                "Latitude": -11.65223,
+                "Longitude": 166.97246,
+                "Altitude": 57.4,
+                "Index": 350,
+                "DistanceOnSegment": 2633.6061434228586,
+                "DistanceFromLast": 3.1128287287821546,
+                "CoordinatesDecimal": "S11.65223° E166.97246°"
+            },
+            {
+                "Latitude": -11.65226,
+                "Longitude": 166.97249,
+                "Altitude": 57.8,
+                "Index": 351,
+                "DistanceOnSegment": 2638.27538630831,
+                "DistanceFromLast": 4.66924288545138,
+                "CoordinatesDecimal": "S11.65226° E166.97249°"
+            },
+            {
+                "Latitude": -11.6523,
+                "Longitude": 166.97251,
+                "Altitude": 58.0,
+                "Index": 352,
+                "DistanceOnSegment": 2643.22784778723,
+                "DistanceFromLast": 4.952461478920174,
+                "CoordinatesDecimal": "S11.65230° E166.97251°"
+            },
+            {
+                "Latitude": -11.65233,
+                "Longitude": 166.97252,
+                "Altitude": 58.6,
+                "Index": 353,
+                "DistanceOnSegment": 2646.7369608134914,
+                "DistanceFromLast": 3.509113026261169,
+                "CoordinatesDecimal": "S11.65233° E166.97252°"
+            },
+            {
+                "Latitude": -11.65237,
+                "Longitude": 166.97254,
+                "Altitude": 59.2,
+                "Index": 354,
+                "DistanceOnSegment": 2651.68942205107,
+                "DistanceFromLast": 4.952461237578577,
+                "CoordinatesDecimal": "S11.65237° E166.97254°"
+            },
+            {
+                "Latitude": -11.6524,
+                "Longitude": 166.97255,
+                "Altitude": 59.2,
+                "Index": 355,
+                "DistanceOnSegment": 2655.198534992366,
+                "DistanceFromLast": 3.5091129412964834,
+                "CoordinatesDecimal": "S11.65240° E166.97255°"
+            },
+            {
+                "Latitude": -11.65242,
+                "Longitude": 166.97259,
+                "Altitude": 59.2,
+                "Index": 356,
+                "DistanceOnSegment": 2660.089507364566,
+                "DistanceFromLast": 4.890972372199989,
+                "CoordinatesDecimal": "S11.65242° E166.97259°"
+            },
+            {
+                "Latitude": -11.65241,
+                "Longitude": 166.97265,
+                "Altitude": 59.4,
+                "Index": 357,
+                "DistanceOnSegment": 2666.717642343027,
+                "DistanceFromLast": 6.6281349784606265,
+                "CoordinatesDecimal": "S11.65241° E166.97265°"
+            },
+            {
+                "Latitude": -11.65238,
+                "Longitude": 166.97269,
+                "Altitude": 59.8,
+                "Index": 358,
+                "DistanceOnSegment": 2672.2043324816127,
+                "DistanceFromLast": 5.4866901385858045,
+                "CoordinatesDecimal": "S11.65238° E166.97269°"
+            },
+            {
+                "Latitude": -11.65235,
+                "Longitude": 166.97272,
+                "Altitude": 60.4,
+                "Index": 359,
+                "DistanceOnSegment": 2676.8735743818775,
+                "DistanceFromLast": 4.669241900264622,
+                "CoordinatesDecimal": "S11.65235° E166.97272°"
+            },
+            {
+                "Latitude": -11.65231,
+                "Longitude": 166.97274,
+                "Altitude": 61.0,
+                "Index": 360,
+                "DistanceOnSegment": 2681.8260356870496,
+                "DistanceFromLast": 4.952461305172198,
+                "CoordinatesDecimal": "S11.65231° E166.97274°"
+            },
+            {
+                "Latitude": -11.65227,
+                "Longitude": 166.97275,
+                "Altitude": 61.8,
+                "Index": 361,
+                "DistanceOnSegment": 2686.4052160333185,
+                "DistanceFromLast": 4.5791803462687835,
+                "CoordinatesDecimal": "S11.65227° E166.97275°"
+            },
+            {
+                "Latitude": -11.65223,
+                "Longitude": 166.97275,
+                "Altitude": 62.4,
+                "Index": 362,
+                "DistanceOnSegment": 2690.85301309913,
+                "DistanceFromLast": 4.447797065811488,
+                "CoordinatesDecimal": "S11.65223° E166.97275°"
+            },
+            {
+                "Latitude": -11.6522,
+                "Longitude": 166.97275,
+                "Altitude": 63.0,
+                "Index": 363,
+                "DistanceOnSegment": 2694.1888608983404,
+                "DistanceFromLast": 3.3358477992104754,
+                "CoordinatesDecimal": "S11.65220° E166.97275°"
+            },
+            {
+                "Latitude": -11.65217,
+                "Longitude": 166.97274,
+                "Altitude": 63.6,
+                "Index": 364,
+                "DistanceOnSegment": 2697.6979740829283,
+                "DistanceFromLast": 3.5091131845879215,
+                "CoordinatesDecimal": "S11.65217° E166.97274°"
+            },
+            {
+                "Latitude": -11.65214,
+                "Longitude": 166.97274,
+                "Altitude": 64.2,
+                "Index": 365,
+                "DistanceOnSegment": 2701.0338218823363,
+                "DistanceFromLast": 3.3358477994079965,
+                "CoordinatesDecimal": "S11.65214° E166.97274°"
+            },
+            {
+                "Latitude": -11.65211,
+                "Longitude": 166.97274,
+                "Altitude": 64.6,
+                "Index": 366,
+                "DistanceOnSegment": 2704.369669681547,
+                "DistanceFromLast": 3.3358477992104754,
+                "CoordinatesDecimal": "S11.65211° E166.97274°"
+            },
+            {
+                "Latitude": -11.65209,
+                "Longitude": 166.97272,
+                "Altitude": 65.0,
+                "Index": 367,
+                "DistanceOnSegment": 2707.4824990665315,
+                "DistanceFromLast": 3.1128293849846225,
+                "CoordinatesDecimal": "S11.65209° E166.97272°"
+            },
+            {
+                "Latitude": -11.65206,
+                "Longitude": 166.9727,
+                "Altitude": 65.6,
+                "Index": 368,
+                "DistanceOnSegment": 2711.4664498068933,
+                "DistanceFromLast": 3.9839507403616548,
+                "CoordinatesDecimal": "S11.65206° E166.97270°"
+            },
+            {
+                "Latitude": -11.65204,
+                "Longitude": 166.97269,
+                "Altitude": 66.0,
+                "Index": 369,
+                "DistanceOnSegment": 2713.942680942927,
+                "DistanceFromLast": 2.4762311360337006,
+                "CoordinatesDecimal": "S11.65204° E166.97269°"
+            },
+            {
+                "Latitude": -11.65202,
+                "Longitude": 166.97266,
+                "Altitude": 66.4,
+                "Index": 370,
+                "DistanceOnSegment": 2717.8948562688183,
+                "DistanceFromLast": 3.9521753258915364,
+                "CoordinatesDecimal": "S11.65202° E166.97266°"
+            },
+            {
+                "Latitude": -11.652,
+                "Longitude": 166.97265,
+                "Altitude": 66.8,
+                "Index": 371,
+                "DistanceOnSegment": 2720.3710874738053,
+                "DistanceFromLast": 2.4762312049868362,
+                "CoordinatesDecimal": "S11.65200° E166.97265°"
+            },
+            {
+                "Latitude": -11.65199,
+                "Longitude": 166.97262,
+                "Altitude": 67.2,
+                "Index": 372,
+                "DistanceOnSegment": 2723.8222320610994,
+                "DistanceFromLast": 3.4511445872939084,
+                "CoordinatesDecimal": "S11.65199° E166.97262°"
+            },
+            {
+                "Latitude": -11.65198,
+                "Longitude": 166.97259,
+                "Altitude": 67.6,
+                "Index": 373,
+                "DistanceOnSegment": 2727.273376762641,
+                "DistanceFromLast": 3.4511447015414976,
+                "CoordinatesDecimal": "S11.65198° E166.97259°"
+            },
+            {
+                "Latitude": -11.65197,
+                "Longitude": 166.97255,
+                "Altitude": 68.0,
+                "Index": 374,
+                "DistanceOnSegment": 2731.769194447125,
+                "DistanceFromLast": 4.495817684484024,
+                "CoordinatesDecimal": "S11.65197° E166.97255°"
+            },
+            {
+                "Latitude": -11.65195,
+                "Longitude": 166.97252,
+                "Altitude": 68.4,
+                "Index": 375,
+                "DistanceOnSegment": 2735.721370453565,
+                "DistanceFromLast": 3.9521760064402702,
+                "CoordinatesDecimal": "S11.65195° E166.97252°"
+            },
+            {
+                "Latitude": -11.65193,
+                "Longitude": 166.97249,
+                "Altitude": 68.8,
+                "Index": 376,
+                "DistanceOnSegment": 2739.6735466543046,
+                "DistanceFromLast": 3.9521762007391334,
+                "CoordinatesDecimal": "S11.65193° E166.97249°"
+            },
+            {
+                "Latitude": -11.65189,
+                "Longitude": 166.97248,
+                "Altitude": 69.2,
+                "Index": 377,
+                "DistanceOnSegment": 2744.2527273548017,
+                "DistanceFromLast": 4.579180700497294,
+                "CoordinatesDecimal": "S11.65189° E166.97248°"
+            },
+            {
+                "Latitude": -11.65186,
+                "Longitude": 166.97248,
+                "Altitude": 69.4,
+                "Index": 378,
+                "DistanceOnSegment": 2747.5885751542096,
+                "DistanceFromLast": 3.3358477994079965,
+                "CoordinatesDecimal": "S11.65186° E166.97248°"
+            },
+            {
+                "Latitude": -11.65182,
+                "Longitude": 166.97248,
+                "Altitude": 70.0,
+                "Index": 379,
+                "DistanceOnSegment": 2752.0363722198235,
+                "DistanceFromLast": 4.447797065613965,
+                "CoordinatesDecimal": "S11.65182° E166.97248°"
+            },
+            {
+                "Latitude": -11.65179,
+                "Longitude": 166.97249,
+                "Altitude": 70.6,
+                "Index": 380,
+                "DistanceOnSegment": 2755.5454858666544,
+                "DistanceFromLast": 3.5091136468307464,
+                "CoordinatesDecimal": "S11.65179° E166.97249°"
+            },
+            {
+                "Latitude": -11.65176,
+                "Longitude": 166.97252,
+                "Altitude": 71.0,
+                "Index": 381,
+                "DistanceOnSegment": 2760.2147326213076,
+                "DistanceFromLast": 4.669246754653314,
+                "CoordinatesDecimal": "S11.65176° E166.97252°"
+            },
+            {
+                "Latitude": -11.65175,
+                "Longitude": 166.97255,
+                "Altitude": 71.4,
+                "Index": 382,
+                "DistanceOnSegment": 2763.665879883124,
+                "DistanceFromLast": 3.451147261816422,
+                "CoordinatesDecimal": "S11.65175° E166.97255°"
+            },
+            {
+                "Latitude": -11.65175,
+                "Longitude": 166.97259,
+                "Altitude": 71.8,
+                "Index": 383,
+                "DistanceOnSegment": 2768.02202223784,
+                "DistanceFromLast": 4.356142354715899,
+                "CoordinatesDecimal": "S11.65175° E166.97259°"
+            },
+            {
+                "Latitude": -11.65175,
+                "Longitude": 166.97262,
+                "Altitude": 72.2,
+                "Index": 384,
+                "DistanceOnSegment": 2771.289129006198,
+                "DistanceFromLast": 3.267106768358344,
+                "CoordinatesDecimal": "S11.65175° E166.97262°"
+            },
+            {
+                "Latitude": -11.65176,
+                "Longitude": 166.97266,
+                "Altitude": 72.4,
+                "Index": 385,
+                "DistanceOnSegment": 2775.7849500327343,
+                "DistanceFromLast": 4.495821026536168,
+                "CoordinatesDecimal": "S11.65176° E166.97266°"
+            },
+            {
+                "Latitude": -11.65178,
+                "Longitude": 166.97269,
+                "Altitude": 72.8,
+                "Index": 386,
+                "DistanceOnSegment": 2779.7371278860564,
+                "DistanceFromLast": 3.9521778533222474,
+                "CoordinatesDecimal": "S11.65178° E166.97269°"
+            },
+            {
+                "Latitude": -11.6518,
+                "Longitude": 166.97272,
+                "Altitude": 73.2,
+                "Index": 387,
+                "DistanceOnSegment": 2783.6893055448604,
+                "DistanceFromLast": 3.9521776588038513,
+                "CoordinatesDecimal": "S11.65180° E166.97272°"
+            },
+            {
+                "Latitude": -11.65183,
+                "Longitude": 166.97275,
+                "Altitude": 73.6,
+                "Index": 388,
+                "DistanceOnSegment": 2788.3585519682442,
+                "DistanceFromLast": 4.66924642338396,
+                "CoordinatesDecimal": "S11.65183° E166.97275°"
+            },
+            {
+                "Latitude": -11.65186,
+                "Longitude": 166.97278,
+                "Altitude": 74.2,
+                "Index": 389,
+                "DistanceOnSegment": 2793.0277981468244,
+                "DistanceFromLast": 4.669246178580177,
+                "CoordinatesDecimal": "S11.65186° E166.97278°"
+            },
+            {
+                "Latitude": -11.65189,
+                "Longitude": 166.9728,
+                "Altitude": 74.8,
+                "Index": 390,
+                "DistanceOnSegment": 2797.0117497445062,
+                "DistanceFromLast": 3.983951597681846,
+                "CoordinatesDecimal": "S11.65189° E166.97280°"
+            },
+            {
+                "Latitude": -11.65191,
+                "Longitude": 166.97281,
+                "Altitude": 75.4,
+                "Index": 391,
+                "DistanceOnSegment": 2799.487981139113,
+                "DistanceFromLast": 2.476231394606798,
+                "CoordinatesDecimal": "S11.65191° E166.97281°"
+            },
+            {
+                "Latitude": -11.65194,
+                "Longitude": 166.97283,
+                "Altitude": 75.8,
+                "Index": 392,
+                "DistanceOnSegment": 2803.4719325206497,
+                "DistanceFromLast": 3.983951381536884,
+                "CoordinatesDecimal": "S11.65194° E166.97283°"
+            },
+            {
+                "Latitude": -11.65196,
+                "Longitude": 166.97284,
+                "Altitude": 76.2,
+                "Index": 393,
+                "DistanceOnSegment": 2805.948163829066,
+                "DistanceFromLast": 2.476231308416118,
+                "CoordinatesDecimal": "S11.65196° E166.97284°"
+            },
+            {
+                "Latitude": -11.65199,
+                "Longitude": 166.97288,
+                "Altitude": 76.6,
+                "Index": 394,
+                "DistanceOnSegment": 2811.434859195817,
+                "DistanceFromLast": 5.486695366751046,
+                "CoordinatesDecimal": "S11.65199° E166.97288°"
+            },
+            {
+                "Latitude": -11.65202,
+                "Longitude": 166.97291,
+                "Altitude": 76.8,
+                "Index": 395,
+                "DistanceOnSegment": 2816.1041040581094,
+                "DistanceFromLast": 4.669244862292706,
+                "CoordinatesDecimal": "S11.65202° E166.97291°"
+            },
+            {
+                "Latitude": -11.65205,
+                "Longitude": 166.97292,
+                "Altitude": 76.8,
+                "Index": 396,
+                "DistanceOnSegment": 2819.613217424015,
+                "DistanceFromLast": 3.5091133659055482,
+                "CoordinatesDecimal": "S11.65205° E166.97292°"
+            },
+            {
+                "Latitude": -11.65209,
+                "Longitude": 166.97294,
+                "Altitude": 76.8,
+                "Index": 397,
+                "DistanceOnSegment": 2824.565679626952,
+                "DistanceFromLast": 4.952462202936684,
+                "CoordinatesDecimal": "S11.65209° E166.97294°"
+            },
+            {
+                "Latitude": -11.65215,
+                "Longitude": 166.97295,
+                "Altitude": 76.8,
+                "Index": 398,
+                "DistanceOnSegment": 2831.325673526329,
+                "DistanceFromLast": 6.759993899377233,
+                "CoordinatesDecimal": "S11.65215° E166.97295°"
+            },
+            {
+                "Latitude": -11.6522,
+                "Longitude": 166.97298,
+                "Altitude": 76.8,
+                "Index": 399,
+                "DistanceOnSegment": 2837.7742961125746,
+                "DistanceFromLast": 6.4486225862455955,
+                "CoordinatesDecimal": "S11.65220° E166.97298°"
+            },
+            {
+                "Latitude": -11.65225,
+                "Longitude": 166.97299,
+                "Altitude": 77.2,
+                "Index": 400,
+                "DistanceOnSegment": 2843.4396975757118,
+                "DistanceFromLast": 5.665401463137349,
+                "CoordinatesDecimal": "S11.65225° E166.97299°"
+            },
+            {
+                "Latitude": -11.65228,
+                "Longitude": 166.97306,
+                "Altitude": 77.6,
+                "Index": 401,
+                "DistanceOnSegment": 2851.7608508789635,
+                "DistanceFromLast": 8.321153303251819,
+                "CoordinatesDecimal": "S11.65228° E166.97306°"
+            },
+            {
+                "Latitude": -11.65228,
+                "Longitude": 166.97312,
+                "Altitude": 78.2,
+                "Index": 402,
+                "DistanceOnSegment": 2858.29505194822,
+                "DistanceFromLast": 6.534201069256633,
+                "CoordinatesDecimal": "S11.65228° E166.97312°"
+            },
+            {
+                "Latitude": -11.65224,
+                "Longitude": 166.97314,
+                "Altitude": 78.8,
+                "Index": 403,
+                "DistanceOnSegment": 2863.2475134959172,
+                "DistanceFromLast": 4.952461547697269,
+                "CoordinatesDecimal": "S11.65224° E166.97314°"
+            },
+            {
+                "Latitude": -11.6522,
+                "Longitude": 166.97318,
+                "Altitude": 79.4,
+                "Index": 404,
+                "DistanceOnSegment": 2869.4731709536227,
+                "DistanceFromLast": 6.22565745770537,
+                "CoordinatesDecimal": "S11.65220° E166.97318°"
+            },
+            {
+                "Latitude": -11.65215,
+                "Longitude": 166.97318,
+                "Altitude": 80.0,
+                "Index": 405,
+                "DistanceOnSegment": 2875.032917285838,
+                "DistanceFromLast": 5.55974633221498,
+                "CoordinatesDecimal": "S11.65215° E166.97318°"
+            },
+            {
+                "Latitude": -11.65211,
+                "Longitude": 166.97318,
+                "Altitude": 80.4,
+                "Index": 406,
+                "DistanceOnSegment": 2879.480714351649,
+                "DistanceFromLast": 4.447797065811488,
+                "CoordinatesDecimal": "S11.65211° E166.97318°"
+            },
+            {
+                "Latitude": -11.65206,
+                "Longitude": 166.97317,
+                "Altitude": 80.8,
+                "Index": 407,
+                "DistanceOnSegment": 2885.1461159202704,
+                "DistanceFromLast": 5.66540156862144,
+                "CoordinatesDecimal": "S11.65206° E166.97317°"
+            },
+            {
+                "Latitude": -11.65202,
+                "Longitude": 166.97317,
+                "Altitude": 81.0,
+                "Index": 408,
+                "DistanceOnSegment": 2889.5939129860817,
+                "DistanceFromLast": 4.447797065811488,
+                "CoordinatesDecimal": "S11.65202° E166.97317°"
+            },
+            {
+                "Latitude": -11.65197,
+                "Longitude": 166.97317,
+                "Altitude": 81.0,
+                "Index": 409,
+                "DistanceOnSegment": 2895.153659318297,
+                "DistanceFromLast": 5.55974633221498,
+                "CoordinatesDecimal": "S11.65197° E166.97317°"
+            },
+            {
+                "Latitude": -11.65192,
+                "Longitude": 166.97317,
+                "Altitude": 81.2,
+                "Index": 410,
+                "DistanceOnSegment": 2900.713405650512,
+                "DistanceFromLast": 5.55974633221498,
+                "CoordinatesDecimal": "S11.65192° E166.97317°"
+            },
+            {
+                "Latitude": -11.65186,
+                "Longitude": 166.97314,
+                "Altitude": 81.2,
+                "Index": 411,
+                "DistanceOnSegment": 2908.1420998858694,
+                "DistanceFromLast": 7.428694235357216,
+                "CoordinatesDecimal": "S11.65186° E166.97314°"
+            },
+            {
+                "Latitude": -11.65181,
+                "Longitude": 166.97313,
+                "Altitude": 81.0,
+                "Index": 412,
+                "DistanceOnSegment": 2913.8075016428525,
+                "DistanceFromLast": 5.665401756982904,
+                "CoordinatesDecimal": "S11.65181° E166.97313°"
+            },
+            {
+                "Latitude": -11.65174,
+                "Longitude": 166.97312,
+                "Altitude": 80.8,
+                "Index": 413,
+                "DistanceOnSegment": 2921.666962545895,
+                "DistanceFromLast": 7.859460903042405,
+                "CoordinatesDecimal": "S11.65174° E166.97312°"
+            },
+            {
+                "Latitude": -11.65167,
+                "Longitude": 166.97309,
+                "Altitude": 80.4,
+                "Index": 414,
+                "DistanceOnSegment": 2930.1084741084624,
+                "DistanceFromLast": 8.441511562567662,
+                "CoordinatesDecimal": "S11.65167° E166.97309°"
+            },
+            {
+                "Latitude": -11.6516,
+                "Longitude": 166.97309,
+                "Altitude": 79.8,
+                "Index": 415,
+                "DistanceOnSegment": 2937.8921189734842,
+                "DistanceFromLast": 7.783644865021962,
+                "CoordinatesDecimal": "S11.65160° E166.97309°"
+            },
+            {
+                "Latitude": -11.65151,
+                "Longitude": 166.97312,
+                "Altitude": 78.0,
+                "Index": 416,
+                "DistanceOnSegment": 2948.419460825126,
+                "DistanceFromLast": 10.52734185164175,
+                "CoordinatesDecimal": "S11.65151° E166.97312°"
+            },
+            {
+                "Latitude": -11.65144,
+                "Longitude": 166.9732,
+                "Altitude": 75.2,
+                "Index": 417,
+                "DistanceOnSegment": 2960.1023193173587,
+                "DistanceFromLast": 11.682858492232603,
+                "CoordinatesDecimal": "S11.65144° E166.97320°"
+            },
+            {
+                "Latitude": -11.65137,
+                "Longitude": 166.97328,
+                "Altitude": 73.4,
+                "Index": 418,
+                "DistanceOnSegment": 2971.7851794462513,
+                "DistanceFromLast": 11.682860128892349,
+                "CoordinatesDecimal": "S11.65137° E166.97328°"
+            },
+            {
+                "Latitude": -11.65128,
+                "Longitude": 166.97331,
+                "Altitude": 70.4,
+                "Index": 419,
+                "DistanceOnSegment": 2982.3125221381515,
+                "DistanceFromLast": 10.527342691900085,
+                "CoordinatesDecimal": "S11.65128° E166.97331°"
+            },
+            {
+                "Latitude": -11.65122,
+                "Longitude": 166.97327,
+                "Altitude": 68.4,
+                "Index": 420,
+                "DistanceOnSegment": 2990.2804306886937,
+                "DistanceFromLast": 7.967908550542071,
+                "CoordinatesDecimal": "S11.65122° E166.97327°"
+            },
+            {
+                "Latitude": -11.65116,
+                "Longitude": 166.9732,
+                "Altitude": 67.2,
+                "Index": 421,
+                "DistanceOnSegment": 3000.4108642258266,
+                "DistanceFromLast": 10.130433537133012,
+                "CoordinatesDecimal": "S11.65116° E166.97320°"
+            },
+            {
+                "Latitude": -11.6511,
+                "Longitude": 166.97313,
+                "Altitude": 66.6,
+                "Index": 422,
+                "DistanceOnSegment": 3010.5412989994825,
+                "DistanceFromLast": 10.130434773655953,
+                "CoordinatesDecimal": "S11.65110° E166.97313°"
+            },
+            {
+                "Latitude": -11.65102,
+                "Longitude": 166.97312,
+                "Altitude": 66.4,
+                "Index": 423,
+                "DistanceOnSegment": 3019.503307666992,
+                "DistanceFromLast": 8.962008667509304,
+                "CoordinatesDecimal": "S11.65102° E166.97312°"
+            },
+            {
+                "Latitude": -11.65095,
+                "Longitude": 166.97318,
+                "Altitude": 66.8,
+                "Index": 424,
+                "DistanceOnSegment": 3029.666048883465,
+                "DistanceFromLast": 10.162741216472936,
+                "CoordinatesDecimal": "S11.65095° E166.97318°"
+            },
+            {
+                "Latitude": -11.65087,
+                "Longitude": 166.97324,
+                "Altitude": 66.8,
+                "Index": 425,
+                "DistanceOnSegment": 3040.703612002544,
+                "DistanceFromLast": 11.037563119079257,
+                "CoordinatesDecimal": "S11.65087° E166.97324°"
+            },
+            {
+                "Latitude": -11.65077,
+                "Longitude": 166.97333,
+                "Altitude": 66.8,
+                "Index": 426,
+                "DistanceOnSegment": 3055.5262177061436,
+                "DistanceFromLast": 14.822605703599379,
+                "CoordinatesDecimal": "S11.65077° E166.97333°"
+            },
+            {
+                "Latitude": -11.65069,
+                "Longitude": 166.97338,
+                "Altitude": 66.8,
+                "Index": 427,
+                "DistanceOnSegment": 3065.956067919797,
+                "DistanceFromLast": 10.42985021365352,
+                "CoordinatesDecimal": "S11.65069° E166.97338°"
+            },
+            {
+                "Latitude": -11.65056,
+                "Longitude": 166.97344,
+                "Altitude": 66.8,
+                "Index": 428,
+                "DistanceOnSegment": 3081.8196475978416,
+                "DistanceFromLast": 15.863579678044404,
+                "CoordinatesDecimal": "S11.65056° E166.97344°"
+            }
+        ],
+        "Id": "watopia-repack-ridge-001"
     }
 ]
