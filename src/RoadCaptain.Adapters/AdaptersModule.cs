@@ -29,7 +29,8 @@ namespace RoadCaptain.Adapters
                 .Except<MessageReceiverFromCaptureFile>()
                 .Except<MessageEmitterToQueue>()
                 .Except<IGameStateDispatcher>()
-                .Except<IGameStateReceiver>();
+                .Except<IGameStateReceiver>()
+                .Except<IZwiftGameConnection>();
 
             builder.RegisterType<MessageEmitterConfiguration>().AsSelf();
 
@@ -38,6 +39,7 @@ namespace RoadCaptain.Adapters
                 builder
                     .RegisterType<MessageReceiverFromSocket>()
                     .As<IMessageReceiver>()
+                    .As<IZwiftGameConnection>()
                     .SingleInstance();
                 
                 builder
@@ -51,6 +53,10 @@ namespace RoadCaptain.Adapters
                     .As<IMessageReceiver>()
                     .WithParameter("captureFilePath", CaptureFilePath)
                     .SingleInstance();
+
+                builder
+                    .RegisterType<NopZwiftGameConnection>()
+                    .As<IZwiftGameConnection>();
 
                 var testableHandler = TestableHandlerForZwiftApiCalls();
 

@@ -9,7 +9,7 @@ using RoadCaptain.Ports;
 
 namespace RoadCaptain.Adapters
 {
-    internal class MessageReceiverFromSocket : IMessageReceiver
+    internal class MessageReceiverFromSocket : IMessageReceiver, IZwiftGameConnection
     {
         private readonly Socket _socket;
         private Socket _acceptedSocket;
@@ -201,7 +201,7 @@ namespace RoadCaptain.Adapters
             }
         }
 
-        public void SendMessageBytes(byte[] payload)
+        private void SendMessageBytes(byte[] payload)
         {
             if (_acceptedSocket == null)
             {

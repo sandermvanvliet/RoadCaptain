@@ -10,7 +10,6 @@ namespace RoadCaptain.UseCases
     {
         private readonly IMessageEmitter _emitter;
         private readonly MonitoringEvents _monitoringEvents;
-        private readonly IMessageReceiver _messageReceiver;
         private bool _pingedBefore;
         private static readonly object SyncRoot = new();
 
@@ -20,19 +19,20 @@ namespace RoadCaptain.UseCases
         private readonly PlannedRoute _route;
         private readonly IGameStateDispatcher _gameStateDispatcher;
         private static ulong _lastIncomingSequenceNumber;
+        private readonly IZwiftGameConnection _gameConnection;
 
         public HandleZwiftMessagesUseCase(
             IMessageEmitter emitter,
-            MonitoringEvents monitoringEvents,
-            IMessageReceiver messageReceiver, 
+            MonitoringEvents monitoringEvents, 
             ISegmentStore segmentStore, 
-            IGameStateDispatcher gameStateDispatcher)
+            IGameStateDispatcher gameStateDispatcher, 
+            IZwiftGameConnection gameConnection)
         {
             _emitter = emitter;
             _monitoringEvents = monitoringEvents;
-            _messageReceiver = messageReceiver;
             _segmentStore = segmentStore;
             _gameStateDispatcher = gameStateDispatcher;
+            _gameConnection = gameConnection;
 
             _route = SegmentSequenceBuilder.TestLoopTwo();
         }
@@ -143,7 +143,7 @@ namespace RoadCaptain.UseCases
                     _pingedBefore = true;
                 }
 
-                _messageReceiver.SendInitialPairingMessage(ping.RiderId, 0);
+                _gameConnection.SendInitialPairingMessage(ping.RiderId, 0);
             }
         }
     }

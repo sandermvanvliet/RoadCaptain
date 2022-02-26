@@ -9,19 +9,19 @@ namespace RoadCaptain.UseCases
     {
         private readonly IGameStateReceiver _gameStateReceiver;
         private readonly MonitoringEvents _monitoringEvents;
-        private readonly IMessageReceiver _messageReceiver;
         private ulong _lastSequenceNumber;
         private int _lastRouteSequenceIndex;
         private GameState _previousState;
+        private readonly IZwiftGameConnection _gameConnection;
 
         public NavigationUseCase(
             IGameStateReceiver gameStateReceiver,
-            MonitoringEvents monitoringEvents,
-            IMessageReceiver messageReceiver)
+            MonitoringEvents monitoringEvents, 
+            IZwiftGameConnection gameConnection)
         {
             _gameStateReceiver = gameStateReceiver;
             _monitoringEvents = monitoringEvents;
-            _messageReceiver = messageReceiver;
+            _gameConnection = gameConnection;
         }
 
         public void Execute(CancellationToken token)
@@ -46,7 +46,7 @@ namespace RoadCaptain.UseCases
                 if (CommandsMatchTurnToNextSegment(turnState.Directions, turnState.Route.TurnToNextSegment))
                 {
                     _monitoringEvents.Information("Executing turn {TurnDirection}", turnState.Route.TurnToNextSegment);
-                    _messageReceiver.SendTurnCommand(turnState.Route.TurnToNextSegment, _lastSequenceNumber);
+                    _gameConnection.SendTurnCommand(turnState.Route.TurnToNextSegment, _lastSequenceNumber);
                 }
                 else
                 {

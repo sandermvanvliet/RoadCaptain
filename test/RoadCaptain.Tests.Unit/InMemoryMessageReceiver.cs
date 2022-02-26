@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using RoadCaptain.Ports;
+﻿using RoadCaptain.Ports;
 
 namespace RoadCaptain.Tests.Unit
 {
@@ -26,24 +25,6 @@ namespace RoadCaptain.Tests.Unit
             return AvailableBytes;
         }
 
-        public void Shutdown()
-        {
-        }
-
-        public void SendMessageBytes(byte[] payload)
-        {
-        }
-
-        public void SendInitialPairingMessage(uint riderId, uint sequenceNumber)
-        {
-        }
-
-        public void SendTurnCommand(TurnDirection direction, ulong sequenceNumber)
-        {
-            SentCommands.Add(direction.ToString());
-        }
-
         public byte[] AvailableBytes { get; set; }
-        public List<string> SentCommands { get; } = new();
     }
 }

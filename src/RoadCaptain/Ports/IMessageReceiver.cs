@@ -4,10 +4,5 @@
     public interface IMessageReceiver
     {
         byte[] ReceiveMessageBytes();
-        void Shutdown();
-
-        void SendMessageBytes(byte[] payload);
-        void SendInitialPairingMessage(uint riderId, uint sequenceNumber);
-        void SendTurnCommand(TurnDirection direction, ulong sequenceNumber);
     }
 }

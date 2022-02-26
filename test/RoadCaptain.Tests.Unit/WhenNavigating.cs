@@ -14,7 +14,7 @@ namespace RoadCaptain.Tests.Unit
     public class WhenNavigating
     {
         private readonly NavigationUseCase _useCase;
-        private readonly InMemoryMessageReceiver _inMemoryMessageReceiver;
+        private readonly InMemoryZwiftGameConnection _inMemoryZwiftGameConnection;
         private readonly PlannedRoute _plannedRoute;
         private readonly InMemoryGameStateDispatcher _gameStateDispatcher;
 
@@ -24,11 +24,11 @@ namespace RoadCaptain.Tests.Unit
             _gameStateDispatcher = new InMemoryGameStateDispatcher(monitoringEvents);
             _plannedRoute = FixedForTesting();
 
-            _inMemoryMessageReceiver = new InMemoryMessageReceiver();
+            _inMemoryZwiftGameConnection = new InMemoryZwiftGameConnection();
             _useCase = new NavigationUseCase(
                 _gameStateDispatcher,
                 monitoringEvents,
-                _inMemoryMessageReceiver);
+                _inMemoryZwiftGameConnection);
         }
         
         public static PlannedRoute FixedForTesting()
@@ -60,7 +60,7 @@ namespace RoadCaptain.Tests.Unit
 
             WhenHandlingNavigation();
 
-            _inMemoryMessageReceiver
+            _inMemoryZwiftGameConnection
                 .SentCommands
                 .Should()
                 .BeEmpty();
@@ -79,7 +79,7 @@ namespace RoadCaptain.Tests.Unit
 
             WhenHandlingNavigation();
 
-            _inMemoryMessageReceiver
+            _inMemoryZwiftGameConnection
                 .SentCommands
                 .Should()
                 .Contain(TurnDirection.Right.ToString())

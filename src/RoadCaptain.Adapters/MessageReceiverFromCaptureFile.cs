@@ -66,34 +66,6 @@ namespace RoadCaptain.Adapters
             return null;
         }
 
-        public void Shutdown()
-        {
-            try
-            {
-                _tokenSource.Cancel();
-            }
-            catch (OperationCanceledException)
-            {
-                // If the task has already been canceled or throws because
-                // it's cancelling then we can ignore this.
-            }
-        }
-
-        public void SendMessageBytes(byte[] payload)
-        {
-            // Ignore for now, nobody is listening
-        }
-
-        public void SendInitialPairingMessage(uint riderId, uint sequenceNumber)
-        {
-            // Ignore for now, nobody is listening
-        }
-
-        public void SendTurnCommand(TurnDirection direction, ulong sequenceNumber)
-        {
-            // Ignore for now, nobody is listening
-        }
-
         private void EnqueueForReceive(byte[] payload)
         {
             // Put the payload on a queue and signal ReceiveMessageBytes() that it can unblock
