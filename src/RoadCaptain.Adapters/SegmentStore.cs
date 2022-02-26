@@ -39,8 +39,8 @@ namespace RoadCaptain.Adapters
 
                 if (turnsForSegment != null)
                 {
-                    segment.NextSegmentsNodeA.AddRange(turnsForSegment.TurnsA);
-                    segment.NextSegmentsNodeB.AddRange(turnsForSegment.TurnsB);
+                    segment.NextSegmentsNodeA.AddRange(turnsForSegment.TurnsA.AsTurns());
+                    segment.NextSegmentsNodeB.AddRange(turnsForSegment.TurnsB.AsTurns());
                 }
             }
 
@@ -53,7 +53,39 @@ namespace RoadCaptain.Adapters
     internal class SegmentTurns
     {
         public string SegmentId { get; set; }
-        public List<Turn> TurnsA { get; set; }
-        public List<Turn> TurnsB { get; set; }
+        public SegmentTurn TurnsA { get; set; }
+        public SegmentTurn TurnsB { get; set; }
+    }
+
+    internal class SegmentTurn
+    {
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string Left { get; set; }
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string Right { get; set; }
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string GoStraight { get; set; }
+
+        public List<Turn> AsTurns()
+        {
+            List<Turn> turns = new();
+
+            if (!string.IsNullOrEmpty(Left))
+            {
+                turns.Add(new Turn(TurnDirection.Left, Left));
+            }
+            
+            if (!string.IsNullOrEmpty(Right))
+            {
+                turns.Add(new Turn(TurnDirection.Right, Right));
+            }
+
+            if (!string.IsNullOrEmpty(GoStraight))
+            {
+                turns.Add(new Turn(TurnDirection.GoStraight, GoStraight));
+            }
+
+            return turns;
+        }
     }
 }
