@@ -236,30 +236,6 @@ namespace RoadCaptain.Tests.Unit.GameState
                 .Be("route-segment-2");
         }
 
-        // TODO: Revisit this case
-        //[Fact]
-        public void GivenOnSegmentStateAndRouteIsInProgressAndPositionIsInStartingSegment_OnSegmentStateIsReturned()
-        {
-            // This test verifies that if we come across the starting segment again
-            // and the route has been started before that we don't attempt to restart
-            // the route.
-
-            _route.EnteredSegment("route-segment-1");
-            GameStates.GameState state = new OnRouteState(ActivityId, RoutePosition1, SegmentById("route-segment-1"), _route);
-            state = state.UpdatePosition(RoutePosition3, _segments, ((OnRouteState)state).Route);
-
-            var result = state.UpdatePosition(RoutePosition1, _segments, _route);
-
-            result
-                .Should()
-                .BeOfType<OnSegmentState>()
-                .Which
-                .CurrentSegment
-                .Id
-                .Should()
-                .Be("route-segment-1");
-        }
-
         [Fact]
         public void GivenOnSegmentStateAndPositionIsUpdatedFromOneToTwo_OnSegmentStateIsReturnedWithDirectionAtoB()
         {
