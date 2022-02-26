@@ -30,7 +30,6 @@ namespace RoadCaptain.UseCases
             // do-while to at least attempt one receive action
             do
             {
-                // Note: this call will block when using an actual network socket
                 var bytes = _messageReceiver.ReceiveMessageBytes();
 
                 if (bytes == null || bytes.Length <= 0)

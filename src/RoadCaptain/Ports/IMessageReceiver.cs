@@ -5,6 +5,11 @@
     /// </summary>
     public interface IMessageReceiver
     {
+        /// <summary>
+        /// Read raw payload data from a Zwift connection
+        /// </summary>
+        /// <returns>An array of bytes with a payload or <c>null</c> if the connection is closed</returns>
+        /// <remarks>This method blocks while waiting for new input</remarks>
         byte[] ReceiveMessageBytes();
     }
 }
