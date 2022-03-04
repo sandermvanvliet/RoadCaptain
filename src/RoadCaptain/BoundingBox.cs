@@ -4,12 +4,11 @@ namespace RoadCaptain
 {
     public class BoundingBox
     {
-        public double MinLatitude { get; }
-        public double MaxLatitude { get; }
+        private readonly double _minLatitude;
+        private readonly double _maxLatitude;
+        private readonly double _minLongitude;
+        private readonly double _maxLongitude;
 
-        public double MinLongitude { get; }
-        public double MaxLongitude { get; }
-        
         // Make the bounding box larger than the points on the segment.
         // That ensures that we can still match game positions properly
         // as they are never exactly aligned with the segment positions.
@@ -18,18 +17,18 @@ namespace RoadCaptain
 
         public BoundingBox(double minLongitude, double minLatitude, double maxLongitude, double maxLatitude)
         {
-            MinLongitude = minLongitude - LongitudeMargin;
-            MinLatitude = minLatitude - LatitudeMargin;
-            MaxLongitude = maxLongitude + LongitudeMargin;
-            MaxLatitude = maxLatitude + LatitudeMargin;
+            _minLongitude = minLongitude - LongitudeMargin;
+            _minLatitude = minLatitude - LatitudeMargin;
+            _maxLongitude = maxLongitude + LongitudeMargin;
+            _maxLatitude = maxLatitude + LatitudeMargin;
         }
 
         public bool IsIn(TrackPoint point)
         {
-            return point.Latitude >= MinLatitude &&
-                   point.Latitude <= MaxLatitude &&
-                   point.Longitude >= MinLongitude &&
-                   point.Longitude <= MaxLongitude;
+            return point.Latitude >= _minLatitude &&
+                   point.Latitude <= _maxLatitude &&
+                   point.Longitude >= _minLongitude &&
+                   point.Longitude <= _maxLongitude;
         }
 
         public static BoundingBox From(List<TrackPoint> points)
