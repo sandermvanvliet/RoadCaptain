@@ -1,0 +1,34 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net5.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Assets\arrow-down-right.png" />
+    <None Remove="Assets\arrow-up-right.png" />
+    <None Remove="Assets\gostraight.jpg" />
+    <None Remove="Assets\turnleft.jpg" />
+    <None Remove="Assets\turnright.jpg" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Assets\arrow-down-right.png" />
+    <Resource Include="Assets\arrow-up-right.png" />
+    <Resource Include="Assets\gostraight.jpg" />
+    <Resource Include="Assets\turnleft.jpg" />
+    <Resource Include="Assets\turnright.jpg" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="SkiaSharp" Version="2.80.3" />
+    <PackageReference Include="SkiaSharp.Views.WPF" Version="2.80.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\RoadCaptain\RoadCaptain.csproj" />
+  </ItemGroup>
+
+</Project>

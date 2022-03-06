@@ -1,0 +1,120 @@
+﻿<Window x:Class="RoadCaptain.RouteBuilder.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:RoadCaptain.RouteBuilder"
+        xmlns:viewmodels="clr-namespace:RoadCaptain.RouteBuilder.ViewModels"
+        xmlns:skia="clr-namespace:SkiaSharp.Views.WPF;assembly=SkiaSharp.Views.WPF"
+        mc:Ignorable="d"
+        Title="RoadCaptain Route Builder" 
+        Height="450" Width="800"
+        d:DataContext="{d:DesignInstance viewmodels:MainViewModel}">
+    <Grid Margin="0,2,2,0">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="200" />
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+
+        <skia:SKElement Grid.Row="0" Grid.Column="1">
+
+        </skia:SKElement>
+
+        <StackPanel Grid.Row="0" Grid.Column="0" Width="200" Orientation="Vertical" CanHorizontallyScroll="False" CanVerticallyScroll="False">
+            <Border CornerRadius="0,5,0,0" Background="#1192CC" BorderBrush="#cccccc"
+                            Width="Auto" HorizontalAlignment="Stretch" Padding="4,4,0,0" Height="56">
+                <StackPanel DataContext="{Binding Path=Route}" Orientation="Vertical" VerticalAlignment="Top">
+                    <StackPanel Orientation="Horizontal" Height="30">
+                        <TextBlock Text="{Binding Path=TotalDistance}" d:Text="12.34" FontSize="26" Foreground="White" FontWeight="Bold" VerticalAlignment="Bottom"/>
+                        <TextBlock Text="km" FontSize="16" Foreground="White" FontWeight="Bold" VerticalAlignment="Bottom" Padding="2,0,0,2"/>
+                    </StackPanel>
+
+                    <StackPanel Orientation="Horizontal" Height="18">
+                        <Image Source="Assets/arrow-up-right.png" Height="12" VerticalAlignment="Center" />
+                        <TextBlock Text="{Binding Path=TotalAscent}" d:Text="125" FontSize="16" FontWeight="Bold" VerticalAlignment="Bottom" />
+                        <TextBlock Text="m" FontSize="10" FontWeight="Bold" VerticalAlignment="Bottom" Padding="0,0,0,1.5"/>
+
+                        <Image Source="Assets/arrow-down-right.png" Height="12" VerticalAlignment="Center" Margin="4,0,0,0" />
+                        <TextBlock Text="{Binding Path=TotalDescent}" d:Text="54" FontSize="16" FontWeight="Bold" VerticalAlignment="Bottom" />
+                        <TextBlock Text="m" FontSize="10" FontWeight="Bold" VerticalAlignment="Bottom" Padding="0,0,0,1.5"/>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+            <ListView Width="200" Padding="0" Margin="0" ItemsSource="{Binding Path=Route.Sequence}" AlternationCount="2" 
+                      BorderThickness="0"
+                      ScrollViewer.HorizontalScrollBarVisibility="Disabled" 
+                      ScrollViewer.VerticalScrollBarVisibility="Auto"
+                      VerticalAlignment="Stretch" Height="Auto">
+                <d:ListView.ItemsSource>
+                    <x:Array Type="{x:Type viewmodels:SegmentSequenceViewModel}">
+                        <viewmodels:SegmentSequenceViewModel Segment="abcd" SequenceNumber="1" Distance="2.34" TurnImage="Assets/turnleft.jppg" Ascent="15" Descent="0" />
+                        <viewmodels:SegmentSequenceViewModel Segment="efgh" SequenceNumber="2" Distance="5.01" TurnImage="Assets/turnright.jpg" Ascent="0" Descent="50" />
+                        <viewmodels:SegmentSequenceViewModel Segment="jikl" SequenceNumber="3" Distance="1.25" TurnImage="Assets/gostraight.jpg" />
+                    </x:Array>
+                </d:ListView.ItemsSource>
+                <ListView.Resources>
+                    <Style TargetType="{x:Type ListViewItem}">
+                        <Style.Triggers>
+                            <Trigger Property="ItemsControl.AlternationIndex"  Value="0">
+                                <Setter Property="Background">
+                                    <Setter.Value>
+                                        <SolidColorBrush Color="Black" Opacity="0.05" />
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+                            <Trigger Property="ItemsControl.AlternationIndex"  Value="1">
+                                <Setter Property="Background">
+                                    <Setter.Value>
+                                        <SolidColorBrush Color="Black" Opacity="0.15" />
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </ListView.Resources>
+                <ListView.ItemTemplate>
+                    <DataTemplate DataType="viewmodels:SegmentSequenceViewModel">
+                        <Grid Width="190" Margin="0">
+                            <Grid.Resources>
+                                <Style TargetType="{x:Type TextBlock}">
+                                    <Setter Property="Foreground" Value="Black" />
+                                    <Setter Property="FontWeight" Value="Bold" />
+                                    <Setter Property="FontSize" Value="18" />
+                                </Style>
+                            </Grid.Resources>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="24" />
+                                <RowDefinition Height="24" />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="24" />
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock Grid.Column="0" Grid.Row="0" Text="{Binding Path=SequenceNumber}" />
+                            <Image Grid.Column="0" Grid.Row="1" Width="24" Height="24" Source="{Binding Path=TurnImage}" />
+
+                            <TextBlock Grid.Column="1" Grid.Row="0" Text="{Binding Path=Segment}" />
+
+                            <StackPanel Grid.Column="1" Grid.Row="1" Orientation="Horizontal">
+                                <StackPanel Orientation="Horizontal" Height="18">
+                                    <TextBlock Text="{Binding Path=Distance}" FontSize="16" FontWeight="Bold" VerticalAlignment="Bottom" />
+                                    <TextBlock Text="km" FontSize="10" FontWeight="Bold" VerticalAlignment="Bottom" Padding="0,0,0,1.5"/>
+                                    
+                                    
+                                    <Image Source="Assets/arrow-up-right.png" Height="12" VerticalAlignment="Center" Margin="4,0,0,0" />
+                                    <TextBlock Text="{Binding Path=Ascent}" FontSize="16" FontWeight="Bold" VerticalAlignment="Bottom" />
+                                    <TextBlock Text="m" FontSize="10" FontWeight="Bold" VerticalAlignment="Bottom" Padding="0,0,0,1.5"/>
+
+                                    <Image Source="Assets/arrow-down-right.png" Height="12" VerticalAlignment="Center" Margin="4,0,0,0" />
+                                    <TextBlock Text="{Binding Path=Descent}" FontSize="16" FontWeight="Bold" VerticalAlignment="Bottom" />
+                                    <TextBlock Text="m" FontSize="10" FontWeight="Bold" VerticalAlignment="Bottom" Padding="0,0,0,1.5"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </Grid>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </StackPanel>
+    </Grid>
+</Window>
