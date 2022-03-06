@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace RoadCaptain.Adapters
+namespace RoadCaptain.Adapters.CaptureFile
 {
     internal class PayloadReadyEventArgs : EventArgs {
         public byte[] Payload { get; set; }

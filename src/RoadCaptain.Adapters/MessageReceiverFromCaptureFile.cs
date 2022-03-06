@@ -4,6 +4,7 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using PacketDotNet;
+using RoadCaptain.Adapters.CaptureFile;
 using RoadCaptain.Ports;
 using SharpPcap;
 using SharpPcap.LibPcap;

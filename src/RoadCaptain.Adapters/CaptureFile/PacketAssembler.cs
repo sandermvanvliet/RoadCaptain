@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using PacketDotNet;
 
-namespace RoadCaptain.Adapters
+namespace RoadCaptain.Adapters.CaptureFile
 {
     /// <summary>
     /// This helper class is used to identify and reassemble fragmented TCP payloads.

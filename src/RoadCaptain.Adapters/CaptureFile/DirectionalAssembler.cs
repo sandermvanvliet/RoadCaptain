@@ -2,7 +2,7 @@ using System;
 using System.Linq;
 using PacketDotNet;
 
-namespace RoadCaptain.Adapters
+namespace RoadCaptain.Adapters.CaptureFile
 {
     internal class DirectionalAssembler
     {
