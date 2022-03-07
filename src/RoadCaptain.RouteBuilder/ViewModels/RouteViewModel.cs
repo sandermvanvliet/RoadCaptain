@@ -37,9 +37,13 @@ namespace RoadCaptain.RouteBuilder.ViewModels
             OnPropertyChanged(nameof(TotalDescent));
         }
 
-        public void NextStep(TurnDirection direction, string ontoSegmentId, Segment segment)
+        public void NextStep(
+            TurnDirection direction, 
+            string ontoSegmentId, 
+            Segment segment,
+            SegmentDirection segmentDirection)
         {
-            Last.SetTurn(direction, ontoSegmentId);
+            Last.SetTurn(direction, ontoSegmentId, segmentDirection);
 
             _sequence.Add(new SegmentSequenceViewModel(new SegmentSequence
                 {

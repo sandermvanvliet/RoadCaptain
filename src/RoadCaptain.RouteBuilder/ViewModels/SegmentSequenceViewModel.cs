@@ -8,30 +8,30 @@ namespace RoadCaptain.RouteBuilder.ViewModels
     public class SegmentSequenceViewModel : INotifyPropertyChanged
     {
         private string _turnImage;
+        private SegmentDirection _direction;
+        private readonly double _ascent;
+        private readonly double _descent;
 
         public SegmentSequenceViewModel(SegmentSequence segmentSequence, Segment segment, int sequenceNumber)
         {
             Model = segmentSequence;
             TurnImage = ImageFromTurn(segmentSequence.TurnToNextSegment);
-            Ascent = Math.Round(segment.Ascent, 1);
-            Descent = Math.Round(segment.Descent, 1);
+            _ascent = Math.Round(segment.Ascent, 1);
+            _descent = Math.Round(segment.Descent, 1);
             Distance = Math.Round(segment.Distance / 1000, 1);
             SequenceNumber = sequenceNumber;
+            Direction = SegmentDirection.Unknown;
         }
 
         private static string ImageFromTurn(TurnDirection turnDirection)
         {
-            switch (turnDirection)
+            return turnDirection switch
             {
-                case TurnDirection.Left:
-                    return "Assets/turnleft.png";
-                case TurnDirection.Right:
-                    return "Assets/turnright.png";
-                case TurnDirection.GoStraight:
-                    return "Assets/gostraight.png";
-                default:
-                    return "Assets/finish.png";
-            }
+                TurnDirection.Left => "Assets/turnleft.png",
+                TurnDirection.Right => "Assets/turnright.png",
+                TurnDirection.GoStraight => "Assets/gostraight.png",
+                _ => "Assets/finish.png"
+            };
         }
 
         public SegmentSequence Model { get; }
@@ -50,15 +50,52 @@ namespace RoadCaptain.RouteBuilder.ViewModels
 
         public string SegmentId => Model.SegmentId;
         public double Distance { get; }
-        public double Descent { get; }
-        public double Ascent { get; }
 
-        public void SetTurn(TurnDirection direction, string ontoSegmentId)
+        public double Ascent
+        {
+            get
+            {
+                return Direction switch
+                {
+                    SegmentDirection.AtoB => _ascent,
+                    SegmentDirection.BtoA => _descent,
+                    _ => 0
+                };
+            }
+        }
+
+        public double Descent
+        {
+            get
+            {
+                return Direction switch
+                {
+                    SegmentDirection.AtoB => _descent,
+                    SegmentDirection.BtoA => _ascent,
+                    _ => 0
+                };
+            }
+        }
+
+        public SegmentDirection Direction
+        {
+            get => _direction;
+            set
+            {
+                _direction = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(Ascent));
+                OnPropertyChanged(nameof(Descent));
+            }
+        }
+
+        public void SetTurn(TurnDirection direction, string ontoSegmentId, SegmentDirection segmentDirection)
         {
             Model.TurnToNextSegment = direction;
             Model.NextSegmentId = ontoSegmentId;
 
             TurnImage = ImageFromTurn(direction);
+            Direction = segmentDirection;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

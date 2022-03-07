@@ -58,13 +58,13 @@ namespace RoadCaptain.RouteBuilder.ViewModels
 
             if (fromA != null && fromB == null)
             {
-                Route.NextStep(fromA.Direction, fromA.SegmentId, newSelectedSegment);
+                Route.NextStep(fromA.Direction, fromA.SegmentId, newSelectedSegment, SegmentDirection.BtoA);
 
                 SelectedSegment = newSelectedSegment;
             }
             else if (fromA == null && fromB != null)
             {
-                Route.NextStep(fromB.Direction, fromB.SegmentId, newSelectedSegment);
+                Route.NextStep(fromB.Direction, fromB.SegmentId, newSelectedSegment, SegmentDirection.AtoB);
 
                 SelectedSegment = newSelectedSegment;
             }
