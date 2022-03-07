@@ -21,7 +21,8 @@
         <skia:SKElement Grid.Row="0" Grid.Column="1" 
                         PaintSurface="SKElement_OnPaintSurface" 
                         MouseLeftButtonUp="SkElement_OnMouseLeftButtonUp"
-                        Name="SkElement">
+                        Name="SkElement"
+                        Cursor="Hand">
         </skia:SKElement>
 
         <StackPanel Grid.Row="0" Grid.Column="0" Width="200" Orientation="Vertical" CanHorizontallyScroll="False" CanVerticallyScroll="False">
