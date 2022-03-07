@@ -70,9 +70,6 @@ namespace RoadCaptain.Host.Console
             // Load segments
             _segments = _segmentStore.LoadSegments();
 
-            // Paint segments
-            CreatePathsForSegments();
-
             // Only register callbacks after the form is initialized
             // otherwise we may get callback invocation before we're
             // ready to handle them.
@@ -211,6 +208,12 @@ namespace RoadCaptain.Host.Console
         {
             _segmentPaths.Clear();
 
+            // Prefer canvas size but before anything is drawn
+            // it will always be 0 x 0
+            var canvasSizeWidth = skControl1.CanvasSize.Width == 0
+                ? skControl1.Width
+                : skControl1.CanvasSize.Width;
+
             var segmentsWithOffsets = _segments
                 .Select(seg => new
                 {
@@ -222,12 +225,12 @@ namespace RoadCaptain.Host.Console
                 {
                     x.Segment,
                     x.GameCoordinates,
-                    Offsets = new Offsets(skControl1.Width, x.GameCoordinates)
+                    Offsets = new Offsets(canvasSizeWidth, x.GameCoordinates)
                 })
                 .ToList();
 
             _overallOffsets = new Offsets(
-                skControl1.Width,
+                canvasSizeWidth,
                 segmentsWithOffsets.SelectMany(s => s.GameCoordinates).ToList());
 
             foreach (var segment in segmentsWithOffsets)
@@ -442,6 +445,16 @@ namespace RoadCaptain.Host.Console
                         skControl1.Invalidate();
                     }
                 }
+            }
+        }
+
+        private void MainWindow_Shown(object sender, EventArgs e)
+        {
+            if (_isInitialized && (_segmentPaths == null || !_segmentPaths.Any()))
+            {
+                CreatePathsForSegments();
+
+                skControl1.Invalidate();
             }
         }
     }
