@@ -69,7 +69,7 @@ namespace RoadCaptain
 
             for (var index = 1; index < Points.Count; index++)
             {
-                var delta = Points[index - 1].Altitude - Points[index].Altitude;
+                var delta = Points[index].Altitude - Points[index - 1].Altitude;
 
                 if (delta < 0)
                 {
