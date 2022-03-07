@@ -38,39 +38,7 @@ namespace RoadCaptain.RouteBuilder
         {
             DataContext = new MainViewModel
             {
-                Route = new RouteViewModel
-                {
-                    Sequence = new List<SegmentSequenceViewModel>
-                    {
-                        new()
-                        {
-                            Ascent = 10,
-                            Descent = 0,
-                            Distance = 1.25,
-                            Segment = "abcd",
-                            SequenceNumber = 1,
-                            TurnImage = "Assets/turnleft.jpg"
-                        },
-                        new()
-                        {
-                            Ascent = 35,
-                            Descent = 78,
-                            Distance = 2.75,
-                            Segment = "efgh",
-                            SequenceNumber = 2,
-                            TurnImage = "Assets/turnright.jpg"
-                        },
-                        new()
-                        {
-                            Ascent = 0,
-                            Descent = 50,
-                            Distance = 10.5,
-                            Segment = "ijkl",
-                            SequenceNumber = 1,
-                            TurnImage = "Assets/gostraight.jpg"
-                        }
-                    }
-                }
+                Route = new RouteViewModel()
             };
 
             InitializeComponent();
