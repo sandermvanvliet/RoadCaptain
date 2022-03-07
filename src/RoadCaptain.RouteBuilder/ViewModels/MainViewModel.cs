@@ -16,7 +16,7 @@ namespace RoadCaptain.RouteBuilder.ViewModels
         public MainViewModel()
         {
             Route = new RouteViewModel();
-            Route.PropertyChanged += (sender, args) => OnPropertyChanged(nameof(Route));
+            Route.PropertyChanged += (_, _) => OnPropertyChanged(nameof(Route));
 
             Segments = new SegmentStore().LoadSegments();
         }
