@@ -3,7 +3,6 @@ using System.Drawing;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
-using RoadCaptain.Adapters;
 using RoadCaptain.RouteBuilder.ViewModels;
 using SkiaSharp;
 using SkiaSharp.Views.Desktop;
@@ -18,7 +17,6 @@ namespace RoadCaptain.RouteBuilder
     // ReSharper disable once RedundantExtendsListEntry
     public partial class MainWindow : Window
     {
-        private Segment _selectedSegment;
         private readonly Dictionary<string, SKPath> _segmentPaths = new();
 
         private readonly SKPaint _riderPathPaint = new()
@@ -31,18 +29,26 @@ namespace RoadCaptain.RouteBuilder
             { Color = SKColor.Parse("#ffcc00"), Style = SKPaintStyle.Stroke, StrokeWidth = 6 };
 
         private readonly SKPath _riderPath = new();
-        private List<Segment> _segments;
         private Offsets _overallOffsets;
         private readonly Dictionary<string, SKRect> _segmentPathBounds = new();
 
+        private readonly MainViewModel _viewModel = new();
+
         public MainWindow()
         {
-            DataContext = new MainViewModel
-            {
-                Route = new RouteViewModel()
-            };
+            DataContext = _viewModel;
+
+            _viewModel.PropertyChanged += _viewModel_PropertyChanged;
 
             InitializeComponent();
+        }
+
+        private void _viewModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(_viewModel.SelectedSegment))
+            {
+                SkElement.InvalidateVisual();
+            }
         }
 
         private void SKElement_OnPaintSurface(object sender, SKPaintSurfaceEventArgs args)
@@ -55,7 +61,7 @@ namespace RoadCaptain.RouteBuilder
                 SKPaint segmentPaint;
 
                 // Use a different color for the selected segment
-                if (_selectedSegment != null && skPath.Key == _selectedSegment.Id)
+                if (_viewModel.SelectedSegment != null && skPath.Key == _viewModel.SelectedSegment.Id)
                 {
                     segmentPaint = _selectedSegmentPathPaint;
                 }
@@ -78,7 +84,7 @@ namespace RoadCaptain.RouteBuilder
             _segmentPaths.Clear();
             _segmentPathBounds.Clear();
 
-            var segmentsWithOffsets = _segments
+            var segmentsWithOffsets = _viewModel.Segments
                 .Select(seg => new
                 {
                     Segment = seg,
@@ -134,10 +140,6 @@ namespace RoadCaptain.RouteBuilder
 
         private void MainWindow_OnLoaded(object sender, RoutedEventArgs e)
         {
-            var store = new SegmentStore();
-
-            _segments = store.LoadSegments();
-
             CreatePathsForSegments();
 
             SkElement.InvalidateVisual();
@@ -145,7 +147,7 @@ namespace RoadCaptain.RouteBuilder
 
         private void MainWindow_OnSizeChanged(object sender, SizeChangedEventArgs e)
         {
-            if (_segments != null)
+            if (_viewModel.Segments != null)
             {
                 CreatePathsForSegments();
 
@@ -170,14 +172,12 @@ namespace RoadCaptain.RouteBuilder
             if (pathsInBounds.Count == 1)
             {
                 // TODO: Do something smart with tightest bounds if that ever becomes necessary
-                _selectedSegment = _segments.Single(s => s.Id == pathsInBounds[0].Key);
+                _viewModel.SelectSegment(pathsInBounds[0].Key);
             }
             else
             {
-                _selectedSegment = null;
+                _viewModel.ClearSelectedSegment();
             }
-
-            SkElement.InvalidateVisual();
         }
     }
 }
