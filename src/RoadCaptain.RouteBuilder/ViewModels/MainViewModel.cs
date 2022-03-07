@@ -69,10 +69,8 @@ namespace RoadCaptain.RouteBuilder.ViewModels
                 })
                 .ToList();
 
-            var overallOffsets = new Offsets(
-                width,
-                segmentsWithOffsets.SelectMany(s => s.GameCoordinates).ToList());
-
+            var overallOffsets = Offsets.From(segmentsWithOffsets.Select(s => s.Offsets).ToList());
+            
             foreach (var segment in segmentsWithOffsets)
             {
                 var skiaPathFromSegment = SkiaPathFromSegment(overallOffsets, segment.GameCoordinates);

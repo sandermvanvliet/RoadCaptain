@@ -16,6 +16,15 @@ namespace RoadCaptain.RouteBuilder
             MaxY = (float)data.Max(p => p.Longitude);
         }
 
+        private Offsets(float minX, float maxX, float minY, float maxY, float imageWidth)
+        {
+            ImageWidth = imageWidth;
+            MinX = minX;
+            MaxX = maxX;
+            MinY = minY;
+            MaxY = maxY;
+        }
+
         public float ImageWidth { get; }
 
         public float MinX { get; }
@@ -40,6 +49,16 @@ namespace RoadCaptain.RouteBuilder
 
                 return (ImageWidth - 1) / RangeX;
             }
+        }
+
+        public static Offsets From(List<Offsets> offsets)
+        {
+            var minX = offsets.Min(o => o.MinX);
+            var maxX = offsets.Max(o => o.MaxX);
+            var minY = offsets.Min(o => o.MinY);
+            var maxY = offsets.Max(o => o.MaxY);
+
+            return new Offsets(minX, maxX, minY, maxY, offsets.First().ImageWidth);
         }
     }
 }
