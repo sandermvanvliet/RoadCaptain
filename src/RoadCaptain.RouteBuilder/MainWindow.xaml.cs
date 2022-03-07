@@ -92,13 +92,13 @@ namespace RoadCaptain.RouteBuilder
             // 2. Find SKPath that contains this coordinate (or close enough)
             var pathsInBounds = _viewModel.SegmentPathBounds
                 .Where(p => p.Value.Contains((float)scaledPoint.X, (float)scaledPoint.Y))
+                .OrderBy(x => x.Value, new SkRectComparer()) // Sort by bounds area, good enough for now
                 .ToList();
 
             // 3. Highlight it
-            if (pathsInBounds.Count == 1)
+            if (pathsInBounds.Any())
             {
-                // TODO: Do something smart with tightest bounds if that ever becomes necessary
-                _viewModel.SelectSegment(pathsInBounds[0].Key);
+                _viewModel.SelectSegment(pathsInBounds.First().Key);
             }
             else
             {
