@@ -28,7 +28,8 @@ namespace RoadCaptain.RouteBuilder.ViewModels
                     TurnToNextSegment = TurnDirection.None,
                     NextSegmentId = null
                 },
-                segment));
+                segment,
+                _sequence.Count + 1));
 
             OnPropertyChanged(nameof(Sequence));
             OnPropertyChanged(nameof(TotalDistance));
@@ -46,7 +47,8 @@ namespace RoadCaptain.RouteBuilder.ViewModels
                     TurnToNextSegment = TurnDirection.None,
                     NextSegmentId = null
                 },
-                segment));
+                segment,
+                _sequence.Count + 1));
 
             OnPropertyChanged(nameof(Sequence));
             OnPropertyChanged(nameof(TotalDistance));
