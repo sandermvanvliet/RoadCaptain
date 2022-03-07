@@ -24,13 +24,13 @@ namespace RoadCaptain.RouteBuilder.ViewModels
             switch (turnDirection)
             {
                 case TurnDirection.Left:
-                    return "Assets/turnleft.jpg";
+                    return "Assets/turnleft.png";
                 case TurnDirection.Right:
-                    return "Assets/turnright.jpg";
+                    return "Assets/turnright.png";
                 case TurnDirection.GoStraight:
-                    return "Assets/gostraight.jpg";
+                    return "Assets/gostraight.png";
                 default:
-                    return null;
+                    return "Assets/finish.png";
             }
         }
 
