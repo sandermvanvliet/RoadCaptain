@@ -325,7 +325,7 @@
   {
     "segmentId": "watopia-big-loop-rev-001-before-after",
     "turnsA": {
-      "right": "watopia-ocean-lava-cliffside-loop",
+      "right": "watopia-ocean-lava-cliffside-loop-001",
       "goStraight": "watopia-bambino-fondo-003-before-before",
       "left": "watopia-bambino-fondo-003-before-after"
     },
