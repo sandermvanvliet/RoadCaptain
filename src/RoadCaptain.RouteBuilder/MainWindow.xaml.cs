@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Windows;
@@ -8,12 +7,15 @@ using RoadCaptain.Adapters;
 using RoadCaptain.RouteBuilder.ViewModels;
 using SkiaSharp;
 using SkiaSharp.Views.Desktop;
+using Point = System.Windows.Point;
 
 namespace RoadCaptain.RouteBuilder
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
+    // ReSharper disable once UnusedMember.Global
+    // ReSharper disable once RedundantExtendsListEntry
     public partial class MainWindow : Window
     {
         private Segment _selectedSegment;
@@ -28,7 +30,7 @@ namespace RoadCaptain.RouteBuilder
         private readonly SKPaint _selectedSegmentPathPaint = new()
             { Color = SKColor.Parse("#ffcc00"), Style = SKPaintStyle.Stroke, StrokeWidth = 6 };
 
-        private SKPath _riderPath = new();
+        private readonly SKPath _riderPath = new();
         private List<Segment> _segments;
         private Offsets _overallOffsets;
 
@@ -180,8 +182,41 @@ namespace RoadCaptain.RouteBuilder
         private void SkElement_OnMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
             var position = e.GetPosition(sender as IInputElement);
+            
+            // 1. Work out scaling to canvas size
+            var scalingFactor = SkElement.CanvasSize.Width / SkElement.ActualWidth;
+            var scaledPoint = new Point(position.X * scalingFactor, position.Y * scalingFactor);
+            
+            // 2. Find SKPath that contains this coordinate (or close enough)
+            var pathsWithBounds = _segmentPaths
+                .Select(kv =>
+                {
+                    kv.Value.GetTightBounds(out var bounds);
 
-            Debugger.Break();
+                    return new
+                    {
+                        Id = kv.Key,
+                        SkPath = kv.Value,
+                        Bounds = bounds
+                    };
+                })
+                .ToList();
+
+            var pathsInBounds = pathsWithBounds
+                .Where(p => p.Bounds.Contains((float)scaledPoint.X, (float)scaledPoint.Y))
+                .ToList();
+
+            // 3. Highlight it
+            if (pathsInBounds.Count == 1)
+            {
+                _selectedSegment = _segments.Single(s => s.Id == pathsInBounds[0].Id);
+            }
+            else
+            {
+                _selectedSegment = null;
+            }
+
+            SkElement.InvalidateVisual();
         }
     }
 }
