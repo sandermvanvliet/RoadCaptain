@@ -33,6 +33,7 @@ namespace RoadCaptain.RouteBuilder
         private readonly SKPath _riderPath = new();
         private List<Segment> _segments;
         private Offsets _overallOffsets;
+        private readonly Dictionary<string, SKRect> _segmentPathBounds = new();
 
         public MainWindow()
         {
@@ -75,6 +76,7 @@ namespace RoadCaptain.RouteBuilder
         private void CreatePathsForSegments()
         {
             _segmentPaths.Clear();
+            _segmentPathBounds.Clear();
 
             var segmentsWithOffsets = _segments
                 .Select(seg => new
@@ -97,7 +99,11 @@ namespace RoadCaptain.RouteBuilder
 
             foreach (var segment in segmentsWithOffsets)
             {
-                _segmentPaths.Add(segment.Segment.Id, SkiaPathFromSegment(_overallOffsets, segment.GameCoordinates));
+                var skiaPathFromSegment = SkiaPathFromSegment(_overallOffsets, segment.GameCoordinates);
+                skiaPathFromSegment.GetTightBounds(out var bounds);
+
+                _segmentPaths.Add(segment.Segment.Id, skiaPathFromSegment);
+                _segmentPathBounds.Add(segment.Segment.Id, bounds);
             }
         }
 
@@ -156,28 +162,15 @@ namespace RoadCaptain.RouteBuilder
             var scaledPoint = new Point(position.X * scalingFactor, position.Y * scalingFactor);
             
             // 2. Find SKPath that contains this coordinate (or close enough)
-            var pathsWithBounds = _segmentPaths
-                .Select(kv =>
-                {
-                    kv.Value.GetTightBounds(out var bounds);
-
-                    return new
-                    {
-                        Id = kv.Key,
-                        SkPath = kv.Value,
-                        Bounds = bounds
-                    };
-                })
-                .ToList();
-
-            var pathsInBounds = pathsWithBounds
-                .Where(p => p.Bounds.Contains((float)scaledPoint.X, (float)scaledPoint.Y))
+            var pathsInBounds = _segmentPathBounds
+                .Where(p => p.Value.Contains((float)scaledPoint.X, (float)scaledPoint.Y))
                 .ToList();
 
             // 3. Highlight it
             if (pathsInBounds.Count == 1)
             {
-                _selectedSegment = _segments.Single(s => s.Id == pathsInBounds[0].Id);
+                // TODO: Do something smart with tightest bounds if that ever becomes necessary
+                _selectedSegment = _segments.Single(s => s.Id == pathsInBounds[0].Key);
             }
             else
             {
