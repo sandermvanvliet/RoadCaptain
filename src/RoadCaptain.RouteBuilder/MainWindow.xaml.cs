@@ -34,14 +34,12 @@ namespace RoadCaptain.RouteBuilder
 
         private void _viewModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == nameof(_viewModel.SelectedSegment))
+            switch (e.PropertyName)
             {
-                SkElement.InvalidateVisual();
-            }
-
-            if (e.PropertyName == nameof(_viewModel.SegmentPaths))
-            {
-                SkElement.InvalidateVisual();
+                case nameof(_viewModel.SelectedSegment):
+                case nameof(_viewModel.SegmentPaths):
+                    SkElement.InvalidateVisual();
+                    break;
             }
         }
 
