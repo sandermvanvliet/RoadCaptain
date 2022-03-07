@@ -100,7 +100,7 @@
                             <TextBlock Grid.Column="0" Grid.Row="0" Text="{Binding Path=SequenceNumber}" HorizontalAlignment="Center" />
                             <Image Grid.Column="0" Grid.Row="1" Width="22" Height="22" Source="{Binding Path=TurnImage}" HorizontalAlignment="Left" />
 
-                            <TextBlock Grid.Column="1" Grid.Row="0" Text="{Binding Path=SegmentId}" Margin="4,0,0,0" />
+                            <TextBlock Grid.Column="1" Grid.Row="0" Text="{Binding Path=SegmentId}" ToolTip="{Binding Path=SegmentId}" Margin="4,0,0,0" />
 
                             <StackPanel Grid.Column="1" Grid.Row="1" Orientation="Horizontal" Margin="4,0,0,0">
                                 <StackPanel Orientation="Horizontal" Height="18">
