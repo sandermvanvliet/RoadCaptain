@@ -58,19 +58,29 @@ namespace RoadCaptain.RouteBuilder.ViewModels
 
             if (fromA != null && fromB == null)
             {
-                Route.NextStep(fromA.Direction, fromA.SegmentId, newSelectedSegment, SegmentDirection.BtoA);
+                var newSegmentDirection = SegmentDirection.BtoA;
+
+                if (newSelectedSegment.NextSegmentsNodeA.Any(s => s.SegmentId == lastSegment.Id))
+                {
+                    newSegmentDirection = SegmentDirection.AtoB;
+                }
+
+                Route.NextStep(fromA.Direction, fromA.SegmentId, newSelectedSegment, SegmentDirection.BtoA, newSegmentDirection);
 
                 SelectedSegment = newSelectedSegment;
             }
             else if (fromA == null && fromB != null)
             {
-                Route.NextStep(fromB.Direction, fromB.SegmentId, newSelectedSegment, SegmentDirection.AtoB);
+                var newSegmentDirection = SegmentDirection.BtoA;
+
+                if (newSelectedSegment.NextSegmentsNodeA.Any(s => s.SegmentId == lastSegment.Id))
+                {
+                    newSegmentDirection = SegmentDirection.AtoB;
+                }
+
+                Route.NextStep(fromB.Direction, fromB.SegmentId, newSelectedSegment, SegmentDirection.AtoB, newSegmentDirection);
 
                 SelectedSegment = newSelectedSegment;
-            }
-            else
-            {
-                // Reachable from both ends, no clue what to do yet
             }
         }
 
