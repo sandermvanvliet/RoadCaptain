@@ -16,6 +16,7 @@ namespace RoadCaptain.RouteBuilder.ViewModels
         public MainViewModel()
         {
             Route = new RouteViewModel();
+            Route.PropertyChanged += (sender, args) => OnPropertyChanged(nameof(Route));
 
             Segments = new SegmentStore().LoadSegments();
         }
@@ -41,7 +42,36 @@ namespace RoadCaptain.RouteBuilder.ViewModels
 
         public void SelectSegment(string segmentId)
         {
-            SelectedSegment = Segments.SingleOrDefault(s => s.Id == segmentId);
+            var newSelectedSegment = Segments.SingleOrDefault(s => s.Id == segmentId);
+
+            // 1. Figure out if this is the first segment on the route, if so add it to the route and set the selection to the new segment
+            if (!Route.Sequence.Any())
+            {
+                Route.StartOn(newSelectedSegment);
+
+                SelectedSegment = newSelectedSegment;
+            }
+            // 2. Figure out if the newly selected segment is reachable from the last segment
+            var lastSegment = Segments.Single(s => s.Id == Route.Last.SegmentId);
+            var fromA = lastSegment.NextSegmentsNodeA.SingleOrDefault(t => t.SegmentId == newSelectedSegment.Id);
+            var fromB = lastSegment.NextSegmentsNodeB.SingleOrDefault(t => t.SegmentId == newSelectedSegment.Id);
+
+            if (fromA != null && fromB == null)
+            {
+                Route.NextStep(fromA.Direction, fromA.SegmentId);
+
+                SelectedSegment = newSelectedSegment;
+            }
+            else if (fromA == null && fromB != null)
+            {
+                Route.NextStep(fromB.Direction, fromB.SegmentId);
+
+                SelectedSegment = newSelectedSegment;
+            }
+            else
+            {
+                // Reachable from both ends, no clue what to do yet
+            }
         }
 
         public void ClearSelectedSegment()

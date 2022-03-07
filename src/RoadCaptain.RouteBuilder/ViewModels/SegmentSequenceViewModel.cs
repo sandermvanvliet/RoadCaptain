@@ -1,16 +1,17 @@
-﻿using System;
+﻿using System.ComponentModel;
+using System.Runtime.CompilerServices;
+using RoadCaptain.RouteBuilder.Annotations;
 
 namespace RoadCaptain.RouteBuilder.ViewModels
 {
-    public class SegmentSequenceViewModel
+    public class SegmentSequenceViewModel : INotifyPropertyChanged
     {
-        public SegmentSequenceViewModel()
+        private string _turnImage;
+
+        public SegmentSequenceViewModel(SegmentSequence segmentSequence)
         {
-            Segment = "some segment id";
-            TurnImage = ImageFromTurn(TurnDirection.Left);
-            Distance = 2.34;
-            Ascent = 100;
-            Descent = 50;
+            Model = segmentSequence;
+            TurnImage = ImageFromTurn(segmentSequence.TurnToNextSegment);
         }
 
         private static string ImageFromTurn(TurnDirection turnDirection)
@@ -28,11 +29,37 @@ namespace RoadCaptain.RouteBuilder.ViewModels
 
         public SegmentSequence Model { get; }
 
-        public int SequenceNumber { get; set; }
-        public string TurnImage { get; set; }
-        public string Segment { get; set; }
-        public double Distance { get; set; }
-        public double Descent { get; set; }
-        public double Ascent { get; set; }
+        public int SequenceNumber { get; }
+
+        public string TurnImage
+        {
+            get => _turnImage;
+            private set
+            {
+                _turnImage = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public string SegmentId => Model.SegmentId;
+        public double Distance { get; }
+        public double Descent { get; }
+        public double Ascent { get; }
+
+        public void SetTurn(TurnDirection direction, string ontoSegmentId)
+        {
+            Model.TurnToNextSegment = direction;
+            Model.NextSegmentId = ontoSegmentId;
+
+            TurnImage = ImageFromTurn(direction);
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        [NotifyPropertyChangedInvocator]
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
     }
 }

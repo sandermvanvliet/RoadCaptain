@@ -49,13 +49,6 @@
                       ScrollViewer.HorizontalScrollBarVisibility="Disabled" 
                       ScrollViewer.VerticalScrollBarVisibility="Auto"
                       VerticalAlignment="Stretch" Height="Auto">
-                <d:ListView.ItemsSource>
-                    <x:Array Type="{x:Type viewmodels:SegmentSequenceViewModel}">
-                        <viewmodels:SegmentSequenceViewModel Segment="abcd" SequenceNumber="1" Distance="2.34" TurnImage="Assets/turnleft.jppg" Ascent="15" Descent="0" />
-                        <viewmodels:SegmentSequenceViewModel Segment="efgh" SequenceNumber="2" Distance="5.01" TurnImage="Assets/turnright.jpg" Ascent="0" Descent="50" />
-                        <viewmodels:SegmentSequenceViewModel Segment="jikl" SequenceNumber="3" Distance="1.25" TurnImage="Assets/gostraight.jpg" />
-                    </x:Array>
-                </d:ListView.ItemsSource>
                 <ListView.Resources>
                     <Style TargetType="{x:Type ListViewItem}">
                         <Style.Triggers>
@@ -98,7 +91,7 @@
                             <TextBlock Grid.Column="0" Grid.Row="0" Text="{Binding Path=SequenceNumber}" />
                             <Image Grid.Column="0" Grid.Row="1" Width="24" Height="24" Source="{Binding Path=TurnImage}" />
 
-                            <TextBlock Grid.Column="1" Grid.Row="0" Text="{Binding Path=Segment}" />
+                            <TextBlock Grid.Column="1" Grid.Row="0" Text="{Binding Path=SegmentId}" />
 
                             <StackPanel Grid.Column="1" Grid.Row="1" Orientation="Horizontal">
                                 <StackPanel Orientation="Horizontal" Height="18">
