@@ -9,7 +9,7 @@ using SkiaSharp;
 
 namespace RoadCaptain.RouteBuilder.ViewModels
 {
-    public class MainViewModel : INotifyPropertyChanged
+    public sealed class MainViewModel : INotifyPropertyChanged
     {
         private Segment _selectedSegment;
 
@@ -107,7 +107,7 @@ namespace RoadCaptain.RouteBuilder.ViewModels
         }
 
         [NotifyPropertyChangedInvocator]
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        private void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
