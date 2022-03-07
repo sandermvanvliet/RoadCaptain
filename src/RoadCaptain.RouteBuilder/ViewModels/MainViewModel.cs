@@ -42,7 +42,7 @@ namespace RoadCaptain.RouteBuilder.ViewModels
 
         public void SelectSegment(string segmentId)
         {
-            var newSelectedSegment = Segments.SingleOrDefault(s => s.Id == segmentId);
+            var newSelectedSegment = Segments.Single(s => s.Id == segmentId);
 
             // 1. Figure out if this is the first segment on the route, if so add it to the route and set the selection to the new segment
             if (!Route.Sequence.Any())
@@ -58,13 +58,13 @@ namespace RoadCaptain.RouteBuilder.ViewModels
 
             if (fromA != null && fromB == null)
             {
-                Route.NextStep(fromA.Direction, fromA.SegmentId);
+                Route.NextStep(fromA.Direction, fromA.SegmentId, newSelectedSegment);
 
                 SelectedSegment = newSelectedSegment;
             }
             else if (fromA == null && fromB != null)
             {
-                Route.NextStep(fromB.Direction, fromB.SegmentId);
+                Route.NextStep(fromB.Direction, fromB.SegmentId, newSelectedSegment);
 
                 SelectedSegment = newSelectedSegment;
             }

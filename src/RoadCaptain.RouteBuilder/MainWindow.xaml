@@ -29,17 +29,17 @@
                             Width="Auto" HorizontalAlignment="Stretch" Padding="4,4,0,0" Height="56">
                 <StackPanel DataContext="{Binding Path=Route}" Orientation="Vertical" VerticalAlignment="Top">
                     <StackPanel Orientation="Horizontal" Height="30">
-                        <TextBlock Text="{Binding Path=TotalDistance}" d:Text="12.34" FontSize="26" Foreground="White" FontWeight="Bold" VerticalAlignment="Bottom"/>
+                        <TextBlock Text="{Binding Path=TotalDistance,StringFormat=0.0}" d:Text="12.34" FontSize="26" Foreground="White" FontWeight="Bold" VerticalAlignment="Bottom"/>
                         <TextBlock Text="km" FontSize="16" Foreground="White" FontWeight="Bold" VerticalAlignment="Bottom" Padding="2,0,0,2"/>
                     </StackPanel>
 
                     <StackPanel Orientation="Horizontal" Height="18">
                         <Image Source="Assets/arrow-up-right.png" Height="12" VerticalAlignment="Center" />
-                        <TextBlock Text="{Binding Path=TotalAscent}" d:Text="125" FontSize="16" FontWeight="Bold" VerticalAlignment="Bottom" />
+                        <TextBlock Text="{Binding Path=TotalAscent,StringFormat=0.0}" d:Text="125" FontSize="16" FontWeight="Bold" VerticalAlignment="Bottom" />
                         <TextBlock Text="m" FontSize="10" FontWeight="Bold" VerticalAlignment="Bottom" Padding="0,0,0,1.5"/>
 
                         <Image Source="Assets/arrow-down-right.png" Height="12" VerticalAlignment="Center" Margin="4,0,0,0" />
-                        <TextBlock Text="{Binding Path=TotalDescent}" d:Text="54" FontSize="16" FontWeight="Bold" VerticalAlignment="Bottom" />
+                        <TextBlock Text="{Binding Path=TotalDescent,StringFormat=0.0}" d:Text="54" FontSize="16" FontWeight="Bold" VerticalAlignment="Bottom" />
                         <TextBlock Text="m" FontSize="10" FontWeight="Bold" VerticalAlignment="Bottom" Padding="0,0,0,1.5"/>
                     </StackPanel>
                 </StackPanel>
@@ -95,16 +95,16 @@
 
                             <StackPanel Grid.Column="1" Grid.Row="1" Orientation="Horizontal">
                                 <StackPanel Orientation="Horizontal" Height="18">
-                                    <TextBlock Text="{Binding Path=Distance}" FontSize="16" FontWeight="Bold" VerticalAlignment="Bottom" />
+                                    <TextBlock Text="{Binding Path=Distance,StringFormat=0.0}" FontSize="16" FontWeight="Bold" VerticalAlignment="Bottom" />
                                     <TextBlock Text="km" FontSize="10" FontWeight="Bold" VerticalAlignment="Bottom" Padding="0,0,0,1.5"/>
                                     
                                     
                                     <Image Source="Assets/arrow-up-right.png" Height="12" VerticalAlignment="Center" Margin="4,0,0,0" />
-                                    <TextBlock Text="{Binding Path=Ascent}" FontSize="16" FontWeight="Bold" VerticalAlignment="Bottom" />
+                                    <TextBlock Text="{Binding Path=Ascent,StringFormat=0.0}" FontSize="16" FontWeight="Bold" VerticalAlignment="Bottom" />
                                     <TextBlock Text="m" FontSize="10" FontWeight="Bold" VerticalAlignment="Bottom" Padding="0,0,0,1.5"/>
 
                                     <Image Source="Assets/arrow-down-right.png" Height="12" VerticalAlignment="Center" Margin="4,0,0,0" />
-                                    <TextBlock Text="{Binding Path=Descent}" FontSize="16" FontWeight="Bold" VerticalAlignment="Bottom" />
+                                    <TextBlock Text="{Binding Path=Descent,StringFormat=0.0}" FontSize="16" FontWeight="Bold" VerticalAlignment="Bottom" />
                                     <TextBlock Text="m" FontSize="10" FontWeight="Bold" VerticalAlignment="Bottom" Padding="0,0,0,1.5"/>
                                 </StackPanel>
                             </StackPanel>

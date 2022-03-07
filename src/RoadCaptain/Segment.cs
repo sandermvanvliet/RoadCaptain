@@ -8,6 +8,9 @@ namespace RoadCaptain
 {
     public class Segment
     {
+        private double? _ascent;
+        private double? _descent;
+        private double? _distance;
         public List<Turn> NextSegmentsNodeA { get; } = new();
         public List<Turn> NextSegmentsNodeB { get; } = new();
         
@@ -19,6 +22,68 @@ namespace RoadCaptain
 
         public string Id { get; set; }
         public BoundingBox BoundingBox { get; }
+
+        public double Distance
+        {
+            get
+            {
+                if (_distance == null)
+                {
+                    _distance = Points.Sum(p => p.DistanceFromLast);
+                }
+
+                return _distance.GetValueOrDefault();
+            }
+        }
+
+        public double Ascent
+        {
+            get
+            {
+                if (_ascent == null)
+                {
+                    CalculateAscentAndDescent();
+                }
+
+                return _ascent.GetValueOrDefault();
+            }
+        }
+
+        public double Descent
+        {
+            get
+            {
+                if (_descent == null)
+                {
+                    CalculateAscentAndDescent();
+                }
+
+                return _descent.GetValueOrDefault();
+            }
+        }
+
+        private void CalculateAscentAndDescent()
+        {
+            var ascent = 0d;
+            var descent = 0d;
+
+            for (var index = 1; index < Points.Count; index++)
+            {
+                var delta = Points[index - 1].Altitude - Points[index].Altitude;
+
+                if (delta < 0)
+                {
+                    descent += Math.Abs(delta);
+                }
+                else if(delta > 0)
+                {
+                    ascent += delta;
+                }
+            }
+
+            _ascent = ascent;
+            _descent = descent;
+        }
 
         public Segment(List<TrackPoint> points)
         {

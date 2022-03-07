@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using RoadCaptain.RouteBuilder.Annotations;
 
@@ -8,10 +9,13 @@ namespace RoadCaptain.RouteBuilder.ViewModels
     {
         private string _turnImage;
 
-        public SegmentSequenceViewModel(SegmentSequence segmentSequence)
+        public SegmentSequenceViewModel(SegmentSequence segmentSequence, Segment segment)
         {
             Model = segmentSequence;
             TurnImage = ImageFromTurn(segmentSequence.TurnToNextSegment);
+            Ascent = Math.Round(segment.Ascent, 1);
+            Descent = Math.Round(segment.Descent, 1);
+            Distance = Math.Round(segment.Distance / 1000, 1);
         }
 
         private static string ImageFromTurn(TurnDirection turnDirection)
@@ -19,11 +23,11 @@ namespace RoadCaptain.RouteBuilder.ViewModels
             switch (turnDirection)
             {
                 case TurnDirection.Left:
-                    return "turnleft.jpg";
+                    return "Assets/turnleft.jpg";
                 case TurnDirection.Right:
-                    return "turnright.jpg";
+                    return "Assets/turnright.jpg";
                 default:
-                    return "gostraight.jpg";
+                    return "Assets/gostraight.jpg";
             }
         }
 
