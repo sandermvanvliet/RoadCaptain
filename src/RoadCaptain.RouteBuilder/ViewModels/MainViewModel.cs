@@ -51,36 +51,73 @@ namespace RoadCaptain.RouteBuilder.ViewModels
 
                 SelectedSegment = newSelectedSegment;
             }
+
             // 2. Figure out if the newly selected segment is reachable from the last segment
             var lastSegment = Segments.Single(s => s.Id == Route.Last.SegmentId);
+            
             var fromA = lastSegment.NextSegmentsNodeA.SingleOrDefault(t => t.SegmentId == newSelectedSegment.Id);
             var fromB = lastSegment.NextSegmentsNodeB.SingleOrDefault(t => t.SegmentId == newSelectedSegment.Id);
 
-            if (fromA != null && fromB == null)
+            if (Route.Last.Direction == SegmentDirection.AtoB)
             {
-                var newSegmentDirection = SegmentDirection.BtoA;
-
-                if (newSelectedSegment.NextSegmentsNodeA.Any(s => s.SegmentId == lastSegment.Id))
+                if (fromB != null)
                 {
-                    newSegmentDirection = SegmentDirection.AtoB;
+                    var newSegmentDirection = SegmentDirection.BtoA;
+
+                    if (newSelectedSegment.NextSegmentsNodeA.Any(s => s.SegmentId == lastSegment.Id))
+                    {
+                        newSegmentDirection = SegmentDirection.AtoB;
+                    }
+
+                    Route.NextStep(fromB.Direction, fromB.SegmentId, newSelectedSegment, SegmentDirection.AtoB, newSegmentDirection);
+
+                    SelectedSegment = newSelectedSegment;
                 }
-
-                Route.NextStep(fromA.Direction, fromA.SegmentId, newSelectedSegment, SegmentDirection.BtoA, newSegmentDirection);
-
-                SelectedSegment = newSelectedSegment;
             }
-            else if (fromA == null && fromB != null)
+            else if(Route.Last.Direction == SegmentDirection.BtoA)
             {
-                var newSegmentDirection = SegmentDirection.BtoA;
-
-                if (newSelectedSegment.NextSegmentsNodeA.Any(s => s.SegmentId == lastSegment.Id))
+                if (fromA != null)
                 {
-                    newSegmentDirection = SegmentDirection.AtoB;
+                    var newSegmentDirection = SegmentDirection.BtoA;
+
+                    if (newSelectedSegment.NextSegmentsNodeA.Any(s => s.SegmentId == lastSegment.Id))
+                    {
+                        newSegmentDirection = SegmentDirection.AtoB;
+                    }
+
+                    Route.NextStep(fromA.Direction, fromA.SegmentId, newSelectedSegment, SegmentDirection.BtoA, newSegmentDirection);
+
+                    SelectedSegment = newSelectedSegment;
                 }
+            }
+            else if (Route.Last.Direction == SegmentDirection.Unknown)
+            {
+                if (fromA != null)
+                {
+                    var newSegmentDirection = SegmentDirection.BtoA;
 
-                Route.NextStep(fromB.Direction, fromB.SegmentId, newSelectedSegment, SegmentDirection.AtoB, newSegmentDirection);
+                    if (newSelectedSegment.NextSegmentsNodeA.Any(s => s.SegmentId == lastSegment.Id))
+                    {
+                        newSegmentDirection = SegmentDirection.AtoB;
+                    }
 
-                SelectedSegment = newSelectedSegment;
+                    Route.NextStep(fromA.Direction, fromA.SegmentId, newSelectedSegment, SegmentDirection.BtoA, newSegmentDirection);
+
+                    SelectedSegment = newSelectedSegment;
+                }
+                else if (fromB != null)
+                {
+                    var newSegmentDirection = SegmentDirection.BtoA;
+
+                    if (newSelectedSegment.NextSegmentsNodeA.Any(s => s.SegmentId == lastSegment.Id))
+                    {
+                        newSegmentDirection = SegmentDirection.AtoB;
+                    }
+
+                    Route.NextStep(fromB.Direction, fromB.SegmentId, newSelectedSegment, SegmentDirection.AtoB, newSegmentDirection);
+
+                    SelectedSegment = newSelectedSegment;
+                }
             }
         }
 
