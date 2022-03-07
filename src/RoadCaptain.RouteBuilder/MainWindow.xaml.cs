@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Windows;
+using System.Windows.Input;
 using RoadCaptain.Adapters;
 using RoadCaptain.RouteBuilder.ViewModels;
 using SkiaSharp;
@@ -115,12 +117,12 @@ namespace RoadCaptain.RouteBuilder
                 {
                     x.Segment,
                     x.GameCoordinates,
-                    Offsets = new Offsets((float)SkElement.ActualWidth, x.GameCoordinates)
+                    Offsets = new Offsets(SkElement.CanvasSize.Width, x.GameCoordinates)
                 })
                 .ToList();
 
             _overallOffsets = new Offsets(
-                (float)(SkElement.ActualWidth),
+                SkElement.CanvasSize.Width,
                 segmentsWithOffsets.SelectMany(s => s.GameCoordinates).ToList());
 
             foreach (var segment in segmentsWithOffsets)
@@ -173,6 +175,13 @@ namespace RoadCaptain.RouteBuilder
 
                 SkElement.InvalidateVisual();
             }
+        }
+
+        private void SkElement_OnMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            var position = e.GetPosition(sender as IInputElement);
+
+            Debugger.Break();
         }
     }
 }
