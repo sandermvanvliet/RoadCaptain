@@ -14,7 +14,7 @@
         SizeChanged="MainWindow_OnSizeChanged">
     <Grid Margin="0,2,2,0">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="200" />
+            <ColumnDefinition Width="300" />
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
 
@@ -25,9 +25,16 @@
                         Cursor="Hand">
         </skia:SKElement>
 
-        <StackPanel Grid.Row="0" Grid.Column="0" Width="200" Orientation="Vertical" CanHorizontallyScroll="False" CanVerticallyScroll="False">
-            <Border CornerRadius="0,5,0,0" Background="#1192CC" BorderBrush="#cccccc"
-                            Width="Auto" HorizontalAlignment="Stretch" Padding="4,4,0,0" Height="56">
+        <Grid Grid.Row="0" Grid.Column="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="56" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            
+            <Border 
+                Grid.Row="0"
+                CornerRadius="0,5,0,0" Background="#1192CC" BorderBrush="#cccccc"
+                            HorizontalAlignment="Stretch" Padding="8,4,0,0" Height="56">
                 <StackPanel DataContext="{Binding Path=Route}" Orientation="Vertical" VerticalAlignment="Top">
                     <StackPanel Orientation="Horizontal" Height="30">
                         <TextBlock Text="{Binding Path=TotalDistance,StringFormat=0.0}" d:Text="12.34" FontSize="26" Foreground="White" FontWeight="Bold" VerticalAlignment="Bottom"/>
@@ -45,11 +52,12 @@
                     </StackPanel>
                 </StackPanel>
             </Border>
-            <ListView Width="200" Padding="0" Margin="0" ItemsSource="{Binding Path=Route.Sequence}" AlternationCount="2" 
+            <ListView Grid.Row="1" HorizontalAlignment="Stretch"
+                Padding="0" Margin="0" ItemsSource="{Binding Path=Route.Sequence}" AlternationCount="2" 
                       BorderThickness="0"
                       ScrollViewer.HorizontalScrollBarVisibility="Disabled" 
                       ScrollViewer.VerticalScrollBarVisibility="Auto"
-                      VerticalAlignment="Stretch" Height="Auto">
+                      VerticalAlignment="Stretch">
                 <ListView.Resources>
                     <Style TargetType="{x:Type ListViewItem}">
                         <Style.Triggers>
@@ -72,7 +80,7 @@
                 </ListView.Resources>
                 <ListView.ItemTemplate>
                     <DataTemplate DataType="viewmodels:SegmentSequenceViewModel">
-                        <Grid Width="190" Margin="0">
+                        <Grid Margin="0">
                             <Grid.Resources>
                                 <Style TargetType="{x:Type TextBlock}">
                                     <Setter Property="Foreground" Value="Black" />
@@ -89,12 +97,12 @@
                                 <ColumnDefinition />
                             </Grid.ColumnDefinitions>
 
-                            <TextBlock Grid.Column="0" Grid.Row="0" Text="{Binding Path=SequenceNumber}" />
-                            <Image Grid.Column="0" Grid.Row="1" Width="24" Height="24" Source="{Binding Path=TurnImage}" />
+                            <TextBlock Grid.Column="0" Grid.Row="0" Text="{Binding Path=SequenceNumber}" HorizontalAlignment="Center" />
+                            <Image Grid.Column="0" Grid.Row="1" Width="22" Height="22" Source="{Binding Path=TurnImage}" HorizontalAlignment="Left" />
 
-                            <TextBlock Grid.Column="1" Grid.Row="0" Text="{Binding Path=SegmentId}" />
+                            <TextBlock Grid.Column="1" Grid.Row="0" Text="{Binding Path=SegmentId}" Margin="4,0,0,0" />
 
-                            <StackPanel Grid.Column="1" Grid.Row="1" Orientation="Horizontal">
+                            <StackPanel Grid.Column="1" Grid.Row="1" Orientation="Horizontal" Margin="4,0,0,0">
                                 <StackPanel Orientation="Horizontal" Height="18">
                                     <TextBlock Text="{Binding Path=Distance,StringFormat=0.0}" FontSize="16" FontWeight="Bold" VerticalAlignment="Bottom" />
                                     <TextBlock Text="km" FontSize="10" FontWeight="Bold" VerticalAlignment="Bottom" Padding="0,0,0,1.5"/>
@@ -113,6 +121,6 @@
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
-        </StackPanel>
+        </Grid>
     </Grid>
 </Window>
