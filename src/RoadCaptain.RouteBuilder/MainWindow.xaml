@@ -9,14 +9,16 @@
         mc:Ignorable="d"
         Title="RoadCaptain Route Builder" 
         Height="450" Width="800"
-        d:DataContext="{d:DesignInstance viewmodels:MainViewModel}">
+        d:DataContext="{d:DesignInstance viewmodels:MainViewModel}"
+        Loaded="MainWindow_OnLoaded"
+        SizeChanged="MainWindow_OnSizeChanged">
     <Grid Margin="0,2,2,0">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="200" />
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
 
-        <skia:SKElement Grid.Row="0" Grid.Column="1">
+        <skia:SKElement Grid.Row="0" Grid.Column="1" PaintSurface="SKElement_OnPaintSurface" Name="SkElement">
 
         </skia:SKElement>
 

@@ -1,18 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+using RoadCaptain.Adapters;
 using RoadCaptain.RouteBuilder.ViewModels;
+using SkiaSharp;
+using SkiaSharp.Views.Desktop;
 
 namespace RoadCaptain.RouteBuilder
 {
@@ -21,6 +14,22 @@ namespace RoadCaptain.RouteBuilder
     /// </summary>
     public partial class MainWindow : Window
     {
+        private Segment _selectedSegment;
+        private readonly Dictionary<string, SKPath> _segmentPaths = new();
+
+        private readonly SKPaint _riderPathPaint = new()
+            { Color = SKColor.Parse("#0000ff"), Style = SKPaintStyle.Stroke, StrokeWidth = 2 };
+
+        private readonly SKPaint _segmentPathPaint = new()
+            { Color = SKColor.Parse("#000000"), Style = SKPaintStyle.Stroke, StrokeWidth = 4 };
+
+        private readonly SKPaint _selectedSegmentPathPaint = new()
+            { Color = SKColor.Parse("#ffcc00"), Style = SKPaintStyle.Stroke, StrokeWidth = 6 };
+
+        private SKPath _riderPath = new();
+        private List<Segment> _segments;
+        private Offsets _overallOffsets;
+
         public MainWindow()
         {
             DataContext = new MainViewModel
@@ -59,7 +68,111 @@ namespace RoadCaptain.RouteBuilder
                     }
                 }
             };
+
             InitializeComponent();
+        }
+
+        private void SKElement_OnPaintSurface(object sender, SKPaintSurfaceEventArgs args)
+        {
+            args.Surface.Canvas.Clear();
+            
+            // Lowest layer are the segments
+            foreach (var skPath in _segmentPaths)
+            {
+                SKPaint segmentPaint;
+
+                // Use a different color for the selected segment
+                if (_selectedSegment != null && skPath.Key == _selectedSegment.Id)
+                {
+                    segmentPaint = _selectedSegmentPathPaint;
+                }
+                else
+                {
+                    segmentPaint = _segmentPathPaint;
+                }
+
+                args.Surface.Canvas.DrawPath(skPath.Value, segmentPaint);
+            }
+
+            // Upon that we draw the path as the rider took it
+            args.Surface.Canvas.DrawPath(_riderPath, _riderPathPaint);
+            
+            args.Surface.Canvas.Flush();
+        }
+
+        private void CreatePathsForSegments()
+        {
+            _segmentPaths.Clear();
+
+            var segmentsWithOffsets = _segments
+                .Select(seg => new
+                {
+                    Segment = seg,
+                    GameCoordinates = seg.Points.Select(point =>
+                        TrackPoint.LatLongToGame(point.Longitude, -point.Latitude, point.Altitude)).ToList()
+                })
+                .Select(x => new
+                {
+                    x.Segment,
+                    x.GameCoordinates,
+                    Offsets = new Offsets((float)SkElement.ActualWidth, x.GameCoordinates)
+                })
+                .ToList();
+
+            _overallOffsets = new Offsets(
+                (float)(SkElement.ActualWidth),
+                segmentsWithOffsets.SelectMany(s => s.GameCoordinates).ToList());
+
+            foreach (var segment in segmentsWithOffsets)
+            {
+                _segmentPaths.Add(segment.Segment.Id, SkiaPathFromSegment(_overallOffsets, segment.GameCoordinates));
+            }
+        }
+
+        private static SKPath SkiaPathFromSegment(Offsets offsets, List<TrackPoint> data)
+        {
+            var path = new SKPath();
+
+            path.AddPoly(
+                data
+                    .Select(point => ScaleAndTranslate(point, offsets))
+                    .Select(point => new SKPoint(point.X, point.Y))
+                    .ToArray(),
+                false);
+
+            return path;
+        }
+
+        private static PointF ScaleAndTranslate(TrackPoint point, Offsets offsets)
+        {
+            var translatedX = offsets.OffsetX + (float)point.Latitude;
+            var translatedY = offsets.OffsetY + (float)point.Longitude;
+
+            var scaledX = translatedX * offsets.ScaleFactor;
+            var scaledY = translatedY * offsets.ScaleFactor;
+
+            return new PointF(scaledX, scaledY);
+        }
+
+        private void MainWindow_OnLoaded(object sender, RoutedEventArgs e)
+        {
+            var store = new SegmentStore();
+
+            _segments = store.LoadSegments();
+
+            CreatePathsForSegments();
+
+            SkElement.InvalidateVisual();
+        }
+
+        private void MainWindow_OnSizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            if (_segments != null)
+            {
+                CreatePathsForSegments();
+
+                SkElement.InvalidateVisual();
+            }
         }
     }
 }
