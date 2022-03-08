@@ -98,7 +98,7 @@ namespace RoadCaptain.RouteBuilder
             // 3. Highlight it
             if (pathsInBounds.Any())
             {
-                _windowViewModel.SelectSegment(pathsInBounds.First().Key);
+                _windowViewModel.SelectSegmentCommand.Execute(pathsInBounds.First().Key);
             }
             else
             {

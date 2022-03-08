@@ -33,7 +33,15 @@ namespace RoadCaptain.RouteBuilder.ViewModels
                 .OnSuccess(_ => Model.StatusBarInfo("Route saved successfully"))
                 .OnSuccessWithWarnings(_ => Model.StatusBarInfo("Route saved successfully: {0}", _.Message))
                 .OnFailure(_ => Model.StatusBarError("Failed to save route because: {0}", _.Message));
+
+            SelectSegmentCommand = new RelayCommand(
+                    _ => SelectSegment((string)_),
+                    _ => true)
+                .OnSuccess(_ => Model.StatusBarInfo("Added segment"))
+                .OnSuccessWithWarnings(_ => Model.StatusBarInfo("Added segment {0}", _.Message))
+                .OnFailure(_ => Model.StatusBarWarning(_.Message));
         }
+
 
         public MainWindowModel Model { get; }
         public List<Segment> Segments { get; }
@@ -42,6 +50,7 @@ namespace RoadCaptain.RouteBuilder.ViewModels
         public Dictionary<string, SKRect> SegmentPathBounds { get; } = new();
 
         public ICommand SaveRouteCommand { get; }
+        public ICommand SelectSegmentCommand { get; }
 
         public Segment SelectedSegment
         {
@@ -55,7 +64,7 @@ namespace RoadCaptain.RouteBuilder.ViewModels
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public void SelectSegment(string segmentId)
+        private CommandResult SelectSegment(string segmentId)
         {
             var newSelectedSegment = Segments.Single(s => s.Id == segmentId);
 
@@ -65,6 +74,8 @@ namespace RoadCaptain.RouteBuilder.ViewModels
                 Route.StartOn(newSelectedSegment);
 
                 SelectedSegment = newSelectedSegment;
+
+                return CommandResult.Success();
             }
 
             // 2. Figure out if the newly selected segment is reachable from the last segment
@@ -88,6 +99,8 @@ namespace RoadCaptain.RouteBuilder.ViewModels
                         newSegmentDirection);
 
                     SelectedSegment = newSelectedSegment;
+
+                    return CommandResult.SuccessWithWarning(segmentId);
                 }
             }
             else if (Route.Last.Direction == SegmentDirection.BtoA)
@@ -105,6 +118,8 @@ namespace RoadCaptain.RouteBuilder.ViewModels
                         newSegmentDirection);
 
                     SelectedSegment = newSelectedSegment;
+
+                    return CommandResult.SuccessWithWarning(segmentId);
                 }
             }
             else if (Route.Last.Direction == SegmentDirection.Unknown)
@@ -122,8 +137,11 @@ namespace RoadCaptain.RouteBuilder.ViewModels
                         newSegmentDirection);
 
                     SelectedSegment = newSelectedSegment;
+
+                    return CommandResult.SuccessWithWarning(segmentId);
                 }
-                else if (fromB != null)
+
+                if (fromB != null)
                 {
                     var newSegmentDirection = SegmentDirection.BtoA;
 
@@ -136,8 +154,12 @@ namespace RoadCaptain.RouteBuilder.ViewModels
                         newSegmentDirection);
 
                     SelectedSegment = newSelectedSegment;
+
+                    return CommandResult.SuccessWithWarning(segmentId);
                 }
             }
+
+            return CommandResult.Failure("Did not find a connection between the last segment and the selected segment");
         }
 
         public void ClearSelectedSegment()
