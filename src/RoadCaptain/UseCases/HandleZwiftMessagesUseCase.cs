@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading;
+using System.Threading.Tasks;
 using RoadCaptain.GameStates;
 using RoadCaptain.Ports;
 
@@ -16,25 +17,31 @@ namespace RoadCaptain.UseCases
         private GameState _gameState = new NotInGameState();
         private List<Segment> _segments;
         private readonly ISegmentStore _segmentStore;
-        private readonly PlannedRoute _route;
+        private PlannedRoute _route;
         private readonly IGameStateDispatcher _gameStateDispatcher;
         private static ulong _lastIncomingSequenceNumber;
         private readonly IZwiftGameConnection _gameConnection;
+        private readonly IGameStateReceiver _gameStateReceiver;
 
         public HandleZwiftMessagesUseCase(
             IMessageEmitter emitter,
             MonitoringEvents monitoringEvents, 
             ISegmentStore segmentStore, 
             IGameStateDispatcher gameStateDispatcher, 
-            IZwiftGameConnection gameConnection)
+            IZwiftGameConnection gameConnection,
+            IGameStateReceiver gameStateReceiver)
         {
             _emitter = emitter;
             _monitoringEvents = monitoringEvents;
             _segmentStore = segmentStore;
             _gameStateDispatcher = gameStateDispatcher;
             _gameConnection = gameConnection;
+            _gameStateReceiver = gameStateReceiver;
 
-            _route = SegmentSequenceBuilder.TestLoopTwo();
+            // The route is needed to update game state,
+            // so this use case needs to listen to RouteSelected
+            // updates.
+            _gameStateReceiver.Register(route => _route = route, null, null);
         }
 
         public GameState State
@@ -60,6 +67,10 @@ namespace RoadCaptain.UseCases
 
         public void Execute(CancellationToken token)
         {
+            // Typically the game state receiver has already been started
+            // and this task exists early.
+            Task.Factory.StartNew(() => _gameStateReceiver.Start(token));
+
             while (!token.IsCancellationRequested)
             {
                 // Dequeue will block if there are no messages in the queue
@@ -77,7 +88,12 @@ namespace RoadCaptain.UseCases
                         _segments = _segmentStore.LoadSegments();
                     }
 
-                    State = State.UpdatePosition(position, _segments, _route);
+                    // As long as there is no route loaded we cannot change the
+                    // the state.
+                    if (_route != null)
+                    {
+                        State = State.UpdatePosition(position, _segments, _route);
+                    }
                 }
                 else if (message is ZwiftPingMessage ping)
                 {

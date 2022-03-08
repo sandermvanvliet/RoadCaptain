@@ -11,14 +11,21 @@ namespace RoadCaptain.Host.Console.HostedServices
         private readonly NavigationUseCase _useCase;
         private readonly CancellationTokenSource _cancellationTokenSource;
         private readonly IGameStateDispatcher _gameStateDispatcher;
+        private readonly IRouteStore _routeStore;
+        private readonly Configuration _configuration;
 
         public NavigationService(MonitoringEvents monitoringEvents,
             NavigationUseCase useCase,
-            IGameStateDispatcher gameStateDispatcher, ISynchronizer synchronizer)
+            IGameStateDispatcher gameStateDispatcher, 
+            ISynchronizer synchronizer,
+            IRouteStore routeStore, 
+            Configuration configuration)
         :base(monitoringEvents, synchronizer)
         {
             _useCase = useCase;
             _gameStateDispatcher = gameStateDispatcher;
+            _routeStore = routeStore;
+            _configuration = configuration;
 
             _cancellationTokenSource = new CancellationTokenSource();
         }
@@ -31,7 +38,7 @@ namespace RoadCaptain.Host.Console.HostedServices
                 () => _useCase.Execute(_cancellationTokenSource.Token),
                 _cancellationTokenSource.Token);
 
-            var route = SegmentSequenceBuilder.TestLoopTwo();
+            var route = _routeStore.LoadFrom(_configuration.Route);
 
             _gameStateDispatcher.RouteSelected(route);
 

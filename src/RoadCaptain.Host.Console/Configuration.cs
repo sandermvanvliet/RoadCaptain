@@ -11,5 +11,6 @@ namespace RoadCaptain.Host.Console
 
         public string Username { get; set; }
         public string Password { get; set; }
+        public string Route { get; set; }
     }
 }
