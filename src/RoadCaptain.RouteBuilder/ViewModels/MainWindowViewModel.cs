@@ -37,7 +37,7 @@ namespace RoadCaptain.RouteBuilder.ViewModels
                 .OnFailure(_ => Model.StatusBarError("Failed to save route because: {0}", _.Message));
 
             ResetRouteCommand = new RelayCommand(
-                    _ => Route.Reset(),
+                    _ => ResetRoute(),
                     _ => true)
                 .OnSuccess(_ => Model.StatusBarInfo("Route reset"))
                 .OnFailure(_ => Model.StatusBarError("Failed to reset route because: {0}", _.Message));
@@ -48,6 +48,15 @@ namespace RoadCaptain.RouteBuilder.ViewModels
                 .OnSuccess(_ => Model.StatusBarInfo("Added segment"))
                 .OnSuccessWithWarnings(_ => Model.StatusBarInfo("Added segment {0}", _.Message))
                 .OnFailure(_ => Model.StatusBarWarning(_.Message));
+        }
+
+        private CommandResult ResetRoute()
+        {
+            var commandResult = Route.Reset();
+
+            SelectedSegment = null;
+
+            return commandResult;
         }
 
 
