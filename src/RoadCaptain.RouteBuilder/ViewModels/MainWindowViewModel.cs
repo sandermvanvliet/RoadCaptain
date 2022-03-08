@@ -15,11 +15,11 @@ using SkiaSharp;
 
 namespace RoadCaptain.RouteBuilder.ViewModels
 {
-    public sealed class MainViewModel : INotifyPropertyChanged
+    public sealed class MainWindowViewModel : INotifyPropertyChanged
     {
         private Segment _selectedSegment;
 
-        public MainViewModel()
+        public MainWindowViewModel()
         {
             Route = new RouteViewModel();
             Route.PropertyChanged += (_, _) => OnPropertyChanged(nameof(Route));

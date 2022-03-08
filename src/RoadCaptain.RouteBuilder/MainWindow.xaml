@@ -9,7 +9,7 @@
         mc:Ignorable="d"
         Title="RoadCaptain Route Builder" 
         Height="450" Width="800"
-        d:DataContext="{d:DesignInstance viewmodels:MainViewModel}"
+        d:DataContext="{d:DesignInstance viewmodels:MainWindowViewModel}"
         Loaded="MainWindow_OnLoaded"
         SizeChanged="MainWindow_OnSizeChanged">
     <Window.InputBindings>

@@ -21,23 +21,23 @@ namespace RoadCaptain.RouteBuilder
         private readonly SKPaint _selectedSegmentPathPaint = new()
             { Color = SKColor.Parse("#ffcc00"), Style = SKPaintStyle.Stroke, StrokeWidth = 6 };
 
-        private readonly MainViewModel _viewModel = new();
+        private readonly MainWindowViewModel _windowViewModel = new();
 
         public MainWindow()
         {
-            DataContext = _viewModel;
+            DataContext = _windowViewModel;
 
-            _viewModel.PropertyChanged += _viewModel_PropertyChanged;
+            _windowViewModel.PropertyChanged += WindowViewModelPropertyChanged;
 
             InitializeComponent();
         }
 
-        private void _viewModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        private void WindowViewModelPropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
             switch (e.PropertyName)
             {
-                case nameof(_viewModel.SelectedSegment):
-                case nameof(_viewModel.SegmentPaths):
+                case nameof(_windowViewModel.SelectedSegment):
+                case nameof(_windowViewModel.SegmentPaths):
                     SkElement.InvalidateVisual();
                     break;
             }
@@ -48,12 +48,12 @@ namespace RoadCaptain.RouteBuilder
             args.Surface.Canvas.Clear();
             
             // Lowest layer are the segments
-            foreach (var skPath in _viewModel.SegmentPaths)
+            foreach (var skPath in _windowViewModel.SegmentPaths)
             {
                 SKPaint segmentPaint;
 
                 // Use a different color for the selected segment
-                if (_viewModel.SelectedSegment != null && skPath.Key == _viewModel.SelectedSegment.Id)
+                if (_windowViewModel.SelectedSegment != null && skPath.Key == _windowViewModel.SelectedSegment.Id)
                 {
                     segmentPaint = _selectedSegmentPathPaint;
                 }
@@ -70,14 +70,14 @@ namespace RoadCaptain.RouteBuilder
 
         private void MainWindow_OnLoaded(object sender, RoutedEventArgs e)
         {
-            _viewModel.CreatePathsForSegments(SkElement.CanvasSize.Width);
+            _windowViewModel.CreatePathsForSegments(SkElement.CanvasSize.Width);
         }
 
         private void MainWindow_OnSizeChanged(object sender, SizeChangedEventArgs e)
         {
-            if (_viewModel.Segments?.Any() ?? false)
+            if (_windowViewModel.Segments?.Any() ?? false)
             {
-                _viewModel.CreatePathsForSegments(SkElement.CanvasSize.Width);
+                _windowViewModel.CreatePathsForSegments(SkElement.CanvasSize.Width);
             }
         }
 
@@ -90,7 +90,7 @@ namespace RoadCaptain.RouteBuilder
             var scaledPoint = new Point(position.X * scalingFactor, position.Y * scalingFactor);
             
             // 2. Find SKPath that contains this coordinate (or close enough)
-            var pathsInBounds = _viewModel.SegmentPathBounds
+            var pathsInBounds = _windowViewModel.SegmentPathBounds
                 .Where(p => p.Value.Contains((float)scaledPoint.X, (float)scaledPoint.Y))
                 .OrderBy(x => x.Value, new SkRectComparer()) // Sort by bounds area, good enough for now
                 .ToList();
@@ -98,11 +98,11 @@ namespace RoadCaptain.RouteBuilder
             // 3. Highlight it
             if (pathsInBounds.Any())
             {
-                _viewModel.SelectSegment(pathsInBounds.First().Key);
+                _windowViewModel.SelectSegment(pathsInBounds.First().Key);
             }
             else
             {
-                _viewModel.ClearSelectedSegment();
+                _windowViewModel.ClearSelectedSegment();
             }
         }
     }
