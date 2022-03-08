@@ -21,6 +21,9 @@ namespace RoadCaptain.RouteBuilder
         private readonly SKPaint _selectedSegmentPathPaint = new()
             { Color = SKColor.Parse("#ffcc00"), Style = SKPaintStyle.Stroke, StrokeWidth = 6 };
 
+        private readonly SKPaint _spawnPointSegmentPathPaint = new()
+            { Color = SKColor.Parse("#44dd44"), Style = SKPaintStyle.Stroke, StrokeWidth = 4 };
+
         private readonly MainWindowViewModel _windowViewModel;
 
         public MainWindow(MainWindowViewModel mainWindowViewModel)
@@ -64,6 +67,10 @@ namespace RoadCaptain.RouteBuilder
                 if (_windowViewModel.SelectedSegment != null && skPath.Key == _windowViewModel.SelectedSegment.Id)
                 {
                     segmentPaint = _selectedSegmentPathPaint;
+                }
+                else if (_windowViewModel.Route.Last == null && _windowViewModel.Route.IsSpawnPointSegment(skPath.Key))
+                {
+                    segmentPaint = _spawnPointSegmentPathPaint;
                 }
                 else
                 {
