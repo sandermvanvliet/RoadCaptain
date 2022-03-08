@@ -65,12 +65,17 @@
                         </StackPanel>
                     </StackPanel>
                 </Border>
-                <ListView Grid.Row="1" HorizontalAlignment="Stretch"
-                Padding="0" Margin="0" ItemsSource="{Binding Path=Route.Sequence}" AlternationCount="2" 
-                      BorderThickness="0"
-                      ScrollViewer.HorizontalScrollBarVisibility="Disabled" 
-                      ScrollViewer.VerticalScrollBarVisibility="Auto"
-                      VerticalAlignment="Stretch">
+                <ListView Grid.Row="1" 
+                          HorizontalAlignment="Stretch"
+                          Padding="0" 
+                          Margin="0"
+                          ItemsSource="{Binding Path=Route.Sequence}" 
+                          AlternationCount="2" 
+                          BorderThickness="0"
+                          ScrollViewer.HorizontalScrollBarVisibility="Disabled" 
+                          ScrollViewer.VerticalScrollBarVisibility="Auto"
+                          VerticalAlignment="Stretch"
+                          Name="RouteListView">
                     <ListView.Resources>
                         <Style TargetType="{x:Type ListViewItem}">
                             <Style.Triggers>

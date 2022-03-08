@@ -99,6 +99,9 @@ namespace RoadCaptain.RouteBuilder
             if (pathsInBounds.Any())
             {
                 _windowViewModel.SelectSegmentCommand.Execute(pathsInBounds.First().Key);
+
+                // Ensure the last added segment is visible
+                RouteListView.ScrollIntoView(RouteListView.Items[^1]);
             }
             else
             {
