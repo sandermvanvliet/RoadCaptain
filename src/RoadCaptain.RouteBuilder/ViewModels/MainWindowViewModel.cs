@@ -114,7 +114,7 @@ namespace RoadCaptain.RouteBuilder.ViewModels
 
             var fromA = lastSegment.NextSegmentsNodeA.SingleOrDefault(t => t.SegmentId == newSelectedSegment.Id);
             var fromB = lastSegment.NextSegmentsNodeB.SingleOrDefault(t => t.SegmentId == newSelectedSegment.Id);
-            
+
             if (Route.Last.Direction == SegmentDirection.AtoB)
             {
                 if (fromB != null)
@@ -242,25 +242,22 @@ namespace RoadCaptain.RouteBuilder.ViewModels
 
         private CommandResult SaveRoute()
         {
-            if (string.IsNullOrEmpty(Route.OutputFilePath))
+            var dialog = new SaveFileDialog
             {
-                var dialog = new SaveFileDialog
-                {
-                    RestoreDirectory = true,
-                    AddExtension = true,
-                    DefaultExt = ".json",
-                    Filter = "JSON files (.json)|*.json"
-                };
+                RestoreDirectory = true,
+                AddExtension = true,
+                DefaultExt = ".json",
+                Filter = "JSON files (.json)|*.json"
+            };
 
-                var result = dialog.ShowDialog();
+            var result = dialog.ShowDialog();
 
-                if (!result.HasValue || !result.Value)
-                {
-                    return CommandResult.Success();
-                }
-
-                Route.OutputFilePath = dialog.FileName;
+            if (!result.HasValue || !result.Value)
+            {
+                return CommandResult.Success();
             }
+
+            Route.OutputFilePath = dialog.FileName;
 
             try
             {
