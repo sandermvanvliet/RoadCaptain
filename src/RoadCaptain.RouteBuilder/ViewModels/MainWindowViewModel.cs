@@ -5,7 +5,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
 using Microsoft.Win32;
-using RoadCaptain.Adapters;
+using RoadCaptain.Ports;
 using RoadCaptain.RouteBuilder.Annotations;
 using RoadCaptain.RouteBuilder.Commands;
 using RoadCaptain.RouteBuilder.Models;
@@ -20,14 +20,14 @@ namespace RoadCaptain.RouteBuilder.ViewModels
         private readonly Dictionary<string, SKRect> _segmentPathBounds = new();
         private readonly List<Segment> _segments;
 
-        public MainWindowViewModel()
+        public MainWindowViewModel(IRouteStore routeStore, ISegmentStore segmentStore)
         {
             Model = new MainWindowModel();
 
-            Route = new RouteViewModel(new RouteStoreToDisk());
+            Route = new RouteViewModel(routeStore);
             Route.PropertyChanged += (_, _) => OnPropertyChanged(nameof(Route));
 
-            _segments = new SegmentStore().LoadSegments();
+            _segments = segmentStore.LoadSegments();
 
             SaveRouteCommand = new RelayCommand(
                     _ => SaveRoute(),
