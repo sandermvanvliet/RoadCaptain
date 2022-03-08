@@ -7,7 +7,7 @@
       "type": "RoadCaptain.Adapters.AdaptersModule, RoadCaptain.Adapters"
     },
     {
-      "type": "RoadCaptain.RouteBuilder, RoadCaptain.RouteBuilder"
+      "type": "RoadCaptain.RouteBuilder.MainModule, RoadCaptain.RouteBuilder"
     }
   ]
 }
