@@ -52,6 +52,8 @@ namespace RoadCaptain.Host.Console
             this.columnStep = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.columnDirection = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.columnSegment = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.textBoxZwiftRouteName = new System.Windows.Forms.TextBox();
+            this.label5 = new System.Windows.Forms.Label();
             this.menuStrip1.SuspendLayout();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
@@ -296,11 +298,32 @@ namespace RoadCaptain.Host.Console
             this.columnSegment.Name = "columnSegment";
             this.columnSegment.ReadOnly = true;
             // 
+            // textBoxZwiftRouteName
+            // 
+            this.textBoxZwiftRouteName.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxZwiftRouteName.Location = new System.Drawing.Point(1634, 1312);
+            this.textBoxZwiftRouteName.Name = "textBoxZwiftRouteName";
+            this.textBoxZwiftRouteName.ReadOnly = true;
+            this.textBoxZwiftRouteName.Size = new System.Drawing.Size(651, 31);
+            this.textBoxZwiftRouteName.TabIndex = 8;
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(1634, 1278);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(151, 25);
+            this.label5.TabIndex = 9;
+            this.label5.Text = "Zwift route name:";
+            this.label5.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(2297, 1449);
+            this.Controls.Add(this.label5);
+            this.Controls.Add(this.textBoxZwiftRouteName);
             this.Controls.Add(this.dataGridViewRoute);
             this.Controls.Add(this.buttonStart);
             this.Controls.Add(this.panel2);
@@ -351,6 +374,8 @@ namespace RoadCaptain.Host.Console
         private System.Windows.Forms.DataGridViewTextBoxColumn columnStep;
         private System.Windows.Forms.DataGridViewTextBoxColumn columnDirection;
         private System.Windows.Forms.DataGridViewTextBoxColumn columnSegment;
+        private System.Windows.Forms.TextBox textBoxZwiftRouteName;
+        private System.Windows.Forms.Label label5;
     }
 }
 
