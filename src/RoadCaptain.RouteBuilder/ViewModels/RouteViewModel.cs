@@ -82,13 +82,30 @@ namespace RoadCaptain.RouteBuilder.ViewModels
                 throw new ArgumentException("Output file path is empty");
             }
 
-            var route = new PlannedRoute();
+            var route = new PlannedRoute
+            {
+                ZwiftRouteName = GetRouteName(Sequence.First())
+            };
+
+            if (string.IsNullOrEmpty(route.ZwiftRouteName))
+            {
+                throw new Exception($"Unable to determine Zwift route name for segment {Sequence.First().SegmentId} and direction {Sequence.First().Direction}");
+            }
 
             route
                 .RouteSegmentSequence
                 .AddRange(Sequence.Select(s => s.Model).ToList());
             
             _routeStore.Store(route, OutputFilePath);
+        }
+
+        private string GetRouteName(SegmentSequenceViewModel startingSegment)
+        {
+            var spawnPoint = _spawnPoints
+                .SingleOrDefault(s =>
+                    s.SegmentId == startingSegment.SegmentId && s.SegmentDirection == startingSegment.Direction);
+
+            return spawnPoint?.ZwiftRouteName;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -109,6 +126,35 @@ namespace RoadCaptain.RouteBuilder.ViewModels
             OnPropertyChanged(nameof(TotalDescent));
 
             return CommandResult.Success();
+        }
+
+        public bool IsSpawnPointSegment(string segmentId)
+        {
+            return _spawnPoints.Any(spanPoint => spanPoint.SegmentId == segmentId);
+        }
+
+        private readonly List<SpawnPoint> _spawnPoints = new()
+        {
+            new("watopia-bambino-fondo-001-after-after-after-after-after", "Beach Island Loop", SegmentDirection.BtoA),
+            new("watopia-bambino-fondo-001-after-after-after-after-after", "Mountain Route", SegmentDirection.AtoB),
+            new("watopia-bambino-fondo-004-before-before", "Mountain 8", SegmentDirection.AtoB),
+            new("watopia-big-foot-hills-004-before", "Muir and the mountain", SegmentDirection.BtoA),
+            new("watopia-big-foot-hills-004-before", "Big Foot Hills", SegmentDirection.AtoB),
+            new("watopia-bambino-fondo-003-before-after", "Jungle Circuit", SegmentDirection.AtoB)
+        };
+    }
+
+    internal class SpawnPoint
+    {
+        public string SegmentId { get; }
+        public string ZwiftRouteName { get; }
+        public SegmentDirection SegmentDirection { get; }
+
+        public SpawnPoint(string segmentId, string zwiftRouteName, SegmentDirection segmentDirection)
+        {
+            SegmentId = segmentId;
+            ZwiftRouteName = zwiftRouteName;
+            SegmentDirection = segmentDirection;
         }
     }
 }

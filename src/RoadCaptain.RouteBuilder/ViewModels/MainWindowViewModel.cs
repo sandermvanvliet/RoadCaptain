@@ -91,6 +91,11 @@ namespace RoadCaptain.RouteBuilder.ViewModels
             // 1. Figure out if this is the first segment on the route, if so add it to the route and set the selection to the new segment
             if (!Route.Sequence.Any())
             {
+                if (!Route.IsSpawnPointSegment(segmentId))
+                {
+                    return CommandResult.Failure($"{segmentId} is not a spawn point, we can't start here unfortunately");
+                }
+
                 Route.StartOn(newSelectedSegment);
 
                 SelectedSegment = newSelectedSegment;
