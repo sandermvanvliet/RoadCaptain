@@ -13,6 +13,7 @@
         SizeChanged="MainWindow_OnSizeChanged">
     <Window.InputBindings>
         <KeyBinding Key="S" Modifiers="Ctrl" Command="{Binding Path=SaveRouteCommand}" />
+        <KeyBinding Key="R" Modifiers="Ctrl" Command="{Binding Path=ResetRouteCommand}" />
     </Window.InputBindings>
     <DockPanel>
         <StackPanel Orientation="Horizontal"

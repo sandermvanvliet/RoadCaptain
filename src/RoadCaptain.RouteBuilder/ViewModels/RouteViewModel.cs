@@ -6,6 +6,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using RoadCaptain.Ports;
 using RoadCaptain.RouteBuilder.Annotations;
+using RoadCaptain.RouteBuilder.Commands;
 
 namespace RoadCaptain.RouteBuilder.ViewModels
 {
@@ -26,7 +27,7 @@ namespace RoadCaptain.RouteBuilder.ViewModels
         public double TotalDescent => Math.Round(Sequence.Sum(s => s.Descent), 1);
 
         public SegmentSequenceViewModel Last => Sequence.LastOrDefault();
-        public string? OutputFilePath { get; set; }
+        public string OutputFilePath { get; set; }
 
         public void StartOn(Segment segment)
         {
@@ -96,6 +97,18 @@ namespace RoadCaptain.RouteBuilder.ViewModels
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        public CommandResult Reset()
+        {
+            _sequence.Clear();
+
+            OnPropertyChanged(nameof(Sequence));
+            OnPropertyChanged(nameof(TotalDistance));
+            OnPropertyChanged(nameof(TotalAscent));
+            OnPropertyChanged(nameof(TotalDescent));
+
+            return CommandResult.Success();
         }
     }
 }

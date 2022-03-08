@@ -36,6 +36,12 @@ namespace RoadCaptain.RouteBuilder.ViewModels
                 .OnSuccessWithWarnings(_ => Model.StatusBarInfo("Route saved successfully: {0}", _.Message))
                 .OnFailure(_ => Model.StatusBarError("Failed to save route because: {0}", _.Message));
 
+            ResetRouteCommand = new RelayCommand(
+                    _ => Route.Reset(),
+                    _ => true)
+                .OnSuccess(_ => Model.StatusBarInfo("Route reset"))
+                .OnFailure(_ => Model.StatusBarError("Failed to reset route because: {0}", _.Message));
+
             SelectSegmentCommand = new RelayCommand(
                     _ => SelectSegment((Point)_),
                     _ => true)
@@ -50,6 +56,7 @@ namespace RoadCaptain.RouteBuilder.ViewModels
         public Dictionary<string, SKPath> SegmentPaths { get; } = new();
 
         public ICommand SaveRouteCommand { get; }
+        public ICommand ResetRouteCommand { get; }
         public ICommand SelectSegmentCommand { get; }
 
         public Segment SelectedSegment
@@ -96,17 +103,12 @@ namespace RoadCaptain.RouteBuilder.ViewModels
 
             var fromA = lastSegment.NextSegmentsNodeA.SingleOrDefault(t => t.SegmentId == newSelectedSegment.Id);
             var fromB = lastSegment.NextSegmentsNodeB.SingleOrDefault(t => t.SegmentId == newSelectedSegment.Id);
-
+            
             if (Route.Last.Direction == SegmentDirection.AtoB)
             {
                 if (fromB != null)
                 {
-                    var newSegmentDirection = SegmentDirection.BtoA;
-
-                    if (newSelectedSegment.NextSegmentsNodeA.Any(s => s.SegmentId == lastSegment.Id))
-                    {
-                        newSegmentDirection = SegmentDirection.AtoB;
-                    }
+                    var newSegmentDirection = GetDirectionOnNewSegment(newSelectedSegment, lastSegment);
 
                     Route.NextStep(fromB.Direction, fromB.SegmentId, newSelectedSegment, SegmentDirection.AtoB,
                         newSegmentDirection);
@@ -120,12 +122,7 @@ namespace RoadCaptain.RouteBuilder.ViewModels
             {
                 if (fromA != null)
                 {
-                    var newSegmentDirection = SegmentDirection.BtoA;
-
-                    if (newSelectedSegment.NextSegmentsNodeA.Any(s => s.SegmentId == lastSegment.Id))
-                    {
-                        newSegmentDirection = SegmentDirection.AtoB;
-                    }
+                    var newSegmentDirection = GetDirectionOnNewSegment(newSelectedSegment, lastSegment);
 
                     Route.NextStep(fromA.Direction, fromA.SegmentId, newSelectedSegment, SegmentDirection.BtoA,
                         newSegmentDirection);
@@ -139,12 +136,7 @@ namespace RoadCaptain.RouteBuilder.ViewModels
             {
                 if (fromA != null)
                 {
-                    var newSegmentDirection = SegmentDirection.BtoA;
-
-                    if (newSelectedSegment.NextSegmentsNodeA.Any(s => s.SegmentId == lastSegment.Id))
-                    {
-                        newSegmentDirection = SegmentDirection.AtoB;
-                    }
+                    var newSegmentDirection = GetDirectionOnNewSegment(newSelectedSegment, lastSegment);
 
                     Route.NextStep(fromA.Direction, fromA.SegmentId, newSelectedSegment, SegmentDirection.BtoA,
                         newSegmentDirection);
@@ -156,12 +148,7 @@ namespace RoadCaptain.RouteBuilder.ViewModels
 
                 if (fromB != null)
                 {
-                    var newSegmentDirection = SegmentDirection.BtoA;
-
-                    if (newSelectedSegment.NextSegmentsNodeA.Any(s => s.SegmentId == lastSegment.Id))
-                    {
-                        newSegmentDirection = SegmentDirection.AtoB;
-                    }
+                    var newSegmentDirection = GetDirectionOnNewSegment(newSelectedSegment, lastSegment);
 
                     Route.NextStep(fromB.Direction, fromB.SegmentId, newSelectedSegment, SegmentDirection.AtoB,
                         newSegmentDirection);
@@ -173,6 +160,22 @@ namespace RoadCaptain.RouteBuilder.ViewModels
             }
 
             return CommandResult.Failure("Did not find a connection between the last segment and the selected segment");
+        }
+
+        private static SegmentDirection GetDirectionOnNewSegment(Segment newSelectedSegment, Segment lastSegment)
+        {
+            var newSegmentDirection = SegmentDirection.Unknown;
+
+            if (newSelectedSegment.NextSegmentsNodeA.Any(s => s.SegmentId == lastSegment.Id))
+            {
+                newSegmentDirection = SegmentDirection.AtoB;
+            }
+            else if (newSelectedSegment.NextSegmentsNodeB.Any(s => s.SegmentId == lastSegment.Id))
+            {
+                newSegmentDirection = SegmentDirection.BtoA;
+            }
+
+            return newSegmentDirection;
         }
 
         public void CreatePathsForSegments(float width)

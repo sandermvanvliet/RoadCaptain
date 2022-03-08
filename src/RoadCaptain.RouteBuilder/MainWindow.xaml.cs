@@ -43,7 +43,10 @@ namespace RoadCaptain.RouteBuilder
                     break;
                 case nameof(_windowViewModel.Route):
                     // Ensure the last added segment is visible
-                    RouteListView.ScrollIntoView(RouteListView.Items[^1]);
+                    if (RouteListView.Items.Count > 0)
+                    {
+                        RouteListView.ScrollIntoView(RouteListView.Items[^1]);
+                    }
                     break;
             }
         }
