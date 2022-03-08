@@ -10,7 +10,8 @@
         Height="450" Width="800"
         d:DataContext="{d:DesignInstance viewmodels:MainWindowViewModel}"
         Loaded="MainWindow_OnLoaded"
-        SizeChanged="MainWindow_OnSizeChanged">
+        SizeChanged="MainWindow_OnSizeChanged"
+        WindowState="Maximized">
     <Window.InputBindings>
         <KeyBinding Key="S" Modifiers="Ctrl" Command="{Binding Path=SaveRouteCommand}" />
         <KeyBinding Key="R" Modifiers="Ctrl" Command="{Binding Path=ResetRouteCommand}" />
