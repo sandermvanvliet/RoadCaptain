@@ -7,7 +7,7 @@
         xmlns:viewmodels="clr-namespace:RoadCaptain.RouteBuilder.ViewModels"
         xmlns:skia="clr-namespace:SkiaSharp.Views.WPF;assembly=SkiaSharp.Views.WPF"
         mc:Ignorable="d"
-        Title="RoadCaptain Route Builder" 
+        Title="{Binding Path=Model.WindowTitle}" 
         Height="450" Width="800"
         d:DataContext="{d:DesignInstance viewmodels:MainWindowViewModel}"
         Loaded="MainWindow_OnLoaded"

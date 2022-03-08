@@ -11,6 +11,7 @@ using Microsoft.Win32;
 using RoadCaptain.Adapters;
 using RoadCaptain.RouteBuilder.Annotations;
 using RoadCaptain.RouteBuilder.Commands;
+using RoadCaptain.RouteBuilder.Models;
 using SkiaSharp;
 
 namespace RoadCaptain.RouteBuilder.ViewModels
@@ -21,6 +22,8 @@ namespace RoadCaptain.RouteBuilder.ViewModels
 
         public MainWindowViewModel()
         {
+            Model = new MainWindowModel();
+
             Route = new RouteViewModel();
             Route.PropertyChanged += (_, _) => OnPropertyChanged(nameof(Route));
 
@@ -31,6 +34,8 @@ namespace RoadCaptain.RouteBuilder.ViewModels
                     _ => true)
                 .OnSuccess(res => { });
         }
+
+        public MainWindowModel Model { get; }
 
         private CommandResult SaveRoute()
         {
