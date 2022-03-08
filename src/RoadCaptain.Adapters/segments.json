@@ -1646,40 +1646,6 @@
         "NextSegmentsNodeB": [],
         "Points": [
             {
-                "Latitude": -11.664959,
-                "Longitude": 166.950785,
-                "Altitude": 75.8,
-                "Index": 0,
-                "DistanceOnSegment": 0.0,
-                "DistanceFromLast": 0.0,
-                "CoordinatesDecimal": "S11.66496° E166.95079°"
-            },
-            {
-                "Latitude": -11.665089,
-                "Longitude": 166.950774,
-                "Altitude": 76.0,
-                "Index": 1,
-                "DistanceOnSegment": 14.5048884496523000,
-                "DistanceFromLast": 14.5048884496523000,
-                "CoordinatesDecimal": "S11.66509° E166.95077°"
-            },
-            {
-                "Latitude": -11.66521,
-                "Longitude": 166.950828,
-                "Altitude": 76.4,
-                "Index": 2,
-                "DistanceOnSegment": 29.1884257273322000,
-                "DistanceFromLast": 14.6835372776799000,
-                "CoordinatesDecimal": "S11.66521° E166.95083°"
-            }
-        ],
-        "Id": "watopia-climbers-gambit-002"
-    },
-    {
-        "NextSegmentsNodeA": [],
-        "NextSegmentsNodeB": [],
-        "Points": [
-            {
                 "Latitude": -11.643743,
                 "Longitude": 166.936054,
                 "Altitude": 8.8,
