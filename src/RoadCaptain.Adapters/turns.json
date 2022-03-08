@@ -103,7 +103,7 @@
     },
     "turnsB": {
       "left": "watopia-beach-island-loop-001",
-      "goStraight": "watopia-bambino-fondo-001-after-after-after-after-after"
+      "right": "watopia-bambino-fondo-001-after-after-after-after-after"
     }
   },
   {
@@ -186,7 +186,7 @@
     "segmentId": "watopia-bambino-fondo-003-before-before",
     "turnsA": {
       "right": "watopia-bambino-fondo-001-after-after-before-before-after-after",
-      "goStraight": "watopia-bambino-fondo-001-after-after-before-after"
+      "left": "watopia-bambino-fondo-001-after-after-before-after"
     },
     "turnsB": {
       "left": "watopia-ocean-lava-cliffside-loop-001",
@@ -331,8 +331,8 @@
       "goStraight": "watopia-bambino-fondo-003-after-after-before"
     },
     "turnsB": {
-      "goStraight": "watopia-bambino-fondo-003-before-after",
-      "left": "watopia-bambino-fondo-003-after-before-before"
+      "right": "watopia-bambino-fondo-003-before-after",
+      "goStraight": "watopia-bambino-fondo-003-after-before-before"
     }
   },
   {
