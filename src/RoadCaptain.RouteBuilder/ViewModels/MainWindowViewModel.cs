@@ -29,51 +29,15 @@ namespace RoadCaptain.RouteBuilder.ViewModels
 
             SaveRouteCommand = new RelayCommand(
                     _ => SaveRoute(),
-                    _ => true)           
+                    _ => true)
                 .OnSuccess(_ => Model.StatusBarInfo("Route saved successfully"))
                 .OnSuccessWithWarnings(_ => Model.StatusBarInfo("Route saved successfully: {0}", _.Message))
                 .OnFailure(_ => Model.StatusBarError("Failed to save route because: {0}", _.Message));
         }
 
         public MainWindowModel Model { get; }
-
-        private CommandResult SaveRoute()
-        {
-            if (string.IsNullOrEmpty(Route.OutputFilePath))
-            {
-                var dialog = new SaveFileDialog
-                {
-                    RestoreDirectory = true,
-                    AddExtension = true,
-                    DefaultExt = ".json",
-                    Filter = "JSON files (.json)|*.json"
-                };
-
-                var result = dialog.ShowDialog();
-
-                if (!result.HasValue || !result.Value)
-                {
-                    return CommandResult.Success();
-                }
-
-                Route.OutputFilePath = dialog.FileName;
-            }
-
-            try
-            {
-                Route.Save();
-                return CommandResult.Success();
-            }
-            catch (Exception e)
-            {
-                return CommandResult.Failure(e.Message);
-            }
-        }
-
         public List<Segment> Segments { get; }
-
         public RouteViewModel Route { get; set; }
-
         public Dictionary<string, SKPath> SegmentPaths { get; } = new();
         public Dictionary<string, SKRect> SegmentPathBounds { get; } = new();
 
@@ -105,7 +69,7 @@ namespace RoadCaptain.RouteBuilder.ViewModels
 
             // 2. Figure out if the newly selected segment is reachable from the last segment
             var lastSegment = Segments.Single(s => s.Id == Route.Last.SegmentId);
-            
+
             var fromA = lastSegment.NextSegmentsNodeA.SingleOrDefault(t => t.SegmentId == newSelectedSegment.Id);
             var fromB = lastSegment.NextSegmentsNodeB.SingleOrDefault(t => t.SegmentId == newSelectedSegment.Id);
 
@@ -120,12 +84,13 @@ namespace RoadCaptain.RouteBuilder.ViewModels
                         newSegmentDirection = SegmentDirection.AtoB;
                     }
 
-                    Route.NextStep(fromB.Direction, fromB.SegmentId, newSelectedSegment, SegmentDirection.AtoB, newSegmentDirection);
+                    Route.NextStep(fromB.Direction, fromB.SegmentId, newSelectedSegment, SegmentDirection.AtoB,
+                        newSegmentDirection);
 
                     SelectedSegment = newSelectedSegment;
                 }
             }
-            else if(Route.Last.Direction == SegmentDirection.BtoA)
+            else if (Route.Last.Direction == SegmentDirection.BtoA)
             {
                 if (fromA != null)
                 {
@@ -136,7 +101,8 @@ namespace RoadCaptain.RouteBuilder.ViewModels
                         newSegmentDirection = SegmentDirection.AtoB;
                     }
 
-                    Route.NextStep(fromA.Direction, fromA.SegmentId, newSelectedSegment, SegmentDirection.BtoA, newSegmentDirection);
+                    Route.NextStep(fromA.Direction, fromA.SegmentId, newSelectedSegment, SegmentDirection.BtoA,
+                        newSegmentDirection);
 
                     SelectedSegment = newSelectedSegment;
                 }
@@ -152,7 +118,8 @@ namespace RoadCaptain.RouteBuilder.ViewModels
                         newSegmentDirection = SegmentDirection.AtoB;
                     }
 
-                    Route.NextStep(fromA.Direction, fromA.SegmentId, newSelectedSegment, SegmentDirection.BtoA, newSegmentDirection);
+                    Route.NextStep(fromA.Direction, fromA.SegmentId, newSelectedSegment, SegmentDirection.BtoA,
+                        newSegmentDirection);
 
                     SelectedSegment = newSelectedSegment;
                 }
@@ -165,7 +132,8 @@ namespace RoadCaptain.RouteBuilder.ViewModels
                         newSegmentDirection = SegmentDirection.AtoB;
                     }
 
-                    Route.NextStep(fromB.Direction, fromB.SegmentId, newSelectedSegment, SegmentDirection.AtoB, newSegmentDirection);
+                    Route.NextStep(fromB.Direction, fromB.SegmentId, newSelectedSegment, SegmentDirection.AtoB,
+                        newSegmentDirection);
 
                     SelectedSegment = newSelectedSegment;
                 }
@@ -198,7 +166,7 @@ namespace RoadCaptain.RouteBuilder.ViewModels
                 .ToList();
 
             var overallOffsets = Offsets.From(segmentsWithOffsets.Select(s => s.Offsets).ToList());
-            
+
             foreach (var segment in segmentsWithOffsets)
             {
                 var skiaPathFromSegment = SkiaPathFromSegment(overallOffsets, segment.GameCoordinates);
@@ -232,6 +200,39 @@ namespace RoadCaptain.RouteBuilder.ViewModels
             var scaledY = translatedY * offsets.ScaleFactor;
 
             return new PointF(scaledX, scaledY);
+        }
+
+        private CommandResult SaveRoute()
+        {
+            if (string.IsNullOrEmpty(Route.OutputFilePath))
+            {
+                var dialog = new SaveFileDialog
+                {
+                    RestoreDirectory = true,
+                    AddExtension = true,
+                    DefaultExt = ".json",
+                    Filter = "JSON files (.json)|*.json"
+                };
+
+                var result = dialog.ShowDialog();
+
+                if (!result.HasValue || !result.Value)
+                {
+                    return CommandResult.Success();
+                }
+
+                Route.OutputFilePath = dialog.FileName;
+            }
+
+            try
+            {
+                Route.Save();
+                return CommandResult.Success();
+            }
+            catch (Exception e)
+            {
+                return CommandResult.Failure(e.Message);
+            }
         }
 
         [NotifyPropertyChangedInvocator]
