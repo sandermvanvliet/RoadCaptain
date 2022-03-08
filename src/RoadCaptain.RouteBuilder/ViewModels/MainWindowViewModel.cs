@@ -2,11 +2,9 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
-using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
-using Microsoft.VisualBasic;
 using Microsoft.Win32;
 using RoadCaptain.Adapters;
 using RoadCaptain.RouteBuilder.Annotations;
@@ -31,8 +29,10 @@ namespace RoadCaptain.RouteBuilder.ViewModels
 
             SaveRouteCommand = new RelayCommand(
                     _ => SaveRoute(),
-                    _ => true)
-                .OnSuccess(res => { });
+                    _ => true)           
+                .OnSuccess(_ => Model.StatusBarInfo("Route saved successfully"))
+                .OnSuccessWithWarnings(_ => Model.StatusBarInfo("Route saved successfully: {0}", _.Message))
+                .OnFailure(_ => Model.StatusBarError("Failed to save route because: {0}", _.Message));
         }
 
         public MainWindowModel Model { get; }
