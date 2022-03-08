@@ -98,6 +98,12 @@ namespace RoadCaptain.RouteBuilder.ViewModels
                 return CommandResult.Success();
             }
 
+            // Prevent selecting the same segment again
+            if (Route.Last.SegmentId == segmentId)
+            {
+                return CommandResult.Aborted();
+            }
+
             // 2. Figure out if the newly selected segment is reachable from the last segment
             var lastSegment = _segments.Single(s => s.Id == Route.Last.SegmentId);
 
