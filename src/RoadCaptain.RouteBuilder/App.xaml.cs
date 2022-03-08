@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
+using RoadCaptain.Adapters;
+using RoadCaptain.RouteBuilder.ViewModels;
 
 namespace RoadCaptain.RouteBuilder
 {
@@ -13,5 +9,13 @@ namespace RoadCaptain.RouteBuilder
     /// </summary>
     public partial class App : Application
     {
+        private void App_OnStartup(object sender, StartupEventArgs e)
+        {
+            var viewModel = new MainWindowViewModel(new RouteStoreToDisk(), new SegmentStore());
+
+            var mainWindow = new MainWindow(viewModel);
+
+            mainWindow.Show();
+        }
     }
 }

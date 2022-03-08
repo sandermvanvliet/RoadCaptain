@@ -1,6 +1,5 @@
 ﻿using System.Windows;
 using System.Windows.Input;
-using RoadCaptain.Adapters;
 using RoadCaptain.RouteBuilder.ViewModels;
 using SkiaSharp;
 using SkiaSharp.Views.Desktop;
@@ -22,11 +21,12 @@ namespace RoadCaptain.RouteBuilder
         private readonly SKPaint _selectedSegmentPathPaint = new()
             { Color = SKColor.Parse("#ffcc00"), Style = SKPaintStyle.Stroke, StrokeWidth = 6 };
 
-        private readonly MainWindowViewModel _windowViewModel = new(new RouteStoreToDisk(), new SegmentStore());
+        private readonly MainWindowViewModel _windowViewModel;
 
-        public MainWindow()
+        public MainWindow(MainWindowViewModel mainWindowViewModel)
         {
-            DataContext = _windowViewModel;
+            _windowViewModel = mainWindowViewModel;
+            DataContext = mainWindowViewModel;
 
             _windowViewModel.PropertyChanged += WindowViewModelPropertyChanged;
 
