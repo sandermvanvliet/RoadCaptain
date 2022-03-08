@@ -93,6 +93,7 @@ namespace RoadCaptain.RouteBuilder.ViewModels
         {
             Model.TurnToNextSegment = direction;
             Model.NextSegmentId = ontoSegmentId;
+            Model.Direction = segmentDirection;
 
             TurnImage = ImageFromTurn(direction);
             Direction = segmentDirection;

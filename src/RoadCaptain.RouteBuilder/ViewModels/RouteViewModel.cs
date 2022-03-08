@@ -56,6 +56,7 @@ namespace RoadCaptain.RouteBuilder.ViewModels
                     SegmentId = ontoSegmentId,
                     TurnToNextSegment = TurnDirection.None,
                     NextSegmentId = null,
+                    Direction = newSegmentDirection
                 },
                 segment,
                 _sequence.Count + 1);
