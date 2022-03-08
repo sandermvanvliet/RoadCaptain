@@ -198,7 +198,8 @@
     "segmentId": "watopia-ocean-lava-cliffside-loop-001",
     "turnsA": {
       "left": "watopia-big-loop-rev-001-before-after",
-      "goStraight": "watopia-big-loop-rev-001-before-before"
+      "goStraight": "watopia-bambino-fondo-003-before-after",
+      "right": "watopia-bambino-fondo-003-before-before"
     },
     "turnsB": {
       "left": "watopia-big-loop-rev-001-after-after",
