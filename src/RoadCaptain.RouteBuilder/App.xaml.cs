@@ -16,10 +16,11 @@ namespace RoadCaptain.RouteBuilder
     public partial class App : Application
     {
         private readonly IContainer _container;
+        private readonly Logger _logger;
 
         public App()
         {
-            var logger = CreateLogger();
+            _logger = CreateLogger();
 
             var configuration = new ConfigurationBuilder()
                 .AddJsonFile("appsettings.json", true)
@@ -29,7 +30,7 @@ namespace RoadCaptain.RouteBuilder
 
             var builder = new ContainerBuilder();
             
-            builder.Register(_ => logger).SingleInstance();
+            builder.Register(_ => _logger).SingleInstance();
 
             builder.Register(_ => configuration).SingleInstance();
 
@@ -54,6 +55,12 @@ namespace RoadCaptain.RouteBuilder
                 .MinimumLevel.Information()
                 .Enrich.FromLogContext()
                 .CreateLogger();
+        }
+
+        private void App_OnExit(object sender, ExitEventArgs e)
+        {
+            // Flush the logger
+            _logger?.Dispose();
         }
     }
 }
