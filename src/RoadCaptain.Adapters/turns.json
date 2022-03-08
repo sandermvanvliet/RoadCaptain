@@ -320,7 +320,8 @@
       "goStraight": "watopia-bambino-fondo-003-after-after-after"
     },
       "turnsB": {
-        "left": "watopia-bambino-fondo-003-after-before-after"
+        "left": "watopia-bambino-fondo-003-after-before-after",
+        "right": "watopia-bambino-fondo-003-after-before-before"
     }
   },
   {
