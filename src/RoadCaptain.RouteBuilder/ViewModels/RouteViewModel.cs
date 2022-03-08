@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using Newtonsoft.Json;
 using RoadCaptain.RouteBuilder.Annotations;
 
 namespace RoadCaptain.RouteBuilder.ViewModels
@@ -19,6 +21,7 @@ namespace RoadCaptain.RouteBuilder.ViewModels
         public double TotalDescent => Math.Round(Sequence.Sum(s => s.Descent), 1);
 
         public SegmentSequenceViewModel Last => Sequence.LastOrDefault();
+        public string? OutputFilePath { get; set; }
 
         public void StartOn(Segment segment)
         {
@@ -63,6 +66,16 @@ namespace RoadCaptain.RouteBuilder.ViewModels
             OnPropertyChanged(nameof(TotalDistance));
             OnPropertyChanged(nameof(TotalAscent));
             OnPropertyChanged(nameof(TotalDescent));
+        }
+
+        public void Save()
+        {
+            if(string.IsNullOrEmpty(OutputFilePath))
+            {
+                throw new ArgumentException("Output file path is empty");
+            }
+
+            File.WriteAllText(OutputFilePath, JsonConvert.SerializeObject(_sequence, Formatting.Indented));
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

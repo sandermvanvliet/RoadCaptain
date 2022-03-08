@@ -1,10 +1,16 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Windows.Input;
+using Microsoft.VisualBasic;
+using Microsoft.Win32;
 using RoadCaptain.Adapters;
 using RoadCaptain.RouteBuilder.Annotations;
+using RoadCaptain.RouteBuilder.Commands;
 using SkiaSharp;
 
 namespace RoadCaptain.RouteBuilder.ViewModels
@@ -19,6 +25,44 @@ namespace RoadCaptain.RouteBuilder.ViewModels
             Route.PropertyChanged += (_, _) => OnPropertyChanged(nameof(Route));
 
             Segments = new SegmentStore().LoadSegments();
+
+            SaveRouteCommand = new RelayCommand(
+                    _ => SaveRoute(),
+                    _ => true)
+                .OnSuccess(res => { });
+        }
+
+        private CommandResult SaveRoute()
+        {
+            if (string.IsNullOrEmpty(Route.OutputFilePath))
+            {
+                var dialog = new SaveFileDialog
+                {
+                    RestoreDirectory = true,
+                    AddExtension = true,
+                    DefaultExt = ".json",
+                    Filter = "JSON files (.json)|*.json"
+                };
+
+                var result = dialog.ShowDialog();
+
+                if (!result.HasValue || !result.Value)
+                {
+                    return CommandResult.Success();
+                }
+
+                Route.OutputFilePath = dialog.FileName;
+            }
+
+            try
+            {
+                Route.Save();
+                return CommandResult.Success();
+            }
+            catch (Exception e)
+            {
+                return CommandResult.Failure(e.Message);
+            }
         }
 
         public List<Segment> Segments { get; }
@@ -27,6 +71,8 @@ namespace RoadCaptain.RouteBuilder.ViewModels
 
         public Dictionary<string, SKPath> SegmentPaths { get; } = new();
         public Dictionary<string, SKRect> SegmentPathBounds { get; } = new();
+
+        public ICommand SaveRouteCommand { get; }
 
         public Segment SelectedSegment
         {
