@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Drawing;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
@@ -219,23 +218,12 @@ namespace RoadCaptain.RouteBuilder.ViewModels
 
             path.AddPoly(
                 data
-                    .Select(point => ScaleAndTranslate(point, offsets))
+                    .Select(offsets.ScaleAndTranslate)
                     .Select(point => new SKPoint(point.X, point.Y))
                     .ToArray(),
                 false);
 
             return path;
-        }
-
-        private static PointF ScaleAndTranslate(TrackPoint point, Offsets offsets)
-        {
-            var translatedX = offsets.OffsetX + (float)point.Latitude;
-            var translatedY = offsets.OffsetY + (float)point.Longitude;
-
-            var scaledX = translatedX * offsets.ScaleFactor;
-            var scaledY = translatedY * offsets.ScaleFactor;
-
-            return new PointF(scaledX, scaledY);
         }
 
         private CommandResult SaveRoute()

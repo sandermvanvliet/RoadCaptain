@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 
 namespace RoadCaptain.RouteBuilder
@@ -49,6 +50,13 @@ namespace RoadCaptain.RouteBuilder
 
                 return (ImageWidth - 1) / RangeX;
             }
+        }
+
+        public PointF ScaleAndTranslate(TrackPoint point)
+        {
+            return new PointF(
+                (OffsetX + (float)point.Latitude) * ScaleFactor, 
+                (OffsetY + (float)point.Longitude) * ScaleFactor);
         }
 
         public static Offsets From(List<Offsets> offsets)
