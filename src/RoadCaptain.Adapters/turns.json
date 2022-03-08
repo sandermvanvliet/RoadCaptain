@@ -388,5 +388,62 @@
       "left": "watopia-ocean-lava-cliffside-loop-001",
       "goStraight": "watopia-big-loop-rev-001-after-after"
     }
+  },
+  {
+    "segmentId": "watopia-big-foot-hills-004-before",
+    "turnsA": {
+      "goStraight": "watopia-big-foot-hills-001-after-after",
+      "left": "watopia-big-foot-hills-007-after"
+    },
+    "turnsB": {
+      "goStraight": "watopia-big-foot-hills-004-after-before"
+    }
+  },
+  {
+    "segmentId": "watopia-big-foot-hills-004-after-before",
+    "turnsA": {
+      "goStraight": "watopia-big-foot-hills-004-before"
+    },
+    "turnsB": {
+      "goStraight": "watopia-big-foot-hills-004-after-after"
+    }
+  },
+  {
+    "segmentId": "watopia-big-foot-hills-004-after-after",
+    "turnsA": {
+      "goStraight": "watopia-big-foot-hills-004-after-before"
+    },
+    "turnsB": {
+      "goStraight": "watopia-big-foot-hills-001-before-before"
+    }
+  },
+  {
+    "segmentId": "watopia-big-foot-hills-001-before-before",
+    "turnsA": {
+      "goStraight": "watopia-big-foot-hills-004-after-after"
+    },
+    "turnsB": {
+      "goStraight": "watopia-big-foot-hills-001-before-after"
+    }
+  },
+  {
+    "segmentId": "watopia-big-foot-hills-001-before-after",
+    "turnsA": {
+      "goStraight": "watopia-big-foot-hills-001-before-before"
+    },
+    "turnsB": {
+      "goStraight": "watopia-big-foot-hills-001-after-before",
+      "left": "watopia-big-foot-hills-003-before"
+    }
+  },
+  {
+    "segmentId": "watopia-big-foot-hills-007-after",
+    "turnsA": {
+
+    },
+    "turnsB": {
+      "left": "watopia-big-foot-hills-001-after-after",
+      "right": "watopia-big-foot-hills-004-before"
+    }
   }
 ]
