@@ -432,7 +432,7 @@
       "goStraight": "watopia-big-foot-hills-001-before-before"
     },
     "turnsB": {
-      "goStraight": "watopia-big-foot-hills-001-after-before",
+      "right": "watopia-big-foot-hills-001-after-before",
       "left": "watopia-big-foot-hills-003-before"
     }
   },
