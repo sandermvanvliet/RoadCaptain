@@ -1680,40 +1680,6 @@
         "NextSegmentsNodeB": [],
         "Points": [
             {
-                "Latitude": -11.637172,
-                "Longitude": 166.959304,
-                "Altitude": 0.6,
-                "Index": 0,
-                "DistanceOnSegment": 0.0,
-                "DistanceFromLast": 0.0,
-                "CoordinatesDecimal": "S11.63717° E166.95930°"
-            },
-            {
-                "Latitude": -11.637015,
-                "Longitude": 166.959218,
-                "Altitude": 0.6,
-                "Index": 1,
-                "DistanceOnSegment": 19.8114516905168000,
-                "DistanceFromLast": 19.8114516905168000,
-                "CoordinatesDecimal": "S11.63702° E166.95922°"
-            },
-            {
-                "Latitude": -11.636835,
-                "Longitude": 166.959261,
-                "Altitude": 0.6,
-                "Index": 2,
-                "DistanceOnSegment": 40.3671115120084000,
-                "DistanceFromLast": 20.5556598214916000,
-                "CoordinatesDecimal": "S11.63684° E166.95926°"
-            }
-        ],
-        "Id": "watopia-dust-in-the-wind-001"
-    },
-    {
-        "NextSegmentsNodeA": [],
-        "NextSegmentsNodeB": [],
-        "Points": [
-            {
                 "Latitude": -11.643743,
                 "Longitude": 166.936054,
                 "Altitude": 8.8,
