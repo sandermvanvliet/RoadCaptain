@@ -6,6 +6,8 @@ using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using Newtonsoft.Json.Serialization;
 using RoadCaptain.RouteBuilder.Annotations;
 
 namespace RoadCaptain.RouteBuilder.ViewModels
@@ -75,7 +77,19 @@ namespace RoadCaptain.RouteBuilder.ViewModels
                 throw new ArgumentException("Output file path is empty");
             }
 
-            File.WriteAllText(OutputFilePath, JsonConvert.SerializeObject(_sequence, Formatting.Indented));
+            File.WriteAllText(OutputFilePath, JsonConvert.SerializeObject(
+                _sequence
+                    .Select(seq => seq.Model)
+                    .ToList(), 
+                Formatting.Indented,
+                new JsonSerializerSettings
+                {
+                    ContractResolver = new CamelCasePropertyNamesContractResolver(),
+                    Converters = new List<JsonConverter>
+                    {
+                        new StringEnumConverter(new CamelCaseNamingStrategy())
+                    }
+                }));
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
