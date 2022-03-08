@@ -137,7 +137,7 @@ namespace RoadCaptain.RouteBuilder.ViewModels
         {
             new("watopia-bambino-fondo-001-after-after-after-after-after", "Beach Island Loop", SegmentDirection.BtoA),
             new("watopia-bambino-fondo-001-after-after-after-after-after", "Mountain Route", SegmentDirection.AtoB),
-            new("watopia-bambino-fondo-004-before-before", "Mountain 8", SegmentDirection.AtoB),
+            new("watopia-bambino-fondo-004-before-before", "The Mega Pretzel", SegmentDirection.AtoB),
             new("watopia-big-foot-hills-004-before", "Muir and the mountain", SegmentDirection.BtoA),
             new("watopia-big-foot-hills-004-before", "Big Foot Hills", SegmentDirection.AtoB),
             new("watopia-bambino-fondo-003-before-after", "Jungle Circuit", SegmentDirection.AtoB)
