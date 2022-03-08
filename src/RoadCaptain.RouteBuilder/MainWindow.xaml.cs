@@ -24,6 +24,9 @@ namespace RoadCaptain.RouteBuilder
         private readonly SKPaint _spawnPointSegmentPathPaint = new()
             { Color = SKColor.Parse("#44dd44"), Style = SKPaintStyle.Stroke, StrokeWidth = 4 };
 
+        private readonly SKPaint _routePathPaint = new()
+            { Color = SKColor.Parse("#0000ff"), Style = SKPaintStyle.Stroke, StrokeWidth = 8 };
+
         private readonly MainWindowViewModel _windowViewModel;
 
         public MainWindow(MainWindowViewModel mainWindowViewModel)
@@ -57,6 +60,8 @@ namespace RoadCaptain.RouteBuilder
         private void SKElement_OnPaintSurface(object sender, SKPaintSurfaceEventArgs args)
         {
             args.Surface.Canvas.Clear();
+
+            args.Surface.Canvas.DrawPath(_windowViewModel.RoutePath, _routePathPaint);
             
             // Lowest layer are the segments
             foreach (var skPath in _windowViewModel.SegmentPaths)

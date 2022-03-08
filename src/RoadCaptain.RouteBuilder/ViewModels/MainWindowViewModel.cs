@@ -19,13 +19,26 @@ namespace RoadCaptain.RouteBuilder.ViewModels
         private Segment _selectedSegment;
         private readonly Dictionary<string, SKRect> _segmentPathBounds = new();
         private readonly List<Segment> _segments;
+        public SKPath RoutePath { get; private set; } = new SKPath();
 
         public MainWindowViewModel(IRouteStore routeStore, ISegmentStore segmentStore)
         {
             Model = new MainWindowModel();
 
             Route = new RouteViewModel(routeStore);
-            Route.PropertyChanged += (_, _) => OnPropertyChanged(nameof(Route));
+            Route.PropertyChanged += (_, args) =>
+            {
+                if (args.PropertyName == nameof(Route.Sequence))
+                {
+                    if (Route.Sequence.Any())
+                    {
+                        var skPathForLastSegment = SegmentPaths[Route.Last.SegmentId].Points;
+                        RoutePath.AddPoly(skPathForLastSegment, false);
+                    }
+                }
+
+                OnPropertyChanged(nameof(Route));
+            };
 
             _segments = segmentStore.LoadSegments();
 
@@ -55,6 +68,8 @@ namespace RoadCaptain.RouteBuilder.ViewModels
             var commandResult = Route.Reset();
 
             SelectedSegment = null;
+
+            RoutePath = new SKPath();
 
             return commandResult;
         }
