@@ -24,7 +24,7 @@ namespace RoadCaptain.RouteBuilder.ViewModels
         {
             Model = new MainWindowModel();
 
-            Route = new RouteViewModel();
+            Route = new RouteViewModel(new RouteStoreToDisk());
             Route.PropertyChanged += (_, _) => OnPropertyChanged(nameof(Route));
 
             _segments = new SegmentStore().LoadSegments();

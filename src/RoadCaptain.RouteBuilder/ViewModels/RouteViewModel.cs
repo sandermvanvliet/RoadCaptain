@@ -2,12 +2,9 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
-using Newtonsoft.Json.Serialization;
+using RoadCaptain.Ports;
 using RoadCaptain.RouteBuilder.Annotations;
 
 namespace RoadCaptain.RouteBuilder.ViewModels
@@ -15,6 +12,12 @@ namespace RoadCaptain.RouteBuilder.ViewModels
     public class RouteViewModel : INotifyPropertyChanged
     {
         private readonly ObservableCollection<SegmentSequenceViewModel> _sequence = new();
+        private readonly IRouteStore _routeStore;
+
+        public RouteViewModel(IRouteStore routeStore)
+        {
+            _routeStore = routeStore;
+        }
 
         public IEnumerable<SegmentSequenceViewModel> Sequence => _sequence;
 
@@ -78,19 +81,13 @@ namespace RoadCaptain.RouteBuilder.ViewModels
                 throw new ArgumentException("Output file path is empty");
             }
 
-            File.WriteAllText(OutputFilePath, JsonConvert.SerializeObject(
-                _sequence
-                    .Select(seq => seq.Model)
-                    .ToList(), 
-                Formatting.Indented,
-                new JsonSerializerSettings
-                {
-                    ContractResolver = new CamelCasePropertyNamesContractResolver(),
-                    Converters = new List<JsonConverter>
-                    {
-                        new StringEnumConverter(new CamelCaseNamingStrategy())
-                    }
-                }));
+            var route = new PlannedRoute();
+
+            route
+                .RouteSegmentSequence
+                .AddRange(Sequence.Select(s => s.Model).ToList());
+            
+            _routeStore.Store(route, OutputFilePath);
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
