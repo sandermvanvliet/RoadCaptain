@@ -42,6 +42,17 @@
     }
   },
   {
+    "segmentId": "watopia-bambino-fondo-001-after-after-before-before-after-before",
+    "turnsA": {
+      "goStraight": "watopia-bambino-fondo-001-after-after-before-before-before",
+      "right": "watopia-big-foot-hills-001-after-after"
+    },
+    "turnsB": {
+      "goStraight": "watopia-bambino-fondo-001-after-after-before-before-after-after",
+      "left": "watopia-big-foot-hills-003-after"
+    }
+  },
+  {
     "segmentId": "watopia-bambino-fondo-002-before-before-before",
     "turnsA": {
       "right": "watopia-climbers-gambit-001",
@@ -91,7 +102,7 @@
       "goStraight": "watopia-bambino-fondo-001-after-after-after-after-before-before"
     },
     "turnsB": {
-      "left": "watopia-gran-fondo-001",
+      "left": "watopia-beach-island-loop-001",
       "goStraight": "watopia-bambino-fondo-001-after-after-after-after-after"
     }
   },
@@ -230,11 +241,34 @@
   {
     "segmentId": "watopia-big-loop-rev-001-after-after",
     "turnsA": {
-      "goStraight": "watopia-big-loop-rev-001-after-before-after"
+      "goStraight": "watopia-big-loop-rev-001-after-before-after",
+      "right": "watopia-ocean-lava-cliffside-loop-001"
     },
     "turnsB": {
       "right": "watopia-big-foot-hills-003-before",
       "goStraight": "watopia-big-foot-hills-003-after"
+    }
+  },
+  {
+    "segmentId": "watopia-big-foot-hills-003-after",
+    "turnsA": {
+      "right": "watopia-big-loop-rev-001-after-after",
+      "goStraight": "watopia-big-foot-hills-003-before"
+    },
+    "turnsB": {
+      "left": "watopia-bambino-fondo-001-after-after-before-before-after-after",
+      "right": "watopia-bambino-fondo-001-after-after-before-before-after-before"
+    }
+  },
+  {
+    "segmentId": "watopia-bambino-fondo-001-after-after-before-before-after-after",
+    "turnsA": {
+      "right": "watopia-big-foot-hills-003-after",
+      "goStraight": "watopia-bambino-fondo-001-after-after-before-before-after-before"
+    },
+    "turnsB": {
+      "goStraight": "watopia-bambino-fondo-001-after-after-before-after",
+      "left": "watopia-bambino-fondo-003-before-before"
     }
   },
   {
