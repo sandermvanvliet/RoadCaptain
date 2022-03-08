@@ -15,6 +15,7 @@ namespace RoadCaptain.Host.Console
 {
     public class Program
     {
+        [STAThread]
         public static void Main(string[] args)
         {
             var logger = CreateLogger();
