@@ -11,12 +11,15 @@ using RoadCaptain.RouteBuilder.Annotations;
 using RoadCaptain.RouteBuilder.Commands;
 using RoadCaptain.RouteBuilder.Models;
 using SkiaSharp;
+using Point = System.Windows.Point;
 
 namespace RoadCaptain.RouteBuilder.ViewModels
 {
     public sealed class MainWindowViewModel : INotifyPropertyChanged
     {
         private Segment _selectedSegment;
+        private readonly Dictionary<string, SKRect> _segmentPathBounds = new();
+        private readonly List<Segment> _segments;
 
         public MainWindowViewModel()
         {
@@ -25,7 +28,7 @@ namespace RoadCaptain.RouteBuilder.ViewModels
             Route = new RouteViewModel();
             Route.PropertyChanged += (_, _) => OnPropertyChanged(nameof(Route));
 
-            Segments = new SegmentStore().LoadSegments();
+            _segments = new SegmentStore().LoadSegments();
 
             SaveRouteCommand = new RelayCommand(
                     _ => SaveRoute(),
@@ -35,7 +38,7 @@ namespace RoadCaptain.RouteBuilder.ViewModels
                 .OnFailure(_ => Model.StatusBarError("Failed to save route because: {0}", _.Message));
 
             SelectSegmentCommand = new RelayCommand(
-                    _ => SelectSegment((string)_),
+                    _ => SelectSegment((Point)_),
                     _ => true)
                 .OnSuccess(_ => Model.StatusBarInfo("Added segment"))
                 .OnSuccessWithWarnings(_ => Model.StatusBarInfo("Added segment {0}", _.Message))
@@ -44,10 +47,8 @@ namespace RoadCaptain.RouteBuilder.ViewModels
 
 
         public MainWindowModel Model { get; }
-        public List<Segment> Segments { get; }
         public RouteViewModel Route { get; set; }
         public Dictionary<string, SKPath> SegmentPaths { get; } = new();
-        public Dictionary<string, SKRect> SegmentPathBounds { get; } = new();
 
         public ICommand SaveRouteCommand { get; }
         public ICommand SelectSegmentCommand { get; }
@@ -64,9 +65,22 @@ namespace RoadCaptain.RouteBuilder.ViewModels
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        private CommandResult SelectSegment(string segmentId)
+        private CommandResult SelectSegment(Point scaledPoint)
         {
-            var newSelectedSegment = Segments.Single(s => s.Id == segmentId);
+            // Find SKPath that contains this coordinate (or close enough)
+            var pathsInBounds = _segmentPathBounds
+                .Where(p => p.Value.Contains((float)scaledPoint.X, (float)scaledPoint.Y))
+                .OrderBy(x => x.Value, new SkRectComparer()) // Sort by bounds area, good enough for now
+                .ToList();
+
+            if (!pathsInBounds.Any())
+            {
+                return CommandResult.Aborted();
+            }
+
+            var segmentId = pathsInBounds.First().Key;
+
+            var newSelectedSegment = _segments.Single(s => s.Id == segmentId);
 
             // 1. Figure out if this is the first segment on the route, if so add it to the route and set the selection to the new segment
             if (!Route.Sequence.Any())
@@ -79,7 +93,7 @@ namespace RoadCaptain.RouteBuilder.ViewModels
             }
 
             // 2. Figure out if the newly selected segment is reachable from the last segment
-            var lastSegment = Segments.Single(s => s.Id == Route.Last.SegmentId);
+            var lastSegment = _segments.Single(s => s.Id == Route.Last.SegmentId);
 
             var fromA = lastSegment.NextSegmentsNodeA.SingleOrDefault(t => t.SegmentId == newSelectedSegment.Id);
             var fromB = lastSegment.NextSegmentsNodeB.SingleOrDefault(t => t.SegmentId == newSelectedSegment.Id);
@@ -162,17 +176,17 @@ namespace RoadCaptain.RouteBuilder.ViewModels
             return CommandResult.Failure("Did not find a connection between the last segment and the selected segment");
         }
 
-        public void ClearSelectedSegment()
-        {
-            SelectedSegment = null;
-        }
-
         public void CreatePathsForSegments(float width)
         {
             SegmentPaths.Clear();
-            SegmentPathBounds.Clear();
+            _segmentPathBounds.Clear();
 
-            var segmentsWithOffsets = Segments
+            if (_segments == null || !_segments.Any())
+            {
+                return;
+            }
+
+            var segmentsWithOffsets = _segments
                 .Select(seg => new
                 {
                     Segment = seg,
@@ -195,7 +209,7 @@ namespace RoadCaptain.RouteBuilder.ViewModels
                 skiaPathFromSegment.GetTightBounds(out var bounds);
 
                 SegmentPaths.Add(segment.Segment.Id, skiaPathFromSegment);
-                SegmentPathBounds.Add(segment.Segment.Id, bounds);
+                _segmentPathBounds.Add(segment.Segment.Id, bounds);
             }
         }
 

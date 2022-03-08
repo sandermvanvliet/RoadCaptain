@@ -1,9 +1,9 @@
-﻿using System.Linq;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Input;
 using RoadCaptain.RouteBuilder.ViewModels;
 using SkiaSharp;
 using SkiaSharp.Views.Desktop;
+using SkiaSharp.Views.WPF;
 using Point = System.Windows.Point;
 
 namespace RoadCaptain.RouteBuilder
@@ -40,6 +40,10 @@ namespace RoadCaptain.RouteBuilder
                 case nameof(_windowViewModel.SegmentPaths):
                     SkElement.InvalidateVisual();
                     break;
+                case nameof(_windowViewModel.Route):
+                    // Ensure the last added segment is visible
+                    RouteListView.ScrollIntoView(RouteListView.Items[^1]);
+                    break;
             }
         }
 
@@ -75,38 +79,24 @@ namespace RoadCaptain.RouteBuilder
 
         private void MainWindow_OnSizeChanged(object sender, SizeChangedEventArgs e)
         {
-            if (_windowViewModel.Segments?.Any() ?? false)
-            {
-                _windowViewModel.CreatePathsForSegments(SkElement.CanvasSize.Width);
-            }
+            _windowViewModel.CreatePathsForSegments(SkElement.CanvasSize.Width);
         }
 
         private void SkElement_OnMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
+            var skiaElement = sender as SKElement;
+
+            if (skiaElement == null)
+            {
+                return;
+            }
+
             var position = e.GetPosition(sender as IInputElement);
-            
-            // 1. Work out scaling to canvas size
-            var scalingFactor = SkElement.CanvasSize.Width / SkElement.ActualWidth;
+
+            var scalingFactor = skiaElement.CanvasSize.Width / skiaElement.ActualWidth;
             var scaledPoint = new Point(position.X * scalingFactor, position.Y * scalingFactor);
             
-            // 2. Find SKPath that contains this coordinate (or close enough)
-            var pathsInBounds = _windowViewModel.SegmentPathBounds
-                .Where(p => p.Value.Contains((float)scaledPoint.X, (float)scaledPoint.Y))
-                .OrderBy(x => x.Value, new SkRectComparer()) // Sort by bounds area, good enough for now
-                .ToList();
-
-            // 3. Highlight it
-            if (pathsInBounds.Any())
-            {
-                _windowViewModel.SelectSegmentCommand.Execute(pathsInBounds.First().Key);
-
-                // Ensure the last added segment is visible
-                RouteListView.ScrollIntoView(RouteListView.Items[^1]);
-            }
-            else
-            {
-                _windowViewModel.ClearSelectedSegment();
-            }
+            _windowViewModel.SelectSegmentCommand.Execute(scaledPoint);
         }
     }
 }
