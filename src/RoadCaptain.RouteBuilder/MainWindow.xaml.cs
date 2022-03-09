@@ -53,6 +53,10 @@ namespace RoadCaptain.RouteBuilder
                     {
                         RouteListView.ScrollIntoView(RouteListView.Items[^1]);
                     }
+
+                    // Redraw when the route changes so that the
+                    // route path is painted correctly
+                    SkElement.InvalidateVisual();
                     break;
             }
         }

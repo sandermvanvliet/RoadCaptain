@@ -358,9 +358,20 @@ namespace RoadCaptain.RouteBuilder.ViewModels
 
             Route.OutputFilePath = dialog.FileName;
 
+            SelectedSegment = null;
+
+            RoutePath = new SKPath();
+
             try
             {
                 Route.Load();
+
+                // RoutePath needs to be set to the total route we just loaded
+                foreach (var segment in Route.Sequence)
+                {
+                    RoutePath.AddPoly(SegmentPaths[segment.SegmentId].Points, false);
+                }
+
                 return CommandResult.Success();
             }
             catch (Exception e)
