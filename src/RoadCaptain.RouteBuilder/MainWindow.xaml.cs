@@ -59,21 +59,24 @@ namespace RoadCaptain.RouteBuilder
 
         private void SKElement_OnPaintSurface(object sender, SKPaintSurfaceEventArgs args)
         {
-            args.Surface.Canvas.Clear();
+            // Purely for readability
+            var canvas = args.Surface.Canvas;
 
-            args.Surface.Canvas.DrawPath(_windowViewModel.RoutePath, _routePathPaint);
+            canvas.Clear();
+
+            canvas.DrawPath(_windowViewModel.RoutePath, _routePathPaint);
             
             // Lowest layer are the segments
-            foreach (var skPath in _windowViewModel.SegmentPaths)
+            foreach (var (segmentId, skiaPath) in _windowViewModel.SegmentPaths)
             {
                 SKPaint segmentPaint;
 
                 // Use a different color for the selected segment
-                if (_windowViewModel.SelectedSegment != null && skPath.Key == _windowViewModel.SelectedSegment.Id)
+                if (segmentId == _windowViewModel.SelectedSegment?.Id)
                 {
                     segmentPaint = _selectedSegmentPathPaint;
                 }
-                else if (_windowViewModel.Route.Last == null && _windowViewModel.Route.IsSpawnPointSegment(skPath.Key))
+                else if (_windowViewModel.Route.Last == null && _windowViewModel.Route.IsSpawnPointSegment(segmentId))
                 {
                     segmentPaint = _spawnPointSegmentPathPaint;
                 }
@@ -82,10 +85,10 @@ namespace RoadCaptain.RouteBuilder
                     segmentPaint = _segmentPathPaint;
                 }
 
-                args.Surface.Canvas.DrawPath(skPath.Value, segmentPaint);
+                canvas.DrawPath(skiaPath, segmentPaint);
             }
             
-            args.Surface.Canvas.Flush();
+            canvas.Flush();
         }
 
         private void MainWindow_OnLoaded(object sender, RoutedEventArgs e)
