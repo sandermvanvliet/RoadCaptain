@@ -30,7 +30,10 @@ namespace RoadCaptain.RouteBuilder
             { Color = SKColor.Parse("#0000ff"), Style = SKPaintStyle.Stroke, StrokeWidth = 8 };
 
         private readonly SKPaint _riderPositionPaint = new()
-            { Color = SKColor.Parse("#ff0000"), Style = SKPaintStyle.Stroke, StrokeWidth = 4 };
+            { Color = SKColor.Parse("#ffffff"), Style = SKPaintStyle.StrokeAndFill, StrokeWidth = 4 };
+
+        private readonly SKPaint _riderPositionFillPaint = new()
+            { Color = SKColor.Parse("#FF6141"), Style = SKPaintStyle.Fill };
 
         private readonly MainWindowViewModel _windowViewModel;
 
@@ -114,10 +117,12 @@ namespace RoadCaptain.RouteBuilder
 
             if (_windowViewModel.RiderPosition != null)
             {
-                var scaledAndTranslated = _windowViewModel.RiderPosition;
+                var scaledAndTranslated = _windowViewModel.RiderPosition.Value;
                 const int radius = 15;
-                args.Surface.Canvas.DrawCircle(scaledAndTranslated.X, scaledAndTranslated.Y, radius,
-                    _riderPositionPaint);
+                canvas
+                    .DrawCircle(scaledAndTranslated.X, scaledAndTranslated.Y, radius, _riderPositionPaint);
+                canvas
+                    .DrawCircle(scaledAndTranslated.X, scaledAndTranslated.Y, radius - _riderPositionPaint.StrokeWidth, _riderPositionFillPaint);
             }
 
             canvas.Flush();

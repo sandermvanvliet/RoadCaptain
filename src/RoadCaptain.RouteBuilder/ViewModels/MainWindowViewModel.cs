@@ -23,7 +23,7 @@ namespace RoadCaptain.RouteBuilder.ViewModels
         private readonly Dictionary<string, SKRect> _segmentPathBounds = new();
         private readonly List<Segment> _segments;
         private Task _simulationTask;
-        private SKPoint _riderPosition;
+        private SKPoint? _riderPosition;
         private SimulationState _simulationState = SimulationState.NotStarted;
         private int _simulationIndex;
 
@@ -441,7 +441,7 @@ namespace RoadCaptain.RouteBuilder.ViewModels
             return CommandResult.Success();
         }
 
-        public SKPoint RiderPosition
+        public SKPoint? RiderPosition
         {
             get => _riderPosition;
             set
