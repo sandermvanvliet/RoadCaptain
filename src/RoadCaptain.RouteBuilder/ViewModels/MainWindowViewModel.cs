@@ -26,7 +26,6 @@ namespace RoadCaptain.RouteBuilder.ViewModels
         private SKPoint _riderPosition;
         private SimulationState _simulationState = SimulationState.NotStarted;
         private int _simulationIndex;
-        public SKPath RoutePath { get; private set; } = new SKPath();
 
         public MainWindowViewModel(IRouteStore routeStore, ISegmentStore segmentStore)
         {
@@ -84,6 +83,7 @@ namespace RoadCaptain.RouteBuilder.ViewModels
         public MainWindowModel Model { get; }
         public RouteViewModel Route { get; set; }
         public Dictionary<string, SKPath> SegmentPaths { get; } = new();
+        public SKPath RoutePath { get; private set; } = new SKPath();
 
         public ICommand SaveRouteCommand { get; }
         public ICommand OpenRouteCommand { get; }
