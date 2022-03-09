@@ -55,12 +55,12 @@
   {
     "segmentId": "watopia-bambino-fondo-002-before-before-before",
     "turnsA": {
-      "right": "watopia-climbers-gambit-001",
-      "goStraight": "watopia-bambino-fondo-002-before-before-after"
-    },
-    "turnsB": {
       "right": "watopia-bambino-fondo-001-after-after-before-before-before",
       "goStraight": "watopia-bambino-fondo-001-after-before"
+    },
+    "turnsB": {
+      "right": "watopia-climbers-gambit-001",
+      "goStraight": "watopia-bambino-fondo-002-before-before-after"
     }
   },
   {
@@ -424,7 +424,17 @@
       "goStraight": "watopia-big-foot-hills-004-after-after"
     },
     "turnsB": {
-      "goStraight": "watopia-big-foot-hills-001-before-after"
+      "goStraight": "watopia-big-foot-hills-001-before-after",
+      "left": "watopia-tempus-fugit-001"
+    }
+  },
+  {
+    "segmentId": "watopia-tempus-fugit-001",
+    "turnsA": {
+      "goStraight": "watopia-big-foot-hills-001-before-before"
+    },
+    "turnsB": {
+      "goStraight": "watopia-big-foot-hills-001-before-before"
     }
   },
   {
