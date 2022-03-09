@@ -440,34 +440,28 @@
   {
     "segmentId": "watopia-big-foot-hills-001-after-before",
     "turnsA": {
-      "goStraight": "watopia-big-foot-hills-001-before-after",
-      "right": "watopia-big-foot-hills-003-before"
+      "goStraight": "watopia-big-foot-hills-001-before-after"
     },
     "turnsB": {
-      "goStraight": "watopia-big-foot-hills-007-before",
-      "left": "watopia-repack-ridge-001"
+      "goStraight": "watopia-big-foot-hills-007-before"
     }
   },
   {
     "segmentId": "watopia-big-foot-hills-007-before",
     "turnsA": {
-      "goStraight": "watopia-big-foot-hills-001-after-before",
-      "right": "watopia-repack-ridge-001"
+      "goStraight": "watopia-big-foot-hills-001-after-before"
     },
     "turnsB": {
-      "goStraight": "watopia-big-foot-hills-007-after",
-      "left": "watopia-repack-ridge-001"
+      "goStraight": "watopia-big-foot-hills-007-after"
     }
   },
   {
     "segmentId": "watopia-repack-ridge-001",
     "turnsA": {
-      "left": "watopia-big-foot-hills-007-after",
-      "right": "watopia-big-foot-hills-007-before"
+      "goStraight": "watopia-big-foot-hills-007-after"
     },
     "turnsB": {
-      "left": "watopia-big-foot-hills-007-before",
-      "right": "watopia-big-foot-hills-001-after-before"
+      "goStraight": "watopia-big-foot-hills-007-before"
     }
   }
 ]
