@@ -53,7 +53,7 @@ namespace RoadCaptain.RouteBuilder.ViewModels
 
             OpenRouteCommand = new RelayCommand(
                     _ => OpenRoute(),
-                    _ => !Route.IsTainted)
+                    _ => true)
                 .OnSuccess(_ => Model.StatusBarInfo("Route loaded successfully"))
                 .OnFailure(_ => Model.StatusBarError("Failed to load route because: {0}", _.Message));
 
