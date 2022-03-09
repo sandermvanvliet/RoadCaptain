@@ -106,6 +106,8 @@ namespace RoadCaptain.RouteBuilder.ViewModels
                 .AddRange(Sequence.Select(s => s.Model).ToList());
             
             _routeStore.Store(route, OutputFilePath);
+
+            IsTainted = false;
         }
 
         private string GetRouteName(SegmentSequenceViewModel startingSegment)
