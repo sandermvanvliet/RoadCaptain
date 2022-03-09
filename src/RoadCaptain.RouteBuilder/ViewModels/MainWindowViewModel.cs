@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Windows;
 using System.Windows.Input;
 using Microsoft.Win32;
 using RoadCaptain.Ports;
@@ -25,7 +26,7 @@ namespace RoadCaptain.RouteBuilder.ViewModels
         {
             Model = new MainWindowModel();
 
-            Route = new RouteViewModel(routeStore);
+            Route = new RouteViewModel(routeStore, segmentStore);
             Route.PropertyChanged += (_, args) =>
             {
                 if (args.PropertyName == nameof(Route.Sequence))
@@ -47,7 +48,14 @@ namespace RoadCaptain.RouteBuilder.ViewModels
                     _ => true)
                 .OnSuccess(_ => Model.StatusBarInfo("Route saved successfully"))
                 .OnSuccessWithWarnings(_ => Model.StatusBarInfo("Route saved successfully: {0}", _.Message))
-                .OnFailure(_ => Model.StatusBarError("Failed to save route because: {0}", _.Message));
+                .OnFailure(_ => Model.StatusBarError("Failed to save route because: {0}", _.Message))
+                .OnNotExecuted(_ => Model.StatusBarInfo("Route hasn't changed dit not need to not saved"));
+
+            OpenRouteCommand = new RelayCommand(
+                    _ => OpenRoute(),
+                    _ => !Route.IsTainted)
+                .OnSuccess(_ => Model.StatusBarInfo("Route loaded successfully"))
+                .OnFailure(_ => Model.StatusBarError("Failed to load route because: {0}", _.Message));
 
             ResetRouteCommand = new RelayCommand(
                     _ => ResetRoute(),
@@ -80,6 +88,7 @@ namespace RoadCaptain.RouteBuilder.ViewModels
         public Dictionary<string, SKPath> SegmentPaths { get; } = new();
 
         public ICommand SaveRouteCommand { get; }
+        public ICommand OpenRouteCommand { get; }
         public ICommand ResetRouteCommand { get; }
         public ICommand SelectSegmentCommand { get; }
 
@@ -266,12 +275,78 @@ namespace RoadCaptain.RouteBuilder.ViewModels
 
         private CommandResult SaveRoute()
         {
-            var dialog = new SaveFileDialog
+            if (!Route.IsTainted)
+            {
+                return CommandResult.Aborted();
+            }
+
+            if (string.IsNullOrEmpty(Route.OutputFilePath))
+            {
+                var dialog = new SaveFileDialog
+                {
+                    RestoreDirectory = true,
+                    AddExtension = true,
+                    DefaultExt = ".json",
+                    Filter = "JSON files (.json)|*.json"
+                };
+
+                var result = dialog.ShowDialog();
+
+                if (!result.HasValue || !result.Value)
+                {
+                    return CommandResult.Success();
+                }
+
+                Route.OutputFilePath = dialog.FileName;
+            }
+
+            try
+            {
+                Route.Save();
+                return CommandResult.Success();
+            }
+            catch (Exception e)
+            {
+                return CommandResult.Failure(e.Message);
+            }
+        }
+
+        private CommandResult OpenRoute()
+        {
+            if (Route.IsTainted)
+            {
+                // First save
+                var questionResult = MessageBox.Show(
+                    "Do you want to save the current route?",
+                    "Current route was changed",
+                    MessageBoxButton.YesNoCancel,
+                    MessageBoxImage.Information);
+
+                if (questionResult == MessageBoxResult.Cancel)
+                {
+                    return CommandResult.Aborted();
+                }
+
+                if (questionResult == MessageBoxResult.Yes)
+                {
+                    var saveResult = SaveRoute();
+                    
+                    // If saving was not successful then return the
+                    // result of SaveRoute instead of proceeding.
+                    if (saveResult.Result != Result.Success)
+                    {
+                        return saveResult;
+                    }
+                }
+            }
+
+            var dialog = new OpenFileDialog
             {
                 RestoreDirectory = true,
                 AddExtension = true,
                 DefaultExt = ".json",
-                Filter = "JSON files (.json)|*.json"
+                Filter = "JSON files (.json)|*.json",
+                Multiselect = false
             };
 
             var result = dialog.ShowDialog();
@@ -285,7 +360,7 @@ namespace RoadCaptain.RouteBuilder.ViewModels
 
             try
             {
-                Route.Save();
+                Route.Load();
                 return CommandResult.Success();
             }
             catch (Exception e)

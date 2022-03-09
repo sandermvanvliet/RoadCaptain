@@ -14,10 +14,12 @@ namespace RoadCaptain.RouteBuilder.ViewModels
     {
         private readonly ObservableCollection<SegmentSequenceViewModel> _sequence = new();
         private readonly IRouteStore _routeStore;
+        private readonly List<Segment> _segments;
 
-        public RouteViewModel(IRouteStore routeStore)
+        public RouteViewModel(IRouteStore routeStore, ISegmentStore segmentStore)
         {
             _routeStore = routeStore;
+            _segments = segmentStore.LoadSegments();
         }
 
         public IEnumerable<SegmentSequenceViewModel> Sequence => _sequence;
@@ -28,10 +30,12 @@ namespace RoadCaptain.RouteBuilder.ViewModels
 
         public SegmentSequenceViewModel Last => Sequence.LastOrDefault();
         public string OutputFilePath { get; set; }
+        public bool IsTainted { get; set; }
 
         public void StartOn(Segment segment)
         {
-            _sequence.Add(new SegmentSequenceViewModel(new SegmentSequence
+            _sequence.Add(new SegmentSequenceViewModel(
+                new SegmentSequence
                 {
                     SegmentId = segment.Id,
                     TurnToNextSegment = TurnDirection.None,
@@ -39,6 +43,8 @@ namespace RoadCaptain.RouteBuilder.ViewModels
                 },
                 segment,
                 _sequence.Count + 1));
+
+            IsTainted = true;
 
             OnPropertyChanged(nameof(Sequence));
             OnPropertyChanged(nameof(TotalDistance));
@@ -63,11 +69,14 @@ namespace RoadCaptain.RouteBuilder.ViewModels
                     Direction = newSegmentDirection
                 },
                 segment,
-                _sequence.Count + 1);
-
-            segmentSequenceViewModel.Direction = newSegmentDirection;
+                _sequence.Count + 1)
+            {
+                Direction = newSegmentDirection
+            };
 
             _sequence.Add(segmentSequenceViewModel);
+
+            IsTainted = true;
 
             OnPropertyChanged(nameof(Sequence));
             OnPropertyChanged(nameof(TotalDistance));
@@ -119,6 +128,8 @@ namespace RoadCaptain.RouteBuilder.ViewModels
         public CommandResult Reset()
         {
             _sequence.Clear();
+            OutputFilePath = null;
+            IsTainted = false;
 
             OnPropertyChanged(nameof(Sequence));
             OnPropertyChanged(nameof(TotalDistance));
@@ -142,6 +153,34 @@ namespace RoadCaptain.RouteBuilder.ViewModels
             new("watopia-big-foot-hills-004-before", "Big Foot Hills", SegmentDirection.AtoB),
             new("watopia-bambino-fondo-003-before-after", "Jungle Circuit", SegmentDirection.AtoB)
         };
+
+        public void Load()
+        {
+            var plannedRoute = _routeStore.LoadFrom(OutputFilePath);
+
+            _sequence.Clear();
+
+            foreach (var seq in plannedRoute.RouteSegmentSequence)
+            {
+                _sequence.Add(
+                    new SegmentSequenceViewModel(
+                        seq,
+                        GetSegmentById(seq.SegmentId),
+                        _sequence.Count + 1));
+            }
+
+            IsTainted = false;
+
+            OnPropertyChanged(nameof(Sequence));
+            OnPropertyChanged(nameof(TotalDistance));
+            OnPropertyChanged(nameof(TotalAscent));
+            OnPropertyChanged(nameof(TotalDescent));
+        }
+
+        private Segment GetSegmentById(string segmentId)
+        {
+            return _segments.SingleOrDefault(s => s.Id == segmentId);
+        }
     }
 
     internal class SpawnPoint

@@ -11,6 +11,7 @@ namespace RoadCaptain.RouteBuilder.Commands
         private Action<CommandResult> _onSuccess;
         private Action<CommandResult> _onSuccessWithWarnings;
         private Action<CommandResult> _onNotExecuted;
+        private Action<CommandResult> _onAbort;
 
         public RelayCommand(Func<object, CommandResult> execute, Func<object, bool> canExecute = null)
         {
