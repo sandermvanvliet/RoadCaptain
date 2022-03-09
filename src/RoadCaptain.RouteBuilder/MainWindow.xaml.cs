@@ -1,9 +1,11 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using System.Windows.Input;
 using RoadCaptain.RouteBuilder.ViewModels;
 using SkiaSharp;
 using SkiaSharp.Views.Desktop;
 using SkiaSharp.Views.WPF;
+using DispatcherPriority = System.Windows.Threading.DispatcherPriority;
 using Point = System.Windows.Point;
 
 namespace RoadCaptain.RouteBuilder
@@ -27,6 +29,9 @@ namespace RoadCaptain.RouteBuilder
         private readonly SKPaint _routePathPaint = new()
             { Color = SKColor.Parse("#0000ff"), Style = SKPaintStyle.Stroke, StrokeWidth = 8 };
 
+        private readonly SKPaint _riderPositionPaint = new()
+            { Color = SKColor.Parse("#ff0000"), Style = SKPaintStyle.Stroke, StrokeWidth = 4 };
+
         private readonly MainWindowViewModel _windowViewModel;
 
         public MainWindow(MainWindowViewModel mainWindowViewModel)
@@ -45,7 +50,7 @@ namespace RoadCaptain.RouteBuilder
             {
                 case nameof(_windowViewModel.SelectedSegment):
                 case nameof(_windowViewModel.SegmentPaths):
-                    SkElement.InvalidateVisual();
+                    TriggerRepaint();
                     break;
                 case nameof(_windowViewModel.Route):
                     // Ensure the last added segment is visible
@@ -56,8 +61,23 @@ namespace RoadCaptain.RouteBuilder
 
                     // Redraw when the route changes so that the
                     // route path is painted correctly
-                    SkElement.InvalidateVisual();
+                    TriggerRepaint();
                     break;
+                case nameof(_windowViewModel.RiderPosition):
+                    TriggerRepaint();
+                    break;
+            }
+        }
+
+        private void TriggerRepaint()
+        {
+            if (SkElement.Dispatcher.CheckAccess())
+            {
+                SkElement.InvalidateVisual();
+            }
+            else
+            {
+                SkElement.Dispatcher.BeginInvoke(DispatcherPriority.Render, (Action)TriggerRepaint);
             }
         }
 
@@ -91,7 +111,15 @@ namespace RoadCaptain.RouteBuilder
 
                 canvas.DrawPath(skiaPath, segmentPaint);
             }
-            
+
+            if (_windowViewModel.RiderPosition != null)
+            {
+                var scaledAndTranslated = _windowViewModel.RiderPosition;
+                const int radius = 15;
+                args.Surface.Canvas.DrawCircle(scaledAndTranslated.X, scaledAndTranslated.Y, radius,
+                    _riderPositionPaint);
+            }
+
             canvas.Flush();
         }
 

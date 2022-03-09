@@ -17,6 +17,27 @@
         <KeyBinding Key="O" Modifiers="Ctrl" Command="{Binding Path=OpenRouteCommand}" />
         <KeyBinding Key="R" Modifiers="Ctrl" Command="{Binding Path=ResetRouteCommand}" />
     </Window.InputBindings>
+    <Window.Resources>
+        <Style TargetType="{x:Type Button}" x:Key="ButtonStyle">
+            <Setter Property="Background" Value="#FF6141" />
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="Width" Value="40" />
+            <Setter Property="Height" Value="32" />
+            <Setter Property="FontSize" Value="20" />
+            <Setter Property="Margin" Value="4,0,0,0" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Name="borderZero" Background="{TemplateBinding Background}" CornerRadius="5">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
     <DockPanel>
         <StackPanel Orientation="Horizontal"
                             Background="{Binding Path=Model.StatusBarBackground,FallbackValue={x:Static Brushes.DodgerBlue}}"
@@ -42,41 +63,29 @@
             </skia:SKElement>
 
             <StackPanel Grid.Row="0" Grid.Column="1" 
-                    Panel.ZIndex="2" 
-                    VerticalAlignment="Top" HorizontalAlignment="Left" 
+                        Panel.ZIndex="2" 
+                        VerticalAlignment="Top" 
+                        HorizontalAlignment="Left" 
                         Orientation="Horizontal">
                 <StackPanel.Resources>
-                    <Style TargetType="{x:Type Border}">
-                        <Setter Property="CornerRadius" Value="5"/>
-                    </Style>
-                    <Style TargetType="{x:Type Button}">
-                        <Setter Property="Background" Value="#FF6141" />
-                        <Setter Property="Foreground" Value="White" />
-                        <Setter Property="Width" Value="40" />
-                        <Setter Property="Height" Value="30" />
-                        <Setter Property="FontSize" Value="20" />
-                        <Setter Property="Margin" Value="4,0,0,0" />
-                        <Setter Property="BorderThickness" Value="0" />
-                        <Setter Property="Template">
-                            <Setter.Value>
-                                <ControlTemplate TargetType="Button">
-                                    <Border Name="borderZero" Background="{TemplateBinding Background}" CornerRadius="5">
-                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
-                                    </Border>
-                                </ControlTemplate>
-                            </Setter.Value>
-                        </Setter>
-                    </Style>
+                    <Style TargetType="{x:Type Button}" BasedOn="{StaticResource ButtonStyle}"/>
                 </StackPanel.Resources>
-                <Button Content="▶️" Command="{Binding Path=SimulateCommnad}" ToolTip="Simulate route" />
+                <Button Command="{Binding Path=SimulateCommnad}" ToolTip="Simulate route">
+                    <Button.Style>
+                        <Style TargetType="{x:Type Button}" BasedOn="{StaticResource ButtonStyle}">
+                            <Setter Property="Content" Value="▶️" /> <!-- default value -->
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding Path=SimulationState}" Value="Running">
+                                    <Setter Property="Content" Value="⏸️" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                </Button>
                 <Button Content="🚮" Command="{Binding Path=ResetRouteCommand}" ToolTip="Reset route" />
                 <Button Content="💾" Command="{Binding Path=SaveRouteCommand}" ToolTip="Save route" />
                 <Button Content="📂" Command="{Binding Path=OpenRouteCommand}" ToolTip="Open route" />
-
-
             </StackPanel>
-
-            <!--  -->
 
             <Grid Grid.Row="0" Grid.Column="0">
                 <Grid.RowDefinitions>

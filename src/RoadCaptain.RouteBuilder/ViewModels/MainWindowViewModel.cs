@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using Microsoft.Win32;
@@ -20,6 +22,10 @@ namespace RoadCaptain.RouteBuilder.ViewModels
         private Segment _selectedSegment;
         private readonly Dictionary<string, SKRect> _segmentPathBounds = new();
         private readonly List<Segment> _segments;
+        private Task _simulationTask;
+        private SKPoint _riderPosition;
+        private SimulationState _simulationState = SimulationState.NotStarted;
+        private int _simulationIndex;
         public SKPath RoutePath { get; private set; } = new SKPath();
 
         public MainWindowViewModel(IRouteStore routeStore, ISegmentStore segmentStore)
@@ -71,21 +77,9 @@ namespace RoadCaptain.RouteBuilder.ViewModels
                 .OnFailure(_ => Model.StatusBarWarning(_.Message));
 
             SimulateCommnad = new RelayCommand(
-                    _ => CommandResult.Aborted(),
+                    _ => SimulateRoute(),
                     _ => true);
         }
-
-        private CommandResult ResetRoute()
-        {
-            var commandResult = Route.Reset();
-
-            SelectedSegment = null;
-
-            RoutePath = new SKPath();
-
-            return commandResult;
-        }
-
 
         public MainWindowModel Model { get; }
         public RouteViewModel Route { get; set; }
@@ -280,6 +274,19 @@ namespace RoadCaptain.RouteBuilder.ViewModels
             return path;
         }
 
+        private CommandResult ResetRoute()
+        {
+            var commandResult = Route.Reset();
+
+            SelectedSegment = null;
+
+            RoutePath = new SKPath();
+            SimulationState = SimulationState.NotStarted;
+            _simulationIndex = 0;
+
+            return commandResult;
+        }
+
         private CommandResult SaveRoute()
         {
             if (!Route.IsTainted)
@@ -392,10 +399,67 @@ namespace RoadCaptain.RouteBuilder.ViewModels
             }
         }
 
+        private CommandResult SimulateRoute()
+        {
+            if (_simulationTask != null && SimulationState == SimulationState.Running)
+            {
+                SimulationState = SimulationState.Paused;
+                return CommandResult.Success();
+            }
+            
+            _simulationTask = Task.Factory.StartNew(() =>
+            {
+                SimulationState = SimulationState.Running;
+
+                while (SimulationState == SimulationState.Running && _simulationIndex < RoutePath.PointCount)
+                {
+                    RiderPosition = RoutePath.Points[_simulationIndex++];
+                    Thread.Sleep(15);
+                }
+
+                if (SimulationState != SimulationState.Paused)
+                {
+                    _simulationIndex = 0;
+                }
+
+                SimulationState = SimulationState.Completed;
+            });
+
+            return CommandResult.Success();
+        }
+
+        public SKPoint RiderPosition
+        {
+            get => _riderPosition;
+            set
+            {
+                _riderPosition = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public SimulationState SimulationState
+        {
+            get => _simulationState;
+            set
+            {
+                _simulationState = value;
+                OnPropertyChanged();
+            }
+        }
+
         [NotifyPropertyChangedInvocator]
         private void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
+    }
+
+    public enum SimulationState
+    {
+        NotStarted,
+        Running,
+        Paused,
+        Completed
     }
 }
