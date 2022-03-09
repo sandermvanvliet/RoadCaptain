@@ -38,8 +38,14 @@ namespace RoadCaptain.RouteBuilder.ViewModels
                 {
                     if (Route.Sequence.Any())
                     {
-                        var skPathForLastSegment = SegmentPaths[Route.Last.SegmentId].Points;
-                        RoutePath.AddPoly(skPathForLastSegment, false);
+                        var points = SegmentPaths[Route.Last.SegmentId].Points;
+
+                        if (Route.Sequence.Last().Direction == SegmentDirection.BtoA)
+                        {
+                            points = points.Reverse().ToArray();
+                        }
+
+                        RoutePath.AddPoly(points, false);
                     }
                 }
 
@@ -395,7 +401,14 @@ namespace RoadCaptain.RouteBuilder.ViewModels
             // RoutePath needs to be set to the total route we just loaded
             foreach (var segment in Route.Sequence)
             {
-                RoutePath.AddPoly(SegmentPaths[segment.SegmentId].Points, false);
+                var points = SegmentPaths[segment.SegmentId].Points;
+
+                if (segment.Direction == SegmentDirection.BtoA)
+                {
+                    points = points.Reverse().ToArray();
+                }
+
+                RoutePath.AddPoly(points, false);
             }
         }
 

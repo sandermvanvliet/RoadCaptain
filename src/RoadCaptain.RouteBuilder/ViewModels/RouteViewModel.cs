@@ -30,7 +30,7 @@ namespace RoadCaptain.RouteBuilder.ViewModels
 
         public SegmentSequenceViewModel Last => Sequence.LastOrDefault();
         public string OutputFilePath { get; set; }
-        public bool IsTainted { get; set; }
+        public bool IsTainted { get; private set; }
 
         public void StartOn(Segment segment)
         {
@@ -168,7 +168,10 @@ namespace RoadCaptain.RouteBuilder.ViewModels
                     new SegmentSequenceViewModel(
                         seq,
                         GetSegmentById(seq.SegmentId),
-                        _sequence.Count + 1));
+                        _sequence.Count + 1)
+                    {
+                        Direction = seq.Direction
+                    });
             }
 
             IsTainted = false;
