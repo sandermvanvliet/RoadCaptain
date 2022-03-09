@@ -257,6 +257,8 @@ namespace RoadCaptain.RouteBuilder.ViewModels
                 SegmentPaths.Add(segment.Segment.Id, skiaPathFromSegment);
                 _segmentPathBounds.Add(segment.Segment.Id, bounds);
             }
+
+            CreateRoutePath();
         }
 
         private static SKPath SkiaPathFromSegment(Offsets offsets, List<TrackPoint> data)
@@ -360,23 +362,28 @@ namespace RoadCaptain.RouteBuilder.ViewModels
 
             SelectedSegment = null;
 
-            RoutePath = new SKPath();
-
             try
             {
                 Route.Load();
 
-                // RoutePath needs to be set to the total route we just loaded
-                foreach (var segment in Route.Sequence)
-                {
-                    RoutePath.AddPoly(SegmentPaths[segment.SegmentId].Points, false);
-                }
+                CreateRoutePath();
 
                 return CommandResult.Success();
             }
             catch (Exception e)
             {
                 return CommandResult.Failure(e.Message);
+            }
+        }
+
+        private void CreateRoutePath()
+        {
+            RoutePath = new SKPath();
+
+            // RoutePath needs to be set to the total route we just loaded
+            foreach (var segment in Route.Sequence)
+            {
+                RoutePath.AddPoly(SegmentPaths[segment.SegmentId].Points, false);
             }
         }
 
