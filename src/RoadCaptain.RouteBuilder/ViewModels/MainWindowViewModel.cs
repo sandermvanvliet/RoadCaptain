@@ -69,6 +69,10 @@ namespace RoadCaptain.RouteBuilder.ViewModels
                 .OnSuccess(_ => Model.StatusBarInfo("Added segment"))
                 .OnSuccessWithWarnings(_ => Model.StatusBarInfo("Added segment {0}", _.Message))
                 .OnFailure(_ => Model.StatusBarWarning(_.Message));
+
+            SimulateCommnad = new RelayCommand(
+                    _ => CommandResult.Aborted(),
+                    _ => true);
         }
 
         private CommandResult ResetRoute()
@@ -91,6 +95,7 @@ namespace RoadCaptain.RouteBuilder.ViewModels
         public ICommand OpenRouteCommand { get; }
         public ICommand ResetRouteCommand { get; }
         public ICommand SelectSegmentCommand { get; }
+        public ICommand SimulateCommnad { get; }
 
         public Segment SelectedSegment
         {

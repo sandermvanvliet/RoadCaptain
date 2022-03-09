@@ -41,6 +41,43 @@
                         Cursor="Hand">
             </skia:SKElement>
 
+            <StackPanel Grid.Row="0" Grid.Column="1" 
+                    Panel.ZIndex="2" 
+                    VerticalAlignment="Top" HorizontalAlignment="Left" 
+                        Orientation="Horizontal">
+                <StackPanel.Resources>
+                    <Style TargetType="{x:Type Border}">
+                        <Setter Property="CornerRadius" Value="5"/>
+                    </Style>
+                    <Style TargetType="{x:Type Button}">
+                        <Setter Property="Background" Value="#FF6141" />
+                        <Setter Property="Foreground" Value="White" />
+                        <Setter Property="Width" Value="40" />
+                        <Setter Property="Height" Value="30" />
+                        <Setter Property="FontSize" Value="20" />
+                        <Setter Property="Margin" Value="4,0,0,0" />
+                        <Setter Property="BorderThickness" Value="0" />
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="Button">
+                                    <Border Name="borderZero" Background="{TemplateBinding Background}" CornerRadius="5">
+                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                    </Border>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </StackPanel.Resources>
+                <Button Content="▶️" Command="{Binding Path=SimulateCommnad}" ToolTip="Simulate route" />
+                <Button Content="🚮" Command="{Binding Path=ResetRouteCommand}" ToolTip="Reset route" />
+                <Button Content="💾" Command="{Binding Path=SaveRouteCommand}" ToolTip="Save route" />
+                <Button Content="📂" Command="{Binding Path=OpenRouteCommand}" ToolTip="Open route" />
+
+
+            </StackPanel>
+
+            <!--  -->
+
             <Grid Grid.Row="0" Grid.Column="0">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="56" />
