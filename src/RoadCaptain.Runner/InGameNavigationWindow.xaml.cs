@@ -26,7 +26,7 @@ namespace RoadCaptain.Runner
         {
         }
 
-        private void MainWindow_OnMouseMove(object sender, MouseEventArgs e)
+        private void Window_OnMouseMove(object sender, MouseEventArgs e)
         {
             if (e.LeftButton == MouseButtonState.Pressed)
             {

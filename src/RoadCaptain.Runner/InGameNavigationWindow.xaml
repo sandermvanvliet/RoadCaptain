@@ -9,7 +9,7 @@
         Title="{Binding Path=Model.WindowTitle}" 
         Height="234" Width="300"
         d:DataContext="{d:DesignInstance viewmodels:InGameNavigationWindowViewModel}"
-        MouseMove="MainWindow_OnMouseMove"
+        MouseMove="Window_OnMouseMove"
         WindowStyle="None"
         ResizeMode="NoResize">
     <Window.Resources>
