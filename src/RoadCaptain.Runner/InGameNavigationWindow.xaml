@@ -11,7 +11,9 @@
         d:DataContext="{d:DesignInstance viewmodels:InGameNavigationWindowViewModel}"
         MouseMove="Window_OnMouseMove"
         WindowStyle="None"
-        ResizeMode="NoResize">
+        ResizeMode="NoResize"
+        Background="Transparent"
+        AllowsTransparency="True">
     <Window.Resources>
         <SolidColorBrush x:Key="ProgressBar.Progress" Color="#FF06B025"/>
         <SolidColorBrush x:Key="ProgressBar.Background" Color="#FFE6E6E6"/>
@@ -114,7 +116,8 @@
 
         <Grid Margin="2,0,0,0"
               Grid.Row="1"
-              DataContext="{Binding Path=Model.CurrentSegment}">
+              DataContext="{Binding Path=Model.CurrentSegment}"
+              Background="White">
             <Grid.Resources>
                 <Style TargetType="{x:Type TextBlock}">
                     <Setter Property="Foreground" Value="Black" />
@@ -159,7 +162,8 @@
 
         <Grid Margin="2,0,0,0"
               Grid.Row="2"
-              DataContext="{Binding Path=Model.NextSegment}">
+              DataContext="{Binding Path=Model.NextSegment}"
+              Background="White">
             <Grid.Resources>
                 <Style TargetType="{x:Type TextBlock}">
                     <Setter Property="Foreground" Value="Black" />
