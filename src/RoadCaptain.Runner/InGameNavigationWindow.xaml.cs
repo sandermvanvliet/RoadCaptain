@@ -6,16 +6,16 @@ using RoadCaptain.Runner.ViewModels;
 namespace RoadCaptain.Runner
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Interaction logic for InGameNavigationWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class InGameNavigationWindow : Window
     {
-        private readonly MainWindowViewModel _windowViewModel;
+        private readonly InGameNavigationWindowViewModel _windowViewModel;
 
-        public MainWindow(MainWindowViewModel mainWindowViewModel)
+        public InGameNavigationWindow(InGameNavigationWindowViewModel windowViewModel)
         {
-            _windowViewModel = mainWindowViewModel;
-            DataContext = mainWindowViewModel;
+            _windowViewModel = windowViewModel;
+            DataContext = windowViewModel;
 
             _windowViewModel.PropertyChanged += WindowViewModelPropertyChanged;
 

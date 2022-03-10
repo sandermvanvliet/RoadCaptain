@@ -10,12 +10,12 @@ using RoadCaptain.Runner.Models;
 
 namespace RoadCaptain.Runner.ViewModels
 {
-    public class MainWindowViewModel : INotifyPropertyChanged
+    public class InGameNavigationWindowViewModel : INotifyPropertyChanged
     {
         private readonly IRouteStore _routeStore;
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public MainWindowViewModel(IRouteStore routeStore, ISegmentStore segmentStore)
+        public InGameNavigationWindowViewModel(IRouteStore routeStore, ISegmentStore segmentStore)
         {
             _routeStore = routeStore;
 
