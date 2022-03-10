@@ -13,7 +13,8 @@ namespace RoadCaptain.Runner.Models
         private SegmentSequenceModel _currentSegment;
         private SegmentSequenceModel _nextSegment;
         private int _currentSegmentSequenceNumber;
-
+        private int _routeSegmentCount;
+        
         public string WindowTitle
         {
             get => _windowTitle;
@@ -97,6 +98,17 @@ namespace RoadCaptain.Runner.Models
             }
         }
 
+        public int RouteSegmentCount
+        {
+            get => _routeSegmentCount;
+            set
+            {
+                if (value == _routeSegmentCount) return;
+                _routeSegmentCount = value;
+                OnPropertyChanged();
+            }
+        }
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         [NotifyPropertyChangedInvocator]
@@ -104,9 +116,5 @@ namespace RoadCaptain.Runner.Models
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
-    }
-
-    public class SegmentSequenceModel
-    {
     }
 }
