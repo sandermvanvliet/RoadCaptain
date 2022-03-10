@@ -22,9 +22,8 @@ namespace RoadCaptain.Runner
             InitializeComponent();
         }
 
-        private void WindowViewModelPropertyChanged(object? sender, PropertyChangedEventArgs e)
+        private void WindowViewModelPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            
         }
 
         private void MainWindow_OnMouseMove(object sender, MouseEventArgs e)
