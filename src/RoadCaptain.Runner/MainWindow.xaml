@@ -75,6 +75,9 @@
             </Setter>
         </Style>
     </Window.Resources>
+    <Window.InputBindings>
+        <KeyBinding Key="O" Modifiers="Control" Command="{Binding Path=OpenRouteCommand}" />
+    </Window.InputBindings>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="90" />
@@ -192,7 +195,8 @@
             </StackPanel>
         </Grid>
 
-        <StackPanel Grid.Row="3" Orientation="Horizontal" VerticalAlignment="Stretch" Background="#666666">
+        <StackPanel Grid.Row="3" Orientation="Horizontal" VerticalAlignment="Stretch" Background="#666666"
+                    DataContext="{Binding Path=Model.Route}">
             <StackPanel.Resources>
                 <Style TargetType="{x:Type TextBlock}">
                     <Setter Property="Foreground" Value="White" />
@@ -201,9 +205,9 @@
                     <Setter Property="VerticalAlignment" Value="Center" />
                 </Style>
             </StackPanel.Resources>
-            <TextBlock Text="{Binding Path=Model.CurrentSegmentSequenceNumber}" d:Text="2" />
+            <TextBlock Text="{Binding Path=SegmentSequenceIndex,FallbackValue=0, TargetNullValue=0}" d:Text="2" />
             <TextBlock Text="/"  />
-            <TextBlock Text="{Binding Path=Model.RouteSegmentCount}" d:Text="12" />
+            <TextBlock Text="{Binding Path=RouteSegmentSequence.Count,FallbackValue=0, TargetNullValue=0}" d:Text="12" />
         </StackPanel>
     </Grid>
 </Window>

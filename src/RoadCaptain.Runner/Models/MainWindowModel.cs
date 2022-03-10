@@ -1,4 +1,6 @@
-﻿using System.ComponentModel;
+﻿using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using RoadCaptain.Runner.Annotations;
 
@@ -6,15 +8,20 @@ namespace RoadCaptain.Runner.Models
 {
     public class MainWindowModel : INotifyPropertyChanged
     {
-        private string _windowTitle;
+        private string _windowTitle = "RoadCaptain";
         private double _elapsedDistance;
         private double _elapsedAscent;
         private double _elapsedDescent;
         private SegmentSequenceModel _currentSegment;
         private SegmentSequenceModel _nextSegment;
-        private int _currentSegmentSequenceNumber;
-        private int _routeSegmentCount;
-        
+        private readonly List<Segment> _segments;
+        private PlannedRoute _route;
+
+        public MainWindowModel(List<Segment> segments)
+        {
+            _segments = segments;
+        }
+
         public string WindowTitle
         {
             get => _windowTitle;
@@ -30,7 +37,16 @@ namespace RoadCaptain.Runner.Models
             }
         }
 
-        public PlannedRoute Route { get; set; }
+        public PlannedRoute Route
+        {
+            get => _route;
+            private set
+            {
+                if (Equals(value, _route)) return;
+                _route = value;
+                OnPropertyChanged();
+            }
+        }
 
         public double ElapsedDistance
         {
@@ -87,34 +103,45 @@ namespace RoadCaptain.Runner.Models
             }
         }
 
-        public int CurrentSegmentSequenceNumber
-        {
-            get => _currentSegmentSequenceNumber;
-            set
-            {
-                if (value == _currentSegmentSequenceNumber) return;
-                _currentSegmentSequenceNumber = value;
-                OnPropertyChanged();
-            }
-        }
-
-        public int RouteSegmentCount
-        {
-            get => _routeSegmentCount;
-            set
-            {
-                if (value == _routeSegmentCount) return;
-                _routeSegmentCount = value;
-                OnPropertyChanged();
-            }
-        }
-
         public event PropertyChangedEventHandler PropertyChanged;
 
         [NotifyPropertyChangedInvocator]
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        public void InitializeRoute(PlannedRoute route)
+        {
+            Route = route;
+
+            var currentSegmentSequence = route.RouteSegmentSequence[route.SegmentSequenceIndex];
+            CurrentSegment = new SegmentSequenceModel(
+                currentSegmentSequence, 
+                GetSegmentById(currentSegmentSequence.SegmentId), 
+                route.SegmentSequenceIndex);
+
+            if (route.SegmentSequenceIndex < route.RouteSegmentSequence.Count - 1)
+            {
+                var nextSegmentSequence = route.RouteSegmentSequence[route.SegmentSequenceIndex + 1];
+                NextSegment = new SegmentSequenceModel(
+                    nextSegmentSequence,
+                    GetSegmentById(currentSegmentSequence.SegmentId), 
+                    route.SegmentSequenceIndex + 1);
+            }
+            else
+            {
+                NextSegment = null;
+            }
+
+            ElapsedAscent = 0;
+            ElapsedDescent = 0;
+            ElapsedDistance = 0;
+        }
+
+        private Segment GetSegmentById(string segmentId)
+        {
+            return _segments.SingleOrDefault(s => s.Id == segmentId);
         }
     }
 }
