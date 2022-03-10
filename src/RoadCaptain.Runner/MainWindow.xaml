@@ -7,9 +7,11 @@
         xmlns:viewmodels="clr-namespace:RoadCaptain.Runner.ViewModels"
         mc:Ignorable="d"
         Title="{Binding Path=Model.WindowTitle}" 
-        Height="252" Width="300"
+        Height="234" Width="300"
         d:DataContext="{d:DesignInstance viewmodels:MainWindowViewModel}"
-        MouseMove="MainWindow_OnMouseMove">
+        MouseMove="MainWindow_OnMouseMove"
+        WindowStyle="None"
+        ResizeMode="NoResize">
     <Window.Resources>
         <SolidColorBrush x:Key="ProgressBar.Progress" Color="#FF06B025"/>
         <SolidColorBrush x:Key="ProgressBar.Background" Color="#FFE6E6E6"/>
