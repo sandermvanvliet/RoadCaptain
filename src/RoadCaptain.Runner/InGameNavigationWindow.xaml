@@ -13,7 +13,9 @@
         WindowStyle="None"
         ResizeMode="NoResize"
         Background="Transparent"
-        AllowsTransparency="True">
+        AllowsTransparency="True"
+        Initialized="InGameNavigationWindow_OnInitialized"
+        LocationChanged="InGameNavigationWindow_OnLocationChanged">
     <Window.Resources>
         <SolidColorBrush x:Key="ProgressBar.Progress" Color="#FF06B025"/>
         <SolidColorBrush x:Key="ProgressBar.Background" Color="#FFE6E6E6"/>

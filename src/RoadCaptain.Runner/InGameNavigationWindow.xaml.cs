@@ -1,7 +1,9 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.Windows;
 using System.Windows.Input;
 using RoadCaptain.Runner.ViewModels;
+using Point = System.Drawing.Point;
 
 namespace RoadCaptain.Runner
 {
@@ -32,6 +34,21 @@ namespace RoadCaptain.Runner
             {
                 DragMove();
             }
+        }
+
+        private void InGameNavigationWindow_OnInitialized(object? sender, EventArgs e)
+        {
+            if (AppSettings.Default.InGameWindowLocation != Point.Empty)
+            {
+                Left = AppSettings.Default.InGameWindowLocation.X;
+                Top = AppSettings.Default.InGameWindowLocation.Y;
+            }
+        }
+
+        private void InGameNavigationWindow_OnLocationChanged(object sender, EventArgs e)
+        {
+            AppSettings.Default.InGameWindowLocation = new Point((int)Left, (int)Top);
+            AppSettings.Default.Save();
         }
     }
 }

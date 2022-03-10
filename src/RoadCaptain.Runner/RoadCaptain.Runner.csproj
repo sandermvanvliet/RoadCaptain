@@ -36,6 +36,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="AppSettings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>AppSettings.Designer.cs</LastGenOutput>
+    </None>
     <None Update="autofac.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -55,6 +59,14 @@
     <Resource Include="Assets\gostraight.png" />
     <Resource Include="Assets\turnleft.png" />
     <Resource Include="Assets\turnright.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="AppSettings.Designer.cs">
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>AppSettings.settings</DependentUpon>
+    </Compile>
   </ItemGroup>
 
 </Project>
