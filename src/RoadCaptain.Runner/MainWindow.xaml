@@ -84,7 +84,7 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="32" />
                     <RowDefinition Height="32" />
-                    <RowDefinition Height="32" />
+                    <RowDefinition Height="60" />
                 </Grid.RowDefinitions>
 
                 <!-- row 1 -->
@@ -108,11 +108,10 @@
                     </TextBlock.ToolTip>
                 </TextBlock>
 
-
                 <!-- row 3 -->
-                <TextBlock Text="Route:" HorizontalAlignment="Right" FontWeight="Bold" FontSize="16" Grid.Column="0" Grid.Row="2" VerticalAlignment="Center" />
-                <TextBox Text="{Binding Path=RoutePath}" Height="28" Grid.Column="1" Grid.Row="2" Margin="4,0,4,0" VerticalAlignment="Center" d:Text="c:\roadcaptain\routes\route-1.json" FontSize="16" Padding="4,0,0,0" />
-                <Button Content="Select" HorizontalAlignment="Right" Grid.Column="2" Grid.Row="2" Margin="0,0,4,0" VerticalAlignment="Center" Command="{Binding Path=LoadRouteCommand}" />
+                <TextBlock Text="Route:" HorizontalAlignment="Right" FontWeight="Bold" FontSize="16" Grid.Column="0" Grid.Row="2" VerticalAlignment="Center" Margin="0,20,0,0" />
+                <TextBox Text="{Binding Path=RoutePath}" Height="28" Grid.Column="1" Grid.Row="2" Margin="4,20,4,0" VerticalAlignment="Center" d:Text="c:\roadcaptain\routes\route-1.json" FontSize="16" Padding="4,0,0,0" />
+                <Button Content="Select" HorizontalAlignment="Right" Grid.Column="2" Grid.Row="2" Margin="0,20,4,0" VerticalAlignment="Center" Command="{Binding Path=LoadRouteCommand}" />
             </Grid>
             <Button Content="Let's Go!" HorizontalAlignment="Right" Grid.Row="2" Margin="2,4,4,2" VerticalAlignment="Center" Command="{Binding Path=StartRouteCommand}" IsEnabled="{Binding Path=CanStartRoute}" />
         </Grid>
