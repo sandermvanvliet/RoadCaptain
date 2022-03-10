@@ -113,7 +113,10 @@
                 <TextBox Text="{Binding Path=RoutePath}" Height="28" Grid.Column="1" Grid.Row="2" Margin="4,20,4,0" VerticalAlignment="Center" d:Text="c:\roadcaptain\routes\route-1.json" FontSize="16" Padding="4,0,0,0" />
                 <Button Content="Select" HorizontalAlignment="Right" Grid.Column="2" Grid.Row="2" Margin="0,20,4,0" VerticalAlignment="Center" Command="{Binding Path=LoadRouteCommand}" />
             </Grid>
-            <Button Content="Let's Go!" HorizontalAlignment="Right" Grid.Row="2" Margin="2,4,4,2" VerticalAlignment="Center" Command="{Binding Path=StartRouteCommand}" IsEnabled="{Binding Path=CanStartRoute}" />
+            <Button Content="Let's Go!" HorizontalAlignment="Right" Grid.Row="2" Margin="2,4,4,2" VerticalAlignment="Center" 
+                    Command="{Binding Path=StartRouteCommand}" 
+                    CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}"
+                    IsEnabled="{Binding Path=CanStartRoute}" />
         </Grid>
     </Border>
 </Window>

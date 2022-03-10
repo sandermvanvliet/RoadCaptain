@@ -79,9 +79,6 @@
             </Setter>
         </Style>
     </Window.Resources>
-    <Window.InputBindings>
-        <KeyBinding Key="O" Modifiers="Control" Command="{Binding Path=OpenRouteCommand}" />
-    </Window.InputBindings>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="90" />

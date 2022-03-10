@@ -6,7 +6,7 @@ using RoadCaptain.Runner.Annotations;
 
 namespace RoadCaptain.Runner.Models
 {
-    public class MainWindowModel : INotifyPropertyChanged
+    public class InGameWindowModel : INotifyPropertyChanged
     {
         private string _windowTitle = "RoadCaptain";
         private double _elapsedDistance;
@@ -17,7 +17,7 @@ namespace RoadCaptain.Runner.Models
         private readonly List<Segment> _segments;
         private PlannedRoute _route;
 
-        public MainWindowModel(List<Segment> segments)
+        public InGameWindowModel(List<Segment> segments)
         {
             _segments = segments;
         }

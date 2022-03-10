@@ -31,6 +31,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\RoadCaptain.Adapters\RoadCaptain.Adapters.csproj" />
+    <ProjectReference Include="..\RoadCaptain.SegmentBuilder\RoadCaptain.SegmentBuilder.csproj" />
     <ProjectReference Include="..\RoadCaptain\RoadCaptain.csproj" />
   </ItemGroup>
 

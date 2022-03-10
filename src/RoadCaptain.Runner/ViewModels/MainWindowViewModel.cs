@@ -1,29 +1,30 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Windows;
 using System.Windows.Input;
 using Microsoft.Win32;
 using RoadCaptain.Ports;
 using RoadCaptain.Runner.Annotations;
 using RoadCaptain.Runner.Commands;
+using RoadCaptain.Runner.Models;
 
 namespace RoadCaptain.Runner.ViewModels
 {
     public class MainWindowViewModel : INotifyPropertyChanged
     {
-        private readonly IRouteStore _routeStore;
-        private readonly ISegmentStore _segmentStore;
         private string _routePath;
         private string _windowTitle = "RoadCaptain";
         private string _zwiftPassword;
         private string _zwiftUsername;
+        private readonly ISegmentStore _segmentStore;
+        private readonly IRouteStore _routeStore;
 
-        public MainWindowViewModel(IRouteStore routeStore, ISegmentStore segmentStore)
+        public MainWindowViewModel(ISegmentStore segmentStore, IRouteStore routeStore)
         {
-            _routeStore = routeStore;
             _segmentStore = segmentStore;
-
+            _routeStore = routeStore;
             StartRouteCommand = new RelayCommand(
-                _ => CommandResult.Aborted(),
+                _ => StartRoute(_ as Window),
                 _ => CanStartRoute
             );
 
@@ -32,12 +33,10 @@ namespace RoadCaptain.Runner.ViewModels
                 _ => true);
         }
 
-        public bool CanStartRoute
-        {
-            get => !string.IsNullOrEmpty(RoutePath) &&
-                   !string.IsNullOrEmpty(ZwiftUsername) &&
-                   !string.IsNullOrEmpty(ZwiftPassword);
-        }
+        public bool CanStartRoute =>
+            !string.IsNullOrEmpty(RoutePath) &&
+            !string.IsNullOrEmpty(ZwiftUsername) &&
+            !string.IsNullOrEmpty(ZwiftPassword);
 
         public string RoutePath
         {
@@ -86,6 +85,8 @@ namespace RoadCaptain.Runner.ViewModels
             }
         }
 
+        public PlannedRoute Route { get; set; }
+
         public ICommand StartRouteCommand { get; set; }
         public ICommand LoadRouteCommand { get; set; }
 
@@ -116,6 +117,19 @@ namespace RoadCaptain.Runner.ViewModels
 
                 WindowTitle = $"RoadCaptain - {RoutePath}";
             }
+
+            return CommandResult.Success();
+        }
+
+        private CommandResult StartRoute(Window window)
+        {
+            var inGameWindowModel = new InGameWindowModel(_segmentStore.LoadSegments());
+            inGameWindowModel.InitializeRoute(_routeStore.LoadFrom(RoutePath));
+            var viewModel = new InGameNavigationWindowViewModel(inGameWindowModel);
+            var inGameWindow = new InGameNavigationWindow(viewModel);
+            inGameWindow.Show();
+
+            window.Close();
 
             return CommandResult.Success();
         }
