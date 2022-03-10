@@ -14,5 +14,10 @@ namespace RoadCaptain.Runner
 
             InitializeComponent();
         }
+
+        private void CloseButton_Click(object sender, RoutedEventArgs e)
+        {
+            Close();
+        }
     }
 }

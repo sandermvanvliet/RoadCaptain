@@ -3,15 +3,16 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:RoadCaptain.Runner"
         xmlns:viewModels="clr-namespace:RoadCaptain.Runner.ViewModels"
         mc:Ignorable="d"
         Title="{Binding Path=WindowTitle}" 
         Height="437" Width="632"
         ResizeMode="NoResize"
-        WindowStyle="SingleBorderWindow"
+        WindowStyle="None"
         WindowStartupLocation="CenterScreen"
-        d:DataContext="{d:DesignInstance viewModels:MainWindowViewModel}">
+        d:DataContext="{d:DesignInstance viewModels:MainWindowViewModel}"
+        Background="Transparent"
+        AllowsTransparency="True">
     <Window.Resources>
         <Style TargetType="{x:Type Button}">
             <Setter Property="Background" Value="#FF6141" />
@@ -38,34 +39,52 @@
             </Style.Triggers>
         </Style>
     </Window.Resources>
-    <Grid Margin="4">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="50" />
-            <!-- banner -->
-            <RowDefinition Height="*" />
-            <!-- main content-->
-            <RowDefinition Height="40" />
-            <!-- bottom button row -->
-        </Grid.RowDefinitions>
+    <Border BorderBrush="DarkGray" BorderThickness="1" CornerRadius="8" Opacity="1" Background="White">
+        <Grid Margin="4">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="50" />
+                <!-- banner -->
+                <RowDefinition Height="*" />
+                <!-- main content-->
+                <RowDefinition Height="40" />
+                <!-- bottom button row -->
+            </Grid.RowDefinitions>
 
-        <TextBlock Grid.Row="0" Text="RoadCaptain" FontWeight="ExtraBold" FontSize="32"/>
+            <TextBlock Grid.Row="0" Text="RoadCaptain" FontWeight="ExtraBold" FontSize="32" Padding="4,0,0,0"/>
+            <Button Content="X" Background="Red" Foreground="White" Grid.Row="0" HorizontalAlignment="Right" Width="40" Height="20" Margin="0,-3,-3,0" VerticalAlignment="Top" 
+                Click="CloseButton_Click">
+                <Button.Resources>
+                    <Style TargetType="{x:Type Button}">
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="Button">
+                                    <Border Name="borderZero" Background="{TemplateBinding Background}" CornerRadius="0,8,0,0">
+                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                    </Border>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </Button.Resources>
+            </Button>
 
-        <Image Grid.Row="1" 
+            <Image Grid.Row="1" 
                Panel.ZIndex="1"
                Source="Assets/background.jpg"
                Stretch="UniformToFill"
                StretchDirection="DownOnly"/>
 
-        <Grid Grid.Row="1" Panel.ZIndex="2" Margin="0,-80,0,0">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="80" />
-                <ColumnDefinition />
-                <ColumnDefinition Width="70" />
-            </Grid.ColumnDefinitions>
-            <TextBlock Text="Route:" HorizontalAlignment="Right" FontWeight="Bold" FontSize="16" Grid.Column="0" VerticalAlignment="Center" />
-            <TextBox Text="{Binding Path=RoutePath}" HorizontalAlignment="Stretch" Height="28" Grid.Column="1" Margin="4,0,4,0" VerticalAlignment="Center" d:Text="c:\roadcaptain\routes\route-1.json" FontSize="16" />
-            <Button Content="Select" HorizontalAlignment="Right" Grid.Column="2" Margin="0,0,4,0" VerticalAlignment="Center" Command="{Binding Path=LoadRouteCommand}" />
+            <Grid Grid.Row="1" Panel.ZIndex="2" Margin="0,-80,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="80" />
+                    <ColumnDefinition />
+                    <ColumnDefinition Width="70" />
+                </Grid.ColumnDefinitions>
+                <TextBlock Text="Route:" HorizontalAlignment="Right" FontWeight="Bold" FontSize="16" Grid.Column="0" VerticalAlignment="Center" />
+                <TextBox Text="{Binding Path=RoutePath}" HorizontalAlignment="Stretch" Height="28" Grid.Column="1" Margin="4,0,4,0" VerticalAlignment="Center" d:Text="c:\roadcaptain\routes\route-1.json" FontSize="16" />
+                <Button Content="Select" HorizontalAlignment="Right" Grid.Column="2" Margin="0,0,4,0" VerticalAlignment="Center" Command="{Binding Path=LoadRouteCommand}" />
+            </Grid>
+            <Button Content="Let's Go!" HorizontalAlignment="Right" Grid.Row="2" Margin="2,4,4,2" VerticalAlignment="Center" Command="{Binding Path=StartRouteCommand}" IsEnabled="{Binding Path=RouteLoaded}" />
         </Grid>
-        <Button Content="Let's Go!" HorizontalAlignment="Right" Grid.Row="2" Margin="2,4,4,2" VerticalAlignment="Center" Command="{Binding Path=StartRouteCommand}" IsEnabled="{Binding Path=RouteLoaded}" />
-    </Grid>
+    </Border>
 </Window>
