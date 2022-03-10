@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using System.Windows;
+using System.Windows.Input;
 using RoadCaptain.Runner.ViewModels;
 
 namespace RoadCaptain.Runner
@@ -24,6 +25,14 @@ namespace RoadCaptain.Runner
         private void WindowViewModelPropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
             
+        }
+
+        private void MainWindow_OnMouseMove(object sender, MouseEventArgs e)
+        {
+            if (e.LeftButton == MouseButtonState.Pressed)
+            {
+                DragMove();
+            }
         }
     }
 }

@@ -8,7 +8,8 @@
         mc:Ignorable="d"
         Title="{Binding Path=Model.WindowTitle}" 
         Height="252" Width="300"
-        d:DataContext="{d:DesignInstance viewmodels:MainWindowViewModel}">
+        d:DataContext="{d:DesignInstance viewmodels:MainWindowViewModel}"
+        MouseMove="MainWindow_OnMouseMove">
     <Window.Resources>
         <SolidColorBrush x:Key="ProgressBar.Progress" Color="#FF06B025"/>
         <SolidColorBrush x:Key="ProgressBar.Background" Color="#FFE6E6E6"/>
