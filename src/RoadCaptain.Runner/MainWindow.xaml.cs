@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using RoadCaptain.Runner.ViewModels;
 
@@ -9,8 +10,11 @@ namespace RoadCaptain.Runner
     /// </summary>
     public partial class MainWindow : Window
     {
+        private readonly MainWindowViewModel _viewModel;
+
         public MainWindow(MainWindowViewModel viewModel)
         {
+            _viewModel = viewModel;
             DataContext = viewModel;
 
             InitializeComponent();
@@ -27,6 +31,11 @@ namespace RoadCaptain.Runner
             {
                 DragMove();
             }
+        }
+
+        private void PasswordBox_OnPasswordChanged(object sender, RoutedEventArgs e)
+        {
+            _viewModel.ZwiftPassword = ((PasswordBox)sender).Password;
         }
     }
 }

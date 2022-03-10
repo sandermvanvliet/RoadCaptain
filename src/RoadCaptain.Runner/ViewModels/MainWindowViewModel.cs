@@ -14,6 +14,8 @@ namespace RoadCaptain.Runner.ViewModels
         private readonly ISegmentStore _segmentStore;
         private string _routePath;
         private string _windowTitle = "RoadCaptain";
+        private string _zwiftPassword;
+        private string _zwiftUsername;
 
         public MainWindowViewModel(IRouteStore routeStore, ISegmentStore segmentStore)
         {
@@ -22,7 +24,7 @@ namespace RoadCaptain.Runner.ViewModels
 
             StartRouteCommand = new RelayCommand(
                 _ => CommandResult.Aborted(),
-                _ => RouteLoaded
+                _ => CanStartRoute
             );
 
             LoadRouteCommand = new RelayCommand(
@@ -30,9 +32,11 @@ namespace RoadCaptain.Runner.ViewModels
                 _ => true);
         }
 
-        public bool RouteLoaded
+        public bool CanStartRoute
         {
-            get => !string.IsNullOrEmpty(RoutePath);
+            get => !string.IsNullOrEmpty(RoutePath) &&
+                   !string.IsNullOrEmpty(ZwiftUsername) &&
+                   !string.IsNullOrEmpty(ZwiftPassword);
         }
 
         public string RoutePath
@@ -43,7 +47,7 @@ namespace RoadCaptain.Runner.ViewModels
                 if (value == _routePath) return;
                 _routePath = value;
                 OnPropertyChanged();
-                OnPropertyChanged(nameof(RouteLoaded));
+                OnPropertyChanged(nameof(CanStartRoute));
             }
         }
 
@@ -55,6 +59,30 @@ namespace RoadCaptain.Runner.ViewModels
                 if (value == _windowTitle) return;
                 _windowTitle = value;
                 OnPropertyChanged();
+            }
+        }
+
+        public string ZwiftUsername
+        {
+            get => _zwiftUsername;
+            set
+            {
+                if (value == _zwiftUsername) return;
+                _zwiftUsername = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(CanStartRoute));
+            }
+        }
+
+        public string ZwiftPassword
+        {
+            get => _zwiftPassword;
+            set
+            {
+                if (value == _zwiftPassword) return;
+                _zwiftPassword = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(CanStartRoute));
             }
         }
 
