@@ -103,6 +103,9 @@ namespace RoadCaptain.Runner.Models
             }
         }
 
+        public string ZwiftUsername { get; set; }
+        public string ZwiftPassword { get; set; }
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         [NotifyPropertyChangedInvocator]

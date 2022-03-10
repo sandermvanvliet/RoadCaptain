@@ -124,9 +124,20 @@ namespace RoadCaptain.Runner.ViewModels
         private CommandResult StartRoute(Window window)
         {
             var inGameWindowModel = new InGameWindowModel(_segmentStore.LoadSegments());
+            
             inGameWindowModel.InitializeRoute(_routeStore.LoadFrom(RoutePath));
-            var viewModel = new InGameNavigationWindowViewModel(inGameWindowModel);
+
+            var viewModel = new InGameNavigationWindowViewModel(inGameWindowModel)
+            {
+                Model =
+                {
+                    ZwiftUsername = ZwiftUsername,
+                    ZwiftPassword = ZwiftPassword
+                }
+            };
+
             var inGameWindow = new InGameNavigationWindow(viewModel);
+            
             inGameWindow.Show();
 
             window.Close();

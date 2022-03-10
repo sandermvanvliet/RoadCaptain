@@ -13,6 +13,7 @@ namespace RoadCaptain.Runner
     public partial class InGameNavigationWindow : Window
     {
         private readonly InGameNavigationWindowViewModel _windowViewModel;
+        
 
         public InGameNavigationWindow(InGameNavigationWindowViewModel windowViewModel)
         {
@@ -49,6 +50,10 @@ namespace RoadCaptain.Runner
         {
             AppSettings.Default.InGameWindowLocation = new Point((int)Left, (int)Top);
             AppSettings.Default.Save();
+        }
+
+        private void InGameNavigationWindow_OnActivated(object? sender, EventArgs e)
+        {
         }
     }
 }
