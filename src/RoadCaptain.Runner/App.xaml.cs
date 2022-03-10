@@ -42,7 +42,7 @@ namespace RoadCaptain.Runner
 
         private void App_OnStartup(object sender, StartupEventArgs e)
         {
-            var mainWindow = _container.Resolve<InGameNavigationWindow>();
+            var mainWindow = _container.Resolve<MainWindow>();
 
             mainWindow.Show();
         }

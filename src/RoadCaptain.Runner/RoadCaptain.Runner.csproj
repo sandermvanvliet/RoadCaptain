@@ -9,6 +9,7 @@
   <ItemGroup>
     <None Remove="Assets\arrow-down-right.png" />
     <None Remove="Assets\arrow-up-right.png" />
+    <None Remove="Assets\background.jpg" />
     <None Remove="Assets\finish.png" />
     <None Remove="Assets\gostraight.png" />
     <None Remove="Assets\turnleft.png" />
@@ -48,6 +49,7 @@
   <ItemGroup>
     <Resource Include="Assets\arrow-down-right.png" />
     <Resource Include="Assets\arrow-up-right.png" />
+    <Resource Include="Assets\background.jpg" />
     <Resource Include="Assets\finish.png" />
     <Resource Include="Assets\gostraight.png" />
     <Resource Include="Assets\turnleft.png" />

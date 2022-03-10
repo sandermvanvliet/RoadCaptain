@@ -1,0 +1,71 @@
+﻿<Window x:Class="RoadCaptain.Runner.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:RoadCaptain.Runner"
+        xmlns:viewModels="clr-namespace:RoadCaptain.Runner.ViewModels"
+        mc:Ignorable="d"
+        Title="{Binding Path=WindowTitle}" 
+        Height="437" Width="632"
+        ResizeMode="NoResize"
+        WindowStyle="SingleBorderWindow"
+        WindowStartupLocation="CenterScreen"
+        d:DataContext="{d:DesignInstance viewModels:MainWindowViewModel}">
+    <Window.Resources>
+        <Style TargetType="{x:Type Button}">
+            <Setter Property="Background" Value="#FF6141" />
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="Height" Value="32" />
+            <Setter Property="FontSize" Value="20" />
+            <Setter Property="FontWeight" Value="Bold" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Name="borderZero" Background="{TemplateBinding Background}" CornerRadius="8" Padding="4,0,4,0">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter Property="Background" Value="LightGray"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
+    <Grid Margin="4">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50" />
+            <!-- banner -->
+            <RowDefinition Height="*" />
+            <!-- main content-->
+            <RowDefinition Height="40" />
+            <!-- bottom button row -->
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Row="0" Text="RoadCaptain" FontWeight="ExtraBold" FontSize="32"/>
+
+        <Image Grid.Row="1" 
+               Panel.ZIndex="1"
+               Source="Assets/background.jpg"
+               Stretch="UniformToFill"
+               StretchDirection="DownOnly"/>
+
+        <Grid Grid.Row="1" Panel.ZIndex="2" Margin="0,-80,0,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="80" />
+                <ColumnDefinition />
+                <ColumnDefinition Width="70" />
+            </Grid.ColumnDefinitions>
+            <TextBlock Text="Route:" HorizontalAlignment="Right" FontWeight="Bold" FontSize="16" Grid.Column="0" VerticalAlignment="Center" />
+            <TextBox Text="{Binding Path=RoutePath}" HorizontalAlignment="Stretch" Height="28" Grid.Column="1" Margin="4,0,4,0" VerticalAlignment="Center" d:Text="c:\roadcaptain\routes\route-1.json" FontSize="16" />
+            <Button Content="Select" HorizontalAlignment="Right" Grid.Column="2" Margin="0,0,4,0" VerticalAlignment="Center" Command="{Binding Path=LoadRouteCommand}" />
+        </Grid>
+        <Button Content="Let's Go!" HorizontalAlignment="Right" Grid.Row="2" Margin="2,4,4,2" VerticalAlignment="Center" Command="{Binding Path=StartRouteCommand}" IsEnabled="{Binding Path=RouteLoaded}" />
+    </Grid>
+</Window>
