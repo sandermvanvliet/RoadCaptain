@@ -18,11 +18,13 @@ namespace RoadCaptain.Runner.ViewModels
         private string _zwiftUsername;
         private readonly ISegmentStore _segmentStore;
         private readonly IRouteStore _routeStore;
+        private readonly Configuration _configuration;
 
-        public MainWindowViewModel(ISegmentStore segmentStore, IRouteStore routeStore)
+        public MainWindowViewModel(ISegmentStore segmentStore, IRouteStore routeStore, Configuration configuration)
         {
             _segmentStore = segmentStore;
             _routeStore = routeStore;
+            _configuration = configuration;
             StartRouteCommand = new RelayCommand(
                 _ => StartRoute(_ as Window),
                 _ => CanStartRoute
@@ -126,6 +128,9 @@ namespace RoadCaptain.Runner.ViewModels
             var inGameWindowModel = new InGameWindowModel(_segmentStore.LoadSegments());
             
             inGameWindowModel.InitializeRoute(_routeStore.LoadFrom(RoutePath));
+
+            _configuration.Username = ZwiftUsername;
+            _configuration.Password = ZwiftPassword;
 
             var viewModel = new InGameNavigationWindowViewModel(inGameWindowModel)
             {

@@ -31,8 +31,9 @@ namespace RoadCaptain.Runner
             var builder = new ContainerBuilder();
             
             builder.Register(_ => _logger).SingleInstance();
-
             builder.Register(_ => configuration).SingleInstance();
+            
+            builder.RegisterType<Configuration>().AsSelf().SingleInstance();
 
             // Wire up registrations through the autofac.json file
             builder.RegisterModule(new ConfigurationModule(configuration));
