@@ -29,7 +29,7 @@ namespace RoadCaptain.Runner
             // Register everything except the hosted services
             builder
                 .RegisterAssemblyTypes(ThisAssembly)
-                .Where(t => !t.Namespace.EndsWith(".HostedServices"))
+                .Where(t => !t.Namespace.EndsWith(".HostedServices") && t.Name != nameof(Configuration))
                 .AsSelf();
         }
     }

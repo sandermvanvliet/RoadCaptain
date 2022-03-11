@@ -19,6 +19,7 @@ namespace RoadCaptain.Runner
         private readonly ISynchronizer _synchronizer;
         private readonly MonitoringEvents _monitoringEvents;
         private readonly CancellationTokenSource _tokenSource = new();
+        private InGameNavigationWindowViewModel _viewModel;
 
 
         public InGameNavigationWindow(
@@ -65,6 +66,8 @@ namespace RoadCaptain.Runner
 
         private void InGameNavigationWindow_OnActivated(object? sender, EventArgs e)
         {
+            _viewModel = DataContext as InGameNavigationWindowViewModel;
+
             // Not to worry about multiple OnActivated events, TriggerSynchronizationEvent is idempotent
             _synchronizer.TriggerSynchronizationEvent();
         }
@@ -73,14 +76,12 @@ namespace RoadCaptain.Runner
         {
             try
             {
-                WindowViewModel.UpdateGameState(gameState);
+                _viewModel.UpdateGameState(gameState);
             }
             catch (Exception e)
             {
                 _monitoringEvents.Error(e, "Failed to update game state");
             }
         }
-
-        public InGameNavigationWindowViewModel WindowViewModel => DataContext as InGameNavigationWindowViewModel;
     }
 }

@@ -134,6 +134,7 @@ namespace RoadCaptain.Runner.ViewModels
             var configuration = _componentContext.Resolve<Configuration>();
             configuration.Username = ZwiftUsername;
             configuration.Password = ZwiftPassword;
+            configuration.Route = RoutePath;
 
             var viewModel = new InGameNavigationWindowViewModel(inGameWindowModel, _segmentStore.LoadSegments())
             {
