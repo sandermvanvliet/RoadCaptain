@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Input;
+using RoadCaptain.Runner.HostedServices;
 using RoadCaptain.Runner.ViewModels;
 using Point = System.Drawing.Point;
 
@@ -13,11 +14,13 @@ namespace RoadCaptain.Runner
     public partial class InGameNavigationWindow : Window
     {
         private readonly InGameNavigationWindowViewModel _windowViewModel;
-        
+        private readonly ISynchronizer _synchronizer;
 
-        public InGameNavigationWindow(InGameNavigationWindowViewModel windowViewModel)
+
+        public InGameNavigationWindow(InGameNavigationWindowViewModel windowViewModel, ISynchronizer synchronizer)
         {
             _windowViewModel = windowViewModel;
+            _synchronizer = synchronizer;
             DataContext = windowViewModel;
 
             _windowViewModel.PropertyChanged += WindowViewModelPropertyChanged;
@@ -54,6 +57,8 @@ namespace RoadCaptain.Runner
 
         private void InGameNavigationWindow_OnActivated(object? sender, EventArgs e)
         {
+            // Not to worry about multiple OnActivated events, TriggerSynchronizationEvent is idempotent
+            _synchronizer.TriggerSynchronizationEvent();
         }
     }
 }

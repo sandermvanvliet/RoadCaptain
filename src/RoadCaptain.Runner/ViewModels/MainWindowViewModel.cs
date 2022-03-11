@@ -6,6 +6,7 @@ using Microsoft.Win32;
 using RoadCaptain.Ports;
 using RoadCaptain.Runner.Annotations;
 using RoadCaptain.Runner.Commands;
+using RoadCaptain.Runner.HostedServices;
 using RoadCaptain.Runner.Models;
 
 namespace RoadCaptain.Runner.ViewModels
@@ -19,12 +20,14 @@ namespace RoadCaptain.Runner.ViewModels
         private readonly ISegmentStore _segmentStore;
         private readonly IRouteStore _routeStore;
         private readonly Configuration _configuration;
+        private readonly ISynchronizer _synchronizer;
 
-        public MainWindowViewModel(ISegmentStore segmentStore, IRouteStore routeStore, Configuration configuration)
+        public MainWindowViewModel(ISegmentStore segmentStore, IRouteStore routeStore, Configuration configuration, ISynchronizer synchronizer)
         {
             _segmentStore = segmentStore;
             _routeStore = routeStore;
             _configuration = configuration;
+            _synchronizer = synchronizer;
             StartRouteCommand = new RelayCommand(
                 _ => StartRoute(_ as Window),
                 _ => CanStartRoute
@@ -141,7 +144,7 @@ namespace RoadCaptain.Runner.ViewModels
                 }
             };
 
-            var inGameWindow = new InGameNavigationWindow(viewModel);
+            var inGameWindow = new InGameNavigationWindow(viewModel, _synchronizer);
             
             inGameWindow.Show();
 
