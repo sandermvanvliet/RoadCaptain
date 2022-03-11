@@ -2,6 +2,7 @@
 using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Input;
+using Autofac;
 using Microsoft.Win32;
 using RoadCaptain.Ports;
 using RoadCaptain.Runner.Annotations;
@@ -19,15 +20,13 @@ namespace RoadCaptain.Runner.ViewModels
         private string _zwiftUsername;
         private readonly ISegmentStore _segmentStore;
         private readonly IRouteStore _routeStore;
-        private readonly Configuration _configuration;
-        private readonly ISynchronizer _synchronizer;
+        private readonly IComponentContext _componentContext;
 
-        public MainWindowViewModel(ISegmentStore segmentStore, IRouteStore routeStore, Configuration configuration, ISynchronizer synchronizer)
+        public MainWindowViewModel(ISegmentStore segmentStore, IRouteStore routeStore, IComponentContext componentContext)
         {
             _segmentStore = segmentStore;
             _routeStore = routeStore;
-            _configuration = configuration;
-            _synchronizer = synchronizer;
+            _componentContext = componentContext;
             StartRouteCommand = new RelayCommand(
                 _ => StartRoute(_ as Window),
                 _ => CanStartRoute
@@ -132,8 +131,9 @@ namespace RoadCaptain.Runner.ViewModels
             
             inGameWindowModel.InitializeRoute(_routeStore.LoadFrom(RoutePath));
 
-            _configuration.Username = ZwiftUsername;
-            _configuration.Password = ZwiftPassword;
+            var configuration = _componentContext.Resolve<Configuration>();
+            configuration.Username = ZwiftUsername;
+            configuration.Password = ZwiftPassword;
 
             var viewModel = new InGameNavigationWindowViewModel(inGameWindowModel)
             {
@@ -144,7 +144,8 @@ namespace RoadCaptain.Runner.ViewModels
                 }
             };
 
-            var inGameWindow = new InGameNavigationWindow(viewModel, _synchronizer);
+            var inGameWindow = _componentContext.Resolve<InGameNavigationWindow>();
+            inGameWindow.DataContext = viewModel;
             
             inGameWindow.Show();
 

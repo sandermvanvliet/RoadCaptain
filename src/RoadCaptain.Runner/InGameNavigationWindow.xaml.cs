@@ -1,7 +1,10 @@
 ﻿using System;
-using System.ComponentModel;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using RoadCaptain.GameStates;
+using RoadCaptain.Ports;
 using RoadCaptain.Runner.HostedServices;
 using RoadCaptain.Runner.ViewModels;
 using Point = System.Drawing.Point;
@@ -13,23 +16,28 @@ namespace RoadCaptain.Runner
     /// </summary>
     public partial class InGameNavigationWindow : Window
     {
-        private readonly InGameNavigationWindowViewModel _windowViewModel;
         private readonly ISynchronizer _synchronizer;
+        private readonly MonitoringEvents _monitoringEvents;
+        private readonly CancellationTokenSource _tokenSource = new();
 
 
-        public InGameNavigationWindow(InGameNavigationWindowViewModel windowViewModel, ISynchronizer synchronizer)
+        public InGameNavigationWindow(
+            ISynchronizer synchronizer,
+            IGameStateReceiver gameStateReceiver, 
+            MonitoringEvents monitoringEvents)
         {
-            _windowViewModel = windowViewModel;
             _synchronizer = synchronizer;
-            DataContext = windowViewModel;
-
-            _windowViewModel.PropertyChanged += WindowViewModelPropertyChanged;
-
+            _monitoringEvents = monitoringEvents;
+            
+            // Start the receiver whenever we trigger the synchronization event
+            _synchronizer.RegisterStart(() => Task.Factory.StartNew(() => gameStateReceiver.Start(_tokenSource.Token)));
+            
             InitializeComponent();
-        }
 
-        private void WindowViewModelPropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
+            gameStateReceiver.Register(
+                null,
+                null,
+                GameStateReceived);
         }
 
         private void Window_OnMouseMove(object sender, MouseEventArgs e)
@@ -60,5 +68,19 @@ namespace RoadCaptain.Runner
             // Not to worry about multiple OnActivated events, TriggerSynchronizationEvent is idempotent
             _synchronizer.TriggerSynchronizationEvent();
         }
+
+        private void GameStateReceived(GameState gameState)
+        {
+            try
+            {
+                WindowViewModel.UpdateGameState(gameState);
+            }
+            catch (Exception e)
+            {
+                _monitoringEvents.Error(e, "Failed to update game state");
+            }
+        }
+
+        public InGameNavigationWindowViewModel WindowViewModel => DataContext as InGameNavigationWindowViewModel;
     }
 }

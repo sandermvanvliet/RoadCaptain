@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using RoadCaptain.GameStates;
 using RoadCaptain.Runner.Annotations;
 using RoadCaptain.Runner.Models;
 
@@ -20,6 +21,14 @@ namespace RoadCaptain.Runner.ViewModels
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        public void UpdateGameState(GameState gameState)
+        {
+            if (gameState is OnRouteState)
+            {
+
+            }
         }
     }
 }
