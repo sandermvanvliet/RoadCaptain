@@ -46,7 +46,7 @@ namespace RoadCaptain.GameStates
                         // The segment is not the expected next one so we lost lock somewhere...
                     }
 
-                    return new OnRouteState(ActivityId, position, segmentState.CurrentSegment, Route);
+                    return new OnRouteState(ActivityId, segmentState.CurrentPosition, segmentState.CurrentSegment, Route);
                 }
 
                 if (segmentState.CurrentSegment.Id == Route.CurrentSegmentId)
