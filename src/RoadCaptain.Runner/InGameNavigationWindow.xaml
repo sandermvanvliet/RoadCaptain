@@ -110,7 +110,14 @@
                     <TextBlock Text="m" FontSize="10" FontWeight="Bold" VerticalAlignment="Bottom" Padding="0,0,0,1.5"/>
                 </StackPanel>
 
-                <ProgressBar Style="{DynamicResource RouteProgressBarStyle}" Margin="0,10,10,0" HorizontalAlignment="Stretch" Width="Auto" Height="18" Background="#cccccc" Foreground="#FF6141" Value="10" Minimum="0" Maximum="100" />
+                <ProgressBar Style="{DynamicResource RouteProgressBarStyle}" 
+                             Margin="0,10,10,0" 
+                             HorizontalAlignment="Stretch" 
+                             Width="Auto" Height="18" 
+                             Background="#cccccc" Foreground="#FF6141" 
+                             Value="{Binding Path=Model.CurrentSegment.SequenceNumber,FallbackValue=0, TargetNullValue=0,Mode=OneWay}" 
+                             Minimum="0" 
+                             Maximum="{Binding Path=Model.Route.RouteSegmentSequence.Count,FallbackValue=0, TargetNullValue=0,Mode=OneWay}" />
             </StackPanel>
         </Border>
 
