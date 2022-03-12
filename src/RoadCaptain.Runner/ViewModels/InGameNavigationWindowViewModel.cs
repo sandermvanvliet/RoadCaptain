@@ -45,13 +45,24 @@ namespace RoadCaptain.Runner.ViewModels
         {
             try
             {
-                if (gameState is PositionedState positionedState)
+                if (gameState is PositionedState positionedState and OnSegmentState)
                 {
                     if (_previousPosition != null)
                     {
                         var distanceFromLast = _previousPosition.DistanceTo(positionedState.CurrentPosition);
 
                         Model.ElapsedDistance += distanceFromLast / 1000;
+
+                        var altitudeDelta = _previousPosition.Altitude - positionedState.CurrentPosition.Altitude;
+                        
+                        if (altitudeDelta < 0)
+                        {
+                            Model.ElapsedDescent += -altitudeDelta;
+                        }
+                        else if (altitudeDelta > 0)
+                        {
+                            Model.ElapsedAscent += altitudeDelta;
+                        }
                     }
 
                     _previousPosition = positionedState.CurrentPosition;
