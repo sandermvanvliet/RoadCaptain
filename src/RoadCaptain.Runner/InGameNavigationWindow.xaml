@@ -164,7 +164,13 @@
             
             <ProgressBar Style="{DynamicResource RouteProgressBarStyle}" 
                          Grid.Row="2" Grid.Column="1"
-                         Margin="4,0,10,0" HorizontalAlignment="Stretch" Width="Auto" Height="18" Background="#cccccc" Foreground="#FF6141" d:Value="71" Minimum="0" Maximum="100" />
+                         Margin="4,0,10,0" 
+                         HorizontalAlignment="Stretch" 
+                         Width="Auto" Height="18" 
+                         Background="#cccccc" Foreground="#FF6141" d:Value="71" 
+                         Value="{Binding Path=DistanceOnSegment,FallbackValue=0, TargetNullValue=0,Mode=OneWay}" 
+                         Minimum="0" 
+                         Maximum="{Binding Path=Distance,FallbackValue=0, TargetNullValue=0,Mode=OneWay}"  />
         </Grid>
 
         <Grid

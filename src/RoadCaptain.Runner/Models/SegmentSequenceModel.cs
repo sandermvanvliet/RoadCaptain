@@ -5,12 +5,13 @@ using RoadCaptain.Runner.Annotations;
 
 namespace RoadCaptain.Runner.Models
 {
-    public class SegmentSequenceModel
+    public class SegmentSequenceModel : INotifyPropertyChanged
     {
         private string _turnImage;
         private SegmentDirection _direction;
         private readonly double _ascent;
         private readonly double _descent;
+        private TrackPoint _pointOnSegment;
 
         public SegmentSequenceModel(SegmentSequence segmentSequence, Segment segment, int sequenceNumber)
         {
@@ -41,7 +42,7 @@ namespace RoadCaptain.Runner.Models
         public string TurnImage
         {
             get => _turnImage;
-            private set
+            private init
             {
                 _turnImage = value;
                 OnPropertyChanged();
@@ -50,6 +51,36 @@ namespace RoadCaptain.Runner.Models
 
         public string SegmentId => Model.SegmentId;
         public double Distance { get; }
+
+        public TrackPoint PointOnSegment
+        {
+            get => _pointOnSegment;
+            set
+            {
+                if (Equals(value, _pointOnSegment)) return;
+                _pointOnSegment = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(DistanceOnSegment));
+            }
+        }
+
+        public double DistanceOnSegment
+        {
+            get
+            {
+                if (PointOnSegment == null)
+                {
+                    return 0;
+                }
+
+                return Direction switch
+                {
+                    SegmentDirection.AtoB => PointOnSegment.DistanceOnSegment / 1000,
+                    SegmentDirection.BtoA => Distance - (PointOnSegment.DistanceOnSegment / 1000),
+                    _ => 0
+                };
+            }
+        }
 
         public double Ascent
         {

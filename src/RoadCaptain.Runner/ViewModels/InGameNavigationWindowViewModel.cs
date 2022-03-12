@@ -66,6 +66,7 @@ namespace RoadCaptain.Runner.ViewModels
                     }
 
                     _previousPosition = positionedState.CurrentPosition;
+                    Model.CurrentSegment.PointOnSegment = positionedState.CurrentPosition;
                 }
 
                 if (gameState is OnRouteState routeState)
