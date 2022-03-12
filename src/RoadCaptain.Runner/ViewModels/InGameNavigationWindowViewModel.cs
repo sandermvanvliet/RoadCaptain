@@ -13,6 +13,7 @@ namespace RoadCaptain.Runner.ViewModels
         private GameState _previousState;
         private int _previousRouteSequenceIndex;
         private readonly List<Segment> _segments;
+        private TrackPoint _previousPosition;
         public event PropertyChangedEventHandler PropertyChanged;
 
         public InGameNavigationWindowViewModel(InGameWindowModel inGameWindowModel, List<Segment> segments)
@@ -44,6 +45,18 @@ namespace RoadCaptain.Runner.ViewModels
         {
             try
             {
+                if (gameState is PositionedState positionedState)
+                {
+                    if (_previousPosition != null)
+                    {
+                        var distanceFromLast = _previousPosition.DistanceTo(positionedState.CurrentPosition);
+
+                        Model.ElapsedDistance += distanceFromLast / 1000;
+                    }
+
+                    _previousPosition = positionedState.CurrentPosition;
+                }
+
                 if (gameState is OnRouteState routeState)
                 {
                     if (_previousState is not OnRouteState && 
