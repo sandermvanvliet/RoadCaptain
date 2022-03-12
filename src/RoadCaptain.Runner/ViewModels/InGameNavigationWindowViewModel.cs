@@ -18,6 +18,17 @@ namespace RoadCaptain.Runner.ViewModels
         public InGameNavigationWindowViewModel(InGameWindowModel inGameWindowModel, List<Segment> segments)
         {
             Model = inGameWindowModel;
+            Model.PropertyChanged += (_, args) =>
+            {
+                switch (args.PropertyName)
+                {
+                    case nameof(Model.CurrentSegment):
+                    case nameof(Model.NextSegment):
+                        OnPropertyChanged(nameof(Model));
+                        break;
+                }
+            };
+
             _segments = segments;
         }
         
