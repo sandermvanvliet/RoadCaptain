@@ -20,7 +20,7 @@ namespace RoadCaptain.Runner.Models
             _descent = Math.Round(segment.Descent, 1);
             Distance = Math.Round(segment.Distance / 1000, 1);
             SequenceNumber = sequenceNumber + 1; // Indexes are zero based...
-            Direction = SegmentDirection.Unknown;
+            Direction = segmentSequence.Direction;
         }
 
         private static string ImageFromTurn(TurnDirection turnDirection)
