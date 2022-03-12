@@ -89,16 +89,6 @@ namespace RoadCaptain.Runner.Models
             }
         }
 
-        public void SetTurn(TurnDirection direction, string ontoSegmentId, SegmentDirection segmentDirection)
-        {
-            Model.TurnToNextSegment = direction;
-            Model.NextSegmentId = ontoSegmentId;
-            Model.Direction = segmentDirection;
-
-            TurnImage = ImageFromTurn(direction);
-            Direction = segmentDirection;
-        }
-
         public event PropertyChangedEventHandler PropertyChanged;
 
         [NotifyPropertyChangedInvocator]
