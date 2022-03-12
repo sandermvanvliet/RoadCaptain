@@ -19,7 +19,7 @@ namespace RoadCaptain.Runner.Models
             _ascent = Math.Round(segment.Ascent, 1);
             _descent = Math.Round(segment.Descent, 1);
             Distance = Math.Round(segment.Distance / 1000, 1);
-            SequenceNumber = sequenceNumber;
+            SequenceNumber = sequenceNumber + 1; // Indexes are zero based...
             Direction = SegmentDirection.Unknown;
         }
 
