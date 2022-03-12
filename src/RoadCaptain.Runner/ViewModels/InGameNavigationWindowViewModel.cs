@@ -48,7 +48,7 @@ namespace RoadCaptain.Runner.ViewModels
                         RouteProgression(routeState.Route.SegmentSequenceIndex);
                     }
 
-                    if (_previousState is OnSegmentState)
+                    if (_previousState is OnSegmentState and not OnRouteState)
                     {
                         // Back on route again
                         RouteProgression(routeState.Route.SegmentSequenceIndex);
