@@ -114,7 +114,8 @@
                              Margin="0,10,10,0" 
                              HorizontalAlignment="Stretch" 
                              Width="Auto" Height="18" 
-                             Background="#cccccc" Foreground="#FF6141" 
+                             Background="#C0C0C0" Foreground="#FF6141" 
+                             d:Value="53"
                              Value="{Binding Path=Model.CurrentSegment.SequenceNumber,FallbackValue=0, TargetNullValue=0,Mode=OneWay}" 
                              Minimum="0" 
                              Maximum="{Binding Path=Model.Route.RouteSegmentSequence.Count,FallbackValue=0, TargetNullValue=0,Mode=OneWay}" />
@@ -167,7 +168,7 @@
                          Margin="4,0,10,0" 
                          HorizontalAlignment="Stretch" 
                          Width="Auto" Height="18" 
-                         Background="#cccccc" Foreground="#FF6141" d:Value="71" 
+                         Background="#C0C0C0" Foreground="#1391CC" d:Value="71" 
                          Value="{Binding Path=DistanceOnSegment,FallbackValue=0, TargetNullValue=0,Mode=OneWay}" 
                          Minimum="0" 
                          Maximum="{Binding Path=Distance,FallbackValue=0, TargetNullValue=0,Mode=OneWay}"  />
