@@ -257,7 +257,6 @@ namespace RoadCaptain.Adapters
                     Tag7 = 0
                 },
                 Sequence = (uint)sequenceNumber // This value is provided via the SomethingEmpty synchronisation command
-                // TODO: figure out if sequence is ulong or uint
             };
 
             SendMessageBytes(message.ToByteArray());
