@@ -92,7 +92,7 @@
 
         <Border 
                 Grid.Row="0"
-                CornerRadius="10,10,0,0" Background="#1192CC" BorderBrush="#cccccc"
+                CornerRadius="20,20,0,0" Background="#1192CC" BorderBrush="#cccccc"
                             HorizontalAlignment="Stretch" Padding="8,4,0,0">
             <Grid>
                 <Grid.ColumnDefinitions>
@@ -241,7 +241,7 @@
             </StackPanel>
         </Grid>
 
-        <Border Grid.Row="3" CornerRadius="0,0,10,10" Background="#666666">
+        <Border Grid.Row="3" CornerRadius="0,0,20,20" Background="#666666">
             <StackPanel Orientation="Horizontal" VerticalAlignment="Stretch">
                 <StackPanel.Resources>
                     <Style TargetType="{x:Type TextBlock}">
@@ -251,7 +251,7 @@
                         <Setter Property="VerticalAlignment" Value="Center" />
                     </Style>
                 </StackPanel.Resources>
-                <TextBlock Text="Segment" />
+                <TextBlock Text="Segment" Margin="15,0,0,0" />
                 <TextBlock Text="{Binding Path=Model.CurrentSegment.SequenceNumber,FallbackValue=0, TargetNullValue=0}" d:Text="2" />
                 <TextBlock Text="of"  />
                 <TextBlock Text="{Binding Path=Model.Route.RouteSegmentSequence.Count,FallbackValue=0, TargetNullValue=0}" d:Text="12" />
