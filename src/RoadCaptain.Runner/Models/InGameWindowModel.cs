@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -16,6 +17,9 @@ namespace RoadCaptain.Runner.Models
         private SegmentSequenceModel _nextSegment;
         private readonly List<Segment> _segments;
         private PlannedRoute _route;
+        private double _totalAscent;
+        private double _totalDescent;
+        private double _totalDistance;
 
         public InGameWindowModel(List<Segment> segments)
         {
@@ -44,6 +48,7 @@ namespace RoadCaptain.Runner.Models
             {
                 if (Equals(value, _route)) return;
                 _route = value;
+                
                 OnPropertyChanged();
             }
         }
@@ -77,6 +82,39 @@ namespace RoadCaptain.Runner.Models
             {
                 if (value.Equals(_elapsedDescent)) return;
                 _elapsedDescent = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public double TotalDistance
+        {
+            get => _totalDistance;
+            set
+            {
+                if (value.Equals(_totalDistance)) return;
+                _totalDistance = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public double TotalAscent
+        {
+            get => _totalAscent;
+            set
+            {
+                if (value.Equals(_totalAscent)) return;
+                _totalAscent = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public double TotalDescent
+        {
+            get => _totalDescent;
+            set
+            {
+                if (value.Equals(_totalDescent)) return;
+                _totalDescent = value;
                 OnPropertyChanged();
             }
         }
@@ -137,9 +175,40 @@ namespace RoadCaptain.Runner.Models
                 NextSegment = null;
             }
 
+            CalculateTotalAscentAndDescent();
+
             ElapsedAscent = 0;
             ElapsedDescent = 0;
             ElapsedDistance = 0;
+        }
+
+        private void CalculateTotalAscentAndDescent()
+        {
+            double totalAscent = 0;
+            double totalDescent = 0;
+            double totalDistance = 0;
+
+            foreach (var sequence in _route.RouteSegmentSequence)
+            {
+                var segment = GetSegmentById(sequence.SegmentId);
+
+                if (sequence.Direction == SegmentDirection.AtoB)
+                {
+                    totalAscent += segment.Ascent;
+                    totalDescent += segment.Descent;
+                }
+                else
+                {
+                    totalAscent += segment.Descent;
+                    totalDescent += segment.Ascent;
+                }
+
+                totalDistance += segment.Distance;
+            }
+
+            TotalDistance = Math.Round(totalDistance / 1000, 1);
+            TotalAscent = totalAscent;
+            TotalDescent = totalDescent;
         }
 
         private Segment GetSegmentById(string segmentId)

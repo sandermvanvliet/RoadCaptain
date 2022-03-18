@@ -7,7 +7,7 @@
         xmlns:viewmodels="clr-namespace:RoadCaptain.Runner.ViewModels"
         mc:Ignorable="d"
         Title="{Binding Path=Model.WindowTitle}" 
-        Height="234" Width="300"
+        Height="234" Width="400"
         d:DataContext="{d:DesignInstance viewmodels:InGameNavigationWindowViewModel}"
         MouseMove="Window_OnMouseMove"
         WindowStyle="None"
@@ -94,32 +94,55 @@
                 Grid.Row="0"
                 CornerRadius="10,10,0,0" Background="#1192CC" BorderBrush="#cccccc"
                             HorizontalAlignment="Stretch" Padding="8,4,0,0">
-            <StackPanel Orientation="Vertical" VerticalAlignment="Top">
-                <StackPanel Orientation="Horizontal" Height="30">
-                    <TextBlock Text="{Binding Path=Model.ElapsedDistance,StringFormat=0.0}" d:Text="12.34" FontSize="26" Foreground="White" FontWeight="ExtraBold" VerticalAlignment="Bottom"/>
-                    <TextBlock Text="km" FontSize="16" Foreground="White" FontWeight="ExtraBold" VerticalAlignment="Bottom" Padding="2,0,0,2"/>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition Width="130" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="60" />
+                    <RowDefinition Height="20" />
+                </Grid.RowDefinitions>
+
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="0,0,0,0" Grid.Column="0">
+                    <TextBlock Text="{Binding Path=Model.ElapsedDistance,StringFormat=0.0}" d:Text="12.34" FontSize="54" Foreground="White" FontWeight="ExtraBold" VerticalAlignment="Bottom"/>
+                    <TextBlock Text="/" FontSize="26" Foreground="#333333" FontWeight="ExtraBold" VerticalAlignment="Bottom" Padding="2,0,0,9" />
+                    <TextBlock Text="{Binding Path=Model.TotalDistance,StringFormat=0.0}" d:Text="48.14" FontSize="26" Foreground="#333333" FontWeight="ExtraBold" VerticalAlignment="Bottom" Padding="0,0,0,6"/>
+                    <TextBlock Text="km" FontSize="16" Foreground="#333333" FontWeight="ExtraBold" VerticalAlignment="Bottom" Padding="2,0,0,8"/>
                 </StackPanel>
 
-                <StackPanel Orientation="Horizontal" Height="18">
-                    <Image Source="Assets/arrow-up-right.png" Height="12" VerticalAlignment="Center" />
-                    <TextBlock Text="{Binding Path=Model.ElapsedAscent,StringFormat=0.0}" d:Text="125" FontSize="16" FontWeight="ExtraBold" VerticalAlignment="Bottom" />
-                    <TextBlock Text="m" FontSize="10" FontWeight="ExtraBold" VerticalAlignment="Bottom" Padding="0,0,0,1.5"/>
+                <StackPanel Grid.Column="1" Grid.Row="0" Orientation="Vertical" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,0,0,0">
+                    <StackPanel Orientation="Horizontal" Height="24">
+                        <Image Source="Assets/arrow-up-right.png" Height="24" VerticalAlignment="Top" Margin="0,-2,0,0" />
+                        <TextBlock Text="{Binding Path=Model.ElapsedAscent,StringFormat=0.0}" d:Text="125" FontSize="22" FontWeight="ExtraBold" VerticalAlignment="Bottom" />
+                        <TextBlock Text="/" FontSize="14" Foreground="#333333" FontWeight="ExtraBold" VerticalAlignment="Bottom" Padding="0,0,0,3" />
+                        <TextBlock Text="{Binding Path=Model.TotalAscent,StringFormat=0.0}" d:Text="475" FontSize="14" FontWeight="ExtraBold" VerticalAlignment="Bottom" Padding="0,0,0,1.5" Foreground="#333333" />
+                        <TextBlock Text="m" FontSize="14" FontWeight="ExtraBold" VerticalAlignment="Bottom" Padding="0,0,0,1.5" Foreground="#333333"/>
+                    </StackPanel>
 
-                    <Image Source="Assets/arrow-down-right.png" Height="12" VerticalAlignment="Center" Margin="4,0,0,0" />
-                    <TextBlock Text="{Binding Path=Model.ElapsedDescent,StringFormat=0.0}" d:Text="54" FontSize="16" FontWeight="ExtraBold" VerticalAlignment="Bottom" />
-                    <TextBlock Text="m" FontSize="10" FontWeight="ExtraBold" VerticalAlignment="Bottom" Padding="0,0,0,1.5"/>
+                    <StackPanel Orientation="Horizontal" Height="24">
+                        <Image Source="Assets/arrow-down-right.png" Height="24" VerticalAlignment="Top" Margin="0,-2,0,0" />
+                        <TextBlock Text="{Binding Path=Model.ElapsedDescent,StringFormat=0.0}" d:Text="54" FontSize="22" FontWeight="ExtraBold" VerticalAlignment="Bottom" />
+                        <TextBlock Text="/" FontSize="14" Foreground="#333333" FontWeight="ExtraBold" VerticalAlignment="Bottom" Padding="0,0,0,4" />
+                        <TextBlock Text="{Binding Path=Model.TotalDescent,StringFormat=0.0}" d:Text="475" FontSize="14" FontWeight="ExtraBold" VerticalAlignment="Bottom" Padding="0,0,0,2.5" Foreground="#333333" />
+                        <TextBlock Text="m" FontSize="14" FontWeight="ExtraBold" VerticalAlignment="Bottom" Padding="0,0,0,2.5" Foreground="#333333"/>
+                    </StackPanel>
                 </StackPanel>
 
                 <ProgressBar Style="{DynamicResource RouteProgressBarStyle}" 
-                             Margin="0,10,10,0" 
+                             Margin="0,0,10,0" 
                              HorizontalAlignment="Stretch" 
                              Width="Auto" Height="18" 
                              Background="#C0C0C0" Foreground="#FF6141" 
                              d:Value="53"
+                             d:Minimum="0"
+                             d:Maximum="100"
                              Value="{Binding Path=Model.CurrentSegment.SequenceNumber,FallbackValue=0, TargetNullValue=0,Mode=OneWay}" 
                              Minimum="0" 
-                             Maximum="{Binding Path=Model.Route.RouteSegmentSequence.Count,FallbackValue=0, TargetNullValue=0,Mode=OneWay}" />
-            </StackPanel>
+                             Maximum="{Binding Path=Model.Route.RouteSegmentSequence.Count,FallbackValue=0, TargetNullValue=0,Mode=OneWay}" 
+                             Grid.Row="2"
+                             Grid.ColumnSpan="2"/>
+            </Grid>
         </Border>
 
         <Grid
@@ -168,10 +191,13 @@
                          Margin="4,0,10,0" 
                          HorizontalAlignment="Stretch" 
                          Width="Auto" Height="18" 
-                         Background="#C0C0C0" Foreground="#1391CC" d:Value="71" 
+                         Background="#C0C0C0" Foreground="#1391CC"
                          Value="{Binding Path=DistanceOnSegment,FallbackValue=0, TargetNullValue=0,Mode=OneWay}" 
                          Minimum="0" 
-                         Maximum="{Binding Path=Distance,FallbackValue=0, TargetNullValue=0,Mode=OneWay}"  />
+                         Maximum="{Binding Path=Distance,FallbackValue=0, TargetNullValue=0,Mode=OneWay}"
+                         d:Value="71" 
+                         d:Minimum="0"
+                         d:Maximum="100"  />
         </Grid>
 
         <Grid
