@@ -11,14 +11,15 @@ namespace RoadCaptain.GameStates
         [JsonProperty]
         public SegmentDirection Direction { get; private set; } = SegmentDirection.Unknown;
 
-        public OnSegmentState(ulong activityId, TrackPoint currentPosition, Segment segment) 
-            : base(activityId, currentPosition)
+        public OnSegmentState(uint riderId, ulong activityId, TrackPoint currentPosition, Segment segment) 
+            : base(riderId, activityId, currentPosition)
         {
             CurrentSegment = segment;
         }
 
-        protected OnSegmentState(ulong activityId, TrackPoint currentPosition, Segment segment, SegmentDirection direction) 
-            : this(activityId, currentPosition, segment)
+        protected OnSegmentState(uint riderId, ulong activityId, TrackPoint currentPosition, Segment segment,
+            SegmentDirection direction) 
+            : this(riderId, activityId, currentPosition, segment)
         {
             Direction = direction;
         }

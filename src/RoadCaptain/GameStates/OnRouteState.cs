@@ -6,20 +6,24 @@ namespace RoadCaptain.GameStates
 {
     public class OnRouteState : OnSegmentState
     {
-        public OnRouteState(ulong activityId, TrackPoint currentPosition, Segment segment, PlannedRoute plannedRoute)
-            : base(activityId, currentPosition, segment)
+        public OnRouteState(uint riderId, ulong activityId, TrackPoint currentPosition, Segment segment,
+            PlannedRoute plannedRoute)
+            : base(riderId, activityId, currentPosition, segment)
         {
             Route = plannedRoute;
         }
 
-        protected OnRouteState(ulong activityId, TrackPoint currentPosition, Segment segment, PlannedRoute plannedRoute, SegmentDirection direction)
-            : base(activityId, currentPosition, segment, direction)
+        protected OnRouteState(uint riderId, ulong activityId, TrackPoint currentPosition, Segment segment,
+            PlannedRoute plannedRoute, SegmentDirection direction)
+            : base(riderId, activityId, currentPosition, segment, direction)
         {
             Route = plannedRoute;
         }
 
-        protected OnRouteState(ulong activityId, TrackPoint currentPosition, Segment segment, PlannedRoute plannedRoute, SegmentDirection direction, List<TurnDirection> turnDirections) 
-            : this(activityId, currentPosition, segment, plannedRoute, direction)
+        protected OnRouteState(uint riderId, ulong activityId, TrackPoint currentPosition, Segment segment,
+            PlannedRoute plannedRoute,
+            SegmentDirection direction, List<TurnDirection> turnDirections) 
+            : this(riderId, activityId, currentPosition, segment, plannedRoute, direction)
         {
             TurnCommands = turnDirections;
         }
@@ -46,12 +50,12 @@ namespace RoadCaptain.GameStates
                         // The segment is not the expected next one so we lost lock somewhere...
                     }
 
-                    return new OnRouteState(ActivityId, segmentState.CurrentPosition, segmentState.CurrentSegment, Route);
+                    return new OnRouteState(RiderId, ActivityId, segmentState.CurrentPosition, segmentState.CurrentSegment, Route);
                 }
 
                 if (segmentState.CurrentSegment.Id == Route.CurrentSegmentId)
                 {
-                    return new OnRouteState(ActivityId, segmentState.CurrentPosition, segmentState.CurrentSegment, Route, segmentState.Direction);
+                    return new OnRouteState(RiderId, ActivityId, segmentState.CurrentPosition, segmentState.CurrentSegment, Route, segmentState.Direction);
                 }
 
                 var distance = position.DistanceTo(CurrentPosition);
@@ -59,10 +63,11 @@ namespace RoadCaptain.GameStates
                 if (distance < 100)
                 {
                     return new OnRouteState(
-                        ActivityId,
+                        RiderId, 
+                        ActivityId, 
                         CurrentPosition, // Use the last known position on the segment
-                        CurrentSegment, // Use the current segment of the route
-                        Route,
+                        CurrentSegment,  // Use the current segment of the route
+                        Route, 
                         Direction);
                 }
 
@@ -98,24 +103,12 @@ namespace RoadCaptain.GameStates
                     x.Count != 1) // If there is only 1 command then it means there are two segments joining without any intersection
                 {
                     // We've got all the turn commands for this segment
-                    return new UpcomingTurnState(
-                        ActivityId,
-                        CurrentPosition,
-                        CurrentSegment,
-                        Route,
-                        Direction,
-                        x);
+                    return new UpcomingTurnState(RiderId, ActivityId, CurrentPosition, CurrentSegment, Route, Direction, x);
                 }
 
                 // Add the new list of turn directions to
                 // a new state.
-                return new OnRouteState(
-                    ActivityId,
-                    CurrentPosition,
-                    CurrentSegment,
-                    Route,
-                    Direction,
-                    x);
+                return new OnRouteState(RiderId, ActivityId, CurrentPosition, CurrentSegment, Route, Direction, x);
             }
 
             return this;

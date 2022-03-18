@@ -8,7 +8,7 @@ namespace RoadCaptain.Adapters
         {
         }
 
-        public void SendTurnCommand(TurnDirection direction, ulong sequenceNumber)
+        public void SendTurnCommand(TurnDirection direction, ulong sequenceNumber, uint riderId)
         {
         }
     }

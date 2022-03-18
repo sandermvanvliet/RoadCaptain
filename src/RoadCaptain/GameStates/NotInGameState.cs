@@ -9,9 +9,11 @@ namespace RoadCaptain.GameStates
             return this;
         }
 
-        public override GameState EnterGame(ulong activityId)
+        public sealed override uint RiderId => 0;
+
+        public sealed override GameState EnterGame(uint riderId, ulong activityId)
         {
-            return new InGameState(activityId);
+            return new InGameState(riderId, activityId);
         }
 
         public override GameState LeaveGame()

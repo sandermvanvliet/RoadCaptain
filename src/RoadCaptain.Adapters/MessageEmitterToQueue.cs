@@ -95,7 +95,7 @@ namespace RoadCaptain.Adapters
                     case 13:
                         var activityDetails = ZwiftAppToCompanionActivityDetailsMessage.Parser.ParseFrom(byteArray);
 
-                        DecodeIncomingActivityDetailsMessage(activityDetails);
+                        DecodeIncomingActivityDetailsMessage(activityDetails, packetData.RiderId);
 
                         break;
                     default:
@@ -106,12 +106,14 @@ namespace RoadCaptain.Adapters
             }
         }
 
-        private void DecodeIncomingActivityDetailsMessage(ZwiftAppToCompanionActivityDetailsMessage activityDetails)
+        private void DecodeIncomingActivityDetailsMessage(
+            ZwiftAppToCompanionActivityDetailsMessage activityDetails,
+            uint riderId)
         {
             switch (activityDetails.Details.Type)
             {
                 case 3:
-                    OnActivityDetails(activityDetails.Details.Data.ActivityId);
+                    OnActivityDetails(riderId, activityDetails.Details.Data.ActivityId);
                     break;
                 case 5:
                     {
@@ -163,10 +165,11 @@ namespace RoadCaptain.Adapters
             });
         }
 
-        private void OnActivityDetails(ulong activityId)
+        private void OnActivityDetails(uint riderId, ulong activityId)
         {
             Enqueue(new ZwiftActivityDetailsMessage
             {
+                RiderId = riderId,
                 ActivityId = activityId
             });
         }

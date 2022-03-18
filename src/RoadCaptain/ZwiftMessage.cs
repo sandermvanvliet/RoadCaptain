@@ -30,5 +30,6 @@
     public sealed class ZwiftActivityDetailsMessage : ZwiftMessage
     {
         public ulong ActivityId { get; set; }
+        public uint RiderId { get; set; }
     }
 }

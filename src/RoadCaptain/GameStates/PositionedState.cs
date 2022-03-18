@@ -7,8 +7,8 @@ namespace RoadCaptain.GameStates
         [JsonProperty]
         public TrackPoint CurrentPosition { get; private set; }
 
-        public PositionedState(ulong activityId, TrackPoint currentPosition)
-            : base(activityId)
+        public PositionedState(uint riderId, ulong activityId, TrackPoint currentPosition)
+            : base(riderId, activityId)
         {
             CurrentPosition = currentPosition;
         }

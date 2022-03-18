@@ -9,8 +9,12 @@ namespace RoadCaptain.GameStates
         [JsonProperty]
         public ulong ActivityId { get; private set; }
 
-        public InGameState(ulong activityId)
+        [JsonProperty]
+        public sealed override uint RiderId { get; }
+
+        public InGameState(uint riderId, ulong activityId)
         {
+            RiderId = riderId;
             ActivityId = activityId;
         }
 
@@ -26,39 +30,39 @@ namespace RoadCaptain.GameStates
 
             if (segment == null)
             {
-                return new PositionedState(ActivityId, position);
+                return new PositionedState(RiderId, ActivityId, position);
             }
 
             if (!plannedRoute.HasStarted && plannedRoute.StartingSegmentId == segment.Id)
             {
                 plannedRoute.EnteredSegment(segment.Id);
-                return new OnRouteState(ActivityId, closestOnSegment, segment, plannedRoute);
+                return new OnRouteState(RiderId, ActivityId, closestOnSegment, segment, plannedRoute);
             }
 
             if (plannedRoute.HasStarted && plannedRoute.CurrentSegmentId == segment.Id)
             {
-                return new OnRouteState(ActivityId, closestOnSegment, segment, plannedRoute);
+                return new OnRouteState(RiderId, ActivityId, closestOnSegment, segment, plannedRoute);
             }
             
             if (plannedRoute.HasStarted && plannedRoute.NextSegmentId == segment.Id)
             {
-                return new OnRouteState(ActivityId, closestOnSegment, segment, plannedRoute);
+                return new OnRouteState(RiderId, ActivityId, closestOnSegment, segment, plannedRoute);
             }
 
-            return new OnSegmentState(ActivityId, closestOnSegment, segment);
+            return new OnSegmentState(RiderId, ActivityId, closestOnSegment, segment);
         }
 
-        public override GameState EnterGame(ulong activityId)
+        public sealed override GameState EnterGame(uint riderId, ulong activityId)
         {
-            if (ActivityId == activityId)
+            if (RiderId == riderId && ActivityId == activityId)
             {
                 return this;
             }
 
-            return new InGameState(activityId);
+            return new InGameState(riderId, activityId);
         }
 
-        public override GameState LeaveGame()
+        public sealed override GameState LeaveGame()
         {
             return new NotInGameState();
         }

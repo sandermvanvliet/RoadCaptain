@@ -107,7 +107,7 @@ namespace RoadCaptain.UseCases
                 {
                     if (activityDetails.ActivityId != 0)
                     {
-                        State = State.EnterGame(activityDetails.ActivityId);
+                        State = State.EnterGame(activityDetails.RiderId, activityDetails.ActivityId);
                     }
                     else
                     {

@@ -46,7 +46,7 @@ namespace RoadCaptain.UseCases
                 if (CommandsMatchTurnToNextSegment(turnState.Directions, turnState.Route.TurnToNextSegment))
                 {
                     _monitoringEvents.Information("Executing turn {TurnDirection}", turnState.Route.TurnToNextSegment);
-                    _gameConnection.SendTurnCommand(turnState.Route.TurnToNextSegment, _lastSequenceNumber);
+                    _gameConnection.SendTurnCommand(turnState.Route.TurnToNextSegment, _lastSequenceNumber, gameState.RiderId);
                 }
                 else
                 {

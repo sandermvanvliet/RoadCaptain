@@ -183,6 +183,7 @@ namespace RoadCaptain.Tests.Unit
         private UpcomingTurnState UpcomingTurnStateWithTurns(params TurnDirection[] directions)
         {
             return new UpcomingTurnState(
+                5678,
                 1234, 
                 new TrackPoint(0, 0, 0), 
                 new Segment(new List<TrackPoint>()) { Id = _plannedRoute.CurrentSegmentId },

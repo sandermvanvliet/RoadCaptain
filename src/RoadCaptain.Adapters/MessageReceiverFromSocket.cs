@@ -242,11 +242,11 @@ namespace RoadCaptain.Adapters
             SendMessageBytes(message.ToByteArray());
         }
 
-        public void SendTurnCommand(TurnDirection direction, ulong sequenceNumber)
+        public void SendTurnCommand(TurnDirection direction, ulong sequenceNumber, uint riderId)
         {
             var message = new ZwiftCompanionToAppRiderMessage
             {
-                MyId = 3089151, /*riderId*/ // TODO: inject this value
+                MyId = riderId,
                 Details = new ZwiftCompanionToAppRiderMessage.Types.RiderMessage
                 {
                     CommandType = (uint)GetCommandTypeForTurnDirection(direction),
