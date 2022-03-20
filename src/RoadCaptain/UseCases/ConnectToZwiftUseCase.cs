@@ -6,6 +6,7 @@ using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
 using RoadCaptain.Commands;
+using RoadCaptain.GameStates;
 using RoadCaptain.Ports;
 
 namespace RoadCaptain.UseCases
@@ -15,19 +16,44 @@ namespace RoadCaptain.UseCases
         private readonly IRequestToken _requestToken;
         private readonly IZwift _zwift;
         private readonly MonitoringEvents _monitoringEvents;
+        private readonly IGameStateReceiver _gameStateReceiver;
+        private bool _userIsInGame;
 
-        public ConnectToZwiftUseCase(
-            IRequestToken requestToken,
+        public ConnectToZwiftUseCase(IRequestToken requestToken,
             IZwift zwift,
-            MonitoringEvents monitoringEvents)
+            MonitoringEvents monitoringEvents, 
+            IGameStateReceiver gameStateReceiver)
         {
             _requestToken = requestToken;
             _zwift = zwift;
             _monitoringEvents = monitoringEvents;
+            _gameStateReceiver = gameStateReceiver;
+            _gameStateReceiver.Register(
+                null,
+                null,
+                ReceiveGameState);
+        }
+
+        private void ReceiveGameState(GameState gameState)
+        {
+            if (gameState is InGameState && !_userIsInGame)
+            {
+                _userIsInGame = true;
+            }
+            else if (gameState is NotInGameState && _userIsInGame)
+            {
+                _userIsInGame = false;
+            }
         }
 
         public async Task ExecuteAsync(ConnectCommand connectCommand, CancellationToken cancellationToken)
         {
+            // Listen for game state updates
+#pragma warning disable CS4014
+            // ReSharper disable once MethodSupportsCancellation
+            Task.Factory.StartNew(() => _gameStateReceiver.Start(cancellationToken));
+#pragma warning restore CS4014
+
             // TODO: Work out what the correct IP address should be
             var ipAddress = GetMostLikelyAddress().ToString();
 
@@ -43,6 +69,15 @@ namespace RoadCaptain.UseCases
 
             while (!cancellationToken.IsCancellationRequested)
             {
+                // _userIsInGame is set through a game state update
+                // which we receive directly on a connection with Zwift.
+                // That means that if it is set we can exit.
+                if (_userIsInGame)
+                {
+                    _monitoringEvents.UserIsRiding();
+                    break;
+                }
+
                 // Check whether user is currently in-game
                 // If not, sleep for a while and try again
                 var profile = await _zwift.GetProfileAsync(tokens.AccessToken);
@@ -55,7 +90,7 @@ namespace RoadCaptain.UseCases
 
                 remainingAttempts--;
 
-                if (remainingAttempts <= 0)
+                if (remainingAttempts <= 0 && !_userIsInGame)
                 {
                     _monitoringEvents.Warning("Zwift did not connect, attempting link again on {IPAddress}:21587", ipAddress);
 
