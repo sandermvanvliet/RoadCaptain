@@ -39,13 +39,12 @@ namespace RoadCaptain.UseCases
 
             await _zwift.InitiateRelayAsync(tokens.AccessToken, relayUri, ipAddress);
 
-            var attempts = 5;
+            var remainingAttempts = 5;
 
             while (!cancellationToken.IsCancellationRequested)
             {
                 // Check whether user is currently in-game
                 // If not, sleep for a while and try again
-
                 var profile = await _zwift.GetProfileAsync(tokens.AccessToken);
 
                 if (profile != null && profile.Riding)
@@ -54,15 +53,15 @@ namespace RoadCaptain.UseCases
                     break;
                 }
 
-                attempts--;
+                remainingAttempts--;
 
-                if (attempts <= 0)
+                if (remainingAttempts <= 0)
                 {
                     _monitoringEvents.Warning("Zwift did not connect, attempting link again on {IPAddress}:21587", ipAddress);
 
                     await _zwift.InitiateRelayAsync(tokens.AccessToken, relayUri, ipAddress);
-                    
-                    attempts = 0;
+
+                    remainingAttempts = 5;
                 }
 
                 Thread.Sleep(5 * 1000);
