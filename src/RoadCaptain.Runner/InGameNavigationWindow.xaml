@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:RoadCaptain.Runner"
         xmlns:viewmodels="clr-namespace:RoadCaptain.Runner.ViewModels"
+        xmlns:converters="clr-namespace:RoadCaptain.Runner.Converters"
         mc:Ignorable="d"
         Title="{Binding Path=Model.WindowTitle}" 
         Height="234" Width="400"
@@ -18,6 +19,7 @@
         LocationChanged="InGameNavigationWindow_OnLocationChanged"
         Activated="InGameNavigationWindow_OnActivated">
     <Window.Resources>
+        <converters:VisibilityConverter x:Key="VisibilityConverter" />
         <SolidColorBrush x:Key="ProgressBar.Progress" Color="#FF06B025"/>
         <SolidColorBrush x:Key="ProgressBar.Background" Color="#FFE6E6E6"/>
         <SolidColorBrush x:Key="ProgressBar.Border" Color="#FFBCBCBC"/>
@@ -89,11 +91,33 @@
             <RowDefinition Height="52" />
             <RowDefinition Height="22" />
         </Grid.RowDefinitions>
+        
+        <Border Grid.Row="0" Grid.RowSpan="4"
+                CornerRadius="20"
+                Background="#1192CC" BorderBrush="#cccccc"
+                Panel.ZIndex="2"
+                Visibility="{Binding Path=Model.UserIsInGame,Converter={StaticResource VisibilityConverter},ConverterParameter=invert}"
+                Padding="20">
+            <StackPanel Orientation="Vertical">
+            <TextBlock Text="Waiting for Zwift connection..." 
+                       Foreground="White" 
+                       FontWeight="ExtraBold"
+                       FontSize="32"
+                       TextWrapping="Wrap"/>
+            <TextBlock Text="Start Zwift and start cycling in Watopia on route:"
+                       Foreground="White" FontWeight="Bold" FontSize="22" TextWrapping="Wrap"
+                       Margin="0,12,0,0"/>
+                <TextBlock Text="{Binding Path=Model.Route.ZwiftRouteName}"
+                           Foreground="White" FontWeight="Bold" FontSize="22" TextWrapping="Wrap" d:Text="Muir and the mountain"
+                           Margin="0,8,0,0"/>
+            </StackPanel>
+        </Border>
 
         <Border 
                 Grid.Row="0"
                 CornerRadius="20,20,0,0" Background="#1192CC" BorderBrush="#cccccc"
-                            HorizontalAlignment="Stretch" Padding="8,4,0,0">
+                            HorizontalAlignment="Stretch" Padding="8,4,0,0"
+            Panel.ZIndex="1">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition />
