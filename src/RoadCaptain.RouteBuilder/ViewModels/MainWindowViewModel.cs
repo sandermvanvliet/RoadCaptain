@@ -26,6 +26,7 @@ namespace RoadCaptain.RouteBuilder.ViewModels
         private SKPoint? _riderPosition;
         private SimulationState _simulationState = SimulationState.NotStarted;
         private int _simulationIndex;
+        private Offsets _overallOffsets;
 
         public MainWindowViewModel(IRouteStore routeStore, ISegmentStore segmentStore)
         {
@@ -122,9 +123,26 @@ namespace RoadCaptain.RouteBuilder.ViewModels
                 return CommandResult.Aborted();
             }
 
-            var segmentId = pathsInBounds.First().Key;
+            // Do expensive point to segment matching now that we've narrowed down the set
+            var boundedSegments = pathsInBounds.Select(kv => _segments.Single(s => s.Id == kv.Key)).ToList();
 
-            var newSelectedSegment = _segments.Single(s => s.Id == segmentId);
+            var reverseScaled = _overallOffsets.ReverseScaleAndTranslate(scaledPoint.X, scaledPoint.Y);
+            var scaledPointToPosition = TrackPoint.FromGameLocation(reverseScaled.Latitude, reverseScaled.Longitude, reverseScaled.Altitude);
+            scaledPointToPosition = new TrackPoint(-scaledPointToPosition.Longitude, scaledPointToPosition.Latitude, scaledPointToPosition.Altitude);
+
+            Segment newSelectedSegment = null;
+
+            foreach (var segment in boundedSegments)
+            {
+                if (segment.Contains(scaledPointToPosition))
+                {
+                    newSelectedSegment = segment;
+                }
+            }
+
+            newSelectedSegment ??= boundedSegments.First();
+
+            var segmentId = newSelectedSegment.Id;
 
             // 1. Figure out if this is the first segment on the route, if so add it to the route and set the selection to the new segment
             if (!Route.Sequence.Any())
@@ -252,11 +270,11 @@ namespace RoadCaptain.RouteBuilder.ViewModels
                 })
                 .ToList();
 
-            var overallOffsets = Offsets.From(segmentsWithOffsets.Select(s => s.Offsets).ToList());
+            _overallOffsets = Offsets.From(segmentsWithOffsets.Select(s => s.Offsets).ToList());
 
             foreach (var segment in segmentsWithOffsets)
             {
-                var skiaPathFromSegment = SkiaPathFromSegment(overallOffsets, segment.GameCoordinates);
+                var skiaPathFromSegment = SkiaPathFromSegment(_overallOffsets, segment.GameCoordinates);
                 skiaPathFromSegment.GetTightBounds(out var bounds);
 
                 SegmentPaths.Add(segment.Segment.Id, skiaPathFromSegment);
@@ -350,7 +368,7 @@ namespace RoadCaptain.RouteBuilder.ViewModels
                 if (questionResult == MessageBoxResult.Yes)
                 {
                     var saveResult = SaveRoute();
-                    
+
                     // If saving was not successful then return the
                     // result of SaveRoute instead of proceeding.
                     if (saveResult.Result != Result.Success)
@@ -419,7 +437,7 @@ namespace RoadCaptain.RouteBuilder.ViewModels
                 SimulationState = SimulationState.Paused;
                 return CommandResult.Success();
             }
-            
+
             _simulationTask = Task.Factory.StartNew(() =>
             {
                 SimulationState = SimulationState.Running;

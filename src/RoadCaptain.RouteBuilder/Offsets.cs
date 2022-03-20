@@ -68,5 +68,13 @@ namespace RoadCaptain.RouteBuilder
 
             return new Offsets(minX, maxX, minY, maxY, offsets.First().ImageWidth);
         }
+
+        public TrackPoint ReverseScaleAndTranslate(double x, double y)
+        {
+            return new TrackPoint(
+                (x / ScaleFactor) - OffsetX,
+                (y / ScaleFactor) - OffsetY,
+                0);
+        }
     }
 }
