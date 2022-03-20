@@ -20,6 +20,7 @@ namespace RoadCaptain.Runner.Models
         private double _totalAscent;
         private double _totalDescent;
         private double _totalDistance;
+        private bool _userIsInGame;
 
         public InGameWindowModel(List<Segment> segments)
         {
@@ -37,6 +38,17 @@ namespace RoadCaptain.Runner.Models
                 }
 
                 _windowTitle = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public bool UserIsInGame
+        {
+            get => _userIsInGame;
+            set
+            {
+                if (value == _userIsInGame) return;
+                _userIsInGame = value;
                 OnPropertyChanged();
             }
         }

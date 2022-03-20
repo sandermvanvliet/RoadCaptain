@@ -43,6 +43,15 @@ namespace RoadCaptain.Runner.ViewModels
 
         public void UpdateGameState(GameState gameState)
         {
+            if (gameState is InGameState && _previousState is not InGameState)
+            {
+                Model.UserIsInGame = true;
+            }
+            else if (gameState is NotInGameState && _previousState is not NotInGameState)
+            {
+                Model.UserIsInGame = false;
+            }
+
             try
             {
                 if (gameState is PositionedState positionedState and OnSegmentState)
