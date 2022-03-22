@@ -13,7 +13,8 @@
         d:DataContext="{d:DesignInstance viewModels:MainWindowViewModel}"
         Background="Transparent"
         AllowsTransparency="True"
-        MouseMove="Window_MouseMove">
+        MouseMove="Window_MouseMove"
+        Icon="../../icon.png">
     <Window.Resources>
         <Style TargetType="{x:Type Button}">
             <Setter Property="Background" Value="#FF6141" />
@@ -51,7 +52,10 @@
                 <!-- bottom button row -->
             </Grid.RowDefinitions>
 
-            <TextBlock Grid.Row="0" Text="RoadCaptain" FontWeight="ExtraBold" FontSize="32" Padding="4,0,0,0"/>
+            <StackPanel Orientation="Horizontal" Grid.Row="0">
+                <Image Source="icon.png" Height="22" VerticalAlignment="Center" Margin="4,4,4,0" />
+                <TextBlock Text="RoadCaptain" FontWeight="ExtraBold" FontSize="32" VerticalAlignment="Center" />
+            </StackPanel>
             <Button Content="X" Background="Red" Foreground="White" Grid.Row="0" HorizontalAlignment="Right" Width="40" Height="20" Margin="0,-3,-3,0" VerticalAlignment="Top" 
                 Click="CloseButton_Click">
                 <Button.Resources>

@@ -22,6 +22,7 @@
     <Resource Include="Assets\gostraight.png" />
     <Resource Include="Assets\turnleft.png" />
     <Resource Include="Assets\turnright.png" />
+    <Resource Include="../../icon.png" />
   </ItemGroup>
 
   <ItemGroup>

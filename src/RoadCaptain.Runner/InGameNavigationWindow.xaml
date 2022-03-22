@@ -17,7 +17,8 @@
         AllowsTransparency="True"
         Initialized="InGameNavigationWindow_OnInitialized"
         LocationChanged="InGameNavigationWindow_OnLocationChanged"
-        Activated="InGameNavigationWindow_OnActivated">
+        Activated="InGameNavigationWindow_OnActivated"
+        Icon="../../icon.png">
     <Window.Resources>
         <converters:VisibilityConverter x:Key="VisibilityConverter" />
         <SolidColorBrush x:Key="ProgressBar.Progress" Color="#FF06B025"/>
