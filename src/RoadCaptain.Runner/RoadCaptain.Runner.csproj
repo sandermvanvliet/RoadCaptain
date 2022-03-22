@@ -39,10 +39,10 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>AppSettings.Designer.cs</LastGenOutput>
     </None>
-    <None Update="autofac.json">
+    <None Update="autofac.runner.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="autofac.development.json" Condition="Exists('autofac.development.json')">
+    <None Update="autofac.runner.development.json" Condition="Exists('autofac.runner.development.json') And '$(Configuration)'=='Debug'">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="appsettings.json">

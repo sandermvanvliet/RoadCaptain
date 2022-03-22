@@ -33,8 +33,8 @@ namespace RoadCaptain.Runner
 
             var configuration = new ConfigurationBuilder()
                 .AddJsonFile("appsettings.json", true)
-                .AddJsonFile("autofac.json")
-                .AddJsonFile("autofac.development.json", true)
+                .AddJsonFile("autofac.runner.json")
+                .AddJsonFile("autofac.runner.development.json", true)
                 .Build();
 
             var builder = new ContainerBuilder();

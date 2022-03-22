@@ -24,8 +24,8 @@ namespace RoadCaptain.RouteBuilder
 
             var configuration = new ConfigurationBuilder()
                 .AddJsonFile("appsettings.json", true)
-                .AddJsonFile("autofac.json")
-                .AddJsonFile("autofac.development.json", true)
+                .AddJsonFile("autofac.routebuilder.json")
+                .AddJsonFile("autofac.routebuilder.development.json", true)
                 .Build();
 
             var builder = new ContainerBuilder();

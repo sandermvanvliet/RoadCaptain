@@ -46,10 +46,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="autofac.json">
+    <None Update="autofac.routebuilder.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="autofac.development.json" Condition="Exists('autofac.development.json')">
+    <None Update="autofac.routebuilder.development.json" Condition="Exists('autofac.routebuilder.development.json') And '$(Configuration)'=='Debug'">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="appsettings.json">
