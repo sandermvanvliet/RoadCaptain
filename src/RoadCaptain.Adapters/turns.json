@@ -450,7 +450,8 @@
   {
     "segmentId": "watopia-big-foot-hills-001-after-before",
     "turnsA": {
-      "goStraight": "watopia-big-foot-hills-001-before-after"
+      "goStraight": "watopia-big-foot-hills-001-before-after",
+      "right": "watopia-big-foot-hills-003-before"
     },
     "turnsB": {
       "goStraight": "watopia-big-foot-hills-007-before"
