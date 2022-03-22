@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="493"
+   height="312"
+   viewBox="0 0 130.43958 82.550004"
+   version="1.1"
+   id="svg837"
+   inkscape:version="1.0.2-2 (e86c870879, 2021-01-15)"
+   sodipodi:docname="dialog.svg"
+   inkscape:export-filename="C:\git\RoadCaptain\packaging\RoadCaptain.Installer\dialog.png"
+   inkscape:export-xdpi="96"
+   inkscape:export-ydpi="96">
+  <defs
+     id="defs831" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="5.6"
+     inkscape:cx="141.41621"
+     inkscape:cy="63.811185"
+     inkscape:document-units="mm"
+     inkscape:current-layer="layer1"
+     inkscape:document-rotation="0"
+     showgrid="false"
+     units="px"
+     inkscape:window-width="3840"
+     inkscape:window-height="2066"
+     inkscape:window-x="-11"
+     inkscape:window-y="-11"
+     inkscape:window-maximized="1" />
+  <metadata
+     id="metadata834">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <path
+       id="rect45-80-4"
+       style="fill:#1192cc;fill-opacity:1;stroke-width:0.0809263"
+       d="m 8.8176843,1.4533378 a 2.2459656,2.2459656 0 0 0 -0.054351,6.699e-4 H 7.1431632 6.69609 l 2.022e-4,-2.816e-4 H 4.7328674 L 1.2352747,7.176753 A 1.245001,1.245001 0 0 0 1.223962,7.1910361 L 1.0820728,7.4244324 A 1.245001,1.245001 0 0 0 0.96553929,7.9503647 1.245001,1.245001 0 0 0 2.2105504,9.1953846 H 4.2295151 L 6.0517334,5.9319054 H 7.0295179 L 7.9728272,9.1953846 H 10.388735 L 9.4250631,5.8615289 A 2.2459656,2.2459656 0 0 0 11.063459,3.6993015 2.2459656,2.2459656 0 0 0 8.8174884,1.453331 Z M 8.1877308,2.6457423 a 1.0506882,1.0506882 0 0 1 6.319e-4,0 1.0506882,1.0506882 0 0 1 0.032232,4.947e-4 h 0.05037 v 0.0027 a 1.0506882,1.0506882 0 0 1 0.9680077,1.0474669 1.0506882,1.0506882 0 0 1 -0.9680077,1.047432 v 0.00372 H 6.7091217 L 7.882414,2.6462328 h 0.2735653 a 1.0506882,1.0506882 0 0 1 0.030968,-4.935e-4 z"
+       inkscape:export-xdpi="15.36"
+       inkscape:export-ydpi="15.36" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:9.05356px;line-height:1.25;font-family:sans-serif;-inkscape-font-specification:'sans-serif Bold';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.22634"
+       x="11.167945"
+       y="-2.9244466"
+       id="text1991"
+       transform="rotate(90)"><tspan
+         sodipodi:role="line"
+         id="tspan1989"
+         x="11.167945"
+         y="-2.9244466"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:sans-serif;-inkscape-font-specification:'sans-serif Bold';stroke-width:0.22634">RoadCaptain</tspan></text>
+  </g>
+</svg>
