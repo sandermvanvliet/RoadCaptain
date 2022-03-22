@@ -6,6 +6,8 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{0408CC06-0F00-4C4D-A341-ACB26E2809A2}"
 	ProjectSection(SolutionItems) = preProject
 		Architecture.md = Architecture.md
+		icon.png = icon.png
+		logo.svg = logo.svg
 		README.md = README.md
 	EndProjectSection
 EndProject
@@ -25,7 +27,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RoadCaptain.SegmentBuilder"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RoadCaptain.RouteBuilder", "src\RoadCaptain.RouteBuilder\RoadCaptain.RouteBuilder.csproj", "{A53B6A87-4058-4392-8F37-02C7B896ACE8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RoadCaptain.Runner", "src\RoadCaptain.Runner\RoadCaptain.Runner.csproj", "{946F1BD8-59D6-4F2B-B056-DC9270F29870}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RoadCaptain.Runner", "src\RoadCaptain.Runner\RoadCaptain.Runner.csproj", "{946F1BD8-59D6-4F2B-B056-DC9270F29870}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
