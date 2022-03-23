@@ -75,9 +75,6 @@
 
   <Fragment>
     <ComponentGroup Id="CommonComponents" Directory="INSTALLFOLDER">
-      <Component Id="appsettings.json" Guid="d9efaa86-67ff-4346-ba6b-d98dc53d9b28">
-        <File Id="appsettings.json" Name="appsettings.json" Source="$(var.RoadCaptain.Runner_TargetDir)appsettings.json" />
-      </Component>
       <Component Id="Autofac.Configuration.dll" Guid="17287a9d-1d1b-464a-8f72-b2fd46ff8304">
         <File Id="Autofac.Configuration.dll" Name="Autofac.Configuration.dll" Source="$(var.RoadCaptain.Runner_TargetDir)Autofac.Configuration.dll" />
       </Component>
@@ -254,14 +251,14 @@
     </ComponentGroup>
   </Fragment>
   <Fragment>
-    <ComponentGroup Id="RunnerNativeComponents" Directory="INSTALLFOLDER">
+    <ComponentGroup Id="RunnerNativeComponents" Directory="native">
       <Component Id="Runner_WebView2Loader.dll" Guid="c2d167fe-33c6-40f8-a6af-1d2ff511303e">
         <File Id="Runner_WebView2Loader.dll" Name="WebView2Loader.dll" Source="$(var.RoadCaptain.Runner_TargetDir)runtimes\win-x64\native\WebView2Loader.dll" />
       </Component>
     </ComponentGroup>
   </Fragment>
   <Fragment>
-    <ComponentGroup Id="RouteBuilderNativeComponents" Directory="INSTALLFOLDER">
+    <ComponentGroup Id="RouteBuilderNativeComponents" Directory="native">
       <Component Id="RouteBuilder_libSkiaSharp.dll" Guid="9691ca15-f485-48e8-8ab8-822e51e3f687">
         <File Id="RouteBuilder_libSkiaSharp.dll" Name="libSkiaSharp.dll" Source="$(var.RoadCaptain.RouteBuilder_TargetDir)runtimes\win-x64\native\libSkiaSharp.dll" />
       </Component>
