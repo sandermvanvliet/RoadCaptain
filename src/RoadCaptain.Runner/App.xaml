@@ -1,4 +1,10 @@
-﻿<Application x:Class="RoadCaptain.Runner.App"
+<!--
+// Copyright (c) 2022 Sander van Vliet
+// Licensed under Artistic License 2.0
+// See LICENSE or https://choosealicense.com/licenses/artistic-2.0/
+-->
+
+<Application x:Class="RoadCaptain.Runner.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:RoadCaptain.Runner"
@@ -8,3 +14,4 @@
          
     </Application.Resources>
 </Application>
+
