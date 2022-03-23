@@ -3,6 +3,7 @@ using System.IO;
 using System.Text.Json;
 using System.Windows;
 using Microsoft.Web.WebView2.Core;
+using Microsoft.Web.WebView2.Wpf;
 using RoadCaptain.Runner.Models;
 
 namespace RoadCaptain.Runner
@@ -19,6 +20,15 @@ namespace RoadCaptain.Runner
         public ZwiftLoginWindow()
         {
             InitializeComponent();
+
+            // This needs to be set to a user writeable path 
+            // otherwise the web view tries to initialize its
+            // temp folder under Program Files which is not
+            // accessible.
+            ZwiftAuthView.CreationProperties = new CoreWebView2CreationProperties
+            {
+                UserDataFolder = Path.GetTempPath(),
+            };
         }
 
         public TokenResponse TokenResponse { get; private set; }
