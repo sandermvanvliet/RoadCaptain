@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:converters="clr-namespace:RoadCaptain.Runner.Converters"
         xmlns:viewModels="clr-namespace:RoadCaptain.Runner.ViewModels"
         mc:Ignorable="d"
         Title="{Binding Path=WindowTitle}" 
@@ -40,6 +41,8 @@
                 </Trigger>
             </Style.Triggers>
         </Style>
+        <converters:BooleanConverter x:Key="BooleanConverter" />
+        <converters:VisibilityConverter x:Key="VisibilityConverter" />
     </Window.Resources>
     <Border BorderBrush="DarkGray" BorderThickness="1" CornerRadius="8" Opacity="1" Background="White">
         <Grid Margin="4">
@@ -83,39 +86,37 @@
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="130" />
                     <ColumnDefinition />
-                    <ColumnDefinition Width="70" />
+                    <ColumnDefinition Width="76" />
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="32" />
-                    <RowDefinition Height="32" />
+                    <RowDefinition Height="38" />
+                    <RowDefinition Height="38" />
                     <RowDefinition Height="60" />
                 </Grid.RowDefinitions>
 
                 <!-- row 1 -->
-                <TextBlock Text="Zwift username:" HorizontalAlignment="Right" FontWeight="Bold" FontSize="16" Grid.Column="0" Grid.Row="0" VerticalAlignment="Center" />
-                <TextBox Text="{Binding Path=ZwiftUsername}" Height="28" Grid.Column="1" Grid.Row="0" Margin="4,0,80,0" VerticalAlignment="Center" d:Text="joe.blogs@cycling-fan.com" FontSize="16" Padding="4,0,0,0" />
+                <TextBlock Text="Zwift account:" HorizontalAlignment="Right" FontWeight="Bold" FontSize="16" Grid.Column="0" Grid.Row="0" VerticalAlignment="Center" Margin="0,2,0,0" />
+                <TextBlock d:Text="Not yet logged in to Zwift" Text="{Binding Path=ZwiftLoggedInText}" HorizontalAlignment="Left" FontSize="16" Grid.Column="1" Grid.Row="0" VerticalAlignment="Center"
+                           Visibility="{Binding Path=LoggedInToZwift,Converter={StaticResource VisibilityConverter},ConverterParameter=invert}" Margin="4,2,0,0"/>
+                <StackPanel Orientation="Horizontal"
+                            Grid.Row="0"
+                            Grid.Column="1"
+                            Visibility="{Binding Path=LoggedInToZwift,Converter={StaticResource VisibilityConverter}}"
+                            d:Visibility="Collapsed">
+                    <Image Source="{Binding Path=ZwiftAvatarUri}" d:Source="https://static-cdn.zwift.com/prod/profile/dd3c328c-1615974" Height="32" Margin="4,0,0,0" />
+                    <TextBlock Text="{Binding Path=ZwiftName}" d:Text="Sander van Vliet [TheBeardRides]" FontSize="16" VerticalAlignment="Center" Margin="4,0,0,0" />
+                </StackPanel>
+                
+                <Button Content="Log in" HorizontalAlignment="Right" Grid.Column="2" Grid.Row="0" VerticalAlignment="Center" 
+                        Command="{Binding Path=LogInCommand}" 
+                        CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}"
+                        Margin="0,0,4,0" Width="72"
+                        IsEnabled="{Binding Path=LoggedInToZwift,Converter={StaticResource BooleanConverter},ConverterParameter=invert}"/>
 
                 <!-- row 2 -->
-                <TextBlock Text="Zwift password:" HorizontalAlignment="Right" FontWeight="Bold" FontSize="16" Grid.Column="0" Grid.Row="1" VerticalAlignment="Center" />
-                <PasswordBox Height="28" Grid.Column="1" Grid.Row="1" Margin="4,0,80,0" VerticalAlignment="Center" FontSize="16" Padding="4,0,0,0" d:Password="abcddef" PasswordChanged="PasswordBox_OnPasswordChanged" />
-
-                <TextBlock Text="Why is this needed?" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" HorizontalAlignment="Right" FontSize="16" VerticalAlignment="Center" Margin="0,0,4,0"
-                           Cursor="Help">
-                    <TextBlock.ToolTip>
-                        <ToolTip>
-                            <TextBlock>
-                                RoadCaptain needs to tell Zwift to connect to the app.
-                                <LineBreak/>
-                                To ensure you can only control your own ride Zwift requires you to authenticate.
-                            </TextBlock>
-                        </ToolTip>
-                    </TextBlock.ToolTip>
-                </TextBlock>
-
-                <!-- row 3 -->
-                <TextBlock Text="Route:" HorizontalAlignment="Right" FontWeight="Bold" FontSize="16" Grid.Column="0" Grid.Row="2" VerticalAlignment="Center" Margin="0,20,0,0" />
-                <TextBox Text="{Binding Path=RoutePath}" Height="28" Grid.Column="1" Grid.Row="2" Margin="4,20,4,0" VerticalAlignment="Center" d:Text="c:\roadcaptain\routes\route-1.json" FontSize="16" Padding="4,0,0,0" />
-                <Button Content="Select" HorizontalAlignment="Right" Grid.Column="2" Grid.Row="2" Margin="0,20,4,0" VerticalAlignment="Center" Command="{Binding Path=LoadRouteCommand}" />
+                <TextBlock Text="Route:" HorizontalAlignment="Right" FontWeight="Bold" FontSize="16" Grid.Column="0" Grid.Row="1" VerticalAlignment="Center" Margin="0,2,0,0" />
+                <TextBox Text="{Binding Path=RoutePath}" Height="28" Grid.Column="1" Grid.Row="1" Margin="4,2,4,0" VerticalAlignment="Center" d:Text="c:\roadcaptain\routes\route-1.json" FontSize="16" Padding="4,0,0,0" />
+                <Button Content="Select" HorizontalAlignment="Right" Grid.Column="2" Grid.Row="1" Margin="0,2,4,0" VerticalAlignment="Center" Command="{Binding Path=LoadRouteCommand}" Width="72" />
             </Grid>
             <Button Content="Let's Go!" HorizontalAlignment="Right" Grid.Row="2" Margin="2,4,4,2" VerticalAlignment="Center" 
                     Command="{Binding Path=StartRouteCommand}" 

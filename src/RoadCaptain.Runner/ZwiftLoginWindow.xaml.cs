@@ -1,0 +1,80 @@
+﻿using System;
+using System.IO;
+using System.Text.Json;
+using System.Windows;
+using Microsoft.Web.WebView2.Core;
+using RoadCaptain.Runner.Models;
+
+namespace RoadCaptain.Runner
+{
+    /// <summary>
+    ///     Interaction logic for ZwiftLoginWindow.xaml
+    /// </summary>
+    // ReSharper disable once UnusedMember.Global
+    // ReSharper disable once RedundantExtendsListEntry
+    public partial class ZwiftLoginWindow : Window
+    {
+        private bool _isInitialActivation = true;
+
+        public ZwiftLoginWindow()
+        {
+            InitializeComponent();
+        }
+
+        public TokenResponse TokenResponse { get; private set; }
+
+        private void ZwiftAuthView_OnCoreWebView2InitializationCompleted(object sender,
+            CoreWebView2InitializationCompletedEventArgs e)
+        {
+            ZwiftAuthView.CoreWebView2.WebResourceResponseReceived += ZwiftAuthView_WebResourceResponseReceived;
+            ZwiftAuthView.CoreWebView2.CookieManager.DeleteAllCookies();
+        }
+
+        private void ZwiftAuthView_OnNavigationStarting(object sender, CoreWebView2NavigationStartingEventArgs e)
+        {
+            if (e.Uri.StartsWith("https://www.zwift.com/feed"))
+            {
+                e.Cancel = true;
+            }
+        }
+
+        private async void ZwiftAuthView_WebResourceResponseReceived(
+            object sender,
+            CoreWebView2WebResourceResponseReceivedEventArgs e)
+        {
+            if (e.Request.Uri.StartsWith("https://www.zwift.com/auth/login") &&
+                "POST".Equals(e.Request.Method, StringComparison.InvariantCultureIgnoreCase) &&
+                e.Response.StatusCode == 200)
+            {
+                try
+                {
+                    // This is the callback that contains the tokens
+                    var stream = await e.Response.GetContentAsync();
+
+                    using var reader = new StreamReader(stream);
+                    var content = await reader.ReadToEndAsync();
+
+                    TokenResponse = JsonSerializer.Deserialize<TokenResponse>(content);
+
+                    Close();
+                }
+                catch
+                {
+                    // nop
+                }
+            }
+        }
+
+        private void ZwiftLoginWindow_OnActivated(object? sender, EventArgs e)
+        {
+            if (_isInitialActivation)
+            {
+                _isInitialActivation = false;
+
+                ZwiftAuthView.Source =
+                    new Uri(
+                        "https://www.zwift.com/eu/sign-in?redirect_uri=https://www.zwift.com/feed?auth_redirect=true");
+            }
+        }
+    }
+}

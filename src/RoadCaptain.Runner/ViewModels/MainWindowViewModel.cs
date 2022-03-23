@@ -16,11 +16,12 @@ namespace RoadCaptain.Runner.ViewModels
     {
         private string _routePath;
         private string _windowTitle = "RoadCaptain";
-        private string _zwiftPassword;
-        private string _zwiftUsername;
         private readonly ISegmentStore _segmentStore;
         private readonly IRouteStore _routeStore;
         private readonly IComponentContext _componentContext;
+        private bool _loggedInToZwift;
+        private string _zwiftName;
+        private string _zwiftAvatarUri;
 
         public MainWindowViewModel(ISegmentStore segmentStore, IRouteStore routeStore, IComponentContext componentContext)
         {
@@ -35,12 +36,15 @@ namespace RoadCaptain.Runner.ViewModels
             LoadRouteCommand = new RelayCommand(
                 _ => LoadRoute(),
                 _ => true);
+
+            LogInCommand = new RelayCommand(
+                _ => LogInToZwift(_ as Window),
+                _ => !LoggedInToZwift);
         }
 
         public bool CanStartRoute =>
             !string.IsNullOrEmpty(RoutePath) &&
-            !string.IsNullOrEmpty(ZwiftUsername) &&
-            !string.IsNullOrEmpty(ZwiftPassword);
+            LoggedInToZwift;
 
         public string RoutePath
         {
@@ -65,27 +69,44 @@ namespace RoadCaptain.Runner.ViewModels
             }
         }
 
-        public string ZwiftUsername
+        public bool LoggedInToZwift
         {
-            get => _zwiftUsername;
+            get => _loggedInToZwift;
             set
             {
-                if (value == _zwiftUsername) return;
-                _zwiftUsername = value;
+                if (value == _loggedInToZwift) return;
+                _loggedInToZwift = value;
                 OnPropertyChanged();
-                OnPropertyChanged(nameof(CanStartRoute));
+                OnPropertyChanged(nameof(ZwiftLoggedInText));
             }
         }
 
-        public string ZwiftPassword
+        public string ZwiftLoggedInText =>
+            LoggedInToZwift
+                ? "Logged in to Zwift"
+                : "Not yet logged in to Zwift";
+
+        public string ZwiftAccessToken { get; private set; }
+
+        public string ZwiftName
         {
-            get => _zwiftPassword;
+            get => _zwiftName;
             set
             {
-                if (value == _zwiftPassword) return;
-                _zwiftPassword = value;
+                if (value == _zwiftName) return;
+                _zwiftName = value;
                 OnPropertyChanged();
-                OnPropertyChanged(nameof(CanStartRoute));
+            }
+        }
+
+        public string ZwiftAvatarUri
+        {
+            get => _zwiftAvatarUri;
+            set
+            {
+                if (value == _zwiftAvatarUri) return;
+                _zwiftAvatarUri = value;
+                OnPropertyChanged();
             }
         }
 
@@ -93,6 +114,7 @@ namespace RoadCaptain.Runner.ViewModels
 
         public ICommand StartRouteCommand { get; set; }
         public ICommand LoadRouteCommand { get; set; }
+        public ICommand LogInCommand { get; set; }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -132,18 +154,10 @@ namespace RoadCaptain.Runner.ViewModels
             inGameWindowModel.InitializeRoute(_routeStore.LoadFrom(RoutePath));
 
             var configuration = _componentContext.Resolve<Configuration>();
-            configuration.Username = ZwiftUsername;
-            configuration.Password = ZwiftPassword;
+            configuration.ZwiftAccessToken = ZwiftAccessToken;
             configuration.Route = RoutePath;
 
-            var viewModel = new InGameNavigationWindowViewModel(inGameWindowModel, _segmentStore.LoadSegments())
-            {
-                Model =
-                {
-                    ZwiftUsername = ZwiftUsername,
-                    ZwiftPassword = ZwiftPassword
-                }
-            };
+            var viewModel = new InGameNavigationWindowViewModel(inGameWindowModel, _segmentStore.LoadSegments());
 
             var inGameWindow = _componentContext.Resolve<InGameNavigationWindow>();
             inGameWindow.DataContext = viewModel;
@@ -153,6 +167,34 @@ namespace RoadCaptain.Runner.ViewModels
             window.Close();
 
             return CommandResult.Success();
+        }
+
+        private CommandResult LogInToZwift(Window window)
+        {
+            var zwiftLoginWindow = _componentContext.Resolve<ZwiftLoginWindow>();
+            
+            zwiftLoginWindow.Owner = window;
+            zwiftLoginWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+
+            zwiftLoginWindow.ShowDialog();
+
+            if (zwiftLoginWindow.TokenResponse != null &&
+                !string.IsNullOrEmpty(zwiftLoginWindow.TokenResponse.AccessToken))
+            {
+                ZwiftAccessToken = zwiftLoginWindow.TokenResponse.AccessToken;
+                if (zwiftLoginWindow.TokenResponse.UserProfile != null)
+                {
+                    ZwiftName =
+                        $"{zwiftLoginWindow.TokenResponse.UserProfile.FirstName} {zwiftLoginWindow.TokenResponse.UserProfile.LastName}";
+                    ZwiftAvatarUri = zwiftLoginWindow.TokenResponse.UserProfile.Avatar;
+                }
+
+                LoggedInToZwift = true;
+
+                return CommandResult.Success();
+            }
+
+            return CommandResult.Aborted();
         }
     }
 }
