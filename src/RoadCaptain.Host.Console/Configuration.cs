@@ -8,9 +8,8 @@ namespace RoadCaptain.Host.Console
         {
             configuration.GetSection("Zwift").Bind(this);
         }
-
-        public string Username { get; set; }
-        public string Password { get; set; }
+        
         public string Route { get; set; }
+        public string AccessToken { get; set; }
     }
 }

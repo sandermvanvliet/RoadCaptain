@@ -13,18 +13,15 @@ namespace RoadCaptain.UseCases
 {
     public class ConnectToZwiftUseCase
     {
-        private readonly IRequestToken _requestToken;
         private readonly IZwift _zwift;
         private readonly MonitoringEvents _monitoringEvents;
         private readonly IGameStateReceiver _gameStateReceiver;
         private bool _userIsInGame;
 
-        public ConnectToZwiftUseCase(IRequestToken requestToken,
-            IZwift zwift,
+        public ConnectToZwiftUseCase(IZwift zwift,
             MonitoringEvents monitoringEvents, 
             IGameStateReceiver gameStateReceiver)
         {
-            _requestToken = requestToken;
             _zwift = zwift;
             _monitoringEvents = monitoringEvents;
             _gameStateReceiver = gameStateReceiver;
@@ -59,11 +56,9 @@ namespace RoadCaptain.UseCases
 
             _monitoringEvents.Information("Telling Zwift to connect to {IPAddress}:21587", ipAddress);
 
-            var tokens = await _requestToken.RequestAsync(connectCommand.Username, connectCommand.Password);
+            var relayUri = await _zwift.RetrieveRelayUrl(connectCommand.AccessToken);
 
-            var relayUri = await _zwift.RetrieveRelayUrl(tokens.AccessToken);
-
-            await _zwift.InitiateRelayAsync(tokens.AccessToken, relayUri, ipAddress);
+            await _zwift.InitiateRelayAsync(connectCommand.AccessToken, relayUri, ipAddress);
 
             var remainingAttempts = 5;
 
@@ -80,7 +75,7 @@ namespace RoadCaptain.UseCases
 
                 // Check whether user is currently in-game
                 // If not, sleep for a while and try again
-                var profile = await _zwift.GetProfileAsync(tokens.AccessToken);
+                var profile = await _zwift.GetProfileAsync(connectCommand.AccessToken);
 
                 if (profile != null && profile.Riding)
                 {
@@ -94,7 +89,7 @@ namespace RoadCaptain.UseCases
                 {
                     _monitoringEvents.Warning("Zwift did not connect, attempting link again on {IPAddress}:21587", ipAddress);
 
-                    await _zwift.InitiateRelayAsync(tokens.AccessToken, relayUri, ipAddress);
+                    await _zwift.InitiateRelayAsync(connectCommand.AccessToken, relayUri, ipAddress);
 
                     remainingAttempts = 5;
                 }

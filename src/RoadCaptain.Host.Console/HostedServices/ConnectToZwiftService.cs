@@ -27,8 +27,7 @@ namespace RoadCaptain.Host.Console.HostedServices
         {
             Task.Factory.StartNew(async () => await _useCase.ExecuteAsync(new ConnectCommand
                     {
-                        Username = _configuration.Username,
-                        Password = _configuration.Password
+                        AccessToken = _configuration.AccessToken
                     },
                     _cancellationTokenSource.Token),
                 _cancellationTokenSource.Token);

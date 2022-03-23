@@ -54,20 +54,17 @@ namespace RoadCaptain.Tests.Unit
         }
 
         [Fact]
-        public void GivenUserNameAndPassword_RelayRequestIsSent()
+        public void GivenAccessToken_RelayRequestIsSent()
         {
             var monitoringEvents = new NopMonitoringEvents();
 
-            var useCase = new ConnectToZwiftUseCase(
-                new RequestTokenFromApi(new HttpClient(_handler)),
-                new Zwift(new HttpClient(_handler)),
+            var useCase = new ConnectToZwiftUseCase(new Zwift(new HttpClient(_handler)),
                 monitoringEvents, 
                 new InMemoryGameStateDispatcher(monitoringEvents));
 
             useCase.ExecuteAsync(new ConnectCommand
                     {
-                        Username = "test",
-                        Password = "supersecret"
+                        AccessToken = "supersecret"
                     },
                     CancellationToken.None)
                 .GetAwaiter()
