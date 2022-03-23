@@ -97,6 +97,7 @@ namespace RoadCaptain.Runner.ViewModels
                 _loggedInToZwift = value;
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(ZwiftLoggedInText));
+                OnPropertyChanged(nameof(CanStartRoute));
             }
         }
 
