@@ -42,6 +42,10 @@ namespace RoadCaptain.Runner.ViewModels
             {
                 RoutePath = configuration.Route;
             }
+            else if (!string.IsNullOrEmpty(AppSettings.Default.Route))
+            {
+                RoutePath = AppSettings.Default.Route;
+            }
 
             StartRouteCommand = new RelayCommand(
                 _ => StartRoute(_ as Window),
@@ -169,6 +173,9 @@ namespace RoadCaptain.Runner.ViewModels
             var configuration = _componentContext.Resolve<Configuration>();
             configuration.AccessToken = ZwiftAccessToken;
             configuration.Route = RoutePath;
+
+            AppSettings.Default.Route = RoutePath;
+            AppSettings.Default.Save();
 
             var viewModel = new InGameNavigationWindowViewModel(inGameWindowModel, _segmentStore.LoadSegments());
 

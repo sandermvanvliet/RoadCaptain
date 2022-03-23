@@ -34,5 +34,17 @@ namespace RoadCaptain.Runner {
                 this["InGameWindowLocation"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string Route {
+            get {
+                return ((string)(this["Route"]));
+            }
+            set {
+                this["Route"] = value;
+            }
+        }
     }
 }
