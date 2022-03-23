@@ -74,6 +74,7 @@ If you haven't started Zwift yet or if you are not yet on the starting segment y
 ![Runner-step-3](/images/Runner-step-3.png)
 
 Once you are in the game and on the right route RoadCaptain gets your position from Zwift and will change to the in-game window:
+
 ![Runner-step-4](/images/Runner-step-4.png)
 
 Here you'll see a _lot_ of details on your route. Let's take a look, we've got:
