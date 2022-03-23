@@ -7,7 +7,6 @@ using Microsoft.Win32;
 using RoadCaptain.Ports;
 using RoadCaptain.Runner.Annotations;
 using RoadCaptain.Runner.Commands;
-using RoadCaptain.Runner.HostedServices;
 using RoadCaptain.Runner.Models;
 
 namespace RoadCaptain.Runner.ViewModels
@@ -23,11 +22,27 @@ namespace RoadCaptain.Runner.ViewModels
         private string _zwiftName;
         private string _zwiftAvatarUri;
 
-        public MainWindowViewModel(ISegmentStore segmentStore, IRouteStore routeStore, IComponentContext componentContext)
+        public MainWindowViewModel(
+            ISegmentStore segmentStore, 
+            IRouteStore routeStore, 
+            IComponentContext componentContext,
+            Configuration configuration)
         {
             _segmentStore = segmentStore;
             _routeStore = routeStore;
             _componentContext = componentContext;
+
+            if (!string.IsNullOrEmpty(configuration.AccessToken))
+            {
+                ZwiftAccessToken = configuration.AccessToken;
+                LoggedInToZwift = true;
+            }
+
+            if (!string.IsNullOrEmpty(configuration.Route))
+            {
+                RoutePath = configuration.Route;
+            }
+
             StartRouteCommand = new RelayCommand(
                 _ => StartRoute(_ as Window),
                 _ => CanStartRoute
@@ -110,8 +125,6 @@ namespace RoadCaptain.Runner.ViewModels
             }
         }
 
-        public PlannedRoute Route { get; set; }
-
         public ICommand StartRouteCommand { get; set; }
         public ICommand LoadRouteCommand { get; set; }
         public ICommand LogInCommand { get; set; }
@@ -154,7 +167,7 @@ namespace RoadCaptain.Runner.ViewModels
             inGameWindowModel.InitializeRoute(_routeStore.LoadFrom(RoutePath));
 
             var configuration = _componentContext.Resolve<Configuration>();
-            configuration.ZwiftAccessToken = ZwiftAccessToken;
+            configuration.AccessToken = ZwiftAccessToken;
             configuration.Route = RoutePath;
 
             var viewModel = new InGameNavigationWindowViewModel(inGameWindowModel, _segmentStore.LoadSegments());

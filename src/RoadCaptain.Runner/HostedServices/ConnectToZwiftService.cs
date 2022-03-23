@@ -27,7 +27,7 @@ namespace RoadCaptain.Runner.HostedServices
         {
             Task.Factory.StartNew(async () => await _useCase.ExecuteAsync(new ConnectCommand
                     {
-                        AccessToken = _configuration.ZwiftAccessToken
+                        AccessToken = _configuration.AccessToken
                     },
                     _cancellationTokenSource.Token),
                 _cancellationTokenSource.Token);
