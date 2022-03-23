@@ -1,4 +1,8 @@
-﻿using System.IO;
+// Copyright (c) 2022 Sander van Vliet
+// Licensed under Artistic License 2.0
+// See LICENSE or https://choosealicense.com/licenses/artistic-2.0/
+
+using System.IO;
 using System.Linq;
 using FluentAssertions;
 using Newtonsoft.Json;
@@ -21,3 +25,4 @@ namespace RoadCaptain.Tests.Unit
         }
     }
 }
+
