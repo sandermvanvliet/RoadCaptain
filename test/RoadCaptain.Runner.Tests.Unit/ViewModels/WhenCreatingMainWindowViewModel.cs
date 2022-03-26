@@ -15,7 +15,7 @@ namespace RoadCaptain.Runner.Tests.Unit.ViewModels
                 Route = routePath
             };
 
-            new MainWindowViewModel(null, null, null, configuration, new AppSettings())
+            CreateViewModel(configuration)
                 .RoutePath
                 .Should()
                 .Be(routePath);
@@ -29,8 +29,8 @@ namespace RoadCaptain.Runner.Tests.Unit.ViewModels
                 Route = "Some route path"
             };
             var configuration = new Configuration(null);
-
-            new MainWindowViewModel(null, null, null, configuration, appSettings)
+            
+            CreateViewModel(configuration, appSettings)
                 .RoutePath
                 .Should()
                 .Be("Some route path");
@@ -40,8 +40,8 @@ namespace RoadCaptain.Runner.Tests.Unit.ViewModels
         public void GivenNoRoutePathInConfigurationorSettings_RoutePathIsNull()
         {
             var configuration = new Configuration(null);
-
-            new MainWindowViewModel(null, null, null, configuration, new AppSettings())
+            
+            CreateViewModel(configuration)
                 .RoutePath
                 .Should()
                 .BeNull();
@@ -54,8 +54,8 @@ namespace RoadCaptain.Runner.Tests.Unit.ViewModels
             {
                 AccessToken = "some token"
             };
-
-            new MainWindowViewModel(null, null, null, configuration, new AppSettings())
+            
+            CreateViewModel(configuration)
                 .ZwiftAccessToken
                 .Should()
                 .Be(configuration.AccessToken);
@@ -68,8 +68,8 @@ namespace RoadCaptain.Runner.Tests.Unit.ViewModels
             {
                 AccessToken = "some token"
             };
-
-            new MainWindowViewModel(null, null, null, configuration, new AppSettings())
+            
+            CreateViewModel(configuration)
                 .ZwiftAvatarUri
                 .Should()
                 .Be("Assets/profile-default.png");
@@ -82,8 +82,8 @@ namespace RoadCaptain.Runner.Tests.Unit.ViewModels
             {
                 AccessToken = "some token"
             };
-
-            new MainWindowViewModel(null, null, null, configuration, new AppSettings())
+            
+            CreateViewModel(configuration)
                 .ZwiftName
                 .Should()
                 .Be("(stored token)");
@@ -96,8 +96,8 @@ namespace RoadCaptain.Runner.Tests.Unit.ViewModels
             {
                 AccessToken = "some token"
             };
-
-            new MainWindowViewModel(null, null, null, configuration, new AppSettings())
+            
+            CreateViewModel(configuration)
                 .LoggedInToZwift
                 .Should()
                 .BeTrue();
@@ -111,11 +111,16 @@ namespace RoadCaptain.Runner.Tests.Unit.ViewModels
                 AccessToken = "some token",
                 Route = "some route"
             };
-
-            new MainWindowViewModel(null, null, null, configuration, new AppSettings())
+            
+            CreateViewModel(configuration)
                 .CanStartRoute
                 .Should()
                 .BeTrue();
+        }
+
+        private static MainWindowViewModel CreateViewModel(Configuration configuration, AppSettings appSettings = null)
+        {
+            return new MainWindowViewModel(null, null, null, configuration, appSettings ?? new AppSettings());
         }
     }
 }
