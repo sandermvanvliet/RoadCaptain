@@ -42,7 +42,7 @@
 
   <ItemGroup>
     <None Update="AppSettings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
+      <Generator>PublicSettingsSingleFileGenerator</Generator>
       <LastGenOutput>AppSettings.Designer.cs</LastGenOutput>
     </None>
     <None Update="autofac.runner.json">

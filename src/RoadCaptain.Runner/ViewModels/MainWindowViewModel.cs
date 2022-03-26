@@ -18,6 +18,7 @@ namespace RoadCaptain.Runner.ViewModels
         private readonly ISegmentStore _segmentStore;
         private readonly IRouteStore _routeStore;
         private readonly IComponentContext _componentContext;
+        private readonly AppSettings _appSettings;
         private bool _loggedInToZwift;
         private string _zwiftName;
         private string _zwiftAvatarUri;
@@ -26,11 +27,13 @@ namespace RoadCaptain.Runner.ViewModels
             ISegmentStore segmentStore, 
             IRouteStore routeStore, 
             IComponentContext componentContext,
-            Configuration configuration)
+            Configuration configuration, 
+            AppSettings appSettings)
         {
             _segmentStore = segmentStore;
             _routeStore = routeStore;
             _componentContext = componentContext;
+            _appSettings = appSettings;
 
             if (!string.IsNullOrEmpty(configuration.AccessToken))
             {
@@ -44,9 +47,9 @@ namespace RoadCaptain.Runner.ViewModels
             {
                 RoutePath = configuration.Route;
             }
-            else if (!string.IsNullOrEmpty(AppSettings.Default.Route))
+            else if (!string.IsNullOrEmpty(appSettings.Route))
             {
-                RoutePath = AppSettings.Default.Route;
+                RoutePath = appSettings.Route;
             }
 
             StartRouteCommand = new RelayCommand(
@@ -177,8 +180,8 @@ namespace RoadCaptain.Runner.ViewModels
             configuration.AccessToken = ZwiftAccessToken;
             configuration.Route = RoutePath;
 
-            AppSettings.Default.Route = RoutePath;
-            AppSettings.Default.Save();
+            _appSettings.Route = RoutePath;
+            _appSettings.Save();
 
             var viewModel = new InGameNavigationWindowViewModel(inGameWindowModel, _segmentStore.LoadSegments());
 
