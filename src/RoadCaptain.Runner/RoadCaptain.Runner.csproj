@@ -16,6 +16,7 @@
     <None Remove="Assets\background.jpg" />
     <None Remove="Assets\finish.png" />
     <None Remove="Assets\gostraight.png" />
+    <None Remove="Assets\profile-default.png" />
     <None Remove="Assets\turnleft.png" />
     <None Remove="Assets\turnright.png" />
   </ItemGroup>
@@ -61,6 +62,7 @@
     <Resource Include="Assets\background.jpg" />
     <Resource Include="Assets\finish.png" />
     <Resource Include="Assets\gostraight.png" />
+    <Resource Include="Assets\profile-default.png" />
     <Resource Include="Assets\turnleft.png" />
     <Resource Include="Assets\turnright.png" />
     <Resource Include="../../icon.png" />

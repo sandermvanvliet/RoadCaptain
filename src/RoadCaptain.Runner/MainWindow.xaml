@@ -109,7 +109,9 @@
                             Grid.Column="1"
                             Visibility="{Binding Path=LoggedInToZwift,Converter={StaticResource VisibilityConverter}}"
                             d:Visibility="Collapsed">
-                    <Image Source="{Binding Path=ZwiftAvatarUri}" d:Source="https://static-cdn.zwift.com/prod/profile/dd3c328c-1615974" Height="32" Margin="4,0,0,0" />
+                    <Border BorderBrush="DarkGray" BorderThickness="1" CornerRadius="0" Margin="4,0,0,0" Height="32" Width="32" Padding="0">
+                        <Image Source="{Binding Path=ZwiftAvatarUri}" d:Source="https://static-cdn.zwift.com/prod/profile/dd3c328c-1615974" Height="32" ClipToBounds="True" />
+                    </Border>
                     <TextBlock Text="{Binding Path=ZwiftName}" d:Text="Sander van Vliet [TheBeardRides]" FontSize="16" VerticalAlignment="Center" Margin="4,0,0,0" />
                 </StackPanel>
                 

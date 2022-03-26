@@ -10,7 +10,7 @@ namespace RoadCaptain.Runner
     {
         public Configuration(IConfiguration configuration)
         {
-            configuration.GetSection("Zwift").Bind(this);
+            configuration?.GetSection("Zwift").Bind(this);
         }
 
         public string Route { get; set; }

@@ -35,6 +35,8 @@ namespace RoadCaptain.Runner.ViewModels
             if (!string.IsNullOrEmpty(configuration.AccessToken))
             {
                 ZwiftAccessToken = configuration.AccessToken;
+                ZwiftAvatarUri = "Assets/profile-default.png";
+                ZwiftName = "(stored token)";
                 LoggedInToZwift = true;
             }
 
