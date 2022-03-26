@@ -79,7 +79,7 @@ namespace RoadCaptain.Runner
             }
         }
 
-        private void ZwiftLoginWindow_OnActivated(object? sender, EventArgs e)
+        private void ZwiftLoginWindow_OnActivated(object sender, EventArgs e)
         {
             if (_isInitialActivation)
             {

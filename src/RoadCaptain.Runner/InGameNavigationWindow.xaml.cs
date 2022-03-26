@@ -53,7 +53,7 @@ namespace RoadCaptain.Runner
             }
         }
 
-        private void InGameNavigationWindow_OnInitialized(object? sender, EventArgs e)
+        private void InGameNavigationWindow_OnInitialized(object sender, EventArgs e)
         {
             if (AppSettings.Default.InGameWindowLocation != Point.Empty)
             {
@@ -68,7 +68,7 @@ namespace RoadCaptain.Runner
             AppSettings.Default.Save();
         }
 
-        private void InGameNavigationWindow_OnActivated(object? sender, EventArgs e)
+        private void InGameNavigationWindow_OnActivated(object sender, EventArgs e)
         {
             _viewModel = DataContext as InGameNavigationWindowViewModel;
 
