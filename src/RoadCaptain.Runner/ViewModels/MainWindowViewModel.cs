@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using System.IO;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Input;
@@ -155,7 +156,15 @@ namespace RoadCaptain.Runner.ViewModels
             {
                 RoutePath = fileName;
 
-                WindowTitle = $"RoadCaptain - {RoutePath}";
+                var routeFileName = RoutePath;
+                
+                try
+                {
+                    routeFileName = Path.GetFileName(routeFileName);
+                }
+                catch { /* nop */ }
+
+                WindowTitle = $"RoadCaptain - {routeFileName}";
             }
 
             return CommandResult.Success();
