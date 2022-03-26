@@ -29,11 +29,15 @@ namespace RoadCaptain.Runner
                 .RegisterAssemblyTypes(ThisAssembly)
                 .Where(t => t.Namespace.EndsWith(".HostedServices"))
                 .As<IHostedService>();
-
-            // Register everything except the hosted services
+            
+            builder.RegisterType<WindowService>().As<IWindowService>();
+            
             builder
                 .RegisterAssemblyTypes(ThisAssembly)
-                .Where(t => !t.Namespace.EndsWith(".HostedServices") && t.Name != nameof(Configuration))
+                .Where(type => type != typeof(Configuration) &&
+                               type != typeof(MonitoringEventsWithSerilog) &&
+                               type != typeof(WindowService) &&
+                               !type.Namespace.EndsWith(".HostedServices"))
                 .AsSelf();
         }
     }

@@ -2,8 +2,6 @@
 using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Input;
-using Autofac;
-using Microsoft.Win32;
 using RoadCaptain.Ports;
 using RoadCaptain.Runner.Annotations;
 using RoadCaptain.Runner.Commands;
@@ -17,23 +15,25 @@ namespace RoadCaptain.Runner.ViewModels
         private string _windowTitle = "RoadCaptain";
         private readonly ISegmentStore _segmentStore;
         private readonly IRouteStore _routeStore;
-        private readonly IComponentContext _componentContext;
+        private readonly Configuration _configuration;
         private readonly AppSettings _appSettings;
         private bool _loggedInToZwift;
         private string _zwiftName;
         private string _zwiftAvatarUri;
+        private readonly IWindowService _windowService;
 
         public MainWindowViewModel(
             ISegmentStore segmentStore, 
-            IRouteStore routeStore, 
-            IComponentContext componentContext,
+            IRouteStore routeStore,
             Configuration configuration, 
-            AppSettings appSettings)
+            AppSettings appSettings, 
+            IWindowService windowService)
         {
             _segmentStore = segmentStore;
             _routeStore = routeStore;
-            _componentContext = componentContext;
+            _configuration = configuration;
             _appSettings = appSettings;
+            _windowService = windowService;
 
             if (!string.IsNullOrEmpty(configuration.AccessToken))
             {
@@ -149,20 +149,11 @@ namespace RoadCaptain.Runner.ViewModels
 
         private CommandResult LoadRoute()
         {
-            var dialog = new OpenFileDialog
-            {
-                RestoreDirectory = true,
-                AddExtension = true,
-                DefaultExt = ".json",
-                Filter = "JSON files (.json)|*.json",
-                Multiselect = false
-            };
-
-            var result = dialog.ShowDialog();
+            var fileName = _windowService.ShowOpenFileDialog();
             
-            if (result.HasValue && result.Value)
+            if (!string.IsNullOrEmpty(fileName))
             {
-                RoutePath = dialog.FileName;
+                RoutePath = fileName;
 
                 WindowTitle = $"RoadCaptain - {RoutePath}";
             }
@@ -175,44 +166,33 @@ namespace RoadCaptain.Runner.ViewModels
             var inGameWindowModel = new InGameWindowModel(_segmentStore.LoadSegments());
             
             inGameWindowModel.InitializeRoute(_routeStore.LoadFrom(RoutePath));
-
-            var configuration = _componentContext.Resolve<Configuration>();
-            configuration.AccessToken = ZwiftAccessToken;
-            configuration.Route = RoutePath;
+            
+            _configuration.AccessToken = ZwiftAccessToken;
+            _configuration.Route = RoutePath;
 
             _appSettings.Route = RoutePath;
             _appSettings.Save();
 
             var viewModel = new InGameNavigationWindowViewModel(inGameWindowModel, _segmentStore.LoadSegments());
 
-            var inGameWindow = _componentContext.Resolve<InGameNavigationWindow>();
-            inGameWindow.DataContext = viewModel;
-            
-            inGameWindow.Show();
-
-            window.Close();
+            _windowService.ShowInGameWindow(window, viewModel);
 
             return CommandResult.Success();
         }
 
         private CommandResult LogInToZwift(Window window)
         {
-            var zwiftLoginWindow = _componentContext.Resolve<ZwiftLoginWindow>();
-            
-            zwiftLoginWindow.Owner = window;
-            zwiftLoginWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+            var tokenResponse = _windowService.ShowLogInDialog(window);
 
-            zwiftLoginWindow.ShowDialog();
-
-            if (zwiftLoginWindow.TokenResponse != null &&
-                !string.IsNullOrEmpty(zwiftLoginWindow.TokenResponse.AccessToken))
+            if (tokenResponse != null &&
+                !string.IsNullOrEmpty(tokenResponse.AccessToken))
             {
-                ZwiftAccessToken = zwiftLoginWindow.TokenResponse.AccessToken;
-                if (zwiftLoginWindow.TokenResponse.UserProfile != null)
+                ZwiftAccessToken = tokenResponse.AccessToken;
+                if (tokenResponse.UserProfile != null)
                 {
                     ZwiftName =
-                        $"{zwiftLoginWindow.TokenResponse.UserProfile.FirstName} {zwiftLoginWindow.TokenResponse.UserProfile.LastName}";
-                    ZwiftAvatarUri = zwiftLoginWindow.TokenResponse.UserProfile.Avatar;
+                        $"{tokenResponse.UserProfile.FirstName} {tokenResponse.UserProfile.LastName}";
+                    ZwiftAvatarUri = tokenResponse.UserProfile.Avatar;
                 }
 
                 LoggedInToZwift = true;

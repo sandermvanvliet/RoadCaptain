@@ -120,7 +120,12 @@ namespace RoadCaptain.Runner.Tests.Unit.ViewModels
 
         private static MainWindowViewModel CreateViewModel(Configuration configuration, AppSettings appSettings = null)
         {
-            return new MainWindowViewModel(null, null, null, configuration, appSettings ?? new AppSettings());
+            return new MainWindowViewModel(
+                null, 
+                null, 
+                configuration, 
+                appSettings ?? new AppSettings(),
+                new WindowService(null));
         }
     }
 }
