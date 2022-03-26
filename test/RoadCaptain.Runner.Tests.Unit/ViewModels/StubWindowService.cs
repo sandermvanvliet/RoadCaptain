@@ -14,8 +14,10 @@ namespace RoadCaptain.Runner.Tests.Unit.ViewModels
         }
 
         public string OpenFileDialogResult { get; set; }
+        public TokenResponse LogInDialogResult { get; set; }
 
         public int OpenFileDialogInvocations { get; private set; }
+        public int LogInDialogInvocations { get; private set; }
 
         public void ShowInGameWindow(Window owner, InGameNavigationWindowViewModel viewModel)
         {
@@ -24,7 +26,9 @@ namespace RoadCaptain.Runner.Tests.Unit.ViewModels
 
         public TokenResponse ShowLogInDialog(Window owner)
         {
-            throw new System.NotImplementedException();
+            LogInDialogInvocations++;
+
+            return LogInDialogResult;
         }
     }
 }
