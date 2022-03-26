@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
+﻿using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using FluentAssertions;
@@ -14,82 +11,6 @@ namespace RoadCaptain.Tests.Unit.Routing
 {
     public class WhenLoadingSegments
     {
-        //[Fact]
-        public void Foo()
-        {
-            var segmentStore = new SegmentStore(@"c:\git\RoadCaptain\src\RoadCaptain.Adapters");
-
-            var segments = segmentStore.LoadSegments();
-
-            var result = new List<TrackPoint>();
-
-            var seg = segments.Single(s => s.Id == "watopia-big-foot-hills-004-before");
-            result.AddRange(seg.Points.AsEnumerable().Reverse());
-
-            seg = segments.Single(s => s.Id == "watopia-big-foot-hills-001-after-before");
-            result.AddRange(seg.Points.AsEnumerable().Reverse());
-            
-            seg = segments.Single(s => s.Id == "watopia-big-foot-hills-003-before");
-            result.AddRange(seg.Points);
-            
-            seg = segments.Single(s => s.Id == "watopia-big-foot-hills-003-after");
-            result.AddRange(seg.Points);
-            
-            seg = segments.Single(s => s.Id == "watopia-bambino-fondo-001-after-after-before-before-after-after");
-            result.AddRange(seg.Points);
-            
-            seg = segments.Single(s => s.Id == "watopia-bambino-fondo-003-before-before");
-            result.AddRange(seg.Points);
-            
-            seg = segments.Single(s => s.Id == "watopia-bambino-fondo-003-before-after");
-            result.AddRange(seg.Points);
-            
-            seg = segments.Single(s => s.Id == "watopia-bambino-fondo-003-after-after-after");
-            result.AddRange(seg.Points.AsEnumerable().Reverse());
-            
-            seg = segments.Single(s => s.Id == "watopia-bambino-fondo-003-after-after-before");
-            result.AddRange(seg.Points.AsEnumerable().Reverse());
-            
-            seg = segments.Single(s => s.Id == "watopia-bambino-fondo-003-after-before-after");
-            result.AddRange(seg.Points.AsEnumerable().Reverse());
-            
-            seg = segments.Single(s => s.Id == "watopia-bambino-fondo-003-after-before-before");
-            result.AddRange(seg.Points.AsEnumerable().Reverse());
-            
-            seg = segments.Single(s => s.Id == "watopia-bambino-fondo-003-before-after");
-            result.AddRange(seg.Points.AsEnumerable().Reverse());
-            
-            seg = segments.Single(s => s.Id == "watopia-bambino-fondo-003-before-before");
-            result.AddRange(seg.Points.AsEnumerable().Reverse());
-            
-            seg = segments.Single(s => s.Id == "watopia-bambino-fondo-001-after-after-before-before-after-after");
-            result.AddRange(seg.Points.AsEnumerable().Reverse());
-            
-            seg = segments.Single(s => s.Id == "watopia-bambino-fondo-001-after-after-before-before-after-before");
-            result.AddRange(seg.Points.AsEnumerable().Reverse());
-            
-            seg = segments.Single(s => s.Id == "watopia-big-foot-hills-001-after-after");
-            result.AddRange(seg.Points.AsEnumerable().Reverse());
-            
-            seg = segments.Single(s => s.Id == "watopia-big-foot-hills-001-after-before");
-            result.AddRange(seg.Points.AsEnumerable().Reverse());
-            
-            seg = segments.Single(s => s.Id == "watopia-big-foot-hills-001-before-after");
-            result.AddRange(seg.Points.AsEnumerable().Reverse());
-            
-            seg = segments.Single(s => s.Id == "watopia-big-foot-hills-001-before-before");
-            result.AddRange(seg.Points.AsEnumerable().Reverse());
-            
-            var csvLines = result
-                .Select(p =>
-                    p.Latitude.ToString("0.00000", CultureInfo.InvariantCulture) + ";" +
-                    p.Longitude.ToString("0.00000", CultureInfo.InvariantCulture) + ";" +
-                    p.Altitude.ToString("0.00000", CultureInfo.InvariantCulture))
-                .ToList();
-
-            var csv = string.Join(Environment.NewLine, csvLines);
-        }
-
         [Fact]
         public void ConvertLatLonToGameAndBack()
         {
@@ -122,7 +43,7 @@ namespace RoadCaptain.Tests.Unit.Routing
         [Fact]
         public void BoundingBoxesCalculated()
         {
-            var segmentStore = new SegmentStore(@"c:\git\RoadCaptain\src\RoadCaptain.Adapters");
+            var segmentStore = new SegmentStore();
 
             var segments = segmentStore.LoadSegments();
 
@@ -135,7 +56,7 @@ namespace RoadCaptain.Tests.Unit.Routing
         [Fact]
         public void AllPointsOnEachSegmentAreWithinItsBoundingBox()
         {
-            var segmentStore = new SegmentStore(@"c:\git\RoadCaptain\src\RoadCaptain.Adapters");
+            var segmentStore = new SegmentStore();
 
             var segments = segmentStore.LoadSegments();
 
