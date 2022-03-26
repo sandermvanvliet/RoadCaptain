@@ -3,9 +3,12 @@
 // See LICENSE or https://choosealicense.com/licenses/artistic-2.0/
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
+using System.Security.AccessControl;
+using System.Security.Principal;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -25,6 +28,8 @@ namespace RoadCaptain.Runner
     // ReSharper disable once RedundantExtendsListEntry
     public partial class App : Application
     {
+        private const string CompanyName = "Codenizer BV";
+        private const string ApplicationName = "RoadCaptain";
         private readonly IContainer _container;
         private readonly Logger _logger;
         private List<IHostedService> _hostedServices = new();
@@ -70,11 +75,32 @@ namespace RoadCaptain.Runner
 
         private static Logger CreateLogger()
         {
-            return new LoggerConfiguration()
-                .WriteTo.Console(LogEventLevel.Information)
-                .WriteTo.File($"roadcaptain-log-{DateTime.UtcNow:yyyy-MM-ddTHHmmss}.log", LogEventLevel.Debug)
-                .MinimumLevel.Information()
-                .Enrich.FromLogContext()
+            var loggerConfiguration = new LoggerConfiguration().Enrich.FromLogContext();
+            var logFileName = $"roadcaptain-log-{DateTime.UtcNow:yyyy-MM-ddTHHmmss}.log";
+            
+#if DEBUG
+            // In debug builds always write to the current directory for simplicity sake
+            // as that makes the log file easier to pick up from bin\Debug
+            var logFilePath = logFileName;
+#else
+            // Because we install into Program Filex (x86) we can't write a log file
+            // there when running as a regular user. Good Windows citizenship also
+            // means we should write data to the right place which is in the user
+            // AppData folder.
+            var localAppDataFolder = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+            
+            CreateDirectoryIfNotExists(Path.Combine(localAppDataFolder, CompanyName));
+            CreateDirectoryIfNotExists(Path.Combine(localAppDataFolder, CompanyName, ApplicationName));
+            
+            var logFilePath = Path.Combine(
+                            localAppDataFolder,
+                            CompanyName, 
+                            ApplicationName, 
+                            logFileName);
+#endif
+
+            return loggerConfiguration
+                .WriteTo.File(logFilePath, LogEventLevel.Debug)
                 .CreateLogger();
         }
 
@@ -103,6 +129,14 @@ namespace RoadCaptain.Runner
 
             // Flush the logger
             _logger?.Dispose();
+        }
+
+        private static void CreateDirectoryIfNotExists(string directory)
+        {
+            if (!Directory.Exists(directory))
+            {
+                Directory.CreateDirectory(directory);
+            }
         }
     }
 }
