@@ -23,12 +23,12 @@ namespace RoadCaptain.Runner.Converters
                     : Visibility.Collapsed;
             }
 
-            return value;
+            return DependencyProperty.UnsetValue;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return value;
+            return DependencyProperty.UnsetValue;
         }
     }
 }
