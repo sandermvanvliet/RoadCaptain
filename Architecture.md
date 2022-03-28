@@ -36,3 +36,13 @@ the `phoneAddress` needs to be on the same network as the Zwift app
 2. Message receiver -> parse Protobuf messages and push to queue(?)
 3. Position message listener -> Map position to road segment
 4. Routing engine -> Determine if current segment changed and which action to do on upcoming junction
+
+## Game States
+
+RoadCaptain uses a state machine to model the interaction with Zwift.
+
+The current iteration of the state diagram looks like this:
+
+![Game state diagram of RoadCaptain](GameStates.png)
+
+The implementation lives in `src/RoadCaptain/GameStates/`
