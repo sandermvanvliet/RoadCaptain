@@ -90,7 +90,7 @@ namespace RoadCaptain.Host.Console
 
         private void GameStateUpdated(GameState gameState)
         {
-            if (_previousState is NotInGameState && gameState is InGameState)
+            if (_previousState is ConnectedToZwiftState && gameState is InGameState)
             {
                 // Entered game
                 EnteredGame();

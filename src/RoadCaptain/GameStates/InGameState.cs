@@ -64,7 +64,7 @@ namespace RoadCaptain.GameStates
 
         public sealed override GameState LeaveGame()
         {
-            return new NotInGameState();
+            return new ConnectedToZwiftState();
         }
 
         public override GameState TurnCommandAvailable(string type)

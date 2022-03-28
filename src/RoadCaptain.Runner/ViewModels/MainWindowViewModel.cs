@@ -3,6 +3,7 @@ using System.IO;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Input;
+using RoadCaptain.GameStates;
 using RoadCaptain.Ports;
 using RoadCaptain.Runner.Annotations;
 using RoadCaptain.Runner.Commands;
@@ -22,19 +23,21 @@ namespace RoadCaptain.Runner.ViewModels
         private string _zwiftName;
         private string _zwiftAvatarUri;
         private readonly IWindowService _windowService;
+        private readonly IGameStateDispatcher _gameStateDispatcher;
 
         public MainWindowViewModel(
             ISegmentStore segmentStore, 
             IRouteStore routeStore,
             Configuration configuration, 
             AppSettings appSettings, 
-            IWindowService windowService)
+            IWindowService windowService, IGameStateDispatcher gameStateDispatcher)
         {
             _segmentStore = segmentStore;
             _routeStore = routeStore;
             _configuration = configuration;
             _appSettings = appSettings;
             _windowService = windowService;
+            _gameStateDispatcher = gameStateDispatcher;
 
             if (!string.IsNullOrEmpty(configuration.AccessToken))
             {
@@ -42,6 +45,7 @@ namespace RoadCaptain.Runner.ViewModels
                 ZwiftAvatarUri = "Assets/profile-default.png";
                 ZwiftName = "(stored token)";
                 LoggedInToZwift = true;
+                _gameStateDispatcher.Dispatch(new LoggedInState());
             }
 
             if (!string.IsNullOrEmpty(configuration.Route))
@@ -172,16 +176,16 @@ namespace RoadCaptain.Runner.ViewModels
 
         private CommandResult StartRoute(Window window)
         {
-            var inGameWindowModel = new InGameWindowModel(_segmentStore.LoadSegments());
-            
-            inGameWindowModel.InitializeRoute(_routeStore.LoadFrom(RoutePath));
-            
             _configuration.AccessToken = ZwiftAccessToken;
             _configuration.Route = RoutePath;
 
             _appSettings.Route = RoutePath;
             _appSettings.Save();
-
+            
+            var inGameWindowModel = new InGameWindowModel(_segmentStore.LoadSegments());
+            
+            inGameWindowModel.InitializeRoute(_routeStore.LoadFrom(RoutePath));
+            
             var viewModel = new InGameNavigationWindowViewModel(inGameWindowModel, _segmentStore.LoadSegments());
 
             _windowService.ShowInGameWindow(window, viewModel);
@@ -205,6 +209,8 @@ namespace RoadCaptain.Runner.ViewModels
                 }
 
                 LoggedInToZwift = true;
+
+                _gameStateDispatcher.Dispatch(new LoggedInState());
 
                 return CommandResult.Success();
             }

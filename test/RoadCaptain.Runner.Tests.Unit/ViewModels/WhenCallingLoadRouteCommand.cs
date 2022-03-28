@@ -18,7 +18,8 @@ namespace RoadCaptain.Runner.Tests.Unit.ViewModels
                 null,
                 new Configuration(null),
                 new AppSettings(),
-                _windowService);
+                _windowService,
+                null);
         }
 
         [Fact]

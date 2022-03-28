@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using RoadCaptain.GameStates;
 using RoadCaptain.Ports;
@@ -93,7 +94,7 @@ namespace RoadCaptain.Adapters
             // it's possible that this call is 
             // made from various consumers and
             // that would cause threading issues
-            // becuase we'd be dequeueing messages
+            // because we'd be dequeuing messages
             // from multiple threads.
             if (Started)
             {
@@ -113,7 +114,7 @@ namespace RoadCaptain.Adapters
                     else
                     {
                         // Only wait if nothing is in the queue,
-                        // otherwise loop aroud and take the next
+                        // otherwise loop around and take the next
                         // item from the queue without waiting.
                         _autoResetEvent.WaitOne(_queueWaitTimeout);
                     }
@@ -150,13 +151,13 @@ namespace RoadCaptain.Adapters
             switch (message.Topic)
             {
                 case "routeSelected":
-                    _routeSelectedHandlers.ForEach(h => InvokeHandler(h, message.Data));
+                    _routeSelectedHandlers.ToList().ForEach(h => InvokeHandler(h, message.Data));
                     break;
                 case "lastSequenceNumber":
-                    _lastSequenceNumberHandlers.ForEach(h => InvokeHandler(h, message.Data));
+                    _lastSequenceNumberHandlers.ToList().ForEach(h => InvokeHandler(h, message.Data));
                     break;
                 case "gameState":
-                    _gameStateHandlers.ForEach(h => InvokeHandler(h, message.Data));
+                    _gameStateHandlers.ToList().ForEach(h => InvokeHandler(h, message.Data));
                     break;
             }
         }

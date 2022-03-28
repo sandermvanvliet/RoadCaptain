@@ -47,7 +47,7 @@ namespace RoadCaptain.Runner.ViewModels
             {
                 Model.UserIsInGame = true;
             }
-            else if (gameState is NotInGameState && _previousState is not NotInGameState)
+            else if (gameState is ConnectedToZwiftState && _previousState is not ConnectedToZwiftState)
             {
                 Model.UserIsInGame = false;
             }

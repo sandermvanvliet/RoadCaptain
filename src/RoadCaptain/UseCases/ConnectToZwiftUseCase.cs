@@ -33,11 +33,12 @@ namespace RoadCaptain.UseCases
 
         private void ReceiveGameState(GameState gameState)
         {
+            // TODO: Revisit this
             if (gameState is InGameState && !_userIsInGame)
             {
                 _userIsInGame = true;
             }
-            else if (gameState is NotInGameState && _userIsInGame)
+            else if (gameState is ConnectedToZwiftState && _userIsInGame)
             {
                 _userIsInGame = false;
             }

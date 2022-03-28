@@ -3,13 +3,10 @@
 // See LICENSE or https://choosealicense.com/licenses/artistic-2.0/
 
 using System;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using RoadCaptain.GameStates;
 using RoadCaptain.Ports;
-using RoadCaptain.Runner.HostedServices;
 using RoadCaptain.Runner.ViewModels;
 using Point = System.Drawing.Point;
 
@@ -18,24 +15,16 @@ namespace RoadCaptain.Runner
     /// <summary>
     /// Interaction logic for InGameNavigationWindow.xaml
     /// </summary>
+    // ReSharper disable once RedundantExtendsListEntry
     public partial class InGameNavigationWindow : Window
     {
-        private readonly ISynchronizer _synchronizer;
         private readonly MonitoringEvents _monitoringEvents;
-        private readonly CancellationTokenSource _tokenSource = new();
         private InGameNavigationWindowViewModel _viewModel;
-
-
-        public InGameNavigationWindow(
-            ISynchronizer synchronizer,
-            IGameStateReceiver gameStateReceiver, 
+        
+        public InGameNavigationWindow(IGameStateReceiver gameStateReceiver, 
             MonitoringEvents monitoringEvents)
         {
-            _synchronizer = synchronizer;
             _monitoringEvents = monitoringEvents;
-            
-            // Start the receiver whenever we trigger the synchronization event
-            _synchronizer.RegisterStart(() => Task.Factory.StartNew(() => gameStateReceiver.Start(_tokenSource.Token)));
             
             InitializeComponent();
 
@@ -71,9 +60,6 @@ namespace RoadCaptain.Runner
         private void InGameNavigationWindow_OnActivated(object sender, EventArgs e)
         {
             _viewModel = DataContext as InGameNavigationWindowViewModel;
-
-            // Not to worry about multiple OnActivated events, TriggerSynchronizationEvent is idempotent
-            _synchronizer.TriggerSynchronizationEvent();
         }
 
         private void GameStateReceived(GameState gameState)

@@ -9,6 +9,7 @@ using System.Net;
 using System.Net.Sockets;
 using Google.Protobuf;
 using RoadCaptain.Adapters.Protobuf;
+using RoadCaptain.GameStates;
 using RoadCaptain.Ports;
 
 namespace RoadCaptain.Adapters
@@ -18,12 +19,16 @@ namespace RoadCaptain.Adapters
         private readonly Socket _socket;
         private Socket _acceptedSocket;
         private readonly MonitoringEvents _monitoringEvents;
+        private readonly IGameStateDispatcher _gameStateDispatcher;
         private uint _commandCounter = 1;
 
-        public MessageReceiverFromSocket(MonitoringEvents monitoringEvents)
+        public MessageReceiverFromSocket(
+            MonitoringEvents monitoringEvents,
+            IGameStateDispatcher gameStateDispatcher)
         {
             _monitoringEvents = monitoringEvents;
-            
+            _gameStateDispatcher = gameStateDispatcher;
+
             _socket = new Socket(
                 AddressFamily.InterNetwork,
                 SocketType.Stream,
@@ -78,6 +83,8 @@ namespace RoadCaptain.Adapters
                     _monitoringEvents.WaitingForConnection();
                     
                     _acceptedSocket = _socket.Accept();
+
+                    _gameStateDispatcher.Dispatch(new ConnectedToZwiftState());
 
                     _monitoringEvents.AcceptedConnection();
                 }
@@ -135,6 +142,8 @@ namespace RoadCaptain.Adapters
                     // Clear this so that the next call to ReceiveMessageBytes() will block
                     // on accepting a new connection.
                     _acceptedSocket = null;
+
+                    _gameStateDispatcher.Dispatch(new LoggedInState());
 
                     return null;
                 }

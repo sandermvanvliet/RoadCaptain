@@ -14,7 +14,7 @@ namespace RoadCaptain.UseCases
         private bool _pingedBefore;
         private static readonly object SyncRoot = new();
 
-        private GameState _gameState = new NotInGameState();
+        private GameState _gameState;
         private List<Segment> _segments;
         private readonly ISegmentStore _segmentStore;
         private PlannedRoute _route;
@@ -54,7 +54,7 @@ namespace RoadCaptain.UseCases
                     return;
                 }
 
-                if (_gameState.GetType() != value.GetType())
+                if (_gameState != null && _gameState.GetType() != value.GetType())
                 {
                     _monitoringEvents.Information("Game state changed from {OldState} to {NewState}", _gameState.GetType().Name, value.GetType().Name);
                 }
@@ -68,7 +68,7 @@ namespace RoadCaptain.UseCases
         public void Execute(CancellationToken token)
         {
             // Typically the game state receiver has already been started
-            // and this task exists early.
+            // and this task exists immediately.
             Task.Factory.StartNew(() => _gameStateReceiver.Start(token));
 
             while (!token.IsCancellationRequested)

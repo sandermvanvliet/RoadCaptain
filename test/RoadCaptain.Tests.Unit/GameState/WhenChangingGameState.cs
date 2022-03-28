@@ -14,7 +14,7 @@ namespace RoadCaptain.Tests.Unit.GameState
         [Fact]
         public void GivenNotInGameStateAndGameIsEntered_ResultingStateIsInGameStateWithActivityIdSet()
         {
-            var state = new NotInGameState();
+            var state = new ConnectedToZwiftState();
 
             var result = state.EnterGame(RiderId, ActivityId);
 
@@ -36,7 +36,7 @@ namespace RoadCaptain.Tests.Unit.GameState
 
             result
                 .Should()
-                .BeOfType<NotInGameState>();
+                .BeOfType<ConnectedToZwiftState>();
         }
 
         [Fact]
