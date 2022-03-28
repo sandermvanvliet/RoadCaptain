@@ -175,6 +175,11 @@ namespace RoadCaptain.Runner
                 }
             }
 
+            if (gameState is ErrorState errorState)
+            {
+                _container.Resolve<IWindowService>().ShowErrorDialog(errorState.Exception.Message);
+            }
+
             _previousGameState = gameState;
         }
 
@@ -221,10 +226,12 @@ namespace RoadCaptain.Runner
 
             var connectUseCase = _container.Resolve<ConnectToZwiftUseCase>();
 
-            _initiatorTask = connectUseCase
-                .ExecuteAsync(
-                    new ConnectCommand { AccessToken = _container.Resolve<Configuration>().AccessToken },
-                    _connectionToken.Token);
+            _initiatorTask = Task.Factory.StartNew(() =>
+                    connectUseCase
+                        .ExecuteAsync(
+                            new ConnectCommand { AccessToken = _container.Resolve<Configuration>().AccessToken },
+                            _connectionToken.Token),
+                TaskCreationOptions.LongRunning);
         }
 
         private void StartMessageHandler()

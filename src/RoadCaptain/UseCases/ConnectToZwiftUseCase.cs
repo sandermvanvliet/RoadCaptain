@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.NetworkInformation;
@@ -16,15 +17,18 @@ namespace RoadCaptain.UseCases
         private readonly IZwift _zwift;
         private readonly MonitoringEvents _monitoringEvents;
         private readonly IGameStateReceiver _gameStateReceiver;
+        private readonly IGameStateDispatcher _gameStateDispatcher;
         private bool _userIsInGame;
 
         public ConnectToZwiftUseCase(IZwift zwift,
             MonitoringEvents monitoringEvents, 
-            IGameStateReceiver gameStateReceiver)
+            IGameStateReceiver gameStateReceiver,
+            IGameStateDispatcher gameStateDispatcher)
         {
             _zwift = zwift;
             _monitoringEvents = monitoringEvents;
             _gameStateReceiver = gameStateReceiver;
+            _gameStateDispatcher = gameStateDispatcher;
             _gameStateReceiver.Register(
                 null,
                 null,
@@ -57,45 +61,62 @@ namespace RoadCaptain.UseCases
 
             _monitoringEvents.Information("Telling Zwift to connect to {IPAddress}:21587", ipAddress);
 
-            var relayUri = await _zwift.RetrieveRelayUrl(connectCommand.AccessToken);
+            Uri relayUri;
 
-            await _zwift.InitiateRelayAsync(connectCommand.AccessToken, relayUri, ipAddress);
+            try
+            {
+                relayUri = await _zwift.RetrieveRelayUrl(connectCommand.AccessToken);
+
+                await _zwift.InitiateRelayAsync(connectCommand.AccessToken, relayUri, ipAddress);
+            }
+            catch (Exception e)
+            {
+                _gameStateDispatcher.Dispatch(new ErrorState(e));
+                return;
+            }
 
             var remainingAttempts = 5;
 
-            while (!cancellationToken.IsCancellationRequested)
+            try
             {
-                // _userIsInGame is set through a game state update
-                // which we receive directly on a connection with Zwift.
-                // That means that if it is set we can exit.
-                if (_userIsInGame)
+                while (!cancellationToken.IsCancellationRequested)
                 {
-                    _monitoringEvents.UserIsRiding();
-                    break;
+                    // _userIsInGame is set through a game state update
+                    // which we receive directly on a connection with Zwift.
+                    // That means that if it is set we can exit.
+                    if (_userIsInGame)
+                    {
+                        _monitoringEvents.UserIsRiding();
+                        break;
+                    }
+
+                    // Check whether user is currently in-game
+                    // If not, sleep for a while and try again
+                    var profile = await _zwift.GetProfileAsync(connectCommand.AccessToken);
+
+                    if (profile != null && profile.Riding)
+                    {
+                        _monitoringEvents.UserIsRiding();
+                        break;
+                    }
+
+                    remainingAttempts--;
+
+                    if (remainingAttempts <= 0 && !_userIsInGame)
+                    {
+                        _monitoringEvents.Warning("Zwift did not connect, attempting link again on {IPAddress}:21587", ipAddress);
+
+                        await _zwift.InitiateRelayAsync(connectCommand.AccessToken, relayUri, ipAddress);
+
+                        remainingAttempts = 5;
+                    }
+
+                    Thread.Sleep(5 * 1000);
                 }
-
-                // Check whether user is currently in-game
-                // If not, sleep for a while and try again
-                var profile = await _zwift.GetProfileAsync(connectCommand.AccessToken);
-
-                if (profile != null && profile.Riding)
-                {
-                    _monitoringEvents.UserIsRiding();
-                    break;
-                }
-
-                remainingAttempts--;
-
-                if (remainingAttempts <= 0 && !_userIsInGame)
-                {
-                    _monitoringEvents.Warning("Zwift did not connect, attempting link again on {IPAddress}:21587", ipAddress);
-
-                    await _zwift.InitiateRelayAsync(connectCommand.AccessToken, relayUri, ipAddress);
-
-                    remainingAttempts = 5;
-                }
-
-                Thread.Sleep(5 * 1000);
+            }
+            catch (Exception e)
+            {
+                _gameStateDispatcher.Dispatch(new ErrorState(e));
             }
         }
 

@@ -30,5 +30,9 @@ namespace RoadCaptain.Runner.Tests.Unit.ViewModels
 
             return LogInDialogResult;
         }
+
+        public void ShowErrorDialog(string message)
+        {
+        }
     }
 }

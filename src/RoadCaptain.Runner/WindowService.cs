@@ -58,6 +58,15 @@ namespace RoadCaptain.Runner
 
             return null;
         }
+
+        public void ShowErrorDialog(string message)
+        {
+            MessageBox.Show(
+                message,
+                "An error occurred",
+                MessageBoxButton.OK,
+                MessageBoxImage.Error);
+        }
     }
 
     public interface IWindowService
@@ -65,5 +74,6 @@ namespace RoadCaptain.Runner
         string ShowOpenFileDialog();
         void ShowInGameWindow(Window owner, InGameNavigationWindowViewModel viewModel);
         TokenResponse ShowLogInDialog(Window owner);
+        void ShowErrorDialog(string message);
     }
 }
