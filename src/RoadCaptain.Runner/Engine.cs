@@ -19,7 +19,7 @@ namespace RoadCaptain.Runner
         private readonly HandleZwiftMessagesUseCase _handleMessageUseCase;
         private readonly DecodeIncomingMessagesUseCase _listenerUseCase;
         private readonly LoadRouteUseCase _loadRouteUseCase;
-        private readonly ILogger _logger;
+        private readonly MonitoringEvents _monitoringEvents;
         private readonly NavigationUseCase _navigationUseCase;
         private readonly CancellationTokenSource _tokenSource = new();
         private readonly IWindowService _windowService;
@@ -34,7 +34,7 @@ namespace RoadCaptain.Runner
         private GameState _previousGameState;
 
         public Engine(
-            ILogger logger,
+            MonitoringEvents monitoringEvents,
             LoadRouteUseCase loadRouteUseCase,
             Configuration configuration,
             IWindowService windowService,
@@ -44,7 +44,7 @@ namespace RoadCaptain.Runner
             NavigationUseCase navigationUseCase,
             IGameStateReceiver gameStateReceiver)
         {
-            _logger = logger;
+            _monitoringEvents = monitoringEvents;
             _loadRouteUseCase = loadRouteUseCase;
             _configuration = configuration;
             _windowService = windowService;
@@ -57,14 +57,11 @@ namespace RoadCaptain.Runner
 
         private void GameStateReceived(GameState gameState)
         {
-            _logger.Debug(
-                "Transitioning from '{CurrentGameState}' to '{NewGameState}'",
-                _previousGameState?.GetType().Name ?? "initial",
-                gameState.GetType().Name);
+            _monitoringEvents.StateTransition(_previousGameState, gameState);
 
             if (gameState is LoggedInState)
             {
-                _logger.Information("User logged in");
+                _monitoringEvents.Information("User logged in");
 
                 // Once the user has logged in we need to do two things:
                 // 1. Start the connection listener (DecodeIncomingMessagesUseCase)
@@ -89,11 +86,11 @@ namespace RoadCaptain.Runner
             }
             else if (gameState is WaitingForConnectionState)
             {
-                _logger.Information("Waiting for connection from Zwift");
+                _monitoringEvents.Information("Waiting for connection from Zwift");
             }
             else if (gameState is ConnectedToZwiftState)
             {
-                _logger.Information("Connected to Zwift");
+                _monitoringEvents.Information("Connected to Zwift");
 
                 _loadRouteUseCase.Execute(new LoadRouteCommand { Path = _configuration.Route });
 
@@ -103,7 +100,7 @@ namespace RoadCaptain.Runner
 
             if (gameState is InGameState && _previousGameState is not InGameState)
             {
-                _logger.Information("User entered the game");
+                _monitoringEvents.Information("User entered the game");
 
                 // Start navigation if it is not running
                 if (!_navigationTask.IsRunning())
@@ -127,7 +124,7 @@ namespace RoadCaptain.Runner
                 return;
             }
 
-            _logger.Information("Starting connection listener");
+            _monitoringEvents.Information("Starting connection listener");
 
             _listenerTask = Task.Factory.StartNew(() => _listenerUseCase.ExecuteAsync(_connectionToken.Token),
                 TaskCreationOptions.LongRunning);
@@ -140,7 +137,7 @@ namespace RoadCaptain.Runner
                 return;
             }
 
-            _logger.Information("Starting connection initiator");
+            _monitoringEvents.Information("Starting connection initiator");
 
             _initiatorTask = Task.Factory.StartNew(() =>
                     _connectUseCase
@@ -157,7 +154,7 @@ namespace RoadCaptain.Runner
                 return;
             }
 
-            _logger.Information("Starting message handler");
+            _monitoringEvents.Information("Starting message handler");
 
             _messageHandlingToken = new CancellationTokenSource();
             _messageHandlingTask = Task.Factory.StartNew(
@@ -172,7 +169,7 @@ namespace RoadCaptain.Runner
                 return;
             }
 
-            _logger.Information("Starting navigation");
+            _monitoringEvents.Information("Starting navigation");
 
             _navigationToken = new CancellationTokenSource();
             _navigationTask = Task.Factory.StartNew(

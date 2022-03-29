@@ -3,6 +3,7 @@
 // See LICENSE or https://choosealicense.com/licenses/artistic-2.0/
 
 using System.Reflection;
+using RoadCaptain.GameStates;
 
 namespace RoadCaptain.Runner
 {
@@ -25,14 +26,13 @@ namespace RoadCaptain.Runner
             monitoringEvents.Information("RoadCaptain stopped");
         }
 
-        public static void ServiceStarted(this MonitoringEvents monitoringEvents, string serviceName)
+        public static void StateTransition(this MonitoringEvents monitoringEvents, GameState previousGameState,
+            GameState gameState)
         {
-            monitoringEvents.Information("Service {Name} started", serviceName);
-        }
-
-        public static void ServiceStopped(this MonitoringEvents monitoringEvents, string serviceName)
-        {
-            monitoringEvents.Information("Service {Name} stopped", serviceName);
+            monitoringEvents.Debug(
+                "Transitioning from '{CurrentGameState}' to '{NewGameState}'",
+                previousGameState?.GetType().Name ?? "initial",
+                gameState.GetType().Name);
         }
 
         private static string GetApplicationVersion()

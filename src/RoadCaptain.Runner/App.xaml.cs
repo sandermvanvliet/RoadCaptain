@@ -20,6 +20,7 @@ namespace RoadCaptain.Runner
         private readonly IContainer _container;
         private readonly Logger _logger;
         private readonly Engine _engine;
+        private readonly MonitoringEvents _monitoringEvents;
 
         public App()
         {
@@ -46,10 +47,13 @@ namespace RoadCaptain.Runner
             _container = builder.Build();
 
             _engine = _container.Resolve<Engine>();
+            _monitoringEvents = _container.Resolve<MonitoringEvents>();
         }
 
         private void App_OnStartup(object sender, StartupEventArgs e)
         {
+            _monitoringEvents.ApplicationStarted();
+
             _engine.Start();
 
             var mainWindow = _container.Resolve<MainWindow>();
@@ -59,7 +63,11 @@ namespace RoadCaptain.Runner
 
         private void App_OnExit(object sender, ExitEventArgs e)
         {
+            _monitoringEvents.ApplicationStopping();
+
             _engine.Stop();
+
+            _monitoringEvents.ApplicationStopped();
 
             // Flush the logger
             _logger?.Dispose();
