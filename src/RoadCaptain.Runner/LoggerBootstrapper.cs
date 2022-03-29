@@ -25,6 +25,7 @@ namespace RoadCaptain.Runner
 #endif
 
             return loggerConfiguration
+                .MinimumLevel.Debug()
                 .WriteTo.Debug(LogEventLevel.Debug)
                 .WriteTo.File(logFilePath, LogEventLevel.Debug)
                 .CreateLogger();
