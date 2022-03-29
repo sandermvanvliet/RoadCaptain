@@ -11,7 +11,13 @@ namespace RoadCaptain.GameStates
             Exception = exception;
         }
 
-        public override uint RiderId => 0;
+        public ErrorState(Exception exception, uint riderId)
+        {
+            Exception = exception;
+            RiderId = riderId;
+        }
+
+        public override uint RiderId { get; }
 
         [JsonProperty]
         public Exception Exception { get; private set; }
