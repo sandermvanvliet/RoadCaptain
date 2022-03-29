@@ -122,8 +122,10 @@ namespace RoadCaptain.Runner
             else if (gameState is ConnectedToZwiftState)
             {
                 _logger.Information("Connected to Zwift");
-
-                // TODO: load the route
+                
+                var configuration = _container.Resolve<Configuration>();
+                var useCase = _container.Resolve<LoadRouteUseCase>();
+                useCase.Execute(new LoadRouteCommand { Path = configuration.Route });
 
                 // Start handling Zwift messages
                 StartMessageHandler();

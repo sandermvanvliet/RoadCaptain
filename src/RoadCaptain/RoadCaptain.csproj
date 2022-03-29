@@ -5,10 +5,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Commands\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Autofac" Version="6.3.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="System.IO.Pipelines" Version="6.0.2" />
