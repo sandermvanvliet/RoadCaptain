@@ -29,6 +29,11 @@ namespace RoadCaptain.Tests.Unit
             return AvailableBytes;
         }
 
+        public void Shutdown()
+        {
+            throw new System.NotImplementedException();
+        }
+
         public byte[] AvailableBytes { get; set; }
     }
 }

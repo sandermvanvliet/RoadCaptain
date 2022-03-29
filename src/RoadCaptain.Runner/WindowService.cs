@@ -33,12 +33,19 @@ namespace RoadCaptain.Runner
                 : null;
         }
 
+        public void ShowMainWindow()
+        {
+            var window = _componentContext.Resolve<MainWindow>();
+
+            window.Show();
+        }
+
         public void ShowInGameWindow(Window owner, InGameNavigationWindowViewModel viewModel)
         {
             var inGameWindow = _componentContext.Resolve<InGameNavigationWindow>();
 
             inGameWindow.DataContext = viewModel;
-            
+
             inGameWindow.Show();
 
             owner.Close();
@@ -47,7 +54,7 @@ namespace RoadCaptain.Runner
         public TokenResponse ShowLogInDialog(Window owner)
         {
             var zwiftLoginWindow = _componentContext.Resolve<ZwiftLoginWindow>();
-            
+
             zwiftLoginWindow.Owner = owner;
             zwiftLoginWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
 
@@ -59,13 +66,25 @@ namespace RoadCaptain.Runner
             return null;
         }
 
-        public void ShowErrorDialog(string message)
+        public void ShowErrorDialog(string message, Window owner)
         {
-            MessageBox.Show(
-                message,
-                "An error occurred",
-                MessageBoxButton.OK,
-                MessageBoxImage.Error);
+            if (owner != null)
+            {
+                MessageBox.Show(
+                    owner,
+                    message,
+                    "An error occurred",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Error);
+            }
+            else
+            {
+                MessageBox.Show(
+                    message,
+                    "An error occurred",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Error);
+            }
         }
     }
 
@@ -74,6 +93,7 @@ namespace RoadCaptain.Runner
         string ShowOpenFileDialog();
         void ShowInGameWindow(Window owner, InGameNavigationWindowViewModel viewModel);
         TokenResponse ShowLogInDialog(Window owner);
-        void ShowErrorDialog(string message);
+        void ShowErrorDialog(string message, Window owner = null);
+        void ShowMainWindow();
     }
 }

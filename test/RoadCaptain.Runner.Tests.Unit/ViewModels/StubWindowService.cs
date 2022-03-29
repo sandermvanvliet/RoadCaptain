@@ -31,8 +31,13 @@ namespace RoadCaptain.Runner.Tests.Unit.ViewModels
             return LogInDialogResult;
         }
 
-        public void ShowErrorDialog(string message)
+        public void ShowErrorDialog(string message, Window owner = null)
         {
+        }
+
+        public void ShowMainWindow()
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

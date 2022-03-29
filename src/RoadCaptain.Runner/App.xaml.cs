@@ -17,10 +17,10 @@ namespace RoadCaptain.Runner
     // ReSharper disable once RedundantExtendsListEntry
     public partial class App : Application
     {
-        private readonly IContainer _container;
         private readonly Logger _logger;
         private readonly Engine _engine;
         private readonly MonitoringEvents _monitoringEvents;
+        private readonly IWindowService _windowService;
 
         public App()
         {
@@ -44,21 +44,20 @@ namespace RoadCaptain.Runner
             // Wire up registrations through the autofac.json file
             builder.RegisterModule(new ConfigurationModule(configuration));
 
-            _container = builder.Build();
+            var container = builder.Build();
 
-            _engine = _container.Resolve<Engine>();
-            _monitoringEvents = _container.Resolve<MonitoringEvents>();
+            _engine = container.Resolve<Engine>();
+            _monitoringEvents = container.Resolve<MonitoringEvents>();
+            _windowService = container.Resolve<IWindowService>();
         }
 
         private void App_OnStartup(object sender, StartupEventArgs e)
         {
             _monitoringEvents.ApplicationStarted();
 
+            _windowService.ShowMainWindow();
+
             _engine.Start();
-
-            var mainWindow = _container.Resolve<MainWindow>();
-
-            mainWindow.Show();
         }
 
         private void App_OnExit(object sender, ExitEventArgs e)
