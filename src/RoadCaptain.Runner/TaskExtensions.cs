@@ -22,9 +22,9 @@ namespace RoadCaptain.Runner
             }
         }
 
-        public static bool IsRunning(this Task task)
+        public static bool IsRunning(this TaskWithCancellation task)
         {
-            return task is
+            return task?.Task is
             {
                 Status: 
                 TaskStatus.Created or

@@ -1,13 +1,10 @@
 using System;
 using System.Linq.Expressions;
 using System.Reflection;
-using System.Threading;
-using System.Threading.Tasks;
 using RoadCaptain.Commands;
 using RoadCaptain.GameStates;
 using RoadCaptain.Ports;
 using RoadCaptain.UseCases;
-using Serilog;
 
 namespace RoadCaptain.Runner
 {
@@ -21,16 +18,14 @@ namespace RoadCaptain.Runner
         private readonly LoadRouteUseCase _loadRouteUseCase;
         private readonly MonitoringEvents _monitoringEvents;
         private readonly NavigationUseCase _navigationUseCase;
-        private readonly CancellationTokenSource _tokenSource = new();
         private readonly IWindowService _windowService;
-        private CancellationTokenSource _connectionToken = new();
-        private Task _gameStateReceiverTask;
-        private Task _initiatorTask;
-        private Task _listenerTask;
-        private Task _messageHandlingTask;
-        private CancellationTokenSource _messageHandlingToken;
-        private Task _navigationTask;
-        private CancellationTokenSource _navigationToken;
+        
+        private TaskWithCancellation _gameStateReceiverTask;
+        private TaskWithCancellation _initiatorTask;
+        private TaskWithCancellation _listenerTask;
+        private TaskWithCancellation _messageHandlingTask;
+        private TaskWithCancellation _navigationTask;
+
         private GameState _previousGameState;
 
         public Engine(
@@ -68,20 +63,18 @@ namespace RoadCaptain.Runner
                 // 2. Start the connection initiator (ConnectToZwiftUseCase)
                 // When the listener picks up a new connection it will
                 // dispatch the ConnectedToZwift state.
-                _connectionToken = new CancellationTokenSource();
-
                 StartZwiftConnectionListener();
                 StartZwiftConnectionInitiator();
             }
             else if (gameState is NotLoggedInState)
             {
                 // Stop the connection initiator and listener
-                CancelAndCleanUp(_connectionToken, () => _listenerTask);
-                CancelAndCleanUp(_connectionToken, () => _initiatorTask);
+                CancelAndCleanUp(() => _listenerTask);
+                CancelAndCleanUp(() => _initiatorTask);
 
                 if (_messageHandlingTask.IsRunning())
                 {
-                    CancelAndCleanUp(_messageHandlingToken, () => _messageHandlingTask);
+                    CancelAndCleanUp(() => _messageHandlingTask);
                 }
             }
             else if (gameState is WaitingForConnectionState)
@@ -126,8 +119,7 @@ namespace RoadCaptain.Runner
 
             _monitoringEvents.Information("Starting connection listener");
 
-            _listenerTask = Task.Factory.StartNew(() => _listenerUseCase.ExecuteAsync(_connectionToken.Token),
-                TaskCreationOptions.LongRunning);
+            _listenerTask = TaskWithCancellation.Start(cancellationToken => _listenerUseCase.ExecuteAsync(cancellationToken));
         }
 
         private void StartZwiftConnectionInitiator()
@@ -139,12 +131,13 @@ namespace RoadCaptain.Runner
 
             _monitoringEvents.Information("Starting connection initiator");
 
-            _initiatorTask = Task.Factory.StartNew(() =>
-                    _connectUseCase
-                        .ExecuteAsync(
-                            new ConnectCommand { AccessToken = _configuration.AccessToken },
-                            _connectionToken.Token),
-                TaskCreationOptions.LongRunning);
+            _initiatorTask = _listenerTask.StartLinkedTask(
+                token => _connectUseCase
+                    .ExecuteAsync(
+                        new ConnectCommand { AccessToken = _configuration.AccessToken },
+                        token)
+                    .GetAwaiter()
+                    .GetResult());
         }
 
         private void StartMessageHandler()
@@ -155,11 +148,8 @@ namespace RoadCaptain.Runner
             }
 
             _monitoringEvents.Information("Starting message handler");
-
-            _messageHandlingToken = new CancellationTokenSource();
-            _messageHandlingTask = Task.Factory.StartNew(
-                () => _handleMessageUseCase.Execute(_messageHandlingToken.Token),
-                TaskCreationOptions.LongRunning);
+            
+            _messageHandlingTask = TaskWithCancellation.Start(token => _handleMessageUseCase.Execute(token));
         }
 
         private void StartNavigation()
@@ -170,25 +160,17 @@ namespace RoadCaptain.Runner
             }
 
             _monitoringEvents.Information("Starting navigation");
-
-            _navigationToken = new CancellationTokenSource();
-            _navigationTask = Task.Factory.StartNew(
-                () => _navigationUseCase.Execute(_navigationToken.Token),
-                TaskCreationOptions.LongRunning);
+            
+            _navigationTask = TaskWithCancellation.Start(token => _navigationUseCase.Execute(token));
         }
 
-        private void CancelAndCleanUp(CancellationTokenSource tokenSource, Expression<Func<Task>> func)
+        private void CancelAndCleanUp(Expression<Func<TaskWithCancellation>> func)
         {
-            if (tokenSource is { IsCancellationRequested: false })
-            {
-                tokenSource.Cancel();
-            }
-
             if (func.Body is MemberExpression { Member: FieldInfo fieldInfo })
             {
-                if (fieldInfo.GetValue(this) is Task task)
+                if (fieldInfo.GetValue(this) is TaskWithCancellation task)
                 {
-                    task.SafeWaitForCancellation();
+                    task.Cancel();
 
                     fieldInfo.SetValue(this, null);
                 }
@@ -197,19 +179,18 @@ namespace RoadCaptain.Runner
 
         public void Stop()
         {
-            CancelAndCleanUp(_tokenSource, () => _gameStateReceiverTask);
-            CancelAndCleanUp(_messageHandlingToken, () => _messageHandlingTask);
-            CancelAndCleanUp(_connectionToken, () => _listenerTask);
-            CancelAndCleanUp(_connectionToken, () => _initiatorTask);
-            CancelAndCleanUp(_navigationToken, () => _navigationTask);
+            CancelAndCleanUp(() => _gameStateReceiverTask);
+            CancelAndCleanUp(() => _messageHandlingTask);
+            CancelAndCleanUp(() => _listenerTask);
+            CancelAndCleanUp(() => _initiatorTask);
+            CancelAndCleanUp(() => _navigationTask);
         }
 
         public void Start()
         {
             _gameStateReceiver.Register(null, null, GameStateReceived);
-            _gameStateReceiverTask = Task.Factory.StartNew(
-                () => _gameStateReceiver.Start(_tokenSource.Token),
-                TaskCreationOptions.LongRunning);
+
+            _gameStateReceiverTask = TaskWithCancellation.Start(token => _gameStateReceiver.Start(token));
         }
     }
 }

@@ -21,7 +21,8 @@ namespace RoadCaptain.Runner
                 .RegisterAssemblyTypes(ThisAssembly)
                 .Where(type => type != typeof(Configuration) &&
                                type != typeof(MonitoringEventsWithSerilog) &&
-                               type != typeof(WindowService))
+                               type != typeof(WindowService) &&
+                               type != typeof(TaskWithCancellation))
                 .AsSelf();
         }
     }
