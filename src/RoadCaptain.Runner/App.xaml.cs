@@ -88,7 +88,10 @@ namespace RoadCaptain.Runner
 
         private void GameStateReceived(GameState gameState)
         {
-            _logger.Debug("Received game state of type {GameStateType}", gameState.GetType().Name);
+            _logger.Debug(
+                "Transitioning from '{CurrentGameState}' to '{NewGameState}'",
+                _previousGameState?.GetType().Name ?? "initial", 
+                gameState.GetType().Name);
 
             if (gameState is LoggedInState)
             {
