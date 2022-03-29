@@ -17,7 +17,6 @@ using RoadCaptain.Ports;
 using RoadCaptain.UseCases;
 using Serilog;
 using Serilog.Core;
-using Serilog.Events;
 
 namespace RoadCaptain.Runner
 {
@@ -27,8 +26,6 @@ namespace RoadCaptain.Runner
     // ReSharper disable once RedundantExtendsListEntry
     public partial class App : Application
     {
-        private const string CompanyName = "Codenizer BV";
-        private const string ApplicationName = "RoadCaptain";
         private readonly IContainer _container;
         private readonly Logger _logger;
         private readonly CancellationTokenSource _tokenSource = new();
@@ -45,7 +42,7 @@ namespace RoadCaptain.Runner
 
         public App()
         {
-            _logger = CreateLogger();
+            _logger = LoggerBootstrapper.CreateLogger();
 
             var configuration = new ConfigurationBuilder()
                 .AddJsonFile("appsettings.json", true)
@@ -66,38 +63,6 @@ namespace RoadCaptain.Runner
             builder.RegisterModule(new ConfigurationModule(configuration));
 
             _container = builder.Build();
-        }
-
-        private static Logger CreateLogger()
-        {
-            var loggerConfiguration = new LoggerConfiguration().Enrich.FromLogContext();
-            var logFileName = $"roadcaptain-log-{DateTime.UtcNow:yyyy-MM-ddTHHmmss}.log";
-
-#if DEBUG
-            // In debug builds always write to the current directory for simplicity sake
-            // as that makes the log file easier to pick up from bin\Debug
-            var logFilePath = logFileName;
-#else
-            // Because we install into Program Files (x86) we can't write a log file
-            // there when running as a regular user. Good Windows citizenship also
-            // means we should write data to the right place which is in the user
-            // AppData folder.
-            var localAppDataFolder = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-            
-            CreateDirectoryIfNotExists(Path.Combine(localAppDataFolder, CompanyName));
-            CreateDirectoryIfNotExists(Path.Combine(localAppDataFolder, CompanyName, ApplicationName));
-            
-            var logFilePath = Path.Combine(
-                            localAppDataFolder,
-                            CompanyName, 
-                            ApplicationName, 
-                            logFileName);
-#endif
-
-            return loggerConfiguration
-                .WriteTo.Debug(LogEventLevel.Debug)
-                .WriteTo.File(logFilePath, LogEventLevel.Debug)
-                .CreateLogger();
         }
 
         private void App_OnStartup(object sender, StartupEventArgs e)
@@ -255,20 +220,5 @@ namespace RoadCaptain.Runner
                 () => navigationUseCase.Execute(_navigationToken.Token),
                 TaskCreationOptions.LongRunning);
         }
-
-#if !DEBUG
-        private static void CreateDirectoryIfNotExists(string directory)
-        {
-            if (string.IsNullOrEmpty(directory))
-            {
-                throw new ArgumentException("Directory cannot be null or empty", nameof(directory));
-            }
-
-            if (!Directory.Exists(directory))
-            {
-                Directory.CreateDirectory(directory);
-            }
-        }
-#endif
     }
 }
