@@ -13,20 +13,25 @@ namespace RoadCaptain.Runner
 
         public static Logger CreateLogger()
         {
-            var loggerConfiguration = new LoggerConfiguration().Enrich.FromLogContext();
-            var logFileName = $"roadcaptain-log-{DateTime.UtcNow:yyyy-MM-ddTHHmmss}.log";
+            var loggerConfiguration = new LoggerConfiguration()
+                .Enrich.FromLogContext()
+                .MinimumLevel.Debug();
             
             // In debug builds always write to the current directory for simplicity sake
             // as that makes the log file easier to pick up from bin\Debug
-            var logFilePath = logFileName;
+            var logFilePath = $"roadcaptain-log-{DateTime.UtcNow:yyyy-MM-ddTHHmmss}.log";
             
 #if !DEBUG
-            logFilePath = CreateLoggerForReleaseMode(logFileName);
+            logFilePath = CreateLoggerForReleaseMode(logFilePath);
+
+            loggerConfiguration = loggerConfiguration
+                .MinimumLevel.Information();
+#else
+            loggerConfiguration = loggerConfiguration
+                .WriteTo.Debug(LogEventLevel.Debug);
 #endif
 
             return loggerConfiguration
-                .MinimumLevel.Debug()
-                .WriteTo.Debug(LogEventLevel.Debug)
                 .WriteTo.File(logFilePath, LogEventLevel.Debug)
                 .CreateLogger();
         }
