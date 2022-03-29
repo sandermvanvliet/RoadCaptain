@@ -64,7 +64,8 @@ namespace RoadCaptain.Tests.Unit
 
             var useCase = new ConnectToZwiftUseCase(new Zwift(new HttpClient(_handler)),
                 monitoringEvents, 
-                new InMemoryGameStateDispatcher(monitoringEvents));
+                new InMemoryGameStateDispatcher(monitoringEvents),
+                null);
 
             useCase.ExecuteAsync(new ConnectCommand
                     {
