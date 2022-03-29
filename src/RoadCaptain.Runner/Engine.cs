@@ -41,7 +41,7 @@ namespace RoadCaptain.Runner
             DecodeIncomingMessagesUseCase listenerUseCase,
             ConnectToZwiftUseCase connectUseCase,
             HandleZwiftMessagesUseCase handleMessageUseCase,
-            NavigationUseCase navigationUseCase, 
+            NavigationUseCase navigationUseCase,
             IGameStateReceiver gameStateReceiver)
         {
             _logger = logger;
@@ -120,24 +120,6 @@ namespace RoadCaptain.Runner
             _previousGameState = gameState;
         }
 
-        private void CancelAndCleanUp(CancellationTokenSource tokenSource, Expression<Func<Task>> func)
-        {
-            if (tokenSource is { IsCancellationRequested: false })
-            {
-                tokenSource.Cancel();
-            }
-
-            if (func.Body is MemberExpression { Member: FieldInfo fieldInfo })
-            {
-                if (fieldInfo.GetValue(this) is Task task)
-                {
-                    task.SafeWaitForCancellation();
-
-                    fieldInfo.SetValue(this, null);
-                }
-            }
-        }
-
         private void StartZwiftConnectionListener()
         {
             if (_listenerTask.IsRunning())
@@ -170,6 +152,11 @@ namespace RoadCaptain.Runner
 
         private void StartMessageHandler()
         {
+            if (_messageHandlingTask.IsRunning())
+            {
+                return;
+            }
+
             _logger.Information("Starting message handler");
 
             _messageHandlingToken = new CancellationTokenSource();
@@ -180,6 +167,11 @@ namespace RoadCaptain.Runner
 
         private void StartNavigation()
         {
+            if (_navigationTask.IsRunning())
+            {
+                return;
+            }
+
             _logger.Information("Starting navigation");
 
             _navigationToken = new CancellationTokenSource();
@@ -188,9 +180,31 @@ namespace RoadCaptain.Runner
                 TaskCreationOptions.LongRunning);
         }
 
+        private void CancelAndCleanUp(CancellationTokenSource tokenSource, Expression<Func<Task>> func)
+        {
+            if (tokenSource is { IsCancellationRequested: false })
+            {
+                tokenSource.Cancel();
+            }
+
+            if (func.Body is MemberExpression { Member: FieldInfo fieldInfo })
+            {
+                if (fieldInfo.GetValue(this) is Task task)
+                {
+                    task.SafeWaitForCancellation();
+
+                    fieldInfo.SetValue(this, null);
+                }
+            }
+        }
+
         public void Stop()
         {
             CancelAndCleanUp(_tokenSource, () => _gameStateReceiverTask);
+            CancelAndCleanUp(_messageHandlingToken, () => _messageHandlingTask);
+            CancelAndCleanUp(_connectionToken, () => _listenerTask);
+            CancelAndCleanUp(_connectionToken, () => _initiatorTask);
+            CancelAndCleanUp(_navigationToken, () => _navigationTask);
         }
 
         public void Start()
