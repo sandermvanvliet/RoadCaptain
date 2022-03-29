@@ -79,9 +79,9 @@ namespace RoadCaptain.Adapters
                         _socket.Bind(new IPEndPoint(IPAddress.Any, 21587));
                         _socket.Listen();
                     }
-                    
+
                     _monitoringEvents.WaitingForConnection();
-                    
+
                     _acceptedSocket = _socket.Accept();
 
                     _gameStateDispatcher.Dispatch(new ConnectedToZwiftState());
@@ -91,7 +91,13 @@ namespace RoadCaptain.Adapters
                 catch (ObjectDisposedException)
                 {
                     _monitoringEvents.Warning("Listening socket has been closed");
-                    throw new InvalidOperationException("Listening socket has been closed. ReceiveMessageBytes can't be called again");
+                    throw new InvalidOperationException(
+                        "Listening socket has been closed. ReceiveMessageBytes can't be called again");
+                }
+                catch (SocketException ex) when (ex.SocketErrorCode == SocketError.Interrupted)
+                {
+                    // Shutdown was called which closed the socket
+                    return null;
                 }
                 catch (SocketException ex)
                 {

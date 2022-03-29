@@ -71,6 +71,20 @@ namespace RoadCaptain.Adapters
             return null;
         }
 
+        public void Shutdown()
+        {
+            _tokenSource.Cancel();
+
+            try
+            {
+                _receiveTask.GetAwaiter().GetResult();
+            }
+            catch (OperationCanceledException)
+            {
+                // Nop
+            }
+        }
+
         private void EnqueueForReceive(byte[] payload)
         {
             // Put the payload on a queue and signal ReceiveMessageBytes() that it can unblock

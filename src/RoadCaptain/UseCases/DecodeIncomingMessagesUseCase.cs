@@ -27,6 +27,14 @@ namespace RoadCaptain.UseCases
 
         public Task ExecuteAsync(CancellationToken token)
         {
+            // Because socket.Accept() is a blocking call with
+            // no way of setting a time-out or passing a cancellation 
+            // token we need to be a bit clever.
+            // Register a handler on the cancellation token which
+            // effectively calls Shutdown() which calls Socket.Close()
+            // which in turn ensures that Accept() is terminated.
+            token.Register(() => _messageReceiver.Shutdown());
+
             // do-while to at least attempt one receive action
             do
             {
