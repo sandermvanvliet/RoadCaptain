@@ -31,7 +31,6 @@ namespace RoadCaptain.Tests.Unit
 
         public void Shutdown()
         {
-            throw new System.NotImplementedException();
         }
 
         public byte[] AvailableBytes { get; set; }
