@@ -46,6 +46,10 @@ namespace RoadCaptain.UseCases
             {
                 _userIsInGame = false;
             }
+            else if (gameState is WaitingForConnectionState && _userIsInGame)
+            {
+                _userIsInGame = false;
+            }
         }
 
         public async Task ExecuteAsync(ConnectCommand connectCommand, CancellationToken cancellationToken)
