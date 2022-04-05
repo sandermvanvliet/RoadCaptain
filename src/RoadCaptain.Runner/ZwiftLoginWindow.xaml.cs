@@ -67,9 +67,19 @@ namespace RoadCaptain.Runner
 
                     using var reader = new StreamReader(stream);
                     var content = await reader.ReadToEndAsync();
+                    
+                    TokenResponse = JsonSerializer.Deserialize<TokenResponse>(content) ?? new TokenResponse();
 
-                    TokenResponse = JsonSerializer.Deserialize<TokenResponse>(content);
+                    if (content.Contains("access_token"))
+                    {
+                        var snakeCaseTokenResponse = JsonSerializer.Deserialize<TokenResponseSnakeCase>(content) ?? new TokenResponseSnakeCase();
+                        TokenResponse.AccessToken = snakeCaseTokenResponse.AccessToken;
+                        TokenResponse.RefreshToken = snakeCaseTokenResponse.RefreshToken;
+                    }
 
+                    // We were successful
+                    DialogResult = true;
+                    
                     Close();
                 }
                 catch
