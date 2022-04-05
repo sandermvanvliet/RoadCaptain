@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Threading;
-using System.Threading.Tasks;
 using FluentAssertions;
 using RoadCaptain.Adapters;
 using RoadCaptain.GameStates;
@@ -16,7 +15,6 @@ namespace RoadCaptain.Runner.Tests.Unit.ViewModels
         private readonly MainWindowViewModel _viewModel;
         private readonly StubWindowService _windowService;
         private readonly InMemoryGameStateDispatcher _gameStateDispatcher;
-        private GameState _lastState;
 
         public WhenCallingLogInCommand()
         {
@@ -29,6 +27,7 @@ namespace RoadCaptain.Runner.Tests.Unit.ViewModels
                 new Configuration(null),
                 new AppSettings(),
                 _windowService,
+                _gameStateDispatcher,
                 _gameStateDispatcher);
         }
 

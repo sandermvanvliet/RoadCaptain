@@ -54,7 +54,7 @@ namespace RoadCaptain.Runner
         {
             _monitoringEvents.StateTransition(_previousGameState, gameState);
 
-            if (gameState is LoggedInState)
+            if (gameState is LoggedInState loggedInState)
             {
                 _monitoringEvents.Information("User logged in");
 
@@ -64,7 +64,7 @@ namespace RoadCaptain.Runner
                 // When the listener picks up a new connection it will
                 // dispatch the ConnectedToZwift state.
                 StartZwiftConnectionListener();
-                StartZwiftConnectionInitiator();
+                StartZwiftConnectionInitiator(loggedInState.AccessToken);
             }
             else if (gameState is NotLoggedInState)
             {
@@ -116,7 +116,6 @@ namespace RoadCaptain.Runner
                 // Clear token info on main window view model
                 // and show main window
                 _windowService.ShowErrorDialog(invalidCredentials.Exception.Message);
-                _configuration.AccessToken = null;
                 _windowService.ShowMainWindow();
             }
 
@@ -140,7 +139,7 @@ namespace RoadCaptain.Runner
             _listenerTask = TaskWithCancellation.Start(cancellationToken => _listenerUseCase.ExecuteAsync(cancellationToken));
         }
 
-        private void StartZwiftConnectionInitiator()
+        private void StartZwiftConnectionInitiator(string accessToken)
         {
             if (_initiatorTask.IsRunning())
             {
@@ -152,7 +151,7 @@ namespace RoadCaptain.Runner
             _initiatorTask = _listenerTask.StartLinkedTask(
                 token => _connectUseCase
                     .ExecuteAsync(
-                        new ConnectCommand { AccessToken = _configuration.AccessToken },
+                        new ConnectCommand { AccessToken = accessToken },
                         token)
                     .GetAwaiter()
                     .GetResult());

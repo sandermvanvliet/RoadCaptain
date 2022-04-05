@@ -16,11 +16,12 @@ namespace RoadCaptain.Adapters
 {
     internal class MessageReceiverFromSocket : IMessageReceiver, IZwiftGameConnection
     {
-        private readonly Socket _socket;
+        private Socket _socket;
         private Socket _acceptedSocket;
         private readonly MonitoringEvents _monitoringEvents;
         private readonly IGameStateDispatcher _gameStateDispatcher;
         private uint _commandCounter = 1;
+        private static readonly object SyncRoot = new();
 
         public MessageReceiverFromSocket(
             MonitoringEvents monitoringEvents,
@@ -29,13 +30,26 @@ namespace RoadCaptain.Adapters
             _monitoringEvents = monitoringEvents;
             _gameStateDispatcher = gameStateDispatcher;
 
-            _socket = new Socket(
-                AddressFamily.InterNetwork,
-                SocketType.Stream,
-                ProtocolType.Tcp)
+            _socket = CreateListeningSocket();
+        }
+
+        private Socket CreateListeningSocket()
+        {
+            if (_socket == null)
             {
-                NoDelay = true
-            };
+                lock (SyncRoot)
+                {
+                    _socket  = new Socket(
+                        AddressFamily.InterNetwork,
+                        SocketType.Stream,
+                        ProtocolType.Tcp)
+                    {
+                        NoDelay = true
+                    };
+                }
+            }
+
+            return _socket;
         }
 
         /*
@@ -70,6 +84,11 @@ namespace RoadCaptain.Adapters
                 // No, try to Accept() a new one
                 try
                 {
+                    if (_socket == null)
+                    {
+                        _socket = CreateListeningSocket();
+                    }
+
                     if (!_socket.IsBound)
                     {
                         // If the socket hasn't been bound before we also 
@@ -149,7 +168,8 @@ namespace RoadCaptain.Adapters
                     // on accepting a new connection.
                     _acceptedSocket = null;
 
-                    _gameStateDispatcher.Dispatch(new LoggedInState());
+                    // TODO: figure out the correct state for this, could be logged in
+                    _gameStateDispatcher.Dispatch(new NotLoggedInState());
 
                     return null;
                 }
@@ -217,6 +237,10 @@ namespace RoadCaptain.Adapters
             catch (SocketException)
             {
                 // Don't care
+            }
+            finally
+            {
+                _socket = null;
             }
         }
 

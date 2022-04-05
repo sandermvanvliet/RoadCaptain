@@ -2,6 +2,8 @@
 using System.Threading;
 using System.Windows.Threading;
 using FluentAssertions;
+using Microsoft.IdentityModel.JsonWebTokens;
+using Newtonsoft.Json;
 using RoadCaptain.Adapters;
 using RoadCaptain.GameStates;
 using RoadCaptain.Runner.ViewModels;
@@ -64,7 +66,7 @@ namespace RoadCaptain.Runner.Tests.Unit.ViewModels
         {
             var configuration = new Configuration(null)
             {
-                AccessToken = "some token"
+                AccessToken = ValidToken()
             };
             
             CreateViewModel(configuration)
@@ -78,7 +80,7 @@ namespace RoadCaptain.Runner.Tests.Unit.ViewModels
         {
             var configuration = new Configuration(null)
             {
-                AccessToken = "some token"
+                AccessToken = ValidToken()
             };
             
             CreateViewModel(configuration)
@@ -92,7 +94,7 @@ namespace RoadCaptain.Runner.Tests.Unit.ViewModels
         {
             var configuration = new Configuration(null)
             {
-                AccessToken = "some token"
+                AccessToken = ValidToken()
             };
             
             CreateViewModel(configuration)
@@ -106,7 +108,7 @@ namespace RoadCaptain.Runner.Tests.Unit.ViewModels
         {
             var configuration = new Configuration(null)
             {
-                AccessToken = "some token"
+                AccessToken = ValidToken()
             };
             
             CreateViewModel(configuration)
@@ -120,7 +122,7 @@ namespace RoadCaptain.Runner.Tests.Unit.ViewModels
         {
             var configuration = new Configuration(null)
             {
-                AccessToken = "some token",
+                AccessToken = ValidToken(),
                 Route = "some route"
             };
             
@@ -135,7 +137,7 @@ namespace RoadCaptain.Runner.Tests.Unit.ViewModels
         {
             var configuration = new Configuration(null)
             {
-                AccessToken = "some token"
+                AccessToken = ValidToken()
             };
 
             CreateViewModel(configuration);
@@ -153,6 +155,7 @@ namespace RoadCaptain.Runner.Tests.Unit.ViewModels
                 configuration, 
                 appSettings ?? new AppSettings(),
                 new WindowService(null, Dispatcher.CurrentDispatcher),
+                _gameStateDispatcher,
                 _gameStateDispatcher);
         }
 
@@ -187,6 +190,18 @@ namespace RoadCaptain.Runner.Tests.Unit.ViewModels
             _gameStateDispatcher.Start(tokenSource.Token);
 
             return lastState;
+        }
+
+        private static string ValidToken()
+        {
+            var handler = new JsonWebTokenHandler();
+
+            var token = handler.CreateToken(JsonConvert.SerializeObject(new
+            {
+                exp = DateTimeOffset.UtcNow.AddHours(3).ToUnixTimeSeconds()
+            }));
+
+            return token;
         }
     }
 }

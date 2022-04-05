@@ -5,6 +5,12 @@ namespace RoadCaptain.GameStates
 {
     public class LoggedInState : GameState
     {
+        public string AccessToken { get; }
+
+        public LoggedInState(string accessToken)
+        {
+            AccessToken = accessToken;
+        }
         public override uint RiderId => 0;
         public override GameState EnterGame(uint riderId, ulong activityId)
         {
