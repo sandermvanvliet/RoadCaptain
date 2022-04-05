@@ -4,6 +4,7 @@
 
 - Log files are now written to `%UserProfile%\AppData\Local\Codenizer BV\RoadCaptain`. This fixes an issue where log files wouldn't be written at all because RoadCaptain doesn't have write access to the installation directory (`Program Files (x86)\RoadCaptain`)
 - Changed from .Net 5 to .Net 6 because version 5 is end-of-life per 8th of May 2022
+- RoadCaptain will now show an error message if it can't connect to the Zwift back-end to initiate the game pairing
 
 ## 0.2.0.0
 
