@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Threading;
-using System.Windows.Threading;
 using FluentAssertions;
 using Microsoft.IdentityModel.JsonWebTokens;
 using Newtonsoft.Json;
