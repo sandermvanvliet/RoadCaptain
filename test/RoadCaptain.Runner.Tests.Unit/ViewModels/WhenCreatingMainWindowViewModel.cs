@@ -155,7 +155,6 @@ namespace RoadCaptain.Runner.Tests.Unit.ViewModels
                 configuration, 
                 appSettings ?? new AppSettings(),
                 new WindowService(null, Dispatcher.CurrentDispatcher),
-                _gameStateDispatcher,
                 _gameStateDispatcher);
         }
 

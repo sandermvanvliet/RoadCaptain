@@ -4,6 +4,7 @@
 
 using System.Windows;
 using System.Windows.Input;
+using RoadCaptain.Ports;
 using RoadCaptain.Runner.ViewModels;
 
 namespace RoadCaptain.Runner
@@ -13,8 +14,10 @@ namespace RoadCaptain.Runner
     /// </summary>
     public partial class MainWindow : Window
     {
-        public MainWindow(MainWindowViewModel viewModel)
+        public MainWindow(MainWindowViewModel viewModel, IGameStateReceiver gameStateReceiver)
         {
+            gameStateReceiver.Register(null, null, viewModel.UpdateGameState);
+
             DataContext = viewModel;
 
             InitializeComponent();

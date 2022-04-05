@@ -27,7 +27,6 @@ namespace RoadCaptain.Runner.Tests.Unit.ViewModels
                 new Configuration(null),
                 new AppSettings(),
                 _windowService,
-                _gameStateDispatcher,
                 _gameStateDispatcher);
         }
 

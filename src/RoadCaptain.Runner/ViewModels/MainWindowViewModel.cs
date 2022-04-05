@@ -32,8 +32,7 @@ namespace RoadCaptain.Runner.ViewModels
             Configuration configuration,
             AppSettings appSettings,
             IWindowService windowService,
-            IGameStateDispatcher gameStateDispatcher, 
-            IGameStateReceiver gameStateReceiver)
+            IGameStateDispatcher gameStateDispatcher)
         {
             _segmentStore = segmentStore;
             _routeStore = routeStore;
@@ -72,17 +71,17 @@ namespace RoadCaptain.Runner.ViewModels
             LogInCommand = new RelayCommand(
                 _ => LogInToZwift(_ as Window),
                 _ => !LoggedInToZwift);
+        }
 
-            gameStateReceiver.Register(null, null, state =>
+        public void UpdateGameState(object state)
+        {
+            if (state is InvalidCredentialsState)
             {
-                if (state is InvalidCredentialsState)
-                {
-                    ZwiftAccessToken = null;
-                    ZwiftAvatarUri = null;
-                    ZwiftName = null;
-                    LoggedInToZwift = false;
-                }
-            });
+                ZwiftAccessToken = null;
+                ZwiftAvatarUri = null;
+                ZwiftName = null;
+                LoggedInToZwift = false;
+            }
         }
 
         private static bool IsValidToken(string accessToken)

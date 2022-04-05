@@ -1,5 +1,4 @@
 ﻿using FluentAssertions;
-using RoadCaptain.Adapters;
 using RoadCaptain.Runner.ViewModels;
 using Xunit;
 
@@ -20,8 +19,7 @@ namespace RoadCaptain.Runner.Tests.Unit.ViewModels
                 new Configuration(null),
                 new AppSettings(),
                 _windowService,
-                null,
-                new InMemoryGameStateDispatcher(new NopMonitoringEvents()));
+                null);
         }
 
         [Fact]
