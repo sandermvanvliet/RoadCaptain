@@ -71,7 +71,7 @@ namespace RoadCaptain.UseCases
             }
             catch (Exception e)
             {
-                _gameStateDispatcher.Dispatch(new ErrorState(e));
+                _gameStateDispatcher.Dispatch(new InvalidCredentialsState(e));
                 return;
             }
 
@@ -123,7 +123,7 @@ namespace RoadCaptain.UseCases
         private static IPAddress GetMostLikelyAddress()
         {
             // Only look at network interfaces that are either Ethernet or WiFi
-            var nics = NetworkInterface
+            var networkInterfaces = NetworkInterface
                 .GetAllNetworkInterfaces()
                 .Where(nic => nic.NetworkInterfaceType == NetworkInterfaceType.Ethernet ||
                               nic.NetworkInterfaceType == NetworkInterfaceType.Wireless80211)
@@ -132,9 +132,9 @@ namespace RoadCaptain.UseCases
 
             var likelyAddresses = new List<IPAddress>();
 
-            foreach (var nic in nics)
+            foreach (var networkInterface in networkInterfaces)
             {
-                var ipProperties = nic.GetIPProperties();
+                var ipProperties = networkInterface.GetIPProperties();
 
                 // If there is no gateway set then the network interface
                 // most likely isn't the right one as it's probably not

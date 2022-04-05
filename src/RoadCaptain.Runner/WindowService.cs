@@ -42,17 +42,24 @@ namespace RoadCaptain.Runner
         {
             _dispatcher.Invoke(() =>
             {
-                var window = _componentContext.Resolve<MainWindow>();
-                
-                if (_currentWindow != null)
+                if (_currentWindow is MainWindow)
                 {
-                    _currentWindow.Close();
-                    _currentWindow = null;
+                    _currentWindow.Activate();
                 }
-                
-                _currentWindow = window;
+                else
+                {
+                    var window = _componentContext.Resolve<MainWindow>();
 
-                window.Show();
+                    if (_currentWindow != null)
+                    {
+                        _currentWindow.Close();
+                        _currentWindow = null;
+                    }
+
+                    _currentWindow = window;
+
+                    window.Show();
+                }
             });
         }
 

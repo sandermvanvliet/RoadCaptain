@@ -19,7 +19,7 @@ namespace RoadCaptain.Runner
         private readonly MonitoringEvents _monitoringEvents;
         private readonly NavigationUseCase _navigationUseCase;
         private readonly IWindowService _windowService;
-        
+
         private TaskWithCancellation _gameStateReceiverTask;
         private TaskWithCancellation _initiatorTask;
         private TaskWithCancellation _listenerTask;
@@ -102,6 +102,24 @@ namespace RoadCaptain.Runner
                 }
             }
 
+            if (gameState is InvalidCredentialsState invalidCredentials)
+            {
+                // Stop the connection initiator and listener
+                CancelAndCleanUp(() => _listenerTask);
+                CancelAndCleanUp(() => _initiatorTask);
+
+                if (_messageHandlingTask.IsRunning())
+                {
+                    CancelAndCleanUp(() => _messageHandlingTask);
+                }
+
+                // Clear token info on main window view model
+                // and show main window
+                _windowService.ShowErrorDialog(invalidCredentials.Exception.Message);
+                _configuration.AccessToken = null;
+                _windowService.ShowMainWindow();
+            }
+
             if (gameState is ErrorState errorState)
             {
                 _windowService.ShowErrorDialog(errorState.Exception.Message);
@@ -148,7 +166,7 @@ namespace RoadCaptain.Runner
             }
 
             _monitoringEvents.Information("Starting message handler");
-            
+
             _messageHandlingTask = TaskWithCancellation.Start(token => _handleMessageUseCase.Execute(token));
         }
 
@@ -160,7 +178,7 @@ namespace RoadCaptain.Runner
             }
 
             _monitoringEvents.Information("Starting navigation");
-            
+
             _navigationTask = TaskWithCancellation.Start(token => _navigationUseCase.Execute(token));
         }
 
