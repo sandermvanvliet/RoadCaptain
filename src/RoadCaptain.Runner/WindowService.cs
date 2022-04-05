@@ -27,7 +27,7 @@ namespace RoadCaptain.Runner
                 Multiselect = false
             };
 
-            var result = dialog.ShowDialog() ?? false;
+            var result = dialog.ShowDialog(_currentWindow) ?? false;
 
             return result
                 ? dialog.FileName
@@ -58,13 +58,15 @@ namespace RoadCaptain.Runner
 
         public void ShowInGameWindow(Window owner, InGameNavigationWindowViewModel viewModel)
         {
-                var inGameWindow = _componentContext.Resolve<InGameNavigationWindow>();
+            var inGameWindow = _componentContext.Resolve<InGameNavigationWindow>();
 
-                inGameWindow.DataContext = viewModel;
+            inGameWindow.DataContext = viewModel;
 
-                inGameWindow.Show();
+            inGameWindow.Show();
 
-                owner.Close();
+            owner.Close();
+
+            _currentWindow = inGameWindow;
         }
 
         public TokenResponse ShowLogInDialog(Window owner)
@@ -84,32 +86,32 @@ namespace RoadCaptain.Runner
 
         public void ShowErrorDialog(string message, Window owner)
         {
-                if (owner != null)
-                {
-                    MessageBox.Show(
-                        owner,
-                        message,
-                        "An error occurred",
-                        MessageBoxButton.OK,
-                        MessageBoxImage.Error);
-                }
-                else if (_currentWindow != null)
-                {
-                    MessageBox.Show(
-                        _currentWindow,
-                        message,
-                        "An error occurred",
-                        MessageBoxButton.OK,
-                        MessageBoxImage.Error);
-                }
-                else
-                {
-                    MessageBox.Show(
-                        message,
-                        "An error occurred",
-                        MessageBoxButton.OK,
-                        MessageBoxImage.Error);
-                }
+            if (owner != null)
+            {
+                MessageBox.Show(
+                    owner,
+                    message,
+                    "An error occurred",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Error);
+            }
+            else if (_currentWindow != null)
+            {
+                MessageBox.Show(
+                    _currentWindow,
+                    message,
+                    "An error occurred",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Error);
+            }
+            else
+            {
+                MessageBox.Show(
+                    message,
+                    "An error occurred",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Error);
+            }
         }
     }
 }
