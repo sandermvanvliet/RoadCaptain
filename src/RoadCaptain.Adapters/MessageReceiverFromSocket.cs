@@ -131,8 +131,13 @@ namespace RoadCaptain.Adapters
             while (true)
             {
                 // Receive will block until bytes are available to read.
-                var received =
-                    _acceptedSocket.Receive(buffer, 0, buffer.Length, SocketFlags.None, out var socketError);
+                var received = _acceptedSocket
+                    .Receive(
+                        buffer, 
+                        0, 
+                        buffer.Length, 
+                        SocketFlags.None, 
+                        out var socketError);
 
                 if (socketError != SocketError.Success)
                 {
@@ -142,7 +147,7 @@ namespace RoadCaptain.Adapters
                     }
                     else
                     {
-                        // Sonmething went wrong...
+                        // Something went wrong...
                         _monitoringEvents.ReceiveFailed(socketError);
                     }
 
@@ -163,13 +168,14 @@ namespace RoadCaptain.Adapters
                     {
                         // Don't care
                     }
+                    finally
+                    {
+                        // Clear this so that the next call to ReceiveMessageBytes() will block
+                        // on accepting a new connection.
+                        _acceptedSocket = null;
+                    }
 
-                    // Clear this so that the next call to ReceiveMessageBytes() will block
-                    // on accepting a new connection.
-                    _acceptedSocket = null;
-
-                    // TODO: figure out the correct state for this, could be logged in
-                    _gameStateDispatcher.Dispatch(new NotLoggedInState());
+                    _gameStateDispatcher.Dispatch(new WaitingForConnectionState());
 
                     return null;
                 }
