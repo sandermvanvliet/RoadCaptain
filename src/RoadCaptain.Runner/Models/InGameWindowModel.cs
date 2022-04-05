@@ -21,6 +21,7 @@ namespace RoadCaptain.Runner.Models
         private double _totalDescent;
         private double _totalDistance;
         private bool _userIsInGame;
+        private string _waitingReason = "Waiting for Zwift connection...";
 
         public InGameWindowModel(List<Segment> segments)
         {
@@ -149,6 +150,17 @@ namespace RoadCaptain.Runner.Models
             {
                 if (Equals(value, _nextSegment)) return;
                 _nextSegment = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public string WaitingReason
+        {
+            get => _waitingReason;
+            set
+            {
+                if (value == _waitingReason) return;
+                _waitingReason = value;
                 OnPropertyChanged();
             }
         }

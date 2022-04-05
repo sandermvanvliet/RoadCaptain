@@ -50,6 +50,12 @@ namespace RoadCaptain.Runner.ViewModels
             else if (gameState is ConnectedToZwiftState && _previousState is not ConnectedToZwiftState)
             {
                 Model.UserIsInGame = false;
+                Model.WaitingReason = "Waiting for Zwift connection...";
+            }
+            else if (gameState is WaitingForConnectionState && _previousState is InGameState)
+            {
+                Model.UserIsInGame = false;
+                Model.WaitingReason = "Connection with Zwift was lost";
             }
 
             try

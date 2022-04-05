@@ -106,7 +106,7 @@
                 Visibility="{Binding Path=Model.UserIsInGame,Converter={StaticResource VisibilityConverter},ConverterParameter=invert}"
                 Padding="20">
             <StackPanel Orientation="Vertical">
-            <TextBlock Text="Waiting for Zwift connection..." 
+            <TextBlock Text="{Binding Path=Model.WaitingReason}" 
                        Foreground="White" 
                        FontWeight="ExtraBold"
                        FontSize="32"
