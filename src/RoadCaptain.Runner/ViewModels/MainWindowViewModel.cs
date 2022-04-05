@@ -26,7 +26,6 @@ namespace RoadCaptain.Runner.ViewModels
         private string _zwiftAvatarUri;
         private readonly IWindowService _windowService;
         private readonly IGameStateDispatcher _gameStateDispatcher;
-        private string _zwiftAccessToken;
 
         public MainWindowViewModel(ISegmentStore segmentStore,
             IRouteStore routeStore,
@@ -43,7 +42,7 @@ namespace RoadCaptain.Runner.ViewModels
             _windowService = windowService;
             _gameStateDispatcher = gameStateDispatcher;
 
-            if (IsValidToken(configuration))
+            if (IsValidToken(configuration.AccessToken))
             {
                 ZwiftAccessToken = configuration.AccessToken;
                 ZwiftAvatarUri = "Assets/profile-default.png";
@@ -86,14 +85,14 @@ namespace RoadCaptain.Runner.ViewModels
             });
         }
 
-        private static bool IsValidToken(Configuration configuration)
+        private static bool IsValidToken(string accessToken)
         {
-            if (string.IsNullOrEmpty(configuration.AccessToken))
+            if (string.IsNullOrEmpty(accessToken))
             {
                 return false;
             }
 
-            var token = new JsonWebToken(configuration.AccessToken);
+            var token = new JsonWebToken(accessToken);
 
             // Token is at least valid for another hour
             return token.ValidTo > DateTime.UtcNow.AddHours(1);
@@ -144,15 +143,7 @@ namespace RoadCaptain.Runner.ViewModels
                 ? "Logged in to Zwift"
                 : "Not yet logged in to Zwift";
 
-        public string ZwiftAccessToken
-        {
-            get => _zwiftAccessToken;
-            private set
-            {
-                _configuration.AccessToken = value;
-                _zwiftAccessToken = value;
-            }
-        }
+        public string ZwiftAccessToken { get; private set; }
 
         public string ZwiftName
         {
