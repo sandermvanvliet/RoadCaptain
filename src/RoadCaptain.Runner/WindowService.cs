@@ -1,4 +1,6 @@
-﻿using System.Windows;
+﻿using System.Threading;
+using System.Windows;
+using System.Windows.Threading;
 using Autofac;
 using Microsoft.Win32;
 using RoadCaptain.Runner.Models;
@@ -9,10 +11,13 @@ namespace RoadCaptain.Runner
     public class WindowService : IWindowService
     {
         private readonly IComponentContext _componentContext;
+        private readonly Dispatcher _dispatcher;
+        private Window _currentWindow;
 
-        public WindowService(IComponentContext componentContext)
+        public WindowService(IComponentContext componentContext, Dispatcher dispatcher)
         {
             _componentContext = componentContext;
+            _dispatcher = dispatcher;
         }
 
         public string ShowOpenFileDialog()
@@ -35,23 +40,47 @@ namespace RoadCaptain.Runner
 
         public void ShowMainWindow()
         {
-            var window = _componentContext.Resolve<MainWindow>();
+            _dispatcher.Invoke(() =>
+            {
+                var window = _componentContext.Resolve<MainWindow>();
+                
+                if (_currentWindow != null)
+                {
+                    _currentWindow.Close();
+                    _currentWindow = null;
+                }
+                
+                _currentWindow = window;
 
-            window.Show();
+                window.Show();
+            });
         }
 
         public void ShowInGameWindow(Window owner, InGameNavigationWindowViewModel viewModel)
         {
-            var inGameWindow = _componentContext.Resolve<InGameNavigationWindow>();
+            _dispatcher.Invoke(() =>
+            {
+                var inGameWindow = _componentContext.Resolve<InGameNavigationWindow>();
 
-            inGameWindow.DataContext = viewModel;
+                inGameWindow.DataContext = viewModel;
 
-            inGameWindow.Show();
+                inGameWindow.Show();
 
-            owner.Close();
+                owner.Close();
+            });
         }
 
         public TokenResponse ShowLogInDialog(Window owner)
+        {
+            if (_dispatcher.Thread != Thread.CurrentThread)
+            {
+                return _dispatcher.Invoke(() => InnerShowLogInDialog(owner));
+            }
+
+            return InnerShowLogInDialog(owner);
+        }
+
+        private TokenResponse InnerShowLogInDialog(Window owner)
         {
             var zwiftLoginWindow = _componentContext.Resolve<ZwiftLoginWindow>();
 
@@ -68,23 +97,35 @@ namespace RoadCaptain.Runner
 
         public void ShowErrorDialog(string message, Window owner)
         {
-            if (owner != null)
+            _dispatcher.Invoke(() =>
             {
-                MessageBox.Show(
-                    owner,
-                    message,
-                    "An error occurred",
-                    MessageBoxButton.OK,
-                    MessageBoxImage.Error);
-            }
-            else
-            {
-                MessageBox.Show(
-                    message,
-                    "An error occurred",
-                    MessageBoxButton.OK,
-                    MessageBoxImage.Error);
-            }
+                if (owner != null)
+                {
+                    MessageBox.Show(
+                        owner,
+                        message,
+                        "An error occurred",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Error);
+                }
+                else if(_currentWindow != null)
+                {
+                    MessageBox.Show(
+                        _currentWindow,
+                        message,
+                        "An error occurred",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Error);
+                }
+                else
+                {
+                    MessageBox.Show(
+                        message,
+                        "An error occurred",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Error);
+                }
+            });
         }
     }
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading;
+using System.Windows.Threading;
 using FluentAssertions;
 using RoadCaptain.Adapters;
 using RoadCaptain.GameStates;
@@ -151,7 +152,7 @@ namespace RoadCaptain.Runner.Tests.Unit.ViewModels
                 null, 
                 configuration, 
                 appSettings ?? new AppSettings(),
-                new WindowService(null),
+                new WindowService(null, Dispatcher.CurrentDispatcher),
                 _gameStateDispatcher);
         }
 
