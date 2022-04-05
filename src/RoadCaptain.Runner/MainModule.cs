@@ -15,7 +15,9 @@ namespace RoadCaptain.Runner
                 .As<MonitoringEvents>()
                 .SingleInstance();
             
+            // Single instance because we keep track of the active window
             builder.RegisterType<WindowService>().As<IWindowService>().SingleInstance();
+            builder.RegisterDecorator<DelegateDecorator, IWindowService>();
             
             builder
                 .RegisterAssemblyTypes(ThisAssembly)

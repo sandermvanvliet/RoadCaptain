@@ -1,6 +1,4 @@
-﻿using System.Threading;
-using System.Windows;
-using System.Windows.Threading;
+﻿using System.Windows;
 using Autofac;
 using Microsoft.Win32;
 using RoadCaptain.Runner.Models;
@@ -11,13 +9,11 @@ namespace RoadCaptain.Runner
     public class WindowService : IWindowService
     {
         private readonly IComponentContext _componentContext;
-        private readonly Dispatcher _dispatcher;
         private Window _currentWindow;
 
-        public WindowService(IComponentContext componentContext, Dispatcher dispatcher)
+        public WindowService(IComponentContext componentContext)
         {
             _componentContext = componentContext;
-            _dispatcher = dispatcher;
         }
 
         public string ShowOpenFileDialog()
@@ -40,33 +36,28 @@ namespace RoadCaptain.Runner
 
         public void ShowMainWindow()
         {
-            _dispatcher.Invoke(() =>
+            if (_currentWindow is MainWindow)
             {
-                if (_currentWindow is MainWindow)
+                _currentWindow.Activate();
+            }
+            else
+            {
+                var window = _componentContext.Resolve<MainWindow>();
+
+                if (_currentWindow != null)
                 {
-                    _currentWindow.Activate();
+                    _currentWindow.Close();
+                    _currentWindow = null;
                 }
-                else
-                {
-                    var window = _componentContext.Resolve<MainWindow>();
 
-                    if (_currentWindow != null)
-                    {
-                        _currentWindow.Close();
-                        _currentWindow = null;
-                    }
+                _currentWindow = window;
 
-                    _currentWindow = window;
-
-                    window.Show();
-                }
-            });
+                window.Show();
+            }
         }
 
         public void ShowInGameWindow(Window owner, InGameNavigationWindowViewModel viewModel)
         {
-            _dispatcher.Invoke(() =>
-            {
                 var inGameWindow = _componentContext.Resolve<InGameNavigationWindow>();
 
                 inGameWindow.DataContext = viewModel;
@@ -74,20 +65,9 @@ namespace RoadCaptain.Runner
                 inGameWindow.Show();
 
                 owner.Close();
-            });
         }
 
         public TokenResponse ShowLogInDialog(Window owner)
-        {
-            if (_dispatcher.Thread != Thread.CurrentThread)
-            {
-                return _dispatcher.Invoke(() => InnerShowLogInDialog(owner));
-            }
-
-            return InnerShowLogInDialog(owner);
-        }
-
-        private TokenResponse InnerShowLogInDialog(Window owner)
         {
             var zwiftLoginWindow = _componentContext.Resolve<ZwiftLoginWindow>();
 
@@ -104,8 +84,6 @@ namespace RoadCaptain.Runner
 
         public void ShowErrorDialog(string message, Window owner)
         {
-            _dispatcher.Invoke(() =>
-            {
                 if (owner != null)
                 {
                     MessageBox.Show(
@@ -115,7 +93,7 @@ namespace RoadCaptain.Runner
                         MessageBoxButton.OK,
                         MessageBoxImage.Error);
                 }
-                else if(_currentWindow != null)
+                else if (_currentWindow != null)
                 {
                     MessageBox.Show(
                         _currentWindow,
@@ -132,16 +110,6 @@ namespace RoadCaptain.Runner
                         MessageBoxButton.OK,
                         MessageBoxImage.Error);
                 }
-            });
         }
-    }
-
-    public interface IWindowService
-    {
-        string ShowOpenFileDialog();
-        void ShowInGameWindow(Window owner, InGameNavigationWindowViewModel viewModel);
-        TokenResponse ShowLogInDialog(Window owner);
-        void ShowErrorDialog(string message, Window owner = null);
-        void ShowMainWindow();
     }
 }
