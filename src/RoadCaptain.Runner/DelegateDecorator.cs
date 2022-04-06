@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Threading;
 using System.Windows;
 using System.Windows.Threading;
 using RoadCaptain.Runner.Models;
@@ -30,7 +29,7 @@ namespace RoadCaptain.Runner
 
         public TokenResponse ShowLogInDialog(Window owner)
         {
-            return InvokeIfNeeded(() => ShowLogInDialog(owner));
+            return InvokeIfNeeded(() => _decorated.ShowLogInDialog(owner));
         }
 
         public void ShowErrorDialog(string message, Window owner = null)
@@ -45,7 +44,7 @@ namespace RoadCaptain.Runner
 
         private TResult InvokeIfNeeded<TResult>(Func<TResult> action)
         {
-            if (_dispatcher.Thread != Thread.CurrentThread)
+            if (!_dispatcher.CheckAccess())
             {
                 return _dispatcher.Invoke(action);
             }
@@ -55,7 +54,7 @@ namespace RoadCaptain.Runner
 
         private void InvokeIfNeeded(Action action)
         {
-            if (_dispatcher.Thread != Thread.CurrentThread)
+            if (!_dispatcher.CheckAccess())
             {
                 _dispatcher.Invoke(action);
             }
