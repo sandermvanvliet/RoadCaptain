@@ -21,7 +21,7 @@
         Background="Transparent"
         AllowsTransparency="True"
         MouseMove="Window_MouseMove"
-        Icon="../../icon.png">
+        Icon="icon.png">
     <Window.Resources>
         <Style TargetType="{x:Type Button}">
             <Setter Property="Background" Value="#FF6141" />
