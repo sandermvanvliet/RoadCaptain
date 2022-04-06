@@ -3,6 +3,7 @@ using System.Reflection;
 using System.Threading;
 using RoadCaptain.Adapters;
 using RoadCaptain.GameStates;
+using RoadCaptain.UseCases;
 using Serilog;
 using Serilog.Sinks.InMemory;
 
@@ -11,6 +12,7 @@ namespace RoadCaptain.Runner.Tests.Unit.Engine
     public class EngineTest
     {
         private readonly InMemoryGameStateDispatcher _gameStateDispatcher;
+        private Configuration _configuration;
 
         public EngineTest()
         {
@@ -23,12 +25,17 @@ namespace RoadCaptain.Runner.Tests.Unit.Engine
 
             var monitoringEvents = new MonitoringEventsWithSerilog(logger);
 
+            _configuration = new Configuration(null)
+            {
+                Route = "someroute.json"
+            };
+
             _gameStateDispatcher = new InMemoryGameStateDispatcher(monitoringEvents);
 
             Engine = new Runner.Engine(
                 monitoringEvents,
-                null,
-                null,
+                new LoadRouteUseCase(_gameStateDispatcher, new StubRouteStore()),
+                _configuration,
                 null,
                 null,
                 null,
@@ -76,15 +83,19 @@ namespace RoadCaptain.Runner.Tests.Unit.Engine
             fieldInfo.SetValue(Engine, value);
         }
 
-        protected void GivenTaskIsRunning(string fieldName)
+        protected TaskWithCancellation GivenTaskIsRunning(string fieldName)
         {
-            SetFieldValueByName(fieldName, TaskWithCancellation.Start(token =>
+            var taskWithCancellation = TaskWithCancellation.Start(token =>
             {
                 do
                 {
                     Thread.Sleep(250);
                 } while (!token.IsCancellationRequested);
-            }));
+            });
+
+            SetFieldValueByName(fieldName, taskWithCancellation);
+
+            return taskWithCancellation;
         }
     }
 }
