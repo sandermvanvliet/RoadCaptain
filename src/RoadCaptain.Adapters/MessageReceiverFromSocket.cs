@@ -155,7 +155,7 @@ namespace RoadCaptain.Adapters
 
                     try
                     {
-                        _acceptedSocket.Shutdown(SocketShutdown.Both);
+                        _acceptedSocket?.Shutdown(SocketShutdown.Both);
                     }
                     catch (SocketException)
                     {
@@ -164,7 +164,7 @@ namespace RoadCaptain.Adapters
 
                     try
                     {
-                        _acceptedSocket.Close();
+                        _acceptedSocket?.Close();
                     }
                     catch (SocketException)
                     {
