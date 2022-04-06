@@ -52,7 +52,7 @@ namespace RoadCaptain.Runner
             _gameStateReceiver.Register(null, null, GameStateReceived);
         }
 
-        private void GameStateReceived(GameState gameState)
+        protected void GameStateReceived(GameState gameState)
         {
             _monitoringEvents.StateTransition(_previousGameState, gameState);
 

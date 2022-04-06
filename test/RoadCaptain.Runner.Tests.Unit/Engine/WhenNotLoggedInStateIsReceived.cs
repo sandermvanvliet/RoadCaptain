@@ -18,7 +18,7 @@ namespace RoadCaptain.Runner.Tests.Unit.Engine
         {
             GivenNotLoggedInStateIsReceived();
 
-            GetTaskByFieldName("_listenerTask")
+            TheTaskWithName("_listenerTask")
                 .Should()
                 .BeNull();
         }
@@ -28,7 +28,7 @@ namespace RoadCaptain.Runner.Tests.Unit.Engine
         {
             GivenNotLoggedInStateIsReceived();
 
-            GetTaskByFieldName("_initiatorTask")
+            TheTaskWithName("_initiatorTask")
                 .Should()
                 .BeNull();
         }
@@ -50,7 +50,7 @@ namespace RoadCaptain.Runner.Tests.Unit.Engine
         {
             GivenNotLoggedInStateIsReceived();
 
-            GetTaskByFieldName("_messageHandlingTask")
+            TheTaskWithName("_messageHandlingTask")
                 .Should()
                 .BeNull();
         }

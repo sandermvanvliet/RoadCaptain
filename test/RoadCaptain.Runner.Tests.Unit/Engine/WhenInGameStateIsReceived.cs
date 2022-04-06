@@ -13,7 +13,7 @@ namespace RoadCaptain.Runner.Tests.Unit.Engine
         {
             GivenInGameStateIsReceived();
 
-            GetTaskByFieldName("_navigationTask")
+            TheTaskWithName("_navigationTask")
                 .Should()
                 .NotBeNull();
         }
@@ -21,12 +21,11 @@ namespace RoadCaptain.Runner.Tests.Unit.Engine
         [Fact]
         public void GivenNavigationTaskAlreadyStarted_ItIsNotStartedAgain()
         {
-            GivenTaskIsRunning("_navigationTask");
-            var navigationTask = GetTaskByFieldName("_navigationTask");
+            var navigationTask = GivenTaskIsRunning("_navigationTask");
 
             GivenInGameStateIsReceived();
 
-            GetTaskByFieldName("_navigationTask")
+            TheTaskWithName("_navigationTask")
                 .Should()
                 .Be(navigationTask);
         }

@@ -13,7 +13,9 @@ namespace RoadCaptain.Runner.Tests.Unit.Engine
         {
             GivenConnectedToZwiftStateReceived();
 
-            
+            LoadedRoute
+                .Should()
+                .NotBeNull();
         }
 
         [Fact]
@@ -21,7 +23,7 @@ namespace RoadCaptain.Runner.Tests.Unit.Engine
         {
             GivenConnectedToZwiftStateReceived();
 
-            GetTaskByFieldName("_messageHandlingTask")
+            TheTaskWithName("_messageHandlingTask")
                 .Should()
                 .NotBeNull();
         }
@@ -33,7 +35,7 @@ namespace RoadCaptain.Runner.Tests.Unit.Engine
 
             GivenConnectedToZwiftStateReceived();
 
-            GetTaskByFieldName("_messageHandlingTask")
+            TheTaskWithName("_messageHandlingTask")
                 .Should()
                 .Be(task);
         }

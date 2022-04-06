@@ -1,6 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Reflection;
-using System.Threading;
 using RoadCaptain.Adapters;
 using RoadCaptain.GameStates;
 using RoadCaptain.UseCases;
@@ -9,10 +9,9 @@ using Serilog.Sinks.InMemory;
 
 namespace RoadCaptain.Runner.Tests.Unit.Engine
 {
-    public class EngineTest
+    public class EngineTest : IDisposable
     {
-        private readonly InMemoryGameStateDispatcher _gameStateDispatcher;
-        private Configuration _configuration;
+        private readonly TaskWithCancellation _receiverTask;
 
         public EngineTest()
         {
@@ -25,73 +24,89 @@ namespace RoadCaptain.Runner.Tests.Unit.Engine
 
             var monitoringEvents = new MonitoringEventsWithSerilog(logger);
 
-            _configuration = new Configuration(null)
+            var configuration = new Configuration(null)
             {
                 Route = "someroute.json"
             };
 
-            _gameStateDispatcher = new InMemoryGameStateDispatcher(monitoringEvents);
+            var gameStateDispatcher = new InMemoryGameStateDispatcher(monitoringEvents);
+            gameStateDispatcher
+                .Register(
+                    route => LoadedRoute = route,
+                    null,
+                    state => States.Add(state));
 
-            Engine = new Runner.Engine(
+            var messageEmitter = new MessageEmitterToQueue(monitoringEvents, new MessageEmitterConfiguration(null));
+
+            Engine = new TestableEngine(
                 monitoringEvents,
-                new LoadRouteUseCase(_gameStateDispatcher, new StubRouteStore()),
-                _configuration,
+                new LoadRouteUseCase(gameStateDispatcher, new StubRouteStore()),
+                configuration,
                 null,
+                new DecodeIncomingMessagesUseCase(new StubMessageReceiver(), messageEmitter, monitoringEvents),
                 null,
+                new HandleZwiftMessagesUseCase(messageEmitter, monitoringEvents, new SegmentStore(),
+                    gameStateDispatcher, new NopZwiftGameConnection(), gameStateDispatcher),
                 null,
-                null,
-                null,
-                _gameStateDispatcher
+                gameStateDispatcher
             );
+
+            _receiverTask = TaskWithCancellation.Start(token => gameStateDispatcher.Start(token));
         }
 
-        protected Runner.Engine Engine { get; }
+        protected PlannedRoute LoadedRoute { get; private set; }
+
+        protected List<GameState> States { get; } = new();
+
+        protected TestableEngine Engine { get; }
 
         protected InMemorySink InMemorySink { get; }
 
-        protected void ReceiveGameState(GameState state)
+        public void Dispose()
         {
-            _gameStateDispatcher.Dispatch(state);
+            _receiverTask.Cancel();
 
-            var tokenSource = new CancellationTokenSource(TimeSpan.FromMilliseconds(50));
-
-            _gameStateDispatcher.Register(null, null, _ => tokenSource.Cancel());
-
-            _gameStateDispatcher.Start(tokenSource.Token);
+            try
+            {
+                Engine.Stop();
+            }
+            catch
+            {
+                // ignored
+            }
         }
 
-        protected TaskWithCancellation GetTaskByFieldName(string fieldName)
+        protected void ReceiveGameState(GameState state)
+        {
+            Engine.PushState(state);
+        }
+
+        protected TaskWithCancellation TheTaskWithName(string fieldName)
         {
             return GetFieldValueByName(fieldName) as TaskWithCancellation;
         }
 
         protected object GetFieldValueByName(string fieldName)
         {
-            var fieldInfo = Engine
-                .GetType()
+            var fieldInfo = typeof(Runner.Engine)
                 .GetField(fieldName, BindingFlags.Instance | BindingFlags.GetField | BindingFlags.NonPublic);
 
+            // ReSharper disable once PossibleNullReferenceException
             return fieldInfo.GetValue(Engine);
         }
 
         protected void SetFieldValueByName(string fieldName, object value)
         {
-            var fieldInfo = Engine
-                .GetType()
+            var fieldInfo = typeof(Runner.Engine)
                 .GetField(fieldName, BindingFlags.Instance | BindingFlags.SetField | BindingFlags.NonPublic);
 
+            // ReSharper disable once PossibleNullReferenceException
             fieldInfo.SetValue(Engine, value);
         }
 
         protected TaskWithCancellation GivenTaskIsRunning(string fieldName)
         {
-            var taskWithCancellation = TaskWithCancellation.Start(token =>
-            {
-                do
-                {
-                    Thread.Sleep(250);
-                } while (!token.IsCancellationRequested);
-            });
+            var taskWithCancellation = TaskWithCancellation.Start(token => token.WaitHandle.WaitOne());
 
             SetFieldValueByName(fieldName, taskWithCancellation);
 
