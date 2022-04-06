@@ -50,11 +50,12 @@ namespace RoadCaptain.Runner.Tests.Unit.ViewModels
         }
 
         [Fact]
-        public void GivenNoRoutePathInConfigurationorSettings_RoutePathIsNull()
+        public void GivenNoRoutePathInConfigurationOrSettings_RoutePathIsNull()
         {
             var configuration = new Configuration(null);
-            
-            CreateViewModel(configuration)
+            var appSettings = new AppSettings { Route = null };
+
+            CreateViewModel(configuration, appSettings)
                 .RoutePath
                 .Should()
                 .BeNull();
