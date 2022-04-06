@@ -103,6 +103,12 @@ namespace RoadCaptain.Adapters
 
             Started = true;
 
+            // To ensure that we don't block a long time 
+            // when there are no items in the queue we
+            // need to trigger the auto reset event when
+            // the token is cancelled.
+            token.Register(() => _autoResetEvent.Set());
+
             try
             {
                 do
