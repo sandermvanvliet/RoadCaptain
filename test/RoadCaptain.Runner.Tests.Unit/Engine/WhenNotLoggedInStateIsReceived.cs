@@ -8,8 +8,9 @@ namespace RoadCaptain.Runner.Tests.Unit.Engine
     {
         public WhenNotLoggedInStateIsReceived()
         {
-            SetFieldValueByName("_initiatorTask", TaskWithCancellation.Start(token => { }));
-            SetFieldValueByName("_listenerTask", TaskWithCancellation.Start(token => { }));
+            GivenTaskIsRunning("_initiatorTask");
+            GivenTaskIsRunning("_listenerTask");
+            GivenTaskIsRunning("_messageHandlingTask");
         }
 
         [Fact]
@@ -42,6 +43,16 @@ namespace RoadCaptain.Runner.Tests.Unit.Engine
             GetFieldValueByName("_previousGameState")
                 .Should()
                 .Be(loggedInState);
+        }
+
+        [Fact]
+        public void MessageHandlingIsCleanedUp()
+        {
+            GivenNotLoggedInStateIsReceived();
+
+            GetTaskByFieldName("_messageHandlingTask")
+                .Should()
+                .BeNull();
         }
 
         private void GivenNotLoggedInStateIsReceived()

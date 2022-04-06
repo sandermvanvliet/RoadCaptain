@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Reflection;
 using System.Threading;
-using System.Threading.Tasks;
 using RoadCaptain.Adapters;
 using RoadCaptain.GameStates;
 using Serilog;
@@ -25,7 +24,7 @@ namespace RoadCaptain.Runner.Tests.Unit.Engine
             var monitoringEvents = new MonitoringEventsWithSerilog(logger);
 
             _gameStateDispatcher = new InMemoryGameStateDispatcher(monitoringEvents);
-            
+
             Engine = new Runner.Engine(
                 monitoringEvents,
                 null,
@@ -48,7 +47,7 @@ namespace RoadCaptain.Runner.Tests.Unit.Engine
             _gameStateDispatcher.Dispatch(state);
 
             var tokenSource = new CancellationTokenSource(TimeSpan.FromMilliseconds(50));
-            
+
             _gameStateDispatcher.Register(null, null, _ => tokenSource.Cancel());
 
             _gameStateDispatcher.Start(tokenSource.Token);
@@ -71,10 +70,21 @@ namespace RoadCaptain.Runner.Tests.Unit.Engine
         protected void SetFieldValueByName(string fieldName, object value)
         {
             var fieldInfo = Engine
-            .GetType()
-            .GetField(fieldName, BindingFlags.Instance | BindingFlags.SetField | BindingFlags.NonPublic);
-            
+                .GetType()
+                .GetField(fieldName, BindingFlags.Instance | BindingFlags.SetField | BindingFlags.NonPublic);
+
             fieldInfo.SetValue(Engine, value);
+        }
+
+        protected void GivenTaskIsRunning(string fieldName)
+        {
+            SetFieldValueByName(fieldName, TaskWithCancellation.Start(token =>
+            {
+                do
+                {
+                    Thread.Sleep(250);
+                } while (!token.IsCancellationRequested);
+            }));
         }
     }
 }
