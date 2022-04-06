@@ -1,0 +1,132 @@
+{
+  "zwiftRouteName": "Mountain Route",
+  "hasCompleted": false,
+  "hasStarted": false,
+  "segmentSequenceIndex": 0,
+  "startingSegmentId": "watopia-bambino-fondo-001-after-after-after-after-after",
+  "nextSegmentId": null,
+  "turnToNextSegment": "none",
+  "currentSegmentId": null,
+  "routeSegmentSequence": [
+    {
+      "segmentId": "watopia-bambino-fondo-001-after-after-after-after-after",
+      "turnToNextSegment": "goStraight",
+      "nextSegmentId": "watopia-bambino-fondo-001-after-before",
+      "direction": "atoB"
+    },
+    {
+      "segmentId": "watopia-bambino-fondo-001-after-before",
+      "turnToNextSegment": "left",
+      "nextSegmentId": "watopia-bambino-fondo-001-after-after-before-before-before",
+      "direction": "atoB"
+    },
+    {
+      "segmentId": "watopia-bambino-fondo-001-after-after-before-before-before",
+      "turnToNextSegment": "goStraight",
+      "nextSegmentId": "watopia-bambino-fondo-001-after-after-before-before-after-before",
+      "direction": "btoA"
+    },
+    {
+      "segmentId": "watopia-bambino-fondo-001-after-after-before-before-after-before",
+      "turnToNextSegment": "left",
+      "nextSegmentId": "watopia-big-foot-hills-003-after",
+      "direction": "atoB"
+    },
+    {
+      "segmentId": "watopia-big-foot-hills-003-after",
+      "turnToNextSegment": "right",
+      "nextSegmentId": "watopia-big-loop-rev-001-after-after",
+      "direction": "btoA"
+    },
+    {
+      "segmentId": "watopia-big-loop-rev-001-after-after",
+      "turnToNextSegment": "goStraight",
+      "nextSegmentId": "watopia-big-loop-rev-001-after-before-after",
+      "direction": "btoA"
+    },
+    {
+      "segmentId": "watopia-big-loop-rev-001-after-before-after",
+      "turnToNextSegment": "goStraight",
+      "nextSegmentId": "watopia-big-loop-rev-001-after-before-before",
+      "direction": "btoA"
+    },
+    {
+      "segmentId": "watopia-big-loop-rev-001-after-before-before",
+      "turnToNextSegment": "goStraight",
+      "nextSegmentId": "watopia-big-loop-rev-001-before-after",
+      "direction": "btoA"
+    },
+    {
+      "segmentId": "watopia-big-loop-rev-001-before-after",
+      "turnToNextSegment": "right",
+      "nextSegmentId": "watopia-ocean-lava-cliffside-loop-001",
+      "direction": "btoA"
+    },
+    {
+      "segmentId": "watopia-ocean-lava-cliffside-loop-001",
+      "turnToNextSegment": "right",
+      "nextSegmentId": "watopia-big-loop-rev-001-after-before-after",
+      "direction": "atoB"
+    },
+    {
+      "segmentId": "watopia-big-loop-rev-001-after-before-after",
+      "turnToNextSegment": "goStraight",
+      "nextSegmentId": "watopia-big-loop-rev-001-after-before-before",
+      "direction": "btoA"
+    },
+    {
+      "segmentId": "watopia-big-loop-rev-001-after-before-before",
+      "turnToNextSegment": "goStraight",
+      "nextSegmentId": "watopia-big-loop-rev-001-before-after",
+      "direction": "btoA"
+    },
+    {
+      "segmentId": "watopia-big-loop-rev-001-before-after",
+      "turnToNextSegment": "right",
+      "nextSegmentId": "watopia-ocean-lava-cliffside-loop-001",
+      "direction": "btoA"
+    },
+    {
+      "segmentId": "watopia-ocean-lava-cliffside-loop-001",
+      "turnToNextSegment": "right",
+      "nextSegmentId": "watopia-big-loop-rev-001-after-before-after",
+      "direction": "atoB"
+    },
+    {
+      "segmentId": "watopia-big-loop-rev-001-after-before-after",
+      "turnToNextSegment": "goStraight",
+      "nextSegmentId": "watopia-big-loop-rev-001-after-before-before",
+      "direction": "btoA"
+    },
+    {
+      "segmentId": "watopia-big-loop-rev-001-after-before-before",
+      "turnToNextSegment": "goStraight",
+      "nextSegmentId": "watopia-big-loop-rev-001-before-after",
+      "direction": "btoA"
+    },
+    {
+      "segmentId": "watopia-big-loop-rev-001-before-after",
+      "turnToNextSegment": "right",
+      "nextSegmentId": "watopia-ocean-lava-cliffside-loop-001",
+      "direction": "btoA"
+    },
+    {
+      "segmentId": "watopia-ocean-lava-cliffside-loop-001",
+      "turnToNextSegment": "right",
+      "nextSegmentId": "watopia-big-loop-rev-001-after-before-after",
+      "direction": "atoB"
+    },
+    {
+      "segmentId": "watopia-big-loop-rev-001-after-before-after",
+      "turnToNextSegment": "goStraight",
+      "nextSegmentId": "watopia-big-loop-rev-001-after-before-before",
+      "direction": "btoA"
+    },
+    {
+      "segmentId": "watopia-big-loop-rev-001-after-before-before",
+      "turnToNextSegment": "none",
+      "nextSegmentId": null,
+      "direction": "btoA"
+    }
+  ]
+}
