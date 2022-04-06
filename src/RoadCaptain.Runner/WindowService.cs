@@ -27,7 +27,7 @@ namespace RoadCaptain.Runner
                 Multiselect = false
             };
 
-            var result = dialog.ShowDialog(_currentWindow) ?? false;
+            var result = ShowDialog(dialog).GetValueOrDefault();
 
             return result
                 ? dialog.FileName
@@ -38,7 +38,7 @@ namespace RoadCaptain.Runner
         {
             if (_currentWindow is MainWindow)
             {
-                _currentWindow.Activate();
+                Activate(_currentWindow);
             }
             else
             {
@@ -46,13 +46,13 @@ namespace RoadCaptain.Runner
 
                 if (_currentWindow != null)
                 {
-                    _currentWindow.Close();
+                    Close(_currentWindow);
                     _currentWindow = null;
                 }
 
                 _currentWindow = window;
 
-                window.Show();
+                Show(window);
             }
         }
 
@@ -62,9 +62,9 @@ namespace RoadCaptain.Runner
 
             inGameWindow.DataContext = viewModel;
 
-            inGameWindow.Show();
+            Show(inGameWindow);
 
-            owner.Close();
+            Close(owner);
 
             _currentWindow = inGameWindow;
         }
@@ -76,7 +76,7 @@ namespace RoadCaptain.Runner
             zwiftLoginWindow.Owner = owner;
             zwiftLoginWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
 
-            if (zwiftLoginWindow.ShowDialog() ?? false)
+            if (ShowDialog(zwiftLoginWindow) ?? false)
             {
                 return zwiftLoginWindow.TokenResponse;
             }
@@ -84,7 +84,7 @@ namespace RoadCaptain.Runner
             return null;
         }
 
-        public void ShowErrorDialog(string message, Window owner)
+        public virtual void ShowErrorDialog(string message, Window owner)
         {
             if (owner != null)
             {
@@ -112,6 +112,31 @@ namespace RoadCaptain.Runner
                     MessageBoxButton.OK,
                     MessageBoxImage.Error);
             }
+        }
+
+        protected virtual bool? ShowDialog(Window window)
+        {
+            return window.ShowDialog();
+        }
+
+        protected virtual void Show(Window window)
+        {
+            window.Show();
+        }
+
+        protected virtual void Close(Window window)
+        {
+            window.Close();
+        }
+
+        protected virtual bool Activate(Window window)
+        {
+            return window.Activate();
+        }
+
+        protected virtual bool? ShowDialog(CommonDialog dialog)
+        {
+            return dialog.ShowDialog(_currentWindow);
         }
     }
 }
