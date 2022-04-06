@@ -8,7 +8,7 @@ using RoadCaptain.UseCases;
 
 namespace RoadCaptain.Runner
 {
-    internal class Engine
+    public class Engine
     {
         private readonly Configuration _configuration;
         private readonly ConnectToZwiftUseCase _connectUseCase;
@@ -48,6 +48,8 @@ namespace RoadCaptain.Runner
             _handleMessageUseCase = handleMessageUseCase;
             _navigationUseCase = navigationUseCase;
             _gameStateReceiver = gameStateReceiver;
+
+            _gameStateReceiver.Register(null, null, GameStateReceived);
         }
 
         private void GameStateReceived(GameState gameState)
@@ -205,8 +207,6 @@ namespace RoadCaptain.Runner
 
         public void Start()
         {
-            _gameStateReceiver.Register(null, null, GameStateReceived);
-
             _gameStateReceiverTask = TaskWithCancellation.Start(token => _gameStateReceiver.Start(token));
         }
     }
