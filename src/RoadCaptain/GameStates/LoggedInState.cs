@@ -14,22 +14,22 @@ namespace RoadCaptain.GameStates
         public override uint RiderId => 0;
         public override GameState EnterGame(uint riderId, ulong activityId)
         {
-            throw new NotImplementedException();
+            return new InGameState(riderId, activityId);
         }
 
         public override GameState LeaveGame()
         {
-            throw new NotImplementedException();
+            return new ConnectedToZwiftState();
         }
 
         public override GameState UpdatePosition(TrackPoint position, List<Segment> segments, PlannedRoute plannedRoute)
         {
-            throw new NotImplementedException();
+            return this;
         }
 
         public override GameState TurnCommandAvailable(string type)
         {
-            throw new NotImplementedException();
+            return this;
         }
     }
 }

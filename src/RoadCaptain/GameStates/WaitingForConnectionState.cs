@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace RoadCaptain.GameStates
 {
@@ -9,7 +8,7 @@ namespace RoadCaptain.GameStates
 
         public override GameState EnterGame(uint riderId, ulong activityId)
         {
-            throw new NotImplementedException();
+            return this;
         }
 
         public override GameState LeaveGame()
@@ -19,12 +18,12 @@ namespace RoadCaptain.GameStates
 
         public override GameState UpdatePosition(TrackPoint position, List<Segment> segments, PlannedRoute plannedRoute)
         {
-            throw new NotImplementedException();
+            return this;
         }
 
         public override GameState TurnCommandAvailable(string type)
         {
-            throw new NotImplementedException();
+            return this;
         }
     }
 }
