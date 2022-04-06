@@ -7,7 +7,7 @@ namespace RoadCaptain.Runner
     public interface IWindowService
     {
         string ShowOpenFileDialog();
-        void ShowInGameWindow(Window owner, InGameNavigationWindowViewModel viewModel);
+        void ShowInGameWindow(InGameNavigationWindowViewModel viewModel);
         TokenResponse ShowLogInDialog(Window owner);
         void ShowErrorDialog(string message, Window owner = null);
         void ShowMainWindow();

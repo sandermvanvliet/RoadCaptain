@@ -1,5 +1,7 @@
 ﻿using FluentAssertions;
+using RoadCaptain.Adapters;
 using RoadCaptain.Runner.ViewModels;
+using RoadCaptain.UseCases;
 using Xunit;
 
 namespace RoadCaptain.Runner.Tests.Unit.ViewModels
@@ -13,13 +15,11 @@ namespace RoadCaptain.Runner.Tests.Unit.ViewModels
         {
             _windowService = new StubWindowService(null);
 
-            _viewModel = new MainWindowViewModel(
-                null,
-                null,
-                new Configuration(null),
+            _viewModel = new MainWindowViewModel(new Configuration(null),
                 new AppSettings(),
                 _windowService,
-                null);
+                null,
+                new LoadRouteUseCase(new InMemoryGameStateDispatcher(new NopMonitoringEvents()), new StubRouteStore()));
         }
 
         [Fact]

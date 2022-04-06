@@ -4,6 +4,8 @@ using System.Reflection;
 using RoadCaptain.Commands;
 using RoadCaptain.GameStates;
 using RoadCaptain.Ports;
+using RoadCaptain.Runner.Models;
+using RoadCaptain.Runner.ViewModels;
 using RoadCaptain.UseCases;
 
 namespace RoadCaptain.Runner
@@ -18,11 +20,13 @@ namespace RoadCaptain.Runner
         private readonly LoadRouteUseCase _loadRouteUseCase;
         private readonly MonitoringEvents _monitoringEvents;
         private readonly NavigationUseCase _navigationUseCase;
+        private readonly ISegmentStore _segmentStore;
         private readonly IWindowService _windowService;
 
         private TaskWithCancellation _gameStateReceiverTask;
         private TaskWithCancellation _initiatorTask;
         private TaskWithCancellation _listenerTask;
+        private PlannedRoute _loadedRoute;
         private TaskWithCancellation _messageHandlingTask;
         private TaskWithCancellation _navigationTask;
 
@@ -37,7 +41,8 @@ namespace RoadCaptain.Runner
             ConnectToZwiftUseCase connectUseCase,
             HandleZwiftMessagesUseCase handleMessageUseCase,
             NavigationUseCase navigationUseCase,
-            IGameStateReceiver gameStateReceiver)
+            IGameStateReceiver gameStateReceiver, 
+            ISegmentStore segmentStore)
         {
             _monitoringEvents = monitoringEvents;
             _loadRouteUseCase = loadRouteUseCase;
@@ -48,8 +53,12 @@ namespace RoadCaptain.Runner
             _handleMessageUseCase = handleMessageUseCase;
             _navigationUseCase = navigationUseCase;
             _gameStateReceiver = gameStateReceiver;
+            _segmentStore = segmentStore;
 
-            _gameStateReceiver.Register(null, null, GameStateReceived);
+            _gameStateReceiver.Register(
+                route => _loadedRoute = route,
+                null,
+                GameStateReceived);
         }
 
         protected void GameStateReceived(GameState gameState)
@@ -82,6 +91,11 @@ namespace RoadCaptain.Runner
             else if (gameState is WaitingForConnectionState)
             {
                 _monitoringEvents.Information("Waiting for connection from Zwift");
+
+                if (_loadedRoute != null)
+                {
+                    _windowService.ShowInGameWindow(CreateInGameViewModel(_loadedRoute));
+                }
             }
             else if (gameState is ConnectedToZwiftState)
             {
@@ -113,13 +127,25 @@ namespace RoadCaptain.Runner
                 // Start navigation if it is not running
                 StartNavigation();
             }
-            
+
             if (gameState is ErrorState errorState)
             {
                 _windowService.ShowErrorDialog(errorState.Exception.Message);
             }
 
             _previousGameState = gameState;
+        }
+
+        private InGameNavigationWindowViewModel CreateInGameViewModel(PlannedRoute plannedRoute)
+        {
+            var segments = _segmentStore.LoadSegments();
+
+            var inGameWindowModel = new InGameWindowModel(segments)
+            {
+                Route = plannedRoute
+            };
+
+            return new InGameNavigationWindowViewModel(inGameWindowModel, segments);
         }
 
         private void StartZwiftConnectionListener()
@@ -131,7 +157,8 @@ namespace RoadCaptain.Runner
 
             _monitoringEvents.Information("Starting connection listener");
 
-            _listenerTask = TaskWithCancellation.Start(cancellationToken => _listenerUseCase.ExecuteAsync(cancellationToken));
+            _listenerTask =
+                TaskWithCancellation.Start(cancellationToken => _listenerUseCase.ExecuteAsync(cancellationToken));
         }
 
         private void StartZwiftConnectionInitiator(string accessToken)
@@ -188,7 +215,8 @@ namespace RoadCaptain.Runner
                     }
                     catch (Exception e)
                     {
-                        _monitoringEvents.Error(e, $"Cleaning up task {fieldInfo.Name.Replace("_","").Replace("Task", "")} failed");
+                        _monitoringEvents.Error(e,
+                            $"Cleaning up task {fieldInfo.Name.Replace("_", "").Replace("Task", "")} failed");
                     }
 
                     fieldInfo.SetValue(this, null);

@@ -5,11 +5,12 @@ using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Input;
 using Microsoft.IdentityModel.JsonWebTokens;
+using RoadCaptain.Commands;
 using RoadCaptain.GameStates;
 using RoadCaptain.Ports;
 using RoadCaptain.Runner.Annotations;
 using RoadCaptain.Runner.Commands;
-using RoadCaptain.Runner.Models;
+using RoadCaptain.UseCases;
 
 namespace RoadCaptain.Runner.ViewModels
 {
@@ -18,28 +19,24 @@ namespace RoadCaptain.Runner.ViewModels
         private readonly AppSettings _appSettings;
         private readonly Configuration _configuration;
         private readonly IGameStateDispatcher _gameStateDispatcher;
-        private readonly IRouteStore _routeStore;
-        private readonly ISegmentStore _segmentStore;
         private readonly IWindowService _windowService;
         private bool _loggedInToZwift;
         private string _routePath;
         private string _windowTitle = "RoadCaptain";
         private string _zwiftAvatarUri;
         private string _zwiftName;
+        private readonly LoadRouteUseCase _loadRouteUseCase;
 
-        public MainWindowViewModel(ISegmentStore segmentStore,
-            IRouteStore routeStore,
-            Configuration configuration,
+        public MainWindowViewModel(Configuration configuration,
             AppSettings appSettings,
             IWindowService windowService,
-            IGameStateDispatcher gameStateDispatcher)
+            IGameStateDispatcher gameStateDispatcher, LoadRouteUseCase loadRouteUseCase)
         {
-            _segmentStore = segmentStore;
-            _routeStore = routeStore;
             _configuration = configuration;
             _appSettings = appSettings;
             _windowService = windowService;
             _gameStateDispatcher = gameStateDispatcher;
+            _loadRouteUseCase = loadRouteUseCase;
 
             if (IsValidToken(configuration.AccessToken))
             {
@@ -60,7 +57,7 @@ namespace RoadCaptain.Runner.ViewModels
             }
 
             StartRouteCommand = new RelayCommand(
-                _ => StartRoute(_ as Window),
+                _ => StartRoute(),
                 _ => CanStartRoute
             );
 
@@ -228,20 +225,16 @@ namespace RoadCaptain.Runner.ViewModels
             return CommandResult.Success();
         }
 
-        private CommandResult StartRoute(Window window)
+        private CommandResult StartRoute()
         {
             _configuration.Route = RoutePath;
 
             _appSettings.Route = RoutePath;
             _appSettings.Save();
 
-            var inGameWindowModel = new InGameWindowModel(_segmentStore.LoadSegments());
+            _loadRouteUseCase.Execute(new LoadRouteCommand { Path = RoutePath });
 
-            inGameWindowModel.InitializeRoute(_routeStore.LoadFrom(RoutePath));
-
-            var viewModel = new InGameNavigationWindowViewModel(inGameWindowModel, _segmentStore.LoadSegments());
-
-            _windowService.ShowInGameWindow(window, viewModel);
+            _gameStateDispatcher.Dispatch(new WaitingForConnectionState());
 
             return CommandResult.Success();
         }

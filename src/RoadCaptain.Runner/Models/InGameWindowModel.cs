@@ -57,11 +57,11 @@ namespace RoadCaptain.Runner.Models
         public PlannedRoute Route
         {
             get => _route;
-            private set
+            set
             {
                 if (Equals(value, _route)) return;
                 _route = value;
-                
+                InitializeRoute(value);
                 OnPropertyChanged();
             }
         }
@@ -173,10 +173,8 @@ namespace RoadCaptain.Runner.Models
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        public void InitializeRoute(PlannedRoute route)
+        private void InitializeRoute(PlannedRoute route)
         {
-            Route = route;
-
             var currentSegmentSequence = route.RouteSegmentSequence[route.SegmentSequenceIndex];
             CurrentSegment = new SegmentSequenceModel(
                 currentSegmentSequence, 
@@ -196,20 +194,20 @@ namespace RoadCaptain.Runner.Models
                 NextSegment = null;
             }
 
-            CalculateTotalAscentAndDescent();
+            CalculateTotalAscentAndDescent(route);
 
             ElapsedAscent = 0;
             ElapsedDescent = 0;
             ElapsedDistance = 0;
         }
 
-        private void CalculateTotalAscentAndDescent()
+        private void CalculateTotalAscentAndDescent(PlannedRoute route)
         {
             double totalAscent = 0;
             double totalDescent = 0;
             double totalDistance = 0;
 
-            foreach (var sequence in _route.RouteSegmentSequence)
+            foreach (var sequence in route.RouteSegmentSequence)
             {
                 var segment = GetSegmentById(sequence.SegmentId);
 

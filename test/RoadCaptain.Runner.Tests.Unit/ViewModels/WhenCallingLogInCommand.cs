@@ -5,6 +5,7 @@ using RoadCaptain.Adapters;
 using RoadCaptain.GameStates;
 using RoadCaptain.Runner.Models;
 using RoadCaptain.Runner.ViewModels;
+using RoadCaptain.UseCases;
 using Xunit;
 using TokenResponse = RoadCaptain.Runner.Models.TokenResponse;
 
@@ -21,13 +22,11 @@ namespace RoadCaptain.Runner.Tests.Unit.ViewModels
             _windowService = new StubWindowService(null);
             _gameStateDispatcher = new InMemoryGameStateDispatcher(new NopMonitoringEvents());
 
-            _viewModel = new MainWindowViewModel(
-                null,
-                null,
-                new Configuration(null),
+            _viewModel = new MainWindowViewModel(new Configuration(null),
                 new AppSettings(),
                 _windowService,
-                _gameStateDispatcher);
+                _gameStateDispatcher,
+                new LoadRouteUseCase(_gameStateDispatcher, new StubRouteStore()));
 
             _windowService
                 .Overrides

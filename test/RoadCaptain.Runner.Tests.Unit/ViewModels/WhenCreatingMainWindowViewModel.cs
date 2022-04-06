@@ -6,6 +6,7 @@ using Newtonsoft.Json;
 using RoadCaptain.Adapters;
 using RoadCaptain.GameStates;
 using RoadCaptain.Runner.ViewModels;
+using RoadCaptain.UseCases;
 using Xunit;
 
 namespace RoadCaptain.Runner.Tests.Unit.ViewModels
@@ -149,13 +150,11 @@ namespace RoadCaptain.Runner.Tests.Unit.ViewModels
 
         private static MainWindowViewModel CreateViewModel(Configuration configuration, AppSettings appSettings = null)
         {
-            return new MainWindowViewModel(
-                null, 
-                null, 
-                configuration, 
+            return new MainWindowViewModel(configuration, 
                 appSettings ?? new AppSettings(),
                 new WindowService(null),
-                _gameStateDispatcher);
+                _gameStateDispatcher,
+                new LoadRouteUseCase(_gameStateDispatcher, new StubRouteStore()));
         }
 
         private GameState GetFirstDispatchedGameState()

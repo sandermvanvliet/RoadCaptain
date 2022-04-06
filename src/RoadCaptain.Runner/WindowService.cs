@@ -56,7 +56,7 @@ namespace RoadCaptain.Runner
             }
         }
 
-        public void ShowInGameWindow(Window owner, InGameNavigationWindowViewModel viewModel)
+        public void ShowInGameWindow(InGameNavigationWindowViewModel viewModel)
         {
             var inGameWindow = Resolve<InGameNavigationWindow>();
 
@@ -64,7 +64,10 @@ namespace RoadCaptain.Runner
 
             Show(inGameWindow);
 
-            Close(owner);
+            if (_currentWindow != null)
+            {
+                Close(_currentWindow);
+            }
 
             _currentWindow = inGameWindow;
         }

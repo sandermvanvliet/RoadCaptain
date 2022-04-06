@@ -4,6 +4,7 @@ using FluentAssertions;
 using RoadCaptain.Adapters;
 using RoadCaptain.GameStates;
 using RoadCaptain.Runner.ViewModels;
+using RoadCaptain.UseCases;
 using Xunit;
 
 namespace RoadCaptain.Runner.Tests.Unit.ViewModels
@@ -16,13 +17,11 @@ namespace RoadCaptain.Runner.Tests.Unit.ViewModels
         public WhenUpdatingMainWindowViewModel()
         {
             _gameStateDispatcher = new InMemoryGameStateDispatcher(new NopMonitoringEvents());
-            _viewModel = new MainWindowViewModel(
-                null, 
-                null, 
-                new Configuration(null), 
+            _viewModel = new MainWindowViewModel(new Configuration(null), 
                 new AppSettings(),
                 new WindowService(null),
-                _gameStateDispatcher);
+                _gameStateDispatcher,
+                new LoadRouteUseCase(_gameStateDispatcher, new StubRouteStore()));
         }
 
         [Fact]

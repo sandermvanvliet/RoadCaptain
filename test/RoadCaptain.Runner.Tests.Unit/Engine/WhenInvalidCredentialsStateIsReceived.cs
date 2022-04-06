@@ -72,9 +72,11 @@ namespace RoadCaptain.Runner.Tests.Unit.Engine
             GivenInvalidCredentialsStateIsReceived();
 
             WindowService
-                .MainWindowInvocations
+                .ShownWindows
                 .Should()
-                .Be(1);
+                .Contain(typeof(MainWindow))
+                .And
+                .HaveCount(1);
         }
 
         private void GivenInvalidCredentialsStateIsReceived()

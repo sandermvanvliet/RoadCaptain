@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Threading;
 using System.Windows;
 using System.Windows.Threading;
 using RoadCaptain.Runner.Models;
@@ -23,9 +22,9 @@ namespace RoadCaptain.Runner
             return InvokeIfNeeded(() => _decorated.ShowOpenFileDialog());
         }
 
-        public void ShowInGameWindow(Window owner, InGameNavigationWindowViewModel viewModel)
+        public void ShowInGameWindow(InGameNavigationWindowViewModel viewModel)
         {
-            InvokeIfNeeded(() => _decorated.ShowInGameWindow(owner, viewModel));
+            InvokeIfNeeded(() => _decorated.ShowInGameWindow(viewModel));
         }
 
         public TokenResponse ShowLogInDialog(Window owner)

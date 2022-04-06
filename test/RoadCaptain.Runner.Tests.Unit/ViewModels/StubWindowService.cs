@@ -16,7 +16,6 @@ namespace RoadCaptain.Runner.Tests.Unit.ViewModels
 
         public string OpenFileDialogResult { get; set; }
         public TokenResponse LogInDialogResult { get; set; }
-
         public int OpenFileDialogInvocations { get; private set; }
         public int LogInDialogInvocations { get; private set; }
         public int MainWindowInvocations { get; private set; }
@@ -57,15 +56,16 @@ namespace RoadCaptain.Runner.Tests.Unit.ViewModels
 
         protected override void Show(Window window)
         {
-            if (window is MainWindow)
-            {
-                MainWindowInvocations++;
-            }
+            ShownWindows.Add(window.GetType());
         }
 
         protected override void Close(Window window)
         {
+            ClosedWindows.Add(window.GetType());
         }
+
+        public List<Type> ClosedWindows { get; } = new();
+        public List<Type> ShownWindows { get; } = new();
 
         protected override bool Activate(Window window)
         {
