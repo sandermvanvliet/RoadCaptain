@@ -18,6 +18,8 @@ namespace RoadCaptain.Runner.Tests.Unit.ViewModels
 
         public int OpenFileDialogInvocations { get; private set; }
         public int LogInDialogInvocations { get; private set; }
+        public int MainWindowInvocations { get; private set; }
+        public int ErrorDialogInvocations { get; private set; }
 
         public void ShowInGameWindow(Window owner, InGameNavigationWindowViewModel viewModel)
         {
@@ -33,11 +35,12 @@ namespace RoadCaptain.Runner.Tests.Unit.ViewModels
 
         public void ShowErrorDialog(string message, Window owner = null)
         {
+            ErrorDialogInvocations++;
         }
 
         public void ShowMainWindow()
         {
-            throw new System.NotImplementedException();
+            MainWindowInvocations++;
         }
     }
 }

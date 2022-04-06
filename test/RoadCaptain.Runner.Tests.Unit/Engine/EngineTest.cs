@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using RoadCaptain.Adapters;
 using RoadCaptain.GameStates;
+using RoadCaptain.Runner.Tests.Unit.ViewModels;
 using RoadCaptain.UseCases;
 using Serilog;
 using Serilog.Sinks.InMemory;
@@ -37,12 +38,13 @@ namespace RoadCaptain.Runner.Tests.Unit.Engine
                     state => States.Add(state));
 
             var messageEmitter = new MessageEmitterToQueue(monitoringEvents, new MessageEmitterConfiguration(null));
+            WindowService = new StubWindowService();
 
             Engine = new TestableEngine(
                 monitoringEvents,
                 new LoadRouteUseCase(gameStateDispatcher, new StubRouteStore()),
                 configuration,
-                null,
+                WindowService,
                 new DecodeIncomingMessagesUseCase(new StubMessageReceiver(), messageEmitter, monitoringEvents),
                 null,
                 new HandleZwiftMessagesUseCase(messageEmitter, monitoringEvents, new SegmentStore(),
@@ -53,6 +55,8 @@ namespace RoadCaptain.Runner.Tests.Unit.Engine
 
             _receiverTask = TaskWithCancellation.Start(token => gameStateDispatcher.Start(token));
         }
+
+        protected StubWindowService WindowService { get; }
 
         protected PlannedRoute LoadedRoute { get; private set; }
 

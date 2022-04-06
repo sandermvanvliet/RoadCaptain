@@ -92,28 +92,13 @@ namespace RoadCaptain.Runner
                 // Start handling Zwift messages
                 StartMessageHandler();
             }
-
-            if (gameState is InGameState && _previousGameState is not InGameState)
-            {
-                _monitoringEvents.Information("User entered the game");
-
-                // Start navigation if it is not running
-                if (!_navigationTask.IsRunning())
-                {
-                    StartNavigation();
-                }
-            }
-
-            if (gameState is InvalidCredentialsState invalidCredentials)
+            else if (gameState is InvalidCredentialsState invalidCredentials)
             {
                 // Stop the connection initiator and listener
                 CancelAndCleanUp(() => _listenerTask);
                 CancelAndCleanUp(() => _initiatorTask);
-
-                if (_messageHandlingTask.IsRunning())
-                {
-                    CancelAndCleanUp(() => _messageHandlingTask);
-                }
+                CancelAndCleanUp(() => _navigationTask);
+                CancelAndCleanUp(() => _messageHandlingTask);
 
                 // Clear token info on main window view model
                 // and show main window
@@ -121,6 +106,14 @@ namespace RoadCaptain.Runner
                 _windowService.ShowMainWindow();
             }
 
+            if (gameState is InGameState && _previousGameState is not InGameState)
+            {
+                _monitoringEvents.Information("User entered the game");
+
+                // Start navigation if it is not running
+                StartNavigation();
+            }
+            
             if (gameState is ErrorState errorState)
             {
                 _windowService.ShowErrorDialog(errorState.Exception.Message);
