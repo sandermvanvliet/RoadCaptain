@@ -7,7 +7,7 @@
     <ProductVersion>3.10</ProductVersion>
     <ProjectGuid>7afb461e-c812-4f42-80c9-e7b61b7221bc</ProjectGuid>
     <SchemaVersion>2.0</SchemaVersion>
-    <OutputName>RoadCaptain.Installer_$(Version)</OutputName>
+    <OutputName>RoadCaptain_$(Version)</OutputName>
     <OutputType>Package</OutputType>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
