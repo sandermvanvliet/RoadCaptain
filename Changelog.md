@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.4.0.0
+
+- Fix issue in building the installer
+- Reworked state machine to improve interaction with Zwift. This is mostly a "behind the scenes" change but it does improve the reliability of pairing with Zwift.
+
 ## 0.3.0.0
 
 - Log files are now written to `%UserProfile%\AppData\Local\Codenizer BV\RoadCaptain`. This fixes an issue where log files wouldn't be written at all because RoadCaptain doesn't have write access to the installation directory (`Program Files (x86)\RoadCaptain`)
