@@ -19,6 +19,7 @@ namespace RoadCaptain.UseCases
         private readonly IGameStateReceiver _gameStateReceiver;
         private readonly IGameStateDispatcher _gameStateDispatcher;
         private bool _userIsInGame;
+        private readonly AutoResetEvent _userDisconnected = new(false);
 
         public ConnectToZwiftUseCase(IZwift zwift,
             MonitoringEvents monitoringEvents, 
@@ -45,10 +46,12 @@ namespace RoadCaptain.UseCases
             else if (gameState is ConnectedToZwiftState && _userIsInGame)
             {
                 _userIsInGame = false;
+                _userDisconnected.Set();
             }
             else if (gameState is WaitingForConnectionState && _userIsInGame)
             {
                 _userIsInGame = false;
+                _userDisconnected.Set();
             }
         }
 
@@ -59,6 +62,12 @@ namespace RoadCaptain.UseCases
             // ReSharper disable once MethodSupportsCancellation
             Task.Factory.StartNew(() => _gameStateReceiver.Start(cancellationToken));
 #pragma warning restore CS4014
+
+            // To ensure that we don't block a long time 
+            // when there are no items in the queue we
+            // need to trigger the auto reset event when
+            // the token is cancelled.
+            cancellationToken.Register(() => _userDisconnected.Set());
 
             // TODO: Work out what the correct IP address should be
             var ipAddress = GetMostLikelyAddress().ToString();
@@ -114,8 +123,8 @@ namespace RoadCaptain.UseCases
 
                         remainingAttempts = 5;
                     }
-
-                    Thread.Sleep(5 * 1000);
+                    
+                    _userDisconnected.WaitOne(5 * 1000);
                 }
             }
             catch (Exception e)
