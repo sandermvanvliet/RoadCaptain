@@ -101,6 +101,8 @@ namespace RoadCaptain.Adapters
 
                     _monitoringEvents.WaitingForConnection();
 
+                    _gameStateDispatcher.Dispatch(new WaitingForConnectionState());
+
                     _acceptedSocket = _socket.Accept();
 
                     _gameStateDispatcher.Dispatch(new ConnectedToZwiftState());
@@ -174,8 +176,6 @@ namespace RoadCaptain.Adapters
                         // on accepting a new connection.
                         _acceptedSocket = null;
                     }
-
-                    _gameStateDispatcher.Dispatch(new WaitingForConnectionState());
 
                     return null;
                 }
