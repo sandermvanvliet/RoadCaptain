@@ -31,9 +31,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="autofac.runner.development.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Update="autofac.runner.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

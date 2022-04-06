@@ -26,9 +26,7 @@ namespace RoadCaptain.Runner.Tests.Unit.Engine
                 .CreateLogger();
             
             var configuration = new ConfigurationBuilder()
-                .AddJsonFile("appsettings.json", true)
                 .AddJsonFile("autofac.runner.json")
-                .AddJsonFile("autofac.runner.development.json", true)
                 .Build();
 
             var containerBuilder = InversionOfControl.ConfigureContainer(configuration, logger, Dispatcher.CurrentDispatcher);
