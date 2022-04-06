@@ -189,7 +189,14 @@ namespace RoadCaptain.Runner
             {
                 if (fieldInfo.GetValue(this) is TaskWithCancellation task)
                 {
-                    task.Cancel();
+                    try
+                    {
+                        task.Cancel();
+                    }
+                    catch (Exception e)
+                    {
+                        _monitoringEvents.Error(e, $"Cleaning up task {fieldInfo.Name.Replace("_","").Replace("Task", "")} failed");
+                    }
 
                     fieldInfo.SetValue(this, null);
                 }
