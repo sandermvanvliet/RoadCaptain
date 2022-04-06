@@ -4,9 +4,7 @@
 
 using System.Windows;
 using Autofac;
-using Autofac.Configuration;
 using Microsoft.Extensions.Configuration;
-using Serilog;
 using Serilog.Core;
 
 namespace RoadCaptain.Runner
@@ -32,22 +30,9 @@ namespace RoadCaptain.Runner
                 .AddJsonFile("autofac.runner.development.json", true)
                 .Build();
 
-            var builder = new ContainerBuilder();
-
-            builder.Register<ILogger>(_ => _logger).SingleInstance();
-            builder.Register<IConfiguration>(_ => configuration).SingleInstance();
-
-            builder.RegisterType<Configuration>().AsSelf().SingleInstance();
-
-            builder.Register(_ => AppSettings.Default).SingleInstance();
-
-            // Wire up registrations through the autofac.json file
-            builder.RegisterModule(new ConfigurationModule(configuration));
-
-            // Register dispatcher here because MainModule does not know of it
-            builder.RegisterInstance(Dispatcher).AsSelf().SingleInstance();
-
-            var container = builder.Build();
+            var container = InversionOfControl
+                .ConfigureContainer(configuration, _logger, Dispatcher)
+                .Build();
 
             _engine = container.Resolve<Engine>();
             _monitoringEvents = container.Resolve<MonitoringEvents>();
