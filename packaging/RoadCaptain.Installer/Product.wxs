@@ -174,15 +174,6 @@
       <Component Id="System.IO.Pipelines.dll" Guid="170636b7-4b8f-458c-8e7e-478433c9eef1">
         <File Id="System.IO.Pipelines.dll" Name="System.IO.Pipelines.dll" Source="$(var.RoadCaptain.Runner_TargetDir)System.IO.Pipelines.dll" />
       </Component>
-      <Component Id="System.Runtime.CompilerServices.Unsafe.dll" Guid="65efbe9c-4d20-4921-ad26-085a7c237ee3">
-        <File Id="System.Runtime.CompilerServices.Unsafe.dll" Name="System.Runtime.CompilerServices.Unsafe.dll" Source="$(var.RoadCaptain.Runner_TargetDir)System.Runtime.CompilerServices.Unsafe.dll" />
-      </Component>
-      <Component Id="System.Text.Encodings.Web.dll" Guid="a35bc142-80e6-4487-9ca1-029dd6d6e28a">
-        <File Id="System.Text.Encodings.Web.dll" Name="System.Text.Encodings.Web.dll" Source="$(var.RoadCaptain.Runner_TargetDir)System.Text.Encodings.Web.dll" />
-      </Component>
-      <Component Id="System.Text.Json.dll" Guid="7803f458-5440-4beb-8e53-c0de68e23c57">
-        <File Id="System.Text.Json.dll" Name="System.Text.Json.dll" Source="$(var.RoadCaptain.Runner_TargetDir)System.Text.Json.dll" />
-      </Component>
       <Component Id="turns.json" Guid="be7117f6-18c1-4eb9-abfe-820bac53c84d">
         <File Id="turns.json" Name="turns.json" Source="$(var.RoadCaptain.Runner_TargetDir)turns.json" />
       </Component>
