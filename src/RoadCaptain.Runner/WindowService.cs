@@ -42,7 +42,7 @@ namespace RoadCaptain.Runner
             }
             else
             {
-                var window = _componentContext.Resolve<MainWindow>();
+                var window = Resolve<MainWindow>();
 
                 if (_currentWindow != null)
                 {
@@ -58,7 +58,7 @@ namespace RoadCaptain.Runner
 
         public void ShowInGameWindow(Window owner, InGameNavigationWindowViewModel viewModel)
         {
-            var inGameWindow = _componentContext.Resolve<InGameNavigationWindow>();
+            var inGameWindow = Resolve<InGameNavigationWindow>();
 
             inGameWindow.DataContext = viewModel;
 
@@ -71,7 +71,7 @@ namespace RoadCaptain.Runner
 
         public TokenResponse ShowLogInDialog(Window owner)
         {
-            var zwiftLoginWindow = _componentContext.Resolve<ZwiftLoginWindow>();
+            var zwiftLoginWindow = Resolve<ZwiftLoginWindow>();
 
             zwiftLoginWindow.Owner = owner;
             zwiftLoginWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
@@ -112,6 +112,11 @@ namespace RoadCaptain.Runner
                     MessageBoxButton.OK,
                     MessageBoxImage.Error);
             }
+        }
+
+        protected virtual TType Resolve<TType>()
+        {
+            return _componentContext.Resolve<TType>();
         }
 
         protected virtual bool? ShowDialog(Window window)

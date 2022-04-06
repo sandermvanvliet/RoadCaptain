@@ -35,7 +35,7 @@ namespace RoadCaptain.Runner
             };
         }
 
-        public TokenResponse TokenResponse { get; private set; }
+        public TokenResponse TokenResponse { get; set; }
 
         private void ZwiftAuthView_OnCoreWebView2InitializationCompleted(object sender,
             CoreWebView2InitializationCompletedEventArgs e)

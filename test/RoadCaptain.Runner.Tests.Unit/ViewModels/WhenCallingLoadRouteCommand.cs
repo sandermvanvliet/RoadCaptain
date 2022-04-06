@@ -11,7 +11,7 @@ namespace RoadCaptain.Runner.Tests.Unit.ViewModels
 
         public WhenCallingLoadRouteCommand()
         {
-            _windowService = new StubWindowService();
+            _windowService = new StubWindowService(null);
 
             _viewModel = new MainWindowViewModel(
                 null,

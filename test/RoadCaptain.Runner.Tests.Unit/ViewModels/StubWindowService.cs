@@ -1,16 +1,17 @@
-﻿using System.Windows;
+﻿using System;
+using System.Collections.Generic;
+using System.Windows;
+using Autofac;
+using Microsoft.Win32;
 using RoadCaptain.Runner.Models;
-using RoadCaptain.Runner.ViewModels;
 
 namespace RoadCaptain.Runner.Tests.Unit.ViewModels
 {
-    public class StubWindowService : IWindowService
+    public class StubWindowService : WindowService
     {
-        public string ShowOpenFileDialog()
+        public StubWindowService(IComponentContext componentContext) 
+            : base(componentContext)
         {
-            OpenFileDialogInvocations++;
-
-            return OpenFileDialogResult;
         }
 
         public string OpenFileDialogResult { get; set; }
@@ -20,27 +21,65 @@ namespace RoadCaptain.Runner.Tests.Unit.ViewModels
         public int LogInDialogInvocations { get; private set; }
         public int MainWindowInvocations { get; private set; }
         public int ErrorDialogInvocations { get; private set; }
+        public Dictionary<Type, object> Overrides { get; } = new();
 
-        public void ShowInGameWindow(Window owner, InGameNavigationWindowViewModel viewModel)
+        protected override bool? ShowDialog(Window window)
         {
-            throw new System.NotImplementedException();
+            if (window is ZwiftLoginWindow loginWindow)
+            {
+                LogInDialogInvocations++;
+                loginWindow.TokenResponse = LogInDialogResult;
+                return true;
+            }
+
+            return false;
         }
 
-        public TokenResponse ShowLogInDialog(Window owner)
+        protected override bool? ShowDialog(CommonDialog dialog)
         {
-            LogInDialogInvocations++;
+            OpenFileDialogInvocations++;
 
-            return LogInDialogResult;
+            if (dialog is OpenFileDialog fileDialog && 
+                !string.IsNullOrEmpty(OpenFileDialogResult))
+            {
+                fileDialog.FileName = OpenFileDialogResult;
+
+                return true;
+            }
+
+            return false;
         }
 
-        public void ShowErrorDialog(string message, Window owner = null)
+        public override void ShowErrorDialog(string message, Window owner)
         {
             ErrorDialogInvocations++;
         }
 
-        public void ShowMainWindow()
+        protected override void Show(Window window)
         {
-            MainWindowInvocations++;
+            if (window is MainWindow)
+            {
+                MainWindowInvocations++;
+            }
+        }
+
+        protected override void Close(Window window)
+        {
+        }
+
+        protected override bool Activate(Window window)
+        {
+            return true;
+        }
+
+        protected override TType Resolve<TType>()
+        {
+            if (Overrides.ContainsKey(typeof(TType)))
+            {
+                return (TType)Overrides[typeof(TType)];
+            }
+
+            return base.Resolve<TType>();
         }
     }
 }

@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
-using RoadCaptain.Adapters;
+using System.Windows.Threading;
+using Autofac;
+using Microsoft.Extensions.Configuration;
 using RoadCaptain.GameStates;
+using RoadCaptain.Ports;
 using RoadCaptain.Runner.Tests.Unit.ViewModels;
-using RoadCaptain.UseCases;
 using Serilog;
 using Serilog.Sinks.InMemory;
 
@@ -22,38 +24,40 @@ namespace RoadCaptain.Runner.Tests.Unit.Engine
                 .WriteTo.Sink(InMemorySink)
                 .Enrich.FromLogContext()
                 .CreateLogger();
+            
+            var configuration = new ConfigurationBuilder()
+                .AddJsonFile("appsettings.json", true)
+                .AddJsonFile("autofac.runner.json")
+                .AddJsonFile("autofac.runner.development.json", true)
+                .Build();
 
-            var monitoringEvents = new MonitoringEventsWithSerilog(logger);
+            var containerBuilder = InversionOfControl.ConfigureContainer(configuration, logger, Dispatcher.CurrentDispatcher);
 
-            var configuration = new Configuration(null)
-            {
-                Route = "someroute.json"
-            };
+            // Replace some services
+            containerBuilder.RegisterType<StubWindowService>().SingleInstance().AsSelf().As<IWindowService>();
+            containerBuilder.RegisterType<StubRouteStore>().AsImplementedInterfaces();
+            containerBuilder.RegisterType<StubMessageReceiver>().AsImplementedInterfaces();
+            
+            // Register the testable engine so we can properly resolve it
+            containerBuilder.RegisterType<TestableEngine>().AsSelf();
 
-            var gameStateDispatcher = new InMemoryGameStateDispatcher(monitoringEvents);
-            gameStateDispatcher
+            var container = containerBuilder.Build();
+
+            container.Resolve<Configuration>().Route = "someroute.json";
+
+            var gameStateReceiver = container.Resolve<IGameStateReceiver>();
+            gameStateReceiver
                 .Register(
-                    route => LoadedRoute = route,
+                    route =>
+                    {
+                        LoadedRoute = route;
+                    },
                     null,
                     state => States.Add(state));
+            _receiverTask = TaskWithCancellation.Start(token => gameStateReceiver.Start(token));
 
-            var messageEmitter = new MessageEmitterToQueue(monitoringEvents, new MessageEmitterConfiguration(null));
-            WindowService = new StubWindowService();
-
-            Engine = new TestableEngine(
-                monitoringEvents,
-                new LoadRouteUseCase(gameStateDispatcher, new StubRouteStore()),
-                configuration,
-                WindowService,
-                new DecodeIncomingMessagesUseCase(new StubMessageReceiver(), messageEmitter, monitoringEvents),
-                null,
-                new HandleZwiftMessagesUseCase(messageEmitter, monitoringEvents, new SegmentStore(),
-                    gameStateDispatcher, new NopZwiftGameConnection(), gameStateDispatcher),
-                null,
-                gameStateDispatcher
-            );
-
-            _receiverTask = TaskWithCancellation.Start(token => gameStateDispatcher.Start(token));
+            Engine = container.Resolve<TestableEngine>();
+            WindowService = container.Resolve<StubWindowService>();
         }
 
         protected StubWindowService WindowService { get; }
