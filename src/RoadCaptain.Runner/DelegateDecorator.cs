@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using System.Windows;
 using System.Windows.Threading;
 using RoadCaptain.Runner.Models;
@@ -58,8 +59,10 @@ namespace RoadCaptain.Runner
             {
                 _dispatcher.Invoke(action);
             }
-
-            action();
+            else
+            {
+                action();
+            }
         }
     }
 }
