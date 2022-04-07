@@ -313,30 +313,22 @@ namespace RoadCaptain.RouteBuilder.ViewModels
 
         private CommandResult SaveRoute()
         {
-            if (!Route.IsTainted)
+            var dialog = new SaveFileDialog
             {
-                return CommandResult.Aborted();
+                RestoreDirectory = true,
+                AddExtension = true,
+                DefaultExt = ".json",
+                Filter = "JSON files (.json)|*.json|GPS Exchange Format (.gpx)|*.gpx"
+            };
+
+            var result = dialog.ShowDialog();
+
+            if (!result.HasValue || !result.Value)
+            {
+                return CommandResult.Success();
             }
 
-            if (string.IsNullOrEmpty(Route.OutputFilePath))
-            {
-                var dialog = new SaveFileDialog
-                {
-                    RestoreDirectory = true,
-                    AddExtension = true,
-                    DefaultExt = ".json",
-                    Filter = "JSON files (.json)|*.json"
-                };
-
-                var result = dialog.ShowDialog();
-
-                if (!result.HasValue || !result.Value)
-                {
-                    return CommandResult.Success();
-                }
-
-                Route.OutputFilePath = dialog.FileName;
-            }
+            Route.OutputFilePath = dialog.FileName;
 
             try
             {

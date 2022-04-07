@@ -6,6 +6,7 @@
 
 - When a segment is selected in the list it will be highlighted in green on the map
 - Fix the direction of segment `watopia-bambino-fondo-001-after-after-before-before-before` which was in reverse
+- Routes can now be saved as GPX files so that they can be imported in other tools
 
 ## 0.4.0.0
 
