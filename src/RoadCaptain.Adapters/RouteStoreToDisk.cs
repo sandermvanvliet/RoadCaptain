@@ -7,7 +7,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Text;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
@@ -17,9 +16,7 @@ namespace RoadCaptain.Adapters
 {
     internal class RouteStoreToDisk : IRouteStore
     {
-        private readonly ISegmentStore _segmentStore;
-
-        private static readonly JsonSerializerSettings RouteSerializationSettings = new JsonSerializerSettings
+        private static readonly JsonSerializerSettings RouteSerializationSettings = new()
         {
             ContractResolver = new CamelCasePropertyNamesContractResolver(),
             Converters = new List<JsonConverter>
@@ -27,6 +24,8 @@ namespace RoadCaptain.Adapters
                 new StringEnumConverter(new CamelCaseNamingStrategy())
             }
         };
+
+        private readonly ISegmentStore _segmentStore;
 
         private List<Segment> _segments;
 
@@ -56,12 +55,17 @@ namespace RoadCaptain.Adapters
             File.WriteAllText(path, serialized);
         }
 
+        private static string SerializeAsJson(PlannedRoute route)
+        {
+            return JsonConvert.SerializeObject(route, Formatting.Indented, RouteSerializationSettings);
+        }
+
         private string SerializeAsGpx(PlannedRoute route)
         {
             var trackSegments = string.Join(
                 Environment.NewLine,
-                route.RouteSegmentSequence.Select(seg => "<trkseg>" + SegmentAsTrackPointList (seg) + "</trkseg>"));
-            
+                route.RouteSegmentSequence.Select(seg => "<trkseg>" + SegmentAsTrackPointList(seg) + "</trkseg>"));
+
             return "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
                    "<gpx creator=\"RoadCaptain:RouteBuilder\" version=\"1.1\" xmlns=\"http://www.topografix.com/GPX/1/1\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd http://www.garmin.com/xmlschemas/TrackPointExtension/v1 http://www.garmin.com/xmlschemas/TrackPointExtensionv1.xsd http://www.garmin.com/xmlschemas/GpxExtensions/v3 http://www.garmin.com/xmlschemas/GpxExtensionsv3.xsd\" xmlns:gpxtpx=\"http://www.garmin.com/xmlschemas/TrackPointExtension/v1\" xmlns:gpxx=\"http://www.garmin.com/xmlschemas/GpxExtensions/v3\">" +
                    "<trk>" +
@@ -84,23 +88,13 @@ namespace RoadCaptain.Adapters
                     .Select(x =>
                         $"<trkpt lat=\"{x.Latitude.ToString(CultureInfo.InvariantCulture)}\" lon=\"{x.Longitude.ToString(CultureInfo.InvariantCulture)}\"><ele>{x.Altitude.ToString(CultureInfo.InvariantCulture)}</ele></trkpt>")
                     .ToList());
-
         }
 
         private Segment GetSegmentById(string segmentId)
         {
-            if (_segments == null)
-            {
-                _segments = _segmentStore.LoadSegments();
-            }
+            _segments ??= _segmentStore.LoadSegments();
 
             return _segments.Single(s => s.Id == segmentId);
         }
-
-        private static string SerializeAsJson(PlannedRoute route)
-        {
-            return JsonConvert.SerializeObject(route, Formatting.Indented, RouteSerializationSettings);
-        }
     }
 }
-
