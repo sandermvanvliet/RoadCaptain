@@ -4,6 +4,7 @@
 
 using System;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using RoadCaptain.RouteBuilder.ViewModels;
 using SkiaSharp;
@@ -27,6 +28,9 @@ namespace RoadCaptain.RouteBuilder
         private readonly SKPaint _selectedSegmentPathPaint = new()
             { Color = SKColor.Parse("#ffcc00"), Style = SKPaintStyle.Stroke, StrokeWidth = 6 };
 
+        private readonly SKPaint _segmentHighlightPaint = new()
+            { Color = SKColor.Parse("#4CFF00"), Style = SKPaintStyle.Stroke, StrokeWidth = 6 };
+
         private readonly SKPaint _spawnPointSegmentPathPaint = new()
             { Color = SKColor.Parse("#44dd44"), Style = SKPaintStyle.Stroke, StrokeWidth = 4 };
 
@@ -40,6 +44,7 @@ namespace RoadCaptain.RouteBuilder
             { Color = SKColor.Parse("#FF6141"), Style = SKPaintStyle.Fill };
 
         private readonly MainWindowViewModel _windowViewModel;
+        private string _highlightedSegmentId;
 
         public MainWindow(MainWindowViewModel mainWindowViewModel)
         {
@@ -57,6 +62,8 @@ namespace RoadCaptain.RouteBuilder
             {
                 case nameof(_windowViewModel.SelectedSegment):
                 case nameof(_windowViewModel.SegmentPaths):
+                    // Reset any manually selected item in the list
+                    _highlightedSegmentId = null;
                     TriggerRepaint();
                     break;
                 case nameof(_windowViewModel.Route):
@@ -107,6 +114,10 @@ namespace RoadCaptain.RouteBuilder
                 {
                     segmentPaint = _selectedSegmentPathPaint;
                 }
+                else if (segmentId == _highlightedSegmentId)
+                {
+                    segmentPaint = _segmentHighlightPaint;
+                }
                 else if (_windowViewModel.Route.Last == null && _windowViewModel.Route.IsSpawnPointSegment(segmentId))
                 {
                     segmentPaint = _spawnPointSegmentPathPaint;
@@ -144,19 +155,30 @@ namespace RoadCaptain.RouteBuilder
 
         private void SkElement_OnMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
-            var skiaElement = sender as SKElement;
-
-            if (skiaElement == null)
+            if (sender is not SKElement skiaElement)
             {
                 return;
             }
 
-            var position = e.GetPosition(sender as IInputElement);
+            var position = e.GetPosition((IInputElement)sender);
 
             var scalingFactor = skiaElement.CanvasSize.Width / skiaElement.ActualWidth;
             var scaledPoint = new Point(position.X * scalingFactor, position.Y * scalingFactor);
             
             _windowViewModel.SelectSegmentCommand.Execute(scaledPoint);
+        }
+
+        private void RouteListView_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (sender is ListView { SelectedItem: SegmentSequenceViewModel viewModel })
+            {
+                _highlightedSegmentId = viewModel.SegmentId;
+                TriggerRepaint();
+            }
+            else
+            {
+                _highlightedSegmentId = null;
+            }
         }
     }
 }

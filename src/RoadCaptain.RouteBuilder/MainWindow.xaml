@@ -77,7 +77,7 @@
                 <StackPanel.Resources>
                     <Style TargetType="{x:Type Button}" BasedOn="{StaticResource ButtonStyle}"/>
                 </StackPanel.Resources>
-                <Button Command="{Binding Path=SimulateCommnad}" ToolTip="Simulate route">
+                <Button Command="{Binding Path=SimulateCommand}" ToolTip="Simulate route" Cursor="Hand">
                     <Button.Style>
                         <Style TargetType="{x:Type Button}" BasedOn="{StaticResource ButtonStyle}">
                             <Setter Property="Content" Value="▶️" /> <!-- default value -->
@@ -89,9 +89,9 @@
                         </Style>
                     </Button.Style>
                 </Button>
-                <Button Content="🚮" Command="{Binding Path=ResetRouteCommand}" ToolTip="Reset route" />
-                <Button Content="💾" Command="{Binding Path=SaveRouteCommand}" ToolTip="Save route" />
-                <Button Content="📂" Command="{Binding Path=OpenRouteCommand}" ToolTip="Open route" />
+                <Button Content="🚮" Command="{Binding Path=ResetRouteCommand}" ToolTip="Reset route" Cursor="Hand" />
+                <Button Content="💾" Command="{Binding Path=SaveRouteCommand}" ToolTip="Save route" Cursor="Hand" />
+                <Button Content="📂" Command="{Binding Path=OpenRouteCommand}" ToolTip="Open route" Cursor="Hand" />
             </StackPanel>
 
             <Grid Grid.Row="0" Grid.Column="0">
@@ -131,7 +131,8 @@
                           ScrollViewer.HorizontalScrollBarVisibility="Disabled" 
                           ScrollViewer.VerticalScrollBarVisibility="Auto"
                           VerticalAlignment="Stretch"
-                          Name="RouteListView">
+                          Name="RouteListView"
+                          SelectionChanged="RouteListView_OnSelectionChanged">
                     <ListView.Resources>
                         <Style TargetType="{x:Type ListViewItem}">
                             <Style.Triggers>
