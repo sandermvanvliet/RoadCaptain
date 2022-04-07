@@ -31,6 +31,8 @@ When you install RoadCaptain, both apps will be installed and you can find them 
 
 First, let's take a look at how to build a route you can ride.
 
+>**NOTE:** Prefer a video? Have a look [here](https://www.youtube.com/watch?v=gMUGyPEI96Q) for a walkthrough of building a route.
+
 When you open the RoadCaptain Route Builder you'll see this screen:
 ![RouteBuilder-step-1](/images/RouteBuilder-step-1.png)
 
