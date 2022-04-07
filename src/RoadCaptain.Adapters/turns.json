@@ -22,12 +22,12 @@
   {
     "segmentId": "watopia-bambino-fondo-001-after-after-before-before-before",
     "turnsA": {
-      "left": "watopia-big-foot-hills-001-after-after",
-      "goStraight": "watopia-bambino-fondo-001-after-after-before-before-after-before"
-    },
-    "turnsB": {
       "left": "watopia-bambino-fondo-002-before-before-before",
       "goStraight": "watopia-bambino-fondo-001-after-before"
+    },
+    "turnsB": {
+      "left": "watopia-big-foot-hills-001-after-after",
+      "goStraight": "watopia-bambino-fondo-001-after-after-before-before-after-before"
     }
   },
   {

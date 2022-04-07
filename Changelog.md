@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.5.0.0
+
+- Fix the direction of segment `watopia-bambino-fondo-001-after-after-before-before-before` which was in reverse
+
 ## 0.4.0.0
 
 - Fix issue in building the installer
