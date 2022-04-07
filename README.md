@@ -2,7 +2,7 @@
 
 RoadCaptain is an app that makes riding on Zwift even more fun and can really push your limits in Watopia.
 
-> Can't wait? Download RoadCaptain [right here](https://github.com/sandermvanvliet/RoadCaptain/releases/download/v0.2.0.0/RoadCaptain.Installer_0.2.0.0.msi)
+> Can't wait? Download RoadCaptain [right here](https://github.com/sandermvanvliet/RoadCaptain/releases/latest)
 
 How? Simple: you are no longer limited to the fixed routes in Watopia, with RoadCaptain you can build your own routes and explore Watopia even more.
 
@@ -103,7 +103,7 @@ RoadCaptain requires a Windows PC with .NET Desktop Runtime 6.0.3 installed whic
 
 I've tested RoadCaptain with Zwift running on the same machine. _However_, as long as you are on the same network you can use Zwift on an iPad or Apple TV as long as you have a PC nearby where you can start the RoadCaptain Runner app.
 
-The RoadCaptain installer can be found [on the releases section](https://github.com/sandermvanvliet/RoadCaptain/releases/)
+The RoadCaptain installer can be found [on the releases section](https://github.com/sandermvanvliet/RoadCaptain/releases/latest)
 
 When you start the RoadCaptain Runner and click _Let's go!_ for the first time, Windows will ask you to allow network traffic on the private network. This is expected and is required for RoadCaptain to be able to talk to Zwift. If you accidentally click _deny_ you will need to uninstall and re-install RoadCaptain for this dialog to show again.
 
