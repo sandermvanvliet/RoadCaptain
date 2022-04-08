@@ -118,16 +118,18 @@ This is a beta version of RoadCaptain so expect quite a few rough edges and bugs
 Some known issues:
 
 - Currently you can't use Zwift Companion and RoadCaptain at the same time.
-- If you enter the wrong Zwift username and/or password RoadCaptain won't tell you. If RoadCaptain is stuck on the "Start Zwift" message you might want to double check your password and restart RoadCaptain.
-- Every so often RoadCaptain remains stuck on the "Start Zwift" message when you are actually on the starting segment in Zwift. Either give it a minute or restart the RoadCaptain Runner
+- ~~If you enter the wrong Zwift username and/or password RoadCaptain won't tell you. If RoadCaptain is stuck on the "Start Zwift" message you might want to double check your password and restart RoadCaptain.~~
+This has been fixed in version 0.2.0.0
+- ~~Every so often RoadCaptain remains stuck on the "Start Zwift" message when you are actually on the starting segment in Zwift. Either give it a minute or restart the RoadCaptain Runner~~ 
+This has been fixed in version 0.3.0.0, RoadCaptain will retry the pairing with Zwift
 - The in-game screen most likely won't show up when running Zwift in full-screen mode. (see above in the installing section)
 
-If you want to report a bug or provide other feedback, feel free to send me an email at [zwift@codenizer.nl](mailto:zwift@codenizer.nl)
+If you want to report a bug or provide other feedback, feel free to send me an email at [zwift@codenizer.nl](mailto:zwift@codenizer.nl) or [create an issue](https://github.com/sandermvanvliet/RoadCaptain/issues).
 
-RoadCaptain generates log files, you can find those in the installation directory. Please send them along (or the latest one) when you report a bug. That will help me diagnose the problem a lot quicker 👍
+RoadCaptain generates log files, you can find those in a directory under your user profile (typically `%userprofile%\AppData\Local\Codenizer BV\RoadCaptain`). Please send them along (or the latest one) when you report a bug. That will help me diagnose the problem a lot quicker 👍
 
 ## Last but not least
 
-Please note that RoadCaptain or myself are not associated with Zwift and the app has been built purely as an interesting experiment to see if I could do it. 
+Please note that RoadCaptain or myself are not associated with Zwift and the app has been built purely as an interesting experiment to see if I could do it.
 
 And yes, the screens do look a bit like Zwift but I hope I've made them just "off" enough to make it clear that it isn't Zwift itself.
