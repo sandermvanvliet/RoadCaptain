@@ -11,15 +11,17 @@ jobs:
     runs-on: windows-2022
 
     steps:
-    - name: Get the version
-      id: get_version
-      run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\/releases\//}.0
-      shell: bash
     - uses: actions/checkout@v2
     - name: Setup .NET
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 6.0.x
+    - name: Get the version
+      id: get_version
+      uses: mavrosxristoforos/get-xml-info@1.0
+      with:
+        xml-file: '.\Directory.Build.props'
+        xpath: '//Version'
     - name: Restore dependencies
       run: dotnet restore
     - name: Build
@@ -36,8 +38,8 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        tag_name: ${{ steps.get_version.outputs.VERSION }}
-        release_name: ${{ steps.get_version.outputs.VERSION }}
+        tag_name: ${{ steps.get_version.outputs.info }}
+        release_name: ${{ steps.get_version.outputs.info }}
         draft: false
         prerelease: false
     - name: Upload Installer
@@ -47,6 +49,6 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
-        asset_path: D:\a\RoadCaptain\RoadCaptain\packaging\RoadCaptain.Installer\bin\Release\RoadCaptain_${{ steps.get_version.outputs.VERSION }}.msi
-        asset_name: RoadCaptain_${{ steps.get_version.outputs.VERSION }}.msi
+        asset_path: D:\a\RoadCaptain\RoadCaptain\packaging\RoadCaptain.Installer\bin\Release\RoadCaptain_${{ steps.get_version.outputs.info }}.msi
+        asset_name: RoadCaptain_${{ steps.get_version.outputs.info }}.msi
         asset_content_type: application/x-msi
