@@ -2,6 +2,10 @@
 
 ## 0.5.0.0
 
+### Runner
+
+- Added a button to launch the Route Builder directly from the runner
+
 ### Route Builder
 
 - When a segment is selected in the list it will be highlighted in green on the map

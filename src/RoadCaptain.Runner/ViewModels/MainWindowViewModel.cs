@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Runtime.CompilerServices;
 using System.Windows;
@@ -30,7 +31,8 @@ namespace RoadCaptain.Runner.ViewModels
         public MainWindowViewModel(Configuration configuration,
             AppSettings appSettings,
             IWindowService windowService,
-            IGameStateDispatcher gameStateDispatcher, LoadRouteUseCase loadRouteUseCase)
+            IGameStateDispatcher gameStateDispatcher, 
+            LoadRouteUseCase loadRouteUseCase)
         {
             _configuration = configuration;
             _appSettings = appSettings;
@@ -68,6 +70,11 @@ namespace RoadCaptain.Runner.ViewModels
             LogInCommand = new RelayCommand(
                 _ => LogInToZwift(_ as Window),
                 _ => !LoggedInToZwift);
+
+            BuildRouteCommand = new RelayCommand(
+                    _ => LaunchRouteBuilder(),
+                    _ => true)
+                .OnFailure(result => _windowService.ShowErrorDialog(result.Message));
         }
 
         public bool CanStartRoute =>
@@ -162,6 +169,7 @@ namespace RoadCaptain.Runner.ViewModels
         public ICommand StartRouteCommand { get; set; }
         public ICommand LoadRouteCommand { get; set; }
         public ICommand LogInCommand { get; set; }
+        public ICommand BuildRouteCommand { get; set; }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -223,6 +231,22 @@ namespace RoadCaptain.Runner.ViewModels
             }
 
             return CommandResult.Success();
+        }
+        
+        private CommandResult LaunchRouteBuilder()
+        {
+            var assemblyLocation = GetType().Assembly.Location;
+            var installationDirectory = Path.GetDirectoryName(assemblyLocation);
+            var routeBuilderPath = Path.Combine(installationDirectory, "RoadCaptain.RouteBuilder.exe");
+
+            if (File.Exists(routeBuilderPath))
+            {
+                Process.Start(routeBuilderPath);
+
+                return CommandResult.Success();
+            }
+
+            return CommandResult.Failure("Could not locate RoadCaptain Route Builder");
         }
 
         private CommandResult StartRoute()
