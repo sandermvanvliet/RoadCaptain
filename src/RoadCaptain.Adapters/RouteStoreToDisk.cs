@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
@@ -66,11 +67,14 @@ namespace RoadCaptain.Adapters
                 Environment.NewLine,
                 route.RouteSegmentSequence.Select(seg => "<trkseg>" + SegmentAsTrackPointList(seg) + "</trkseg>"));
 
+            var version = Assembly.GetExecutingAssembly().GetName().Version?.ToString(4) ?? "0.0.0.0";
+            var routeBuilderVersion = $"RoadCaptain:RouteBuilder {version}";
+
             return "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
-                   "<gpx creator=\"RoadCaptain:RouteBuilder\" version=\"1.1\" xmlns=\"http://www.topografix.com/GPX/1/1\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd http://www.garmin.com/xmlschemas/TrackPointExtension/v1 http://www.garmin.com/xmlschemas/TrackPointExtensionv1.xsd http://www.garmin.com/xmlschemas/GpxExtensions/v3 http://www.garmin.com/xmlschemas/GpxExtensionsv3.xsd\" xmlns:gpxtpx=\"http://www.garmin.com/xmlschemas/TrackPointExtension/v1\" xmlns:gpxx=\"http://www.garmin.com/xmlschemas/GpxExtensions/v3\">" +
+                   $"<gpx creator=\"{routeBuilderVersion}\" version=\"1.1\" xmlns=\"http://www.topografix.com/GPX/1/1\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd http://www.garmin.com/xmlschemas/TrackPointExtension/v1 http://www.garmin.com/xmlschemas/TrackPointExtensionv1.xsd http://www.garmin.com/xmlschemas/GpxExtensions/v3 http://www.garmin.com/xmlschemas/GpxExtensionsv3.xsd\" xmlns:gpxtpx=\"http://www.garmin.com/xmlschemas/TrackPointExtension/v1\" xmlns:gpxx=\"http://www.garmin.com/xmlschemas/GpxExtensions/v3\">" +
                    "<trk>" +
-                   $"<name>RoadCaptain route starting at {route.ZwiftRouteName}</name>" +
-                   $"<desc>RoadCaptain route starting at {route.ZwiftRouteName}</desc>" +
+                   $"<name>{route.Name}</name>" +
+                   $"<desc>RoadCaptain route starting at {route.ZwiftSpawnPoint}</desc>" +
                    "<type>RoadCaptain route</type>" +
                    trackSegments +
                    "</trk>" +
