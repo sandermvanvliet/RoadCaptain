@@ -22,6 +22,7 @@ namespace RoadCaptain
         public string CurrentSegmentId => HasStarted ? RouteSegmentSequence[SegmentSequenceIndex].SegmentId : null;
 
         public List<SegmentSequence> RouteSegmentSequence { get; } = new();
+        public string World { get; set; } = "Watopia";
 
         public RouteMoveResult EnteredSegment(string segmentId)
         {

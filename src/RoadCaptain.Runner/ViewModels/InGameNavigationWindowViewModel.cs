@@ -106,7 +106,7 @@ namespace RoadCaptain.Runner.ViewModels
             {
                 Model.UserIsInGame = false;
                 Model.WaitingReason = "Connected with Zwift";
-                Model.InstructionText = "Start Zwift and start cycling in Watopia on route:";
+                Model.InstructionText = $"Start Zwift and start cycling in {Model.Route.World} on route:";
             }
             else if (gameState is WaitingForConnectionState && _previousState is InGameState)
             {
@@ -118,7 +118,7 @@ namespace RoadCaptain.Runner.ViewModels
             {
                 Model.UserIsInGame = false;
                 Model.WaitingReason = "Waiting for Zwift...";
-                Model.InstructionText = "Start Zwift and start cycling in Watopia on route:";
+                Model.InstructionText = $"Start Zwift and start cycling in {Model.Route.World} on route:";
             }
             else if (gameState is ErrorState)
             {

@@ -10,6 +10,8 @@ namespace RoadCaptain.Runner.Tests.Unit.ViewModels.InGame
 {
     public class WhenUpdatingGameState
     {
+        private const string WorldName = "TestWorld";
+
         [Fact]
         public void GivenWaitingForConnectionState_UserInGameIsFalse()
         {
@@ -39,7 +41,7 @@ namespace RoadCaptain.Runner.Tests.Unit.ViewModels.InGame
                 .Model
                 .InstructionText
                 .Should()
-                .Be("Start Zwift and start cycling in Watopia on route:");
+                .Be($"Start Zwift and start cycling in {WorldName} on route:");
         }
 
         [Fact]
@@ -153,7 +155,7 @@ namespace RoadCaptain.Runner.Tests.Unit.ViewModels.InGame
                 .Model
                 .InstructionText
                 .Should()
-                .Be("Start Zwift and start cycling in Watopia on route:");
+                .Be($"Start Zwift and start cycling in {WorldName} on route:");
         }
 
         [Fact]
@@ -191,7 +193,7 @@ namespace RoadCaptain.Runner.Tests.Unit.ViewModels.InGame
                 .Model
                 .InstructionText
                 .Should()
-                .Be("Start Zwift and start cycling in Watopia on route:");
+                .Be($"Start Zwift and start cycling in {WorldName} on route:");
         }
 
         [Fact]
@@ -251,6 +253,7 @@ namespace RoadCaptain.Runner.Tests.Unit.ViewModels.InGame
             {
                 Route = new PlannedRoute
                 {
+                    World = WorldName,
                     RouteSegmentSequence =
                     {
                         new SegmentSequence
