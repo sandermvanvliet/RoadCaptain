@@ -24,7 +24,7 @@ namespace RoadCaptain.Runner.ViewModels
         private bool _loggedInToZwift;
         private string _routePath;
         private string _windowTitle = "RoadCaptain";
-        private string _zwiftAvatarUri;
+        private string _zwiftAvatarUri = "Assets/profile-default.png";
         private string _zwiftName;
         private readonly LoadRouteUseCase _loadRouteUseCase;
         private readonly IRouteStore _routeStore;
