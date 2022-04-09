@@ -9,7 +9,7 @@ using RoadCaptain.UseCases;
 using Xunit;
 using TokenResponse = RoadCaptain.Runner.Models.TokenResponse;
 
-namespace RoadCaptain.Runner.Tests.Unit.ViewModels
+namespace RoadCaptain.Runner.Tests.Unit.ViewModels.MainWindow
 {
     public class WhenCallingLogInCommand
     {
