@@ -27,6 +27,8 @@ namespace RoadCaptain.Runner.ViewModels
         private string _zwiftAvatarUri;
         private string _zwiftName;
         private readonly LoadRouteUseCase _loadRouteUseCase;
+        private string _version;
+        private string _changelogUri;
 
         public MainWindowViewModel(Configuration configuration,
             AppSettings appSettings,
@@ -75,6 +77,12 @@ namespace RoadCaptain.Runner.ViewModels
                     _ => LaunchRouteBuilder(),
                     _ => true)
                 .OnFailure(result => _windowService.ShowErrorDialog(result.Message));
+
+            OpenLinkCommand = new RelayCommand(
+                _ => OpenLink(_ as string),
+                _ => !string.IsNullOrEmpty(_ as string));
+
+            Version = GetType().Assembly.GetName().Version?.ToString(4) ?? "0.0.0.0";
         }
 
         public bool CanStartRoute =>
@@ -166,10 +174,35 @@ namespace RoadCaptain.Runner.ViewModels
             }
         }
 
+        public string Version
+        {
+            get => _version;
+            set
+            {
+                if (value == _version) return;
+                _version = value;
+                ChangelogUri = $"https://github.com/sandermvanvliet/RoadCaptain/blob/main/Changelog.md/#{Version.Replace(".", "")}";
+                OnPropertyChanged();
+            }
+        }
+
+        public string ChangelogUri
+        {
+            get => _changelogUri;
+            set
+            {
+                if (value == _changelogUri) return;
+                _changelogUri = value;
+                OnPropertyChanged();
+            }
+        }
+
         public ICommand StartRouteCommand { get; set; }
         public ICommand LoadRouteCommand { get; set; }
         public ICommand LogInCommand { get; set; }
         public ICommand BuildRouteCommand { get; set; }
+
+        public ICommand OpenLinkCommand { get; set; }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -286,6 +319,23 @@ namespace RoadCaptain.Runner.ViewModels
             }
 
             return CommandResult.Aborted();
+        }
+
+        private CommandResult OpenLink(string url)
+        {
+            if (Uri.TryCreate(url, UriKind.Absolute, out var uri))
+            {
+                var startInfo = new ProcessStartInfo(uri.ToString())
+                {
+                    UseShellExecute = true
+                };
+
+                Process.Start(startInfo);
+
+                return CommandResult.Success();
+            }
+
+            return CommandResult.Failure("Invalid url");
         }
     }
 }

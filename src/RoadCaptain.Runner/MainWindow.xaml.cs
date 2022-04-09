@@ -2,7 +2,9 @@
 // Licensed under Artistic License 2.0
 // See LICENSE or https://choosealicense.com/licenses/artistic-2.0/
 
+using System.Diagnostics;
 using System.Windows;
+using System.Windows.Documents;
 using System.Windows.Input;
 using RoadCaptain.Ports;
 using RoadCaptain.Runner.ViewModels;

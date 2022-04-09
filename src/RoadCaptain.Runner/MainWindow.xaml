@@ -47,6 +47,14 @@
                 </Trigger>
             </Style.Triggers>
         </Style>
+        <Style x:Key="LinkButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="White" />
+            <Setter Property="Foreground" Value="Blue" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Padding" Value="0" />
+        </Style>
         <converters:BooleanConverter x:Key="BooleanConverter" />
         <converters:VisibilityConverter x:Key="VisibilityConverter" />
     </Window.Resources>
@@ -115,7 +123,7 @@
                     </Border>
                     <TextBlock Text="{Binding Path=ZwiftName}" d:Text="Sander van Vliet [TheBeardRides]" FontSize="16" VerticalAlignment="Center" Margin="4,0,0,0" />
                 </StackPanel>
-                
+
                 <Button Content="Log in" HorizontalAlignment="Right" Grid.Column="2" Grid.Row="0" VerticalAlignment="Center" 
                         Command="{Binding Path=LogInCommand}" 
                         CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}"
@@ -126,14 +134,26 @@
                 <TextBlock Text="Route:" HorizontalAlignment="Right" FontWeight="Bold" FontSize="16" Grid.Column="0" Grid.Row="1" VerticalAlignment="Center" Margin="0,2,0,0" />
                 <TextBox Text="{Binding Path=RoutePath}" Height="28" Grid.Column="1" Grid.Row="1" Margin="4,2,4,0" VerticalAlignment="Center" d:Text="c:\roadcaptain\routes\route-1.json" FontSize="16" Padding="4,0,0,0" />
                 <Button Content="Select" HorizontalAlignment="Right" Grid.Column="2" Grid.Row="1" Margin="0,2,4,0" VerticalAlignment="Center" Command="{Binding Path=LoadRouteCommand}" Width="72" />
-                
+
                 <!-- row 3 -->
                 <Button Content="Build route" HorizontalAlignment="Left" Grid.Column="1" Grid.Row="2" Margin="4,0,0,0" VerticalAlignment="Center" Command="{Binding Path=BuildRouteCommand}" Width="122" />
             </Grid>
-            <Button Content="Let's Go!" HorizontalAlignment="Right" Grid.Row="2" Margin="2,4,4,2" VerticalAlignment="Center" 
+            <Grid Grid.Row="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition Width="96" />
+                </Grid.ColumnDefinitions>
+                <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center" IsEnabled="True">
+                    <TextBlock Text="Version:" />
+                    <TextBlock Text="{Binding Path=Version}" d:Text="0.5.0.0" Margin="4,0,0,0" />
+                    <Button Content="Changelog (Github)" Margin="4,0,0,0" CommandParameter="{Binding Path=ChangelogUri}" Command="{Binding Path=OpenLinkCommand}" Style="{StaticResource LinkButtonStyle}" />
+                </StackPanel>
+                <Button Grid.Column="1"
+                    Content="Let's Go!" HorizontalAlignment="Right" Margin="2,4,4,2" VerticalAlignment="Center" 
                     Command="{Binding Path=StartRouteCommand}" 
                     CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}"
                     IsEnabled="{Binding Path=CanStartRoute}" />
+            </Grid>
         </Grid>
     </Border>
 </Window>
