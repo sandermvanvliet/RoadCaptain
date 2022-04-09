@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading;
@@ -27,6 +28,8 @@ namespace RoadCaptain.RouteBuilder.ViewModels
         private SimulationState _simulationState = SimulationState.NotStarted;
         private int _simulationIndex;
         private Offsets _overallOffsets;
+        private string _version;
+        private string _changelogUri;
 
         public MainWindowViewModel(IRouteStore routeStore, ISegmentStore segmentStore)
         {
@@ -85,6 +88,12 @@ namespace RoadCaptain.RouteBuilder.ViewModels
             SimulateCommand = new RelayCommand(
                     _ => SimulateRoute(),
                     _ => true);
+
+            OpenLinkCommand = new RelayCommand(
+                _ => OpenLink(_ as string),
+                _ => !string.IsNullOrEmpty(_ as string));
+
+            Version = GetType().Assembly.GetName().Version?.ToString(4) ?? "0.0.0.0";
         }
 
         public MainWindowModel Model { get; }
@@ -97,6 +106,7 @@ namespace RoadCaptain.RouteBuilder.ViewModels
         public ICommand ResetRouteCommand { get; }
         public ICommand SelectSegmentCommand { get; }
         public ICommand SimulateCommand { get; }
+        public ICommand OpenLinkCommand { get; set; }
 
         public Segment SelectedSegment
         {
@@ -451,6 +461,23 @@ namespace RoadCaptain.RouteBuilder.ViewModels
             return CommandResult.Success();
         }
 
+        private CommandResult OpenLink(string url)
+        {
+            if (Uri.TryCreate(url, UriKind.Absolute, out var uri))
+            {
+                var startInfo = new ProcessStartInfo(uri.ToString())
+                {
+                    UseShellExecute = true
+                };
+
+                Process.Start(startInfo);
+
+                return CommandResult.Success();
+            }
+
+            return CommandResult.Failure("Invalid url");
+        }
+
         public SKPoint? RiderPosition
         {
             get => _riderPosition;
@@ -467,6 +494,29 @@ namespace RoadCaptain.RouteBuilder.ViewModels
             set
             {
                 _simulationState = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public string Version
+        {
+            get => _version;
+            set
+            {
+                if (value == _version) return;
+                _version = value;
+                ChangelogUri = $"https://github.com/sandermvanvliet/RoadCaptain/blob/main/Changelog.md/#{Version.Replace(".", "")}";
+                OnPropertyChanged();
+            }
+        }
+
+        public string ChangelogUri
+        {
+            get => _changelogUri;
+            set
+            {
+                if (value == _changelogUri) return;
+                _changelogUri = value;
                 OnPropertyChanged();
             }
         }
