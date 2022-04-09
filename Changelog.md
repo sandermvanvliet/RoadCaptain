@@ -5,12 +5,14 @@
 ### Runner
 
 - Added a button to launch the Route Builder directly from the runner
+- The version of RoadCaptain is now shown in the main window and has a link to the changelog
 
 ### Route Builder
 
 - When a segment is selected in the list it will be highlighted in green on the map
 - Fix the direction of segment `watopia-bambino-fondo-001-after-after-before-before-before` which was in reverse
 - Routes can now be saved as GPX files so that they can be imported in other tools
+- You can now set a custom name for the route, previously this was always set to the Zwift route name you would start on
 
 ## 0.4.0.0
 
