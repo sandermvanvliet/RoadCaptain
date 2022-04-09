@@ -73,13 +73,6 @@ namespace RoadCaptain.Runner.ViewModels
 
                 if (gameState is OnRouteState routeState)
                 {
-                    if (_previousState is not OnRouteState && 
-                        routeState.Route.HasStarted &&
-                        routeState.Route.SegmentSequenceIndex == 0)
-                    {
-                        RouteStarted();
-                    }
-
                     if(_previousRouteSequenceIndex != routeState.Route.SegmentSequenceIndex)
                     {
                         // Moved to next segment on route
@@ -133,11 +126,6 @@ namespace RoadCaptain.Runner.ViewModels
                 Model.WaitingReason = "Oops! Something went wrong...";
                 Model.InstructionText = "Please report a bug on Github";
             }
-        }
-
-        private void RouteStarted()
-        {
-            // TODO: decide if we need this
         }
 
         private void RouteProgression(int segmentSequenceIndex)
