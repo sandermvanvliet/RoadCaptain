@@ -6,6 +6,7 @@
 
 - Added a button to launch the Route Builder directly from the runner
 - The version of RoadCaptain is now shown in the main window and has a link to the changelog
+- When a route is selected the main window now displays the name, world and Zwift route: ![RoadCaptain main window showing route details](./images/changelog-route-details.png)
 
 ### Route Builder
 

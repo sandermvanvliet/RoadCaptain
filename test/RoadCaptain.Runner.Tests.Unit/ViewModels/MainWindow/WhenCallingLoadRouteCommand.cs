@@ -15,11 +15,15 @@ namespace RoadCaptain.Runner.Tests.Unit.ViewModels.MainWindow
         {
             _windowService = new StubWindowService(null);
 
+            var gameStateDispatcher = new InMemoryGameStateDispatcher(new NopMonitoringEvents());
+
+            var routeStore = new StubRouteStore();
             _viewModel = new MainWindowViewModel(new Configuration(null),
                 new AppSettings(),
                 _windowService,
                 null,
-                new LoadRouteUseCase(new InMemoryGameStateDispatcher(new NopMonitoringEvents()), new StubRouteStore()));
+                new LoadRouteUseCase(gameStateDispatcher, routeStore),
+                routeStore);
         }
 
         [Fact]
@@ -60,6 +64,17 @@ namespace RoadCaptain.Runner.Tests.Unit.ViewModels.MainWindow
                 .RoutePath
                 .Should()
                 .Be("some path");
+        }
+
+        [Fact]
+        public void GivenUserSelectedFile_RouteIsLoaded()
+        {
+            _viewModel.RoutePath = null;
+            _windowService.OpenFileDialogResult = "someroute.json";
+            
+            LoadRoute();
+
+            _viewModel.Route.Should().NotBeNull();
         }
 
         [Fact]

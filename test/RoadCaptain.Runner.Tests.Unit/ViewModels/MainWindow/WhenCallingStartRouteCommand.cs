@@ -23,18 +23,22 @@ namespace RoadCaptain.Runner.Tests.Unit.ViewModels.MainWindow
 
             _appSettings = new AppSettings();
             _configuration = new Configuration(null);
-            _viewModel = new MainWindowViewModel(_configuration,
-                _appSettings,
+
+            StubRouteStore routeStore = new StubRouteStore();
+            _viewModel = new MainWindowViewModel(
+                _configuration,
+                new AppSettings(),
                 windowService,
                 _gameStateDispatcher,
-                new LoadRouteUseCase(_gameStateDispatcher, new StubRouteStore()));
+                new LoadRouteUseCase(_gameStateDispatcher, routeStore),
+                routeStore);
         }
 
 
         [Fact]
         public void RoutePathIsStoredInAppSettings()
         {
-            _viewModel.RoutePath = "some route here";
+            _viewModel.RoutePath = "someroute.json";
 
             StartRoute();
 
@@ -48,7 +52,7 @@ namespace RoadCaptain.Runner.Tests.Unit.ViewModels.MainWindow
         [Fact]
         public void RoutePathIsStoredInConfiguration()
         {
-            _viewModel.RoutePath = "some route here";
+            _viewModel.RoutePath = "someroute.json";
 
             StartRoute();
 

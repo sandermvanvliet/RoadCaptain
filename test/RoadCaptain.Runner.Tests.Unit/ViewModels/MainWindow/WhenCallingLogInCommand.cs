@@ -22,11 +22,13 @@ namespace RoadCaptain.Runner.Tests.Unit.ViewModels.MainWindow
             _windowService = new StubWindowService(null);
             _gameStateDispatcher = new InMemoryGameStateDispatcher(new NopMonitoringEvents());
 
+            StubRouteStore routeStore = new StubRouteStore();
             _viewModel = new MainWindowViewModel(new Configuration(null),
                 new AppSettings(),
                 _windowService,
                 _gameStateDispatcher,
-                new LoadRouteUseCase(_gameStateDispatcher, new StubRouteStore()));
+                new LoadRouteUseCase(_gameStateDispatcher, routeStore),
+                routeStore);
 
             _windowService
                 .Overrides

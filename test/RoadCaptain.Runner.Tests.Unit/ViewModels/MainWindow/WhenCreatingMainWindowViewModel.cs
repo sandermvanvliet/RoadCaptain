@@ -150,11 +150,13 @@ namespace RoadCaptain.Runner.Tests.Unit.ViewModels.MainWindow
 
         private static MainWindowViewModel CreateViewModel(Configuration configuration, AppSettings appSettings = null)
         {
+            var routeStore = new StubRouteStore();
             return new MainWindowViewModel(configuration, 
                 appSettings ?? new AppSettings(),
                 new WindowService(null),
                 _gameStateDispatcher,
-                new LoadRouteUseCase(_gameStateDispatcher, new StubRouteStore()));
+                new LoadRouteUseCase(_gameStateDispatcher, routeStore),
+                routeStore);
         }
 
         private GameState GetFirstDispatchedGameState()

@@ -17,11 +17,13 @@ namespace RoadCaptain.Runner.Tests.Unit.ViewModels.MainWindow
         public WhenUpdatingMainWindowViewModel()
         {
             _gameStateDispatcher = new InMemoryGameStateDispatcher(new NopMonitoringEvents());
+            var routeStore = new StubRouteStore();
             _viewModel = new MainWindowViewModel(new Configuration(null), 
                 new AppSettings(),
                 new WindowService(null),
                 _gameStateDispatcher,
-                new LoadRouteUseCase(_gameStateDispatcher, new StubRouteStore()));
+                new LoadRouteUseCase(_gameStateDispatcher, routeStore),
+                routeStore);
         }
 
         [Fact]

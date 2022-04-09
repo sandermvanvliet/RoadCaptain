@@ -27,20 +27,24 @@ namespace RoadCaptain.Runner.ViewModels
         private string _zwiftAvatarUri;
         private string _zwiftName;
         private readonly LoadRouteUseCase _loadRouteUseCase;
+        private readonly IRouteStore _routeStore;
         private string _version;
         private string _changelogUri;
+        private PlannedRoute _route;
 
         public MainWindowViewModel(Configuration configuration,
             AppSettings appSettings,
             IWindowService windowService,
             IGameStateDispatcher gameStateDispatcher, 
-            LoadRouteUseCase loadRouteUseCase)
+            LoadRouteUseCase loadRouteUseCase,
+            IRouteStore routeStore)
         {
             _configuration = configuration;
             _appSettings = appSettings;
             _windowService = windowService;
             _gameStateDispatcher = gameStateDispatcher;
             _loadRouteUseCase = loadRouteUseCase;
+            _routeStore = routeStore;
 
             if (IsValidToken(configuration.AccessToken))
             {
@@ -54,10 +58,12 @@ namespace RoadCaptain.Runner.ViewModels
             if (!string.IsNullOrEmpty(configuration.Route))
             {
                 RoutePath = configuration.Route;
+                Route = _routeStore.LoadFrom(RoutePath);
             }
             else if (!string.IsNullOrEmpty(appSettings.Route))
             {
                 RoutePath = appSettings.Route;
+                Route = _routeStore.LoadFrom(RoutePath);
             }
 
             StartRouteCommand = new RelayCommand(
@@ -197,6 +203,17 @@ namespace RoadCaptain.Runner.ViewModels
             }
         }
 
+        public PlannedRoute Route
+        {
+            get => _route;
+            set
+            {
+                if (Equals(value, _route)) return;
+                _route = value;
+                OnPropertyChanged();
+            }
+        }
+
         public ICommand StartRouteCommand { get; set; }
         public ICommand LoadRouteCommand { get; set; }
         public ICommand LogInCommand { get; set; }
@@ -261,6 +278,8 @@ namespace RoadCaptain.Runner.ViewModels
                 }
 
                 WindowTitle = $"RoadCaptain - {routeFileName}";
+
+                Route = _routeStore.LoadFrom(RoutePath);
             }
 
             return CommandResult.Success();
@@ -288,7 +307,7 @@ namespace RoadCaptain.Runner.ViewModels
 
             _appSettings.Route = RoutePath;
             _appSettings.Save();
-
+            
             _loadRouteUseCase.Execute(new LoadRouteCommand { Path = RoutePath });
 
             _gameStateDispatcher.Dispatch(new WaitingForConnectionState());
