@@ -14,6 +14,7 @@
 - Fix the direction of segment `watopia-bambino-fondo-001-after-after-before-before-before` which was in reverse
 - Routes can now be saved as GPX files so that they can be imported in other tools
 - You can now set a custom name for the route, previously this was always set to the Zwift route name you would start on
+- The version of RoadCaptain is now shown in the status bar and has a link to the changelog
 
 ## 0.4.0.0
 
