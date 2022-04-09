@@ -43,20 +43,7 @@ namespace RoadCaptain.Runner.ViewModels
 
         public void UpdateGameState(GameState gameState)
         {
-            if (gameState is InGameState && _previousState is not InGameState)
-            {
-                Model.UserIsInGame = true;
-            }
-            else if (gameState is ConnectedToZwiftState && _previousState is not ConnectedToZwiftState)
-            {
-                Model.UserIsInGame = false;
-                Model.WaitingReason = "Waiting for Zwift connection...";
-            }
-            else if (gameState is WaitingForConnectionState && _previousState is InGameState)
-            {
-                Model.UserIsInGame = false;
-                Model.WaitingReason = "Connection with Zwift was lost";
-            }
+            UpdateUserInGameStatus(gameState);
 
             try
             {
@@ -111,6 +98,40 @@ namespace RoadCaptain.Runner.ViewModels
             finally
             {
                 _previousState = gameState;
+            }
+        }
+
+        private void UpdateUserInGameStatus(GameState gameState)
+        {
+            if (gameState is InGameState && _previousState is not InGameState)
+            {
+                Model.UserIsInGame = true;
+                Model.WaitingReason = string.Empty;
+                Model.InstructionText = string.Empty;
+            }
+            else if (gameState is ConnectedToZwiftState && _previousState is not ConnectedToZwiftState)
+            {
+                Model.UserIsInGame = false;
+                Model.WaitingReason = "Connected with Zwift";
+                Model.InstructionText = "Start Zwift and start cycling in Watopia on route:";
+            }
+            else if (gameState is WaitingForConnectionState && _previousState is InGameState)
+            {
+                Model.UserIsInGame = false;
+                Model.WaitingReason = "Connection with Zwift was lost, waiting for reconnect...";
+                Model.InstructionText = string.Empty;
+            }
+            else if (gameState is WaitingForConnectionState)
+            {
+                Model.UserIsInGame = false;
+                Model.WaitingReason = "Waiting for Zwift...";
+                Model.InstructionText = "Start Zwift and start cycling in Watopia on route:";
+            }
+            else if (gameState is ErrorState)
+            {
+                Model.UserIsInGame = false;
+                Model.WaitingReason = "Oops! Something went wrong...";
+                Model.InstructionText = "Please report a bug on Github";
             }
         }
 

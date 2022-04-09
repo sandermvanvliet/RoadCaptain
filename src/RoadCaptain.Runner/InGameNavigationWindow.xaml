@@ -98,7 +98,7 @@
             <RowDefinition Height="52" />
             <RowDefinition Height="22" />
         </Grid.RowDefinitions>
-        
+
         <Border Grid.Row="0" Grid.RowSpan="4"
                 CornerRadius="20"
                 Background="#1192CC" BorderBrush="#cccccc"
@@ -106,14 +106,16 @@
                 Visibility="{Binding Path=Model.UserIsInGame,Converter={StaticResource VisibilityConverter},ConverterParameter=invert}"
                 Padding="20">
             <StackPanel Orientation="Vertical">
-            <TextBlock Text="{Binding Path=Model.WaitingReason}" 
+                <TextBlock Text="{Binding Path=Model.WaitingReason}" 
                        Foreground="White" 
                        FontWeight="ExtraBold"
                        FontSize="32"
-                       TextWrapping="Wrap"/>
-            <TextBlock Text="Start Zwift and start cycling in Watopia on route:"
+                       TextWrapping="Wrap" 
+                       d:Text="Connected with Zwift"/>
+                <TextBlock Text="{Binding Path=Model.InstructionText}"
                        Foreground="White" FontWeight="Bold" FontSize="22" TextWrapping="Wrap"
-                       Margin="0,12,0,0"/>
+                       Margin="0,12,0,0"
+                       d:Text="Start Zwift and start cycling in Watopia on route:"/>
                 <TextBlock Text="{Binding Path=Model.Route.ZwiftRouteName}"
                            Foreground="White" FontWeight="Bold" FontSize="22" TextWrapping="Wrap" d:Text="Muir and the mountain"
                            Margin="0,8,0,0"/>
