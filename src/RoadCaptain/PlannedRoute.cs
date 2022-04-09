@@ -9,6 +9,7 @@ namespace RoadCaptain
 {
     public class PlannedRoute
     {
+        public string Name { get; set; }
         public string ZwiftRouteName { get; set; }
         public bool HasCompleted { get; private set; }
         public bool HasStarted { get; private set; }

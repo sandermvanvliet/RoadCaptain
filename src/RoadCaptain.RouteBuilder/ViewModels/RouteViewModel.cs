@@ -12,9 +12,23 @@ namespace RoadCaptain.RouteBuilder.ViewModels
 {
     public class RouteViewModel : INotifyPropertyChanged
     {
-        private readonly ObservableCollection<SegmentSequenceViewModel> _sequence = new();
         private readonly IRouteStore _routeStore;
         private readonly List<Segment> _segments;
+        private readonly ObservableCollection<SegmentSequenceViewModel> _sequence = new();
+
+        private readonly List<SpawnPoint> _spawnPoints = new()
+        {
+            new SpawnPoint("watopia-bambino-fondo-001-after-after-after-after-after", "Beach Island Loop",
+                SegmentDirection.BtoA),
+            new SpawnPoint("watopia-bambino-fondo-001-after-after-after-after-after", "Mountain Route",
+                SegmentDirection.AtoB),
+            new SpawnPoint("watopia-bambino-fondo-004-before-before", "The Mega Pretzel", SegmentDirection.AtoB),
+            new SpawnPoint("watopia-big-foot-hills-004-before", "Muir and the mountain", SegmentDirection.BtoA),
+            new SpawnPoint("watopia-big-foot-hills-004-before", "Big Foot Hills", SegmentDirection.AtoB),
+            new SpawnPoint("watopia-bambino-fondo-003-before-after", "Jungle Circuit", SegmentDirection.AtoB)
+        };
+
+        private string _name;
 
         public RouteViewModel(IRouteStore routeStore, ISegmentStore segmentStore)
         {
@@ -24,13 +38,30 @@ namespace RoadCaptain.RouteBuilder.ViewModels
 
         public IEnumerable<SegmentSequenceViewModel> Sequence => _sequence;
 
-        public double TotalDistance => Math.Round(Sequence.Sum(s => s.Distance) ,1);
+        public double TotalDistance => Math.Round(Sequence.Sum(s => s.Distance), 1);
         public double TotalAscent => Math.Round(Sequence.Sum(s => s.Ascent), 1);
         public double TotalDescent => Math.Round(Sequence.Sum(s => s.Descent), 1);
 
         public SegmentSequenceViewModel Last => Sequence.LastOrDefault();
         public string OutputFilePath { get; set; }
         public bool IsTainted { get; private set; }
+
+        public string Name
+        {
+            get => _name;
+            set
+            {
+                if (value == _name)
+                {
+                    return;
+                }
+
+                _name = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
 
         public void StartOn(Segment segment)
         {
@@ -55,7 +86,7 @@ namespace RoadCaptain.RouteBuilder.ViewModels
         public void NextStep(TurnDirection direction,
             string ontoSegmentId,
             Segment segment,
-            SegmentDirection segmentDirection, 
+            SegmentDirection segmentDirection,
             SegmentDirection newSegmentDirection)
         {
             Last.SetTurn(direction, ontoSegmentId, segmentDirection);
@@ -86,25 +117,32 @@ namespace RoadCaptain.RouteBuilder.ViewModels
 
         public void Save()
         {
-            if(string.IsNullOrEmpty(OutputFilePath))
+            if (string.IsNullOrEmpty(OutputFilePath))
             {
                 throw new ArgumentException("Output file path is empty");
             }
 
             var route = new PlannedRoute
             {
-                ZwiftRouteName = GetRouteName(Sequence.First())
+                ZwiftRouteName = GetRouteName(Sequence.First()),
+                Name = Name
             };
+
+            if (string.IsNullOrEmpty(route.Name))
+            {
+                route.Name = $"RoadCaptain route starting on {route.ZwiftRouteName}";
+            }
 
             if (string.IsNullOrEmpty(route.ZwiftRouteName))
             {
-                throw new Exception($"Unable to determine Zwift route name for segment {Sequence.First().SegmentId} and direction {Sequence.First().Direction}");
+                throw new Exception(
+                    $"Unable to determine Zwift route name for segment {Sequence.First().SegmentId} and direction {Sequence.First().Direction}");
             }
 
             route
                 .RouteSegmentSequence
                 .AddRange(Sequence.Select(s => s.Model).ToList());
-            
+
             _routeStore.Store(route, OutputFilePath);
 
             IsTainted = false;
@@ -118,8 +156,6 @@ namespace RoadCaptain.RouteBuilder.ViewModels
 
             return spawnPoint?.ZwiftRouteName;
         }
-
-        public event PropertyChangedEventHandler PropertyChanged;
 
         [NotifyPropertyChangedInvocator]
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
@@ -146,16 +182,6 @@ namespace RoadCaptain.RouteBuilder.ViewModels
             return _spawnPoints.Any(spanPoint => spanPoint.SegmentId == segmentId);
         }
 
-        private readonly List<SpawnPoint> _spawnPoints = new()
-        {
-            new("watopia-bambino-fondo-001-after-after-after-after-after", "Beach Island Loop", SegmentDirection.BtoA),
-            new("watopia-bambino-fondo-001-after-after-after-after-after", "Mountain Route", SegmentDirection.AtoB),
-            new("watopia-bambino-fondo-004-before-before", "The Mega Pretzel", SegmentDirection.AtoB),
-            new("watopia-big-foot-hills-004-before", "Muir and the mountain", SegmentDirection.BtoA),
-            new("watopia-big-foot-hills-004-before", "Big Foot Hills", SegmentDirection.AtoB),
-            new("watopia-bambino-fondo-003-before-after", "Jungle Circuit", SegmentDirection.AtoB)
-        };
-
         public void Load()
         {
             var plannedRoute = _routeStore.LoadFrom(OutputFilePath);
@@ -174,8 +200,10 @@ namespace RoadCaptain.RouteBuilder.ViewModels
                     });
             }
 
+            Name = plannedRoute.Name;
             IsTainted = false;
 
+            OnPropertyChanged(nameof(Name));
             OnPropertyChanged(nameof(Sequence));
             OnPropertyChanged(nameof(TotalDistance));
             OnPropertyChanged(nameof(TotalAscent));
@@ -185,20 +213,6 @@ namespace RoadCaptain.RouteBuilder.ViewModels
         private Segment GetSegmentById(string segmentId)
         {
             return _segments.SingleOrDefault(s => s.Id == segmentId);
-        }
-    }
-
-    internal class SpawnPoint
-    {
-        public string SegmentId { get; }
-        public string ZwiftRouteName { get; }
-        public SegmentDirection SegmentDirection { get; }
-
-        public SpawnPoint(string segmentId, string zwiftRouteName, SegmentDirection segmentDirection)
-        {
-            SegmentId = segmentId;
-            ZwiftRouteName = zwiftRouteName;
-            SegmentDirection = segmentDirection;
         }
     }
 }

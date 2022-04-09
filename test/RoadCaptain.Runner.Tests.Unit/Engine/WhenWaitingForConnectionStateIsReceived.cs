@@ -84,7 +84,7 @@ namespace RoadCaptain.Runner.Tests.Unit.Engine
         {
             var plannedRoute = new PlannedRoute
             {
-                ZwiftRouteName = "test"
+                Name = "test"
             };
 
             plannedRoute.RouteSegmentSequence.Add(new SegmentSequence { Direction = SegmentDirection.AtoB, SegmentId = "watopia-beach-island-loop-001"});

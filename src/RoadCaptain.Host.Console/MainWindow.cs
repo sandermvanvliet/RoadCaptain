@@ -194,7 +194,7 @@ namespace RoadCaptain.Host.Console
 
         private void PopulateListBox(PlannedRoute route)
         {
-            textBoxZwiftRouteName.Text = route.ZwiftRouteName;
+            textBoxZwiftRouteName.Text = route.Name;
 
             dataGridViewRoute.DataSource = route
                 .RouteSegmentSequence

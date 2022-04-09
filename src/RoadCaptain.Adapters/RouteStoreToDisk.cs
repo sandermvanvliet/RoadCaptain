@@ -10,6 +10,7 @@ using System.Linq;
 using System.Reflection;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
 using RoadCaptain.Ports;
 
@@ -42,9 +43,30 @@ namespace RoadCaptain.Adapters
                 throw new FileNotFoundException();
             }
 
-            return JsonConvert.DeserializeObject<PlannedRoute>(
-                File.ReadAllText(path),
+            var serialized = File.ReadAllText(path);
+            var parsed = JObject.Parse(serialized);
+
+            if (parsed.ContainsKey("version"))
+            {
+                var schemaVersion = parsed["version"]?.Value<string>() ?? "0";
+
+                if (schemaVersion == PersistedRouteVersion1.Version)
+                {
+                    var deserialized = JsonConvert.DeserializeObject<PersistedRouteVersion1>(
+                        serialized,
+                        RouteSerializationSettings);
+
+                    // ReSharper disable once PossibleNullReferenceException
+                    return deserialized.Route;
+                }
+            }
+
+            var deserializeObject = JsonConvert.DeserializeObject<PersistedRouteVersion0>(
+                serialized,
                 RouteSerializationSettings);
+            
+            // ReSharper disable once PossibleNullReferenceException
+            return deserializeObject.AsRoute();
         }
 
         public void Store(PlannedRoute route, string path)
@@ -58,7 +80,12 @@ namespace RoadCaptain.Adapters
 
         private static string SerializeAsJson(PlannedRoute route)
         {
-            return JsonConvert.SerializeObject(route, Formatting.Indented, RouteSerializationSettings);
+            var versionedRoute = new PersistedRouteVersion1
+            {
+                Route = route
+            };
+
+            return JsonConvert.SerializeObject(versionedRoute, Formatting.Indented, RouteSerializationSettings);
         }
 
         private string SerializeAsGpx(PlannedRoute route)
@@ -74,7 +101,7 @@ namespace RoadCaptain.Adapters
                    $"<gpx creator=\"{routeBuilderVersion}\" version=\"1.1\" xmlns=\"http://www.topografix.com/GPX/1/1\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd http://www.garmin.com/xmlschemas/TrackPointExtension/v1 http://www.garmin.com/xmlschemas/TrackPointExtensionv1.xsd http://www.garmin.com/xmlschemas/GpxExtensions/v3 http://www.garmin.com/xmlschemas/GpxExtensionsv3.xsd\" xmlns:gpxtpx=\"http://www.garmin.com/xmlschemas/TrackPointExtension/v1\" xmlns:gpxx=\"http://www.garmin.com/xmlschemas/GpxExtensions/v3\">" +
                    "<trk>" +
                    $"<name>{route.Name}</name>" +
-                   $"<desc>RoadCaptain route starting at {route.ZwiftSpawnPoint}</desc>" +
+                   $"<desc>RoadCaptain route starting at {route.ZwiftRouteName}</desc>" +
                    "<type>RoadCaptain route</type>" +
                    trackSegments +
                    "</trk>" +
