@@ -98,6 +98,7 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="56" />
                     <RowDefinition Height="*" />
+                    <RowDefinition Height="24" />
                 </Grid.RowDefinitions>
 
                 <Border 
@@ -196,6 +197,10 @@
                         </DataTemplate>
                     </ListView.ItemTemplate>
                 </ListView>
+                <StackPanel Orientation="Horizontal" Grid.Row="2">
+                    <TextBlock Text="Route name:" VerticalAlignment="Center" Margin="4,0,0,0" FontWeight="Bold" />
+                    <TextBox Text="{Binding Path=Route.Name}" Margin="4,4,4,2" Width="225" VerticalAlignment="Center" d:Text="Derp derp derp" />
+                </StackPanel>
             </Grid>
         </Grid>
     </DockPanel>
