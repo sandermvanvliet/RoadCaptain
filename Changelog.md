@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.5.1.0
+
+### Runner
+
+- Fixed a bug where the elapsed ascent and descent would have a negative sign even though the numbers would increase.
+
 ## 0.5.0.0
 
 ### Runner

@@ -55,15 +55,13 @@ namespace RoadCaptain.Runner.ViewModels
 
                         Model.ElapsedDistance += distanceFromLast / 1000;
 
-                        var altitudeDelta = _previousPosition.Altitude - positionedState.CurrentPosition.Altitude;
-                        
-                        if (altitudeDelta > 0)
+                        if (_previousPosition.Altitude < positionedState.CurrentPosition.Altitude)
                         {
-                            Model.ElapsedDescent += -altitudeDelta;
+                            Model.ElapsedAscent += positionedState.CurrentPosition.Altitude - _previousPosition.Altitude;
                         }
-                        else if (altitudeDelta < 0)
+                        else if (_previousPosition.Altitude > positionedState.CurrentPosition.Altitude)
                         {
-                            Model.ElapsedAscent += altitudeDelta;
+                            Model.ElapsedDescent += _previousPosition.Altitude - positionedState.CurrentPosition.Altitude;
                         }
                     }
 
