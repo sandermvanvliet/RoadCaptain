@@ -196,7 +196,7 @@ namespace RoadCaptain.RouteBuilder.ViewModels
                         GetSegmentById(seq.SegmentId),
                         _sequence.Count + 1)
                     {
-                        Direction = seq.Direction
+                        Direction = seq.Direction,
                     });
             }
 

@@ -21,6 +21,7 @@ namespace RoadCaptain.RouteBuilder.ViewModels
             Distance = Math.Round(segment.Distance / 1000, 1);
             SequenceNumber = sequenceNumber;
             Direction = SegmentDirection.Unknown;
+            SegmentName = segment.Name;
         }
 
         private static string ImageFromTurn(TurnDirection turnDirection)
@@ -88,6 +89,8 @@ namespace RoadCaptain.RouteBuilder.ViewModels
                 OnPropertyChanged(nameof(Descent));
             }
         }
+
+        public string SegmentName { get; private set; }
 
         public void SetTurn(TurnDirection direction, string ontoSegmentId, SegmentDirection segmentDirection)
         {

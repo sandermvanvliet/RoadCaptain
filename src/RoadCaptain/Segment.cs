@@ -15,6 +15,7 @@ namespace RoadCaptain
         private double? _ascent;
         private double? _descent;
         private double? _distance;
+        private string _name;
         public List<Turn> NextSegmentsNodeA { get; } = new();
         public List<Turn> NextSegmentsNodeB { get; } = new();
         
@@ -26,6 +27,20 @@ namespace RoadCaptain
 
         public string Id { get; set; }
         public BoundingBox BoundingBox { get; }
+
+        public string Name
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(_name))
+                {
+                    _name = Id.Replace("watopia-", "");
+                }
+
+                return _name;
+            }
+            set => _name = value;
+        }
 
         public double Distance
         {

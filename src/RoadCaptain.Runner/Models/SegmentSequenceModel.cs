@@ -7,7 +7,7 @@ namespace RoadCaptain.Runner.Models
 {
     public class SegmentSequenceModel : INotifyPropertyChanged
     {
-        private string _turnImage;
+        private readonly string _turnImage;
         private SegmentDirection _direction;
         private readonly double _ascent;
         private readonly double _descent;
@@ -22,6 +22,7 @@ namespace RoadCaptain.Runner.Models
             Distance = Math.Round(segment.Distance / 1000, 1);
             SequenceNumber = sequenceNumber + 1; // Indexes are zero based...
             Direction = segmentSequence.Direction;
+            SegmentName = segment.Name;
         }
 
         private static string ImageFromTurn(TurnDirection turnDirection)
@@ -119,6 +120,8 @@ namespace RoadCaptain.Runner.Models
                 OnPropertyChanged(nameof(Descent));
             }
         }
+
+        public string SegmentName { get; private set; }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
