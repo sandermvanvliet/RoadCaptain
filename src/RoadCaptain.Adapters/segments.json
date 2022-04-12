@@ -21843,7 +21843,8 @@
                 "CoordinatesDecimal": "S11.67548° E166.95070°"
             }
         ],
-        "Id": "watopia-four-horsemen-002-before"
+        "Id": "watopia-four-horsemen-002-before",
+        "Name": "Epic KOM tower climb"
     },
     {
         "NextSegmentsNodeA": [],
@@ -22246,7 +22247,8 @@
                 "CoordinatesDecimal": "S11.67529° E166.95065°"
             }
         ],
-        "Id": "watopia-four-horsemen-002-after"
+        "Id": "watopia-four-horsemen-002-after",
+        "Name": "Epic KOM tower summit"
     },
     {
         "NextSegmentsNodeA": [],
@@ -31730,7 +31732,8 @@
                 "CoordinatesDecimal": "S11.68161° E166.88947°"
             }
         ],
-        "Id": "watopia-four-horsemen-003-before"
+        "Id": "watopia-four-horsemen-003-before",
+        "Name": "Alpe du Zwift"
     },
     {
         "NextSegmentsNodeA": [],
@@ -32178,7 +32181,8 @@
                 "CoordinatesDecimal": "S11.68163° E166.88933°"
             }
         ],
-        "Id": "watopia-four-horsemen-003-after"
+        "Id": "watopia-four-horsemen-003-after",
+        "Name": "Alpe du Zwift summit"
     },
     {
         "NextSegmentsNodeA": [],
