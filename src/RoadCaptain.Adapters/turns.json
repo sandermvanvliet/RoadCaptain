@@ -515,5 +515,25 @@
       "goStraight": "watopia-bambino-fondo-004-after-after",
       "right": "watopia-beach-island-loop-002"
     }
+  },
+  {
+    "segmentId": "watopia-four-horsemen-002-before",
+    "turnsA": {
+      "left": "watopia-big-loop-rev-001-before-after",
+      "right": "watopia-big-loop-rev-001-after-before-before"
+    },
+    "turnsB": 
+    {
+      "goStraight": "watopia-four-horsemen-002-after"
+    }
+  },
+  {
+    "segmentId": "watopia-four-horsemen-002-after",
+    "turnsA": {
+      "goStraight": "watopia-four-horsemen-002-before"
+    },
+    "turnsB": {
+      "goStraight": "watopia-four-horsemen-002-before"
+    }
   }
 ]

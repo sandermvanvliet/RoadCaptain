@@ -1,5 +1,11 @@
 ﻿# Changelog
 
+## 0.5.3.0
+
+### Route Builder
+
+- Fixed bug #8 where you could not leave segment `watopia-four-horsemen-002-before`
+
 ## 0.5.2.0
 
 ### Runner
