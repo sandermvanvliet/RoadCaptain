@@ -39,6 +39,11 @@ namespace RoadCaptain.GameStates
 
             if (result is OnSegmentState segmentState)
             {
+                if (plannedRoute.HasCompleted)
+                {
+                    return new CompletedRouteState(RiderId, ActivityId, segmentState.CurrentPosition, plannedRoute);
+                }
+
                 if (segmentState.CurrentSegment.Id == Route.NextSegmentId)
                 {
                     try

@@ -39,9 +39,14 @@ namespace RoadCaptain.GameStates
                 return new OnRouteState(RiderId, ActivityId, closestOnSegment, segment, plannedRoute);
             }
 
-            if (plannedRoute.HasStarted && plannedRoute.CurrentSegmentId == segment.Id)
+            if (plannedRoute.HasStarted && !plannedRoute.HasCompleted && plannedRoute.CurrentSegmentId == segment.Id)
             {
                 return new OnRouteState(RiderId, ActivityId, closestOnSegment, segment, plannedRoute);
+            }
+
+            if (plannedRoute.HasCompleted && plannedRoute.CurrentSegmentId == segment.Id)
+            {
+                return new CompletedRouteState(RiderId, ActivityId, closestOnSegment, plannedRoute);
             }
             
             if (plannedRoute.HasStarted && plannedRoute.NextSegmentId == segment.Id)

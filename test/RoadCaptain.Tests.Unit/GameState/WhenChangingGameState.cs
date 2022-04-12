@@ -360,6 +360,45 @@ namespace RoadCaptain.Tests.Unit.GameState
                 .Be(RoutePosition1Point3);
         }
 
+        [Fact]
+        public void GivenOnRouteStateAndOnLastSegmentOfRoute_EnteringNewSegment_ResultingStateIsRouteCompletedState()
+        {
+            _route.EnteredSegment("route-segment-1");
+            _route.EnteredSegment("route-segment-2");
+            _route.EnteredSegment("route-segment-3");
+            GameStates.GameState state = new OnRouteState(RiderId, ActivityId, RoutePosition3, SegmentById("route-segment-3"), _route);
+
+            var result = state.UpdatePosition(PositionOnSegment, _segments, _route);
+
+            result
+                .Should()
+                .BeOfType<CompletedRouteState>()
+                .Which
+                .CurrentPosition
+                .Should()
+                .Be(PositionOnSegment);
+        }
+
+        [Fact]
+        public void GivenCompletedRouteStateAndEnteringLastSegmentOfRoute_ResultingStateIsRouteCompletedState()
+        {
+            _route.EnteredSegment("route-segment-1");
+            _route.EnteredSegment("route-segment-2");
+            _route.EnteredSegment("route-segment-3");
+            GameStates.GameState state = new OnRouteState(RiderId, ActivityId, RoutePosition3, SegmentById("route-segment-3"), _route);
+            state = state.UpdatePosition(PositionOnSegment, _segments, _route);
+
+            var result = state.UpdatePosition(RoutePosition3, _segments, _route);
+
+            result
+                .Should()
+                .BeOfType<CompletedRouteState>()
+                .Which
+                .CurrentPosition
+                .Should()
+                .Be(RoutePosition3);
+        }
+
         private Segment SegmentById(string id)
         {
             return _segments.SingleOrDefault(s => s.Id == id);
