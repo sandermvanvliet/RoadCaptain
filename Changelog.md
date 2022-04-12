@@ -5,7 +5,8 @@
 ### Runner
 
 - Fixed a bug where the in-game window would show only `Waiting for Zwift connection...` and the route name without giving any instructions when RoadCaptain is started but Zwift is not.
-- When you've completed your route the in-game window now shows that a lot better: ![finish flag on last segment](./images/runner-finished-route.png) (when you're on the last segment of the route the finish flag is not yet visible 😉)
+- When you've completed your route the in-game window now shows that a lot better: ![finish flag on last segment](./images/runner-finished-route.png) 
+(when you're on the last segment of the route the finish flag is not yet visible 😉)
 - Tweaked the in-game UI to use black text for the ascent/descent numbers instead of gray because it looks a bit better.
 
 ## 0.5.1.0
