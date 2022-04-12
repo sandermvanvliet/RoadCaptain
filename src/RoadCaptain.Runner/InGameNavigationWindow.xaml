@@ -27,6 +27,7 @@
         Icon="icon.png">
     <Window.Resources>
         <converters:VisibilityConverter x:Key="VisibilityConverter" />
+        <converters:NullabilityConverter x:Key="NullabilityConverter" />
         <SolidColorBrush x:Key="ProgressBar.Progress" Color="#FF06B025"/>
         <SolidColorBrush x:Key="ProgressBar.Background" Color="#FFE6E6E6"/>
         <SolidColorBrush x:Key="ProgressBar.Border" Color="#FFBCBCBC"/>
@@ -234,10 +235,22 @@
                          d:Maximum="100"  />
         </Grid>
 
+        <Grid Name="Placeholder"
+              Visibility="{Binding Path=Model.NextSegment,Converter={StaticResource NullabilityConverter},ConverterParameter=invert}"
+              Grid.Row="2"
+              Background="White">
+            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Orientation="Horizontal">
+                <TextBlock Text="🏁" FontSize="32"/>
+                <TextBlock Text="Finished!" FontSize="32"/>
+            </StackPanel>
+        </Grid>
         <Grid
               Grid.Row="2"
               DataContext="{Binding Path=Model.NextSegment}"
-              Background="White">
+              Background="White"
+              Visibility="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}, AncestorLevel=1}, Path=DataContext.Model.NextSegment,Converter={StaticResource NullabilityConverter}}"
+              Name="SecondRow"
+              d:Visibility="Collapsed">
             <Grid.Resources>
                 <Style TargetType="{x:Type TextBlock}">
                     <Setter Property="Foreground" Value="Black" />

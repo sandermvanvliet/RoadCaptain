@@ -5,6 +5,7 @@
 ### Runner
 
 - Fixed a bug where the in-game window would show only `Waiting for Zwift connection...` and the route name without giving any instructions when RoadCaptain is started but Zwift is not.
+- When you're on the last segment of your route the in-game window now shows that a lot better: ![finish flag on last segment](./images/runner-finished-route.png)
 
 ## 0.5.1.0
 

@@ -11,6 +11,15 @@ namespace RoadCaptain.Runner.Converters
         {
             if (value == null)
             {
+                if ("invert".Equals(parameter))
+                {
+                    return Visibility.Visible;
+                }
+                return Visibility.Collapsed;
+            }
+            
+            if ("invert".Equals(parameter))
+            {
                 return Visibility.Collapsed;
             }
 
