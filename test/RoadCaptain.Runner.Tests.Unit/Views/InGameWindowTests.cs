@@ -73,7 +73,7 @@ namespace RoadCaptain.Runner.Tests.Unit.Views
                 .Be(Visibility.Collapsed);
         }
 
-        //[StaFact]
+        [StaFact]
         public void GivenRouteInLastSegment_PlaceholderIsVisible()
         {
             var segment = new Segment(new List<TrackPoint>
@@ -138,6 +138,143 @@ namespace RoadCaptain.Runner.Tests.Unit.Views
                 .Visibility
                 .Should()
                 .Be(Visibility.Visible);
+        }
+
+        [StaFact]
+        public void GivenRouteHasCompleted_FinishFlagIsVisible()
+        {
+            var segment = new Segment(new List<TrackPoint>
+            {
+                new TrackPoint(1, 2, 3),
+                new TrackPoint(1, 2.1, 5)
+            }) { Id = "seg-3"};
+            segment.CalculateDistances();
+            var segments = new List<Segment>
+            {
+                new(new List<TrackPoint>()) { Id = "seg-1"},
+                new(new List<TrackPoint>()) { Id = "seg-2"},
+                segment,
+            };
+            var route = new PlannedRoute()
+            {
+                Name = "TestRoute",
+                World = "TestWorld",
+                ZwiftRouteName = "Mountain route"
+            };
+            route.RouteSegmentSequence.Add(new SegmentSequence { SegmentId = "seg-1", NextSegmentId = "seg-2", Direction = SegmentDirection.AtoB, TurnToNextSegment = TurnDirection.GoStraight });
+            route.RouteSegmentSequence.Add(new SegmentSequence { SegmentId = "seg-2", NextSegmentId = "seg-3", Direction = SegmentDirection.AtoB, TurnToNextSegment = TurnDirection.GoStraight });
+            route.RouteSegmentSequence.Add(new SegmentSequence { SegmentId = "seg-3", NextSegmentId = null, Direction = SegmentDirection.AtoB, TurnToNextSegment = TurnDirection.GoStraight });
+            route.EnteredSegment("seg-1");
+
+            var model = new InGameWindowModel(segments)
+            {
+                Route = route
+            };
+
+            var viewModel = new InGameNavigationWindowViewModel(model, segments);
+            var monitoringEvents = new NopMonitoringEvents();
+            var window =
+                new InGameNavigationWindow(new InMemoryGameStateDispatcher(monitoringEvents), monitoringEvents)
+                    {
+                        ShowActivated = true,
+                        DataContext = viewModel
+                    };
+            viewModel.Model.TotalDescent = 123;
+            viewModel.Model.TotalAscent = 78;
+            viewModel.Model.TotalDistance = 25;
+            viewModel.Model.ElapsedDescent = 33;
+            viewModel.Model.ElapsedAscent = 12;
+            viewModel.Model.ElapsedDistance = 25;
+
+            window.Show();
+            window.Dispatcher.Invoke(() => { }, DispatcherPriority.SystemIdle);
+
+            route.EnteredSegment("seg-2");
+            viewModel.UpdateGameState(new OnRouteState(1, 2, new TrackPoint(1, 2, 3), segments[1], route));
+            window.Dispatcher.Invoke(() => { }, DispatcherPriority.SystemIdle);
+
+            route.EnteredSegment("seg-3");
+            viewModel.UpdateGameState(new OnRouteState(1, 2, new TrackPoint(1, 2, 3) { DistanceOnSegment = 12}, segments[2], route));
+            window.Dispatcher.Invoke(() => { }, DispatcherPriority.SystemIdle);
+
+            viewModel.UpdateGameState(new CompletedRouteState(1, 2, new TrackPoint(1, 2, 3) { DistanceOnSegment = 12}, route));
+            window.Dispatcher.Invoke(() => { }, DispatcherPriority.SystemIdle);
+            
+            var windowContent = (window.Content as Grid);
+            TryScreenshotToClipboardAsync(windowContent).GetAwaiter().GetResult();
+            var secondRow = (windowContent.FindName("FinishFlag") as StackPanel);
+
+            secondRow
+                .Visibility
+                .Should()
+                .Be(Visibility.Visible);
+        }
+
+        [StaFact]
+        public void GivenRouteInLastSegmentButNotYetCompleted_FinishFlagIsNotVisible()
+        {
+            var segment = new Segment(new List<TrackPoint>
+            {
+                new TrackPoint(1, 2, 3),
+                new TrackPoint(1, 2.1, 5)
+            }) { Id = "seg-3"};
+            segment.CalculateDistances();
+            var segments = new List<Segment>
+            {
+                new(new List<TrackPoint>()) { Id = "seg-1"},
+                new(new List<TrackPoint>()) { Id = "seg-2"},
+                segment,
+            };
+            var route = new PlannedRoute()
+            {
+                Name = "TestRoute",
+                World = "TestWorld",
+                ZwiftRouteName = "Mountain route"
+            };
+            route.RouteSegmentSequence.Add(new SegmentSequence { SegmentId = "seg-1", NextSegmentId = "seg-2", Direction = SegmentDirection.AtoB, TurnToNextSegment = TurnDirection.GoStraight });
+            route.RouteSegmentSequence.Add(new SegmentSequence { SegmentId = "seg-2", NextSegmentId = "seg-3", Direction = SegmentDirection.AtoB, TurnToNextSegment = TurnDirection.GoStraight });
+            route.RouteSegmentSequence.Add(new SegmentSequence { SegmentId = "seg-3", NextSegmentId = null, Direction = SegmentDirection.AtoB, TurnToNextSegment = TurnDirection.GoStraight });
+            route.EnteredSegment("seg-1");
+
+            var model = new InGameWindowModel(segments)
+            {
+                Route = route
+            };
+
+            var viewModel = new InGameNavigationWindowViewModel(model, segments);
+            var monitoringEvents = new NopMonitoringEvents();
+            var window =
+                new InGameNavigationWindow(new InMemoryGameStateDispatcher(monitoringEvents), monitoringEvents)
+                    {
+                        ShowActivated = true,
+                        DataContext = viewModel
+                    };
+            viewModel.Model.TotalDescent = 123;
+            viewModel.Model.TotalAscent = 78;
+            viewModel.Model.TotalDistance = 25;
+            viewModel.Model.ElapsedDescent = 33;
+            viewModel.Model.ElapsedAscent = 12;
+            viewModel.Model.ElapsedDistance = 25;
+
+            window.Show();
+            window.Dispatcher.Invoke(() => { }, DispatcherPriority.SystemIdle);
+
+            route.EnteredSegment("seg-2");
+            viewModel.UpdateGameState(new OnRouteState(1, 2, new TrackPoint(1, 2, 3), segments[1], route));
+            window.Dispatcher.Invoke(() => { }, DispatcherPriority.SystemIdle);
+
+            route.EnteredSegment("seg-3");
+            viewModel.UpdateGameState(new OnRouteState(1, 2, new TrackPoint(1, 2, 3) { DistanceOnSegment = 12}, segments[2], route));
+            window.Dispatcher.Invoke(() => { }, DispatcherPriority.SystemIdle);
+            
+            var windowContent = (window.Content as Grid);
+            TryScreenshotToClipboardAsync(windowContent).GetAwaiter().GetResult();
+            var secondRow = (windowContent.FindName("FinishFlag") as StackPanel);
+
+            secondRow
+                .Visibility
+                .Should()
+                .Be(Visibility.Collapsed);
         }
 
         public async Task<bool> TryScreenshotToClipboardAsync(FrameworkElement frameworkElement)

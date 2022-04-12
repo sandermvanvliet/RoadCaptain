@@ -14,6 +14,7 @@ namespace RoadCaptain.Runner.ViewModels
         private int _previousRouteSequenceIndex;
         private readonly List<Segment> _segments;
         private TrackPoint _previousPosition;
+        private bool _hasRouteFinished;
         public event PropertyChangedEventHandler PropertyChanged;
 
         public InGameNavigationWindowViewModel(InGameWindowModel inGameWindowModel, List<Segment> segments)
@@ -85,10 +86,26 @@ namespace RoadCaptain.Runner.ViewModels
 
                     _previousRouteSequenceIndex = routeState.Route.SegmentSequenceIndex;
                 }
+
+                if (gameState is CompletedRouteState)
+                {
+                    HasRouteFinished = true;
+                }
             }
             finally
             {
                 _previousState = gameState;
+            }
+        }
+
+        public bool HasRouteFinished
+        {
+            get => _hasRouteFinished;
+            set
+            {
+                if (value == _hasRouteFinished) return;
+                _hasRouteFinished = value;
+                OnPropertyChanged();
             }
         }
 

@@ -27,6 +27,7 @@
     <Window.Resources>
         <converters:VisibilityConverter x:Key="VisibilityConverter" />
         <converters:NullabilityConverter x:Key="NullabilityConverter" />
+        <converters:BooleanConverter x:Key="BooleanConverter" />
         <SolidColorBrush x:Key="ProgressBar.Progress" Color="#FF06B025"/>
         <SolidColorBrush x:Key="ProgressBar.Background" Color="#FFE6E6E6"/>
         <SolidColorBrush x:Key="ProgressBar.Border" Color="#FFBCBCBC"/>
@@ -239,7 +240,9 @@
               Visibility="{Binding Path=Model.NextSegment,Converter={StaticResource NullabilityConverter},ConverterParameter=invert}"
               Grid.Row="2"
               Background="White">
-            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Orientation="Horizontal">
+            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Orientation="Horizontal"
+                        Visibility="{Binding Path=HasRouteFinished,Converter={StaticResource VisibilityConverter}}"
+                        Name="FinishFlag">
                 <TextBlock Text="🏁" FontSize="32"/>
                 <TextBlock Text="Finished!" FontSize="32"/>
             </StackPanel>
