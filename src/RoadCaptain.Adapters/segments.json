@@ -4051,7 +4051,8 @@
                 "CoordinatesDecimal": "S11.66155° E166.98426°"
             }
         ],
-        "Id": "watopia-tempus-fugit-001"
+        "Id": "watopia-tempus-fugit-001",
+        "Name": "Fuego flats reverse B"
     },
     {
         "NextSegmentsNodeA": [],
@@ -4166,7 +4167,8 @@
                 "CoordinatesDecimal": "S11.64019° E166.97829°"
             }
         ],
-        "Id": "watopia-tempus-fugit-002"
+        "Id": "watopia-tempus-fugit-002",
+        "Name": "Fuego flats reverse A"
     },
     {
         "NextSegmentsNodeA": [],
@@ -45861,7 +45863,8 @@
                 "CoordinatesDecimal": "S11.66208° E166.98364°"
             }
         ],
-        "Id": "watopia-big-foot-hills-001-before-before"
+        "Id": "watopia-big-foot-hills-001-before-before",
+        "Name": "Fuego flats 4"
     },
     {
         "NextSegmentsNodeA": [],
@@ -46300,7 +46303,8 @@
                 "CoordinatesDecimal": "S11.65940° E166.97685°"
             }
         ],
-        "Id": "watopia-big-foot-hills-001-before-after"
+        "Id": "watopia-big-foot-hills-001-before-after",
+        "Name": "Fuego flats 5"
     },
     {
         "NextSegmentsNodeA": [],
@@ -46982,7 +46986,8 @@
                 "CoordinatesDecimal": "S11.63821° E166.97739°"
             }
         ],
-        "Id": "watopia-big-foot-hills-004-before"
+        "Id": "watopia-big-foot-hills-004-before",
+        "Name": "Fuego flats 1"
     },
     {
         "NextSegmentsNodeA": [],
@@ -47241,7 +47246,8 @@
                 "CoordinatesDecimal": "S11.64021° E166.97808°"
             }
         ],
-        "Id": "watopia-big-foot-hills-004-after-before"
+        "Id": "watopia-big-foot-hills-004-after-before",
+        "Name": "Fuego flats 2"
     },
     {
         "NextSegmentsNodeA": [],
@@ -47698,7 +47704,8 @@
                 "CoordinatesDecimal": "S11.63919° E166.98241°"
             }
         ],
-        "Id": "watopia-big-foot-hills-004-after-after"
+        "Id": "watopia-big-foot-hills-004-after-after",
+        "Name": "Fuego flats 3"
     },
     {
         "NextSegmentsNodeA": [],
