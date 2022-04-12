@@ -4052,7 +4052,7 @@
             }
         ],
         "Id": "watopia-tempus-fugit-001",
-        "Name": "Fuego flats reverse B"
+        "Name": "Fuego Flats reverse B"
     },
     {
         "NextSegmentsNodeA": [],
@@ -4168,7 +4168,7 @@
             }
         ],
         "Id": "watopia-tempus-fugit-002",
-        "Name": "Fuego flats reverse A"
+        "Name": "Fuego Flats reverse A"
     },
     {
         "NextSegmentsNodeA": [],
@@ -45864,7 +45864,7 @@
             }
         ],
         "Id": "watopia-big-foot-hills-001-before-before",
-        "Name": "Fuego flats 4"
+        "Name": "Fuego Flats 4"
     },
     {
         "NextSegmentsNodeA": [],
@@ -46304,7 +46304,7 @@
             }
         ],
         "Id": "watopia-big-foot-hills-001-before-after",
-        "Name": "Fuego flats 5"
+        "Name": "Fuego Flats 5"
     },
     {
         "NextSegmentsNodeA": [],
@@ -46987,7 +46987,7 @@
             }
         ],
         "Id": "watopia-big-foot-hills-004-before",
-        "Name": "Fuego flats 1"
+        "Name": "Fuego Flats 1"
     },
     {
         "NextSegmentsNodeA": [],
@@ -47247,7 +47247,7 @@
             }
         ],
         "Id": "watopia-big-foot-hills-004-after-before",
-        "Name": "Fuego flats 2"
+        "Name": "Fuego Flats 2"
     },
     {
         "NextSegmentsNodeA": [],
@@ -47705,7 +47705,7 @@
             }
         ],
         "Id": "watopia-big-foot-hills-004-after-after",
-        "Name": "Fuego flats 3"
+        "Name": "Fuego Flats 3"
     },
     {
         "NextSegmentsNodeA": [],
