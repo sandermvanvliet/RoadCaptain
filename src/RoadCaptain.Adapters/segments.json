@@ -1639,7 +1639,8 @@
                 "CoordinatesDecimal": "S11.63938° E166.95471°"
             }
         ],
-        "Id": "watopia-climbers-gambit-001"
+        "Id": "watopia-climbers-gambit-001",
+        "Name": "Zwift KOM bypass"
     },
     {
         "NextSegmentsNodeA": [],
@@ -3820,7 +3821,8 @@
                 "CoordinatesDecimal": "S11.68161° E166.92756°"
             }
         ],
-        "Id": "watopia-serpentine-8-001"
+        "Id": "watopia-serpentine-8-001",
+        "Name": "Jungle Loop switchback"
     },
     {
         "NextSegmentsNodeA": [],
@@ -5405,7 +5407,8 @@
                 "CoordinatesDecimal": "S11.64804° E166.95250°"
             }
         ],
-        "Id": "watopia-bambino-fondo-001-after-after-before-after"
+        "Id": "watopia-bambino-fondo-001-after-after-before-after",
+        "Name": "Marina"
     },
     {
         "NextSegmentsNodeA": [],
@@ -5736,7 +5739,8 @@
                 "CoordinatesDecimal": "S11.65084° E166.94922°"
             }
         ],
-        "Id": "watopia-bambino-fondo-001-after-after-after-before"
+        "Id": "watopia-bambino-fondo-001-after-after-after-before",
+        "Name": "Italian Villas 1"
     },
     {
         "NextSegmentsNodeA": [],
@@ -11637,7 +11641,8 @@
                 "CoordinatesDecimal": "S11.64712° E166.94917°"
             }
         ],
-        "Id": "watopia-bambino-fondo-001-after-after-after-after-before-before"
+        "Id": "watopia-bambino-fondo-001-after-after-after-after-before-before",
+        "Name": "Italian Villas 2"
     },
     {
         "NextSegmentsNodeA": [],
@@ -13708,7 +13713,8 @@
                 "CoordinatesDecimal": "S11.65120° E166.96245°"
             }
         ],
-        "Id": "watopia-bambino-fondo-001-after-after-before-before-after-before"
+        "Id": "watopia-bambino-fondo-001-after-after-before-before-after-before",
+        "Name": "Ocean Boulevard"
     },
     {
         "NextSegmentsNodeA": [],
@@ -14282,7 +14288,8 @@
                 "CoordinatesDecimal": "S11.65371° E166.95603°"
             }
         ],
-        "Id": "watopia-bambino-fondo-001-after-after-before-before-after-after"
+        "Id": "watopia-bambino-fondo-001-after-after-before-before-after-after",
+        "Name": "Sequoia to Marina"
     },
     {
         "NextSegmentsNodeA": [],
@@ -16025,7 +16032,7 @@
             }
         ],
         "Id": "watopia-bambino-fondo-003-before-before",
-        "Name": "Epic KOM wind farm"
+        "Name": "Epic KOM to Marina"
     },
     {
         "NextSegmentsNodeA": [],
@@ -17517,7 +17524,8 @@
                 "CoordinatesDecimal": "S11.67895° E166.93919°"
             }
         ],
-        "Id": "watopia-bambino-fondo-003-before-after"
+        "Id": "watopia-bambino-fondo-003-before-after",
+        "Name": "Epic to Jungle"
     },
     {
         "NextSegmentsNodeA": [],
@@ -18557,7 +18565,8 @@
                 "CoordinatesDecimal": "S11.65143° E166.96258°"
             }
         ],
-        "Id": "watopia-big-foot-hills-003-after"
+        "Id": "watopia-big-foot-hills-003-after",
+        "Name": "Sequoia to Epic"
     },
     {
         "NextSegmentsNodeA": [],
@@ -19113,7 +19122,8 @@
                 "CoordinatesDecimal": "S11.64615° E166.95066°"
             }
         ],
-        "Id": "watopia-bambino-fondo-002-before-after"
+        "Id": "watopia-bambino-fondo-002-before-after",
+        "Name": "Zwift KOM 3"
     },
     {
         "NextSegmentsNodeA": [],
@@ -19606,7 +19616,8 @@
                 "CoordinatesDecimal": "S11.63922° E166.95480°"
             }
         ],
-        "Id": "watopia-bambino-fondo-002-before-before-before"
+        "Id": "watopia-bambino-fondo-002-before-before-before",
+        "Name": "Zwift KOM 1"
     },
     {
         "NextSegmentsNodeA": [],
@@ -20900,7 +20911,8 @@
                 "CoordinatesDecimal": "S11.63926° E166.95292°"
             }
         ],
-        "Id": "watopia-bambino-fondo-002-before-before-after"
+        "Id": "watopia-bambino-fondo-002-before-before-after",
+        "Name": "Zwift KOM 2"
     },
     {
         "NextSegmentsNodeA": [],
@@ -40013,7 +40025,8 @@
                 "CoordinatesDecimal": "S11.68418° E166.93045°"
             }
         ],
-        "Id": "watopia-bambino-fondo-003-after-after-before"
+        "Id": "watopia-bambino-fondo-003-after-after-before",
+        "Name": "Jungle Loop 1"
     },
     {
         "NextSegmentsNodeA": [],
@@ -41478,7 +41491,8 @@
                 "CoordinatesDecimal": "S11.67908° E166.93903°"
             }
         ],
-        "Id": "watopia-bambino-fondo-003-after-after-after"
+        "Id": "watopia-bambino-fondo-003-after-after-after",
+        "Name": "Jungle Loop rope bridge"
     },
     {
         "NextSegmentsNodeA": [],
@@ -42430,7 +42444,8 @@
                 "CoordinatesDecimal": "S11.68145° E166.92754°"
             }
         ],
-        "Id": "watopia-bambino-fondo-003-after-before-before"
+        "Id": "watopia-bambino-fondo-003-after-before-before",
+        "Name": "Jungle Loop 3"
     },
     {
         "NextSegmentsNodeA": [],
@@ -42770,7 +42785,8 @@
                 "CoordinatesDecimal": "S11.68636° E166.92640°"
             }
         ],
-        "Id": "watopia-bambino-fondo-003-after-before-after"
+        "Id": "watopia-bambino-fondo-003-after-before-after",
+        "Name": "Jungle Loop 2"
     },
     {
         "NextSegmentsNodeA": [],
