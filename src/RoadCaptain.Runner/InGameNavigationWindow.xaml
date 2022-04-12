@@ -1,4 +1,4 @@
-<!--
+﻿<!--
 // Copyright (c) 2022 Sander van Vliet
 // Licensed under Artistic License 2.0
 // See LICENSE or https://choosealicense.com/licenses/artistic-2.0/
@@ -104,7 +104,8 @@
                 Background="#1192CC" BorderBrush="#cccccc"
                 Panel.ZIndex="2"
                 Visibility="{Binding Path=Model.UserIsInGame,Converter={StaticResource VisibilityConverter},ConverterParameter=invert}"
-                Padding="20">
+                Padding="20"
+                d:Visibility="Collapsed">
             <StackPanel Orientation="Vertical">
                 <TextBlock Text="{Binding Path=Model.WaitingReason}" 
                        Foreground="White" 
@@ -146,7 +147,7 @@
 
                 <StackPanel Grid.Column="1" Grid.Row="0" Orientation="Vertical" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,0,0,0">
                     <StackPanel Orientation="Horizontal" Height="24">
-                        <Image Source="Assets/arrow-up-right.png" Height="24" VerticalAlignment="Top" Margin="0,-2,0,0" />
+                        <TextBlock Text="🡽" FontSize="20" Margin="0,-4,0,0" Padding="0" />
                         <TextBlock Text="{Binding Path=Model.ElapsedAscent,StringFormat=0.0}" d:Text="125" FontSize="22" FontWeight="ExtraBold" VerticalAlignment="Bottom" />
                         <TextBlock Text="/" FontSize="14" Foreground="#333333" FontWeight="ExtraBold" VerticalAlignment="Bottom" Padding="0,0,0,3" />
                         <TextBlock Text="{Binding Path=Model.TotalAscent,StringFormat=0.0}" d:Text="475" FontSize="14" FontWeight="ExtraBold" VerticalAlignment="Bottom" Padding="0,0,0,1.5" Foreground="#333333" />
@@ -154,7 +155,7 @@
                     </StackPanel>
 
                     <StackPanel Orientation="Horizontal" Height="24">
-                        <Image Source="Assets/arrow-down-right.png" Height="24" VerticalAlignment="Top" Margin="0,-2,0,0" />
+                        <TextBlock Text="🡾" FontSize="20" Margin="0,-4,0,0" Padding="0" />
                         <TextBlock Text="{Binding Path=Model.ElapsedDescent,StringFormat=0.0}" d:Text="54" FontSize="22" FontWeight="ExtraBold" VerticalAlignment="Bottom" />
                         <TextBlock Text="/" FontSize="14" Foreground="#333333" FontWeight="ExtraBold" VerticalAlignment="Bottom" Padding="0,0,0,4" />
                         <TextBlock Text="{Binding Path=Model.TotalDescent,StringFormat=0.0}" d:Text="475" FontSize="14" FontWeight="ExtraBold" VerticalAlignment="Bottom" Padding="0,0,0,2.5" Foreground="#333333" />
@@ -209,11 +210,11 @@
                     <TextBlock Text="{Binding Path=Distance,StringFormat=0.0}" d:Text="1,2" FontSize="16" FontWeight="Bold" VerticalAlignment="Bottom" />
                     <TextBlock Text="km" FontSize="10" FontWeight="Bold" VerticalAlignment="Bottom" Padding="0,0,0,1.5"/>
 
-                    <Image Source="Assets/arrow-up-right.png" Height="12" VerticalAlignment="Center" Margin="4,0,0,0" />
+                    <TextBlock Text="🡽" FontSize="15" Margin="0,-2,0,0" Padding="0" FontWeight="Light" />
                     <TextBlock Text="{Binding Path=Ascent,StringFormat=0.0}" d:Text="12" FontSize="16" FontWeight="Bold" VerticalAlignment="Bottom" />
                     <TextBlock Text="m" FontSize="10" FontWeight="Bold" VerticalAlignment="Bottom" Padding="0,0,0,1.5"/>
 
-                    <Image Source="Assets/arrow-down-right.png" Height="12" VerticalAlignment="Center" Margin="4,0,0,0" />
+                    <TextBlock Text="🡾" FontSize="15" Margin="0,-2,0,0" Padding="0" FontWeight="Light" />
                     <TextBlock Text="{Binding Path=Descent,StringFormat=0.0}" d:Text="57" FontSize="16" FontWeight="Bold" VerticalAlignment="Bottom" />
                     <TextBlock Text="m" FontSize="10" FontWeight="Bold" VerticalAlignment="Bottom" Padding="0,0,0,1.5"/>
                 </StackPanel>
@@ -263,11 +264,11 @@
                     <TextBlock Text="{Binding Path=Distance,StringFormat=0.0}" d:Text="1,2" FontSize="16" FontWeight="Bold" VerticalAlignment="Bottom" />
                     <TextBlock Text="km" FontSize="10" FontWeight="Bold" VerticalAlignment="Bottom" Padding="0,0,0,1.5"/>
 
-                    <Image Source="Assets/arrow-up-right.png" Height="12" VerticalAlignment="Center" Margin="4,0,0,0" />
+                    <TextBlock Text="🡽" FontSize="15" Margin="0,-2,0,0" Padding="0" FontWeight="Light" />
                     <TextBlock Text="{Binding Path=Ascent,StringFormat=0.0}" d:Text="12" FontSize="16" FontWeight="Bold" VerticalAlignment="Bottom" />
                     <TextBlock Text="m" FontSize="10" FontWeight="Bold" VerticalAlignment="Bottom" Padding="0,0,0,1.5"/>
 
-                    <Image Source="Assets/arrow-down-right.png" Height="12" VerticalAlignment="Center" Margin="4,0,0,0" />
+                    <TextBlock Text="🡾" FontSize="15" Margin="0,-2,0,0" Padding="0" FontWeight="Light" />
                     <TextBlock Text="{Binding Path=Descent,StringFormat=0.0}" d:Text="57" FontSize="16" FontWeight="Bold" VerticalAlignment="Bottom" />
                     <TextBlock Text="m" FontSize="10" FontWeight="Bold" VerticalAlignment="Bottom" Padding="0,0,0,1.5"/>
                 </StackPanel>
