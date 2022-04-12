@@ -76,11 +76,17 @@ namespace RoadCaptain.Runner.Tests.Unit.Views
         //[StaFact]
         public void GivenRouteInLastSegment_PlaceholderIsVisible()
         {
+            var segment = new Segment(new List<TrackPoint>
+            {
+                new TrackPoint(1, 2, 3),
+                new TrackPoint(1, 2.1, 5)
+            }) { Id = "seg-3"};
+            segment.CalculateDistances();
             var segments = new List<Segment>
             {
                 new(new List<TrackPoint>()) { Id = "seg-1"},
                 new(new List<TrackPoint>()) { Id = "seg-2"},
-                new(new List<TrackPoint>()) { Id = "seg-3"},
+                segment,
             };
             var route = new PlannedRoute()
             {
@@ -106,6 +112,12 @@ namespace RoadCaptain.Runner.Tests.Unit.Views
                         ShowActivated = true,
                         DataContext = viewModel
                     };
+            viewModel.Model.TotalDescent = 123;
+            viewModel.Model.TotalAscent = 78;
+            viewModel.Model.TotalDistance = 25;
+            viewModel.Model.ElapsedDescent = 33;
+            viewModel.Model.ElapsedAscent = 12;
+            viewModel.Model.ElapsedDistance = 25;
 
             window.Show();
             window.Dispatcher.Invoke(() => { }, DispatcherPriority.SystemIdle);
@@ -115,7 +127,7 @@ namespace RoadCaptain.Runner.Tests.Unit.Views
             window.Dispatcher.Invoke(() => { }, DispatcherPriority.SystemIdle);
 
             route.EnteredSegment("seg-3");
-            viewModel.UpdateGameState(new OnRouteState(1, 2, new TrackPoint(1, 2, 3), segments[2], route));
+            viewModel.UpdateGameState(new OnRouteState(1, 2, new TrackPoint(1, 2, 3) { DistanceOnSegment = 12}, segments[2], route));
             window.Dispatcher.Invoke(() => { }, DispatcherPriority.SystemIdle);
             
             var windowContent = (window.Content as Grid);
