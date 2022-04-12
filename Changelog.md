@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.5.2.0
+
+### Runner
+
+- Fixed a bug where the in-game window would show only `Waiting for Zwift connection...` and the route name without giving any instructions when RoadCaptain is started but Zwift is not.
+
 ## 0.5.1.0
 
 ### Runner

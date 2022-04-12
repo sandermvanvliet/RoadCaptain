@@ -145,7 +145,11 @@ namespace RoadCaptain.Runner
                 Route = plannedRoute
             };
 
-            return new InGameNavigationWindowViewModel(inGameWindowModel, segments);
+            var viewModel = new InGameNavigationWindowViewModel(inGameWindowModel, segments);
+            
+            viewModel.UpdateGameState(_previousGameState);
+
+            return viewModel;
         }
 
         private void StartZwiftConnectionListener()
