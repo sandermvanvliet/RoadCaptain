@@ -2952,7 +2952,8 @@
                 "CoordinatesDecimal": "S11.67361° E166.96923°"
             }
         ],
-        "Id": "watopia-ocean-lava-cliffside-loop-001"
+        "Id": "watopia-ocean-lava-cliffside-loop-001",
+        "Name": "Cliffside"
     },
     {
         "NextSegmentsNodeA": [],
@@ -16023,7 +16024,8 @@
                 "CoordinatesDecimal": "S11.66496° E166.95069°"
             }
         ],
-        "Id": "watopia-bambino-fondo-003-before-before"
+        "Id": "watopia-bambino-fondo-003-before-before",
+        "Name": "Epic KOM wind farm"
     },
     {
         "NextSegmentsNodeA": [],
@@ -34584,7 +34586,8 @@
                 "CoordinatesDecimal": "S11.67649° E166.95825°"
             }
         ],
-        "Id": "watopia-big-loop-rev-001-before-after"
+        "Id": "watopia-big-loop-rev-001-before-after",
+        "Name": "Epic KOM 3"
     },
     {
         "NextSegmentsNodeA": [],
@@ -35509,7 +35512,8 @@
                 "CoordinatesDecimal": "S11.65972° E166.96754°"
             }
         ],
-        "Id": "watopia-big-loop-rev-001-after-after"
+        "Id": "watopia-big-loop-rev-001-after-after",
+        "Name": "Epic KOM bridge"
     },
     {
         "NextSegmentsNodeA": [],
@@ -38027,7 +38031,8 @@
                 "CoordinatesDecimal": "S11.67798° E166.96551°"
             }
         ],
-        "Id": "watopia-big-loop-rev-001-after-before-before"
+        "Id": "watopia-big-loop-rev-001-after-before-before",
+        "Name": "Epic KOM 2"
     },
     {
         "NextSegmentsNodeA": [],
@@ -38457,7 +38462,8 @@
                 "CoordinatesDecimal": "S11.67386° E166.96898°"
             }
         ],
-        "Id": "watopia-big-loop-rev-001-after-before-after"
+        "Id": "watopia-big-loop-rev-001-after-before-after",
+        "Name": "Epic KOM 1"
     },
     {
         "NextSegmentsNodeA": [],
@@ -51573,7 +51579,8 @@
                 "CoordinatesDecimal": "S11.65056° E166.97344°"
             }
         ],
-        "Id": "watopia-repack-ridge-001"
+        "Id": "watopia-repack-ridge-001",
+        "Name": "Repack Ridge"
     },
     {
         "NextSegmentsNodeA":[],
