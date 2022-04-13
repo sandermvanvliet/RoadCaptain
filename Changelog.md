@@ -9,6 +9,7 @@
 ### Route Builder
 
 - Use segment name instead of id in the status bar messages to avoid confusion. ([issue #20](https://github.com/sandermvanvliet/RoadCaptain/issues/20))
+- The _Open file_ and _Save file_ dialogs now have the initial location set to My Documents instead of the installation directory. ([issue #19](https://github.com/sandermvanvliet/RoadCaptain/issues/19))
 
 ## 0.5.3.0
 
