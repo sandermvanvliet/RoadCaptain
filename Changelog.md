@@ -1,5 +1,11 @@
 ﻿# Changelog
 
+## 0.5.4.0
+
+### Runner
+
+- Fixed the issue with RoadCaptain Runner not starting for some people. The installer now includes the missing files. ([issue #14](https://github.com/sandermvanvliet/RoadCaptain/issues/14))
+
 ## 0.5.3.0
 
 - Desktop shortcuts for both the Runner and Route Builder will be created when installing RoadCaptain ([issue #5](https://github.com/sandermvanvliet/RoadCaptain/issues/5))
