@@ -23,6 +23,7 @@
         <KeyBinding Key="S" Modifiers="Ctrl" Command="{Binding Path=SaveRouteCommand}" />
         <KeyBinding Key="O" Modifiers="Ctrl" Command="{Binding Path=OpenRouteCommand}" />
         <KeyBinding Key="R" Modifiers="Ctrl" Command="{Binding Path=ResetRouteCommand}" />
+        <KeyBinding Key="Z" Modifiers="Ctrl" Command="{Binding Path=RemoveLastSegmentCommand}" />
     </Window.InputBindings>
     <Window.Resources>
         <Style TargetType="{x:Type Button}" x:Key="ButtonStyle">
@@ -150,7 +151,8 @@
                           ScrollViewer.VerticalScrollBarVisibility="Auto"
                           VerticalAlignment="Stretch"
                           Name="RouteListView"
-                          SelectionChanged="RouteListView_OnSelectionChanged">
+                          SelectionChanged="RouteListView_OnSelectionChanged"
+                          KeyUp="RouteListView_KeyUp">
                     <ListView.Resources>
                         <Style TargetType="{x:Type ListViewItem}">
                             <Style.Triggers>

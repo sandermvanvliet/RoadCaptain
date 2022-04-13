@@ -180,6 +180,17 @@ namespace RoadCaptain.RouteBuilder
                 _highlightedSegmentId = null;
             }
         }
+
+        private void RouteListView_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (sender is ListView { SelectedItem: SegmentSequenceViewModel viewModel } && e.Key == Key.Delete)
+            {
+                if (viewModel == _windowViewModel.Route.Last)
+                {
+                    _windowViewModel.RemoveLastSegmentCommand.Execute(null);
+                }
+            }
+        }
     }
 }
 

@@ -105,6 +105,16 @@ namespace RoadCaptain.RouteBuilder.ViewModels
             Direction = segmentDirection;
         }
 
+        public void ResetTurn()
+        {
+            Model.TurnToNextSegment = TurnDirection.None;
+            Model.NextSegmentId = null;
+            Model.Direction = SegmentDirection.Unknown;
+
+            TurnImage = null;
+            Direction = SegmentDirection.Unknown;
+        }
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         [NotifyPropertyChangedInvocator]

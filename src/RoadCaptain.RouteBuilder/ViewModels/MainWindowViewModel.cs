@@ -85,6 +85,19 @@ namespace RoadCaptain.RouteBuilder.ViewModels
                 .OnSuccessWithWarnings(_ => Model.StatusBarInfo("Added segment {0}", _.Message))
                 .OnFailure(_ => Model.StatusBarWarning(_.Message));
 
+            RemoveLastSegmentCommand = new RelayCommand(
+                _ => RemoveLastSegment(),
+                _ => Route.Sequence.Any())
+                    .OnSuccess(_ =>
+                    {
+                        Model.StatusBarInfo("Removed segment");
+                    })
+                    .OnSuccessWithWarnings(_ =>
+                    {
+                        Model.StatusBarInfo("Removed segment {0}", _.Message);
+                    })
+                    .OnFailure(_ => Model.StatusBarWarning(_.Message));
+
             SimulateCommand = new RelayCommand(
                     _ => SimulateRoute(),
                     _ => true);
@@ -105,6 +118,7 @@ namespace RoadCaptain.RouteBuilder.ViewModels
         public ICommand OpenRouteCommand { get; }
         public ICommand ResetRouteCommand { get; }
         public ICommand SelectSegmentCommand { get; }
+        public ICommand RemoveLastSegmentCommand { get; }
         public ICommand SimulateCommand { get; }
         public ICommand OpenLinkCommand { get; set; }
 
@@ -242,6 +256,21 @@ namespace RoadCaptain.RouteBuilder.ViewModels
             }
 
             return CommandResult.Failure("Did not find a connection between the last segment and the selected segment");
+        }
+
+        private CommandResult RemoveLastSegment()
+        {
+            if (!Route.Sequence.Any())
+            {
+                return CommandResult.Failure("Can't remove segment because the route does not have any segments");
+            }
+
+            var lastSegment = Route.RemoveLast();
+            
+            SelectedSegment = null;
+            CreateRoutePath();
+
+            return CommandResult.SuccessWithWarning(lastSegment.SegmentName);
         }
 
         private static SegmentDirection GetDirectionOnNewSegment(Segment newSelectedSegment, Segment lastSegment)

@@ -214,5 +214,31 @@ namespace RoadCaptain.RouteBuilder.ViewModels
         {
             return _segments.SingleOrDefault(s => s.Id == segmentId);
         }
+
+        public SegmentSequenceViewModel RemoveLast()
+        {
+            var lastSegment = Last;
+
+            if (lastSegment == _sequence.First())
+            {
+                Reset();
+            }
+            else
+            {
+                _sequence.Remove(lastSegment);
+
+                Last.ResetTurn();
+            }
+            
+
+            IsTainted = true;
+
+            OnPropertyChanged(nameof(Sequence));
+            OnPropertyChanged(nameof(TotalDistance));
+            OnPropertyChanged(nameof(TotalAscent));
+            OnPropertyChanged(nameof(TotalDescent));
+
+            return lastSegment;
+        }
     }
 }
