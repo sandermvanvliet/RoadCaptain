@@ -136,7 +136,7 @@ namespace RoadCaptain.RouteBuilder.ViewModels
             if (string.IsNullOrEmpty(route.ZwiftRouteName))
             {
                 throw new Exception(
-                    $"Unable to determine Zwift route name for segment {Sequence.First().SegmentId} and direction {Sequence.First().Direction}");
+                    $"Unable to determine Zwift route name for segment {Sequence.First().SegmentName} and direction {Sequence.First().Direction}");
             }
 
             route

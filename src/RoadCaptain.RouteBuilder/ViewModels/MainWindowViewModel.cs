@@ -173,7 +173,7 @@ namespace RoadCaptain.RouteBuilder.ViewModels
             {
                 if (!Route.IsSpawnPointSegment(segmentId))
                 {
-                    return CommandResult.Failure($"{segmentId} is not a spawn point, we can't start here unfortunately");
+                    return CommandResult.Failure($"{newSelectedSegment.Name} is not a spawn point, we can't start here unfortunately");
                 }
 
                 Route.StartOn(newSelectedSegment);
@@ -211,7 +211,7 @@ namespace RoadCaptain.RouteBuilder.ViewModels
 
                     SelectedSegment = newSelectedSegment;
 
-                    return CommandResult.SuccessWithWarning(segmentId);
+                    return CommandResult.SuccessWithWarning(newSelectedSegment.Name);
                 }
             }
             else if (Route.Last.Direction == SegmentDirection.BtoA)
@@ -225,7 +225,7 @@ namespace RoadCaptain.RouteBuilder.ViewModels
 
                     SelectedSegment = newSelectedSegment;
 
-                    return CommandResult.SuccessWithWarning(segmentId);
+                    return CommandResult.SuccessWithWarning(newSelectedSegment.Name);
                 }
             }
             else if (Route.Last.Direction == SegmentDirection.Unknown)
@@ -239,7 +239,7 @@ namespace RoadCaptain.RouteBuilder.ViewModels
 
                     SelectedSegment = newSelectedSegment;
 
-                    return CommandResult.SuccessWithWarning(segmentId);
+                    return CommandResult.SuccessWithWarning(newSelectedSegment.Name);
                 }
 
                 if (fromB != null)
@@ -251,7 +251,7 @@ namespace RoadCaptain.RouteBuilder.ViewModels
 
                     SelectedSegment = newSelectedSegment;
 
-                    return CommandResult.SuccessWithWarning(segmentId);
+                    return CommandResult.SuccessWithWarning(newSelectedSegment.Name);
                 }
             }
 
