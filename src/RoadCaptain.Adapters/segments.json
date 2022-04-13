@@ -51600,7 +51600,8 @@
             }
         ],
         "Id": "watopia-repack-ridge-001",
-        "Name": "Repack Ridge"
+        "Name": "Repack Ridge",
+        "NoSelectReason": "Repack Ridge is using the new steering feature in Zwift which is not supported when using RoadCaptain" 
     },
     {
         "NextSegmentsNodeA":[],

@@ -124,7 +124,7 @@ namespace RoadCaptain.RouteBuilder.ViewModels
 
             var route = new PlannedRoute
             {
-                ZwiftRouteName = GetRouteName(Sequence.First()),
+                ZwiftRouteName = GetZwiftRouteName(Sequence.First()),
                 Name = Name
             };
 
@@ -148,7 +148,7 @@ namespace RoadCaptain.RouteBuilder.ViewModels
             IsTainted = false;
         }
 
-        private string GetRouteName(SegmentSequenceViewModel startingSegment)
+        private string GetZwiftRouteName(SegmentSequenceViewModel startingSegment)
         {
             var spawnPoint = _spawnPoints
                 .SingleOrDefault(s =>

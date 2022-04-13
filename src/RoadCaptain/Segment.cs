@@ -42,6 +42,8 @@ namespace RoadCaptain
             set => _name = value;
         }
 
+        public string NoSelectReason { get; set; }
+
         public double Distance
         {
             get

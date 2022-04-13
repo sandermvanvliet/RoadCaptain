@@ -22,6 +22,7 @@ namespace RoadCaptain.RouteBuilder.ViewModels
             SequenceNumber = sequenceNumber;
             Direction = SegmentDirection.Unknown;
             SegmentName = segment.Name;
+            NoSelectReason = segment.NoSelectReason;
         }
 
         private static string ImageFromTurn(TurnDirection turnDirection)
@@ -90,7 +91,9 @@ namespace RoadCaptain.RouteBuilder.ViewModels
             }
         }
 
-        public string SegmentName { get; private set; }
+        public string SegmentName { get; }
+
+        public string NoSelectReason { get; }
 
         public void SetTurn(TurnDirection direction, string ontoSegmentId, SegmentDirection segmentDirection)
         {

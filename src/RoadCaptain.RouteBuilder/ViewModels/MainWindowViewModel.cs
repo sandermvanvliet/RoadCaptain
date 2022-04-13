@@ -175,6 +175,11 @@ namespace RoadCaptain.RouteBuilder.ViewModels
                 return CommandResult.Aborted();
             }
 
+            if (!string.IsNullOrEmpty(newSelectedSegment.NoSelectReason))
+            {
+                return CommandResult.Failure(newSelectedSegment.NoSelectReason);
+            }
+
             // 2. Figure out if the newly selected segment is reachable from the last segment
             var lastSegment = _segments.Single(s => s.Id == Route.Last.SegmentId);
 
