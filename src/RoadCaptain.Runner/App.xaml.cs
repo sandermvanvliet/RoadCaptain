@@ -2,6 +2,7 @@
 // Licensed under Artistic License 2.0
 // See LICENSE or https://choosealicense.com/licenses/artistic-2.0/
 
+using System;
 using System.Windows;
 using Autofac;
 using Microsoft.Extensions.Configuration;
@@ -23,6 +24,11 @@ namespace RoadCaptain.Runner
         public App()
         {
             _logger = LoggerBootstrapper.CreateLogger();
+            
+            AppDomain.CurrentDomain.UnhandledException += (sender, args) =>
+            {
+                _logger.Fatal(args.ExceptionObject as Exception, "Unhandled exception occurred");
+            };
 
             var configuration = new ConfigurationBuilder()
                 .AddJsonFile("appsettings.json", true)

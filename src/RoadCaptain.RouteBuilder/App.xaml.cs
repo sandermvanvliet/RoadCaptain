@@ -25,6 +25,11 @@ namespace RoadCaptain.RouteBuilder
         public App()
         {
             _logger = CreateLogger();
+            
+            AppDomain.CurrentDomain.UnhandledException += (sender, args) =>
+            {
+                _logger.Fatal(args.ExceptionObject as Exception, "Unhandled exception occurred");
+            };
 
             var configuration = new ConfigurationBuilder()
                 .AddJsonFile("appsettings.json", true)
