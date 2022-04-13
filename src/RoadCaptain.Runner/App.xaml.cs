@@ -4,6 +4,7 @@
 
 using System;
 using System.Windows;
+using System.Windows.Threading;
 using Autofac;
 using Microsoft.Extensions.Configuration;
 using Serilog.Core;
@@ -28,6 +29,11 @@ namespace RoadCaptain.Runner
             AppDomain.CurrentDomain.UnhandledException += (sender, args) =>
             {
                 _logger.Fatal(args.ExceptionObject as Exception, "Unhandled exception occurred");
+            };
+
+            DispatcherUnhandledException += (sender, args) =>
+            {
+                _logger.Error(args.Exception, "Unhandled exception in dispatcher");
             };
 
             var configuration = new ConfigurationBuilder()

@@ -31,6 +31,11 @@ namespace RoadCaptain.RouteBuilder
                 _logger.Fatal(args.ExceptionObject as Exception, "Unhandled exception occurred");
             };
 
+            DispatcherUnhandledException += (sender, args) =>
+            {
+                _logger.Error(args.Exception, "Unhandled exception in dispatcher");
+            };
+
             var configuration = new ConfigurationBuilder()
                 .AddJsonFile("appsettings.json", true)
                 .AddJsonFile("autofac.routebuilder.json")
