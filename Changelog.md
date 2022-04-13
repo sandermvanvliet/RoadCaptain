@@ -2,14 +2,16 @@
 
 ## 0.5.3.0
 
+- Desktop shortcuts for both the Runner and Route Builder will be created when installing RoadCaptain ([issue #5](https://github.com/sandermvanvliet/RoadCaptain/issues/5))
+
 ### Runner
 
-- Add better logging of errors during start up.
+- Add better logging of errors during start up. ([issue #14](https://github.com/sandermvanvliet/RoadCaptain/issues/14))
 
 ### Route Builder
 
-- Fixed bug #8 where you could not leave segment `watopia-four-horsemen-002-before`
-- Add better logging of errors during start up.
+- Fixed bug #8 where you could not leave segment `watopia-four-horsemen-002-before` ([issue #14](https://github.com/sandermvanvliet/RoadCaptain/issues/8))
+- Add better logging of errors during start up. ([issue #14](https://github.com/sandermvanvliet/RoadCaptain/issues/14))
 
 ## 0.5.2.0
 

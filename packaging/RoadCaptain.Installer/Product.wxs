@@ -44,6 +44,7 @@
 			<ComponentGroupRef Id="RunnerNativeComponents"/>
 			<ComponentGroupRef Id="RouteBuilderNativeComponents"/>
 			<ComponentRef Id="ApplicationShortcut" />
+			<ComponentRef Id="DesktopShortcut" />
 		</Feature>
 
 		<Property Id="WIXUI_INSTALLDIR" Value="INSTALLFOLDER" />
@@ -70,7 +71,19 @@
 			<Directory Id="ProgramMenuFolder">
 				<Directory Id="ApplicationProgramsFolder" Name="$(var.Name)" />
 			</Directory>
+			<!--Create desktop folder -->
+			<Directory Id="DesktopFolder" Name="Desktop"/>
 		</Directory>
+	</Fragment>
+
+	<Fragment>
+		<DirectoryRef Id="DesktopFolder">
+			<Component Id="DesktopShortcut" Guid="7BEC4281-9F3A-4A0C-B731-0AF4486B1250">
+				<Shortcut Id="RunnerDesktopShortcut" Name="$(var.Name) Runner" Description="$(var.Description)" Icon="icon.ico" Target="[#Runner_RoadCaptain.Runner.exe]" WorkingDirectory="INSTALLFOLDER" />
+				<Shortcut Id="RouteBuilderDesktopShortcut" Name="$(var.Name) Route Builder" Description="$(var.Description)" Icon="icon.ico" Target="[#RouteBuilder_RoadCaptain.RouteBuilder.exe]" WorkingDirectory="INSTALLFOLDER" />
+				<RegistryValue Root="HKCU" Key="Software\Microsoft\$(var.Manufacturer)\$(var.Name)" Name="installed" Type="integer" Value="1" KeyPath="yes" />
+			</Component>
+		</DirectoryRef>
 	</Fragment>
 
 	<Fragment>
