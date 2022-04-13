@@ -3,6 +3,7 @@
 ## 0.5.3.0
 
 - Desktop shortcuts for both the Runner and Route Builder will be created when installing RoadCaptain ([issue #5](https://github.com/sandermvanvliet/RoadCaptain/issues/5))
+- Most segments now have a more descriptive name than `watopia-foo-bas-001-after-before-before` which should make things a lot easier to read. This is a _work in progress_ and may see changes later. ([issue #6](https://github.com/sandermvanvliet/RoadCaptain/issues/6))
 
 ### Runner
 
@@ -10,7 +11,7 @@
 
 ### Route Builder
 
-- Fixed bug #8 where you could not leave segment `watopia-four-horsemen-002-before` ([issue #14](https://github.com/sandermvanvliet/RoadCaptain/issues/8))
+- Fixed bug #8 where you could not leave segment `watopia-four-horsemen-002-before` ([issue #8](https://github.com/sandermvanvliet/RoadCaptain/issues/8))
 - Add better logging of errors during start up. ([issue #14](https://github.com/sandermvanvliet/RoadCaptain/issues/14))
 
 ## 0.5.2.0
