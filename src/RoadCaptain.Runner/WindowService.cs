@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using Autofac;
 using Microsoft.Win32;
 using RoadCaptain.Runner.Models;
@@ -24,7 +25,8 @@ namespace RoadCaptain.Runner
                 AddExtension = true,
                 DefaultExt = ".json",
                 Filter = "JSON files (.json)|*.json",
-                Multiselect = false
+                Multiselect = false,
+                InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
             };
 
             var result = ShowDialog(dialog).GetValueOrDefault();

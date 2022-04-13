@@ -362,7 +362,8 @@ namespace RoadCaptain.RouteBuilder.ViewModels
                 RestoreDirectory = true,
                 AddExtension = true,
                 DefaultExt = ".json",
-                Filter = "JSON files (.json)|*.json|GPS Exchange Format (.gpx)|*.gpx"
+                Filter = "JSON files (.json)|*.json|GPS Exchange Format (.gpx)|*.gpx",
+                InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
             };
 
             var result = dialog.ShowDialog();
@@ -420,7 +421,8 @@ namespace RoadCaptain.RouteBuilder.ViewModels
                 AddExtension = true,
                 DefaultExt = ".json",
                 Filter = "JSON files (.json)|*.json",
-                Multiselect = false
+                Multiselect = false,
+                InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
             };
 
             var result = dialog.ShowDialog();
