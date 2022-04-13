@@ -15,6 +15,7 @@
 - Add better logging of errors during start up. ([issue #14](https://github.com/sandermvanvliet/RoadCaptain/issues/14))
 - Route Builder will now show a message when you can't select a segment because it's unsupported: ![Screenshot showing error mesage in status bar](./images/route-builder-no-select-reason.png)
 See: ([issue #3](https://github.com/sandermvanvliet/RoadCaptain/issues/3)) and ([issue #13](https://github.com/sandermvanvliet/RoadCaptain/issues/13))
+- Added missing turn information for the loop at the start side of [Tempus Fugit](https://zwiftinsider.com/route/tempus-fugit/) on Fuego Flats. ([issue #13](https://github.com/sandermvanvliet/RoadCaptain/issues/13))
 
 ## 0.5.2.0
 
