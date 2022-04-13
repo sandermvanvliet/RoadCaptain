@@ -2,9 +2,14 @@
 
 ## 0.5.3.0
 
+### Runner
+
+- Add better logging of errors during start up.
+
 ### Route Builder
 
 - Fixed bug #8 where you could not leave segment `watopia-four-horsemen-002-before`
+- Add better logging of errors during start up.
 
 ## 0.5.2.0
 
