@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 
-namespace RoadCaptain.Runner
+namespace RoadCaptain.UserInterface.Shared
 {
     /// <summary>
     /// Interaction logic for UpdateAvailableWindow.xaml

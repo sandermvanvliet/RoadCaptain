@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Input;
 
-namespace RoadCaptain.Runner.Commands
+namespace RoadCaptain.UserInterface.Shared.Commands
 {
     public class RelayCommand : ICommand
     {

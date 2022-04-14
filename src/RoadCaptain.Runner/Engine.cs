@@ -7,6 +7,7 @@ using RoadCaptain.Ports;
 using RoadCaptain.Runner.Models;
 using RoadCaptain.Runner.ViewModels;
 using RoadCaptain.UseCases;
+using RoadCaptain.UserInterface.Shared;
 
 namespace RoadCaptain.Runner
 {

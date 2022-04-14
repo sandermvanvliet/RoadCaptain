@@ -8,6 +8,9 @@
     },
     {
       "type": "RoadCaptain.Runner.MainModule, RoadCaptain.Runner"
+    },
+    {
+      "type": "RoadCaptain.UserInterface.Shared.SharedModule, RoadCaptain.UserInterface.Shared"
     }
   ]
 }

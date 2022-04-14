@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Windows;
 using Autofac;
 using Microsoft.Win32;
 using RoadCaptain.Runner.Models;
+using RoadCaptain.UserInterface.Shared;
 
 namespace RoadCaptain.Runner.Tests.Unit.ViewModels
 {
@@ -57,11 +59,25 @@ namespace RoadCaptain.Runner.Tests.Unit.ViewModels
         protected override void Show(Window window)
         {
             ShownWindows.Add(window.GetType());
+            SetCurrentWindow(window);
         }
+        
+        private void SetCurrentWindow(Window window)
+        {
+            // CurrentWindow is normally set by BaseWindowService
+            // but as we've overriden Show/Close that doesn't happen
+            // which break the tests unfortunately.
+            // Therefore this dirty hack exists.
+            typeof(BaseWindowService)
+                .GetProperty("CurrentWindow", BindingFlags.Instance | BindingFlags.NonPublic)
+                .GetSetMethod(true)
+                .Invoke(this, new object[] { window });
+    }
 
         protected override void Close(Window window)
         {
             ClosedWindows.Add(window.GetType());
+            SetCurrentWindow(null);
         }
 
         public List<Type> ClosedWindows { get; } = new();

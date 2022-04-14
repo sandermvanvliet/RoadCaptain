@@ -1,15 +1,15 @@
-﻿namespace RoadCaptain.RouteBuilder.Commands
+﻿namespace RoadCaptain.UserInterface.Shared.Commands
 {
     public class CommandResult
     {
         public Result Result { get; set; }
         public string Message { get; set; }
-        
+
         public static CommandResult Success(string message = null)
         {
             return new() { Result = Result.Success, Message = message };
         }
-        
+
         public static CommandResult SuccessWithWarning(string message)
         {
             return new() { Result = Result.SuccessWithWarnings, Message = message };

@@ -10,7 +10,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:viewmodels="clr-namespace:RoadCaptain.Runner.ViewModels"
-        xmlns:converters="clr-namespace:RoadCaptain.Runner.Converters"
+        xmlns:converters="clr-namespace:RoadCaptain.UserInterface.Shared.Converters;assembly=RoadCaptain.UserInterface.Shared"
         mc:Ignorable="d"
         Title="{Binding Path=Model.WindowTitle}" 
         Height="234" Width="400"
@@ -23,7 +23,7 @@
         Initialized="InGameNavigationWindow_OnInitialized"
         LocationChanged="InGameNavigationWindow_OnLocationChanged"
         Activated="InGameNavigationWindow_OnActivated"
-        Icon="icon.png">
+        Icon="pack://application:,,,/RoadCaptain.UserInterface.Shared;component/icon.png">
     <Window.Resources>
         <converters:VisibilityConverter x:Key="VisibilityConverter" />
         <converters:NullabilityConverter x:Key="NullabilityConverter" />
@@ -203,7 +203,7 @@
             </Grid.ColumnDefinitions>
 
             <TextBlock Margin="2,0,0,0" Grid.Column="0" Grid.Row="0" Text="{Binding Path=SequenceNumber}" d:Text="1" HorizontalAlignment="Center" />
-            <Image Grid.Column="0" Grid.Row="1" Margin="2,0,0,0" Width="22" Height="22" Source="{Binding Path=TurnImage}" d:Source="Assets/turnright.png" HorizontalAlignment="Left" />
+            <Image Grid.Column="0" Grid.Row="1" Margin="2,0,0,0" Width="22" Height="22" Source="{Binding Path=TurnImage}" d:Source="pack://application:,,,/RoadCaptain.UserInterface.Shared;component/Assets/turnright.png" HorizontalAlignment="Left" />
 
             <TextBlock Grid.Column="1" Grid.Row="0" Text="{Binding Path=SegmentName}" ToolTip="{Binding Path=SegmentName}" d:Text="big-loop-001-after" Margin="4,0,0,0" />
 

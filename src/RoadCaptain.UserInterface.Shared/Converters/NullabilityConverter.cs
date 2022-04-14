@@ -3,7 +3,7 @@ using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
 
-namespace RoadCaptain.Runner.Converters
+namespace RoadCaptain.UserInterface.Shared.Converters
 {
     public class NullabilityConverter : IValueConverter
     {
@@ -17,7 +17,7 @@ namespace RoadCaptain.Runner.Converters
                 }
                 return Visibility.Collapsed;
             }
-            
+
             if ("invert".Equals(parameter))
             {
                 return Visibility.Collapsed;

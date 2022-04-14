@@ -16,7 +16,7 @@
         Width="800"
         WindowStyle="SingleBorderWindow"
         Activated="ZwiftLoginWindow_OnActivated"
-        Icon="icon.png">
+        Icon="pack://application:,,,/RoadCaptain.UserInterface.Shared;component/icon.png">
     <Grid>
         <wv2:WebView2 Name="ZwiftAuthView"
                       CoreWebView2InitializationCompleted="ZwiftAuthView_OnCoreWebView2InitializationCompleted"

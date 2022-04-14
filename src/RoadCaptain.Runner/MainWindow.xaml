@@ -9,7 +9,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:converters="clr-namespace:RoadCaptain.Runner.Converters"
+        xmlns:converters="clr-namespace:RoadCaptain.UserInterface.Shared.Converters;assembly=RoadCaptain.UserInterface.Shared"
         xmlns:viewModels="clr-namespace:RoadCaptain.Runner.ViewModels"
         mc:Ignorable="d"
         Title="{Binding Path=WindowTitle}" 
@@ -21,7 +21,7 @@
         Background="Transparent"
         AllowsTransparency="True"
         MouseMove="Window_MouseMove"
-        Icon="icon.png"
+        Icon="pack://application:,,,/RoadCaptain.UserInterface.Shared;component/icon.png"
         Activated="MainWindow_OnActivated">
     <Window.Resources>
         <Style TargetType="{x:Type Button}">
@@ -72,7 +72,7 @@
             </Grid.RowDefinitions>
 
             <StackPanel Orientation="Horizontal" Grid.Row="0">
-                <Image Source="icon.png" Height="22" VerticalAlignment="Center" Margin="4,4,4,0" />
+                <Image Source="pack://application:,,,/RoadCaptain.UserInterface.Shared;component/icon.png" Height="22" VerticalAlignment="Center" Margin="4,4,4,0" />
                 <TextBlock Text="RoadCaptain" FontWeight="ExtraBold" FontSize="32" VerticalAlignment="Center" />
             </StackPanel>
             <Button Content="X" Background="Red" Foreground="White" Grid.Row="0" HorizontalAlignment="Right" Width="40" Height="20" Margin="0,-3,-3,0" VerticalAlignment="Top" 
@@ -94,7 +94,7 @@
 
             <Image Grid.Row="1" 
                Panel.ZIndex="1"
-               Source="Assets/background.jpg"
+               Source="pack://application:,,,/RoadCaptain.UserInterface.Shared;component/Assets/background.jpg"
                Stretch="UniformToFill"
                StretchDirection="DownOnly"/>
 

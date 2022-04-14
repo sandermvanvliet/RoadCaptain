@@ -7,6 +7,7 @@ using Microsoft.Extensions.Configuration;
 using RoadCaptain.GameStates;
 using RoadCaptain.Ports;
 using RoadCaptain.Runner.Tests.Unit.ViewModels;
+using RoadCaptain.UserInterface.Shared;
 using Serilog;
 using Serilog.Sinks.InMemory;
 
@@ -15,7 +16,7 @@ namespace RoadCaptain.Runner.Tests.Unit.Engine
     public class EngineTest : IDisposable
     {
         private readonly TaskWithCancellation _receiverTask;
-        private IGameStateReceiver _gameStateReceiver;
+        private readonly IGameStateReceiver _gameStateReceiver;
 
         public EngineTest()
         {

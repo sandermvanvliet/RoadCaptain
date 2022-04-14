@@ -10,7 +10,7 @@ using System.Windows;
 using System.Windows.Input;
 using Microsoft.Win32;
 using RoadCaptain.Ports;
-using RoadCaptain.RouteBuilder.Commands;
+using RoadCaptain.UserInterface.Shared.Commands;
 using RoadCaptain.RouteBuilder.Models;
 using SkiaSharp;
 using Point = System.Windows.Point;

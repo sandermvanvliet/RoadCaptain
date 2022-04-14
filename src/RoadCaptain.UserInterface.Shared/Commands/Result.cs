@@ -1,4 +1,4 @@
-﻿namespace RoadCaptain.Runner.Commands
+﻿namespace RoadCaptain.UserInterface.Shared.Commands
 {
     public enum Result
     {

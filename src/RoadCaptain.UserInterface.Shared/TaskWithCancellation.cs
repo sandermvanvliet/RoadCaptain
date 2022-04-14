@@ -2,7 +2,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace RoadCaptain.Runner
+namespace RoadCaptain.UserInterface.Shared
 {
     public class TaskWithCancellation
     {

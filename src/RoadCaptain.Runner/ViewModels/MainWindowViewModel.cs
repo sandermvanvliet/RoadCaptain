@@ -10,7 +10,7 @@ using RoadCaptain.Commands;
 using RoadCaptain.GameStates;
 using RoadCaptain.Ports;
 using RoadCaptain.Runner.Annotations;
-using RoadCaptain.Runner.Commands;
+using RoadCaptain.UserInterface.Shared.Commands;
 using RoadCaptain.UseCases;
 
 namespace RoadCaptain.Runner.ViewModels

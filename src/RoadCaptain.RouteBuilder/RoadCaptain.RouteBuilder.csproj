@@ -11,27 +11,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Assets\arrow-down-right.png" />
-    <None Remove="Assets\arrow-up-right.png" />
-    <None Remove="Assets\background.jpg" />
-    <None Remove="Assets\finish.png" />
-    <None Remove="Assets\gostraight.png" />
-    <None Remove="Assets\turnleft.png" />
-    <None Remove="Assets\turnright.png" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Resource Include="Assets\arrow-down-right.png" />
-    <Resource Include="Assets\arrow-up-right.png" />
-    <Resource Include="Assets\background.jpg" />
-    <Resource Include="Assets\finish.png" />
-    <Resource Include="Assets\gostraight.png" />
-    <Resource Include="Assets\turnleft.png" />
-    <Resource Include="Assets\turnright.png" />
-    <Resource Include="../../icon.png" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Autofac" Version="6.3.0" />
     <PackageReference Include="Autofac.Configuration" Version="6.0.0" />
     <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="7.2.0" />
@@ -48,13 +27,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\RoadCaptain.Adapters\RoadCaptain.Adapters.csproj" />
+    <ProjectReference Include="..\RoadCaptain.UserInterface.Shared\RoadCaptain.UserInterface.Shared.csproj" />
     <ProjectReference Include="..\RoadCaptain\RoadCaptain.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Compile Update="UpdateAvailableWindow.xaml.cs">
-      <SubType>Code</SubType>
-    </Compile>
   </ItemGroup>
 
   <ItemGroup>
@@ -67,13 +41,6 @@
     <None Update="appsettings.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Page Update="UpdateAvailableWindow.xaml">
-      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
-      <SubType>Designer</SubType>
-    </Page>
   </ItemGroup>
 
 </Project>

@@ -28,10 +28,10 @@ namespace RoadCaptain.RouteBuilder.ViewModels
         {
             return turnDirection switch
             {
-                TurnDirection.Left => "Assets/turnleft.png",
-                TurnDirection.Right => "Assets/turnright.png",
-                TurnDirection.GoStraight => "Assets/gostraight.png",
-                _ => "Assets/finish.png"
+                TurnDirection.Left => "pack://application:,,,/RoadCaptain.UserInterface.Shared;component/Assets/turnleft.png",
+                TurnDirection.Right => "pack://application:,,,/RoadCaptain.UserInterface.Shared;component/Assets/turnright.png",
+                TurnDirection.GoStraight => "pack://application:,,,/RoadCaptain.UserInterface.Shared;component/Assets/gostraight.png",
+                _ => "pack://application:,,,/RoadCaptain.UserInterface.Shared;component/Assets/finish.png"
             };
         }
 

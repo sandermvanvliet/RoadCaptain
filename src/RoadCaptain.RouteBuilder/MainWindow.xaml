@@ -19,7 +19,7 @@
         SizeChanged="MainWindow_OnSizeChanged"
         Activated="MainWindow_OnActivated"
         WindowState="Maximized"
-        Icon="../../icon.png">
+        Icon="pack://application:,,,/RoadCaptain.UserInterface.Shared;component/icon.png">
     <Window.InputBindings>
         <KeyBinding Key="S" Modifiers="Ctrl" Command="{Binding Path=SaveRouteCommand}" />
         <KeyBinding Key="O" Modifiers="Ctrl" Command="{Binding Path=OpenRouteCommand}" />
@@ -131,11 +131,11 @@
                         </StackPanel>
 
                         <StackPanel Orientation="Horizontal" Height="18">
-                            <Image Source="Assets/arrow-up-right.png" Height="12" VerticalAlignment="Center" />
+                            <Image Source="pack://application:,,,/RoadCaptain.UserInterface.Shared;component/Assets/arrow-up-right.png" Height="12" VerticalAlignment="Center" />
                             <TextBlock Text="{Binding Path=TotalAscent,StringFormat=0.0}" d:Text="125" FontSize="16" FontWeight="Bold" VerticalAlignment="Bottom" />
                             <TextBlock Text="m" FontSize="10" FontWeight="Bold" VerticalAlignment="Bottom" Padding="0,0,0,1.5"/>
 
-                            <Image Source="Assets/arrow-down-right.png" Height="12" VerticalAlignment="Center" Margin="4,0,0,0" />
+                            <Image Source="pack://application:,,,/RoadCaptain.UserInterface.Shared;component/Assets/arrow-down-right.png" Height="12" VerticalAlignment="Center" Margin="4,0,0,0" />
                             <TextBlock Text="{Binding Path=TotalDescent,StringFormat=0.0}" d:Text="54" FontSize="16" FontWeight="Bold" VerticalAlignment="Bottom" />
                             <TextBlock Text="m" FontSize="10" FontWeight="Bold" VerticalAlignment="Bottom" Padding="0,0,0,1.5"/>
                         </StackPanel>
@@ -204,11 +204,11 @@
                                         <TextBlock Text="km" FontSize="10" FontWeight="Bold" VerticalAlignment="Bottom" Padding="0,0,0,1.5"/>
 
 
-                                        <Image Source="Assets/arrow-up-right.png" Height="12" VerticalAlignment="Center" Margin="4,0,0,0" />
+                                        <Image Source="pack://application:,,,/RoadCaptain.UserInterface.Shared;component/Assets/arrow-up-right.png" Height="12" VerticalAlignment="Center" Margin="4,0,0,0" />
                                         <TextBlock Text="{Binding Path=Ascent,StringFormat=0.0}" FontSize="16" FontWeight="Bold" VerticalAlignment="Bottom" />
                                         <TextBlock Text="m" FontSize="10" FontWeight="Bold" VerticalAlignment="Bottom" Padding="0,0,0,1.5"/>
 
-                                        <Image Source="Assets/arrow-down-right.png" Height="12" VerticalAlignment="Center" Margin="4,0,0,0" />
+                                        <Image Source="pack://application:,,,/RoadCaptain.UserInterface.Shared;component/Assets/arrow-down-right.png" Height="12" VerticalAlignment="Center" Margin="4,0,0,0" />
                                         <TextBlock Text="{Binding Path=Descent,StringFormat=0.0}" FontSize="16" FontWeight="Bold" VerticalAlignment="Bottom" />
                                         <TextBlock Text="m" FontSize="10" FontWeight="Bold" VerticalAlignment="Bottom" Padding="0,0,0,1.5"/>
                                     </StackPanel>

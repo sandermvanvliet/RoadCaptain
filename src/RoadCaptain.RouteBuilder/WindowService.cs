@@ -1,130 +1,31 @@
-﻿using System;
-using System.Windows;
-using Autofac;
-using Microsoft.Win32;
-using RoadCaptain.RouteBuilder.ViewModels;
+﻿using Autofac;
+using RoadCaptain.UserInterface.Shared;
 
 namespace RoadCaptain.RouteBuilder
 {
-    public class WindowService : IWindowService
+    public class WindowService : BaseWindowService, IWindowService
     {
-        private readonly IComponentContext _componentContext;
-        private Window _currentWindow;
-
-        public WindowService(IComponentContext componentContext)
+        public WindowService(IComponentContext componentContext) : base(componentContext)
         {
-            _componentContext = componentContext;
-        }
-
-        public string ShowOpenFileDialog()
-        {
-            var dialog = new OpenFileDialog
-            {
-                RestoreDirectory = true,
-                AddExtension = true,
-                DefaultExt = ".json",
-                Filter = "JSON files (.json)|*.json",
-                Multiselect = false,
-                InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
-            };
-
-            var result = ShowDialog(dialog).GetValueOrDefault();
-
-            return result
-                ? dialog.FileName
-                : null;
         }
 
         public void ShowMainWindow()
         {
-            if (_currentWindow is MainWindow)
+            if (CurrentWindow is MainWindow)
             {
-                Activate(_currentWindow);
+                Activate(CurrentWindow);
             }
             else
             {
                 var window = Resolve<MainWindow>();
 
-                if (_currentWindow != null)
+                if (CurrentWindow != null)
                 {
-                    Close(_currentWindow);
-                    _currentWindow = null;
+                    Close(CurrentWindow);
                 }
-
-                _currentWindow = window;
 
                 Show(window);
             }
-        }
-
-        public void ShowNewVersionDialog(Release release)
-        {
-            var window = Resolve<UpdateAvailableWindow>();
-
-            window.DataContext = new UpdateAvailableViewModel(release);
-            window.Owner = _currentWindow;
-
-            ShowDialog(window);
-        }
-
-        public virtual void ShowErrorDialog(string message, Window owner)
-        {
-            if (owner != null)
-            {
-                MessageBox.Show(
-                    owner,
-                    message,
-                    "An error occurred",
-                    MessageBoxButton.OK,
-                    MessageBoxImage.Error);
-            }
-            else if (_currentWindow != null)
-            {
-                MessageBox.Show(
-                    _currentWindow,
-                    message,
-                    "An error occurred",
-                    MessageBoxButton.OK,
-                    MessageBoxImage.Error);
-            }
-            else
-            {
-                MessageBox.Show(
-                    message,
-                    "An error occurred",
-                    MessageBoxButton.OK,
-                    MessageBoxImage.Error);
-            }
-        }
-
-        protected virtual TType Resolve<TType>()
-        {
-            return _componentContext.Resolve<TType>();
-        }
-
-        protected virtual bool? ShowDialog(Window window)
-        {
-            return window.ShowDialog();
-        }
-
-        protected virtual void Show(Window window)
-        {
-            window.Show();
-        }
-
-        protected virtual void Close(Window window)
-        {
-            window.Close();
-        }
-
-        protected virtual bool Activate(Window window)
-        {
-            return window.Activate();
-        }
-
-        protected virtual bool? ShowDialog(CommonDialog dialog)
-        {
-            return dialog.ShowDialog(_currentWindow);
         }
     }
 }

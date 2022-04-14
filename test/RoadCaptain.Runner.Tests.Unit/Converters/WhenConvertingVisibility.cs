@@ -1,7 +1,7 @@
 ﻿using System.Globalization;
 using System.Windows;
 using FluentAssertions;
-using RoadCaptain.Runner.Converters;
+using RoadCaptain.UserInterface.Shared.Converters;
 using Xunit;
 
 namespace RoadCaptain.Runner.Tests.Unit.Converters

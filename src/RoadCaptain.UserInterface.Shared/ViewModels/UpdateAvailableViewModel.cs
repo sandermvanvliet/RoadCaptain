@@ -3,9 +3,10 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
-using RoadCaptain.RouteBuilder.Commands;
+using RoadCaptain.UserInterface.Shared.Annotations;
+using RoadCaptain.UserInterface.Shared.Commands;
 
-namespace RoadCaptain.RouteBuilder.ViewModels
+namespace RoadCaptain.UserInterface.Shared.ViewModels
 {
     public class UpdateAvailableViewModel : INotifyPropertyChanged
     {
@@ -59,14 +60,6 @@ namespace RoadCaptain.RouteBuilder.ViewModels
             }
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        [NotifyPropertyChangedInvocator]
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-
         private CommandResult OpenLink(string url)
         {
             if (Uri.TryCreate(url, UriKind.Absolute, out var uri))
@@ -82,6 +75,14 @@ namespace RoadCaptain.RouteBuilder.ViewModels
             }
 
             return CommandResult.Failure("Invalid url");
+        }
+
+        public event PropertyChangedEventHandler? PropertyChanged;
+
+        [NotifyPropertyChangedInvocator]
+        protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

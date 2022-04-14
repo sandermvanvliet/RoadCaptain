@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-namespace RoadCaptain.Runner
+namespace RoadCaptain.UserInterface.Shared
 {
     public static class TaskExtensions
     {
@@ -26,7 +26,7 @@ namespace RoadCaptain.Runner
         {
             return task?.Task is
             {
-                Status: 
+                Status:
                 TaskStatus.Created or
                 TaskStatus.WaitingForActivation or
                 TaskStatus.WaitingToRun or

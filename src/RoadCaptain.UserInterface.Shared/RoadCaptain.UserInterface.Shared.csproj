@@ -1,0 +1,49 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Assets\arrow-down-right.png" />
+    <None Remove="Assets\arrow-up-right.png" />
+    <None Remove="Assets\background.jpg" />
+    <None Remove="Assets\finish.png" />
+    <None Remove="Assets\gostraight.png" />
+    <None Remove="Assets\profile-default.png" />
+    <None Remove="Assets\turnleft.png" />
+    <None Remove="Assets\turnright.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\RoadCaptain\RoadCaptain.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="..\..\icon.png" Link="icon.png" />
+    <Resource Include="Assets\arrow-down-right.png" />
+    <Resource Include="Assets\arrow-up-right.png" />
+    <Resource Include="Assets\background.jpg" />
+    <Resource Include="Assets\finish.png" />
+    <Resource Include="Assets\gostraight.png" />
+    <Resource Include="Assets\profile-default.png" />
+    <Resource Include="Assets\turnleft.png" />
+    <Resource Include="Assets\turnright.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="UpdateAvailableWindow.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="UpdateAvailableWindow.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
+
+</Project>
