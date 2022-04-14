@@ -6,9 +6,9 @@ using System;
 using Serilog;
 using Serilog.Events;
 
-namespace RoadCaptain.RouteBuilder
+namespace RoadCaptain.UserInterface.Shared
 {
-    internal class MonitoringEventsWithSerilog : MonitoringEvents
+    public class MonitoringEventsWithSerilog : MonitoringEvents
     {
         private readonly ILogger _logger;
 

@@ -3,6 +3,7 @@
 // See LICENSE or https://choosealicense.com/licenses/artistic-2.0/
 
 using Autofac;
+using RoadCaptain.UserInterface.Shared;
 
 namespace RoadCaptain.RouteBuilder
 {
