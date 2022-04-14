@@ -24,6 +24,7 @@ namespace RoadCaptain.Adapters
         private readonly TimeSpan _queueWaitTimeout = TimeSpan.FromMilliseconds(2000);
         private bool _started;
         private static readonly object SyncRoot = new();
+        private bool _working;
 
         public InMemoryGameStateDispatcher(MonitoringEvents monitoringEvents)
         {
@@ -115,10 +116,14 @@ namespace RoadCaptain.Adapters
                 {
                     if (_queue.TryDequeue(out var message))
                     {
+                        _working = true;
+
                         InvokeHandlers(message);
                     }
                     else
                     {
+                        _working = false;
+
                         // Only wait if nothing is in the queue,
                         // otherwise loop around and take the next
                         // item from the queue without waiting.
@@ -137,6 +142,14 @@ namespace RoadCaptain.Adapters
             AddHandlerIfNotNull(_routeSelectedHandlers, routeSelected);
             AddHandlerIfNotNull(_lastSequenceNumberHandlers, lastSequenceNumber);
             AddHandlerIfNotNull(_gameStateHandlers, gameState);
+        }
+
+        public void Drain()
+        {
+            while (_working)
+            {
+
+            }
         }
 
         private static void AddHandlerIfNotNull<TMessage>(List<Action<TMessage>> collection, Action<TMessage> handler)

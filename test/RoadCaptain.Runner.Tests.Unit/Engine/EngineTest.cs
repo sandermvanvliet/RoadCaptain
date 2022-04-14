@@ -15,6 +15,7 @@ namespace RoadCaptain.Runner.Tests.Unit.Engine
     public class EngineTest : IDisposable
     {
         private readonly TaskWithCancellation _receiverTask;
+        private IGameStateReceiver _gameStateReceiver;
 
         public EngineTest()
         {
@@ -43,8 +44,8 @@ namespace RoadCaptain.Runner.Tests.Unit.Engine
 
             container.Resolve<Configuration>().Route = "someroute.json";
 
-            var gameStateReceiver = container.Resolve<IGameStateReceiver>();
-            gameStateReceiver
+            _gameStateReceiver = container.Resolve<IGameStateReceiver>();
+            _gameStateReceiver
                 .Register(
                     route =>
                     {
@@ -52,8 +53,9 @@ namespace RoadCaptain.Runner.Tests.Unit.Engine
                     },
                     null,
                     state => States.Add(state));
-            _receiverTask = TaskWithCancellation.Start(token => gameStateReceiver.Start(token));
 
+            _receiverTask = TaskWithCancellation.Start(token => _gameStateReceiver.Start(token));
+            
             Engine = container.Resolve<TestableEngine>();
             WindowService = container.Resolve<StubWindowService>();
         }
@@ -85,6 +87,10 @@ namespace RoadCaptain.Runner.Tests.Unit.Engine
         protected void ReceiveGameState(GameState state)
         {
             Engine.PushState(state);
+
+            // Ensure that the dispatcher processed
+            // all messages.
+            _gameStateReceiver.Drain();
         }
 
         protected TaskWithCancellation TheTaskWithName(string fieldName)

@@ -9,5 +9,7 @@ namespace RoadCaptain.Ports
         void Start(CancellationToken token);
         void Register(Action<PlannedRoute> routeSelected,
             Action<ulong> lastSequenceNumber, Action<GameState> gameState);
+
+        void Drain();
     }
 }
