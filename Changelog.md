@@ -8,6 +8,7 @@
 
 - Dialogs should now appear in or over the main window instead of outside of it. ([issue #26](https://github.com/sandermvanvliet/RoadCaptain/issues/26))
 - Fix an issue where opening a route after removing all segments of the current route would ask you to save the route first. ([issue #25](https://github.com/sandermvanvliet/RoadCaptain/issues/25))
+- When adding the starting segment the name is now shown in the status bar instead of just "Added segment". ([issue #24](https://github.com/sandermvanvliet/RoadCaptain/issues/24))
 
 ## 0.5.4.0
 

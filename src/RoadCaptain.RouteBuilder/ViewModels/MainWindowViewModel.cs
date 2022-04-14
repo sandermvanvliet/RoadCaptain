@@ -8,7 +8,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
-using Microsoft.Win32;
 using RoadCaptain.Ports;
 using RoadCaptain.UserInterface.Shared.Commands;
 using RoadCaptain.RouteBuilder.Models;
@@ -184,7 +183,7 @@ namespace RoadCaptain.RouteBuilder.ViewModels
 
                 SelectedSegment = newSelectedSegment;
 
-                return CommandResult.Success();
+                return CommandResult.SuccessWithWarning(newSelectedSegment.Name);
             }
 
             // Prevent selecting the same segment again
