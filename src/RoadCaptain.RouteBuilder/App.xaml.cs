@@ -19,8 +19,8 @@ namespace RoadCaptain.RouteBuilder
     // ReSharper disable once RedundantExtendsListEntry
     public partial class App : Application
     {
-        private readonly IContainer _container;
         private readonly Logger _logger;
+        private readonly IWindowService _windowService;
 
         public App()
         {
@@ -42,23 +42,16 @@ namespace RoadCaptain.RouteBuilder
                 .AddJsonFile("autofac.routebuilder.development.json", true)
                 .Build();
 
-            var builder = new ContainerBuilder();
-            
-            builder.Register(_ => _logger).SingleInstance();
+            var container = InversionOfControl
+                .ConfigureContainer(configuration, _logger, Dispatcher)
+                .Build();
 
-            builder.Register(_ => configuration).SingleInstance();
-
-            // Wire up registrations through the autofac.json file
-            builder.RegisterModule(new ConfigurationModule(configuration));
-
-            _container = builder.Build();
+            _windowService = container.Resolve<IWindowService>();
         }
 
         private void App_OnStartup(object sender, StartupEventArgs e)
         {
-            var mainWindow = _container.Resolve<MainWindow>();
-
-            mainWindow.Show();
+            _windowService.ShowMainWindow();
         }
 
         private static Logger CreateLogger()

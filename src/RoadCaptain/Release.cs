@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace RoadCaptain.Runner
+namespace RoadCaptain
 {
     public class Release
     {

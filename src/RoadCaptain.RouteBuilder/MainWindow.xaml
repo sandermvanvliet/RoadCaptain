@@ -17,6 +17,7 @@
         d:DataContext="{d:DesignInstance viewmodels:MainWindowViewModel}"
         Loaded="MainWindow_OnLoaded"
         SizeChanged="MainWindow_OnSizeChanged"
+        Activated="MainWindow_OnActivated"
         WindowState="Maximized"
         Icon="../../icon.png">
     <Window.InputBindings>

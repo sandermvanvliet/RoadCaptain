@@ -4,10 +4,11 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
+using RoadCaptain.Ports;
 
-namespace RoadCaptain.Runner
+namespace RoadCaptain.Adapters
 {
-    public class VersionChecker
+    internal class VersionChecker : IVersionChecker
     {
         public static readonly JsonSerializerSettings SerializerSettings = new()
         {

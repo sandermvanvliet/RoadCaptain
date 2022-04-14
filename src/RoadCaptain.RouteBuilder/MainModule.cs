@@ -14,10 +14,16 @@ namespace RoadCaptain.RouteBuilder
                 .RegisterType<MonitoringEventsWithSerilog>()
                 .As<MonitoringEvents>()
                 .SingleInstance();
+            
+            // Single instance because we keep track of the active window
+            builder.RegisterType<WindowService>().As<IWindowService>().SingleInstance();
+            builder.RegisterDecorator<DelegateDecorator, IWindowService>();
 
             // Register the hosted services...
             builder
                 .RegisterAssemblyTypes(ThisAssembly)
+                .Where(type => type != typeof(MonitoringEventsWithSerilog) &&
+                               type != typeof(WindowService))
                 .AsSelf();
         }
     }

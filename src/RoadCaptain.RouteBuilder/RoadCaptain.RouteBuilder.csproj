@@ -13,6 +13,7 @@
   <ItemGroup>
     <None Remove="Assets\arrow-down-right.png" />
     <None Remove="Assets\arrow-up-right.png" />
+    <None Remove="Assets\background.jpg" />
     <None Remove="Assets\finish.png" />
     <None Remove="Assets\gostraight.png" />
     <None Remove="Assets\turnleft.png" />
@@ -22,6 +23,7 @@
   <ItemGroup>
     <Resource Include="Assets\arrow-down-right.png" />
     <Resource Include="Assets\arrow-up-right.png" />
+    <Resource Include="Assets\background.jpg" />
     <Resource Include="Assets\finish.png" />
     <Resource Include="Assets\gostraight.png" />
     <Resource Include="Assets\turnleft.png" />
@@ -50,6 +52,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="UpdateAvailableWindow.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
     <None Update="autofac.routebuilder.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -59,6 +67,13 @@
     <None Update="appsettings.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="UpdateAvailableWindow.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
   </ItemGroup>
 
 </Project>

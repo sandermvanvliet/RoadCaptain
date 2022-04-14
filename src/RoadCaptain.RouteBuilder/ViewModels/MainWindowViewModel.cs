@@ -10,7 +10,6 @@ using System.Windows;
 using System.Windows.Input;
 using Microsoft.Win32;
 using RoadCaptain.Ports;
-using RoadCaptain.RouteBuilder.Annotations;
 using RoadCaptain.RouteBuilder.Commands;
 using RoadCaptain.RouteBuilder.Models;
 using SkiaSharp;
@@ -30,9 +29,14 @@ namespace RoadCaptain.RouteBuilder.ViewModels
         private Offsets _overallOffsets;
         private string _version;
         private string _changelogUri;
+        private bool _haveCheckedVersion;
+        private readonly IVersionChecker _versionChecker;
+        private readonly IWindowService _windowService;
 
-        public MainWindowViewModel(IRouteStore routeStore, ISegmentStore segmentStore)
+        public MainWindowViewModel(IRouteStore routeStore, ISegmentStore segmentStore, IVersionChecker versionChecker, IWindowService windowService)
         {
+            _versionChecker = versionChecker;
+            _windowService = windowService;
             Model = new MainWindowModel();
 
             Route = new RouteViewModel(routeStore, segmentStore);
@@ -561,6 +565,24 @@ namespace RoadCaptain.RouteBuilder.ViewModels
         private void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        public void CheckForNewVersion()
+        {
+            if (_haveCheckedVersion)
+            {
+                return;
+            }
+
+            _haveCheckedVersion = true;
+
+            var currentVersion = System.Version.Parse(Version);
+            var latestRelease = _versionChecker.GetLatestRelease();
+
+            if (latestRelease != null && latestRelease.Version > currentVersion)
+            {
+                _windowService.ShowNewVersionDialog(latestRelease);
+            }
         }
     }
 

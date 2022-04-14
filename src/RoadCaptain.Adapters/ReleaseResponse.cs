@@ -1,4 +1,4 @@
-﻿namespace RoadCaptain.Runner
+﻿namespace RoadCaptain.Adapters
 {
     internal class ReleaseResponse
     {

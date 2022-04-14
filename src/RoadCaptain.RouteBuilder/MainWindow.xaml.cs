@@ -3,6 +3,7 @@
 // See LICENSE or https://choosealicense.com/licenses/artistic-2.0/
 
 using System;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -190,6 +191,11 @@ namespace RoadCaptain.RouteBuilder
                     _windowViewModel.RemoveLastSegmentCommand.Execute(null);
                 }
             }
+        }
+
+        private void MainWindow_OnActivated(object? sender, EventArgs e)
+        {
+            Task.Factory.StartNew(() => _windowViewModel.CheckForNewVersion());
         }
     }
 }

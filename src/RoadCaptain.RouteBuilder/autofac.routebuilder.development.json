@@ -6,7 +6,7 @@
     {
       "type": "RoadCaptain.Adapters.AdaptersModule, RoadCaptain.Adapters",
       "properties": {
-        "MessageReceiverSource": "file",
+        "MessageReceiverSource": "socket",
         "CaptureFilePath": "c:\\git\\temp\\zwift\\rc-run-13.pcapng"
       }
     },

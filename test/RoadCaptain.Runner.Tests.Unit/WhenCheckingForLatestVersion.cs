@@ -4,6 +4,7 @@ using System.Net.Http;
 using Codenizer.HttpClient.Testable;
 using FluentAssertions;
 using Newtonsoft.Json;
+using RoadCaptain.Adapters;
 using Xunit;
 
 namespace RoadCaptain.Runner.Tests.Unit

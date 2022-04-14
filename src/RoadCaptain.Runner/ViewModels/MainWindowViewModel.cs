@@ -31,7 +31,7 @@ namespace RoadCaptain.Runner.ViewModels
         private string _version;
         private string _changelogUri;
         private PlannedRoute _route;
-        private readonly VersionChecker _versionChecker;
+        private readonly IVersionChecker _versionChecker;
         private bool _haveCheckedVersion;
 
         public MainWindowViewModel(Configuration configuration,
@@ -40,7 +40,7 @@ namespace RoadCaptain.Runner.ViewModels
             IGameStateDispatcher gameStateDispatcher,
             LoadRouteUseCase loadRouteUseCase,
             IRouteStore routeStore, 
-            VersionChecker versionChecker)
+            IVersionChecker versionChecker)
         {
             _configuration = configuration;
             _appSettings = appSettings;
