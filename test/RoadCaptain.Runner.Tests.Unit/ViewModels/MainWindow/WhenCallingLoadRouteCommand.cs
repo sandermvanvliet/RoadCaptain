@@ -23,7 +23,8 @@ namespace RoadCaptain.Runner.Tests.Unit.ViewModels.MainWindow
                 _windowService,
                 null,
                 new LoadRouteUseCase(gameStateDispatcher, routeStore),
-                routeStore);
+                routeStore,
+                null);
         }
 
         [Fact]

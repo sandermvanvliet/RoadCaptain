@@ -4,7 +4,6 @@
 
 using System;
 using System.Windows;
-using System.Windows.Threading;
 using Autofac;
 using Microsoft.Extensions.Configuration;
 using Serilog.Core;

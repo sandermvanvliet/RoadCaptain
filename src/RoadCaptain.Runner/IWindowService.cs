@@ -11,5 +11,6 @@ namespace RoadCaptain.Runner
         TokenResponse ShowLogInDialog(Window owner);
         void ShowErrorDialog(string message, Window owner = null);
         void ShowMainWindow();
+        void ShowNewVersionDialog(Release release);
     }
 }

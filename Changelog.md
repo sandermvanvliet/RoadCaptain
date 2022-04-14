@@ -1,5 +1,11 @@
 ﻿# Changelog
 
+## 0.5.5.0
+
+### Runner
+
+- When starting RoadCaptain the Runner will now check if there is a new release available and shows a window to inform you if there is: ![Screenshot of a window showing the new version information](./images/runner-new-version.png) ([issue #15](https://github.com/sandermvanvliet/RoadCaptain/issues/15))
+
 ## 0.5.4.0
 
 ### Runner

@@ -58,6 +58,16 @@ namespace RoadCaptain.Runner
             }
         }
 
+        public void ShowNewVersionDialog(Release release)
+        {
+            var window = Resolve<UpdateAvailableWindow>();
+
+            window.DataContext = new UpdateAvailableViewModel(release);
+            window.Owner = _currentWindow;
+
+            ShowDialog(window);
+        }
+
         public void ShowInGameWindow(InGameNavigationWindowViewModel viewModel)
         {
             var inGameWindow = Resolve<InGameNavigationWindow>();

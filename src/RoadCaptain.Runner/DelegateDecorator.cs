@@ -42,6 +42,11 @@ namespace RoadCaptain.Runner
             InvokeIfNeeded(() => _decorated.ShowMainWindow());
         }
 
+        public void ShowNewVersionDialog(Release release)
+        {
+            InvokeIfNeeded(() => _decorated.ShowNewVersionDialog(release));
+        }
+
         private TResult InvokeIfNeeded<TResult>(Func<TResult> action)
         {
             if (!_dispatcher.CheckAccess())

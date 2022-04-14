@@ -28,7 +28,8 @@ namespace RoadCaptain.Runner.Tests.Unit.ViewModels.MainWindow
                 _windowService,
                 _gameStateDispatcher,
                 new LoadRouteUseCase(_gameStateDispatcher, routeStore),
-                routeStore);
+                routeStore,
+                null);
 
             _windowService
                 .Overrides

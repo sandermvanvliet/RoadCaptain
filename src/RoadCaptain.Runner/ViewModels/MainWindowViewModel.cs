@@ -31,13 +31,16 @@ namespace RoadCaptain.Runner.ViewModels
         private string _version;
         private string _changelogUri;
         private PlannedRoute _route;
+        private readonly VersionChecker _versionChecker;
+        private bool _haveCheckedVersion;
 
         public MainWindowViewModel(Configuration configuration,
             AppSettings appSettings,
             IWindowService windowService,
-            IGameStateDispatcher gameStateDispatcher, 
+            IGameStateDispatcher gameStateDispatcher,
             LoadRouteUseCase loadRouteUseCase,
-            IRouteStore routeStore)
+            IRouteStore routeStore, 
+            VersionChecker versionChecker)
         {
             _configuration = configuration;
             _appSettings = appSettings;
@@ -45,6 +48,7 @@ namespace RoadCaptain.Runner.ViewModels
             _gameStateDispatcher = gameStateDispatcher;
             _loadRouteUseCase = loadRouteUseCase;
             _routeStore = routeStore;
+            _versionChecker = versionChecker;
 
             if (IsValidToken(configuration.AccessToken))
             {
@@ -218,7 +222,6 @@ namespace RoadCaptain.Runner.ViewModels
         public ICommand LoadRouteCommand { get; set; }
         public ICommand LogInCommand { get; set; }
         public ICommand BuildRouteCommand { get; set; }
-
         public ICommand OpenLinkCommand { get; set; }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -228,6 +231,24 @@ namespace RoadCaptain.Runner.ViewModels
             if (state is InvalidCredentialsState)
             {
                 LogoutFromZwift();
+            }
+        }
+
+        public void CheckForNewVersion()
+        {
+            if (_haveCheckedVersion)
+            {
+                return;
+            }
+
+            _haveCheckedVersion = true;
+
+            var currentVersion = System.Version.Parse(Version);
+            var latestRelease = _versionChecker.GetLatestRelease();
+
+            if (latestRelease != null && latestRelease.Version > currentVersion)
+            {
+                _windowService.ShowNewVersionDialog(latestRelease);
             }
         }
 
@@ -284,7 +305,7 @@ namespace RoadCaptain.Runner.ViewModels
 
             return CommandResult.Success();
         }
-        
+
         private CommandResult LaunchRouteBuilder()
         {
             var assemblyLocation = GetType().Assembly.Location;
@@ -307,7 +328,7 @@ namespace RoadCaptain.Runner.ViewModels
 
             _appSettings.Route = RoutePath;
             _appSettings.Save();
-            
+
             _loadRouteUseCase.Execute(new LoadRouteCommand { Path = RoutePath });
 
             _gameStateDispatcher.Dispatch(new WaitingForConnectionState());
@@ -342,19 +363,20 @@ namespace RoadCaptain.Runner.ViewModels
 
         private CommandResult OpenLink(string url)
         {
-            if (Uri.TryCreate(url, UriKind.Absolute, out var uri))
+            if (!Uri.TryCreate(url, UriKind.Absolute, out var uri))
             {
-                var startInfo = new ProcessStartInfo(uri.ToString())
-                {
-                    UseShellExecute = true
-                };
-
-                Process.Start(startInfo);
-
-                return CommandResult.Success();
+                return CommandResult.Failure("Invalid url");
             }
 
-            return CommandResult.Failure("Invalid url");
+            var startInfo = new ProcessStartInfo(uri.ToString())
+            {
+                UseShellExecute = true
+            };
+
+            Process.Start(startInfo);
+
+            return CommandResult.Success();
+
         }
     }
 }
