@@ -230,7 +230,7 @@ namespace RoadCaptain.RouteBuilder.ViewModels
             }
             
 
-            IsTainted = true;
+            IsTainted = _sequence.Any();
 
             OnPropertyChanged(nameof(Sequence));
             OnPropertyChanged(nameof(TotalDistance));
