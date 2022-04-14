@@ -41,7 +41,6 @@ namespace RoadCaptain.UserInterface.Shared
             var window = Resolve<UpdateAvailableWindow>();
 
             window.DataContext = new UpdateAvailableViewModel(release);
-            window.Owner = CurrentWindow;
 
             ShowDialog(window);
         }
@@ -83,6 +82,11 @@ namespace RoadCaptain.UserInterface.Shared
 
         protected virtual bool? ShowDialog(Window window)
         {
+            if (window.Owner == null)
+            {
+                window.Owner = CurrentWindow;
+            }
+
             return window.ShowDialog();
         }
 

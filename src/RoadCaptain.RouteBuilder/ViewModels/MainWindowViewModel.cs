@@ -361,23 +361,14 @@ namespace RoadCaptain.RouteBuilder.ViewModels
 
         private CommandResult SaveRoute()
         {
-            var dialog = new SaveFileDialog
-            {
-                RestoreDirectory = true,
-                AddExtension = true,
-                DefaultExt = ".json",
-                Filter = "JSON files (.json)|*.json|GPS Exchange Format (.gpx)|*.gpx",
-                InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
-            };
+            var routeOutputFilePath = _windowService.ShowSaveFileDialog();
 
-            var result = dialog.ShowDialog();
-
-            if (!result.HasValue || !result.Value)
+            if (string.IsNullOrEmpty(routeOutputFilePath))
             {
                 return CommandResult.Success();
             }
 
-            Route.OutputFilePath = dialog.FileName;
+            Route.OutputFilePath = routeOutputFilePath;
 
             try
             {
@@ -419,24 +410,14 @@ namespace RoadCaptain.RouteBuilder.ViewModels
                 }
             }
 
-            var dialog = new OpenFileDialog
-            {
-                RestoreDirectory = true,
-                AddExtension = true,
-                DefaultExt = ".json",
-                Filter = "JSON files (.json)|*.json",
-                Multiselect = false,
-                InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
-            };
+            var fileName = _windowService.ShowOpenFileDialog();
 
-            var result = dialog.ShowDialog();
-
-            if (!result.HasValue || !result.Value)
+            if (string.IsNullOrEmpty(fileName))
             {
                 return CommandResult.Success();
             }
 
-            Route.OutputFilePath = dialog.FileName;
+            Route.OutputFilePath = fileName;
 
             SelectedSegment = null;
 

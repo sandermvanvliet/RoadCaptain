@@ -8,5 +8,6 @@ namespace RoadCaptain.RouteBuilder
         void ShowErrorDialog(string message, Window owner = null);
         void ShowMainWindow();
         void ShowNewVersionDialog(Release release);
+        string ShowSaveFileDialog();
     }
 }

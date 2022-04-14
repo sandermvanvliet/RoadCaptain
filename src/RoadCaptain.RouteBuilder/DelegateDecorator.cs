@@ -35,6 +35,11 @@ namespace RoadCaptain.RouteBuilder
             InvokeIfNeeded(() => _decorated.ShowNewVersionDialog(release));
         }
 
+        public string ShowSaveFileDialog()
+        {
+            return InvokeIfNeeded(() => _decorated.ShowSaveFileDialog());
+        }
+
         private TResult InvokeIfNeeded<TResult>(Func<TResult> action)
         {
             if (!_dispatcher.CheckAccess())
