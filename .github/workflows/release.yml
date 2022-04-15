@@ -29,6 +29,12 @@ jobs:
       run: dotnet build --no-restore -c Release .\RoadCaptain.sln
     - name: Test
       run: dotnet test --no-build --verbosity normal -c Release
+    - name: Publish Runner
+      run: dotnet publish --no-restore --no-build -c Release src\RoadCaptain.Runner\RoadCaptain.Runner.csproj
+    - name: Publish RouteBuilder
+      run: dotnet publish --no-restore --no-build -c Release src\RoadCaptain.RouteBuilder\RoadCaptain.RouteBuilder.csproj
+    - name: Update Wix components file
+      run: dotnet run --project .\packaging\RoadCaptain.WixComponentFileGenerator\RoadCaptain.WixComponentFileGenerator.csproj src\RoadCaptain.Runner\bin\Release\net6.0-windows\publish src\RoadCaptain.RouteBuilder\bin\Release\net6.0-windows\publish .\packaging\RoadCaptain.Installer\Components.wxi
     - name: Add msbuild to PATH
       uses: microsoft/setup-msbuild@v1.1
     - name: Build MSI
