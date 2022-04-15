@@ -2,27 +2,32 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Xml.Linq;
+using System.Xml.XPath;
 
 namespace RoadCaptain.WixComponentFileGenerator
 {
     public class WixFileGenerator
     {
-        private readonly StreamWriter _writer;
-
-        private const string Template = @"
-        <Component Id=""##PREFIX####FILENAME##"" Guid=""##GUID##"">
-            <File Id=""##PREFIX####FILENAME##"" Name=""##FILENAME##"" Source=""$(##TARGETDIR##)##TARGETDIRPREFIX####FILENAME##"" ##KEYPATH##/>
-        </Component>";
+        private readonly XDocument _doc;
+        private readonly string _outputPath;
 
         public WixFileGenerator(string outputPath)
         {
-            _writer = new StreamWriter(outputPath);
+            _outputPath = outputPath;
+
+            if (File.Exists(outputPath))
+            {
+                _doc = XDocument.Load(outputPath);
+            }
+            else
+            {
+                _doc = new XDocument();
+            }
         }
 
         public void Generate(string runnerArtifactsPath, string routeBuilderArtifactsPath)
         {
-            _writer.WriteLine("<Include>");
-
             var runnerFiles = Directory.GetFiles(runnerArtifactsPath).Select(Path.GetFileName).ToList();
             var runnerNativeFiles = Directory.GetFiles(Path.Combine(runnerArtifactsPath, "runtimes", "win-x64", "native")).Select(Path.GetFileName).ToList();
 
@@ -34,6 +39,11 @@ namespace RoadCaptain.WixComponentFileGenerator
             runnerFiles = runnerFiles.Except(commonFiles).ToList();
             routeBuilderFiles = routeBuilderFiles.Except(commonFiles).ToList();
             
+            if (_doc.Root == null)
+            {
+                _doc.Add(new XElement(XName.Get("Include")));
+            }
+
             RenderFragment(commonFiles, @"CommonComponents", "Runner");
 
             RenderFragment(runnerFiles, @"RunnerComponents", "Runner", "Runner");
@@ -41,40 +51,53 @@ namespace RoadCaptain.WixComponentFileGenerator
             
             RenderFragment(runnerNativeFiles, @"RunnerNativeComponents", "Runner", "Runner", "runtimes\\win-x64\\native\\");
             RenderFragment(routeBuilderNativeFiles, @"RouteBuilderNativeComponents", "RouteBuilder", "RouteBuilder", "runtimes\\win-x64\\native\\");
-
-            _writer.WriteLine("\n</Include>");
-            _writer.Flush();
-            _writer.Close();
+            
+            _doc.Save(_outputPath, SaveOptions.OmitDuplicateNamespaces);
         }
 
         private void RenderFragment(List<string> files, string componentId, string targetDir, string prefix = "", string targetDirPrefix = "")
         {
             var componentDirectory = targetDirPrefix.EndsWith("native\\") ? "native" : @"INSTALLFOLDER";
 
-            _writer.Write($@"
-<Fragment>
-    <ComponentGroup Id=""{componentId}"" Directory=""{componentDirectory}"">");
-            foreach (var file in files)
+            var componentGroup = _doc.XPathSelectElement($"/Include/Fragment/ComponentGroup[@Id='{componentId}']");
+            
+            if (componentGroup == null)
             {
-                var generated = RenderTemplate(file, $"var.RoadCaptain.{targetDir}_TargetDir", prefix == "" ? "" : $"{prefix}_", targetDirPrefix);
-
-                _writer.Write(generated);
+                var fragment = new XElement(XName.Get("Fragment"));
+                componentGroup = new XElement(XName.Get("ComponentGroup"));
+                componentGroup.Add(new XAttribute(XName.Get("Id"), componentId));
+                componentGroup.Add(new XAttribute(XName.Get("Directory"), componentDirectory));
+                fragment.Add(componentGroup);
+                _doc.Root.Add(fragment);
             }
 
-            _writer.Write(@"
-    </ComponentGroup>
-</Fragment>");
-        }
+            foreach (var file in files)
+            {
+                var fileWithPrefix = string.IsNullOrEmpty(prefix)
+                    ? file
+                    : $"{prefix}_{file}";
 
-        private static string RenderTemplate(string file, string targetDir, string prefix, string targetDirPrefix)
-        {
-            return Template
-                .Replace("##FILENAME##", file)
-                .Replace("##GUID##", Guid.NewGuid().ToString("D"))
-                .Replace("##TARGETDIR##", targetDir)
-                .Replace("##TARGETDIRPREFIX##", targetDirPrefix)
-                .Replace("##PREFIX##", prefix)
-                .Replace("##KEYPATH##", file.EndsWith(".exe") ? "KeyPath=\"yes\" " : "");
+                var component = componentGroup.XPathSelectElement($"Component[@Id='{fileWithPrefix}']");
+
+                if (component == null)
+                {
+                    var componentFile = new XElement(XName.Get("File"));
+                    componentFile.Add(new XAttribute("Id", fileWithPrefix));
+                    componentFile.Add(new XAttribute("Name", file));
+                    componentFile.Add(new XAttribute("Source", $"(var.RoadCaptain.{targetDir}_TargetDir){targetDirPrefix}{file}"));
+                    if (file.EndsWith(".exe"))
+                    {
+                        componentFile.Add(new XAttribute(XName.Get("KeyPath"), "yes"));
+                    }
+
+                    component = new XElement(XName.Get("Component"));
+                    component.Add(new XAttribute(XName.Get("Id"), fileWithPrefix));
+                    component.Add(new XAttribute(XName.Get("Guid"), Guid.NewGuid().ToString("D")));
+                    component.Add(componentFile);
+                    
+                    componentGroup.Add(component);
+                }
+            }
         }
     }
 }
