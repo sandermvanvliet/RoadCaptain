@@ -72,6 +72,7 @@ namespace RoadCaptain.WixComponentFileGenerator
                 _doc.Root.Add(fragment);
             }
 
+            // Add files missing in the Wix file
             foreach (var file in files)
             {
                 var fileWithPrefix = string.IsNullOrEmpty(prefix)
@@ -99,6 +100,18 @@ namespace RoadCaptain.WixComponentFileGenerator
                     component.Add(componentFile);
                     
                     componentGroup.Add(component);
+                }
+            }
+
+            // Remove files that are in the Wix file but no longer published
+            foreach (var file in componentGroup.Descendants(XName.Get("File")).ToList())
+            {
+                var fileName = file.Attribute(XName.Get("Name")).Value;
+
+                if (!files.Contains(fileName))
+                {
+                    Console.WriteLine($"Removing file {fileName} becauase it's not part of the release anymore");
+                    file.Parent.Remove();
                 }
             }
         }

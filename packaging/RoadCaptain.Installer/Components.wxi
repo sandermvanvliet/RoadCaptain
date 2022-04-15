@@ -160,9 +160,6 @@
   </Fragment>
   <Fragment>
     <ComponentGroup Id="RouteBuilderComponents" Directory="INSTALLFOLDER">
-      <Component Id="RouteBuilder_appsettings.json" Guid="cbbe596a-a24f-417c-8fa6-d155c4df39dd">
-        <File Id="RouteBuilder_appsettings.json" Name="appsettings.json" Source="$(var.RoadCaptain.RouteBuilder_TargetDir)appsettings.json" />
-      </Component>
       <Component Id="RouteBuilder_autofac.routebuilder.json" Guid="362e30ce-9475-404e-9125-d0a42f42810d">
         <File Id="RouteBuilder_autofac.routebuilder.json" Name="autofac.routebuilder.json" Source="$(var.RoadCaptain.RouteBuilder_TargetDir)autofac.routebuilder.json" />
       </Component>
