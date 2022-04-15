@@ -1,4 +1,4 @@
-﻿namespace RoadCaptain.RouteBuilder.ViewModels
+﻿namespace RoadCaptain.RouteBuilder.Models
 {
     internal class SpawnPoint
     {

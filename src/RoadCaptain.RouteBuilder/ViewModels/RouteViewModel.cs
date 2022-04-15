@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using RoadCaptain.Ports;
+using RoadCaptain.RouteBuilder.Models;
 using RoadCaptain.UserInterface.Shared.Commands;
 
 namespace RoadCaptain.RouteBuilder.ViewModels
