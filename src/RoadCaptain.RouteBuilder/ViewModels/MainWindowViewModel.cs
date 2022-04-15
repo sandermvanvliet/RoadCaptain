@@ -20,7 +20,7 @@ namespace RoadCaptain.RouteBuilder.ViewModels
     {
         private Segment _selectedSegment;
         private readonly Dictionary<string, SKRect> _segmentPathBounds = new();
-        private readonly List<Segment> _segments;
+        private List<Segment> _segments;
         private Task _simulationTask;
         private SKPoint? _riderPosition;
         private SimulationState _simulationState = SimulationState.NotStarted;
@@ -31,17 +31,18 @@ namespace RoadCaptain.RouteBuilder.ViewModels
         private bool _haveCheckedVersion;
         private readonly IVersionChecker _versionChecker;
         private readonly IWindowService _windowService;
+        private readonly IWorldStore _worldStore;
+        private World[] _worlds;
 
         public MainWindowViewModel(IRouteStore routeStore, ISegmentStore segmentStore, IVersionChecker versionChecker, IWindowService windowService, IWorldStore worldStore)
         {
             _versionChecker = versionChecker;
             _windowService = windowService;
+            _worldStore = worldStore;
             Model = new MainWindowModel();
+            Worlds = worldStore.LoadWorlds();
 
-            Route = new RouteViewModel(routeStore, segmentStore)
-            {
-                World = worldStore.LoadWorldById("watopia")
-            };
+            Route = new RouteViewModel(routeStore, segmentStore);
 
             Route.PropertyChanged += (_, args) =>
             {
@@ -60,10 +61,15 @@ namespace RoadCaptain.RouteBuilder.ViewModels
                     }
                 }
 
+                if (args.PropertyName == nameof(Route.World))
+                {
+                    _segments = segmentStore.LoadSegments(Route.World);
+                }
+
                 OnPropertyChanged(nameof(Route));
             };
 
-            _segments = segmentStore.LoadSegments(Route.World);
+            _segments = new List<Segment>();
 
             SaveRouteCommand = new RelayCommand(
                     _ => SaveRoute(),
@@ -113,6 +119,10 @@ namespace RoadCaptain.RouteBuilder.ViewModels
                 _ => OpenLink(_ as string),
                 _ => !string.IsNullOrEmpty(_ as string));
 
+            SelectWorldCommand = new RelayCommand(
+                _ => SelectWorld(_ as string),
+                _ => true);
+
             Version = GetType().Assembly.GetName().Version?.ToString(4) ?? "0.0.0.0";
         }
 
@@ -128,6 +138,7 @@ namespace RoadCaptain.RouteBuilder.ViewModels
         public ICommand RemoveLastSegmentCommand { get; }
         public ICommand SimulateCommand { get; }
         public ICommand OpenLinkCommand { get; set; }
+        public ICommand SelectWorldCommand { get; }
 
         public Segment SelectedSegment
         {
@@ -438,6 +449,13 @@ namespace RoadCaptain.RouteBuilder.ViewModels
             }
         }
 
+        private CommandResult SelectWorld(string worldId)
+        {
+            Route.World = _worldStore.LoadWorldById(worldId);
+            
+            return CommandResult.Success();
+        }
+
         private void CreateRoutePath()
         {
             RoutePath = new SKPath();
@@ -541,6 +559,17 @@ namespace RoadCaptain.RouteBuilder.ViewModels
             {
                 if (value == _changelogUri) return;
                 _changelogUri = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public World[] Worlds
+        {
+            get => _worlds;
+            set
+            {
+                if (value == _worlds) return;
+                _worlds = value;
                 OnPropertyChanged();
             }
         }

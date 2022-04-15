@@ -9,8 +9,10 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:converters="clr-namespace:RoadCaptain.UserInterface.Shared.Converters;assembly=RoadCaptain.UserInterface.Shared"
         xmlns:viewmodels="clr-namespace:RoadCaptain.RouteBuilder.ViewModels"
         xmlns:skia="clr-namespace:SkiaSharp.Views.WPF;assembly=SkiaSharp.Views.WPF"
+        xmlns:roadCaptain="clr-namespace:RoadCaptain;assembly=RoadCaptain"
         mc:Ignorable="d"
         Title="{Binding Path=Model.WindowTitle}" 
         Height="450" Width="800"
@@ -45,7 +47,7 @@
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
-        </Style>        
+        </Style>
         <Style x:Key="LinkButtonStyle" TargetType="Button">
             <Setter Property="Background" Value="Transparent" />
             <Setter Property="Foreground" Value="White" />
@@ -54,6 +56,26 @@
             <Setter Property="Cursor" Value="Hand" />
             <Setter Property="Padding" Value="0" />
         </Style>
+        <Style x:Key="WorldButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="White" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Name="borderZero" Background="{TemplateBinding Background}" CornerRadius="5" BorderBrush="#FF6141" BorderThickness="1"
+                                Width="200" Height="100">
+                            <ContentPresenter HorizontalAlignment="Left" VerticalAlignment="Top" Margin="4,4,4,4" />
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#FF6141" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        <converters:NullabilityConverter x:Key="NullabilityConverter" />
     </Window.Resources>
     <DockPanel>
         <Grid 
@@ -70,10 +92,10 @@
                        Text="{Binding Path=Model.StatusBarText, FallbackValue=Ready,TargetNullValue=Ready}"
                        Foreground="{Binding Path=Model.StatusBarForeground,FallbackValue={x:Static Brushes.White}}" />
             <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Right" IsEnabled="True">
-                    <TextBlock Text="Version:" Foreground="White" />
-                    <Button Content="{Binding Path=Version}" d:Content="0.0.0.0" Margin="4,0,2,0" CommandParameter="{Binding Path=ChangelogUri}" Command="{Binding Path=OpenLinkCommand}" Style="{StaticResource LinkButtonStyle}" />
+                <TextBlock Text="Version:" Foreground="White" />
+                <Button Content="{Binding Path=Version}" d:Content="0.0.0.0" Margin="4,0,2,0" CommandParameter="{Binding Path=ChangelogUri}" Command="{Binding Path=OpenLinkCommand}" Style="{StaticResource LinkButtonStyle}" />
                 <TextBlock Text="🔗" Margin="0,0,4,0" />
-                </StackPanel>
+            </StackPanel>
         </Grid>
         <Grid Margin="0,2,2,0">
             <Grid.ColumnDefinitions>
@@ -88,6 +110,45 @@
                         Cursor="Hand">
             </skia:SKElement>
 
+            <Grid Grid.Row="0" Grid.Column="1"
+                  Visibility="{Binding Path=Route.World,Converter={StaticResource NullabilityConverter},ConverterParameter=invert}"
+                  d:Visibility="Visible"
+                  Margin="3,40,4,4">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="30" />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+                <TextBlock Text="Select a world to build a route for:" FontSize="16" Grid.Row="0" />
+                <ItemsControl ItemsSource="{Binding Path=Worlds}" Grid.Row="1">
+                    <ItemsControl.Template>
+                        <ControlTemplate TargetType="ItemsControl">
+                            <ItemsPresenter/>
+                        </ControlTemplate>
+                    </ItemsControl.Template>
+                    <!--Use the ItemsPanel property to specify an ItemsPanelTemplate
+      that defines the panel that is used to hold the generated items.
+      In other words, use this property if you want to affect
+      how the items are laid out.-->
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate DataType="{x:Type roadCaptain:World}">
+                            <Button Style="{StaticResource WorldButtonStyle}" Command="{Binding Path=DataContext.SelectWorldCommand, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=Window}}" CommandParameter="{Binding Path=Id}">
+                                <Button.Content>
+                                    <StackPanel Orientation="Vertical">
+                                        <TextBlock Text="{Binding Path=Name}" FontWeight="Bold" />
+                                        <TextBlock Text="{Binding Path=Description}" />
+                                    </StackPanel>
+                                </Button.Content>
+                            </Button>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </Grid>
+
             <StackPanel Grid.Row="0" Grid.Column="1" 
                         Panel.ZIndex="2" 
                         VerticalAlignment="Top" 
@@ -99,7 +160,8 @@
                 <Button Command="{Binding Path=SimulateCommand}" ToolTip="Simulate route" Cursor="Hand">
                     <Button.Style>
                         <Style TargetType="{x:Type Button}" BasedOn="{StaticResource ButtonStyle}">
-                            <Setter Property="Content" Value="▶️" /> <!-- default value -->
+                            <Setter Property="Content" Value="▶️" />
+                            <!-- default value -->
                             <Style.Triggers>
                                 <DataTrigger Binding="{Binding Path=SimulationState}" Value="Running">
                                     <Setter Property="Content" Value="⏸️" />

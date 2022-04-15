@@ -3,6 +3,7 @@
 // See LICENSE or https://choosealicense.com/licenses/artistic-2.0/
 
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -72,6 +73,15 @@ namespace RoadCaptain.RouteBuilder
                     if (RouteListView.Items.Count > 0)
                     {
                         RouteListView.ScrollIntoView(RouteListView.Items[^1]);
+                    }
+
+                    // When a world is selected the path segments
+                    // need to be generated which needs the canvas
+                    // size. Therefore we need to call that from
+                    // this handler
+                    if (_windowViewModel.Route.World != null && !_windowViewModel.SegmentPaths.Any())
+                    {
+                        _windowViewModel.CreatePathsForSegments(SkElement.CanvasSize.Width);
                     }
 
                     // Redraw when the route changes so that the
