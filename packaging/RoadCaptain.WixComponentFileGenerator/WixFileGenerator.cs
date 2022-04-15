@@ -87,7 +87,7 @@ namespace RoadCaptain.WixComponentFileGenerator
                     var componentFile = new XElement(XName.Get("File"));
                     componentFile.Add(new XAttribute("Id", fileWithPrefix));
                     componentFile.Add(new XAttribute("Name", file));
-                    componentFile.Add(new XAttribute("Source", $"(var.RoadCaptain.{targetDir}_TargetDir){targetDirPrefix}{file}"));
+                    componentFile.Add(new XAttribute("Source", $"$(var.RoadCaptain.{targetDir}_TargetDir){targetDirPrefix}{file}"));
                     if (file.EndsWith(".exe"))
                     {
                         componentFile.Add(new XAttribute(XName.Get("KeyPath"), "yes"));
