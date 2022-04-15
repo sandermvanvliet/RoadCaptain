@@ -86,199 +86,206 @@
 		</DirectoryRef>
 	</Fragment>
 
+
 	<Fragment>
 		<ComponentGroup Id="CommonComponents" Directory="INSTALLFOLDER">
-			<Component Id="Autofac.Configuration.dll" Guid="b044f0b7-7ab2-494c-b25f-614bf47bad6b">
+			<Component Id="Autofac.Configuration.dll" Guid="6191e7c3-d39c-441e-a51b-987f643cee90">
 				<File Id="Autofac.Configuration.dll" Name="Autofac.Configuration.dll" Source="$(var.RoadCaptain.Runner_TargetDir)Autofac.Configuration.dll" />
 			</Component>
-			<Component Id="Autofac.dll" Guid="8d81355b-fa1f-42bd-aa1c-d564c0818e44">
+			<Component Id="Autofac.dll" Guid="c0511071-d64c-4cfd-964b-802de08be1dd">
 				<File Id="Autofac.dll" Name="Autofac.dll" Source="$(var.RoadCaptain.Runner_TargetDir)Autofac.dll" />
 			</Component>
-			<Component Id="Autofac.Extensions.DependencyInjection.dll" Guid="211367a1-3687-4b20-80bc-8b1b0eafcded">
+			<Component Id="Autofac.Extensions.DependencyInjection.dll" Guid="3b7aa307-72fb-4c71-b32a-c0a1425d6ff0">
 				<File Id="Autofac.Extensions.DependencyInjection.dll" Name="Autofac.Extensions.DependencyInjection.dll" Source="$(var.RoadCaptain.Runner_TargetDir)Autofac.Extensions.DependencyInjection.dll" />
 			</Component>
-			<Component Id="Codenizer.HttpClient.Testable.dll" Guid="fd44b11f-5612-4e94-b43a-e49a314172f1">
+			<Component Id="Codenizer.HttpClient.Testable.dll" Guid="dd952b14-0848-41a7-834d-fcc75143c2a5">
 				<File Id="Codenizer.HttpClient.Testable.dll" Name="Codenizer.HttpClient.Testable.dll" Source="$(var.RoadCaptain.Runner_TargetDir)Codenizer.HttpClient.Testable.dll" />
 			</Component>
-			<Component Id="Google.Protobuf.dll" Guid="328f2b4d-5a37-4cfe-98df-6b9ccae4adcb">
+			<Component Id="Google.Protobuf.dll" Guid="62160538-821e-45cd-b44a-3cee6936004a">
 				<File Id="Google.Protobuf.dll" Name="Google.Protobuf.dll" Source="$(var.RoadCaptain.Runner_TargetDir)Google.Protobuf.dll" />
 			</Component>
-			<Component Id="Microsoft.Extensions.Configuration.Abstractions.dll" Guid="fdb30de3-4920-4b3a-98cc-1f97d78428d6">
+			<Component Id="Microsoft.Extensions.Configuration.Abstractions.dll" Guid="ad666263-ec57-43d4-b22c-407c7379ece3">
 				<File Id="Microsoft.Extensions.Configuration.Abstractions.dll" Name="Microsoft.Extensions.Configuration.Abstractions.dll" Source="$(var.RoadCaptain.Runner_TargetDir)Microsoft.Extensions.Configuration.Abstractions.dll" />
 			</Component>
-			<Component Id="Microsoft.Extensions.Configuration.Binder.dll" Guid="9c8a3e81-cbb8-458a-a626-c14d269f46d1">
+			<Component Id="Microsoft.Extensions.Configuration.Binder.dll" Guid="299b4136-48af-42ee-a1ea-df131ae34f62">
 				<File Id="Microsoft.Extensions.Configuration.Binder.dll" Name="Microsoft.Extensions.Configuration.Binder.dll" Source="$(var.RoadCaptain.Runner_TargetDir)Microsoft.Extensions.Configuration.Binder.dll" />
 			</Component>
-			<Component Id="Microsoft.Extensions.Configuration.dll" Guid="e9af6bd0-78da-46b7-b12f-121d8c87bb82">
+			<Component Id="Microsoft.Extensions.Configuration.dll" Guid="2e86cd9c-2d83-4825-9468-d1450b888246">
 				<File Id="Microsoft.Extensions.Configuration.dll" Name="Microsoft.Extensions.Configuration.dll" Source="$(var.RoadCaptain.Runner_TargetDir)Microsoft.Extensions.Configuration.dll" />
 			</Component>
-			<Component Id="Microsoft.Extensions.Configuration.FileExtensions.dll" Guid="2549f07e-06d6-48a8-ac6c-e7664b1583f0">
+			<Component Id="Microsoft.Extensions.Configuration.FileExtensions.dll" Guid="793c013f-8759-4ce5-bfd9-860a520c23ac">
 				<File Id="Microsoft.Extensions.Configuration.FileExtensions.dll" Name="Microsoft.Extensions.Configuration.FileExtensions.dll" Source="$(var.RoadCaptain.Runner_TargetDir)Microsoft.Extensions.Configuration.FileExtensions.dll" />
 			</Component>
-			<Component Id="Microsoft.Extensions.Configuration.Json.dll" Guid="29bef886-3edf-4088-9634-92e2f4f6a2a4">
+			<Component Id="Microsoft.Extensions.Configuration.Json.dll" Guid="39d7cc1a-76ed-4940-908c-ef314d83142b">
 				<File Id="Microsoft.Extensions.Configuration.Json.dll" Name="Microsoft.Extensions.Configuration.Json.dll" Source="$(var.RoadCaptain.Runner_TargetDir)Microsoft.Extensions.Configuration.Json.dll" />
 			</Component>
-			<Component Id="Microsoft.Extensions.DependencyInjection.Abstractions.dll" Guid="1531ca51-a102-43ba-b1f4-676ce889cada">
+			<Component Id="Microsoft.Extensions.DependencyInjection.Abstractions.dll" Guid="42b659ce-79db-45e3-9e4d-688e8572f948">
 				<File Id="Microsoft.Extensions.DependencyInjection.Abstractions.dll" Name="Microsoft.Extensions.DependencyInjection.Abstractions.dll" Source="$(var.RoadCaptain.Runner_TargetDir)Microsoft.Extensions.DependencyInjection.Abstractions.dll" />
 			</Component>
-			<Component Id="Microsoft.Extensions.FileProviders.Abstractions.dll" Guid="7c17f04f-6f55-4e8c-97fe-95f42124cb1c">
+			<Component Id="Microsoft.Extensions.FileProviders.Abstractions.dll" Guid="302c0d17-2b14-42c7-92b9-5a9ba9612a6f">
 				<File Id="Microsoft.Extensions.FileProviders.Abstractions.dll" Name="Microsoft.Extensions.FileProviders.Abstractions.dll" Source="$(var.RoadCaptain.Runner_TargetDir)Microsoft.Extensions.FileProviders.Abstractions.dll" />
 			</Component>
-			<Component Id="Microsoft.Extensions.FileProviders.Physical.dll" Guid="da6214b9-bbfa-4a40-b4b8-a89062bc142e">
+			<Component Id="Microsoft.Extensions.FileProviders.Physical.dll" Guid="0960586b-df43-481c-af75-3ac56b0f1814">
 				<File Id="Microsoft.Extensions.FileProviders.Physical.dll" Name="Microsoft.Extensions.FileProviders.Physical.dll" Source="$(var.RoadCaptain.Runner_TargetDir)Microsoft.Extensions.FileProviders.Physical.dll" />
 			</Component>
-			<Component Id="Microsoft.Extensions.FileSystemGlobbing.dll" Guid="217ada29-1663-493d-b97c-62b5942b263a">
+			<Component Id="Microsoft.Extensions.FileSystemGlobbing.dll" Guid="9b789890-c143-40a2-8ce8-a09eef9f270b">
 				<File Id="Microsoft.Extensions.FileSystemGlobbing.dll" Name="Microsoft.Extensions.FileSystemGlobbing.dll" Source="$(var.RoadCaptain.Runner_TargetDir)Microsoft.Extensions.FileSystemGlobbing.dll" />
 			</Component>
-			<Component Id="Microsoft.Extensions.Hosting.Abstractions.dll" Guid="a118a05a-d359-4be9-8e40-a924145d5b30">
+			<Component Id="Microsoft.Extensions.Hosting.Abstractions.dll" Guid="888e4b06-678a-4dcb-a923-3acb3b81f19f">
 				<File Id="Microsoft.Extensions.Hosting.Abstractions.dll" Name="Microsoft.Extensions.Hosting.Abstractions.dll" Source="$(var.RoadCaptain.Runner_TargetDir)Microsoft.Extensions.Hosting.Abstractions.dll" />
 			</Component>
-			<Component Id="Microsoft.Extensions.Logging.Abstractions.dll" Guid="7280b664-2a8a-4c1d-a634-a2d88f2342ab">
+			<Component Id="Microsoft.Extensions.Logging.Abstractions.dll" Guid="2a543ef0-363d-4308-84d0-c1a893699375">
 				<File Id="Microsoft.Extensions.Logging.Abstractions.dll" Name="Microsoft.Extensions.Logging.Abstractions.dll" Source="$(var.RoadCaptain.Runner_TargetDir)Microsoft.Extensions.Logging.Abstractions.dll" />
 			</Component>
-			<Component Id="Microsoft.Extensions.Logging.dll" Guid="7c347ec4-9ea4-4432-abbe-1944c5ddf9c8">
+			<Component Id="Microsoft.Extensions.Logging.dll" Guid="d7599edb-d691-4ebf-be62-870abb3bf9b4">
 				<File Id="Microsoft.Extensions.Logging.dll" Name="Microsoft.Extensions.Logging.dll" Source="$(var.RoadCaptain.Runner_TargetDir)Microsoft.Extensions.Logging.dll" />
 			</Component>
-			<Component Id="Microsoft.Extensions.Options.dll" Guid="f34ae760-343f-4679-ba95-06815110fe7d">
+			<Component Id="Microsoft.Extensions.Options.dll" Guid="e98eeba3-6e99-4b54-8655-b04e5a7ab00e">
 				<File Id="Microsoft.Extensions.Options.dll" Name="Microsoft.Extensions.Options.dll" Source="$(var.RoadCaptain.Runner_TargetDir)Microsoft.Extensions.Options.dll" />
 			</Component>
-			<Component Id="Microsoft.Extensions.Primitives.dll" Guid="9d50fbd4-3a5f-4bf3-b1c9-12456dd8fb93">
+			<Component Id="Microsoft.Extensions.Primitives.dll" Guid="417c3e6b-43c7-40bb-97bd-31ee3fafeb8a">
 				<File Id="Microsoft.Extensions.Primitives.dll" Name="Microsoft.Extensions.Primitives.dll" Source="$(var.RoadCaptain.Runner_TargetDir)Microsoft.Extensions.Primitives.dll" />
 			</Component>
-			<Component Id="Newtonsoft.Json.dll" Guid="8321f1fc-fd48-4c88-b3d4-0890d7b3d834">
+			<Component Id="Newtonsoft.Json.dll" Guid="9bf6e2da-1e33-4899-b90b-07bf2b6f4d81">
 				<File Id="Newtonsoft.Json.dll" Name="Newtonsoft.Json.dll" Source="$(var.RoadCaptain.Runner_TargetDir)Newtonsoft.Json.dll" />
 			</Component>
-			<Component Id="PacketDotNet.dll" Guid="3c55f3ab-b78c-4d77-9b20-01eadda017c2">
+			<Component Id="PacketDotNet.dll" Guid="7aed166b-864e-470f-87b6-e0249ec95dab">
 				<File Id="PacketDotNet.dll" Name="PacketDotNet.dll" Source="$(var.RoadCaptain.Runner_TargetDir)PacketDotNet.dll" />
 			</Component>
-			<Component Id="RoadCaptain.Adapters.dll" Guid="152504f4-ad15-40be-bffb-756780ddf9b0">
+			<Component Id="RoadCaptain.Adapters.dll" Guid="81fce8df-71b7-484f-b10c-b0f5a289cb3e">
 				<File Id="RoadCaptain.Adapters.dll" Name="RoadCaptain.Adapters.dll" Source="$(var.RoadCaptain.Runner_TargetDir)RoadCaptain.Adapters.dll" />
 			</Component>
-			<Component Id="RoadCaptain.Adapters.pdb" Guid="9132646f-32d1-4533-ac6f-b9bec349d653">
+			<Component Id="RoadCaptain.Adapters.pdb" Guid="427241b7-8fad-47f8-b5ba-4d79a1e7da5b">
 				<File Id="RoadCaptain.Adapters.pdb" Name="RoadCaptain.Adapters.pdb" Source="$(var.RoadCaptain.Runner_TargetDir)RoadCaptain.Adapters.pdb" />
 			</Component>
-			<Component Id="RoadCaptain.dll" Guid="df45f34e-9360-4305-94ae-0cf146d0d96a">
+			<Component Id="RoadCaptain.dll" Guid="8fc1e26d-7777-41f1-b408-30d1b02bfbe9">
 				<File Id="RoadCaptain.dll" Name="RoadCaptain.dll" Source="$(var.RoadCaptain.Runner_TargetDir)RoadCaptain.dll" />
 			</Component>
-			<Component Id="RoadCaptain.pdb" Guid="0d0d8689-95e5-40f8-90b9-cc15efc178ba">
+			<Component Id="RoadCaptain.pdb" Guid="04d9f171-2fd5-4570-b865-2dc43c7babee">
 				<File Id="RoadCaptain.pdb" Name="RoadCaptain.pdb" Source="$(var.RoadCaptain.Runner_TargetDir)RoadCaptain.pdb" />
 			</Component>
-			<Component Id="segments.json" Guid="af175148-0e46-49b1-b6fc-1ab269316393">
+			<Component Id="RoadCaptain.UserInterface.Shared.dll" Guid="2851af3b-913c-4be8-a1a0-8d67436d719a">
+				<File Id="RoadCaptain.UserInterface.Shared.dll" Name="RoadCaptain.UserInterface.Shared.dll" Source="$(var.RoadCaptain.Runner_TargetDir)RoadCaptain.UserInterface.Shared.dll" />
+			</Component>
+			<Component Id="RoadCaptain.UserInterface.Shared.pdb" Guid="e5ee6baf-2b3a-4a03-bbca-e1d2de07f518">
+				<File Id="RoadCaptain.UserInterface.Shared.pdb" Name="RoadCaptain.UserInterface.Shared.pdb" Source="$(var.RoadCaptain.Runner_TargetDir)RoadCaptain.UserInterface.Shared.pdb" />
+			</Component>
+			<Component Id="segments.json" Guid="bbf280ef-e051-4bdc-bc43-216426654f01">
 				<File Id="segments.json" Name="segments.json" Source="$(var.RoadCaptain.Runner_TargetDir)segments.json" />
 			</Component>
-			<Component Id="Serilog.dll" Guid="d12dbf72-233f-438d-aeab-972acfeb713e">
+			<Component Id="Serilog.dll" Guid="61d5475b-cd67-4361-84a0-d4be9d28e8b1">
 				<File Id="Serilog.dll" Name="Serilog.dll" Source="$(var.RoadCaptain.Runner_TargetDir)Serilog.dll" />
 			</Component>
-			<Component Id="Serilog.Extensions.Hosting.dll" Guid="e4d0beea-5c43-4fcb-bc9d-69f0df3f2c95">
+			<Component Id="Serilog.Extensions.Hosting.dll" Guid="f2407e4f-2f3f-4932-99ce-1cbbdae5c32a">
 				<File Id="Serilog.Extensions.Hosting.dll" Name="Serilog.Extensions.Hosting.dll" Source="$(var.RoadCaptain.Runner_TargetDir)Serilog.Extensions.Hosting.dll" />
 			</Component>
-			<Component Id="Serilog.Extensions.Logging.dll" Guid="efdc5f5d-626e-4303-a8ee-ae3ef4db6431">
+			<Component Id="Serilog.Extensions.Logging.dll" Guid="1502eb71-8668-4ef8-9de2-5ab1ba0d2bcf">
 				<File Id="Serilog.Extensions.Logging.dll" Name="Serilog.Extensions.Logging.dll" Source="$(var.RoadCaptain.Runner_TargetDir)Serilog.Extensions.Logging.dll" />
 			</Component>
-			<Component Id="Serilog.Sinks.Console.dll" Guid="89f4f9e4-3e4d-48c3-9a8c-01cd323c8d2c">
+			<Component Id="Serilog.Sinks.Console.dll" Guid="d86fd9dd-a1f4-4609-afe3-48df39ed7451">
 				<File Id="Serilog.Sinks.Console.dll" Name="Serilog.Sinks.Console.dll" Source="$(var.RoadCaptain.Runner_TargetDir)Serilog.Sinks.Console.dll" />
 			</Component>
-			<Component Id="Serilog.Sinks.File.dll" Guid="bb8b092e-df7b-4891-a420-4c48362c2cc6">
+			<Component Id="Serilog.Sinks.File.dll" Guid="588e54e2-01d0-45da-9c81-183c425c7282">
 				<File Id="Serilog.Sinks.File.dll" Name="Serilog.Sinks.File.dll" Source="$(var.RoadCaptain.Runner_TargetDir)Serilog.Sinks.File.dll" />
 			</Component>
-			<Component Id="SharpPcap.dll" Guid="24d37f9a-7b13-413b-9858-0aaa54b2babd">
+			<Component Id="SharpPcap.dll" Guid="c7d5e3aa-75ff-4482-bb08-20397afad375">
 				<File Id="SharpPcap.dll" Name="SharpPcap.dll" Source="$(var.RoadCaptain.Runner_TargetDir)SharpPcap.dll" />
 			</Component>
-			<Component Id="System.IO.Pipelines.dll" Guid="56a3fbf5-042d-41d2-ab58-42371b0646c2">
+			<Component Id="System.IO.Pipelines.dll" Guid="7d1ea2b1-57e0-4d08-816a-a2bcb5d80542">
 				<File Id="System.IO.Pipelines.dll" Name="System.IO.Pipelines.dll" Source="$(var.RoadCaptain.Runner_TargetDir)System.IO.Pipelines.dll" />
 			</Component>
-			<Component Id="turns.json" Guid="0e5fae89-5833-49bb-a04f-5377ae92cfcd">
+			<Component Id="turns.json" Guid="e6b75158-c7f1-4442-b271-261b7cae9333">
 				<File Id="turns.json" Name="turns.json" Source="$(var.RoadCaptain.Runner_TargetDir)turns.json" />
 			</Component>
 		</ComponentGroup>
 	</Fragment>
 	<Fragment>
 		<ComponentGroup Id="RunnerComponents" Directory="INSTALLFOLDER">
-			<Component Id="Runner_autofac.runner.json" Guid="a0915621-bf67-40b5-b63e-b46925c6096b">
+			<Component Id="Runner_autofac.runner.json" Guid="1f986628-59cb-416d-8a08-c1d65e8dc460">
 				<File Id="Runner_autofac.runner.json" Name="autofac.runner.json" Source="$(var.RoadCaptain.Runner_TargetDir)autofac.runner.json" />
 			</Component>
-			<Component Id="Runner_Microsoft.IdentityModel.JsonWebTokens.dll" Guid="1b08b0de-e349-4220-80d0-a9fafc4f5aa1">
+			<Component Id="Runner_Microsoft.IdentityModel.JsonWebTokens.dll" Guid="4341a8ed-3a6f-433e-83dc-3daf3708f02c">
 				<File Id="Runner_Microsoft.IdentityModel.JsonWebTokens.dll" Name="Microsoft.IdentityModel.JsonWebTokens.dll" Source="$(var.RoadCaptain.Runner_TargetDir)Microsoft.IdentityModel.JsonWebTokens.dll" />
 			</Component>
-			<Component Id="Runner_Microsoft.IdentityModel.Logging.dll" Guid="6ab03d6a-4921-41ce-a590-a7d9650fec36">
+			<Component Id="Runner_Microsoft.IdentityModel.Logging.dll" Guid="17d1c8e1-001f-4544-9bad-1093f584961a">
 				<File Id="Runner_Microsoft.IdentityModel.Logging.dll" Name="Microsoft.IdentityModel.Logging.dll" Source="$(var.RoadCaptain.Runner_TargetDir)Microsoft.IdentityModel.Logging.dll" />
 			</Component>
-			<Component Id="Runner_Microsoft.IdentityModel.Tokens.dll" Guid="cdaa32ea-1399-49ce-8b90-22b5049cdc84">
+			<Component Id="Runner_Microsoft.IdentityModel.Tokens.dll" Guid="6b5a0fc4-bfcd-45e7-98ce-59fb9f9da45b">
 				<File Id="Runner_Microsoft.IdentityModel.Tokens.dll" Name="Microsoft.IdentityModel.Tokens.dll" Source="$(var.RoadCaptain.Runner_TargetDir)Microsoft.IdentityModel.Tokens.dll" />
 			</Component>
-			<Component Id="Runner_Microsoft.Web.WebView2.Core.dll" Guid="77b10e3a-729e-4b8f-aae8-aa557d1554b0">
+			<Component Id="Runner_Microsoft.Web.WebView2.Core.dll" Guid="d68fe117-d918-4c92-b0b0-4f57784c700f">
 				<File Id="Runner_Microsoft.Web.WebView2.Core.dll" Name="Microsoft.Web.WebView2.Core.dll" Source="$(var.RoadCaptain.Runner_TargetDir)Microsoft.Web.WebView2.Core.dll" />
 			</Component>
-			<Component Id="Runner_Microsoft.Web.WebView2.WinForms.dll" Guid="b2624406-aba7-4237-b70b-db504d54318e">
+			<Component Id="Runner_Microsoft.Web.WebView2.WinForms.dll" Guid="38d63871-4194-459e-9e8d-74707bfe75f0">
 				<File Id="Runner_Microsoft.Web.WebView2.WinForms.dll" Name="Microsoft.Web.WebView2.WinForms.dll" Source="$(var.RoadCaptain.Runner_TargetDir)Microsoft.Web.WebView2.WinForms.dll" />
 			</Component>
-			<Component Id="Runner_Microsoft.Web.WebView2.Wpf.dll" Guid="41fd2988-6897-4751-9669-11d4b256b6b0">
+			<Component Id="Runner_Microsoft.Web.WebView2.Wpf.dll" Guid="2c2210a9-5113-4e23-9956-31536c615262">
 				<File Id="Runner_Microsoft.Web.WebView2.Wpf.dll" Name="Microsoft.Web.WebView2.Wpf.dll" Source="$(var.RoadCaptain.Runner_TargetDir)Microsoft.Web.WebView2.Wpf.dll" />
 			</Component>
-			<Component Id="Runner_RoadCaptain.Runner.deps.json" Guid="77519ffb-4af8-4dec-8e5a-922e16fc1001">
+			<Component Id="Runner_RoadCaptain.Runner.deps.json" Guid="9ec4df33-095d-4424-b81b-db950e3fc620">
 				<File Id="Runner_RoadCaptain.Runner.deps.json" Name="RoadCaptain.Runner.deps.json" Source="$(var.RoadCaptain.Runner_TargetDir)RoadCaptain.Runner.deps.json" />
 			</Component>
-			<Component Id="Runner_RoadCaptain.Runner.dll" Guid="3386651e-9ce8-4e4d-b557-afa1f7a6497f">
+			<Component Id="Runner_RoadCaptain.Runner.dll" Guid="9e2d7f55-a031-4af1-a9d9-eafb06faac9b">
 				<File Id="Runner_RoadCaptain.Runner.dll" Name="RoadCaptain.Runner.dll" Source="$(var.RoadCaptain.Runner_TargetDir)RoadCaptain.Runner.dll" />
 			</Component>
-			<Component Id="Runner_RoadCaptain.Runner.exe" Guid="4146a172-9958-4e68-b301-6f03230a562b">
+			<Component Id="Runner_RoadCaptain.Runner.exe" Guid="365e8865-93f1-4d96-a492-02b3412e83cc">
 				<File Id="Runner_RoadCaptain.Runner.exe" Name="RoadCaptain.Runner.exe" Source="$(var.RoadCaptain.Runner_TargetDir)RoadCaptain.Runner.exe" KeyPath="yes" />
 			</Component>
-			<Component Id="Runner_RoadCaptain.Runner.pdb" Guid="a26a9f6b-57e1-49a7-aaa8-5c25f9f7fb02">
+			<Component Id="Runner_RoadCaptain.Runner.pdb" Guid="857f0880-f64b-4b38-b615-6b84c62cf32a">
 				<File Id="Runner_RoadCaptain.Runner.pdb" Name="RoadCaptain.Runner.pdb" Source="$(var.RoadCaptain.Runner_TargetDir)RoadCaptain.Runner.pdb" />
 			</Component>
-			<Component Id="Runner_RoadCaptain.Runner.runtimeconfig.json" Guid="ab9c14e2-833b-4255-bf24-7b4922b8027c">
+			<Component Id="Runner_RoadCaptain.Runner.runtimeconfig.json" Guid="23e1a9fd-0d4e-46f5-a80f-e7abd0622eee">
 				<File Id="Runner_RoadCaptain.Runner.runtimeconfig.json" Name="RoadCaptain.Runner.runtimeconfig.json" Source="$(var.RoadCaptain.Runner_TargetDir)RoadCaptain.Runner.runtimeconfig.json" />
 			</Component>
-			<Component Id="Runner_Serilog.Sinks.Debug.dll" Guid="f5908f4e-20ad-4aba-a440-513e2ce673fc">
+			<Component Id="Runner_Serilog.Sinks.Debug.dll" Guid="cbe805d4-69eb-484e-9733-d951453b16cf">
 				<File Id="Runner_Serilog.Sinks.Debug.dll" Name="Serilog.Sinks.Debug.dll" Source="$(var.RoadCaptain.Runner_TargetDir)Serilog.Sinks.Debug.dll" />
 			</Component>
-			<Component Id="Runner_System.IdentityModel.Tokens.Jwt.dll" Guid="d430676e-8642-46d0-a210-3e598d7e5773">
+			<Component Id="Runner_System.IdentityModel.Tokens.Jwt.dll" Guid="dada449c-cfa6-431e-b4d2-876cc985b09b">
 				<File Id="Runner_System.IdentityModel.Tokens.Jwt.dll" Name="System.IdentityModel.Tokens.Jwt.dll" Source="$(var.RoadCaptain.Runner_TargetDir)System.IdentityModel.Tokens.Jwt.dll" />
 			</Component>
 		</ComponentGroup>
 	</Fragment>
 	<Fragment>
 		<ComponentGroup Id="RouteBuilderComponents" Directory="INSTALLFOLDER">
-			<Component Id="RouteBuilder_autofac.routebuilder.json" Guid="7fa4d8fb-be49-432a-b21e-eebe6002e154">
+			<Component Id="RouteBuilder_autofac.routebuilder.json" Guid="0213eb95-bacb-4f7e-9172-401a29609f72">
 				<File Id="RouteBuilder_autofac.routebuilder.json" Name="autofac.routebuilder.json" Source="$(var.RoadCaptain.RouteBuilder_TargetDir)autofac.routebuilder.json" />
 			</Component>
-			<Component Id="RouteBuilder_RoadCaptain.RouteBuilder.deps.json" Guid="3fc9822f-e2f4-4fda-b387-f5b5937d38cc">
+			<Component Id="RouteBuilder_RoadCaptain.RouteBuilder.deps.json" Guid="cb60579c-926f-4ad9-a3b3-20c9f6daf6d7">
 				<File Id="RouteBuilder_RoadCaptain.RouteBuilder.deps.json" Name="RoadCaptain.RouteBuilder.deps.json" Source="$(var.RoadCaptain.RouteBuilder_TargetDir)RoadCaptain.RouteBuilder.deps.json" />
 			</Component>
-			<Component Id="RouteBuilder_RoadCaptain.RouteBuilder.dll" Guid="b52c6dc6-f101-4164-8d05-c4bfc9a71b0a">
+			<Component Id="RouteBuilder_RoadCaptain.RouteBuilder.dll" Guid="fc084109-b598-48e2-88d6-444b49c01633">
 				<File Id="RouteBuilder_RoadCaptain.RouteBuilder.dll" Name="RoadCaptain.RouteBuilder.dll" Source="$(var.RoadCaptain.RouteBuilder_TargetDir)RoadCaptain.RouteBuilder.dll" />
 			</Component>
-			<Component Id="RouteBuilder_RoadCaptain.RouteBuilder.exe" Guid="34347b4d-0e5e-45e7-9f58-2d15af0b70a3">
+			<Component Id="RouteBuilder_RoadCaptain.RouteBuilder.exe" Guid="317e10db-6969-4a18-8ad1-bf22749ee2ab">
 				<File Id="RouteBuilder_RoadCaptain.RouteBuilder.exe" Name="RoadCaptain.RouteBuilder.exe" Source="$(var.RoadCaptain.RouteBuilder_TargetDir)RoadCaptain.RouteBuilder.exe" KeyPath="yes" />
 			</Component>
-			<Component Id="RouteBuilder_RoadCaptain.RouteBuilder.pdb" Guid="1196b2fe-c79e-45d9-86c9-d7a527cbe9fd">
+			<Component Id="RouteBuilder_RoadCaptain.RouteBuilder.pdb" Guid="a0199997-9e2e-4d51-b356-5ad318f5ad2d">
 				<File Id="RouteBuilder_RoadCaptain.RouteBuilder.pdb" Name="RoadCaptain.RouteBuilder.pdb" Source="$(var.RoadCaptain.RouteBuilder_TargetDir)RoadCaptain.RouteBuilder.pdb" />
 			</Component>
-			<Component Id="RouteBuilder_RoadCaptain.RouteBuilder.runtimeconfig.json" Guid="20a86d9c-e985-448b-942c-f51d430c54a0">
+			<Component Id="RouteBuilder_RoadCaptain.RouteBuilder.runtimeconfig.json" Guid="a3589cbe-adcc-4d68-8635-4b48a5482adb">
 				<File Id="RouteBuilder_RoadCaptain.RouteBuilder.runtimeconfig.json" Name="RoadCaptain.RouteBuilder.runtimeconfig.json" Source="$(var.RoadCaptain.RouteBuilder_TargetDir)RoadCaptain.RouteBuilder.runtimeconfig.json" />
 			</Component>
-			<Component Id="RouteBuilder_SkiaSharp.dll" Guid="307fc2f3-bebb-40c6-ab34-d696d8fc778e">
+			<Component Id="RouteBuilder_SkiaSharp.dll" Guid="58bd965c-63d5-4a88-81ea-be074422dfb7">
 				<File Id="RouteBuilder_SkiaSharp.dll" Name="SkiaSharp.dll" Source="$(var.RoadCaptain.RouteBuilder_TargetDir)SkiaSharp.dll" />
 			</Component>
-			<Component Id="RouteBuilder_SkiaSharp.Views.Desktop.Common.dll" Guid="05fe3817-6c2e-48ff-a21e-0d8183a93055">
+			<Component Id="RouteBuilder_SkiaSharp.Views.Desktop.Common.dll" Guid="49788b44-766e-4df5-82a0-e6003a4f026c">
 				<File Id="RouteBuilder_SkiaSharp.Views.Desktop.Common.dll" Name="SkiaSharp.Views.Desktop.Common.dll" Source="$(var.RoadCaptain.RouteBuilder_TargetDir)SkiaSharp.Views.Desktop.Common.dll" />
 			</Component>
-			<Component Id="RouteBuilder_SkiaSharp.Views.WPF.dll" Guid="db27fa90-87b3-4d7d-bd62-01026041b842">
+			<Component Id="RouteBuilder_SkiaSharp.Views.WPF.dll" Guid="2149d35a-34fa-4b12-a0cd-8ca3b8248a1f">
 				<File Id="RouteBuilder_SkiaSharp.Views.WPF.dll" Name="SkiaSharp.Views.WPF.dll" Source="$(var.RoadCaptain.RouteBuilder_TargetDir)SkiaSharp.Views.WPF.dll" />
 			</Component>
 		</ComponentGroup>
 	</Fragment>
 	<Fragment>
 		<ComponentGroup Id="RunnerNativeComponents" Directory="native">
-			<Component Id="Runner_WebView2Loader.dll" Guid="81ba799d-b15f-40fc-8348-96c1e1d2fbbd">
+			<Component Id="Runner_WebView2Loader.dll" Guid="127b58fe-1389-496f-98f1-8cb6d53d6cd5">
 				<File Id="Runner_WebView2Loader.dll" Name="WebView2Loader.dll" Source="$(var.RoadCaptain.Runner_TargetDir)runtimes\win-x64\native\WebView2Loader.dll" />
 			</Component>
 		</ComponentGroup>
 	</Fragment>
 	<Fragment>
 		<ComponentGroup Id="RouteBuilderNativeComponents" Directory="native">
-			<Component Id="RouteBuilder_libSkiaSharp.dll" Guid="eeef21b8-6ee4-49ab-8650-759ee01b33da">
+			<Component Id="RouteBuilder_libSkiaSharp.dll" Guid="def2cf26-d8d1-4264-a806-b7d9611a5ef5">
 				<File Id="RouteBuilder_libSkiaSharp.dll" Name="libSkiaSharp.dll" Source="$(var.RoadCaptain.RouteBuilder_TargetDir)runtimes\win-x64\native\libSkiaSharp.dll" />
 			</Component>
 		</ComponentGroup>
