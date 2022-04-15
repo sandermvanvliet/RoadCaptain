@@ -12,7 +12,7 @@ namespace RoadCaptain.RouteBuilder.ViewModels
     public class RouteViewModel : INotifyPropertyChanged
     {
         private readonly IRouteStore _routeStore;
-        private readonly List<Segment> _segments;
+        private readonly ISegmentStore _segmentStore;
         private readonly ObservableCollection<SegmentSequenceViewModel> _sequence = new();
 
         private readonly List<SpawnPoint> _spawnPoints = new()
@@ -32,7 +32,7 @@ namespace RoadCaptain.RouteBuilder.ViewModels
         public RouteViewModel(IRouteStore routeStore, ISegmentStore segmentStore)
         {
             _routeStore = routeStore;
-            _segments = segmentStore.LoadSegments(new World { Id = "watopia", Name = "Watopia" });
+            _segmentStore = segmentStore;
         }
 
         public IEnumerable<SegmentSequenceViewModel> Sequence => _sequence;
@@ -184,6 +184,7 @@ namespace RoadCaptain.RouteBuilder.ViewModels
         public void Load()
         {
             var plannedRoute = _routeStore.LoadFrom(OutputFilePath);
+            var segments = _segmentStore.LoadSegments(plannedRoute.World);
 
             _sequence.Clear();
 
@@ -192,7 +193,7 @@ namespace RoadCaptain.RouteBuilder.ViewModels
                 _sequence.Add(
                     new SegmentSequenceViewModel(
                         seq,
-                        GetSegmentById(seq.SegmentId),
+                        segments.Single(s => s.Id == seq.SegmentId),
                         _sequence.Count + 1)
                     {
                         Direction = seq.Direction,
@@ -207,11 +208,6 @@ namespace RoadCaptain.RouteBuilder.ViewModels
             OnPropertyChanged(nameof(TotalDistance));
             OnPropertyChanged(nameof(TotalAscent));
             OnPropertyChanged(nameof(TotalDescent));
-        }
-
-        private Segment GetSegmentById(string segmentId)
-        {
-            return _segments.SingleOrDefault(s => s.Id == segmentId);
         }
 
         public SegmentSequenceViewModel RemoveLast()

@@ -92,15 +92,12 @@ namespace RoadCaptain.UseCases
                     // Convert from Zwift game coordinates to a lat/lon coordinate
                     var position = TrackPoint.FromGameLocation(riderPosition.Latitude, riderPosition.Longitude, riderPosition.Altitude);
 
-                    if (_segments == null)
-                    {
-                        _segments = _segmentStore.LoadSegments(_route.World);
-                    }
-
                     // As long as there is no route loaded we cannot change the
                     // the state.
                     if (_route != null)
                     {
+                        _segments ??= _segmentStore.LoadSegments(_route.World);
+
                         State = State.UpdatePosition(position, _segments, _route);
                     }
                 }
