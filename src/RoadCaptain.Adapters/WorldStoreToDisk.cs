@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Newtonsoft.Json;
@@ -13,7 +14,11 @@ namespace RoadCaptain.Adapters
         private World[] _loadedWorlds;
         private readonly JsonSerializerSettings _serializerSettings = new()
         {
-            ContractResolver = new CamelCasePropertyNamesContractResolver()
+            ContractResolver = new CamelCasePropertyNamesContractResolver(),
+            Converters = new List<JsonConverter>
+            {
+                new SegmentDirectionConverter()
+            }
         };
 
         public WorldStoreToDisk() : this(Environment.CurrentDirectory)

@@ -32,13 +32,17 @@ namespace RoadCaptain.RouteBuilder.ViewModels
         private readonly IVersionChecker _versionChecker;
         private readonly IWindowService _windowService;
 
-        public MainWindowViewModel(IRouteStore routeStore, ISegmentStore segmentStore, IVersionChecker versionChecker, IWindowService windowService)
+        public MainWindowViewModel(IRouteStore routeStore, ISegmentStore segmentStore, IVersionChecker versionChecker, IWindowService windowService, IWorldStore worldStore)
         {
             _versionChecker = versionChecker;
             _windowService = windowService;
             Model = new MainWindowModel();
 
-            Route = new RouteViewModel(routeStore, segmentStore);
+            Route = new RouteViewModel(routeStore, segmentStore)
+            {
+                World = worldStore.LoadWorldById("watopia")
+            };
+
             Route.PropertyChanged += (_, args) =>
             {
                 if (args.PropertyName == nameof(Route.Sequence))
@@ -59,7 +63,7 @@ namespace RoadCaptain.RouteBuilder.ViewModels
                 OnPropertyChanged(nameof(Route));
             };
 
-            _segments = segmentStore.LoadSegments(new World { Id = "watopia", Name = "Watopia" });
+            _segments = segmentStore.LoadSegments(Route.World);
 
             SaveRouteCommand = new RelayCommand(
                     _ => SaveRoute(),

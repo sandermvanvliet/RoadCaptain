@@ -2,6 +2,38 @@
   {
     "id": "watopia",
     "name": "Watopia",
-    "description": "" 
+    "description": "",
+    "spawnPoints": [
+      {
+        "segmentId": "watopia-bambino-fondo-001-after-after-after-after-after",
+        "zwiftRouteName": "Beach Island Loop",
+        "direction": "BtoA"
+      },
+      {
+        "segmentId": "watopia-bambino-fondo-001-after-after-after-after-after",
+        "zwiftRouteName": "Mountain Route",
+        "direction": "AtoB"
+      },
+      {
+        "segmentId": "watopia-bambino-fondo-004-before-before",
+        "zwiftRouteName": "The Mega Pretzel",
+        "direction": "AtoB"
+      },
+      {
+        "segmentId": "watopia-big-foot-hills-004-before",
+        "zwiftRouteName": "Muir and the mountain",
+        "direction": "BtoA"
+      },
+      {
+        "segmentId": "watopia-big-foot-hills-004-before",
+        "zwiftRouteName": "Big Foot Hills",
+        "direction": "AtoB"
+      },
+      {
+        "segmentId": "watopia-bambino-fondo-003-before-after",
+        "zwiftRouteName": "Jungle Circuit",
+        "direction": "Ato"
+      }
+    ]
   }
 ]

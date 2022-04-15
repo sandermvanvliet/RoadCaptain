@@ -5,7 +5,6 @@ using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using RoadCaptain.Ports;
-using RoadCaptain.RouteBuilder.Models;
 using RoadCaptain.UserInterface.Shared.Commands;
 
 namespace RoadCaptain.RouteBuilder.ViewModels
@@ -16,19 +15,8 @@ namespace RoadCaptain.RouteBuilder.ViewModels
         private readonly ISegmentStore _segmentStore;
         private readonly ObservableCollection<SegmentSequenceViewModel> _sequence = new();
 
-        private readonly List<SpawnPoint> _spawnPoints = new()
-        {
-            new SpawnPoint("watopia-bambino-fondo-001-after-after-after-after-after", "Beach Island Loop",
-                SegmentDirection.BtoA),
-            new SpawnPoint("watopia-bambino-fondo-001-after-after-after-after-after", "Mountain Route",
-                SegmentDirection.AtoB),
-            new SpawnPoint("watopia-bambino-fondo-004-before-before", "The Mega Pretzel", SegmentDirection.AtoB),
-            new SpawnPoint("watopia-big-foot-hills-004-before", "Muir and the mountain", SegmentDirection.BtoA),
-            new SpawnPoint("watopia-big-foot-hills-004-before", "Big Foot Hills", SegmentDirection.AtoB),
-            new SpawnPoint("watopia-bambino-fondo-003-before-after", "Jungle Circuit", SegmentDirection.AtoB)
-        };
-
         private string _name;
+        private World _world;
 
         public RouteViewModel(IRouteStore routeStore, ISegmentStore segmentStore)
         {
@@ -57,6 +45,21 @@ namespace RoadCaptain.RouteBuilder.ViewModels
                 }
 
                 _name = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public World World
+        {
+            get => _world;
+            set
+            {
+                if (value == _world)
+                {
+                    return;
+                }
+
+                _world = value;
                 OnPropertyChanged();
             }
         }
@@ -125,7 +128,8 @@ namespace RoadCaptain.RouteBuilder.ViewModels
             var route = new PlannedRoute
             {
                 ZwiftRouteName = GetZwiftRouteName(Sequence.First()),
-                Name = Name
+                Name = Name,
+                World = World
             };
 
             if (string.IsNullOrEmpty(route.Name))
@@ -150,9 +154,9 @@ namespace RoadCaptain.RouteBuilder.ViewModels
 
         private string GetZwiftRouteName(SegmentSequenceViewModel startingSegment)
         {
-            var spawnPoint = _spawnPoints
+            var spawnPoint = _world.SpawnPoints
                 .SingleOrDefault(s =>
-                    s.SegmentId == startingSegment.SegmentId && s.SegmentDirection == startingSegment.Direction);
+                    s.SegmentId == startingSegment.SegmentId && s.Direction == startingSegment.Direction);
 
             return spawnPoint?.ZwiftRouteName;
         }
@@ -179,7 +183,7 @@ namespace RoadCaptain.RouteBuilder.ViewModels
 
         public bool IsSpawnPointSegment(string segmentId)
         {
-            return _spawnPoints.Any(spanPoint => spanPoint.SegmentId == segmentId);
+            return _world.SpawnPoints.Any(spanPoint => spanPoint.SegmentId == segmentId);
         }
 
         public void Load()
