@@ -63,6 +63,7 @@ namespace RoadCaptain.WixComponentFileGenerator
             
             if (componentGroup == null)
             {
+                Console.WriteLine($"Component {componentId} is missing, adding it");
                 var fragment = new XElement(XName.Get("Fragment"));
                 componentGroup = new XElement(XName.Get("ComponentGroup"));
                 componentGroup.Add(new XAttribute(XName.Get("Id"), componentId));
@@ -81,6 +82,8 @@ namespace RoadCaptain.WixComponentFileGenerator
 
                 if (component == null)
                 {
+                    Console.WriteLine($"File {file} is missing, adding it");
+
                     var componentFile = new XElement(XName.Get("File"));
                     componentFile.Add(new XAttribute("Id", fileWithPrefix));
                     componentFile.Add(new XAttribute("Name", file));
