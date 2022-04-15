@@ -38,7 +38,7 @@
     <None Update="autofac.routebuilder.development.json" Condition="Exists('autofac.routebuilder.development.json') And '$(Configuration)'=='Debug'">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="appsettings.json">
+    <None Update="appsettings.json" Condition="'$(Configuration)'=='Debug'">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
