@@ -28,8 +28,6 @@ namespace RoadCaptain.Adapters
         };
 
         private readonly ISegmentStore _segmentStore;
-
-        private List<Segment> _segments;
         private readonly IWorldStore _worldStore;
 
         public RouteStoreToDisk(ISegmentStore segmentStore, IWorldStore worldStore)
@@ -68,7 +66,7 @@ namespace RoadCaptain.Adapters
             var deserializeObject = JsonConvert.DeserializeObject<PersistedRouteVersion0>(
                 serialized,
                 RouteSerializationSettings);
-            
+
             // ReSharper disable once PossibleNullReferenceException
             return deserializeObject.AsRoute();
         }
@@ -94,9 +92,12 @@ namespace RoadCaptain.Adapters
 
         private string SerializeAsGpx(PlannedRoute route)
         {
+            var segments = _segmentStore.LoadSegments(route.World);
+
             var trackSegments = string.Join(
                 Environment.NewLine,
-                route.RouteSegmentSequence.Select(seg => "<trkseg>" + SegmentAsTrackPointList(seg) + "</trkseg>"));
+                route.RouteSegmentSequence.Select(seg =>
+                    "<trkseg>" + SegmentAsTrackPointList(seg, segments) + "</trkseg>"));
 
             var version = Assembly.GetExecutingAssembly().GetName().Version?.ToString(4) ?? "0.0.0.0";
             var routeBuilderVersion = $"RoadCaptain:RouteBuilder {version}";
@@ -112,9 +113,9 @@ namespace RoadCaptain.Adapters
                    "</gpx>";
         }
 
-        private string SegmentAsTrackPointList(SegmentSequence segment)
+        private string SegmentAsTrackPointList(SegmentSequence segment, List<Segment> world)
         {
-            var actualSegment = GetSegmentById(segment.SegmentId);
+            var actualSegment = world.Single(s => s.Id == segment.SegmentId);
 
             return string.Join(
                 Environment.NewLine,
@@ -123,13 +124,6 @@ namespace RoadCaptain.Adapters
                     .Select(x =>
                         $"<trkpt lat=\"{x.Latitude.ToString(CultureInfo.InvariantCulture)}\" lon=\"{x.Longitude.ToString(CultureInfo.InvariantCulture)}\"><ele>{x.Altitude.ToString(CultureInfo.InvariantCulture)}</ele></trkpt>")
                     .ToList());
-        }
-
-        private Segment GetSegmentById(string segmentId)
-        {
-            _segments ??= _segmentStore.LoadSegments(new World { Id = "watopia", Name = "Watopia" });
-
-            return _segments.Single(s => s.Id == segmentId);
         }
     }
 }
