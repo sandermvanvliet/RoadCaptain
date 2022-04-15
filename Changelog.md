@@ -4,6 +4,10 @@
 
 - The runner and route build now use unicode arrow glyphs instead of images for the turn indicators because it looks a bit cleaner as the images don't scale very well.
 
+### Route Builder
+
+- When removing the last segment, the new last segment in the route list will be automatically selected.
+
 ## 0.5.5.0
 
 - When starting, both the runner and route builder will now check if there is a new release available and shows a window to inform you if there is: ![Screenshot of a window showing the new version information](./images/runner-new-version.png) ([issue #15](https://github.com/sandermvanvliet/RoadCaptain/issues/15))

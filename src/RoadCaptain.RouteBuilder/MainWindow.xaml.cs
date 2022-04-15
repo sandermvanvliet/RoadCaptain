@@ -189,6 +189,10 @@ namespace RoadCaptain.RouteBuilder
                 if (viewModel == _windowViewModel.Route.Last)
                 {
                     _windowViewModel.RemoveLastSegmentCommand.Execute(null);
+                    if (RouteListView.HasItems)
+                    {
+                        RouteListView.SelectedItem = RouteListView.Items[^1];
+                    }
                 }
             }
         }
