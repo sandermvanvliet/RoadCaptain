@@ -7,7 +7,7 @@ namespace RoadCaptain.Runner.Models
 {
     public class SegmentSequenceModel : INotifyPropertyChanged
     {
-        private readonly string _turnImage;
+        private readonly string _turnGlyph;
         private SegmentDirection _direction;
         private readonly double _ascent;
         private readonly double _descent;
@@ -16,7 +16,7 @@ namespace RoadCaptain.Runner.Models
         public SegmentSequenceModel(SegmentSequence segmentSequence, Segment segment, int sequenceNumber)
         {
             Model = segmentSequence;
-            TurnImage = ImageFromTurn(segmentSequence.TurnToNextSegment);
+            TurnGlyph = GlyphFromTurn(segmentSequence.TurnToNextSegment);
             _ascent = Math.Round(segment.Ascent, 1);
             _descent = Math.Round(segment.Descent, 1);
             Distance = Math.Round(segment.Distance / 1000, 1);
@@ -25,14 +25,14 @@ namespace RoadCaptain.Runner.Models
             SegmentName = segment.Name;
         }
 
-        private static string ImageFromTurn(TurnDirection turnDirection)
+        private static string GlyphFromTurn(TurnDirection turnDirection)
         {
             return turnDirection switch
             {
-                TurnDirection.Left => "pack://application:,,,/RoadCaptain.UserInterface.Shared;component/Assets/turnleft.png",
-                TurnDirection.Right => "pack://application:,,,/RoadCaptain.UserInterface.Shared;component/Assets/turnright.png",
-                TurnDirection.GoStraight => "pack://application:,,,/RoadCaptain.UserInterface.Shared;component/Assets/gostraight.png",
-                _ => "pack://application:,,,/RoadCaptain.UserInterface.Shared;component/Assets/finish.png"
+                TurnDirection.Left => "🡸",
+                TurnDirection.Right => "🡺",
+                TurnDirection.GoStraight => "🡹",
+                _ => "🏁"
             };
         }
 
@@ -40,12 +40,12 @@ namespace RoadCaptain.Runner.Models
 
         public int SequenceNumber { get; }
 
-        public string TurnImage
+        public string TurnGlyph
         {
-            get => _turnImage;
+            get => _turnGlyph;
             private init
             {
-                _turnImage = value;
+                _turnGlyph = value;
                 OnPropertyChanged();
             }
         }

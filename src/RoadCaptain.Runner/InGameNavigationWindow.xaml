@@ -203,7 +203,7 @@
             </Grid.ColumnDefinitions>
 
             <TextBlock Margin="2,0,0,0" Grid.Column="0" Grid.Row="0" Text="{Binding Path=SequenceNumber}" d:Text="1" HorizontalAlignment="Center" />
-            <Image Grid.Column="0" Grid.Row="1" Margin="2,0,0,0" Width="22" Height="22" Source="{Binding Path=TurnImage}" d:Source="pack://application:,,,/RoadCaptain.UserInterface.Shared;component/Assets/turnright.png" HorizontalAlignment="Left" />
+            <TextBlock Grid.Column="0" Grid.Row="1" Text="{Binding Path=TurnGlyph}"  d:Text="🡽" FontSize="16" Foreground="#1192CC" Padding="0" Margin="0,-4,0,0" FontWeight="Light" HorizontalAlignment="Center" VerticalAlignment="Center" />
 
             <TextBlock Grid.Column="1" Grid.Row="0" Text="{Binding Path=SegmentName}" ToolTip="{Binding Path=SegmentName}" d:Text="big-loop-001-after" Margin="4,0,0,0" />
 
@@ -271,7 +271,7 @@
             </Grid.ColumnDefinitions>
 
             <TextBlock Grid.Column="0" Grid.Row="0" Margin="2,0,0,0" Text="{Binding Path=SequenceNumber}" d:Text="1" HorizontalAlignment="Center" />
-            <Image Grid.Column="0" Grid.Row="1" Margin="2,0,0,0" Width="22" Height="22" Source="{Binding Path=TurnImage}" d:Source="Assets/turnright.png" HorizontalAlignment="Left" />
+            <TextBlock Grid.Column="0" Grid.Row="1" Text="{Binding Path=TurnGlyph}"  d:Text="🡽" FontSize="16" Foreground="#1192CC" Padding="0" Margin="0,-4,0,0" FontWeight="Light" HorizontalAlignment="Center" VerticalAlignment="Center" />
 
             <TextBlock Grid.Column="1" Grid.Row="0" Text="{Binding Path=SegmentName}" ToolTip="{Binding Path=SegmentName}" d:Text="big-loop-001-after" Margin="4,0,0,0" />
 

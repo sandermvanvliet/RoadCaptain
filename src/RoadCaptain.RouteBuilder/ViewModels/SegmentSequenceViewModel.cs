@@ -6,15 +6,15 @@ namespace RoadCaptain.RouteBuilder.ViewModels
 {
     public class SegmentSequenceViewModel : INotifyPropertyChanged
     {
-        private string _turnImage;
         private SegmentDirection _direction;
         private readonly double _ascent;
         private readonly double _descent;
+        private string _turnGlyph;
 
         public SegmentSequenceViewModel(SegmentSequence segmentSequence, Segment segment, int sequenceNumber)
         {
             Model = segmentSequence;
-            TurnImage = ImageFromTurn(segmentSequence.TurnToNextSegment);
+            TurnGlyph = GlyphFromTurn(segmentSequence.TurnToNextSegment);
             _ascent = Math.Round(segment.Ascent, 1);
             _descent = Math.Round(segment.Descent, 1);
             Distance = Math.Round(segment.Distance / 1000, 1);
@@ -24,14 +24,14 @@ namespace RoadCaptain.RouteBuilder.ViewModels
             NoSelectReason = segment.NoSelectReason;
         }
 
-        private static string ImageFromTurn(TurnDirection turnDirection)
+        private static string GlyphFromTurn(TurnDirection turnDirection)
         {
             return turnDirection switch
             {
-                TurnDirection.Left => "pack://application:,,,/RoadCaptain.UserInterface.Shared;component/Assets/turnleft.png",
-                TurnDirection.Right => "pack://application:,,,/RoadCaptain.UserInterface.Shared;component/Assets/turnright.png",
-                TurnDirection.GoStraight => "pack://application:,,,/RoadCaptain.UserInterface.Shared;component/Assets/gostraight.png",
-                _ => "pack://application:,,,/RoadCaptain.UserInterface.Shared;component/Assets/finish.png"
+                TurnDirection.Left => "🡸",
+                TurnDirection.Right => "🡺",
+                TurnDirection.GoStraight => "🡹",
+                _ => "🏁"
             };
         }
 
@@ -39,12 +39,12 @@ namespace RoadCaptain.RouteBuilder.ViewModels
 
         public int SequenceNumber { get; }
 
-        public string TurnImage
+        public string TurnGlyph
         {
-            get => _turnImage;
+            get => _turnGlyph;
             private set
             {
-                _turnImage = value;
+                _turnGlyph = value;
                 OnPropertyChanged();
             }
         }
@@ -100,7 +100,7 @@ namespace RoadCaptain.RouteBuilder.ViewModels
             Model.NextSegmentId = ontoSegmentId;
             Model.Direction = segmentDirection;
 
-            TurnImage = ImageFromTurn(direction);
+            TurnGlyph = GlyphFromTurn(direction);
             Direction = segmentDirection;
         }
 
@@ -110,7 +110,7 @@ namespace RoadCaptain.RouteBuilder.ViewModels
             Model.NextSegmentId = null;
             Model.Direction = SegmentDirection.Unknown;
 
-            TurnImage = null;
+            TurnGlyph = null;
             Direction = SegmentDirection.Unknown;
         }
 
