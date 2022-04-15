@@ -72,7 +72,7 @@ namespace RoadCaptain.Host.Console
         private void MainWindow_Load(object sender, EventArgs e)
         {
             // Load segments
-            _segments = _segmentStore.LoadSegments();
+            _segments = _segmentStore.LoadSegments(new World { Id = "watopia", Name = "Watopia" });
 
             // Only register callbacks after the form is initialized
             // otherwise we may get callback invocation before we're

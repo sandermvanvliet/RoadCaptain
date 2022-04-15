@@ -1,10 +1,7 @@
 ﻿using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using FluentAssertions;
 using FluentAssertions.Execution;
 using RoadCaptain.Adapters;
-using RoadCaptain.SegmentBuilder;
 using Xunit;
 
 namespace RoadCaptain.Tests.Unit.Routing
@@ -45,7 +42,7 @@ namespace RoadCaptain.Tests.Unit.Routing
         {
             var segmentStore = new SegmentStore();
 
-            var segments = segmentStore.LoadSegments();
+            var segments = segmentStore.LoadSegments(new World { Id = "watopia", Name = "Watopia" });
 
             segments
                 .All(s => s.BoundingBox != null)
@@ -58,7 +55,7 @@ namespace RoadCaptain.Tests.Unit.Routing
         {
             var segmentStore = new SegmentStore();
 
-            var segments = segmentStore.LoadSegments();
+            var segments = segmentStore.LoadSegments(new World { Id = "watopia", Name = "Watopia" });
 
             foreach (var segment in segments)
             {
@@ -71,6 +68,18 @@ namespace RoadCaptain.Tests.Unit.Routing
                     }
                 }
             }
+        }
+
+        [Fact]
+        public void GivenWorldWithoutSegments_NoSegmentsAreReturned()
+        {
+            var segmentStore = new SegmentStore();
+
+            var segments = segmentStore.LoadSegments(new World { Id = "test", Name = "Test" });
+
+            segments
+                .Should()
+                .BeEmpty();
         }
     }
 }

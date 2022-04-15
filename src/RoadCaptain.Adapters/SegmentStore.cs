@@ -13,9 +13,8 @@ namespace RoadCaptain.Adapters
 {
     internal class SegmentStore : ISegmentStore
     {
-        private readonly string _segmentPath;
-        private readonly string _tracksPath;
-        private List<Segment> _loadedSegemnts;
+        private readonly string _fileRoot;
+        private readonly Dictionary<string, List<Segment>> _loadedSegments = new();
 
         public SegmentStore() : this(Environment.CurrentDirectory)
         {
@@ -23,19 +22,27 @@ namespace RoadCaptain.Adapters
 
         internal SegmentStore(string fileRoot)
         {
-            _segmentPath = Path.Combine(fileRoot, "segments.json");
-            _tracksPath = Path.Combine(fileRoot, "turns.json");
+            _fileRoot = fileRoot;
         }
 
-        public List<Segment> LoadSegments()
+        public List<Segment> LoadSegments(World world)
         {
-            if (_loadedSegemnts != null)
+            if (_loadedSegments.ContainsKey(world.Id))
             {
-                return _loadedSegemnts;
+                return _loadedSegments[world.Id];
             }
 
-            var segments = JsonConvert.DeserializeObject<List<Segment>>(File.ReadAllText(_segmentPath));
-            var turns = JsonConvert.DeserializeObject<List<SegmentTurns>>(File.ReadAllText(_tracksPath));
+            var segmentsPathForWorld = Path.Combine(_fileRoot, $"segments-{world.Id}.json");
+            var turnsPathForWorld = Path.Combine(_fileRoot, $"turns-{world.Id}.json");
+
+            if (!File.Exists(segmentsPathForWorld) || !File.Exists(turnsPathForWorld))
+            {
+                _loadedSegments.Add(world.Id, new List<Segment>());
+                return _loadedSegments[world.Id];
+            }
+
+            var segments = JsonConvert.DeserializeObject<List<Segment>>(File.ReadAllText(segmentsPathForWorld));
+            var turns = JsonConvert.DeserializeObject<List<SegmentTurns>>(File.ReadAllText(turnsPathForWorld));
 
             if (segments == null)
             {
@@ -65,7 +72,7 @@ namespace RoadCaptain.Adapters
                 }
             }
 
-            _loadedSegemnts = segments;
+            _loadedSegments.Add(world.Id, segments);
 
             return segments;
         }

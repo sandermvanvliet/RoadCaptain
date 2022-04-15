@@ -22,10 +22,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="segments.json">
+    <None Update="segments-watopia.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="turns.json">
+    <None Update="turns-watopia.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="worlds.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>

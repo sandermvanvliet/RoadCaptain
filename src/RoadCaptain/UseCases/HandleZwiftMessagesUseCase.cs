@@ -94,7 +94,7 @@ namespace RoadCaptain.UseCases
 
                     if (_segments == null)
                     {
-                        _segments = _segmentStore.LoadSegments();
+                        _segments = _segmentStore.LoadSegments(_route.World);
                     }
 
                     // As long as there is no route loaded we cannot change the

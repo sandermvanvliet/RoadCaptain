@@ -59,7 +59,7 @@ namespace RoadCaptain.RouteBuilder.ViewModels
                 OnPropertyChanged(nameof(Route));
             };
 
-            _segments = segmentStore.LoadSegments();
+            _segments = segmentStore.LoadSegments(new World { Id = "watopia", Name = "Watopia" });
 
             SaveRouteCommand = new RelayCommand(
                     _ => SaveRoute(),

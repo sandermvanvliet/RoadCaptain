@@ -30,10 +30,12 @@ namespace RoadCaptain.Adapters
         private readonly ISegmentStore _segmentStore;
 
         private List<Segment> _segments;
+        private readonly IWorldStore _worldStore;
 
-        public RouteStoreToDisk(ISegmentStore segmentStore)
+        public RouteStoreToDisk(ISegmentStore segmentStore, IWorldStore worldStore)
         {
             _segmentStore = segmentStore;
+            _worldStore = worldStore;
         }
 
         public PlannedRoute LoadFrom(string path)
@@ -55,6 +57,8 @@ namespace RoadCaptain.Adapters
                     var deserialized = JsonConvert.DeserializeObject<PersistedRouteVersion1>(
                         serialized,
                         RouteSerializationSettings);
+
+                    deserialized.Route.World = _worldStore.LoadWorldById(deserialized.Route.WorldId);
 
                     // ReSharper disable once PossibleNullReferenceException
                     return deserialized.Route;
@@ -123,7 +127,7 @@ namespace RoadCaptain.Adapters
 
         private Segment GetSegmentById(string segmentId)
         {
-            _segments ??= _segmentStore.LoadSegments();
+            _segments ??= _segmentStore.LoadSegments(new World { Id = "watopia", Name = "Watopia" });
 
             return _segments.Single(s => s.Id == segmentId);
         }

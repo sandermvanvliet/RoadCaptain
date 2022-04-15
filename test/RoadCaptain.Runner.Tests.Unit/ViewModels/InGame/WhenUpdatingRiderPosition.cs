@@ -196,7 +196,7 @@ namespace RoadCaptain.Runner.Tests.Unit.ViewModels.InGame
 
             _route = new PlannedRoute
             {
-                World = "TestWorld",
+                World = new World { Id = "testworld", Name = "TestWorld" },
                 RouteSegmentSequence =
                 {
                     new SegmentSequence

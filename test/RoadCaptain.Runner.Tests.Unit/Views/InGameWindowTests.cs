@@ -30,7 +30,7 @@ namespace RoadCaptain.Runner.Tests.Unit.Views
             var route = new PlannedRoute()
             {
                 Name = "TestRoute",
-                World = "TestWorld",
+                World = new World { Id = "testworld", Name = "TestWorld" },
                 ZwiftRouteName = "Mountain route"
             };
             route.RouteSegmentSequence.Add(new SegmentSequence { SegmentId = "seg-1", NextSegmentId = "seg-2", Direction = SegmentDirection.AtoB, TurnToNextSegment = TurnDirection.GoStraight });
@@ -91,7 +91,7 @@ namespace RoadCaptain.Runner.Tests.Unit.Views
             var route = new PlannedRoute()
             {
                 Name = "TestRoute",
-                World = "TestWorld",
+                World = new World { Id = "testworld", Name = "TestWorld" },
                 ZwiftRouteName = "Mountain route"
             };
             route.RouteSegmentSequence.Add(new SegmentSequence { SegmentId = "seg-1", NextSegmentId = "seg-2", Direction = SegmentDirection.AtoB, TurnToNextSegment = TurnDirection.GoStraight });
@@ -158,7 +158,7 @@ namespace RoadCaptain.Runner.Tests.Unit.Views
             var route = new PlannedRoute()
             {
                 Name = "TestRoute",
-                World = "TestWorld",
+                World = new World { Id = "testworld", Name = "TestWorld" },
                 ZwiftRouteName = "Mountain route"
             };
             route.RouteSegmentSequence.Add(new SegmentSequence { SegmentId = "seg-1", NextSegmentId = "seg-2", Direction = SegmentDirection.AtoB, TurnToNextSegment = TurnDirection.GoStraight });
@@ -228,7 +228,7 @@ namespace RoadCaptain.Runner.Tests.Unit.Views
             var route = new PlannedRoute()
             {
                 Name = "TestRoute",
-                World = "TestWorld",
+                World = new World { Id = "testworld", Name = "TestWorld" },
                 ZwiftRouteName = "Mountain route"
             };
             route.RouteSegmentSequence.Add(new SegmentSequence { SegmentId = "seg-1", NextSegmentId = "seg-2", Direction = SegmentDirection.AtoB, TurnToNextSegment = TurnDirection.GoStraight });

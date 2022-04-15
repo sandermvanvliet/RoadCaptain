@@ -32,7 +32,7 @@ namespace RoadCaptain.RouteBuilder.ViewModels
         public RouteViewModel(IRouteStore routeStore, ISegmentStore segmentStore)
         {
             _routeStore = routeStore;
-            _segments = segmentStore.LoadSegments();
+            _segments = segmentStore.LoadSegments(new World { Id = "watopia", Name = "Watopia" });
         }
 
         public IEnumerable<SegmentSequenceViewModel> Sequence => _sequence;

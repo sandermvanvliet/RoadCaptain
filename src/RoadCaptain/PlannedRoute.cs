@@ -4,11 +4,14 @@
 
 using System;
 using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace RoadCaptain
 {
     public class PlannedRoute
     {
+        private World _world;
+        private string _worldId;
         public string Name { get; set; }
         public string ZwiftRouteName { get; set; }
         public bool HasCompleted { get; private set; }
@@ -22,7 +25,24 @@ namespace RoadCaptain
         public string CurrentSegmentId => HasStarted ? RouteSegmentSequence[SegmentSequenceIndex].SegmentId : null;
 
         public List<SegmentSequence> RouteSegmentSequence { get; } = new();
-        public string World { get; set; } = "Watopia";
+
+        [JsonIgnore]
+        public World World
+        {
+            get => _world;
+            set
+            {
+                _world = value;
+                _worldId = value.Id;
+            }
+        }
+
+        [JsonProperty("world")]
+        public string WorldId
+        {
+            get => _world?.Id ?? _worldId;
+            set => _worldId = value;
+        }
 
         public RouteMoveResult EnteredSegment(string segmentId)
         {
