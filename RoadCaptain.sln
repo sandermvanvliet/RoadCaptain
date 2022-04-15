@@ -39,7 +39,9 @@ Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "RoadCaptain.Installer", "pa
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RoadCaptain.Runner.Tests.Unit", "test\RoadCaptain.Runner.Tests.Unit\RoadCaptain.Runner.Tests.Unit.csproj", "{B53775F8-E028-4940-9B76-0DA365681403}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RoadCaptain.UserInterface.Shared", "src\RoadCaptain.UserInterface.Shared\RoadCaptain.UserInterface.Shared.csproj", "{440990B0-1C56-4ADF-A549-D4D435E83B08}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RoadCaptain.UserInterface.Shared", "src\RoadCaptain.UserInterface.Shared\RoadCaptain.UserInterface.Shared.csproj", "{440990B0-1C56-4ADF-A549-D4D435E83B08}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RoadCaptain.WixComponentFileGenerator", "packaging\RoadCaptain.WixComponentFileGenerator\RoadCaptain.WixComponentFileGenerator.csproj", "{7FA3618C-6F84-4BA1-9FFA-7EDC96F6DF1C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -229,6 +231,24 @@ Global
 		{440990B0-1C56-4ADF-A549-D4D435E83B08}.ReleaseFull|x64.Build.0 = Release|Any CPU
 		{440990B0-1C56-4ADF-A549-D4D435E83B08}.ReleaseFull|x86.ActiveCfg = Release|Any CPU
 		{440990B0-1C56-4ADF-A549-D4D435E83B08}.ReleaseFull|x86.Build.0 = Release|Any CPU
+		{7FA3618C-6F84-4BA1-9FFA-7EDC96F6DF1C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7FA3618C-6F84-4BA1-9FFA-7EDC96F6DF1C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7FA3618C-6F84-4BA1-9FFA-7EDC96F6DF1C}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{7FA3618C-6F84-4BA1-9FFA-7EDC96F6DF1C}.Debug|x64.Build.0 = Debug|Any CPU
+		{7FA3618C-6F84-4BA1-9FFA-7EDC96F6DF1C}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{7FA3618C-6F84-4BA1-9FFA-7EDC96F6DF1C}.Debug|x86.Build.0 = Debug|Any CPU
+		{7FA3618C-6F84-4BA1-9FFA-7EDC96F6DF1C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7FA3618C-6F84-4BA1-9FFA-7EDC96F6DF1C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7FA3618C-6F84-4BA1-9FFA-7EDC96F6DF1C}.Release|x64.ActiveCfg = Release|Any CPU
+		{7FA3618C-6F84-4BA1-9FFA-7EDC96F6DF1C}.Release|x64.Build.0 = Release|Any CPU
+		{7FA3618C-6F84-4BA1-9FFA-7EDC96F6DF1C}.Release|x86.ActiveCfg = Release|Any CPU
+		{7FA3618C-6F84-4BA1-9FFA-7EDC96F6DF1C}.Release|x86.Build.0 = Release|Any CPU
+		{7FA3618C-6F84-4BA1-9FFA-7EDC96F6DF1C}.ReleaseFull|Any CPU.ActiveCfg = Release|Any CPU
+		{7FA3618C-6F84-4BA1-9FFA-7EDC96F6DF1C}.ReleaseFull|Any CPU.Build.0 = Release|Any CPU
+		{7FA3618C-6F84-4BA1-9FFA-7EDC96F6DF1C}.ReleaseFull|x64.ActiveCfg = Release|Any CPU
+		{7FA3618C-6F84-4BA1-9FFA-7EDC96F6DF1C}.ReleaseFull|x64.Build.0 = Release|Any CPU
+		{7FA3618C-6F84-4BA1-9FFA-7EDC96F6DF1C}.ReleaseFull|x86.ActiveCfg = Release|Any CPU
+		{7FA3618C-6F84-4BA1-9FFA-7EDC96F6DF1C}.ReleaseFull|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -244,6 +264,7 @@ Global
 		{7AFB461E-C812-4F42-80C9-E7B61B7221BC} = {32960635-C826-4DFF-A9E0-8AFAE47DEC90}
 		{B53775F8-E028-4940-9B76-0DA365681403} = {E3C458CE-58E7-4E56-BC08-A5AA17B898B1}
 		{440990B0-1C56-4ADF-A549-D4D435E83B08} = {BEA7E74A-4BB1-47E5-864C-8F017CD224BB}
+		{7FA3618C-6F84-4BA1-9FFA-7EDC96F6DF1C} = {32960635-C826-4DFF-A9E0-8AFAE47DEC90}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {EFDBED01-0D64-4ACF-89AA-107DDFD90387}

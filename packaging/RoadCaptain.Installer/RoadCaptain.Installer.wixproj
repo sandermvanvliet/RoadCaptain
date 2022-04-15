@@ -24,6 +24,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="banner.bmp" />
+    <None Include="Components.wxi" />
     <Content Include="dialog.bmp" />
     <Content Include="icon.ico" />
     <Content Include="License.rtf" />

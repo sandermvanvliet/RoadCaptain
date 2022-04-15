@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "RoadCaptain.WixComponentFileGenerator": {
+      "commandName": "Project",
+      "commandLineArgs": "\"..\\..\\..\\..\\..\\src\\RoadCaptain.Runner\\bin\\Release\\net6.0-windows\\publish\" \"..\\..\\..\\..\\..\\src\\RoadCaptain.RouteBuilder\\bin\\Release\\net6.0-windows\\publish\" \"..\\..\\..\\..\\RoadCaptain.Installer\\Components.wxi\""
+    }
+  }
+}
