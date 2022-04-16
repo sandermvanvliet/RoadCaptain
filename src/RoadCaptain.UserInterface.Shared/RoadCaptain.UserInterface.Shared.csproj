@@ -20,6 +20,15 @@
 		<None Remove="Assets\profile-default.png" />
 		<None Remove="Assets\turnleft.png" />
 		<None Remove="Assets\turnright.png" />
+		<None Remove="Assets\world-france.jpg" />
+		<None Remove="Assets\world-innsbruck.jpg" />
+		<None Remove="Assets\world-london.jpg" />
+		<None Remove="Assets\world-makuri_islands.jpg" />
+		<None Remove="Assets\world-new_york.jpg" />
+		<None Remove="Assets\world-paris.jpg" />
+		<None Remove="Assets\world-richmond.jpg" />
+		<None Remove="Assets\world-watopia.jpg" />
+		<None Remove="Assets\world-yorkshire.jpg" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -36,6 +45,15 @@
 		<Resource Include="Assets\profile-default.png" />
 		<Resource Include="Assets\turnleft.png" />
 		<Resource Include="Assets\turnright.png" />
+		<Resource Include="Assets\world-innsbruck.jpg" />
+		<Resource Include="Assets\world-london.jpg" />
+		<Resource Include="Assets\world-makuri_islands.jpg" />
+		<Resource Include="Assets\world-new_york.jpg" />
+		<Resource Include="Assets\world-paris.jpg" />
+		<Resource Include="Assets\world-richmond.jpg" />
+		<Resource Include="Assets\world-watopia.jpg" />
+		<Resource Include="Assets\world-yorkshire.jpg" />
+		<Resource Include="Assets\world-france.jpg" />
 	</ItemGroup>
 
 	<ItemGroup>

@@ -35,5 +35,53 @@
         "direction": "AtoB"
       }
     ]
+  },
+  {
+    "id": "makuri_islands",
+    "name": "Makuri Islands",
+    "description": "A fantasy landscape inspired by Japanese culture",
+    "spawnPoints": []
+  },
+  {
+    "id": "richmond",
+    "name": "Richmond",
+    "description": "",
+    "spawnPoints": []
+  },
+  {
+    "id": "london",
+    "name": "London",
+    "description": "",
+    "spawnPoints": []
+  },
+  {
+    "id": "new_york",
+    "name": "New York",
+    "description": "",
+    "spawnPoints": []
+  },
+  {
+    "id": "innsbruck",
+    "name": "Innsbruck",
+    "description": "",
+    "spawnPoints": []
+  },
+  {
+    "id": "yorkshire",
+    "name": "Yorkshire",
+    "description": "",
+    "spawnPoints": []
+  },
+  {
+    "id": "france",
+    "name": "France",
+    "description": "",
+    "spawnPoints": []
+  },
+  {
+    "id": "paris",
+    "name": "Paris",
+    "description": "",
+    "spawnPoints": []
   }
 ]

@@ -63,7 +63,26 @@ namespace RoadCaptain.RouteBuilder.ViewModels
 
                 if (args.PropertyName == nameof(Route.World))
                 {
-                    _segments = segmentStore.LoadSegments(Route.World);
+                    if (Route.World == null)
+                    {
+                        _segments = new List<Segment>();
+                    }
+                    else if (Route.World != null && !string.IsNullOrEmpty(Route.Sport))
+                    {
+                        _segments = segmentStore.LoadSegments(Route.World);
+                    }
+                }
+
+                if (args.PropertyName == nameof(Route.Sport))
+                {
+                    if (string.IsNullOrEmpty(Route.Sport))
+                    {
+                        _segments = new List<Segment>();
+                    }
+                    else if (!string.IsNullOrEmpty(Route.Sport) && Route.World != null)
+                    {
+                        _segments = segmentStore.LoadSegments(Route.World);
+                    }
                 }
 
                 OnPropertyChanged(nameof(Route));
@@ -123,6 +142,10 @@ namespace RoadCaptain.RouteBuilder.ViewModels
                 _ => SelectWorld(_ as string),
                 _ => true);
 
+            SelectSportCommand = new RelayCommand(
+                _ => SelectSport(_ as string),
+                _ => Route.World != null);
+
             Version = GetType().Assembly.GetName().Version?.ToString(4) ?? "0.0.0.0";
         }
 
@@ -139,6 +162,7 @@ namespace RoadCaptain.RouteBuilder.ViewModels
         public ICommand SimulateCommand { get; }
         public ICommand OpenLinkCommand { get; set; }
         public ICommand SelectWorldCommand { get; }
+        public ICommand SelectSportCommand { get; }
 
         public Segment SelectedSegment
         {
@@ -370,6 +394,8 @@ namespace RoadCaptain.RouteBuilder.ViewModels
             SimulationState = SimulationState.NotStarted;
             _simulationIndex = 0;
 
+            SegmentPaths.Clear();
+
             return commandResult;
         }
 
@@ -453,6 +479,13 @@ namespace RoadCaptain.RouteBuilder.ViewModels
         {
             Route.World = _worldStore.LoadWorldById(worldId);
             
+            return CommandResult.Success();
+        }
+
+        private CommandResult SelectSport(string sport)
+        {
+            Route.Sport = sport;
+
             return CommandResult.Success();
         }
 
@@ -573,7 +606,7 @@ namespace RoadCaptain.RouteBuilder.ViewModels
                 OnPropertyChanged();
             }
         }
-
+        
         [NotifyPropertyChangedInvocator]
         private void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {

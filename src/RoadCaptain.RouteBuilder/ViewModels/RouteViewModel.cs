@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Windows.Documents;
 using RoadCaptain.Ports;
 using RoadCaptain.UserInterface.Shared.Commands;
 
@@ -17,6 +18,7 @@ namespace RoadCaptain.RouteBuilder.ViewModels
 
         private string _name;
         private World _world;
+        private string _sport;
 
         public RouteViewModel(IRouteStore routeStore, ISegmentStore segmentStore)
         {
@@ -61,8 +63,27 @@ namespace RoadCaptain.RouteBuilder.ViewModels
 
                 _world = value;
                 OnPropertyChanged();
+                OnPropertyChanged(nameof(ReadyToBuild));
             }
         }
+
+        public string Sport
+        {
+            get => _sport;
+            set
+            {
+                if (value == _sport)
+                {
+                    return;
+                }
+
+                _sport = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(ReadyToBuild));
+            }
+        }
+
+        public bool ReadyToBuild => World != null && !string.IsNullOrEmpty(Sport);
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -172,6 +193,8 @@ namespace RoadCaptain.RouteBuilder.ViewModels
             _sequence.Clear();
             OutputFilePath = null;
             IsTainted = false;
+            World = null;
+            Sport = null;
 
             OnPropertyChanged(nameof(Sequence));
             OnPropertyChanged(nameof(TotalDistance));
@@ -183,6 +206,10 @@ namespace RoadCaptain.RouteBuilder.ViewModels
 
         public bool IsSpawnPointSegment(string segmentId)
         {
+            if (_world == null)
+            {
+                return false;
+            }
             return _world.SpawnPoints.Any(spanPoint => spanPoint.SegmentId == segmentId);
         }
 
