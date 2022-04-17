@@ -139,8 +139,8 @@ namespace RoadCaptain.RouteBuilder.ViewModels
                 _ => !string.IsNullOrEmpty(_ as string));
 
             SelectWorldCommand = new RelayCommand(
-                _ => SelectWorld(_ as string),
-                _ => true);
+                _ => SelectWorld(_ as World),
+                _ => ((_ as World)?.Status ?? WorldStatus.Unknown) == WorldStatus.Available);
 
             SelectSportCommand = new RelayCommand(
                 _ => SelectSport(_ as string),
@@ -475,9 +475,9 @@ namespace RoadCaptain.RouteBuilder.ViewModels
             }
         }
 
-        private CommandResult SelectWorld(string worldId)
+        private CommandResult SelectWorld(World world)
         {
-            Route.World = _worldStore.LoadWorldById(worldId);
+            Route.World = _worldStore.LoadWorldById(world.Id);
             
             return CommandResult.Success();
         }

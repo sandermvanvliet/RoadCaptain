@@ -34,54 +34,63 @@
         "zwiftRouteName": "Jungle Circuit",
         "direction": "AtoB"
       }
-    ]
+    ],
+    "status": "available"
   },
   {
     "id": "makuri_islands",
     "name": "Makuri Islands",
-    "description": "A fantasy landscape inspired by Japanese culture",
-    "spawnPoints": []
+    "description": "",
+    "spawnPoints": [],
+    "status": "unavailable" 
   },
   {
     "id": "richmond",
     "name": "Richmond",
     "description": "",
-    "spawnPoints": []
+    "spawnPoints": [],
+    "status": "unavailable"
   },
   {
     "id": "london",
     "name": "London",
     "description": "",
-    "spawnPoints": []
+    "spawnPoints": [],
+    "status": "unavailable"
   },
   {
     "id": "new_york",
     "name": "New York",
     "description": "",
-    "spawnPoints": []
+    "spawnPoints": [],
+    "status": "unavailable"
   },
   {
     "id": "innsbruck",
     "name": "Innsbruck",
     "description": "",
-    "spawnPoints": []
+    "spawnPoints": [],
+    "status": "unavailable"
   },
   {
     "id": "yorkshire",
     "name": "Yorkshire",
     "description": "",
-    "spawnPoints": []
+    "spawnPoints": [],
+    "status": "unavailable"
   },
   {
     "id": "france",
     "name": "France",
     "description": "",
-    "spawnPoints": []
+    "spawnPoints": [],
+    "status": "unavailable"
   },
   {
     "id": "paris",
     "name": "Paris",
     "description": "",
-    "spawnPoints": []
+    "spawnPoints": [],
+    "status": "unavailable"
   }
 ]

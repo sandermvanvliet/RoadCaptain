@@ -172,7 +172,7 @@
                     </ItemsControl.ItemsPanel>
                     <ItemsControl.ItemTemplate>
                         <DataTemplate DataType="{x:Type roadCaptain:World}">
-                            <Button Style="{StaticResource WorldButtonStyle}" Command="{Binding Path=DataContext.SelectWorldCommand, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=Window}}" CommandParameter="{Binding Path=Id}">
+                            <Button Style="{StaticResource WorldButtonStyle}" Command="{Binding Path=DataContext.SelectWorldCommand, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=Window}}" CommandParameter="{Binding}">
                                 <Button.Content>
                                     <Border Name="borderZero" Background="White" CornerRadius="5" BorderBrush="#FF6141" BorderThickness="1"
                                             Width="200" Height="100" Margin="8,8,8,8">
