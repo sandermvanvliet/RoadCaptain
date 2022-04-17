@@ -57,6 +57,13 @@ namespace RoadCaptain.Adapters
                         RouteSerializationSettings);
 
                     deserialized.Route.World = _worldStore.LoadWorldById(deserialized.Route.WorldId);
+                    
+                    // For routes that were created before sport was known
+                    // set it to Bike because we only supported bike rides.
+                    if (deserialized.Route.Sport == SportType.Unknown)
+                    {
+                        deserialized.Route.Sport = SportType.Bike;
+                    }
 
                     // ReSharper disable once PossibleNullReferenceException
                     return deserialized.Route;
@@ -92,7 +99,7 @@ namespace RoadCaptain.Adapters
 
         private string SerializeAsGpx(PlannedRoute route)
         {
-            var segments = _segmentStore.LoadSegments(route.World);
+            var segments = _segmentStore.LoadSegments(route.World, route.Sport);
 
             var trackSegments = string.Join(
                 Environment.NewLine,

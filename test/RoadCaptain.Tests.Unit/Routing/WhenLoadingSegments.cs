@@ -42,7 +42,7 @@ namespace RoadCaptain.Tests.Unit.Routing
         {
             var segmentStore = new SegmentStore();
 
-            var segments = segmentStore.LoadSegments(new World { Id = "watopia", Name = "Watopia" });
+            var segments = segmentStore.LoadSegments(new World { Id = "watopia", Name = "Watopia" }, SportType.Both);
 
             segments
                 .All(s => s.BoundingBox != null)
@@ -55,7 +55,7 @@ namespace RoadCaptain.Tests.Unit.Routing
         {
             var segmentStore = new SegmentStore();
 
-            var segments = segmentStore.LoadSegments(new World { Id = "watopia", Name = "Watopia" });
+            var segments = segmentStore.LoadSegments(new World { Id = "watopia", Name = "Watopia" }, SportType.Both);
 
             foreach (var segment in segments)
             {
@@ -75,11 +75,30 @@ namespace RoadCaptain.Tests.Unit.Routing
         {
             var segmentStore = new SegmentStore();
 
-            var segments = segmentStore.LoadSegments(new World { Id = "test", Name = "Test" });
+            var segments = segmentStore.LoadSegments(new World { Id = "test", Name = "Test" }, SportType.Both);
 
             segments
                 .Should()
                 .BeEmpty();
+        }
+
+        [Fact]
+        public void GivenWatopiaSegmentsAndSportIsBoth_AllSegmentsAreReturned()
+        {
+            var segmentStore = new SegmentStore();
+
+            var allSegments = segmentStore.LoadSegments(new World { Id = "test", Name = "Test" }, SportType.Both);
+
+            var bikeSegments = segmentStore.LoadSegments(new World { Id = "test", Name = "Test" }, SportType.Bike);
+            var runSegments = segmentStore.LoadSegments(new World { Id = "test", Name = "Test" }, SportType.Run);
+
+            bikeSegments
+                .Should()
+                .HaveCount(allSegments.Count);
+
+            runSegments
+                .Should()
+                .HaveCount(allSegments.Count);
         }
     }
 }

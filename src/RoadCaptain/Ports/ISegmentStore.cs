@@ -4,6 +4,6 @@ namespace RoadCaptain.Ports
 {
     public interface ISegmentStore
     {
-        List<Segment> LoadSegments(World world);
+        List<Segment> LoadSegments(World world, SportType sport);
     }
 }

@@ -139,7 +139,7 @@ namespace RoadCaptain.Runner
 
         private InGameNavigationWindowViewModel CreateInGameViewModel(PlannedRoute plannedRoute)
         {
-            var segments = _segmentStore.LoadSegments(plannedRoute.World);
+            var segments = _segmentStore.LoadSegments(plannedRoute.World, plannedRoute.Sport);
 
             var inGameWindowModel = new InGameWindowModel(segments)
             {

@@ -25,7 +25,7 @@ namespace RoadCaptain.Adapters
             _fileRoot = fileRoot;
         }
 
-        public List<Segment> LoadSegments(World world)
+        public List<Segment> LoadSegments(World world, SportType sport)
         {
             if (_loadedSegments.ContainsKey(world.Id))
             {
@@ -42,6 +42,11 @@ namespace RoadCaptain.Adapters
             }
 
             var segments = JsonConvert.DeserializeObject<List<Segment>>(File.ReadAllText(segmentsPathForWorld));
+            
+            segments = segments
+                .Where(segment => segment.SportType == SportType.Both || segment.SportType == sport)
+                .ToList();
+
             var turns = JsonConvert.DeserializeObject<List<SegmentTurns>>(File.ReadAllText(turnsPathForWorld));
 
             if (segments == null)

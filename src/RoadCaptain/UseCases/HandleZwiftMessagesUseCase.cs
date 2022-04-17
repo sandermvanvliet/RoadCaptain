@@ -96,7 +96,7 @@ namespace RoadCaptain.UseCases
                     // the state.
                     if (_route != null)
                     {
-                        _segments ??= _segmentStore.LoadSegments(_route.World);
+                        _segments ??= _segmentStore.LoadSegments(_route.World, _route.Sport);
 
                         State = State.UpdatePosition(position, _segments, _route);
                     }

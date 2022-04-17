@@ -67,21 +67,21 @@ namespace RoadCaptain.RouteBuilder.ViewModels
                     {
                         _segments = new List<Segment>();
                     }
-                    else if (Route.World != null && !string.IsNullOrEmpty(Route.Sport))
+                    else if (Route.World != null && Route.Sport != SportType.Unknown)
                     {
-                        _segments = segmentStore.LoadSegments(Route.World);
+                        _segments = segmentStore.LoadSegments(Route.World, Route.Sport);
                     }
                 }
 
                 if (args.PropertyName == nameof(Route.Sport))
                 {
-                    if (string.IsNullOrEmpty(Route.Sport))
+                    if (Route.Sport == SportType.Unknown)
                     {
                         _segments = new List<Segment>();
                     }
-                    else if (!string.IsNullOrEmpty(Route.Sport) && Route.World != null)
+                    else if (Route.Sport != SportType.Unknown && Route.World != null)
                     {
-                        _segments = segmentStore.LoadSegments(Route.World);
+                        _segments = segmentStore.LoadSegments(Route.World, Route.Sport);
                     }
                 }
 
@@ -143,7 +143,14 @@ namespace RoadCaptain.RouteBuilder.ViewModels
                 _ => ((_ as WorldViewModel)?.CanSelect ?? false));
 
             SelectSportCommand = new RelayCommand(
-                _ => SelectSport(_ as string),
+                _ =>
+                {
+                    if (_ is SportType sport)
+                    {
+                        return SelectSport(sport);
+                    }
+                    return CommandResult.Failure("Command parameter is not a sport type");
+                },
                 _ => true);
 
             Version = GetType().Assembly.GetName().Version?.ToString(4) ?? "0.0.0.0";
@@ -490,7 +497,7 @@ namespace RoadCaptain.RouteBuilder.ViewModels
             return CommandResult.Success();
         }
 
-        private CommandResult SelectSport(string sport)
+        private CommandResult SelectSport(SportType sport)
         {
             Route.Sport = sport;
 

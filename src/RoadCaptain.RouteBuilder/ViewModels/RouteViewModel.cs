@@ -4,7 +4,6 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Windows.Documents;
 using RoadCaptain.Ports;
 using RoadCaptain.UserInterface.Shared.Commands;
 
@@ -18,7 +17,7 @@ namespace RoadCaptain.RouteBuilder.ViewModels
 
         private string _name;
         private World _world;
-        private string _sport;
+        private SportType _sport;
 
         public RouteViewModel(IRouteStore routeStore, ISegmentStore segmentStore)
         {
@@ -67,7 +66,7 @@ namespace RoadCaptain.RouteBuilder.ViewModels
             }
         }
 
-        public string Sport
+        public SportType Sport
         {
             get => _sport;
             set
@@ -83,7 +82,7 @@ namespace RoadCaptain.RouteBuilder.ViewModels
             }
         }
 
-        public bool ReadyToBuild => World != null && !string.IsNullOrEmpty(Sport);
+        public bool ReadyToBuild => World != null && Sport != SportType.Unknown;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -150,7 +149,8 @@ namespace RoadCaptain.RouteBuilder.ViewModels
             {
                 ZwiftRouteName = GetZwiftRouteName(Sequence.First()),
                 Name = Name,
-                World = World
+                World = World,
+                Sport = Sport
             };
 
             if (string.IsNullOrEmpty(route.Name))
@@ -194,7 +194,7 @@ namespace RoadCaptain.RouteBuilder.ViewModels
             OutputFilePath = null;
             IsTainted = false;
             World = null;
-            Sport = null;
+            Sport = SportType.Unknown;
 
             OnPropertyChanged(nameof(Sequence));
             OnPropertyChanged(nameof(TotalDistance));
@@ -216,7 +216,7 @@ namespace RoadCaptain.RouteBuilder.ViewModels
         public void Load()
         {
             var plannedRoute = _routeStore.LoadFrom(OutputFilePath);
-            var segments = _segmentStore.LoadSegments(plannedRoute.World);
+            var segments = _segmentStore.LoadSegments(plannedRoute.World, plannedRoute.Sport);
 
             _sequence.Clear();
 
@@ -234,6 +234,8 @@ namespace RoadCaptain.RouteBuilder.ViewModels
 
             Name = plannedRoute.Name;
             IsTainted = false;
+            World = plannedRoute.World;
+            Sport = plannedRoute.Sport;
 
             OnPropertyChanged(nameof(Name));
             OnPropertyChanged(nameof(Sequence));

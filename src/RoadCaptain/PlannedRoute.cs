@@ -44,6 +44,8 @@ namespace RoadCaptain
             set => _worldId = value;
         }
 
+        public SportType Sport { get; set; } = SportType.Unknown;
+
         public RouteMoveResult EnteredSegment(string segmentId)
         {
             if (HasCompleted)
