@@ -75,7 +75,7 @@ namespace RoadCaptain.Adapters
                 RouteSerializationSettings);
 
             // ReSharper disable once PossibleNullReferenceException
-            return deserializeObject.AsRoute();
+            return deserializeObject.AsRoute(_worldStore.LoadWorldById("watopia"));
         }
 
         public void Store(PlannedRoute route, string path)
