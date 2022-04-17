@@ -173,21 +173,33 @@
                     </ItemsControl.ItemsPanel>
                     <ItemsControl.ItemTemplate>
                         <DataTemplate DataType="{x:Type viewModels:WorldViewModel}">
-                            <Button Style="{StaticResource WorldButtonStyle}" Command="{Binding Path=DataContext.SelectWorldCommand, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=Window}}" CommandParameter="{Binding}">
+                            <Button Style="{StaticResource WorldButtonStyle}" Command="{Binding Path=DataContext.SelectWorldCommand,RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}" CommandParameter="{Binding}">
                                 <Button.Content>
-                                    <Border Name="borderZero" Background="White" CornerRadius="5" BorderBrush="#FF6141" BorderThickness="1"
+                                    <Border Name="borderZero" Background="White" CornerRadius="5" BorderThickness="2"
                                             Width="200" Height="100" Margin="8,8,8,8">
+                                        <Border.Style>
+                                            <Style TargetType="{x:Type Border}">
+                                                <Setter Property="BorderBrush" Value="#1192CC" />
+                                                <Style.Triggers>
+                                                    <Trigger Property="IsMouseOver" Value="True">
+                                                        <Setter Property="BorderBrush" Value="#FF6141"/>
+                                                    </Trigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Border.Style>
                                         <Grid>
-                                            <Border Name="Mask"
-                                                    Background="White"
-                                                    BorderBrush="#FF6141"
-                                                    BorderThickness="1"
-                                                    CornerRadius="5">
-                                            </Border>
-                                            <Image Source="{Binding Path=Image}" Stretch="UniformToFill" StretchDirection="DownOnly" ClipToBounds="True" x:Name="WorldImage">
-                                                <Image.OpacityMask>
-                                                    <VisualBrush Visual="{Binding ElementName=Mask}" />
-                                                </Image.OpacityMask>
+                                            <Grid.OpacityMask>
+                                                <DrawingBrush>
+                                                    <DrawingBrush.Drawing>
+                                                        <GeometryDrawing Brush="Black">
+                                                            <GeometryDrawing.Geometry>
+                                                                <RectangleGeometry RadiusX="5" RadiusY="5" Rect="0,0,200,100" />
+                                                            </GeometryDrawing.Geometry>
+                                                        </GeometryDrawing>
+                                                    </DrawingBrush.Drawing>
+                                                </DrawingBrush>
+                                            </Grid.OpacityMask>
+                                            <Image Source="{Binding Path=Image}" Height="100" Width="200" Stretch="UniformToFill" ClipToBounds="True" x:Name="WorldImage" Margin="0">
                                                 <Image.Style>
                                                     <Style TargetType="{x:Type Image}">
                                                         <Setter Property="Opacity" Value="0.5" />
@@ -195,9 +207,6 @@
                                                             <Trigger Property="IsMouseOver" Value="True">
                                                                 <Setter Property="Opacity" Value="1"/>
                                                             </Trigger>
-                                                            <DataTrigger Binding="{Binding Path=IsSelected}">
-                                                                <Setter Property="Opacity" Value="1"/>
-                                                            </DataTrigger>
                                                         </Style.Triggers>
                                                     </Style>
                                                 </Image.Style>
@@ -217,19 +226,31 @@
                 <StackPanel Orientation="Horizontal" Grid.Row="3" HorizontalAlignment="Left">
                     <Button Style="{StaticResource WorldButtonStyle}" Command="{Binding Path=DataContext.SelectSportCommand, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=Window}}" CommandParameter="run">
                         <Button.Content>
-                            <Border Name="borderZero" Background="White" CornerRadius="5" BorderBrush="#FF6141" BorderThickness="1"
+                            <Border Background="White" CornerRadius="5" BorderThickness="2"
                                             Width="200" Height="120" Margin="8,8,8,8">
+                                <Border.Style>
+                                    <Style TargetType="{x:Type Border}">
+                                        <Setter Property="BorderBrush" Value="#1192CC" />
+                                        <Style.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter Property="BorderBrush" Value="#FF6141"/>
+                                            </Trigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Border.Style>
                                 <Grid>
-                                    <Border Name="Mask"
-                                                    Background="White"
-                                                    BorderBrush="#FF6141"
-                                                    BorderThickness="1"
-                                                    CornerRadius="5">
-                                    </Border>
+                                    <Grid.OpacityMask>
+                                        <DrawingBrush>
+                                            <DrawingBrush.Drawing>
+                                                <GeometryDrawing Brush="Black">
+                                                    <GeometryDrawing.Geometry>
+                                                        <RectangleGeometry RadiusX="5" RadiusY="5" Rect="0,0,200,120" />
+                                                    </GeometryDrawing.Geometry>
+                                                </GeometryDrawing>
+                                            </DrawingBrush.Drawing>
+                                        </DrawingBrush>
+                                    </Grid.OpacityMask>
                                     <Image Margin="8" Source="{StaticResource RunnerDrawingImage}" Height="100">
-                                        <Image.OpacityMask>
-                                            <VisualBrush Visual="{Binding ElementName=Mask}" />
-                                        </Image.OpacityMask>
                                         <Image.Style>
                                             <Style TargetType="{x:Type Image}">
                                                 <Setter Property="Opacity" Value="0.5" />
@@ -247,19 +268,31 @@
                     </Button>
                     <Button Style="{StaticResource WorldButtonStyle}" Command="{Binding Path=DataContext.SelectSportCommand, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=Window}}" CommandParameter="bike">
                         <Button.Content>
-                            <Border Name="borderZeroX" Background="White" CornerRadius="5" BorderBrush="#FF6141" BorderThickness="1"
+                            <Border Background="White" CornerRadius="5" BorderThickness="2"
                                             Width="200" Height="120" Margin="8,8,8,8">
+                                <Border.Style>
+                                    <Style TargetType="{x:Type Border}">
+                                        <Setter Property="BorderBrush" Value="#1192CC" />
+                                        <Style.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter Property="BorderBrush" Value="#FF6141"/>
+                                            </Trigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Border.Style>
                                 <Grid>
-                                    <Border Name="MaskX"
-                                                    Background="White"
-                                                    BorderBrush="#FF6141"
-                                                    BorderThickness="1"
-                                                    CornerRadius="5">
-                                    </Border>
+                                    <Grid.OpacityMask>
+                                        <DrawingBrush>
+                                            <DrawingBrush.Drawing>
+                                                <GeometryDrawing Brush="Black">
+                                                    <GeometryDrawing.Geometry>
+                                                        <RectangleGeometry RadiusX="5" RadiusY="5" Rect="0,0,200,100" />
+                                                    </GeometryDrawing.Geometry>
+                                                </GeometryDrawing>
+                                            </DrawingBrush.Drawing>
+                                        </DrawingBrush>
+                                    </Grid.OpacityMask>
                                     <Image Margin="8" Source="{StaticResource RacebikeDrawingImage}" Height="100">
-                                        <Image.OpacityMask>
-                                            <VisualBrush Visual="{Binding ElementName=Mask}" />
-                                        </Image.OpacityMask>
                                         <Image.Style>
                                             <Style TargetType="{x:Type Image}">
                                                 <Setter Property="Opacity" Value="0.5" />

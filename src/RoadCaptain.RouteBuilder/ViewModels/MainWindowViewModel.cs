@@ -144,7 +144,7 @@ namespace RoadCaptain.RouteBuilder.ViewModels
 
             SelectSportCommand = new RelayCommand(
                 _ => SelectSport(_ as string),
-                _ => Route.World != null);
+                _ => true);
 
             Version = GetType().Assembly.GetName().Version?.ToString(4) ?? "0.0.0.0";
         }
@@ -479,6 +479,14 @@ namespace RoadCaptain.RouteBuilder.ViewModels
         {
             Route.World = _worldStore.LoadWorldById(world.Id);
             
+            var currentSelected = Worlds.SingleOrDefault(w => w.IsSelected);
+            if (currentSelected != null)
+            {
+                currentSelected.IsSelected = false;
+            }
+
+            world.IsSelected = true;
+
             return CommandResult.Success();
         }
 
