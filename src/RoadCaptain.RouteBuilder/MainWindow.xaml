@@ -156,71 +156,73 @@
                     <RowDefinition Height="150" />
                 </Grid.RowDefinitions>
                 <TextBlock Text="Select a world to build a route for:" FontSize="16" Grid.Row="0" />
-                <ItemsControl ItemsSource="{Binding Path=Worlds}" Grid.Row="1">
-                    <ItemsControl.Template>
-                        <ControlTemplate TargetType="ItemsControl">
-                            <ItemsPresenter/>
-                        </ControlTemplate>
-                    </ItemsControl.Template>
-                    <!--Use the ItemsPanel property to specify an ItemsPanelTemplate
+                <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                    <ItemsControl ItemsSource="{Binding Path=Worlds}">
+                        <ItemsControl.Template>
+                            <ControlTemplate TargetType="ItemsControl">
+                                <ItemsPresenter/>
+                            </ControlTemplate>
+                        </ItemsControl.Template>
+                        <!--Use the ItemsPanel property to specify an ItemsPanelTemplate
       that defines the panel that is used to hold the generated items.
       In other words, use this property if you want to affect
       how the items are laid out.-->
-                    <ItemsControl.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <WrapPanel />
-                        </ItemsPanelTemplate>
-                    </ItemsControl.ItemsPanel>
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate DataType="{x:Type viewModels:WorldViewModel}">
-                            <Button Style="{StaticResource WorldButtonStyle}" Command="{Binding Path=DataContext.SelectWorldCommand,RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}" CommandParameter="{Binding}">
-                                <Button.Content>
-                                    <Border Name="borderZero" Background="White" CornerRadius="5" BorderThickness="2"
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate DataType="{x:Type viewModels:WorldViewModel}">
+                                <Button Style="{StaticResource WorldButtonStyle}" Command="{Binding Path=DataContext.SelectWorldCommand,RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}" CommandParameter="{Binding}">
+                                    <Button.Content>
+                                        <Border Name="borderZero" Background="White" CornerRadius="5" BorderThickness="2"
                                             Width="200" Height="100" Margin="8,8,8,8">
-                                        <Border.Style>
-                                            <Style TargetType="{x:Type Border}">
-                                                <Setter Property="BorderBrush" Value="#1192CC" />
-                                                <Style.Triggers>
-                                                    <Trigger Property="IsMouseOver" Value="True">
-                                                        <Setter Property="BorderBrush" Value="#FF6141"/>
-                                                    </Trigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </Border.Style>
-                                        <Grid>
-                                            <Grid.OpacityMask>
-                                                <DrawingBrush>
-                                                    <DrawingBrush.Drawing>
-                                                        <GeometryDrawing Brush="Black">
-                                                            <GeometryDrawing.Geometry>
-                                                                <RectangleGeometry RadiusX="5" RadiusY="5" Rect="0,0,200,100" />
-                                                            </GeometryDrawing.Geometry>
-                                                        </GeometryDrawing>
-                                                    </DrawingBrush.Drawing>
-                                                </DrawingBrush>
-                                            </Grid.OpacityMask>
-                                            <Image Source="{Binding Path=Image}" Height="100" Width="200" Stretch="UniformToFill" ClipToBounds="True" x:Name="WorldImage" Margin="0">
-                                                <Image.Style>
-                                                    <Style TargetType="{x:Type Image}">
-                                                        <Setter Property="Opacity" Value="0.5" />
-                                                        <Style.Triggers>
-                                                            <Trigger Property="IsMouseOver" Value="True">
-                                                                <Setter Property="Opacity" Value="1"/>
-                                                            </Trigger>
-                                                        </Style.Triggers>
-                                                    </Style>
-                                                </Image.Style>
-                                            </Image>
-                                            <Border Margin="0" Height="28" VerticalAlignment="Top" HorizontalAlignment="Right" BorderBrush="#FF6141" BorderThickness="1" CornerRadius="0,5,0,5" Background="White">
-                                                <TextBlock Text="{Binding Path=Name}" FontWeight="Bold" FontSize="16" Foreground="Black" Padding="4,2,4,0"  />
-                                            </Border>
-                                        </Grid>
-                                    </Border>
-                                </Button.Content>
-                            </Button>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
+                                            <Border.Style>
+                                                <Style TargetType="{x:Type Border}">
+                                                    <Setter Property="BorderBrush" Value="#1192CC" />
+                                                    <Style.Triggers>
+                                                        <Trigger Property="IsMouseOver" Value="True">
+                                                            <Setter Property="BorderBrush" Value="#FF6141"/>
+                                                        </Trigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </Border.Style>
+                                            <Grid>
+                                                <Grid.OpacityMask>
+                                                    <DrawingBrush>
+                                                        <DrawingBrush.Drawing>
+                                                            <GeometryDrawing Brush="Black">
+                                                                <GeometryDrawing.Geometry>
+                                                                    <RectangleGeometry RadiusX="5" RadiusY="5" Rect="0,0,200,100" />
+                                                                </GeometryDrawing.Geometry>
+                                                            </GeometryDrawing>
+                                                        </DrawingBrush.Drawing>
+                                                    </DrawingBrush>
+                                                </Grid.OpacityMask>
+                                                <Image Source="{Binding Path=Image}" Height="100" Width="200" Stretch="UniformToFill" ClipToBounds="True" x:Name="WorldImage" Margin="0">
+                                                    <Image.Style>
+                                                        <Style TargetType="{x:Type Image}">
+                                                            <Setter Property="Opacity" Value="0.5" />
+                                                            <Style.Triggers>
+                                                                <Trigger Property="IsMouseOver" Value="True">
+                                                                    <Setter Property="Opacity" Value="1"/>
+                                                                </Trigger>
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </Image.Style>
+                                                </Image>
+                                                <Border Margin="0" Height="28" VerticalAlignment="Top" HorizontalAlignment="Right" BorderBrush="#FF6141" BorderThickness="1" CornerRadius="0,5,0,5" Background="White">
+                                                    <TextBlock Text="{Binding Path=Name}" FontWeight="Bold" FontSize="16" Foreground="Black" Padding="4,2,4,0"  />
+                                                </Border>
+                                            </Grid>
+                                        </Border>
+                                    </Button.Content>
+                                </Button>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
 
                 <TextBlock Text="Select a sport to build a route for:" FontSize="16" Grid.Row="2" />
                 <StackPanel Orientation="Horizontal" Grid.Row="3" HorizontalAlignment="Left">
