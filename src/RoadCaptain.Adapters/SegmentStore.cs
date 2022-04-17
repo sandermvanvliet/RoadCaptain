@@ -27,9 +27,9 @@ namespace RoadCaptain.Adapters
 
         public List<Segment> LoadSegments(World world, SportType sport)
         {
-            if (_loadedSegments.ContainsKey(world.Id))
+            if (_loadedSegments.ContainsKey(CacheKey(sport, world)))
             {
-                return _loadedSegments[world.Id];
+                return _loadedSegments[CacheKey(sport, world)];
             }
 
             var segmentsPathForWorld = Path.Combine(_fileRoot, $"segments-{world.Id}.json");
@@ -37,14 +37,14 @@ namespace RoadCaptain.Adapters
 
             if (!File.Exists(segmentsPathForWorld) || !File.Exists(turnsPathForWorld))
             {
-                _loadedSegments.Add(world.Id, new List<Segment>());
-                return _loadedSegments[world.Id];
+                _loadedSegments.Add(CacheKey(sport, world), new List<Segment>());
+                return _loadedSegments[CacheKey(sport, world)];
             }
 
             var segments = JsonConvert.DeserializeObject<List<Segment>>(File.ReadAllText(segmentsPathForWorld));
             
             segments = segments
-                .Where(segment => segment.SportType == SportType.Both || segment.SportType == sport)
+                .Where(segment => segment.Sport == SportType.Both || segment.Sport == sport)
                 .ToList();
 
             var turns = JsonConvert.DeserializeObject<List<SegmentTurns>>(File.ReadAllText(turnsPathForWorld));
@@ -77,9 +77,14 @@ namespace RoadCaptain.Adapters
                 }
             }
 
-            _loadedSegments.Add(world.Id, segments);
+            _loadedSegments.Add(CacheKey(sport, world), segments);
 
             return segments;
+        }
+
+        private static string CacheKey(SportType sport, World world)
+        {
+            return $"{world.Id}-{sport}";
         }
     }
 

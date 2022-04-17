@@ -27,7 +27,7 @@ namespace RoadCaptain
 
         public string Id { get; set; }
         public BoundingBox BoundingBox { get; }
-        public SportType SportType { get; set; } = SportType.Both;
+        public SportType Sport { get; set; } = SportType.Both;
 
         public string Name
         {

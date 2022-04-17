@@ -400,7 +400,8 @@ namespace RoadCaptain.RouteBuilder.ViewModels
             RoutePath = new SKPath();
             SimulationState = SimulationState.NotStarted;
             _simulationIndex = 0;
-
+            
+            _segments.Clear();
             SegmentPaths.Clear();
 
             return commandResult;
