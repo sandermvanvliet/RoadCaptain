@@ -3,8 +3,8 @@ namespace RoadCaptain
     public enum SportType
     {
         Unknown,
-        Bike,
-        Run,
+        Cycling,
+        Running,
         Both
     }
 }

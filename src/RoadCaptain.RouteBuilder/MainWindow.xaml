@@ -226,7 +226,7 @@
 
                 <TextBlock Text="Select a sport to build a route for:" FontSize="16" Grid.Row="2" />
                 <StackPanel Orientation="Horizontal" Grid.Row="3" HorizontalAlignment="Left">
-                    <Button Style="{StaticResource WorldButtonStyle}" Command="{Binding Path=DataContext.SelectSportCommand, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=Window}}" CommandParameter="{x:Static roadCaptain:SportType.Run}">
+                    <Button Style="{StaticResource WorldButtonStyle}" Command="{Binding Path=DataContext.SelectSportCommand, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=Window}}" CommandParameter="{x:Static roadCaptain:SportType.Running}">
                         <Button.Content>
                             <Border Background="White" CornerRadius="5" BorderThickness="2"
                                             Width="200" Height="120" Margin="8,8,8,8">
@@ -268,7 +268,7 @@
                             </Border>
                         </Button.Content>
                     </Button>
-                    <Button Style="{StaticResource WorldButtonStyle}" Command="{Binding Path=DataContext.SelectSportCommand, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=Window}}" CommandParameter="{x:Static roadCaptain:SportType.Bike}">
+                    <Button Style="{StaticResource WorldButtonStyle}" Command="{Binding Path=DataContext.SelectSportCommand, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=Window}}" CommandParameter="{x:Static roadCaptain:SportType.Cycling}">
                         <Button.Content>
                             <Border Background="White" CornerRadius="5" BorderThickness="2"
                                             Width="200" Height="120" Margin="8,8,8,8">

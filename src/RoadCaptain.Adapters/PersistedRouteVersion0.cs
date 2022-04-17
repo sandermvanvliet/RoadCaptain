@@ -14,7 +14,7 @@ namespace RoadCaptain.Adapters
                 Name = ZwiftRouteName, // original versions did not have a name for the route itself
                 ZwiftRouteName = ZwiftRouteName,
                 World = watopia,
-                Sport = SportType.Bike
+                Sport = SportType.Cycling
             };
 
             plannedRoute.RouteSegmentSequence.AddRange(RouteSegmentSequence);

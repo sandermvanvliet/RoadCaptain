@@ -89,8 +89,8 @@ namespace RoadCaptain.Tests.Unit.Routing
 
             var allSegments = segmentStore.LoadSegments(new World { Id = "test", Name = "Test" }, SportType.Both);
 
-            var bikeSegments = segmentStore.LoadSegments(new World { Id = "test", Name = "Test" }, SportType.Bike);
-            var runSegments = segmentStore.LoadSegments(new World { Id = "test", Name = "Test" }, SportType.Run);
+            var bikeSegments = segmentStore.LoadSegments(new World { Id = "test", Name = "Test" }, SportType.Cycling);
+            var runSegments = segmentStore.LoadSegments(new World { Id = "test", Name = "Test" }, SportType.Running);
 
             bikeSegments
                 .Should()

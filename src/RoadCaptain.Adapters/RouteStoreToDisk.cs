@@ -59,10 +59,10 @@ namespace RoadCaptain.Adapters
                     deserialized.Route.World = _worldStore.LoadWorldById(deserialized.Route.WorldId);
                     
                     // For routes that were created before sport was known
-                    // set it to Bike because we only supported bike rides.
+                    // set it to Cycling because we only supported bike rides.
                     if (deserialized.Route.Sport == SportType.Unknown)
                     {
-                        deserialized.Route.Sport = SportType.Bike;
+                        deserialized.Route.Sport = SportType.Cycling;
                     }
 
                     // ReSharper disable once PossibleNullReferenceException

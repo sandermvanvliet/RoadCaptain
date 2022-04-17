@@ -149,8 +149,8 @@ namespace RoadCaptain.Runner.ViewModels
         {
             return Model.Route.Sport switch
             {
-                SportType.Bike => "cycling",
-                SportType.Run => "running",
+                SportType.Cycling => "cycling",
+                SportType.Running => "running",
                 _ => "cycling"
             };
         }
