@@ -119,9 +119,10 @@ namespace RoadCaptain.Runner.ViewModels
             }
             else if (gameState is ConnectedToZwiftState && _previousState is not ConnectedToZwiftState)
             {
+                var sportActivity = GetActivityFromSport();
                 Model.UserIsInGame = false;
                 Model.WaitingReason = "Connected with Zwift";
-                Model.InstructionText = $"Start Zwift and start cycling in {Model.Route.World} on route:";
+                Model.InstructionText = $"Start Zwift and start {sportActivity} in {Model.Route.World} on route:";
             }
             else if (gameState is WaitingForConnectionState && _previousState is InGameState)
             {
@@ -131,9 +132,10 @@ namespace RoadCaptain.Runner.ViewModels
             }
             else if (gameState is WaitingForConnectionState)
             {
+                var sportActivity = GetActivityFromSport();
                 Model.UserIsInGame = false;
                 Model.WaitingReason = "Waiting for Zwift...";
-                Model.InstructionText = $"Start Zwift and start cycling in {Model.Route.World} on route:";
+                Model.InstructionText = $"Start Zwift and start {sportActivity} in {Model.Route.World} on route:";
             }
             else if (gameState is ErrorState)
             {
@@ -141,6 +143,16 @@ namespace RoadCaptain.Runner.ViewModels
                 Model.WaitingReason = "Oops! Something went wrong...";
                 Model.InstructionText = "Please report a bug on Github";
             }
+        }
+
+        private string GetActivityFromSport()
+        {
+            return Model.Route.Sport switch
+            {
+                SportType.Bike => "cycling",
+                SportType.Run => "running",
+                _ => "cycling"
+            };
         }
 
         private void RouteProgression(int segmentSequenceIndex)
