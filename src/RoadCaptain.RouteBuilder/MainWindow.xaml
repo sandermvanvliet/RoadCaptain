@@ -10,13 +10,14 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:converters="clr-namespace:RoadCaptain.UserInterface.Shared.Converters;assembly=RoadCaptain.UserInterface.Shared"
-        xmlns:viewmodels="clr-namespace:RoadCaptain.RouteBuilder.ViewModels"
+        xmlns:viewModels="clr-namespace:RoadCaptain.RouteBuilder.ViewModels"
         xmlns:skia="clr-namespace:SkiaSharp.Views.WPF;assembly=SkiaSharp.Views.WPF"
         xmlns:roadCaptain="clr-namespace:RoadCaptain;assembly=RoadCaptain"
+        xmlns:routeBuilder="clr-namespace:RoadCaptain.RouteBuilder"
         mc:Ignorable="d"
         Title="{Binding Path=Model.WindowTitle}" 
         Height="450" Width="800"
-        d:DataContext="{d:DesignInstance viewmodels:MainWindowViewModel}"
+        d:DataContext="{d:DesignInstance viewModels:MainWindowViewModel}"
         Loaded="MainWindow_OnLoaded"
         SizeChanged="MainWindow_OnSizeChanged"
         Activated="MainWindow_OnActivated"
@@ -171,7 +172,7 @@
                         </ItemsPanelTemplate>
                     </ItemsControl.ItemsPanel>
                     <ItemsControl.ItemTemplate>
-                        <DataTemplate DataType="{x:Type roadCaptain:World}">
+                        <DataTemplate DataType="{x:Type viewModels:WorldViewModel}">
                             <Button Style="{StaticResource WorldButtonStyle}" Command="{Binding Path=DataContext.SelectWorldCommand, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=Window}}" CommandParameter="{Binding}">
                                 <Button.Content>
                                     <Border Name="borderZero" Background="White" CornerRadius="5" BorderBrush="#FF6141" BorderThickness="1"
@@ -194,6 +195,9 @@
                                                             <Trigger Property="IsMouseOver" Value="True">
                                                                 <Setter Property="Opacity" Value="1"/>
                                                             </Trigger>
+                                                            <DataTrigger Binding="{Binding Path=IsSelected}">
+                                                                <Setter Property="Opacity" Value="1"/>
+                                                            </DataTrigger>
                                                         </Style.Triggers>
                                                     </Style>
                                                 </Image.Style>
@@ -208,7 +212,6 @@
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
-
 
                 <TextBlock Text="Select a sport to build a route for:" FontSize="16" Grid.Row="2" />
                 <StackPanel Orientation="Horizontal" Grid.Row="3" HorizontalAlignment="Left">
@@ -363,7 +366,7 @@
                         </Style>
                     </ListView.Resources>
                     <ListView.ItemTemplate>
-                        <DataTemplate DataType="viewmodels:SegmentSequenceViewModel">
+                        <DataTemplate DataType="viewModels:SegmentSequenceViewModel">
                             <Grid Margin="0">
                                 <Grid.Resources>
                                     <Style TargetType="{x:Type TextBlock}">

@@ -32,7 +32,7 @@ namespace RoadCaptain.RouteBuilder.ViewModels
         private readonly IVersionChecker _versionChecker;
         private readonly IWindowService _windowService;
         private readonly IWorldStore _worldStore;
-        private World[] _worlds;
+        private WorldViewModel[] _worlds;
 
         public MainWindowViewModel(IRouteStore routeStore, ISegmentStore segmentStore, IVersionChecker versionChecker, IWindowService windowService, IWorldStore worldStore)
         {
@@ -40,7 +40,7 @@ namespace RoadCaptain.RouteBuilder.ViewModels
             _windowService = windowService;
             _worldStore = worldStore;
             Model = new MainWindowModel();
-            Worlds = worldStore.LoadWorlds();
+            Worlds = worldStore.LoadWorlds().Select(world => new WorldViewModel(world)).ToArray();
 
             Route = new RouteViewModel(routeStore, segmentStore);
 
@@ -139,8 +139,8 @@ namespace RoadCaptain.RouteBuilder.ViewModels
                 _ => !string.IsNullOrEmpty(_ as string));
 
             SelectWorldCommand = new RelayCommand(
-                _ => SelectWorld(_ as World),
-                _ => ((_ as World)?.Status ?? WorldStatus.Unknown) == WorldStatus.Available);
+                _ => SelectWorld(_ as WorldViewModel),
+                _ => ((_ as WorldViewModel)?.CanSelect ?? false));
 
             SelectSportCommand = new RelayCommand(
                 _ => SelectSport(_ as string),
@@ -475,7 +475,7 @@ namespace RoadCaptain.RouteBuilder.ViewModels
             }
         }
 
-        private CommandResult SelectWorld(World world)
+        private CommandResult SelectWorld(WorldViewModel world)
         {
             Route.World = _worldStore.LoadWorldById(world.Id);
             
@@ -596,7 +596,7 @@ namespace RoadCaptain.RouteBuilder.ViewModels
             }
         }
 
-        public World[] Worlds
+        public WorldViewModel[] Worlds
         {
             get => _worlds;
             set
