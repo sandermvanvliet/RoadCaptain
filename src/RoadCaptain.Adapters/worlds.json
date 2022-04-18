@@ -77,7 +77,14 @@
     "id": "makuri_islands",
     "name": "Makuri Islands",
     "description": "",
-    "spawnPoints": [],
+    "spawnPoints": [
+      {
+        "segmentId": "makuri-islands-temples-and-towers-001-before-before",
+        "zwiftRouteName": "Castle to Castle",
+        "direction": "AtoB",
+        "sport": "both" 
+      }
+    ],
     "status": "available" 
   },
   {
