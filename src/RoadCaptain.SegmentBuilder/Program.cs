@@ -8,6 +8,8 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using Newtonsoft.Json.Serialization;
 
 namespace RoadCaptain.SegmentBuilder
 {
@@ -20,12 +22,20 @@ namespace RoadCaptain.SegmentBuilder
 
         static void Main(string[] args)
         {
-            var gpxDirectory = args.Length > 0 ? args[0] : @"C:\git\temp\zwift\zwift-watopia-gpx";
+            var gpxDirectory = args.Length > 0 ? args[0] : @"C:\git\temp\zwift\zwift-makuri_islands-gpx";
 
             new Program().Run(gpxDirectory);
         }
 
         private List<Segment> _segments = new();
+        private readonly JsonSerializerSettings _serializerSettings = new()
+        {
+            ContractResolver = new CamelCasePropertyNamesContractResolver(),
+            Converters =
+            {
+                new StringEnumConverter()
+            }
+        };
 
         public void Run(string gpxDirectory)
         {
@@ -56,11 +66,11 @@ namespace RoadCaptain.SegmentBuilder
                     }
                 }
 
-                File.WriteAllText(Path.Combine(gpxDirectory, "segments", "snapshot-1.json"), JsonConvert.SerializeObject(_segments));
+                File.WriteAllText(Path.Combine(gpxDirectory, "segments", "snapshot-1.json"), JsonConvert.SerializeObject(_segments, _serializerSettings));
             }
             else
             {
-                _segments = JsonConvert.DeserializeObject<List<Segment>>(File.ReadAllText(Path.Combine(gpxDirectory, "segments", "snapshot-1.json")));
+                _segments = JsonConvert.DeserializeObject<List<Segment>>(File.ReadAllText(Path.Combine(gpxDirectory, "segments", "snapshot-1.json")), _serializerSettings);
 
                 // Poplulate distance, index and parent properties
                 // of track points on the segment.
@@ -94,7 +104,7 @@ namespace RoadCaptain.SegmentBuilder
 
             File.WriteAllText(
                 Path.Combine(gpxDirectory, "segments", "segments.json"),
-                JsonConvert.SerializeObject(_segments));
+                JsonConvert.SerializeObject(_segments, _serializerSettings));
         }
 
         private bool SplitSegmentsAndUpdateSegmentList()

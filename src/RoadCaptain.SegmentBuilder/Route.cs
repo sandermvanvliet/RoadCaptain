@@ -2,6 +2,7 @@
 // Licensed under Artistic License 2.0
 // See LICENSE or https://choosealicense.com/licenses/artistic-2.0/
 
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -17,13 +18,15 @@ namespace RoadCaptain.SegmentBuilder
         public string Name { get; set; }
         public List<TrackPoint> TrackPoints { get; set; }
         public string Slug { get; set; }
+        public string[] Sports { get; set; }
 
         public static Route FromGpxFile(string filePath)
         {
             var doc = XDocument.Parse(File.ReadAllText(filePath));
 
             var trkElement = doc.Root.Element(XName.Get("trk", GpxNamespace));
-
+            
+            var typeElement = trkElement.Element(XName.Get("link", GpxNamespace)).Element(XName.Get("type", GpxNamespace));
             var trkSeg = trkElement.Elements(XName.Get("trkseg", GpxNamespace));
 
             var trkpt = trkSeg.Elements(XName.Get("trkpt", GpxNamespace));
@@ -41,7 +44,8 @@ namespace RoadCaptain.SegmentBuilder
             {
                 Name = trkElement.Element(XName.Get("name", GpxNamespace)).Value,
                 Slug = Path.GetFileNameWithoutExtension(filePath),
-                TrackPoints = trackPoints
+                TrackPoints = trackPoints,
+                Sports = typeElement.Value.Split(',')
             };
         }
 
@@ -57,7 +61,15 @@ namespace RoadCaptain.SegmentBuilder
         {
             var result = new List<Segment>();
 
-            var currentSegment = new Segment(new List<TrackPoint>()) { Id = $"{Slug}-{result.Count + 1:000}" };
+            var sport = Sports.Contains("running") && Sports.Contains("cycling")
+                ? SportType.Both
+                : Enum.Parse<SportType>(Sports.Single());
+
+            var currentSegment = new Segment(new List<TrackPoint>())
+            {
+                Id = $"{Slug}-{result.Count + 1:000}",
+                Sport = sport
+            };
             TrackPoint previousPoint = null;
 
             foreach (var point in TrackPoints)
@@ -123,7 +135,7 @@ namespace RoadCaptain.SegmentBuilder
                 {
                     if (currentSegment == null)
                     {
-                        currentSegment = new Segment(new List<TrackPoint>()) { Id = $"{Slug}-{result.Count + 1:000}" };
+                        currentSegment = new Segment(new List<TrackPoint>()) { Id = $"{Slug}-{result.Count + 1:000}", Sport = SportType.Running };
 
                         if (previousPoint != null)
                         {
