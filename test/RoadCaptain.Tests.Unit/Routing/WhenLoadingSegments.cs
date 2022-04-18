@@ -87,18 +87,18 @@ namespace RoadCaptain.Tests.Unit.Routing
         {
             var segmentStore = new SegmentStore();
 
-            var allSegments = segmentStore.LoadSegments(new World { Id = "test", Name = "Test" }, SportType.Both);
+            var allSegments = segmentStore.LoadSegments(new World { Id = "watopia", Name = "Watopia" }, SportType.Both);
 
-            var bikeSegments = segmentStore.LoadSegments(new World { Id = "test", Name = "Test" }, SportType.Cycling);
-            var runSegments = segmentStore.LoadSegments(new World { Id = "test", Name = "Test" }, SportType.Running);
+            var bikeSegments = segmentStore.LoadSegments(new World { Id = "watopia", Name = "Watopia" }, SportType.Cycling);
+            var runSegments = segmentStore.LoadSegments(new World { Id = "watopia", Name = "Watopia" }, SportType.Running);
 
             bikeSegments
                 .Should()
-                .HaveCount(allSegments.Count);
+                .HaveCount(allSegments.Count - runSegments.Count(r => r.Sport == SportType.Running), "there are less cycling segments than running segments");
 
             runSegments
                 .Should()
-                .HaveCount(allSegments.Count);
+                .HaveCount(allSegments.Count, "there are more running segments than cycling segments");
         }
     }
 }

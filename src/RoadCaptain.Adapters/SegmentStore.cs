@@ -7,6 +7,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using Newtonsoft.Json.Serialization;
 using RoadCaptain.Ports;
 
 namespace RoadCaptain.Adapters
@@ -15,6 +17,14 @@ namespace RoadCaptain.Adapters
     {
         private readonly string _fileRoot;
         private readonly Dictionary<string, List<Segment>> _loadedSegments = new();
+        private readonly JsonSerializerSettings _serializerSettings = new()
+        {
+            ContractResolver = new CamelCasePropertyNamesContractResolver(),
+            Converters =
+            {
+                new StringEnumConverter()
+            }
+        };
 
         public SegmentStore() : this(Environment.CurrentDirectory)
         {
@@ -41,13 +51,13 @@ namespace RoadCaptain.Adapters
                 return _loadedSegments[CacheKey(sport, world)];
             }
 
-            var segments = JsonConvert.DeserializeObject<List<Segment>>(File.ReadAllText(segmentsPathForWorld));
+            var segments = JsonConvert.DeserializeObject<List<Segment>>(File.ReadAllText(segmentsPathForWorld), _serializerSettings);
             
             segments = segments
-                .Where(segment => segment.Sport == SportType.Both || segment.Sport == sport)
+                .Where(segment => sport == SportType.Both || (segment.Sport == SportType.Both || segment.Sport == sport))
                 .ToList();
 
-            var turns = JsonConvert.DeserializeObject<List<SegmentTurns>>(File.ReadAllText(turnsPathForWorld));
+            var turns = JsonConvert.DeserializeObject<List<SegmentTurns>>(File.ReadAllText(turnsPathForWorld), _serializerSettings);
 
             if (segments == null)
             {
