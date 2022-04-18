@@ -251,7 +251,7 @@ namespace RoadCaptain.RouteBuilder.ViewModels
 
             if (lastSegment == _sequence.First())
             {
-                Reset();
+                _sequence.Clear();
             }
             else
             {
