@@ -12,8 +12,6 @@
         xmlns:converters="clr-namespace:RoadCaptain.UserInterface.Shared.Converters;assembly=RoadCaptain.UserInterface.Shared"
         xmlns:viewModels="clr-namespace:RoadCaptain.RouteBuilder.ViewModels"
         xmlns:skia="clr-namespace:SkiaSharp.Views.WPF;assembly=SkiaSharp.Views.WPF"
-        xmlns:roadCaptain="clr-namespace:RoadCaptain;assembly=RoadCaptain"
-        xmlns:routeBuilder="clr-namespace:RoadCaptain.RouteBuilder"
         mc:Ignorable="d"
         Title="{Binding Path=Model.WindowTitle}" 
         Height="450" Width="800"
@@ -152,151 +150,147 @@
                     <RowDefinition Height="150" />
                 </Grid.RowDefinitions>
                 <TextBlock Text="Select a world to build a route for:" FontSize="16" Grid.Row="0" />
-                <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
-                    <ItemsControl ItemsSource="{Binding Path=Worlds}">
-                        <ItemsControl.Template>
-                            <ControlTemplate TargetType="ItemsControl">
+                <ItemsControl ItemsSource="{Binding Path=Worlds}" Grid.Row="1" >
+                    <ItemsControl.Template>
+                        <ControlTemplate TargetType="ItemsControl">
+                            <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
                                 <ItemsPresenter/>
-                            </ControlTemplate>
-                        </ItemsControl.Template>
-                        <!--Use the ItemsPanel property to specify an ItemsPanelTemplate
+                            </ScrollViewer>
+                        </ControlTemplate>
+                    </ItemsControl.Template>
+                    <!--Use the ItemsPanel property to specify an ItemsPanelTemplate
       that defines the panel that is used to hold the generated items.
       In other words, use this property if you want to affect
       how the items are laid out.-->
-                        <ItemsControl.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <WrapPanel />
-                            </ItemsPanelTemplate>
-                        </ItemsControl.ItemsPanel>
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate DataType="{x:Type viewModels:WorldViewModel}">
-                                <Button Style="{StaticResource WorldButtonStyle}" Command="{Binding Path=DataContext.SelectWorldCommand,RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}" CommandParameter="{Binding}">
-                                    <Button.Content>
-                                        <Border Name="borderZero" Background="White" CornerRadius="5" BorderThickness="2"
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate DataType="{x:Type viewModels:WorldViewModel}">
+                            <Button Style="{StaticResource WorldButtonStyle}" Command="{Binding Path=DataContext.SelectWorldCommand,RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}" CommandParameter="{Binding}">
+                                <Button.Content>
+                                    <Border Name="borderZero" Background="White" CornerRadius="5" BorderThickness="2"
                                             Width="200" Height="100" Margin="8,8,8,8">
-                                            <Border.Style>
-                                                <Style TargetType="{x:Type Border}">
-                                                    <Setter Property="BorderBrush" Value="#1192CC" />
-                                                    <Style.Triggers>
-                                                        <Trigger Property="IsMouseOver" Value="True">
-                                                            <Setter Property="BorderBrush" Value="#FF6141"/>
-                                                        </Trigger>
-                                                        <DataTrigger Binding="{Binding Path=IsSelected,Mode=OneWay}" Value="True">
-                                                            <Setter Property="BorderBrush" Value="#FF6141"/>
-                                                        </DataTrigger>
-                                                    </Style.Triggers>
-                                                </Style>
-                                            </Border.Style>
-                                            <Grid>
-                                                <Grid.OpacityMask>
-                                                    <DrawingBrush>
-                                                        <DrawingBrush.Drawing>
-                                                            <GeometryDrawing Brush="Black">
-                                                                <GeometryDrawing.Geometry>
-                                                                    <RectangleGeometry RadiusX="5" RadiusY="5" Rect="0,0,200,100" />
-                                                                </GeometryDrawing.Geometry>
-                                                            </GeometryDrawing>
-                                                        </DrawingBrush.Drawing>
-                                                    </DrawingBrush>
-                                                </Grid.OpacityMask>
-                                                <Image Source="{Binding Path=Image}" Height="100" Width="200" Stretch="UniformToFill" ClipToBounds="True" x:Name="WorldImage" Margin="0">
-                                                    <Image.Style>
-                                                        <Style TargetType="{x:Type Image}">
-                                                            <Setter Property="Opacity" Value="0.5" />
-                                                            <Style.Triggers>
-                                                                <Trigger Property="IsMouseOver" Value="True">
-                                                                    <Setter Property="Opacity" Value="1"/>
-                                                                </Trigger>
-                                                                <DataTrigger Binding="{Binding Path=IsSelected,Mode=OneWay}" Value="True">
-                                                                    <Setter Property="Opacity" Value="1"/>
-                                                                </DataTrigger>
-                                                            </Style.Triggers>
-                                                        </Style>
-                                                    </Image.Style>
-                                                </Image>
-                                                <Border Margin="0" Height="28" VerticalAlignment="Top" HorizontalAlignment="Right" BorderBrush="#FF6141" BorderThickness="1" CornerRadius="0,5,0,5" Background="White">
-                                                    <TextBlock Text="{Binding Path=Name}" FontWeight="Bold" FontSize="16" Foreground="Black" Padding="4,2,4,0"  />
-                                                </Border>
-                                            </Grid>
-                                        </Border>
-                                    </Button.Content>
-                                </Button>
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ItemsControl>
-                </ScrollViewer>
+                                        <Border.Style>
+                                            <Style TargetType="{x:Type Border}">
+                                                <Setter Property="BorderBrush" Value="#1192CC" />
+                                                <Style.Triggers>
+                                                    <Trigger Property="IsMouseOver" Value="True">
+                                                        <Setter Property="BorderBrush" Value="#FF6141"/>
+                                                    </Trigger>
+                                                    <DataTrigger Binding="{Binding Path=IsSelected,Mode=OneWay}" Value="True">
+                                                        <Setter Property="BorderBrush" Value="#FF6141"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Border.Style>
+                                        <Grid>
+                                            <Grid.OpacityMask>
+                                                <DrawingBrush>
+                                                    <DrawingBrush.Drawing>
+                                                        <GeometryDrawing Brush="Black">
+                                                            <GeometryDrawing.Geometry>
+                                                                <RectangleGeometry RadiusX="5" RadiusY="5" Rect="0,0,200,100" />
+                                                            </GeometryDrawing.Geometry>
+                                                        </GeometryDrawing>
+                                                    </DrawingBrush.Drawing>
+                                                </DrawingBrush>
+                                            </Grid.OpacityMask>
+                                            <Image Source="{Binding Path=Image}" Height="100" Width="200" Stretch="UniformToFill" ClipToBounds="True" x:Name="WorldImage" Margin="0">
+                                                <Image.Style>
+                                                    <Style TargetType="{x:Type Image}">
+                                                        <Setter Property="Opacity" Value="0.5" />
+                                                        <Style.Triggers>
+                                                            <Trigger Property="IsMouseOver" Value="True">
+                                                                <Setter Property="Opacity" Value="1"/>
+                                                            </Trigger>
+                                                            <DataTrigger Binding="{Binding Path=IsSelected,Mode=OneWay}" Value="True">
+                                                                <Setter Property="Opacity" Value="1"/>
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </Image.Style>
+                                            </Image>
+                                            <Border Margin="0" Height="28" VerticalAlignment="Top" HorizontalAlignment="Right" BorderBrush="#FF6141" BorderThickness="1" CornerRadius="0,5,0,5" Background="White">
+                                                <TextBlock Text="{Binding Path=Name}" FontWeight="Bold" FontSize="16" Foreground="Black" Padding="4,2,4,0"  />
+                                            </Border>
+                                        </Grid>
+                                    </Border>
+                                </Button.Content>
+                            </Button>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
 
                 <TextBlock Text="Select a sport to build a route for:" FontSize="16" Grid.Row="2" />
-                <ScrollViewer Grid.Row="3" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
-                    <ItemsControl ItemsSource="{Binding Path=Sports}">
-                        <ItemsControl.Template>
-                            <ControlTemplate TargetType="ItemsControl">
+                <ItemsControl ItemsSource="{Binding Path=Sports}" Grid.Row="3">
+                    <ItemsControl.Template>
+                        <ControlTemplate TargetType="ItemsControl">
+                            <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
                                 <ItemsPresenter/>
-                            </ControlTemplate>
-                        </ItemsControl.Template>
-                        <!--Use the ItemsPanel property to specify an ItemsPanelTemplate
-      that defines the panel that is used to hold the generated items.
-      In other words, use this property if you want to affect
-      how the items are laid out.-->
-                        <ItemsControl.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <WrapPanel />
-                            </ItemsPanelTemplate>
-                        </ItemsControl.ItemsPanel>
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate DataType="{x:Type viewModels:SportViewModel}">
-                                <Button Style="{StaticResource WorldButtonStyle}" Command="{Binding Path=DataContext.SelectSportCommand, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=Window}}" CommandParameter="{Binding}">
-                                    <Button.Content>
-                                        <Border Background="White" CornerRadius="5" BorderThickness="2"
+                            </ScrollViewer>
+                        </ControlTemplate>
+                    </ItemsControl.Template>
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate DataType="{x:Type viewModels:SportViewModel}">
+                            <Button Style="{StaticResource WorldButtonStyle}" Command="{Binding Path=DataContext.SelectSportCommand, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=Window}}" CommandParameter="{Binding}">
+                                <Button.Content>
+                                    <Border Background="White" CornerRadius="5" BorderThickness="2"
                                             Width="200" Height="120" Margin="8,8,8,8">
-                                            <Border.Style>
-                                                <Style TargetType="{x:Type Border}">
-                                                    <Setter Property="BorderBrush" Value="#1192CC" />
-                                                    <Style.Triggers>
-                                                        <Trigger Property="IsMouseOver" Value="True">
-                                                            <Setter Property="BorderBrush" Value="#FF6141"/>
-                                                        </Trigger>
-                                                        <DataTrigger Binding="{Binding Path=IsSelected,Mode=OneWay}" Value="True">
-                                                            <Setter Property="BorderBrush" Value="#FF6141"/>
-                                                        </DataTrigger>
-                                                    </Style.Triggers>
-                                                </Style>
-                                            </Border.Style>
-                                            <Grid>
-                                                <Grid.OpacityMask>
-                                                    <DrawingBrush>
-                                                        <DrawingBrush.Drawing>
-                                                            <GeometryDrawing Brush="Black">
-                                                                <GeometryDrawing.Geometry>
-                                                                    <RectangleGeometry RadiusX="5" RadiusY="5" Rect="0,0,200,120" />
-                                                                </GeometryDrawing.Geometry>
-                                                            </GeometryDrawing>
-                                                        </DrawingBrush.Drawing>
-                                                    </DrawingBrush>
-                                                </Grid.OpacityMask>
-                                                <Image Margin="8" Height="100" Source="{Binding Path=Image}">
-                                                    <Image.Style>
-                                                        <Style TargetType="{x:Type Image}">
-                                                            <Setter Property="Opacity" Value="0.5" />
-                                                            <Style.Triggers>
-                                                                <Trigger Property="IsMouseOver" Value="True">
-                                                                    <Setter Property="Opacity" Value="1"/>
-                                                                </Trigger>
-                                                                <DataTrigger Binding="{Binding Path=IsSelected,Mode=OneWay}" Value="True">
-                                                                    <Setter Property="Opacity" Value="1"/>
-                                                                </DataTrigger>
-                                                            </Style.Triggers>
-                                                        </Style>
-                                                    </Image.Style>
-                                                </Image>
-                                            </Grid>
-                                        </Border>
-                                    </Button.Content>
-                                </Button>
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ItemsControl>
-                </ScrollViewer>
+                                        <Border.Style>
+                                            <Style TargetType="{x:Type Border}">
+                                                <Setter Property="BorderBrush" Value="#1192CC" />
+                                                <Style.Triggers>
+                                                    <Trigger Property="IsMouseOver" Value="True">
+                                                        <Setter Property="BorderBrush" Value="#FF6141"/>
+                                                    </Trigger>
+                                                    <DataTrigger Binding="{Binding Path=IsSelected,Mode=OneWay}" Value="True">
+                                                        <Setter Property="BorderBrush" Value="#FF6141"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Border.Style>
+                                        <Grid>
+                                            <Grid.OpacityMask>
+                                                <DrawingBrush>
+                                                    <DrawingBrush.Drawing>
+                                                        <GeometryDrawing Brush="Black">
+                                                            <GeometryDrawing.Geometry>
+                                                                <RectangleGeometry RadiusX="5" RadiusY="5" Rect="0,0,200,120" />
+                                                            </GeometryDrawing.Geometry>
+                                                        </GeometryDrawing>
+                                                    </DrawingBrush.Drawing>
+                                                </DrawingBrush>
+                                            </Grid.OpacityMask>
+                                            <Image Margin="8" Height="100" Source="{Binding Path=Image}">
+                                                <Image.Style>
+                                                    <Style TargetType="{x:Type Image}">
+                                                        <Setter Property="Opacity" Value="0.5" />
+                                                        <Style.Triggers>
+                                                            <Trigger Property="IsMouseOver" Value="True">
+                                                                <Setter Property="Opacity" Value="1"/>
+                                                            </Trigger>
+                                                            <DataTrigger Binding="{Binding Path=IsSelected,Mode=OneWay}" Value="True">
+                                                                <Setter Property="Opacity" Value="1"/>
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </Image.Style>
+                                            </Image>
+                                        </Grid>
+                                    </Border>
+                                </Button.Content>
+                            </Button>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
             </Grid>
 
             <StackPanel Grid.Row="0" Grid.Column="1" 
