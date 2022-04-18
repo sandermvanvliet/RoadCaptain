@@ -7,32 +7,68 @@
       {
         "segmentId": "watopia-bambino-fondo-001-after-after-after-after-after",
         "zwiftRouteName": "Beach Island Loop",
-        "direction": "BtoA"
+        "direction": "BtoA",
+        "sport": "cycling"
       },
       {
         "segmentId": "watopia-bambino-fondo-001-after-after-after-after-after",
         "zwiftRouteName": "Mountain Route",
-        "direction": "AtoB"
+        "direction": "AtoB",
+        "sport": "cycling"
       },
       {
         "segmentId": "watopia-bambino-fondo-004-before-before",
         "zwiftRouteName": "The Mega Pretzel",
-        "direction": "AtoB"
+        "direction": "AtoB",
+        "sport": "cycling"
       },
       {
         "segmentId": "watopia-big-foot-hills-004-before",
         "zwiftRouteName": "Muir and the mountain",
-        "direction": "BtoA"
+        "direction": "BtoA",
+        "sport": "cycling"
       },
       {
         "segmentId": "watopia-big-foot-hills-004-before",
         "zwiftRouteName": "Big Foot Hills",
-        "direction": "AtoB"
+        "direction": "AtoB",
+        "sport": "cycling"
       },
       {
         "segmentId": "watopia-bambino-fondo-003-before-after",
         "zwiftRouteName": "Jungle Circuit",
-        "direction": "AtoB"
+        "direction": "AtoB",
+        "sport": "cycling"
+      },
+      {
+        "segmentId": "watopia-5k-loop-001-before-before",
+        "zwiftRouteName": "5k Loop",
+        "direction": "AtoB",
+        "sport": "running"
+      },
+      {
+        "segmentId": "watopia-5k-loop-001-after-after-after",
+        "zwiftRouteName": "11.1 Ocean Boulevard",
+        "direction": "BtoA",
+        "sport": "running"
+      },
+      {
+        "segmentId": "watopia-5k-loop-001-after-after-after",
+        "zwiftRouteName": "11.1 Ocean Boulevard",
+        "direction": "BtoA",
+        "sport": "running"
+      },
+      {
+        "segmentId": "watopia-may-field-001",
+        "zwiftRouteName": "May Field",
+        "direction": "AtoB",
+        "sport": "running"
+      },
+      {
+        "segmentId": "watopia-5k-loop-001-after-after-before-after",
+        "zwiftRouteName": "Run Path Reverse",
+        "direction": "BtoA",
+        "sport": "running"
       }
     ],
     "status": "available"
@@ -42,7 +78,7 @@
     "name": "Makuri Islands",
     "description": "",
     "spawnPoints": [],
-    "status": "unavailable" 
+    "status": "available" 
   },
   {
     "id": "richmond",
