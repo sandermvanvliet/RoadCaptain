@@ -210,7 +210,8 @@ namespace RoadCaptain.RouteBuilder.ViewModels
             {
                 return false;
             }
-            return _world.SpawnPoints.Any(spanPoint => spanPoint.SegmentId == segmentId);
+
+            return _world.SpawnPoints.Any(spawnPoint => spawnPoint.SegmentId == segmentId && (spawnPoint.Sport == SportType.Both || spawnPoint.Sport == Sport));
         }
 
         public void Load()
