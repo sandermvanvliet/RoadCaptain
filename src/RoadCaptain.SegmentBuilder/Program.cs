@@ -72,7 +72,7 @@ namespace RoadCaptain.SegmentBuilder
             {
                 _segments = JsonConvert.DeserializeObject<List<Segment>>(File.ReadAllText(Path.Combine(gpxDirectory, "segments", "snapshot-1.json")), _serializerSettings);
 
-                // Poplulate distance, index and parent properties
+                // Populate distance, index and parent properties
                 // of track points on the segment.
                 foreach (var segment in _segments)
                 {

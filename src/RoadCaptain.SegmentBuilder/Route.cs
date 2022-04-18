@@ -135,7 +135,7 @@ namespace RoadCaptain.SegmentBuilder
                 {
                     if (currentSegment == null)
                     {
-                        currentSegment = new Segment(new List<TrackPoint>()) { Id = $"{Slug}-{result.Count + 1:000}", Sport = SportType.Running };
+                        currentSegment = new Segment(new List<TrackPoint>()) { Id = $"{Slug}-{result.Count + 1:000}", Sport = sport };
 
                         if (previousPoint != null)
                         {
