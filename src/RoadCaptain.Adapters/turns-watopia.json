@@ -546,5 +546,105 @@
     "turnsB": {
       "goStraight": "watopia-four-horsemen-002-before"
     }
+  },
+  {
+    "segmentId": "watopia-5k-loop-001-after-after-after",
+    "turnsA": {
+      "goStraight": "watopia-5k-loop-001-after-after-before-after",
+      "left": "watopia-chili-pepper-003-after-after"
+    },
+    "turnsB": {
+      "goStraight": "watopia-5k-loop-001-before-before"
+    }
+  },
+  {
+    "segmentId": "watopia-5k-loop-001-before-before",
+    "turnsA": {
+      "goStraight": "watopia-5k-loop-001-after-after-after"
+    },
+    "turnsB": {
+      "goStraight": "watopia-5k-loop-001-before-after",
+      "left": "watopia-jons-route-001"
+    }
+  },
+  {
+    "segmentId": "watopia-5k-loop-001-before-after",
+    "turnsA": {
+      "goStraight": "watopia-5k-loop-001-before-before",
+      "right": "watopia-jons-route-001"
+    },
+    "turnsB": {
+      "left": "watopia-5k-loop-001-after-before",
+      "right": "watopia-chili-pepper-001"
+    }
+  },
+  {
+    "segmentId": "watopia-5k-loop-001-after-before",
+    "turnsA": {
+      "right": "watopia-5k-loop-001-before-after",
+      "goStraight": "watopia-chili-pepper-001" 
+    },
+    "turnsB": {
+      "goStraight": "watopia-5k-loop-001-after-after-before-before"
+    } 
+  },
+  {
+    "segmentId": "watopia-chili-pepper-001",
+    "turnsA": {
+      "left": "watopia-5k-loop-001-before-after",
+      "goStraight": "watopia-5k-loop-001-after-before"
+    },
+    "turnsB": {
+      "left": "watopia-bambino-fondo-001-after-before",
+      "right": "watopia-bambino-fondo-001-after-after-after-after-after"
+    }
+  },
+  {
+    "segmentId": "watopia-5k-loop-001-after-after-before-before",
+    "turnsA": {
+      "goStraight": "watopia-5k-loop-001-after-before"
+    },
+    "turnsB": {
+      "goStraight": "watopia-5k-loop-001-after-after-before-after",
+      "right": "watopia-ocean-blvd-001"
+    }
+  },
+  {
+    "segmentId": "watopia-ocean-blvd-001",
+    "turnsA": {
+      "goStraight": "watopia-5k-loop-001-after-after-before-before"
+    },
+    "turnsB": {
+      "goStraight": "watopia-bambino-fondo-002-before-after"
+    }
+  },
+  {
+    "segmentId": "watopia-5k-loop-001-after-after-before-after",
+    "turnsA": {
+      "goStraight": "watopia-5k-loop-001-after-after-before-before"
+    },
+    "turnsB": {
+      "goStraight": "watopia-5k-loop-001-after-after-after"
+    }
+  },
+  {
+    "segmentId": "watopia-chili-pepper-003-after-after",
+    "turnsA": {
+      "goStraight": "watopia-bambino-fondo-002-before-after"
+    },
+    "turnsB": {
+      "goStraight": "watopia-5k-loop-001-after-after-after"
+    }
+  },
+  {
+    "segmentId": "watopia-jons-route-001",
+    "turnsA": {
+      "goStraight": "watopia-5k-loop-001-before-before",
+      "left": "watopia-5k-loop-001-before-after"
+    },
+    "turnsB": {
+      "left": "watopia-bambino-fondo-001-after-after-after-after-after",
+      "right": "watopia-bambino-fondo-001-after-after-after-after-after"
+    }
   }
 ]
