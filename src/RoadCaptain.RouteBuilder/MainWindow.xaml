@@ -30,23 +30,20 @@
         <KeyBinding Key="Z" Modifiers="Ctrl" Command="{Binding Path=RemoveLastSegmentCommand}" />
     </Window.InputBindings>
     <Window.Resources>
-        <Geometry x:Key="runnerGeometry1">F1 M1000,1000z M0,0z M571,215.9C583.3,195.3,603.9,183,624.5,199.4L698.6,248.8C731.5,273.5,710.9,302.3,702.7,314.7L517.5,615.3C509.3,627.6 496.9,631.7 484.6,623.5 484.6,623.5 480.5,619.4 427,586.4 373.5,553.5 385.8,504 414.6,454.6L571,215.9z</Geometry>
-        <Geometry x:Key="runnerGeometry2">F1 M1000,1000z M0,0z M727.5,10C784.4,10 830.4,56.1 830.4,112.9 830.4,169.8 784.3,215.8 727.5,215.8 670.6,215.8 624.6,169.7 624.6,112.9 624.5,56.1 670.6,10 727.5,10z</Geometry>
-        <Geometry x:Key="runnerGeometry3">F1 M1000,1000z M0,0z M612.2,191.2L455.7,137.7C443.4,133.6,426.9,133.6,418.6,137.7L241.5,232.4C216.8,244.8 208.5,273.6 220.9,294.2 229.1,310.7 241.5,318.9 258,318.9 266.2,318.9 274.5,318.9 282.7,314.8L443.3,232.4 583.3,281.8C608,290 632.7,277.7 641,253 649.2,224.1 636.9,199.4 612.2,191.2z</Geometry>
-        <Geometry x:Key="runnerGeometry4">F1 M1000,1000z M0,0z M352.7,565.9L299.2,640 105.7,640 105.7,640C76.9,640 48,664.7 48,693.5 48,726.5 72.7,751.2 105.6,751.2L332.1,751.2 332.1,751.2C352.7,751.2,369.2,743,381.5,722.4L435,644.2C431,644.1,356.9,594.7,352.7,565.9z</Geometry>
-        <Geometry x:Key="runnerGeometry5">F1 M1000,1000z M0,0z M682.2,635.9L484.5,491.8C459.8,475.3 422.7,479.4 406.3,508.3 389.8,533 393.9,570 422.8,586.5L579.3,701.8 484.6,911.8C472.2,940.6 484.6,973.6 513.4,985.9 521.6,990 529.9,990 538.1,990 558.7,990 579.3,977.7 587.5,957.1L698.7,701.8C711,681.2,702.8,652.3,682.2,635.9z</Geometry>
-        <Geometry x:Key="runnerGeometry6">F1 M1000,1000z M0,0z M916.9,454.7L764.6,417.6 719.3,277.6C711.1,252.9 686.4,240.5 661.7,248.8 637,257 624.6,281.8 632.9,306.5L686.4,471.2C690.5,487.7,702.9,500,719.3,504.1L896.4,549.4 900.5,549.4C925.2,553.5 945.8,537.1 949.9,512.4 958,483.5 941.6,458.8 916.9,454.7z</Geometry>
-        <DrawingGroup x:Key="runnerDrawingGroup" ClipGeometry="M0,0 V1000 H1000 V0 H0 Z">
-            <DrawingGroup Opacity="1">
-                <GeometryDrawing Brush="#FF000000" Geometry="{StaticResource runnerGeometry1}" />
-                <GeometryDrawing Brush="#FF000000" Geometry="{StaticResource runnerGeometry2}" />
-                <GeometryDrawing Brush="#FF000000" Geometry="{StaticResource runnerGeometry3}" />
-                <GeometryDrawing Brush="#FF000000" Geometry="{StaticResource runnerGeometry4}" />
-                <GeometryDrawing Brush="#FF000000" Geometry="{StaticResource runnerGeometry5}" />
-                <GeometryDrawing Brush="#FF000000" Geometry="{StaticResource runnerGeometry6}" />
-            </DrawingGroup>
-        </DrawingGroup>
-        <DrawingImage x:Key="RunningDrawingImage" Drawing="{StaticResource runnerDrawingGroup}" />
+        <DrawingImage x:Key="RunningDrawingImage">
+            <DrawingImage.Drawing>
+                <DrawingGroup ClipGeometry="M0,0 V1000 H1000 V0 H0 Z">
+                    <DrawingGroup Opacity="1">
+                        <GeometryDrawing Brush="#FF000000" Geometry="F1 M1000,1000z M0,0z M571,215.9C583.3,195.3,603.9,183,624.5,199.4L698.6,248.8C731.5,273.5,710.9,302.3,702.7,314.7L517.5,615.3C509.3,627.6 496.9,631.7 484.6,623.5 484.6,623.5 480.5,619.4 427,586.4 373.5,553.5 385.8,504 414.6,454.6L571,215.9z" />
+                        <GeometryDrawing Brush="#FF000000" Geometry="F1 M1000,1000z M0,0z M727.5,10C784.4,10 830.4,56.1 830.4,112.9 830.4,169.8 784.3,215.8 727.5,215.8 670.6,215.8 624.6,169.7 624.6,112.9 624.5,56.1 670.6,10 727.5,10z" />
+                        <GeometryDrawing Brush="#FF000000" Geometry="F1 M1000,1000z M0,0z M612.2,191.2L455.7,137.7C443.4,133.6,426.9,133.6,418.6,137.7L241.5,232.4C216.8,244.8 208.5,273.6 220.9,294.2 229.1,310.7 241.5,318.9 258,318.9 266.2,318.9 274.5,318.9 282.7,314.8L443.3,232.4 583.3,281.8C608,290 632.7,277.7 641,253 649.2,224.1 636.9,199.4 612.2,191.2z" />
+                        <GeometryDrawing Brush="#FF000000" Geometry="F1 M1000,1000z M0,0z M352.7,565.9L299.2,640 105.7,640 105.7,640C76.9,640 48,664.7 48,693.5 48,726.5 72.7,751.2 105.6,751.2L332.1,751.2 332.1,751.2C352.7,751.2,369.2,743,381.5,722.4L435,644.2C431,644.1,356.9,594.7,352.7,565.9z" />
+                        <GeometryDrawing Brush="#FF000000" Geometry="F1 M1000,1000z M0,0z M682.2,635.9L484.5,491.8C459.8,475.3 422.7,479.4 406.3,508.3 389.8,533 393.9,570 422.8,586.5L579.3,701.8 484.6,911.8C472.2,940.6 484.6,973.6 513.4,985.9 521.6,990 529.9,990 538.1,990 558.7,990 579.3,977.7 587.5,957.1L698.7,701.8C711,681.2,702.8,652.3,682.2,635.9z" />
+                        <GeometryDrawing Brush="#FF000000" Geometry="F1 M1000,1000z M0,0z M916.9,454.7L764.6,417.6 719.3,277.6C711.1,252.9 686.4,240.5 661.7,248.8 637,257 624.6,281.8 632.9,306.5L686.4,471.2C690.5,487.7,702.9,500,719.3,504.1L896.4,549.4 900.5,549.4C925.2,553.5 945.8,537.1 949.9,512.4 958,483.5 941.6,458.8 916.9,454.7z" />
+                    </DrawingGroup>
+                </DrawingGroup>
+            </DrawingImage.Drawing>
+        </DrawingImage>
         <DrawingImage x:Key="CyclingDrawingImage">
             <DrawingImage.Drawing>
                 <DrawingGroup ClipGeometry="M0,0 V149.93927 H227.50724 V0 H0 Z">
