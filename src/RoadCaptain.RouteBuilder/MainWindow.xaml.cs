@@ -81,7 +81,7 @@ namespace RoadCaptain.RouteBuilder
                     // this handler
                     if (_windowViewModel.Route.World != null && !_windowViewModel.SegmentPaths.Any())
                     {
-                        _windowViewModel.CreatePathsForSegments(SkElement.CanvasSize.Width);
+                        _windowViewModel.CreatePathsForSegments(SkElement.CanvasSize.Width, SkElement.CanvasSize.Height);
                     }
 
                     // Redraw when the route changes so that the
@@ -156,12 +156,12 @@ namespace RoadCaptain.RouteBuilder
 
         private void MainWindow_OnLoaded(object sender, RoutedEventArgs e)
         {
-            _windowViewModel.CreatePathsForSegments(SkElement.CanvasSize.Width);
+            _windowViewModel.CreatePathsForSegments(SkElement.CanvasSize.Width, SkElement.CanvasSize.Height);
         }
 
         private void MainWindow_OnSizeChanged(object sender, SizeChangedEventArgs e)
         {
-            _windowViewModel.CreatePathsForSegments(SkElement.CanvasSize.Width);
+            _windowViewModel.CreatePathsForSegments(SkElement.CanvasSize.Width, SkElement.CanvasSize.Height);
         }
 
         private void SkElement_OnMouseLeftButtonUp(object sender, MouseButtonEventArgs e)

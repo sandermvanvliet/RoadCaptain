@@ -338,7 +338,7 @@ namespace RoadCaptain.RouteBuilder.ViewModels
             return newSegmentDirection;
         }
 
-        public void CreatePathsForSegments(float width)
+        public void CreatePathsForSegments(float width, float height)
         {
             SegmentPaths.Clear();
             _segmentPathBounds.Clear();
@@ -359,7 +359,7 @@ namespace RoadCaptain.RouteBuilder.ViewModels
                 {
                     x.Segment,
                     x.GameCoordinates,
-                    Offsets = new Offsets(width, x.GameCoordinates)
+                    Offsets = new Offsets(width, height, x.GameCoordinates)
                 })
                 .ToList();
 

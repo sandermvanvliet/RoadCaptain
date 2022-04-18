@@ -10,9 +10,10 @@ namespace RoadCaptain.RouteBuilder
 {
     public class Offsets
     {
-        public Offsets(float imageWidth, List<TrackPoint> data)
+        public Offsets(float imageWidth, float imageHeight, List<TrackPoint> data)
         {
             ImageWidth = imageWidth;
+            ImageHeight = imageHeight;
 
             MinX = (float)data.Min(p => p.Latitude);
             MaxX = (float)data.Max(p => p.Latitude);
@@ -21,9 +22,10 @@ namespace RoadCaptain.RouteBuilder
             MaxY = (float)data.Max(p => p.Longitude);
         }
 
-        private Offsets(float minX, float maxX, float minY, float maxY, float imageWidth)
+        private Offsets(float minX, float maxX, float minY, float maxY, float imageWidth, float imageHeight)
         {
             ImageWidth = imageWidth;
+            ImageHeight = imageHeight;
             MinX = minX;
             MaxX = maxX;
             MinY = minY;
@@ -31,6 +33,7 @@ namespace RoadCaptain.RouteBuilder
         }
 
         public float ImageWidth { get; }
+        public float ImageHeight { get; }
 
         public float MinX { get; }
         public float MaxX { get; }
@@ -39,7 +42,7 @@ namespace RoadCaptain.RouteBuilder
         public float RangeX => MaxX - MinX;
         public float RangeY => MaxY - MinY;
 
-        // If minX is negative the offset is positive because we shift everything to the right, if it is positive the offset is negative beause we shift to the left
+        // If minX is negative the offset is positive because we shift everything to the right, if it is positive the offset is negative because we shift to the left
         public float OffsetX => -MinX;
         public float OffsetY => -MinY;
 
@@ -49,7 +52,7 @@ namespace RoadCaptain.RouteBuilder
             {
                 if (RangeY > RangeX)
                 {
-                    return (ImageWidth - 1) / RangeY;
+                    return (ImageHeight - 1) / RangeY;
                 }
 
                 return (ImageWidth - 1) / RangeX;
@@ -70,7 +73,7 @@ namespace RoadCaptain.RouteBuilder
             var minY = offsets.Min(o => o.MinY);
             var maxY = offsets.Max(o => o.MaxY);
 
-            return new Offsets(minX, maxX, minY, maxY, offsets.First().ImageWidth);
+            return new Offsets(minX, maxX, minY, maxY, offsets.First().ImageWidth, offsets.First().ImageHeight);
         }
 
         public TrackPoint ReverseScaleAndTranslate(double x, double y)

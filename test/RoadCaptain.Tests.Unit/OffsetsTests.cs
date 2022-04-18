@@ -16,7 +16,10 @@ namespace RoadCaptain.Tests.Unit
         {
             var input = new TrackPoint(1.23, 4.56, 12);
 
-            var offsets = new Offsets(400, new List<TrackPoint>
+            var offsets = new Offsets(
+                400, 
+                400,
+                new List<TrackPoint>
             {
                 new TrackPoint(1, 1, 0),
                 new TrackPoint(5, 5, 0)
