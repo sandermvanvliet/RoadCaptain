@@ -30,7 +30,6 @@
         <KeyBinding Key="Z" Modifiers="Ctrl" Command="{Binding Path=RemoveLastSegmentCommand}" />
     </Window.InputBindings>
     <Window.Resources>
-
         <Geometry x:Key="runnerGeometry1">F1 M1000,1000z M0,0z M571,215.9C583.3,195.3,603.9,183,624.5,199.4L698.6,248.8C731.5,273.5,710.9,302.3,702.7,314.7L517.5,615.3C509.3,627.6 496.9,631.7 484.6,623.5 484.6,623.5 480.5,619.4 427,586.4 373.5,553.5 385.8,504 414.6,454.6L571,215.9z</Geometry>
         <Geometry x:Key="runnerGeometry2">F1 M1000,1000z M0,0z M727.5,10C784.4,10 830.4,56.1 830.4,112.9 830.4,169.8 784.3,215.8 727.5,215.8 670.6,215.8 624.6,169.7 624.6,112.9 624.5,56.1 670.6,10 727.5,10z</Geometry>
         <Geometry x:Key="runnerGeometry3">F1 M1000,1000z M0,0z M612.2,191.2L455.7,137.7C443.4,133.6,426.9,133.6,418.6,137.7L241.5,232.4C216.8,244.8 208.5,273.6 220.9,294.2 229.1,310.7 241.5,318.9 258,318.9 266.2,318.9 274.5,318.9 282.7,314.8L443.3,232.4 583.3,281.8C608,290 632.7,277.7 641,253 649.2,224.1 636.9,199.4 612.2,191.2z</Geometry>
@@ -47,7 +46,8 @@
                 <GeometryDrawing Brush="#FF000000" Geometry="{StaticResource runnerGeometry6}" />
             </DrawingGroup>
         </DrawingGroup>
-        <DrawingImage x:Key="RacebikeDrawingImage" xmlns:svg="http://sharpvectors.codeplex.com/runtime/">
+        <DrawingImage x:Key="RunningDrawingImage" Drawing="{StaticResource runnerDrawingGroup}" />
+        <DrawingImage x:Key="CyclingDrawingImage">
             <DrawingImage.Drawing>
                 <DrawingGroup ClipGeometry="M0,0 V149.93927 H227.50724 V0 H0 Z">
                     <DrawingGroup.Transform>
@@ -66,7 +66,6 @@
                 </DrawingGroup>
             </DrawingImage.Drawing>
         </DrawingImage>
-        <DrawingImage x:Key="RunnerDrawingImage" Drawing="{StaticResource runnerDrawingGroup}" />
         <Style TargetType="{x:Type Button}" x:Key="ButtonStyle">
             <Setter Property="Background" Value="#FF6141" />
             <Setter Property="Foreground" Value="White" />
@@ -231,92 +230,76 @@
                 </ScrollViewer>
 
                 <TextBlock Text="Select a sport to build a route for:" FontSize="16" Grid.Row="2" />
-                <StackPanel Orientation="Horizontal" Grid.Row="3" HorizontalAlignment="Left">
-                    <Button Style="{StaticResource WorldButtonStyle}" Command="{Binding Path=DataContext.SelectSportCommand, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=Window}}" CommandParameter="{x:Static roadCaptain:SportType.Running}">
-                        <Button.Content>
-                            <Border Background="White" CornerRadius="5" BorderThickness="2"
+                <ScrollViewer Grid.Row="3" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                    <ItemsControl ItemsSource="{Binding Path=Sports}">
+                        <ItemsControl.Template>
+                            <ControlTemplate TargetType="ItemsControl">
+                                <ItemsPresenter/>
+                            </ControlTemplate>
+                        </ItemsControl.Template>
+                        <!--Use the ItemsPanel property to specify an ItemsPanelTemplate
+      that defines the panel that is used to hold the generated items.
+      In other words, use this property if you want to affect
+      how the items are laid out.-->
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate DataType="{x:Type viewModels:SportViewModel}">
+                                <Button Style="{StaticResource WorldButtonStyle}" Command="{Binding Path=DataContext.SelectSportCommand, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=Window}}" CommandParameter="{Binding}">
+                                    <Button.Content>
+                                        <Border Background="White" CornerRadius="5" BorderThickness="2"
                                             Width="200" Height="120" Margin="8,8,8,8">
-                                <Border.Style>
-                                    <Style TargetType="{x:Type Border}">
-                                        <Setter Property="BorderBrush" Value="#1192CC" />
-                                        <Style.Triggers>
-                                            <Trigger Property="IsMouseOver" Value="True">
-                                                <Setter Property="BorderBrush" Value="#FF6141"/>
-                                            </Trigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </Border.Style>
-                                <Grid>
-                                    <Grid.OpacityMask>
-                                        <DrawingBrush>
-                                            <DrawingBrush.Drawing>
-                                                <GeometryDrawing Brush="Black">
-                                                    <GeometryDrawing.Geometry>
-                                                        <RectangleGeometry RadiusX="5" RadiusY="5" Rect="0,0,200,120" />
-                                                    </GeometryDrawing.Geometry>
-                                                </GeometryDrawing>
-                                            </DrawingBrush.Drawing>
-                                        </DrawingBrush>
-                                    </Grid.OpacityMask>
-                                    <Image Margin="8" Source="{StaticResource RunnerDrawingImage}" Height="100">
-                                        <Image.Style>
-                                            <Style TargetType="{x:Type Image}">
-                                                <Setter Property="Opacity" Value="0.5" />
-                                                <Style.Triggers>
-                                                    <Trigger Property="IsMouseOver" Value="True">
-                                                        <Setter Property="Opacity" Value="1"/>
-                                                    </Trigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </Image.Style>
-                                    </Image>
-                                </Grid>
-                            </Border>
-                        </Button.Content>
-                    </Button>
-                    <Button Style="{StaticResource WorldButtonStyle}" Command="{Binding Path=DataContext.SelectSportCommand, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=Window}}" CommandParameter="{x:Static roadCaptain:SportType.Cycling}">
-                        <Button.Content>
-                            <Border Background="White" CornerRadius="5" BorderThickness="2"
-                                            Width="200" Height="120" Margin="8,8,8,8">
-                                <Border.Style>
-                                    <Style TargetType="{x:Type Border}">
-                                        <Setter Property="BorderBrush" Value="#1192CC" />
-                                        <Style.Triggers>
-                                            <Trigger Property="IsMouseOver" Value="True">
-                                                <Setter Property="BorderBrush" Value="#FF6141"/>
-                                            </Trigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </Border.Style>
-                                <Grid>
-                                    <Grid.OpacityMask>
-                                        <DrawingBrush>
-                                            <DrawingBrush.Drawing>
-                                                <GeometryDrawing Brush="Black">
-                                                    <GeometryDrawing.Geometry>
-                                                        <RectangleGeometry RadiusX="5" RadiusY="5" Rect="0,0,200,100" />
-                                                    </GeometryDrawing.Geometry>
-                                                </GeometryDrawing>
-                                            </DrawingBrush.Drawing>
-                                        </DrawingBrush>
-                                    </Grid.OpacityMask>
-                                    <Image Margin="8" Source="{StaticResource RacebikeDrawingImage}" Height="100">
-                                        <Image.Style>
-                                            <Style TargetType="{x:Type Image}">
-                                                <Setter Property="Opacity" Value="0.5" />
-                                                <Style.Triggers>
-                                                    <Trigger Property="IsMouseOver" Value="True">
-                                                        <Setter Property="Opacity" Value="1"/>
-                                                    </Trigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </Image.Style>
-                                    </Image>
-                                </Grid>
-                            </Border>
-                        </Button.Content>
-                    </Button>
-                </StackPanel>
+                                            <Border.Style>
+                                                <Style TargetType="{x:Type Border}">
+                                                    <Setter Property="BorderBrush" Value="#1192CC" />
+                                                    <Style.Triggers>
+                                                        <Trigger Property="IsMouseOver" Value="True">
+                                                            <Setter Property="BorderBrush" Value="#FF6141"/>
+                                                        </Trigger>
+                                                        <DataTrigger Binding="{Binding Path=IsSelected,Mode=OneWay}" Value="True">
+                                                            <Setter Property="BorderBrush" Value="#FF6141"/>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </Border.Style>
+                                            <Grid>
+                                                <Grid.OpacityMask>
+                                                    <DrawingBrush>
+                                                        <DrawingBrush.Drawing>
+                                                            <GeometryDrawing Brush="Black">
+                                                                <GeometryDrawing.Geometry>
+                                                                    <RectangleGeometry RadiusX="5" RadiusY="5" Rect="0,0,200,120" />
+                                                                </GeometryDrawing.Geometry>
+                                                            </GeometryDrawing>
+                                                        </DrawingBrush.Drawing>
+                                                    </DrawingBrush>
+                                                </Grid.OpacityMask>
+                                                <Image Margin="8" Height="100" Source="{Binding Path=Image}">
+                                                    <Image.Style>
+                                                        <Style TargetType="{x:Type Image}">
+                                                            <Setter Property="Opacity" Value="0.5" />
+                                                            <Style.Triggers>
+                                                                <Trigger Property="IsMouseOver" Value="True">
+                                                                    <Setter Property="Opacity" Value="1"/>
+                                                                </Trigger>
+                                                                <DataTrigger Binding="{Binding Path=IsSelected,Mode=OneWay}" Value="True">
+                                                                    <Setter Property="Opacity" Value="1"/>
+                                                                </DataTrigger>
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </Image.Style>
+                                                </Image>
+                                            </Grid>
+                                        </Border>
+                                    </Button.Content>
+                                </Button>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
             </Grid>
 
             <StackPanel Grid.Row="0" Grid.Column="1" 

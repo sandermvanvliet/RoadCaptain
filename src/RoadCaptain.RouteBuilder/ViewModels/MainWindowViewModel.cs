@@ -33,6 +33,7 @@ namespace RoadCaptain.RouteBuilder.ViewModels
         private readonly IWindowService _windowService;
         private readonly IWorldStore _worldStore;
         private WorldViewModel[] _worlds;
+        private SportViewModel[] _sports;
 
         public MainWindowViewModel(IRouteStore routeStore, ISegmentStore segmentStore, IVersionChecker versionChecker, IWindowService windowService, IWorldStore worldStore)
         {
@@ -41,6 +42,7 @@ namespace RoadCaptain.RouteBuilder.ViewModels
             _worldStore = worldStore;
             Model = new MainWindowModel();
             Worlds = worldStore.LoadWorlds().Select(world => new WorldViewModel(world)).ToArray();
+            Sports = new[] { new SportViewModel(SportType.Cycling), new SportViewModel(SportType.Running) };
 
             Route = new RouteViewModel(routeStore, segmentStore);
 
@@ -140,17 +142,10 @@ namespace RoadCaptain.RouteBuilder.ViewModels
 
             SelectWorldCommand = new RelayCommand(
                 _ => SelectWorld(_ as WorldViewModel),
-                _ => ((_ as WorldViewModel)?.CanSelect ?? false));
-
+                _ => (_ as WorldViewModel)?.CanSelect ?? false);
+            
             SelectSportCommand = new RelayCommand(
-                _ =>
-                {
-                    if (_ is SportType sport)
-                    {
-                        return SelectSport(sport);
-                    }
-                    return CommandResult.Failure("Command parameter is not a sport type");
-                },
+                _ => SelectSport(_ as SportViewModel),
                 _ => true);
 
             Version = GetType().Assembly.GetName().Version?.ToString(4) ?? "0.0.0.0";
@@ -404,6 +399,18 @@ namespace RoadCaptain.RouteBuilder.ViewModels
             _segments.Clear();
             SegmentPaths.Clear();
 
+            var selectedSport = Sports.SingleOrDefault(s => s.IsSelected);
+            if (selectedSport != null)
+            {
+                selectedSport.IsSelected = false;
+            }
+
+            var selectedWorld = Worlds.SingleOrDefault(s => s.IsSelected);
+            if (selectedWorld != null)
+            {
+                selectedWorld.IsSelected = false;
+            }
+
             return commandResult;
         }
 
@@ -498,9 +505,17 @@ namespace RoadCaptain.RouteBuilder.ViewModels
             return CommandResult.Success();
         }
 
-        private CommandResult SelectSport(SportType sport)
+        private CommandResult SelectSport(SportViewModel sport)
         {
-            Route.Sport = sport;
+            Route.Sport = sport.Sport;
+            
+            var currentSelected = Sports.SingleOrDefault(w => w.IsSelected);
+            if (currentSelected != null)
+            {
+                currentSelected.IsSelected = false;
+            }
+
+            sport.IsSelected = true;
 
             return CommandResult.Success();
         }
@@ -622,7 +637,18 @@ namespace RoadCaptain.RouteBuilder.ViewModels
                 OnPropertyChanged();
             }
         }
-        
+
+        public SportViewModel[] Sports
+        {
+            get => _sports;
+            set
+            {
+                if (value == _sports) return;
+                _sports = value;
+                OnPropertyChanged();
+            }
+        }
+
         [NotifyPropertyChangedInvocator]
         private void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
