@@ -150,9 +150,8 @@
         "direction": "AtoB",
         "sport": "both"
       }
-      //
     ],
-    "status": "available" 
+    "status": "unavailable" 
   },
   {
     "id": "richmond",
