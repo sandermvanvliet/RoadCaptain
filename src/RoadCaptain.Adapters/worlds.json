@@ -8,37 +8,37 @@
         "segmentId": "watopia-bambino-fondo-001-after-after-after-after-after",
         "zwiftRouteName": "Beach Island Loop",
         "direction": "BtoA",
-        "sport": "cycling"
+        "sport": "both"
       },
       {
         "segmentId": "watopia-bambino-fondo-001-after-after-after-after-after",
         "zwiftRouteName": "Mountain Route",
         "direction": "AtoB",
-        "sport": "cycling"
+        "sport": "both"
       },
       {
         "segmentId": "watopia-bambino-fondo-004-before-before",
         "zwiftRouteName": "The Mega Pretzel",
         "direction": "AtoB",
-        "sport": "cycling"
+        "sport": "both"
       },
       {
         "segmentId": "watopia-big-foot-hills-004-before",
         "zwiftRouteName": "Muir and the mountain",
         "direction": "BtoA",
-        "sport": "cycling"
+        "sport": "both"
       },
       {
         "segmentId": "watopia-big-foot-hills-004-before",
         "zwiftRouteName": "Big Foot Hills",
         "direction": "AtoB",
-        "sport": "cycling"
+        "sport": "both"
       },
       {
         "segmentId": "watopia-bambino-fondo-003-before-after",
         "zwiftRouteName": "Jungle Circuit",
         "direction": "AtoB",
-        "sport": "cycling"
+        "sport": "both"
       },
       {
         "segmentId": "watopia-5k-loop-001-before-before",
