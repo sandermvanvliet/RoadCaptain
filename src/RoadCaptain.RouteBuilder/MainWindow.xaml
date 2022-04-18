@@ -185,6 +185,9 @@
                                                         <Trigger Property="IsMouseOver" Value="True">
                                                             <Setter Property="BorderBrush" Value="#FF6141"/>
                                                         </Trigger>
+                                                        <DataTrigger Binding="{Binding Path=IsSelected,Mode=OneWay}" Value="True">
+                                                            <Setter Property="BorderBrush" Value="#FF6141"/>
+                                                        </DataTrigger>
                                                     </Style.Triggers>
                                                 </Style>
                                             </Border.Style>
@@ -208,6 +211,9 @@
                                                                 <Trigger Property="IsMouseOver" Value="True">
                                                                     <Setter Property="Opacity" Value="1"/>
                                                                 </Trigger>
+                                                                <DataTrigger Binding="{Binding Path=IsSelected,Mode=OneWay}" Value="True">
+                                                                    <Setter Property="Opacity" Value="1"/>
+                                                                </DataTrigger>
                                                             </Style.Triggers>
                                                         </Style>
                                                     </Image.Style>
