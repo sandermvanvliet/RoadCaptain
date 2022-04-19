@@ -83,9 +83,6 @@
       <Component Id="RoadCaptain.UserInterface.Shared.pdb" Guid="5e64b027-7495-4f18-b9a3-4bde2a6419c3">
         <File Id="RoadCaptain.UserInterface.Shared.pdb" Name="RoadCaptain.UserInterface.Shared.pdb" Source="$(var.RoadCaptain.Runner_TargetDir)RoadCaptain.UserInterface.Shared.pdb" />
       </Component>
-      <Component Id="segments.json" Guid="94204d00-cfcd-437f-87ad-9e913338b5b3">
-        <File Id="segments.json" Name="segments.json" Source="$(var.RoadCaptain.Runner_TargetDir)segments.json" />
-      </Component>
       <Component Id="Serilog.dll" Guid="ba164d8e-a541-4fed-8e21-06f2d53c20c2">
         <File Id="Serilog.dll" Name="Serilog.dll" Source="$(var.RoadCaptain.Runner_TargetDir)Serilog.dll" />
       </Component>
@@ -107,8 +104,20 @@
       <Component Id="System.IO.Pipelines.dll" Guid="65688271-0047-47a5-be14-1d401a7ebb97">
         <File Id="System.IO.Pipelines.dll" Name="System.IO.Pipelines.dll" Source="$(var.RoadCaptain.Runner_TargetDir)System.IO.Pipelines.dll" />
       </Component>
-      <Component Id="turns.json" Guid="361a6895-5615-46fa-8672-66dead18d656">
-        <File Id="turns.json" Name="turns.json" Source="$(var.RoadCaptain.Runner_TargetDir)turns.json" />
+      <Component Id="segments.makuri_islands.json" Guid="a0b82c3d-e0a9-480a-bb57-835787c9cad5">
+        <File Id="segments.makuri_islands.json" Name="segments-makuri_islands.json" Source="$(var.RoadCaptain.Runner_TargetDir)segments-makuri_islands.json" />
+      </Component>
+      <Component Id="segments.watopia.json" Guid="d3c39a07-f6fb-4a86-98aa-cb60179c8843">
+        <File Id="segments.watopia.json" Name="segments-watopia.json" Source="$(var.RoadCaptain.Runner_TargetDir)segments-watopia.json" />
+      </Component>
+      <Component Id="turns.makuri_islands.json" Guid="56b5e506-7ac1-4ebd-a179-77429d6fb0cf">
+        <File Id="turns.makuri_islands.json" Name="turns-makuri_islands.json" Source="$(var.RoadCaptain.Runner_TargetDir)turns-makuri_islands.json" />
+      </Component>
+      <Component Id="turns.watopia.json" Guid="144d48d4-0bbb-47fd-aa4b-8066e25dda09">
+        <File Id="turns.watopia.json" Name="turns-watopia.json" Source="$(var.RoadCaptain.Runner_TargetDir)turns-watopia.json" />
+      </Component>
+      <Component Id="worlds.json" Guid="c3e0ea86-e9de-4c25-8a54-ae118602ba92">
+        <File Id="worlds.json" Name="worlds.json" Source="$(var.RoadCaptain.Runner_TargetDir)worlds.json" />
       </Component>
     </ComponentGroup>
   </Fragment>

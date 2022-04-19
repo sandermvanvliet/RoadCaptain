@@ -78,6 +78,8 @@ namespace RoadCaptain.WixComponentFileGenerator
                 var fileWithPrefix = string.IsNullOrEmpty(prefix)
                     ? file
                     : $"{prefix}_{file}";
+                
+                fileWithPrefix = MangleId(fileWithPrefix);
 
                 var component = componentGroup.XPathSelectElement($"Component[@Id='{fileWithPrefix}']");
 
@@ -114,6 +116,11 @@ namespace RoadCaptain.WixComponentFileGenerator
                     file.Parent.Remove();
                 }
             }
+        }
+
+        private string MangleId(string input)
+        {
+            return input.Replace("-", ".");
         }
     }
 }
