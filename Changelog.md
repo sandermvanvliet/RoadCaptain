@@ -5,6 +5,7 @@
 ### Route Builder
 
 - Fix issue where loading a route for a different sport than the default sport fails
+- Show route start and end markers on the map ([issue #31](https://github.com/sandermvanvliet/RoadCaptain/issues/31))
 
 ## 0.6.0.0
 
