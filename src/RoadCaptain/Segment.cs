@@ -169,7 +169,8 @@ namespace RoadCaptain
             var slicedSegement = new Segment(slicedPoints)
             {
                 Id = Id + $"-{suffix}",
-                Sport = Sport
+                Sport = Sport,
+                Name = Name + $"-{suffix}"
             };
 
             // To prevent gaps in sliced segments we want to add the last point of the

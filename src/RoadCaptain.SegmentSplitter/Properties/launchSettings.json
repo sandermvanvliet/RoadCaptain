@@ -1,0 +1,9 @@
+{
+  "profiles": {
+    "RoadCaptain.SegmentSplitter": {
+      "commandName": "Project",
+      "commandLineArgs": "\"C:\\git\\RoadCaptain\\src\\RoadCaptain.Adapters\\segments-watopia.json\" \"watopia-bambino-fondo-002-before-after\"",
+      "remoteDebugEnabled": false
+    }
+  }
+}
