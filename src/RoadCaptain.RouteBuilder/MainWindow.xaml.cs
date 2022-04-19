@@ -45,6 +45,15 @@ namespace RoadCaptain.RouteBuilder
         private readonly SKPaint _riderPositionFillPaint = new()
             { Color = SKColor.Parse("#FF6141"), Style = SKPaintStyle.Fill };
 
+        private readonly SKPaint _startMarkerPaint = new()
+            { Color = SKColor.Parse("#ffffff"), Style = SKPaintStyle.StrokeAndFill, StrokeWidth = 4 };
+
+        private readonly SKPaint _startMarkerFillPaint = new()
+            { Color = SKColor.Parse("#14c817"), Style = SKPaintStyle.StrokeAndFill, StrokeWidth = 0 };
+
+        private readonly SKPaint _endMarkerFillPaint = new()
+            { Color = SKColor.Parse("#ff0000"), Style = SKPaintStyle.StrokeAndFill, StrokeWidth = 0 };
+
         private readonly MainWindowViewModel _windowViewModel;
         private string _highlightedSegmentId;
 
@@ -141,6 +150,24 @@ namespace RoadCaptain.RouteBuilder
                 canvas.DrawPath(skiaPath, segmentPaint);
             }
 
+            // Route markers
+            if (_windowViewModel.RoutePath.Points.Any())
+            {
+                // Route end marker
+                var endPoint = _windowViewModel.RoutePath.Points.Last();
+                
+                canvas.DrawCircle(endPoint, 15, _startMarkerPaint);
+                canvas.DrawCircle(endPoint, 15 - _startMarkerPaint.StrokeWidth, _endMarkerFillPaint);
+            
+                // Route start marker, needs to be after the end marker to
+                // ensure the start is always visible if the route starts and
+                // ends at the same location.
+                var startPoint = _windowViewModel.RoutePath.Points.First();
+                
+                canvas.DrawCircle(startPoint, 15, _startMarkerPaint);
+                canvas.DrawCircle(startPoint, 15 - _startMarkerPaint.StrokeWidth, _startMarkerFillPaint);
+            }
+
             if (_windowViewModel.RiderPosition != null)
             {
                 var scaledAndTranslated = _windowViewModel.RiderPosition.Value;
@@ -207,7 +234,7 @@ namespace RoadCaptain.RouteBuilder
             }
         }
 
-        private void MainWindow_OnActivated(object? sender, EventArgs e)
+        private void MainWindow_OnActivated(object sender, EventArgs e)
         {
             Task.Factory.StartNew(() => _windowViewModel.CheckForNewVersion());
         }
