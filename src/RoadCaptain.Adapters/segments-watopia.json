@@ -3043,47 +3043,6 @@
     "nextSegmentsNodeB": [],
     "points": [
       {
-        "latitude": -11.67779,
-        "longitude": 166.96557,
-        "altitude": 160.4,
-        "index": 0,
-        "distanceOnSegment": 0.0,
-        "distanceFromLast": 0.0,
-        "coordinatesDecimal": "S11.67779° E166.96557°"
-      },
-      {
-        "latitude": -11.67784,
-        "longitude": 166.96552,
-        "altitude": 160.8,
-        "index": 1,
-        "distanceOnSegment": 7.63846659981237,
-        "distanceFromLast": 7.63846659981237,
-        "coordinatesDecimal": "S11.67784° E166.96552°"
-      },
-      {
-        "latitude": -11.67789,
-        "longitude": 166.96548,
-        "altitude": 161.2,
-        "index": 2,
-        "distanceOnSegment": 14.07278612600777,
-        "distanceFromLast": 6.4343195261954,
-        "coordinatesDecimal": "S11.67789° E166.96548°"
-      }
-    ],
-    "id": "watopia-quatch-quest-001",
-    "boundingBox": {},
-    "sport": "Both",
-    "name": "quatch-quest-001",
-    "noSelectReason": null,
-    "distance": 14.07278612600777,
-    "ascent": 0.799999999999983,
-    "descent": 0.0
-  },
-  {
-    "nextSegmentsNodeA": [],
-    "nextSegmentsNodeB": [],
-    "points": [
-      {
         "latitude": -11.63685,
         "longitude": 166.96929,
         "altitude": 11.8,
