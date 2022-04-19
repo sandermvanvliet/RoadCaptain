@@ -147,7 +147,7 @@
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="70" />
-                        <ColumnDefinition Width="200" />
+                        <ColumnDefinition Width="290" />
                     </Grid.ColumnDefinitions>
                     
                     <TextBlock Grid.Column="0" HorizontalAlignment="Right" FontWeight="Bold" Text="Name:" />
