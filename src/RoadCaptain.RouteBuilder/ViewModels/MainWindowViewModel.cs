@@ -35,7 +35,6 @@ namespace RoadCaptain.RouteBuilder.ViewModels
         private readonly UserPreferences _userPreferences;
         private WorldViewModel[] _worlds;
         private SportViewModel[] _sports;
-        private bool _hasDefaultSport;
 
         public MainWindowViewModel(IRouteStore routeStore, ISegmentStore segmentStore, IVersionChecker versionChecker, IWindowService windowService, IWorldStore worldStore, UserPreferences userPreferences)
         {
@@ -636,6 +635,7 @@ namespace RoadCaptain.RouteBuilder.ViewModels
                 }
 
                 SimulationState = SimulationState.Completed;
+                RiderPosition = null;
             });
 
             return CommandResult.Success();
