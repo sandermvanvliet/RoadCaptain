@@ -1,5 +1,11 @@
 ﻿# Changelog
 
+## 0.6.1.0
+
+### Route Builder
+
+- Fix issue where loading a route for a different sport than the default sport fails
+
 ## 0.6.0.0
 
 This is a big release with two items that will make RoadCaptain a lot more versatile!

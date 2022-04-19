@@ -233,12 +233,17 @@ namespace RoadCaptain.RouteBuilder.ViewModels
                     });
             }
 
-            Name = plannedRoute.Name;
             IsTainted = false;
-            World = plannedRoute.World;
-            Sport = plannedRoute.Sport;
+
+            // Don't use the properties because we don't
+            // want PropertyChanged to fire just yet.
+            _name = plannedRoute.Name;
+            _world = plannedRoute.World;
+            _sport = plannedRoute.Sport;
 
             OnPropertyChanged(nameof(Name));
+            OnPropertyChanged(nameof(World));
+            OnPropertyChanged(nameof(Sport));
             OnPropertyChanged(nameof(Sequence));
             OnPropertyChanged(nameof(TotalDistance));
             OnPropertyChanged(nameof(TotalAscent));
