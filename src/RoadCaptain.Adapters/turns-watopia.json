@@ -2,7 +2,8 @@
   {
     "segmentId": "watopia-bambino-fondo-001-after-before",
     "turnsA": {
-      "goStraight": "watopia-bambino-fondo-001-after-after-after-after-after-after"
+      "goStraight": "watopia-bambino-fondo-001-after-after-after-after-after-after",
+      "right": "watopia-chili-pepper-001"
     },
     "turnsB": {
       "left": "watopia-bambino-fondo-001-after-after-before-before-before",
@@ -595,7 +596,7 @@
     },
     "turnsB": {
       "left": "watopia-bambino-fondo-001-after-before",
-      "right": "watopia-bambino-fondo-001-after-after-after-after-after"
+      "right": "watopia-bambino-fondo-001-after-after-after-after-after-after"
     }
   },
   {
@@ -664,7 +665,8 @@
       "left": "watopia-jons-route-001"
     },
     "turnsB": {
-      "goStraight": "watopia-bambino-fondo-001-after-before"
+      "goStraight": "watopia-bambino-fondo-001-after-before",
+      "left": "watopia-chili-pepper-001"
     }
   }
 ]
