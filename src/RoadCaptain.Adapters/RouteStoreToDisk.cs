@@ -46,6 +46,8 @@ namespace RoadCaptain.Adapters
             var serialized = File.ReadAllText(path);
             var parsed = JObject.Parse(serialized);
 
+            PlannedRoute plannedRoute = null;
+
             if (parsed.ContainsKey("version"))
             {
                 var schemaVersion = parsed["version"]?.Value<string>() ?? "0";
@@ -66,16 +68,37 @@ namespace RoadCaptain.Adapters
                     }
 
                     // ReSharper disable once PossibleNullReferenceException
-                    return deserialized.Route;
+                    plannedRoute = deserialized.Route;
+                }
+            }
+            else
+            {
+                var deserializeObject = JsonConvert.DeserializeObject<PersistedRouteVersion0>(
+                    serialized,
+                    RouteSerializationSettings);
+
+                // ReSharper disable once PossibleNullReferenceException
+                plannedRoute = deserializeObject.AsRoute(_worldStore.LoadWorldById("watopia"));
+            }
+
+            if (plannedRoute != null)
+            {
+                // Handle the spawn point segment split
+                if (plannedRoute.StartingSegmentId == "watopia-bambino-fondo-001-after-after-after-after-after")
+                {
+                    if ("mountain route".Equals(plannedRoute.ZwiftRouteName,
+                            StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        plannedRoute.RouteSegmentSequence[0].SegmentId = "watopia-bambino-fondo-001-after-after-after-after-after-after";
+                    }
+                    else
+                    {
+                        plannedRoute.RouteSegmentSequence[0].SegmentId = "watopia-bambino-fondo-001-after-after-after-after-after-before";
+                    }
                 }
             }
 
-            var deserializeObject = JsonConvert.DeserializeObject<PersistedRouteVersion0>(
-                serialized,
-                RouteSerializationSettings);
-
-            // ReSharper disable once PossibleNullReferenceException
-            return deserializeObject.AsRoute(_worldStore.LoadWorldById("watopia"));
+            return plannedRoute;
         }
 
         public void Store(PlannedRoute route, string path)
