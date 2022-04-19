@@ -54361,169 +54361,88 @@
     "nextSegmentsNodeA": [],
     "nextSegmentsNodeB": [],
     "points": [
-      {
-        "latitude": -11.63646,
-        "longitude": 166.95402,
-        "altitude": 1.0,
-        "index": 0,
-        "distanceOnSegment": 0.0,
-        "distanceFromLast": 0.0,
-        "coordinatesDecimal": "S11.63646° E166.95402°"
-      },
-      {
-        "latitude": -11.6365,
-        "longitude": 166.95415,
-        "altitude": 1.0,
-        "index": 1,
-        "distanceOnSegment": 14.840440182974904,
-        "distanceFromLast": 14.840440182974904,
-        "coordinatesDecimal": "S11.63650° E166.95415°"
-      },
-      {
-        "latitude": -11.6366,
-        "longitude": 166.95424,
-        "altitude": 1.0,
-        "index": 2,
-        "distanceOnSegment": 29.66337852389033,
-        "distanceFromLast": 14.822938340915425,
-        "coordinatesDecimal": "S11.63660° E166.95424°"
-      },
-      {
-        "latitude": -11.63669,
-        "longitude": 166.95435,
-        "altitude": 1.0,
-        "index": 3,
-        "distanceOnSegment": 45.27338616916506,
-        "distanceFromLast": 15.61000764527473,
-        "coordinatesDecimal": "S11.63669° E166.95435°"
-      },
-      {
-        "latitude": -11.63679,
-        "longitude": 166.95444,
-        "altitude": 1.0,
-        "index": 4,
-        "distanceOnSegment": 60.096320083710154,
-        "distanceFromLast": 14.822933914545095,
-        "coordinatesDecimal": "S11.63679° E166.95444°"
-      },
-      {
-        "latitude": -11.6369,
-        "longitude": 166.95452,
-        "altitude": 1.0,
-        "index": 5,
-        "distanceOnSegment": 75.11365058290907,
-        "distanceFromLast": 15.01733049919892,
-        "coordinatesDecimal": "S11.63690° E166.95452°"
-      },
-      {
-        "latitude": -11.63704,
-        "longitude": 166.95455,
-        "altitude": 1.0,
-        "index": 6,
-        "distanceOnSegment": 91.02011565510361,
-        "distanceFromLast": 15.90646507219454,
-        "coordinatesDecimal": "S11.63704° E166.95455°"
-      },
-      {
-        "latitude": -11.63717,
-        "longitude": 166.95452,
-        "altitude": 1.0,
-        "index": 7,
-        "distanceOnSegment": 105.84010145493947,
-        "distanceFromLast": 14.819985799835862,
-        "coordinatesDecimal": "S11.63717° E166.95452°"
-      },
-      {
-        "latitude": -11.63728,
-        "longitude": 166.95444,
-        "altitude": 1.0,
-        "index": 8,
-        "distanceOnSegment": 120.85742504970506,
-        "distanceFromLast": 15.017323594765589,
-        "coordinatesDecimal": "S11.63728° E166.95444°"
-      },
-      {
-        "latitude": -11.63736,
-        "longitude": 166.95434,
-        "altitude": 1.0,
-        "index": 9,
-        "distanceOnSegment": 134.91956422136067,
-        "distanceFromLast": 14.062139171655604,
-        "coordinatesDecimal": "S11.63736° E166.95434°"
-      },
-      {
-        "latitude": -11.63738,
-        "longitude": 166.9542,
-        "altitude": 1.0,
-        "index": 10,
-        "distanceOnSegment": 150.32818132013355,
-        "distanceFromLast": 15.408617098772872,
-        "coordinatesDecimal": "S11.63738° E166.95420°"
-      },
-      {
-        "latitude": -11.63735,
-        "longitude": 166.95408,
-        "altitude": 1.0,
-        "index": 11,
-        "distanceOnSegment": 163.8162998001501,
-        "distanceFromLast": 13.488118480016542,
-        "coordinatesDecimal": "S11.63735° E166.95408°"
-      },
-      {
-        "latitude": -11.63727,
-        "longitude": 166.95395,
-        "altitude": 1.0,
-        "index": 12,
-        "distanceOnSegment": 180.53713007512522,
-        "distanceFromLast": 16.72083027497512,
-        "coordinatesDecimal": "S11.63727° E166.95395°"
-      },
-      {
-        "latitude": -11.63718,
-        "longitude": 166.95386,
-        "altitude": 1.0,
-        "index": 13,
-        "distanceOnSegment": 194.54522925400707,
-        "distanceFromLast": 14.008099178881862,
-        "coordinatesDecimal": "S11.63718° E166.95386°"
-      },
-      {
-        "latitude": -11.63708,
-        "longitude": 166.95377,
-        "altitude": 1.0,
-        "index": 14,
-        "distanceOnSegment": 209.36815408277485,
-        "distanceFromLast": 14.822924828767775,
-        "coordinatesDecimal": "S11.63708° E166.95377°"
-      },
-      {
-        "latitude": -11.63697,
-        "longitude": 166.95368,
-        "altitude": 1.0,
-        "index": 15,
-        "distanceOnSegment": 225.04247153486176,
-        "distanceFromLast": 15.674317452086918,
-        "coordinatesDecimal": "S11.63697° E166.95368°"
-      },
-      {
-        "latitude": -11.63686,
-        "longitude": 166.95361,
-        "altitude": 1.0,
-        "index": 16,
-        "distanceOnSegment": 239.45525408521345,
-        "distanceFromLast": 14.412782550351704,
-        "coordinatesDecimal": "S11.63686° E166.95361°"
-      }
+        {
+            "latitude": -11.63646,
+            "longitude": 166.95402,
+            "altitude": 1.0,
+            "index": 0,
+            "distanceOnSegment": 0.0,
+            "distanceFromLast": 0.0,
+            "coordinatesDecimal": "S11.63646° E166.95402°"
+        },
+        {
+            "latitude": -11.6365,
+            "longitude": 166.95415,
+            "altitude": 1.0,
+            "index": 1,
+            "distanceOnSegment": 14.840440182974904,
+            "distanceFromLast": 14.840440182974904,
+            "coordinatesDecimal": "S11.63650° E166.95415°"
+        },
+        {
+            "latitude": -11.6366,
+            "longitude": 166.95424,
+            "altitude": 1.0,
+            "index": 2,
+            "distanceOnSegment": 29.66337852389033,
+            "distanceFromLast": 14.822938340915425,
+            "coordinatesDecimal": "S11.63660° E166.95424°"
+        },
+        {
+            "latitude": -11.63669,
+            "longitude": 166.95435,
+            "altitude": 1.0,
+            "index": 3,
+            "distanceOnSegment": 45.27338616916506,
+            "distanceFromLast": 15.61000764527473,
+            "coordinatesDecimal": "S11.63669° E166.95435°"
+        },
+        {
+            "latitude": -11.63679,
+            "longitude": 166.95444,
+            "altitude": 1.0,
+            "index": 4,
+            "distanceOnSegment": 60.096320083710154,
+            "distanceFromLast": 14.822933914545095,
+            "coordinatesDecimal": "S11.63679° E166.95444°"
+        },
+        {
+            "latitude": -11.6369,
+            "longitude": 166.95452,
+            "altitude": 1.0,
+            "index": 5,
+            "distanceOnSegment": 75.11365058290907,
+            "distanceFromLast": 15.01733049919892,
+            "coordinatesDecimal": "S11.63690° E166.95452°"
+        },
+        {
+            "latitude": -11.63701,
+            "longitude": 166.95457,
+            "altitude": 1.0,
+            "index": 6,
+            "distanceOnSegment": 88.50250005854969,
+            "distanceFromLast": 13.388849475640605,
+            "coordinatesDecimal": "S11.63701° E166.95457°"
+        },
+        {
+            "latitude": -11.63713,
+            "longitude": 166.95458,
+            "altitude": 1.0,
+            "index": 7,
+            "distanceOnSegment": 101.8902635913993,
+            "distanceFromLast": 13.387763532849611,
+            "coordinatesDecimal": "S11.63713° E166.95458°"
+        }
     ],
     "id": "watopia-chili-pepper-001",
     "boundingBox": {},
     "sport": "Running",
     "name": "chili-pepper-001",
     "noSelectReason": null,
-    "distance": 239.45525408521345,
+    "distance": 101.8902635913993,
     "ascent": 0.0,
     "descent": 0.0
-  },
+},
   {
     "nextSegmentsNodeA": [],
     "nextSegmentsNodeB": [],
