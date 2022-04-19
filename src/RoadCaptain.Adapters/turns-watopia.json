@@ -668,5 +668,15 @@
       "goStraight": "watopia-bambino-fondo-001-after-before",
       "left": "watopia-chili-pepper-001"
     }
+  },
+  {
+    "segmentId": "watopia-may-field-001",
+    "turnsA": {
+      "goStraight": "watopia-may-field-001",
+      "right": "watopia-bambino-fondo-001-after-after-before-before-before"
+    },
+    "turnsB": {
+      "goStraight": "watopia-may-field-001"
+    }
   }
 ]
