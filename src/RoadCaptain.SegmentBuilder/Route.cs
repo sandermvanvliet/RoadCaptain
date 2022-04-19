@@ -26,7 +26,7 @@ namespace RoadCaptain.SegmentBuilder
 
             var trkElement = doc.Root.Element(XName.Get("trk", GpxNamespace));
             
-            var typeElement = trkElement.Element(XName.Get("link", GpxNamespace)).Element(XName.Get("type", GpxNamespace));
+            var typeElement = trkElement.Element(XName.Get("link", GpxNamespace))?.Element(XName.Get("type", GpxNamespace));
             var trkSeg = trkElement.Elements(XName.Get("trkseg", GpxNamespace));
 
             var trkpt = trkSeg.Elements(XName.Get("trkpt", GpxNamespace));
@@ -40,12 +40,14 @@ namespace RoadCaptain.SegmentBuilder
                 ))
                 .ToList();
 
+            var sports = typeElement?.Value.Split(',') ?? new [] { "running", "cycling" };
+
             return new Route
             {
                 Name = trkElement.Element(XName.Get("name", GpxNamespace)).Value,
                 Slug = Path.GetFileNameWithoutExtension(filePath),
                 TrackPoints = trackPoints,
-                Sports = typeElement.Value.Split(',')
+                Sports = sports
             };
         }
 
