@@ -5,6 +5,7 @@ using System.Linq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
+using RoadCaptain.Adapters;
 
 namespace RoadCaptain.SegmentSplitter
 {
@@ -22,40 +23,26 @@ namespace RoadCaptain.SegmentSplitter
         public static void Main(string[] args)
         {
             var segmentFileName = args[0];
-            var segmentToSplitId = args[1];
+            var turnsFileName = args[1];
+            var segmentToSplitId = args[2];
+            var splitPoint = args[3];
 
-            new Program().Split(segmentToSplitId, segmentFileName);
+            new Program().Split(segmentToSplitId, segmentFileName, turnsFileName, splitPoint);
         }
 
-        public void Split(string segmentToSplitId, string segmentFileName)
+        public void Split(string segmentToSplitId, string segmentFileName, string turnsFileName, string splitPoint)
         {
             var segments =
                 JsonConvert.DeserializeObject<List<Segment>>(File.ReadAllText(segmentFileName), _serializerSettings);
+            
+            var turns = 
+                JsonConvert.DeserializeObject<List<SegmentTurns>>(File.ReadAllText(turnsFileName), _serializerSettings);
 
             var segmentToSplit = segments.SingleOrDefault(s => s.Id == segmentToSplitId);
 
             if (segmentToSplit == null)
             {
                 throw new Exception($"Segment '{segmentToSplitId}' not found");
-            }
-
-            string? splitPoint;
-
-            while (true)
-            {
-                Console.WriteLine("Enter decimal coordinates of split point:");
-                splitPoint = Console.ReadLine();
-
-                if (!string.IsNullOrEmpty(splitPoint))
-                {
-                    if (splitPoint == "exit")
-                    {
-                        Console.WriteLine("Exiting...");
-                        return;
-                    }
-
-                    break;
-                }
             }
 
             var sliceIndex =
@@ -77,12 +64,113 @@ namespace RoadCaptain.SegmentSplitter
             segments.Add(beforeSplit);
             segments.Add(afterSplit);
 
+            var beforeTurns = new SegmentTurns
+            {
+                SegmentId = beforeSplit.Id,
+                TurnsA = new SegmentTurn
+                {
+                    // Copy from turns of segmentToSplit
+                },
+                TurnsB = new SegmentTurn
+                {
+                    GoStraight = afterSplit.Id
+                }
+            };
+
+            var afterTurns = new SegmentTurns
+            {
+                SegmentId = afterSplit.Id,
+                TurnsA = new SegmentTurn
+                {
+                    GoStraight = beforeSplit.Id
+                },
+                TurnsB = new SegmentTurn
+                {
+                    // Copy from turns of segmentToSplit
+                }
+            };
+
+            var originalTurnsOfSegment = turns.Single(t => t.SegmentId == segmentToSplit.Id);
+
+            // Before
+            Dwim(turns, originalTurnsOfSegment.TurnsA, beforeTurns.TurnsA, segmentToSplit.Id, beforeSplit.Id);
+
+            // After
+            Dwim(turns, originalTurnsOfSegment.TurnsB, afterTurns.TurnsB, segmentToSplit.Id, afterSplit.Id);
+
+            // Add new turns
+            turns.Add(beforeTurns);
+            turns.Add(afterTurns);
+
+            // Remove the old one as that segment doesn't exist anymore
+            turns.Remove(originalTurnsOfSegment);
+
             File.WriteAllText(
                 "split-segments.json",
                 JsonConvert.SerializeObject(segments, Formatting.Indented, _serializerSettings));
 
+            File.WriteAllText(
+                "split-turns.json",
+                JsonConvert.SerializeObject(turns, Formatting.Indented, _serializerSettings));
+
             File.WriteAllText($"{beforeSplit.Id}.gpx", beforeSplit.AsGpx());
             File.WriteAllText($"{afterSplit.Id}.gpx", afterSplit.AsGpx());
+        }
+
+        private void Dwim(
+            List<SegmentTurns> turns, 
+            SegmentTurn segmentToSplitTurnNode, 
+            SegmentTurn targetSegmentTurnNode, 
+            string originalSegmentId, 
+            string replacementSegmentId)
+        {
+            if (segmentToSplitTurnNode.GoStraight != null)
+            {
+                targetSegmentTurnNode.GoStraight = segmentToSplitTurnNode.GoStraight;
+
+                var targetSegmentTurn = turns.Single(t => t.SegmentId == segmentToSplitTurnNode.GoStraight);
+                ReplaceTurnReferences(targetSegmentTurn, originalSegmentId, replacementSegmentId);
+            }
+
+            if (segmentToSplitTurnNode.Left != null)
+            {
+                targetSegmentTurnNode.Left = segmentToSplitTurnNode.Left;
+
+                var targetSegmentTurn = turns.Single(t => t.SegmentId == segmentToSplitTurnNode.Left);
+                ReplaceTurnReferences(targetSegmentTurn, originalSegmentId, replacementSegmentId);
+            }
+
+            if (segmentToSplitTurnNode.Right != null)
+            {
+                targetSegmentTurnNode.Right = segmentToSplitTurnNode.Right;
+
+                var targetSegmentTurn = turns.Single(t => t.SegmentId == segmentToSplitTurnNode.Right);
+                ReplaceTurnReferences(targetSegmentTurn, originalSegmentId, replacementSegmentId);
+            }
+        }
+
+        private void ReplaceTurnReferences(SegmentTurns turn, string originalId, string replacementId)
+        {
+            ReplaceTurnNodeReferences(originalId, replacementId, turn.TurnsA);
+            ReplaceTurnNodeReferences(originalId, replacementId, turn.TurnsB);
+        }
+
+        private static void ReplaceTurnNodeReferences(string originalId, string replacementId, SegmentTurn node)
+        {
+            if (originalId.Equals(node.GoStraight))
+            {
+                node.GoStraight = replacementId;
+            }
+
+            if (originalId.Equals(node.Left))
+            {
+                node.Left = replacementId;
+            }
+
+            if (originalId.Equals(node.Right))
+            {
+                node.Right = replacementId;
+            }
         }
     }
 }

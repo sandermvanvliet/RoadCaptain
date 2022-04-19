@@ -5,13 +5,13 @@
     "description": "",
     "spawnPoints": [
       {
-        "segmentId": "watopia-bambino-fondo-001-after-after-after-after-after",
+        "segmentId": "watopia-bambino-fondo-001-after-after-after-after-after-before",
         "zwiftRouteName": "Beach Island Loop",
         "direction": "BtoA",
         "sport": "both"
       },
       {
-        "segmentId": "watopia-bambino-fondo-001-after-after-after-after-after",
+        "segmentId": "watopia-bambino-fondo-001-after-after-after-after-after-after",
         "zwiftRouteName": "Mountain Route",
         "direction": "AtoB",
         "sport": "both"

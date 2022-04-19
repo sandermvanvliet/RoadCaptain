@@ -8,6 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\RoadCaptain.Adapters\RoadCaptain.Adapters.csproj" />
     <ProjectReference Include="..\RoadCaptain\RoadCaptain.csproj" />
   </ItemGroup>
 
