@@ -9,5 +9,6 @@ namespace RoadCaptain.RouteBuilder
         void ShowMainWindow();
         void ShowNewVersionDialog(Release release);
         string ShowSaveFileDialog();
+        bool ShowDefaultSportSelectionDialog(SportType sport);
     }
 }

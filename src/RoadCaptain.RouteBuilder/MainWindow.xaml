@@ -149,6 +149,7 @@
             </Style.Triggers>
         </Style>
         <converters:VisibilityConverter x:Key="VisibilityConverter" />
+        <converters:BooleanConverter x:Key="BooleanConverter" />
     </Window.Resources>
     <DockPanel>
         <Grid 
@@ -215,7 +216,7 @@
                         <DataTemplate DataType="{x:Type viewModels:WorldViewModel}">
                             <Button Style="{StaticResource WorldButtonStyle}" Command="{Binding Path=DataContext.SelectWorldCommand,RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}" CommandParameter="{Binding}">
                                 <Button.Content>
-                                    <Border Margin="0" Height="28" VerticalAlignment="Top" HorizontalAlignment="Right" BorderBrush="#FF6141" BorderThickness="1" CornerRadius="0,5,0,5" Background="White">
+                                    <Border Margin="0" Height="28" VerticalAlignment="Top" HorizontalAlignment="Right" BorderBrush="#FF6141" BorderThickness="1,0,0,1" CornerRadius="0,5,0,5" Background="White">
                                         <TextBlock Text="{Binding Path=Name}" FontWeight="Bold" FontSize="16" Foreground="Black" Padding="4,2,4,0"  />
                                     </Border>
                                 </Button.Content>
@@ -224,7 +225,12 @@
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
 
-                <TextBlock Text="Select a sport to build a route for:" FontSize="16" Grid.Row="2" />
+                <StackPanel Orientation="Horizontal" Grid.Row="2">
+                    <TextBlock Text="Select a sport to build a route for:" FontSize="16" VerticalAlignment="Center" />
+                    <Button Content="(reset default)" Style="{StaticResource LinkButtonStyle}" Foreground="Blue" VerticalAlignment="Center" Margin="8,2,0,0" 
+                            Visibility="{Binding Path=HasDefaultSport,Converter={StaticResource VisibilityConverter}}"
+                            Command="{Binding Path=ResetDefaultSportCommand}"/>
+                </StackPanel>
                 <ItemsControl ItemsSource="{Binding Path=Sports}" Grid.Row="3">
                     <ItemsControl.Template>
                         <ControlTemplate TargetType="ItemsControl">
@@ -243,6 +249,12 @@
                             <Button Style="{StaticResource WorldButtonStyle}" 
                                     Command="{Binding Path=DataContext.SelectSportCommand, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=Window}}" 
                                     CommandParameter="{Binding}">
+                                <Button.Content>
+                                    <Border Margin="0" Height="28" VerticalAlignment="Top" HorizontalAlignment="Right" BorderBrush="#FF6141" BorderThickness="1,0,0,1" CornerRadius="0,5,0,5" Background="White"
+                                            Visibility="{Binding Path=IsDefault,Converter={StaticResource VisibilityConverter}}">
+                                        <TextBlock Text="Default" FontSize="16" Foreground="Black" Padding="4,2,4,0"  />
+                                    </Border>
+                                </Button.Content>
                             </Button>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>

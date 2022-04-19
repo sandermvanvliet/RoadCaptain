@@ -29,6 +29,7 @@ And there are a lot of other tweaks and fixes in this release:
 - **[Watopia]** Removed a segment from the cycling starting pens as that's only reachable from events
 - **[Watopia]** Running segments are now included, they are only visible when you select running as the sport to build a route for
 - **[Makuri Islands]** Added segments and spawn points, this is very much a work in progress still.
+- **[User Experience]** When you select a sport for the first time RoadCaptain will ask you to use it as the default sport.
 
 ### Runner
 

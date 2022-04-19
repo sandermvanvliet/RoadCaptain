@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Windows;
 using Autofac;
 using Microsoft.Win32;
 using RoadCaptain.UserInterface.Shared;
@@ -49,6 +50,18 @@ namespace RoadCaptain.RouteBuilder
             }
 
             return dialog.FileName;
+        }
+
+        public bool ShowDefaultSportSelectionDialog(SportType sport)
+        {
+            var result = MessageBox.Show(
+                CurrentWindow,
+                $"Do you want to use {sport} as your default selection?\nIf you do you won't have to select it again when you build more routes.",
+                "Select default sport",
+                MessageBoxButton.YesNo,
+                MessageBoxImage.Question);
+
+            return result == MessageBoxResult.Yes;
         }
     }
 }

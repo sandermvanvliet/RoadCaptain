@@ -8,14 +8,14 @@ namespace RoadCaptain.RouteBuilder.ViewModels
     public class SportViewModel : INotifyPropertyChanged
     {
         private bool _isSelected;
+        private bool _isDefault;
         public SportType Sport { get; }
 
         public SportViewModel(SportType sport)
         {
             Sport = sport;
         }
-
-
+        
         public bool IsSelected
         {
             get => _isSelected;
@@ -27,6 +27,21 @@ namespace RoadCaptain.RouteBuilder.ViewModels
                 }
 
                 _isSelected = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public bool IsDefault
+        {
+            get => _isDefault;
+            set
+            {
+                if (value == _isDefault)
+                {
+                    return;
+                }
+
+                _isDefault = value;
                 OnPropertyChanged();
             }
         }

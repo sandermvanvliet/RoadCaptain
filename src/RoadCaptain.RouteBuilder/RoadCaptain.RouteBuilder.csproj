@@ -32,6 +32,14 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="UserPreferences.Designer.cs">
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>UserPreferences.settings</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
     <None Update="autofac.routebuilder.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -40,6 +48,10 @@
     </None>
     <None Update="appsettings.json" Condition="'$(Configuration)'=='Debug'">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="UserPreferences.settings">
+      <Generator>PublicSettingsSingleFileGenerator</Generator>
+      <LastGenOutput>UserPreferences.Designer.cs</LastGenOutput>
     </None>
   </ItemGroup>
 

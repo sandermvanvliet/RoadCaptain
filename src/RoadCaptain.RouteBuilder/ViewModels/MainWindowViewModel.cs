@@ -32,65 +32,26 @@ namespace RoadCaptain.RouteBuilder.ViewModels
         private readonly IVersionChecker _versionChecker;
         private readonly IWindowService _windowService;
         private readonly IWorldStore _worldStore;
+        private readonly UserPreferences _userPreferences;
         private WorldViewModel[] _worlds;
         private SportViewModel[] _sports;
+        private bool _hasDefaultSport;
 
-        public MainWindowViewModel(IRouteStore routeStore, ISegmentStore segmentStore, IVersionChecker versionChecker, IWindowService windowService, IWorldStore worldStore)
+        public MainWindowViewModel(IRouteStore routeStore, ISegmentStore segmentStore, IVersionChecker versionChecker, IWindowService windowService, IWorldStore worldStore, UserPreferences userPreferences)
         {
+            _segments = new List<Segment>();
             _versionChecker = versionChecker;
             _windowService = windowService;
             _worldStore = worldStore;
+            _userPreferences = userPreferences;
             Model = new MainWindowModel();
             Worlds = worldStore.LoadWorlds().Select(world => new WorldViewModel(world)).ToArray();
             Sports = new[] { new SportViewModel(SportType.Cycling), new SportViewModel(SportType.Running) };
-
             Route = new RouteViewModel(routeStore, segmentStore);
-
-            Route.PropertyChanged += (_, args) =>
-            {
-                if (args.PropertyName == nameof(Route.Sequence))
-                {
-                    if (Route.Sequence.Any())
-                    {
-                        var points = SegmentPaths[Route.Last.SegmentId].Points;
-
-                        if (Route.Sequence.Last().Direction == SegmentDirection.BtoA)
-                        {
-                            points = points.Reverse().ToArray();
-                        }
-
-                        RoutePath.AddPoly(points, false);
-                    }
-                }
-
-                if (args.PropertyName == nameof(Route.World))
-                {
-                    if (Route.World == null)
-                    {
-                        _segments = new List<Segment>();
-                    }
-                    else if (Route.World != null && Route.Sport != SportType.Unknown)
-                    {
-                        _segments = segmentStore.LoadSegments(Route.World, Route.Sport);
-                    }
-                }
-
-                if (args.PropertyName == nameof(Route.Sport))
-                {
-                    if (Route.Sport == SportType.Unknown)
-                    {
-                        _segments = new List<Segment>();
-                    }
-                    else if (Route.Sport != SportType.Unknown && Route.World != null)
-                    {
-                        _segments = segmentStore.LoadSegments(Route.World, Route.Sport);
-                    }
-                }
-
-                OnPropertyChanged(nameof(Route));
-            };
-
-            _segments = new List<Segment>();
+            
+            Route.PropertyChanged += (_, args) => HandleRoutePropertyChanged(segmentStore, args);
+            
+            SelectDefaultSportFromPreferences();
 
             SaveRouteCommand = new RelayCommand(
                     _ => SaveRoute(),
@@ -148,7 +109,87 @@ namespace RoadCaptain.RouteBuilder.ViewModels
                 _ => SelectSport(_ as SportViewModel),
                 _ => true);
 
+            ResetDefaultSportCommand = new RelayCommand(
+                _ => ResetDefaultSport(), 
+                _ => true);
+
             Version = GetType().Assembly.GetName().Version?.ToString(4) ?? "0.0.0.0";
+        }
+
+        private CommandResult ResetDefaultSport()
+        {
+            _userPreferences.DefaultSport = null;
+            _userPreferences.Save();
+
+            foreach (var sport in _sports)
+            {
+                sport.IsDefault = false;
+            }
+
+            DefaultSport = null;
+
+            return CommandResult.Success();
+        }
+
+        private void SelectDefaultSportFromPreferences()
+        {
+            if (HasDefaultSport)
+            {
+                var sport = Sports
+                    .SingleOrDefault(s =>
+                        _userPreferences.DefaultSport.Equals(s.Sport.ToString(), StringComparison.InvariantCultureIgnoreCase));
+
+                if (sport != null)
+                {
+                    sport.IsSelected = true;
+                    sport.IsDefault = true;
+                    Route.Sport = sport.Sport;
+                }
+            }
+        }
+
+        private void HandleRoutePropertyChanged(ISegmentStore segmentStore, PropertyChangedEventArgs args)
+        {
+            if (args.PropertyName == nameof(Route.Sequence))
+            {
+                if (Route.Sequence.Any())
+                {
+                    var points = SegmentPaths[Route.Last.SegmentId].Points;
+
+                    if (Route.Sequence.Last().Direction == SegmentDirection.BtoA)
+                    {
+                        points = points.Reverse().ToArray();
+                    }
+
+                    RoutePath.AddPoly(points, false);
+                }
+            }
+
+            if (args.PropertyName == nameof(Route.World))
+            {
+                if (Route.World == null)
+                {
+                    _segments = new List<Segment>();
+                }
+                else if (Route.World != null && Route.Sport != SportType.Unknown)
+                {
+                    _segments = segmentStore.LoadSegments(Route.World, Route.Sport);
+                }
+            }
+
+            if (args.PropertyName == nameof(Route.Sport))
+            {
+                if (Route.Sport == SportType.Unknown)
+                {
+                    _segments = new List<Segment>();
+                }
+                else if (Route.Sport != SportType.Unknown && Route.World != null)
+                {
+                    _segments = segmentStore.LoadSegments(Route.World, Route.Sport);
+                }
+            }
+
+            OnPropertyChanged(nameof(Route));
         }
 
         public MainWindowModel Model { get; }
@@ -165,14 +206,34 @@ namespace RoadCaptain.RouteBuilder.ViewModels
         public ICommand OpenLinkCommand { get; set; }
         public ICommand SelectWorldCommand { get; }
         public ICommand SelectSportCommand { get; }
+        public ICommand ResetDefaultSportCommand { get; }
 
         public Segment SelectedSegment
         {
             get => _selectedSegment;
             private set
             {
+                if (value == _selectedSegment) return;
                 _selectedSegment = value;
                 OnPropertyChanged();
+            }
+        }
+
+        public bool HasDefaultSport
+        {
+            get => !string.IsNullOrEmpty(DefaultSport);
+        }
+
+        public string DefaultSport
+        {
+            get => _userPreferences.DefaultSport;
+            private set
+            {
+                _userPreferences.DefaultSport = value;
+                _userPreferences.Save();
+
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(HasDefaultSport));
             }
         }
 
@@ -403,6 +464,8 @@ namespace RoadCaptain.RouteBuilder.ViewModels
             if (selectedSport != null)
             {
                 selectedSport.IsSelected = false;
+                
+                SelectDefaultSportFromPreferences();
             }
 
             var selectedWorld = Worlds.SingleOrDefault(s => s.IsSelected);
@@ -508,6 +571,17 @@ namespace RoadCaptain.RouteBuilder.ViewModels
         private CommandResult SelectSport(SportViewModel sport)
         {
             Route.Sport = sport.Sport;
+
+            if (string.IsNullOrEmpty(_userPreferences.DefaultSport))
+            {
+                var result = _windowService.ShowDefaultSportSelectionDialog(sport.Sport);
+
+                if (result)
+                {
+                    DefaultSport = sport.Sport.ToString();
+                    sport.IsDefault = true;
+                }
+            }
             
             var currentSelected = Sports.SingleOrDefault(w => w.IsSelected);
             if (currentSelected != null)
