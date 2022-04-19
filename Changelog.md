@@ -1,5 +1,40 @@
 ﻿# Changelog
 
+## 0.6.0.0
+
+This is a big release with two items that will make RoadCaptain a lot more versatile!
+
+With this release the RoadCaptain UI has been prepared to support multiple worlds! You'll no longer be stuck in Watopia but can also build routes in Makuri Islands 🎉🎉
+All Zwift worlds are visible in Route Builder but for now only Watopia is selectable, the other worlds need to be added still.
+
+As well as multiple world support, RoadCaptain now also supports running!
+When you start the Route Builder you'll see the option to select a sport to build a route for. Especially for Watopia where there are dedicated run segments you can now include those on your routes!
+
+Have a look at the new RoadCaptain Route Builder:
+
+![Screenshot of Route Builder showing world and sport selection](./images/route-builder-multi-world-sport.png)
+
+The RoadCaptain Runner now also displays the world and sport of a route when you select it:
+![Screenshot of Runner with sport and world info of a selected route](./images/runner-route-running.png)
+
+Of course the Runner will also tell you to either start cycling or running depending on the sport type of the route 😉
+
+And there are a lot of other tweaks and fixes in this release:
+
+### Route Builder
+
+- **[Watopia]** Split the spwan point segment along the beach to for the new junction to Jons Route (running only)
+  Routes that were created prior to this release will still work, RoadCaptain automatically corrects to the right spawn point
+- **[Watopia]** Cleaned up the segments at the end of the beach so it looks a bit better
+- **[Watopia]** Removed a segment from the cycling starting pens as that's only reachable from events
+- **[Watopia]** Running segments are now included, they are only visible when you select running as the sport to build a route for
+- **[Makuri Islands]** Added segments and spawn points, this is very much a work in progress still.
+
+### Runner
+
+- Sport type is now shown when you select a route
+- The messages shown by the runner when waiting for Zwift to connect or an activity to start will now use the right term. For example: _Start running..._ / _Start cycling..._
+
 ## 0.5.6.0
 
 - The runner and route build now use unicode arrow glyphs instead of images for the turn indicators because it looks a bit cleaner as the images don't scale very well.
