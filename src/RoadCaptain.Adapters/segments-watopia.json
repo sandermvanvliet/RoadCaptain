@@ -1827,56 +1827,6 @@
     "nextSegmentsNodeB": [],
     "points": [
       {
-        "latitude": -11.6792,
-        "longitude": 166.93855,
-        "altitude": 57.8,
-        "index": 0,
-        "distanceOnSegment": 0.0,
-        "distanceFromLast": 0.0,
-        "coordinatesDecimal": "S11.67920° E166.93855°"
-      },
-      {
-        "latitude": -11.67911,
-        "longitude": 166.93854,
-        "altitude": 57.8,
-        "index": 1,
-        "distanceOnSegment": 10.4102692956653,
-        "distanceFromLast": 10.4102692956653,
-        "coordinatesDecimal": "S11.67911° E166.93854°"
-      },
-      {
-        "latitude": -11.67902,
-        "longitude": 166.93851,
-        "altitude": 57.8,
-        "index": 2,
-        "distanceOnSegment": 21.0071159694106,
-        "distanceFromLast": 10.5968466737453,
-        "coordinatesDecimal": "S11.67902° E166.93851°"
-      },
-      {
-        "latitude": -11.67894,
-        "longitude": 166.93847,
-        "altitude": 57.8,
-        "index": 3,
-        "distanceOnSegment": 30.96153606035334,
-        "distanceFromLast": 9.95442009094274,
-        "coordinatesDecimal": "S11.67894° E166.93847°"
-      }
-    ],
-    "id": "watopia-jungle-circuit-001",
-    "boundingBox": {},
-    "sport": "Both",
-    "name": "jungle-circuit-001",
-    "noSelectReason": null,
-    "distance": 30.96153606035334,
-    "ascent": 0.0,
-    "descent": 0.0
-  },
-  {
-    "nextSegmentsNodeA": [],
-    "nextSegmentsNodeB": [],
-    "points": [
-      {
         "latitude": -11.66554,
         "longitude": 166.95141,
         "altitude": 79.0,
