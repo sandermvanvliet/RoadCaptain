@@ -51,7 +51,7 @@ namespace RoadCaptain.Adapters
                 return _loadedSegments[CacheKey(sport, world)];
             }
 
-            var segments = JsonConvert.DeserializeObject<List<Segment>>(File.ReadAllText(segmentsPathForWorld), _serializerSettings);
+            var segments = JsonConvert.DeserializeObject<List<Segment>>(File.ReadAllText(segmentsPathForWorld), _serializerSettings) ?? new List<Segment>();
             
             segments = segments
                 .Where(segment => sport == SportType.Both || (segment.Sport == SportType.Both || segment.Sport == sport))
@@ -90,6 +90,38 @@ namespace RoadCaptain.Adapters
             _loadedSegments.Add(CacheKey(sport, world), segments);
 
             return segments;
+        }
+
+        public List<Segment> LoadMarkers(World world)
+        {
+            if (_loadedSegments.ContainsKey(CacheKeyForMarkers(world)))
+            {
+                return _loadedSegments[CacheKeyForMarkers(world)];
+            }
+
+            var markersPathForWorld = Path.Combine(_fileRoot, $"markers-{world.Id}.json");
+
+            if (!File.Exists(markersPathForWorld))
+            {
+                _loadedSegments.Add(CacheKeyForMarkers(world), new List<Segment>());
+                return _loadedSegments[CacheKeyForMarkers(world)];
+            }
+
+            var markers = JsonConvert.DeserializeObject<List<Segment>>(File.ReadAllText(markersPathForWorld), _serializerSettings);
+            
+            if (markers == null)
+            {
+                throw new Exception("Was unable to deserialize markers from file");
+            }
+
+            _loadedSegments.Add(CacheKeyForMarkers(world), markers);
+
+            return markers;
+        }
+
+        private string CacheKeyForMarkers(World world)
+        {
+            return $"markers-{world}";
         }
 
         private static string CacheKey(SportType sport, World world)

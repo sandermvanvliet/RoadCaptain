@@ -5,7 +5,9 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Linq;
+using System.Xml.Linq;
 using Newtonsoft.Json;
 
 namespace RoadCaptain
@@ -28,6 +30,7 @@ namespace RoadCaptain
         public string Id { get; set; }
         public BoundingBox BoundingBox { get; }
         public SportType Sport { get; set; } = SportType.Both;
+        public SegmentType Type { get; set; } = SegmentType.Segment;
 
         public string Name
         {
@@ -155,6 +158,58 @@ namespace RoadCaptain
                    $"<trkseg>{string.Join(Environment.NewLine, trkptList)}</trkseg>" +
                    "</trk>" +
                    "</gpx>";
+        }
+        
+        private const string GpxNamespace = "http://www.topografix.com/GPX/1/1";
+        public static Segment FromGpx(string gpxFileContents)
+        {
+            var doc = XDocument.Parse(gpxFileContents);
+
+            var trkElement = doc.Root.Element(XName.Get("trk", GpxNamespace));
+            
+            var typeElement = trkElement.Element(XName.Get("link", GpxNamespace))?.Element(XName.Get("type", GpxNamespace));
+            var trkSeg = trkElement.Elements(XName.Get("trkseg", GpxNamespace));
+
+            var trkpt = trkSeg.Elements(XName.Get("trkpt", GpxNamespace));
+
+            var trackPoints = trkpt
+                .Select(trackPoint => new TrackPoint(
+                    double.Parse(trackPoint.Attribute(XName.Get("lat")).Value, CultureInfo.InvariantCulture),
+                    double.Parse(trackPoint.Attribute(XName.Get("lon")).Value, CultureInfo.InvariantCulture),
+                    double.Parse(trackPoint.Element(XName.Get("ele", GpxNamespace)).Value,
+                        CultureInfo.InvariantCulture)
+                ))
+                .ToList();
+
+            var sports = typeElement?.Value.Split(',') ?? new [] { "running", "cycling" };
+
+            SportType sport = SportType.Unknown;
+            SegmentType segmentType = SegmentType.Segment;
+
+            if(sports.Contains("running") && sports.Contains("cycling"))
+            {
+                sport = SportType.Both;
+            }
+            else if(Enum.TryParse(typeof(SportType), sports.First(), out var parsedSport))
+            {
+                sport = (SportType)parsedSport;
+            }
+            else if(Enum.TryParse(typeof(SegmentType), sports.First(), out var parsedSegmentType))
+            {
+                segmentType = (SegmentType)parsedSegmentType;
+            }
+
+            var segment = new Segment(trackPoints)
+            {
+                Name = trkElement.Element(XName.Get("name", GpxNamespace)).Value,
+                Sport = sport,
+                Type = segmentType
+            };
+
+            segment.CalculateDistances();
+            segment.CalculateAscentAndDescent();
+
+            return segment;
         }
 
         public Segment Slice(string suffix, int start)

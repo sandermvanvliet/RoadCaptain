@@ -63,9 +63,16 @@ namespace RoadCaptain.SegmentBuilder
         {
             var result = new List<Segment>();
 
-            var sport = Sports.Contains("running") && Sports.Contains("cycling")
-                ? SportType.Both
-                : Enum.Parse<SportType>(Sports.Single());
+            SportType sport = SportType.Unknown;
+
+            if(Sports.Contains("running") && Sports.Contains("cycling"))
+            {
+                sport = SportType.Both;
+            }
+            else if(Enum.TryParse(typeof(SportType), Sports.First(), out var x))
+            {
+                sport = (SportType)x;
+            }
 
             var currentSegment = new Segment(new List<TrackPoint>())
             {
