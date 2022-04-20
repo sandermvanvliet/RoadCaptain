@@ -26,7 +26,6 @@ namespace RoadCaptain.RouteBuilder
     {
         private const int KomMarkerHeight = 32;
         private const int KomMarkerWidth = 6;
-        private bool _showClimbs = false;
 
         private readonly SKPaint _segmentPathPaint = new()
             { Color = SKColor.Parse("#000000"), Style = SKPaintStyle.Stroke, StrokeWidth = 4 };
@@ -108,6 +107,7 @@ namespace RoadCaptain.RouteBuilder
                     TriggerRepaint();
                     break;
                 case nameof(_windowViewModel.RiderPosition):
+                case nameof(_windowViewModel.ShowClimbs):
                     TriggerRepaint();
                     break;
             }
@@ -160,7 +160,7 @@ namespace RoadCaptain.RouteBuilder
                 canvas.DrawPath(skiaPath, segmentPaint);
             }
 
-            if (_showClimbs)
+            if (_windowViewModel.ShowClimbs)
             {
                 foreach (var (segmentId, marker) in _windowViewModel.Markers)
                 {

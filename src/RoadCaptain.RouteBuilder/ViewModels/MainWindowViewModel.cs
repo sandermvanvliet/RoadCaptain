@@ -36,6 +36,7 @@ namespace RoadCaptain.RouteBuilder.ViewModels
         private WorldViewModel[] _worlds;
         private SportViewModel[] _sports;
         private List<Segment> _markers;
+        private bool _showClimbs;
 
         public MainWindowViewModel(IRouteStore routeStore, ISegmentStore segmentStore, IVersionChecker versionChecker, IWindowService windowService, IWorldStore worldStore, UserPreferences userPreferences)
         {
@@ -240,6 +241,17 @@ namespace RoadCaptain.RouteBuilder.ViewModels
 
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(HasDefaultSport));
+            }
+        }
+
+        public bool ShowClimbs
+        {
+            get => _showClimbs;
+            set
+            {
+                if(value == _showClimbs) return;
+                _showClimbs = value;
+                OnPropertyChanged();
             }
         }
 
