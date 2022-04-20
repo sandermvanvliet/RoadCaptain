@@ -190,11 +190,11 @@ namespace RoadCaptain
             {
                 sport = SportType.Both;
             }
-            else if(Enum.TryParse(typeof(SportType), sports.First(), out var parsedSport))
+            else if(Enum.TryParse(typeof(SportType), sports.First(), true, out var parsedSport))
             {
                 sport = (SportType)parsedSport;
             }
-            else if(Enum.TryParse(typeof(SegmentType), sports.First(), out var parsedSegmentType))
+            else if(Enum.TryParse(typeof(SegmentType), sports.First(), true, out var parsedSegmentType))
             {
                 segmentType = (SegmentType)parsedSegmentType;
             }
