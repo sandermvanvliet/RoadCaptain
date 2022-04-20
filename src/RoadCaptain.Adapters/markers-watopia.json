@@ -7294,11 +7294,11 @@
         "coordinatesDecimal": "S11.68197° E166.89001°"
       }
     ],
-    "id": null,
+    "id": "alpe-du-zwift",
     "boundingBox": {},
     "sport": "Unknown",
     "type": "Segment",
-    "name": "Alpe du Zwift (watopia)",
+    "name": "Alpe du Zwift",
     "noSelectReason": null,
     "distance": 12203.679715616434,
     "ascent": 1035.8000000000002,
@@ -11035,11 +11035,11 @@
         "coordinatesDecimal": "S11.67773° E166.96084°"
       }
     ],
-    "id": null,
+    "id": "epic-kom-rev.",
     "boundingBox": {},
     "sport": "Unknown",
     "type": "Segment",
-    "name": "Epic KOM Rev. (watopia)",
+    "name": "Epic KOM Rev.",
     "noSelectReason": null,
     "distance": 6189.238599233483,
     "ascent": 402.3999999999999,
@@ -16792,11 +16792,11 @@
         "coordinatesDecimal": "S11.67767° E166.96087°"
       }
     ],
-    "id": null,
+    "id": "epic-kom",
     "boundingBox": {},
     "sport": "Unknown",
     "type": "Segment",
-    "name": "Epic KOM (watopia)",
+    "name": "Epic KOM",
     "noSelectReason": null,
     "distance": 9434.986797086456,
     "ascent": 414.8,
@@ -21433,11 +21433,11 @@
         "coordinatesDecimal": "S11.63912° E166.98236°"
       }
     ],
-    "id": null,
+    "id": "fuego-flats-rev.",
     "boundingBox": {},
     "sport": "Unknown",
     "type": "Segment",
-    "name": "Fuego Flats Rev. (watopia)",
+    "name": "Fuego Flats Rev.",
     "noSelectReason": null,
     "distance": 7097.769286811494,
     "ascent": 10.000000000000005,
@@ -21853,11 +21853,11 @@
         "coordinatesDecimal": "S11.63919° E166.98236°"
       }
     ],
-    "id": null,
+    "id": "fuego-flats",
     "boundingBox": {},
     "sport": "Unknown",
     "type": "Segment",
-    "name": "Fuego Flats (watopia)",
+    "name": "Fuego Flats",
     "noSelectReason": null,
     "distance": 495.9172935300376,
     "ascent": 1.200000000000001,
@@ -25810,11 +25810,11 @@
         "coordinatesDecimal": "S11.63546° E166.95185°"
       }
     ],
-    "id": null,
+    "id": "hilly-loop-rev.",
     "boundingBox": {},
     "sport": "Unknown",
     "type": "Segment",
-    "name": "Hilly Loop Rev. (watopia)",
+    "name": "Hilly Loop Rev.",
     "noSelectReason": null,
     "distance": 9166.139445105795,
     "ascent": 107.6,
@@ -29731,11 +29731,11 @@
         "coordinatesDecimal": "S11.63549° E166.95188°"
       }
     ],
-    "id": null,
+    "id": "hilly-loop",
     "boundingBox": {},
     "sport": "Unknown",
     "type": "Segment",
-    "name": "Hilly Loop (watopia)",
+    "name": "Hilly Loop",
     "noSelectReason": null,
     "distance": 9115.928952854068,
     "ascent": 107.20000000000005,
@@ -38179,11 +38179,11 @@
         "coordinatesDecimal": "S11.69010° E166.92860°"
       }
     ],
-    "id": null,
+    "id": "jungle-loop-rev.",
     "boundingBox": {},
     "sport": "Unknown",
     "type": "Segment",
-    "name": "Jungle Loop Rev. (watopia)",
+    "name": "Jungle Loop Rev.",
     "noSelectReason": null,
     "distance": 7909.708102984041,
     "ascent": 82.20000000000009,
@@ -45205,11 +45205,11 @@
         "coordinatesDecimal": "S11.69005° E166.92861°"
       }
     ],
-    "id": null,
+    "id": "jungle-loop",
     "boundingBox": {},
     "sport": "Unknown",
     "type": "Segment",
-    "name": "Jungle Loop (watopia)",
+    "name": "Jungle Loop",
     "noSelectReason": null,
     "distance": 7870.961936749002,
     "ascent": 82.20000000000009,
@@ -46264,11 +46264,11 @@
         "coordinatesDecimal": "S11.64981° E166.97650°"
       }
     ],
-    "id": null,
+    "id": "titans-grove-kom-rev.",
     "boundingBox": {},
     "sport": "Unknown",
     "type": "Segment",
-    "name": "Titans Grove KOM Rev. (watopia)",
+    "name": "Titans Grove KOM Rev.",
     "noSelectReason": null,
     "distance": 911.6776209651124,
     "ascent": 39.199999999999996,
@@ -48646,11 +48646,11 @@
         "coordinatesDecimal": "S11.64980° E166.97645°"
       }
     ],
-    "id": null,
+    "id": "titans-grove-kom",
     "boundingBox": {},
     "sport": "Unknown",
     "type": "Segment",
-    "name": "Titans Grove KOM (watopia)",
+    "name": "Titans Grove KOM",
     "noSelectReason": null,
     "distance": 2630.2180564221635,
     "ascent": 58.99999999999999,
@@ -52270,11 +52270,11 @@
         "coordinatesDecimal": "S11.64266° E166.94036°"
       }
     ],
-    "id": null,
+    "id": "volcano-circuit-rev.",
     "boundingBox": {},
     "sport": "Unknown",
     "type": "Segment",
-    "name": "Volcano Circuit Rev. (watopia)",
+    "name": "Volcano Circuit Rev.",
     "noSelectReason": null,
     "distance": 4108.400581073665,
     "ascent": 19.800000000000004,
@@ -55372,11 +55372,11 @@
         "coordinatesDecimal": "S11.64261° E166.94030°"
       }
     ],
-    "id": null,
+    "id": "volcano-circuit",
     "boundingBox": {},
     "sport": "Unknown",
     "type": "Segment",
-    "name": "Volcano Circuit (watopia)",
+    "name": "Volcano Circuit",
     "noSelectReason": null,
     "distance": 4083.757819902742,
     "ascent": 19.800000000000004,
@@ -60058,11 +60058,11 @@
         "coordinatesDecimal": "S11.64251° E166.93883°"
       }
     ],
-    "id": null,
+    "id": "volcano-kom",
     "boundingBox": {},
     "sport": "Unknown",
     "type": "Segment",
-    "name": "Volcano KOM (watopia)",
+    "name": "Volcano KOM",
     "noSelectReason": null,
     "distance": 3757.4991690443617,
     "ascent": 127.8,
@@ -60190,11 +60190,11 @@
         "coordinatesDecimal": "S11.64726° E166.94922°"
       }
     ],
-    "id": null,
+    "id": "watopia-sprint-rev.",
     "boundingBox": {},
     "sport": "Unknown",
     "type": "Segment",
-    "name": "Watopia Sprint Rev. (watopia)",
+    "name": "Watopia Sprint Rev.",
     "noSelectReason": null,
     "distance": 187.14432956561546,
     "ascent": 0.0,
@@ -60448,11 +60448,11 @@
         "coordinatesDecimal": "S11.64724° E166.94925°"
       }
     ],
-    "id": null,
+    "id": "watopia-sprint",
     "boundingBox": {},
     "sport": "Unknown",
     "type": "Segment",
-    "name": "Watopia Sprint (watopia)",
+    "name": "Watopia Sprint",
     "noSelectReason": null,
     "distance": 352.9934097698157,
     "ascent": 1.1999999999999993,
@@ -61966,11 +61966,11 @@
         "coordinatesDecimal": "S11.64048° E166.95793°"
       }
     ],
-    "id": null,
+    "id": "zwift-kom-rev.",
     "boundingBox": {},
     "sport": "Unknown",
     "type": "Segment",
-    "name": "Zwift KOM Rev. (watopia)",
+    "name": "Zwift KOM Rev.",
     "noSelectReason": null,
     "distance": 2496.7520453460447,
     "ascent": 56.0,
@@ -62710,11 +62710,11 @@
         "coordinatesDecimal": "S11.64046° E166.95786°"
       }
     ],
-    "id": null,
+    "id": "zwift-kom",
     "boundingBox": {},
     "sport": "Unknown",
     "type": "Segment",
-    "name": "Zwift KOM (watopia)",
+    "name": "Zwift KOM",
     "noSelectReason": null,
     "distance": 901.5592368713917,
     "ascent": 50.400000000000006,

@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Linq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
@@ -16,6 +17,16 @@ namespace RoadCaptain.MarkerBuilder
             var markers = poiFiles
                 .Select(file => Segment.FromGpx(File.ReadAllText(file)))
                 .ToList();
+
+            foreach (var segment in markers)
+            {
+                segment.Name = segment.Name.Replace($"({world})", "", StringComparison.InvariantCultureIgnoreCase).Trim();
+
+                if (string.IsNullOrEmpty(segment.Id))
+                {
+                    segment.Id = segment.Name.Replace(" ", "-").ToLower();
+                }
+            }
 
             File.WriteAllText(
                 $"markers-{world}.json",
