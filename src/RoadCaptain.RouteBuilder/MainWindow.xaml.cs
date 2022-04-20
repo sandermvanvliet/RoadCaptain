@@ -52,16 +52,16 @@ namespace RoadCaptain.RouteBuilder
             { Color = SKColor.Parse("#ffffff"), Style = SKPaintStyle.StrokeAndFill, StrokeWidth = 4 };
 
         private readonly SKPaint _startMarkerFillPaint = new()
-            { Color = SKColor.Parse("#14c817"), Style = SKPaintStyle.StrokeAndFill, StrokeWidth = 0 };
+            { Color = SKColor.Parse("#14c817"), Style = SKPaintStyle.Fill };
 
         private readonly SKPaint _endMarkerFillPaint = new()
-            { Color = SKColor.Parse("#ff0000"), Style = SKPaintStyle.StrokeAndFill, StrokeWidth = 0 };
+            { Color = SKColor.Parse("#ff0000"), Style = SKPaintStyle.Fill };
 
         private readonly SKPaint _markerSegmentStartPaint = new()
-            { Color = SKColor.Parse("#ff0000"), Style = SKPaintStyle.StrokeAndFill, StrokeWidth = 0 };
+            { Color = SKColor.Parse("#ff0000"), Style = SKPaintStyle.Fill };
         
         private readonly SKPaint _markerSegmentEndPaint = new()
-            { Color = SKColor.Parse("#14c817"), Style = SKPaintStyle.StrokeAndFill, StrokeWidth = 0 };
+            { Color = SKColor.Parse("#14c817"), Style = SKPaintStyle.Fill };
 
         private readonly MainWindowViewModel _windowViewModel;
         private string _highlightedSegmentId;
@@ -210,8 +210,12 @@ namespace RoadCaptain.RouteBuilder
         private void DrawClimbMarker(SKCanvas canvas, SKPaint paint, float angle, SKPoint point)
         {
             canvas.RotateDegrees(angle, point.X, point.Y);
-            canvas.DrawRect(point.X - (KomMarkerWidth / 2),
-                point.Y - (KomMarkerHeight / 2), KomMarkerWidth, KomMarkerHeight,
+
+            canvas.DrawRect(
+                point.X - (KomMarkerWidth / 2),
+                point.Y - (KomMarkerHeight / 2),
+                KomMarkerWidth, 
+                KomMarkerHeight,
                 paint);
         }
 
