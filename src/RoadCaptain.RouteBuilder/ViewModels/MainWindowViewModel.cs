@@ -35,6 +35,7 @@ namespace RoadCaptain.RouteBuilder.ViewModels
         private readonly UserPreferences _userPreferences;
         private WorldViewModel[] _worlds;
         private SportViewModel[] _sports;
+        private List<Segment> _markers;
 
         public MainWindowViewModel(IRouteStore routeStore, ISegmentStore segmentStore, IVersionChecker versionChecker, IWindowService windowService, IWorldStore worldStore, UserPreferences userPreferences)
         {
@@ -170,10 +171,8 @@ namespace RoadCaptain.RouteBuilder.ViewModels
                 {
                     _segments = new List<Segment>();
                 }
-                else if (Route.World != null && Route.Sport != SportType.Unknown)
-                {
-                    _segments = segmentStore.LoadSegments(Route.World, Route.Sport);
-                }
+
+                TryLoadSegmentsForWorldAndSport(segmentStore);
             }
 
             if (args.PropertyName == nameof(Route.Sport))
@@ -182,18 +181,26 @@ namespace RoadCaptain.RouteBuilder.ViewModels
                 {
                     _segments = new List<Segment>();
                 }
-                else if (Route.Sport != SportType.Unknown && Route.World != null)
-                {
-                    _segments = segmentStore.LoadSegments(Route.World, Route.Sport);
-                }
+                
+                TryLoadSegmentsForWorldAndSport(segmentStore);
             }
 
             OnPropertyChanged(nameof(Route));
         }
 
+        private void TryLoadSegmentsForWorldAndSport(ISegmentStore segmentStore)
+        {
+            if (Route.World != null && Route.Sport != SportType.Unknown)
+            {
+                _segments = segmentStore.LoadSegments(Route.World, Route.Sport);
+                _markers = segmentStore.LoadMarkers(Route.World);
+            }
+        }
+
         public MainWindowModel Model { get; }
         public RouteViewModel Route { get; set; }
         public Dictionary<string, SKPath> SegmentPaths { get; } = new();
+        public Dictionary<string, Marker> Markers { get; } = new();
         public SKPath RoutePath { get; private set; } = new SKPath();
 
         public ICommand SaveRouteCommand { get; }
@@ -430,6 +437,37 @@ namespace RoadCaptain.RouteBuilder.ViewModels
             }
 
             CreateRoutePath();
+
+            CreateMarkers();
+        }
+
+        private void CreateMarkers()
+        {
+            Markers.Clear();
+
+            if (_markers == null || !_markers.Any())
+            {
+                return;
+            }
+
+            foreach (var segment in _markers.Where(m => m.Type == SegmentType.Climb))
+            {
+                var firstPoint = segment.Points.First();
+                var lastPoint = segment.Points.Last();
+                var startPoint = _overallOffsets.ScaleAndTranslate(TrackPoint.LatLongToGame(firstPoint.Longitude, -firstPoint.Latitude, firstPoint.Altitude));
+                var endPoint = _overallOffsets.ScaleAndTranslate(TrackPoint.LatLongToGame(lastPoint.Longitude, -lastPoint.Latitude, lastPoint.Altitude));
+
+                var marker = new Marker
+                {
+                    Id = segment.Id,
+                    StartPoint = new SKPoint(startPoint.X, startPoint.Y),
+                    EndPoint = new SKPoint(endPoint.X, endPoint.Y),
+                    StartAngle = (float)TrackPoint.Bearing(segment.Points[0], segment.Points[1]) + 90,
+                    EndAngle = (float)TrackPoint.Bearing(segment.Points[^2], segment.Points[^1]) + 90
+                };
+
+                Markers.Add(segment.Id, marker);
+            }
         }
 
         private static SKPath SkiaPathFromSegment(Offsets offsets, List<TrackPoint> data)
@@ -746,6 +784,15 @@ namespace RoadCaptain.RouteBuilder.ViewModels
                 _windowService.ShowNewVersionDialog(latestRelease);
             }
         }
+    }
+
+    public class Marker
+    {
+        public string Id { get; set; }
+        public SKPoint StartPoint { get; set; }
+        public SKPoint EndPoint { get; set; }
+        public float StartAngle { get; set; }
+        public float EndAngle { get; set; }
     }
 
     public enum SimulationState

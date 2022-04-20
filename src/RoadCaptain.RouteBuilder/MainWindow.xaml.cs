@@ -24,6 +24,10 @@ namespace RoadCaptain.RouteBuilder
     // ReSharper disable once RedundantExtendsListEntry
     public partial class MainWindow : Window
     {
+        private const int KomMarkerHeight = 32;
+        private const int KomMarkerWidth = 6;
+        private bool _showClimbs = false;
+
         private readonly SKPaint _segmentPathPaint = new()
             { Color = SKColor.Parse("#000000"), Style = SKPaintStyle.Stroke, StrokeWidth = 4 };
 
@@ -53,6 +57,12 @@ namespace RoadCaptain.RouteBuilder
 
         private readonly SKPaint _endMarkerFillPaint = new()
             { Color = SKColor.Parse("#ff0000"), Style = SKPaintStyle.StrokeAndFill, StrokeWidth = 0 };
+
+        private readonly SKPaint _markerSegmentStartPaint = new()
+            { Color = SKColor.Parse("#ff0000"), Style = SKPaintStyle.StrokeAndFill, StrokeWidth = 0 };
+        
+        private readonly SKPaint _markerSegmentEndPaint = new()
+            { Color = SKColor.Parse("#14c817"), Style = SKPaintStyle.StrokeAndFill, StrokeWidth = 0 };
 
         private readonly MainWindowViewModel _windowViewModel;
         private string _highlightedSegmentId;
@@ -148,6 +158,35 @@ namespace RoadCaptain.RouteBuilder
                 }
 
                 canvas.DrawPath(skiaPath, segmentPaint);
+            }
+
+            if (_showClimbs)
+            {
+                foreach (var (segmentId, marker) in _windowViewModel.Markers)
+                {
+
+                    using (new SKAutoCanvasRestore(canvas))
+                    {
+                        // do any transformations
+                        canvas.RotateDegrees(marker.StartAngle, marker.StartPoint.X, marker.StartPoint.Y);
+                        // do serious work
+                        canvas.DrawRect(marker.StartPoint.X - (KomMarkerWidth / 2),
+                            marker.StartPoint.Y - (KomMarkerHeight / 2), KomMarkerWidth, KomMarkerHeight,
+                            _markerSegmentStartPaint);
+                        // auto restore, even on exceptions or errors
+                    }
+
+                    using (new SKAutoCanvasRestore(canvas))
+                    {
+                        // do any transformations
+                        canvas.RotateDegrees(marker.EndAngle, marker.EndPoint.X, marker.EndPoint.Y);
+                        // do serious work
+                        canvas.DrawRect(marker.EndPoint.X - (KomMarkerWidth / 2),
+                            marker.EndPoint.Y - (KomMarkerHeight / 2), KomMarkerWidth, KomMarkerHeight,
+                            _markerSegmentEndPaint);
+                        // auto restore, even on exceptions or errors
+                    }
+                }
             }
 
             // Route markers

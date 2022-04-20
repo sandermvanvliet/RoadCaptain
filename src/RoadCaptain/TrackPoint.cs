@@ -13,6 +13,7 @@ namespace RoadCaptain
     {
         private const double CoordinateEqualityTolerance = 0.0001d;
         private const double PiRad = Math.PI / 180d;
+        private const double RadToDegree = 180 / Math.PI;
 
         public TrackPoint(double latitude, double longitude, double altitude)
         {
@@ -29,7 +30,7 @@ namespace RoadCaptain
         public double DistanceFromLast { get; set; }
         [JsonIgnore]
         public Segment Segment { get; set; }
-        
+
         // ReSharper disable once UnusedMember.Global because this is only used to look up a point using Garmin BaseCamp
         public string CoordinatesDecimal =>
             $"S{(Latitude * -1).ToString("0.00000", CultureInfo.InvariantCulture)}° E{Longitude.ToString("0.00000", CultureInfo.InvariantCulture)}°";
@@ -57,9 +58,9 @@ namespace RoadCaptain
             }
 
             var distance = GetDistanceFromLatLonInMeters(
-                Latitude, 
+                Latitude,
                 Longitude,
-                point.Latitude, 
+                point.Latitude,
                 point.Longitude);
 
             // TODO: re-enable altitude matching
@@ -95,6 +96,20 @@ namespace RoadCaptain
             return d * 1000;
         }
 
+        public static double Bearing(TrackPoint pt1, TrackPoint pt2)
+        {
+            var x = Math.Cos(DegreesToRadians(pt1.Latitude)) * Math.Sin(DegreesToRadians(pt2.Latitude)) - Math.Sin(DegreesToRadians(pt1.Latitude)) * Math.Cos(DegreesToRadians(pt2.Latitude)) * Math.Cos(DegreesToRadians(pt2.Longitude - pt1.Longitude));
+            var y = Math.Sin(DegreesToRadians(pt2.Longitude - pt1.Longitude)) * Math.Cos(DegreesToRadians(pt2.Latitude));
+
+            // Math.Atan2 can return negative value, 0 <= output value < 2*PI expected 
+            return (Math.Atan2(y, x) + Math.PI * 2) % (Math.PI * 2) * RadToDegree;
+        }
+
+        private static double DegreesToRadians(double angle)
+        {
+            return angle * PiRad;
+        }
+
         public bool Equals(TrackPoint other)
         {
             if (ReferenceEquals(null, other))
@@ -107,8 +122,8 @@ namespace RoadCaptain
                 return true;
             }
 
-            return Math.Abs(Latitude - other.Latitude) < CoordinateEqualityTolerance && 
-                   Math.Abs(Longitude - other.Longitude) < CoordinateEqualityTolerance && 
+            return Math.Abs(Latitude - other.Latitude) < CoordinateEqualityTolerance &&
+                   Math.Abs(Longitude - other.Longitude) < CoordinateEqualityTolerance &&
                    Math.Abs(Altitude - other.Altitude) < CoordinateEqualityTolerance;
         }
 
@@ -136,7 +151,7 @@ namespace RoadCaptain
         {
             return HashCode.Combine(Latitude, Longitude, Altitude, Segment);
         }
-        
+
         public static TrackPoint LatLongToGame(double latitude, double longitude, double altitude)
         {
             const double metersBetweenLatitudeDegree = 110614.71d;
