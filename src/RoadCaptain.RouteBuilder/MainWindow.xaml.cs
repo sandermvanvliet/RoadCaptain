@@ -164,27 +164,14 @@ namespace RoadCaptain.RouteBuilder
             {
                 foreach (var (segmentId, marker) in _windowViewModel.Markers)
                 {
-
                     using (new SKAutoCanvasRestore(canvas))
                     {
-                        // do any transformations
-                        canvas.RotateDegrees(marker.StartAngle, marker.StartPoint.X, marker.StartPoint.Y);
-                        // do serious work
-                        canvas.DrawRect(marker.StartPoint.X - (KomMarkerWidth / 2),
-                            marker.StartPoint.Y - (KomMarkerHeight / 2), KomMarkerWidth, KomMarkerHeight,
-                            _markerSegmentStartPaint);
-                        // auto restore, even on exceptions or errors
+                        DrawClimbMarker(canvas, _markerSegmentStartPaint, marker.StartAngle, marker.StartPoint);
                     }
 
                     using (new SKAutoCanvasRestore(canvas))
                     {
-                        // do any transformations
-                        canvas.RotateDegrees(marker.EndAngle, marker.EndPoint.X, marker.EndPoint.Y);
-                        // do serious work
-                        canvas.DrawRect(marker.EndPoint.X - (KomMarkerWidth / 2),
-                            marker.EndPoint.Y - (KomMarkerHeight / 2), KomMarkerWidth, KomMarkerHeight,
-                            _markerSegmentEndPaint);
-                        // auto restore, even on exceptions or errors
+                        DrawClimbMarker(canvas, _markerSegmentEndPaint, marker.EndAngle, marker.EndPoint);
                     }
                 }
             }
@@ -218,6 +205,14 @@ namespace RoadCaptain.RouteBuilder
             }
 
             canvas.Flush();
+        }
+
+        private void DrawClimbMarker(SKCanvas canvas, SKPaint paint, float angle, SKPoint point)
+        {
+            canvas.RotateDegrees(angle, point.X, point.Y);
+            canvas.DrawRect(point.X - (KomMarkerWidth / 2),
+                point.Y - (KomMarkerHeight / 2), KomMarkerWidth, KomMarkerHeight,
+                paint);
         }
 
         private void MainWindow_OnLoaded(object sender, RoutedEventArgs e)
