@@ -27,42 +27,6 @@ namespace RoadCaptain.RouteBuilder
         private const int KomMarkerHeight = 32;
         private const int KomMarkerWidth = 6;
 
-        private readonly SKPaint _segmentPathPaint = new()
-            { Color = SKColor.Parse("#000000"), Style = SKPaintStyle.Stroke, StrokeWidth = 4 };
-
-        private readonly SKPaint _selectedSegmentPathPaint = new()
-            { Color = SKColor.Parse("#ffcc00"), Style = SKPaintStyle.Stroke, StrokeWidth = 6 };
-
-        private readonly SKPaint _segmentHighlightPaint = new()
-            { Color = SKColor.Parse("#4CFF00"), Style = SKPaintStyle.Stroke, StrokeWidth = 6 };
-
-        private readonly SKPaint _spawnPointSegmentPathPaint = new()
-            { Color = SKColor.Parse("#44dd44"), Style = SKPaintStyle.Stroke, StrokeWidth = 4 };
-
-        private readonly SKPaint _routePathPaint = new()
-            { Color = SKColor.Parse("#0000ff"), Style = SKPaintStyle.Stroke, StrokeWidth = 8 };
-
-        private readonly SKPaint _riderPositionPaint = new()
-            { Color = SKColor.Parse("#ffffff"), Style = SKPaintStyle.StrokeAndFill, StrokeWidth = 4 };
-
-        private readonly SKPaint _riderPositionFillPaint = new()
-            { Color = SKColor.Parse("#FF6141"), Style = SKPaintStyle.Fill };
-
-        private readonly SKPaint _startMarkerPaint = new()
-            { Color = SKColor.Parse("#ffffff"), Style = SKPaintStyle.StrokeAndFill, StrokeWidth = 4 };
-
-        private readonly SKPaint _startMarkerFillPaint = new()
-            { Color = SKColor.Parse("#14c817"), Style = SKPaintStyle.Fill };
-
-        private readonly SKPaint _endMarkerFillPaint = new()
-            { Color = SKColor.Parse("#ff0000"), Style = SKPaintStyle.Fill };
-
-        private readonly SKPaint _markerSegmentStartPaint = new()
-            { Color = SKColor.Parse("#ff0000"), Style = SKPaintStyle.Fill };
-        
-        private readonly SKPaint _markerSegmentEndPaint = new()
-            { Color = SKColor.Parse("#14c817"), Style = SKPaintStyle.Fill };
-
         private readonly MainWindowViewModel _windowViewModel;
         private string _highlightedSegmentId;
 
@@ -132,7 +96,7 @@ namespace RoadCaptain.RouteBuilder
 
             canvas.Clear();
 
-            canvas.DrawPath(_windowViewModel.RoutePath, _routePathPaint);
+            canvas.DrawPath(_windowViewModel.RoutePath, SkiaPaints._routePathPaint);
             
             // Lowest layer are the segments
             foreach (var (segmentId, skiaPath) in _windowViewModel.SegmentPaths)
@@ -142,19 +106,19 @@ namespace RoadCaptain.RouteBuilder
                 // Use a different color for the selected segment
                 if (segmentId == _windowViewModel.SelectedSegment?.Id)
                 {
-                    segmentPaint = _selectedSegmentPathPaint;
+                    segmentPaint = SkiaPaints._selectedSegmentPathPaint;
                 }
                 else if (segmentId == _highlightedSegmentId)
                 {
-                    segmentPaint = _segmentHighlightPaint;
+                    segmentPaint = SkiaPaints._segmentHighlightPaint;
                 }
                 else if (_windowViewModel.Route.Last == null && _windowViewModel.Route.IsSpawnPointSegment(segmentId))
                 {
-                    segmentPaint = _spawnPointSegmentPathPaint;
+                    segmentPaint = SkiaPaints._spawnPointSegmentPathPaint;
                 }
                 else
                 {
-                    segmentPaint = _segmentPathPaint;
+                    segmentPaint = SkiaPaints._segmentPathPaint;
                 }
 
                 canvas.DrawPath(skiaPath, segmentPaint);
@@ -162,16 +126,16 @@ namespace RoadCaptain.RouteBuilder
 
             if (_windowViewModel.ShowClimbs)
             {
-                foreach (var (segmentId, marker) in _windowViewModel.Markers)
+                foreach (var (_, marker) in _windowViewModel.Markers)
                 {
                     using (new SKAutoCanvasRestore(canvas))
                     {
-                        DrawClimbMarker(canvas, _markerSegmentStartPaint, marker.StartAngle, marker.StartPoint);
+                        DrawClimbMarker(canvas, SkiaPaints._markerSegmentStartPaint, marker.StartAngle, marker.StartPoint);
                     }
 
                     using (new SKAutoCanvasRestore(canvas))
                     {
-                        DrawClimbMarker(canvas, _markerSegmentEndPaint, marker.EndAngle, marker.EndPoint);
+                        DrawClimbMarker(canvas, SkiaPaints._markerSegmentEndPaint, marker.EndAngle, marker.EndPoint);
                     }
                 }
             }
@@ -182,16 +146,16 @@ namespace RoadCaptain.RouteBuilder
                 // Route end marker
                 var endPoint = _windowViewModel.RoutePath.Points.Last();
                 
-                canvas.DrawCircle(endPoint, 15, _startMarkerPaint);
-                canvas.DrawCircle(endPoint, 15 - _startMarkerPaint.StrokeWidth, _endMarkerFillPaint);
+                canvas.DrawCircle(endPoint, 15, SkiaPaints._startMarkerPaint);
+                canvas.DrawCircle(endPoint, 15 - SkiaPaints._startMarkerPaint.StrokeWidth, SkiaPaints._endMarkerFillPaint);
             
                 // Route start marker, needs to be after the end marker to
                 // ensure the start is always visible if the route starts and
                 // ends at the same location.
                 var startPoint = _windowViewModel.RoutePath.Points.First();
                 
-                canvas.DrawCircle(startPoint, 15, _startMarkerPaint);
-                canvas.DrawCircle(startPoint, 15 - _startMarkerPaint.StrokeWidth, _startMarkerFillPaint);
+                canvas.DrawCircle(startPoint, 15, SkiaPaints._startMarkerPaint);
+                canvas.DrawCircle(startPoint, 15 - SkiaPaints._startMarkerPaint.StrokeWidth, SkiaPaints._startMarkerFillPaint);
             }
 
             if (_windowViewModel.RiderPosition != null)
@@ -199,9 +163,9 @@ namespace RoadCaptain.RouteBuilder
                 var scaledAndTranslated = _windowViewModel.RiderPosition.Value;
                 const int radius = 15;
                 canvas
-                    .DrawCircle(scaledAndTranslated.X, scaledAndTranslated.Y, radius, _riderPositionPaint);
+                    .DrawCircle(scaledAndTranslated.X, scaledAndTranslated.Y, radius, SkiaPaints._riderPositionPaint);
                 canvas
-                    .DrawCircle(scaledAndTranslated.X, scaledAndTranslated.Y, radius - _riderPositionPaint.StrokeWidth, _riderPositionFillPaint);
+                    .DrawCircle(scaledAndTranslated.X, scaledAndTranslated.Y, radius - SkiaPaints._riderPositionPaint.StrokeWidth, SkiaPaints._riderPositionFillPaint);
             }
 
             canvas.Flush();
