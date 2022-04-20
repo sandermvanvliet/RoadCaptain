@@ -6,6 +6,8 @@
 
 - Fix issue where loading a route for a different sport than the default sport fails
 - Show route start and end markers on the map ([issue #31](https://github.com/sandermvanvliet/RoadCaptain/issues/31))
+- Show KOM start (red) and finish (green) markers on the map ([issue #31](https://github.com/sandermvanvliet/RoadCaptain/issues/31)):
+![Screenshot of Route Builder map with KOM markers shown in green and red](./images/route-builder-koms.png)
 
 ## 0.6.0.0
 
