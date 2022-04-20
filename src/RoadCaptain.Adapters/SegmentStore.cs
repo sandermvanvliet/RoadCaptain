@@ -121,7 +121,7 @@ namespace RoadCaptain.Adapters
 
         private string CacheKeyForMarkers(World world)
         {
-            return $"markers-{world}";
+            return $"markers-{world.Id}";
         }
 
         private static string CacheKey(SportType sport, World world)

@@ -494,8 +494,11 @@ namespace RoadCaptain.RouteBuilder.ViewModels
             SimulationState = SimulationState.NotStarted;
             _simulationIndex = 0;
             
-            _segments.Clear();
+            _segments = null;
             SegmentPaths.Clear();
+
+            _markers = null;
+            Markers.Clear();
 
             var selectedSport = Sports.SingleOrDefault(s => s.IsSelected);
             if (selectedSport != null)
