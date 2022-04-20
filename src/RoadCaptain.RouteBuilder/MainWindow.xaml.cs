@@ -96,7 +96,7 @@ namespace RoadCaptain.RouteBuilder
 
             canvas.Clear();
 
-            canvas.DrawPath(_windowViewModel.RoutePath, SkiaPaints._routePathPaint);
+            canvas.DrawPath(_windowViewModel.RoutePath, SkiaPaints.RoutePathPaint);
             
             // Lowest layer are the segments
             foreach (var (segmentId, skiaPath) in _windowViewModel.SegmentPaths)
@@ -106,19 +106,19 @@ namespace RoadCaptain.RouteBuilder
                 // Use a different color for the selected segment
                 if (segmentId == _windowViewModel.SelectedSegment?.Id)
                 {
-                    segmentPaint = SkiaPaints._selectedSegmentPathPaint;
+                    segmentPaint = SkiaPaints.SelectedSegmentPathPaint;
                 }
                 else if (segmentId == _highlightedSegmentId)
                 {
-                    segmentPaint = SkiaPaints._segmentHighlightPaint;
+                    segmentPaint = SkiaPaints.SegmentHighlightPaint;
                 }
                 else if (_windowViewModel.Route.Last == null && _windowViewModel.Route.IsSpawnPointSegment(segmentId))
                 {
-                    segmentPaint = SkiaPaints._spawnPointSegmentPathPaint;
+                    segmentPaint = SkiaPaints.SpawnPointSegmentPathPaint;
                 }
                 else
                 {
-                    segmentPaint = SkiaPaints._segmentPathPaint;
+                    segmentPaint = SkiaPaints.SegmentPathPaint;
                 }
 
                 canvas.DrawPath(skiaPath, segmentPaint);
@@ -130,12 +130,12 @@ namespace RoadCaptain.RouteBuilder
                 {
                     using (new SKAutoCanvasRestore(canvas))
                     {
-                        DrawClimbMarker(canvas, SkiaPaints._markerSegmentStartPaint, marker.StartAngle, marker.StartPoint);
+                        DrawClimbMarker(canvas, SkiaPaints.MarkerSegmentStartPaint, marker.StartAngle, marker.StartPoint);
                     }
 
                     using (new SKAutoCanvasRestore(canvas))
                     {
-                        DrawClimbMarker(canvas, SkiaPaints._markerSegmentEndPaint, marker.EndAngle, marker.EndPoint);
+                        DrawClimbMarker(canvas, SkiaPaints.MarkerSegmentEndPaint, marker.EndAngle, marker.EndPoint);
                     }
                 }
             }
@@ -146,16 +146,16 @@ namespace RoadCaptain.RouteBuilder
                 // Route end marker
                 var endPoint = _windowViewModel.RoutePath.Points.Last();
                 
-                canvas.DrawCircle(endPoint, 15, SkiaPaints._startMarkerPaint);
-                canvas.DrawCircle(endPoint, 15 - SkiaPaints._startMarkerPaint.StrokeWidth, SkiaPaints._endMarkerFillPaint);
+                canvas.DrawCircle(endPoint, 15, SkiaPaints.StartMarkerPaint);
+                canvas.DrawCircle(endPoint, 15 - SkiaPaints.StartMarkerPaint.StrokeWidth, SkiaPaints.EndMarkerFillPaint);
             
                 // Route start marker, needs to be after the end marker to
                 // ensure the start is always visible if the route starts and
                 // ends at the same location.
                 var startPoint = _windowViewModel.RoutePath.Points.First();
                 
-                canvas.DrawCircle(startPoint, 15, SkiaPaints._startMarkerPaint);
-                canvas.DrawCircle(startPoint, 15 - SkiaPaints._startMarkerPaint.StrokeWidth, SkiaPaints._startMarkerFillPaint);
+                canvas.DrawCircle(startPoint, 15, SkiaPaints.StartMarkerPaint);
+                canvas.DrawCircle(startPoint, 15 - SkiaPaints.StartMarkerPaint.StrokeWidth, SkiaPaints.StartMarkerFillPaint);
             }
 
             if (_windowViewModel.RiderPosition != null)
@@ -163,9 +163,9 @@ namespace RoadCaptain.RouteBuilder
                 var scaledAndTranslated = _windowViewModel.RiderPosition.Value;
                 const int radius = 15;
                 canvas
-                    .DrawCircle(scaledAndTranslated.X, scaledAndTranslated.Y, radius, SkiaPaints._riderPositionPaint);
+                    .DrawCircle(scaledAndTranslated.X, scaledAndTranslated.Y, radius, SkiaPaints.RiderPositionPaint);
                 canvas
-                    .DrawCircle(scaledAndTranslated.X, scaledAndTranslated.Y, radius - SkiaPaints._riderPositionPaint.StrokeWidth, SkiaPaints._riderPositionFillPaint);
+                    .DrawCircle(scaledAndTranslated.X, scaledAndTranslated.Y, radius - SkiaPaints.RiderPositionPaint.StrokeWidth, SkiaPaints.RiderPositionFillPaint);
             }
 
             canvas.Flush();
