@@ -472,6 +472,7 @@ namespace RoadCaptain.RouteBuilder.ViewModels
                 var marker = new Marker
                 {
                     Id = segment.Id,
+                    Name = segment.Name,
                     StartPoint = new SKPoint(startPoint.X, startPoint.Y),
                     EndPoint = new SKPoint(endPoint.X, endPoint.Y),
                     StartAngle = (float)TrackPoint.Bearing(segment.Points[0], segment.Points[1]) + 90,
@@ -808,6 +809,7 @@ namespace RoadCaptain.RouteBuilder.ViewModels
         public SKPoint EndPoint { get; set; }
         public float StartAngle { get; set; }
         public float EndAngle { get; set; }
+        public string Name { get; set; }
     }
 
     public enum SimulationState
