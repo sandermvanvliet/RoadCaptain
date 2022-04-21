@@ -40,6 +40,7 @@ namespace RoadCaptain.RouteBuilder
         private double _dragDeltaY;
         private double _translateY;
         private double _translateX;
+        private SKMatrix _currentMatrix;
 
         public MainWindow(MainWindowViewModel mainWindowViewModel)
         {
@@ -108,6 +109,11 @@ namespace RoadCaptain.RouteBuilder
             
             canvas.Translate(-(float)(_translateX + _dragDeltaX), -(float)(_translateY + _dragDeltaY));
             canvas.Scale(_scaleX, _scaleY);
+
+            // Store the inverse of the scale/translate matrix
+            // so that we can convert a click on the canvas to
+            // the correct coordinates of a segment.
+            _currentMatrix = canvas.TotalMatrix.Invert();
 
             canvas.Clear();
 
@@ -258,24 +264,31 @@ namespace RoadCaptain.RouteBuilder
 
             if(_dragActive)
             {
-                _dragActive = false;
-                _dragStartX = 0;
-                _dragStartY = 0;
-                _translateX += _dragDeltaX;
-                _translateY += _dragDeltaY;
-                _dragDeltaX = 0;
-                _dragDeltaY = 0;
-
-                TriggerRepaint();
+                EndMapDrag();
                 return;
             }
 
             var position = e.GetPosition((IInputElement)sender);
+            
+            // This is the canvas to WPF element scaling, not the canvas scaling itself
+            var scalingFactor = skiaElement.CanvasSize.Width / skiaElement.ActualWidth;
 
-            var scalingFactor = (skiaElement.CanvasSize.Width / skiaElement.ActualWidth) / _scaleX;
-            var scaledPoint = new Point(position.X * scalingFactor, position.Y * scalingFactor);
+            var matrixConverted = _currentMatrix.MapPoint((float)(position.X * scalingFactor), (float)(position.Y * scalingFactor));
 
-            _windowViewModel.SelectSegmentCommand.Execute(scaledPoint);
+            _windowViewModel.SelectSegmentCommand.Execute(new Point(matrixConverted.X, matrixConverted.Y));
+        }
+
+        private void EndMapDrag()
+        {
+            _dragActive = false;
+            _dragStartX = 0;
+            _dragStartY = 0;
+            _translateX += _dragDeltaX;
+            _translateY += _dragDeltaY;
+            _dragDeltaX = 0;
+            _dragDeltaY = 0;
+
+            TriggerRepaint();
         }
 
         private void RouteListView_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -324,31 +337,31 @@ namespace RoadCaptain.RouteBuilder
             {
                 if (!_dragActive)
                 {
+                    // When the left mouse button is pressed and
+                    // dragging is not active, initialize the
+                    // start position
                     _dragActive = true;
                     _dragStartX = position.X;
                     _dragStartY = position.Y;
                 }
                 else
                 {
+                    // When a drag operation is active,
+                    // track the delta-x and delta-y values
+                    // based on the start position of the
+                    // drag operation
                     _dragDeltaX = _dragStartX - position.X;
                     _dragDeltaY = _dragStartY - position.Y;
+
+                    TriggerRepaint();
                 }
 
-                TriggerRepaint();
                 return;
             }
 
             if(_dragActive)
             {
-                _dragActive = false;
-                _dragStartX = 0;
-                _dragStartY = 0;
-                _translateX += _dragDeltaX;
-                _translateY += _dragDeltaY;
-                _dragDeltaX = 0;
-                _dragDeltaY = 0;
-
-                TriggerRepaint();
+                EndMapDrag();
                 return;
             }
 
