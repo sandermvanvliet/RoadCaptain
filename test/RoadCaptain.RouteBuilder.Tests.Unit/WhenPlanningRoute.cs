@@ -4,6 +4,7 @@ using FluentAssertions;
 using RoadCaptain.Adapters;
 using RoadCaptain.RouteBuilder.ViewModels;
 using RoadCaptain.UserInterface.Shared.Commands;
+using SkiaSharp;
 using Xunit;
 
 namespace RoadCaptain.RouteBuilder.Tests.Unit
@@ -128,6 +129,25 @@ namespace RoadCaptain.RouteBuilder.Tests.Unit
                 .Message
                 .Should()
                 .Be("Volcano circuit 1");
+        }
+
+        // 1: watopia-bambino-fondo-001-after-after-after-after-after-before
+        // 2: watopia-bambino-fondo-001-after-after-after-after-before-after
+        [Fact]
+        public void GivenAtoBSegmentAndRouteStartsInBtoADirection_RoutePathIsGeneratedCorrectly()
+        {
+            GivenWorldAndSport("watopia", SportType.Cycling);
+
+            _viewModel.CallAddSegmentToRoute(GetSegmentById("watopia-bambino-fondo-001-after-after-after-after-after-before"));
+            _viewModel.CallAddSegmentToRoute(GetSegmentById("watopia-bambino-fondo-001-after-after-after-after-before-after"));
+
+            // This is a bit convoluted but given that we know that:
+            // 1: Segment watopia-bambino-fondo-001-after-after-after-after-after-before is AtoB
+            // 2: The route segments have directions BtoA -> BtoA
+            // 3: Therefore the first part of the route is the 'B' part of the first segment
+            var expectedFirstPoint = _viewModel.SegmentPaths[_viewModel.Route.Sequence.First().SegmentId].Points.Last();
+
+            _viewModel.RoutePath.Points.First().Should().Be(expectedFirstPoint);
         }
 
         private Segment GetSegmentById(string id)

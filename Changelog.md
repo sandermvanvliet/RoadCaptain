@@ -11,8 +11,8 @@
 - Show sprint start (red), finish (green) and segment (purple) on the map ([issue #31](https://github.com/sandermvanvliet/RoadCaptain/issues/31)):
 ![Screenshot of Route Builder map with sprints markers shown in green and red](./images/route-builder-sprints.png)
 - Fixed a layout issue where the buttons would overlap the map if the window is resized to a relatively small size.
-- Show a warning when you select a segment that can't be reached from the spawn point ([issue #33](https://github.com/sandermvanvliet/RoadCaptain/issues/33)):
-
+- Show a warning when you select a segment that can't be reached from the spawn point ([issue #33](https://github.com/sandermvanvliet/RoadCaptain/issues/33))
+- Fix issue where the route path direction would be incorrect for the starting segment when the direction is reversed. This would show the start marker on the wrong end of the starting segment ([issue #33](https://github.com/sandermvanvliet/RoadCaptain/issues/33))
 
 ## 0.6.0.0
 

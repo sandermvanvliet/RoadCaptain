@@ -156,6 +156,21 @@ namespace RoadCaptain.RouteBuilder.ViewModels
             {
                 if (Route.Sequence.Any())
                 {
+                    if (Route.Sequence.Count() == 2)
+                    {
+                        RoutePath.Reset();
+                        var firstSequence = Route.Sequence.First();
+
+                        SKPoint[] pointsOfFirstSegment = SegmentPaths[firstSequence.SegmentId].Points;
+
+                        if (firstSequence.Direction == SegmentDirection.BtoA)
+                        {
+                            pointsOfFirstSegment = pointsOfFirstSegment.Reverse().ToArray();
+                        }
+
+                        RoutePath.AddPoly(pointsOfFirstSegment, false);
+                    }
+
                     var points = SegmentPaths[Route.Last.SegmentId].Points;
 
                     if (Route.Sequence.Last().Direction == SegmentDirection.BtoA)
