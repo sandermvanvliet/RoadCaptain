@@ -6,6 +6,12 @@
     "spawnPoints": [
       {
         "segmentId": "watopia-bambino-fondo-001-after-after-after-after-after-before",
+        "zwiftRouteName": "Big Loop",
+        "direction": "AtoB",
+        "sport": "both"
+      },
+      {
+        "segmentId": "watopia-bambino-fondo-001-after-after-after-after-after-before",
         "zwiftRouteName": "Beach Island Loop",
         "direction": "BtoA",
         "sport": "both"
@@ -17,8 +23,8 @@
         "sport": "both"
       },
       {
-        "segmentId": "watopia-bambino-fondo-004-before-before",
-        "zwiftRouteName": "The Mega Pretzel",
+        "segmentId": "watopia-bambino-fondo-001-after-after-after-after-after-after",
+        "zwiftRouteName": "Big Loop Reverse",
         "direction": "BtoA",
         "sport": "both"
       },
@@ -41,14 +47,20 @@
         "sport": "both"
       },
       {
+        "segmentId": "watopia-beach-island-loop-001",
+        "zwiftRouteName": "Volcano Circuit",
+        "direction": "AtoB",
+        "sport": "both" 
+      },
+      {
         "segmentId": "watopia-5k-loop-001-before-before",
         "zwiftRouteName": "5k Loop",
         "direction": "AtoB",
         "sport": "running"
       },
       {
-        "segmentId": "watopia-5k-loop-001-after-after-after",
-        "zwiftRouteName": "11.1 Ocean Boulevard",
+        "segmentId": "watopia-5k-loop-001-before-before",
+        "zwiftRouteName": "Chili Pepper Reverse",
         "direction": "BtoA",
         "sport": "running"
       },
