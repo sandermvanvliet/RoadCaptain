@@ -270,25 +270,9 @@ namespace RoadCaptain.RouteBuilder
 
             var position = e.GetPosition((IInputElement)sender);
             
-            // This is the canvas to WPF element scaling, not the canvas scaling itself
-            var scalingFactor = skiaElement.CanvasSize.Width / skiaElement.ActualWidth;
+            var canvasCoordinate = ConvertMousePositionToCanvasCoordinate(skiaElement, position);
 
-            var matrixConverted = _currentMatrix.MapPoint((float)(position.X * scalingFactor), (float)(position.Y * scalingFactor));
-
-            _windowViewModel.SelectSegmentCommand.Execute(new Point(matrixConverted.X, matrixConverted.Y));
-        }
-
-        private void EndMapDrag()
-        {
-            _dragActive = false;
-            _dragStartX = 0;
-            _dragStartY = 0;
-            _translateX += _dragDeltaX;
-            _translateY += _dragDeltaY;
-            _dragDeltaX = 0;
-            _dragDeltaY = 0;
-
-            TriggerRepaint();
+            _windowViewModel.SelectSegmentCommand.Execute(canvasCoordinate);
         }
 
         private void RouteListView_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -372,11 +356,9 @@ namespace RoadCaptain.RouteBuilder
             {
                 return;
             }
-
-
-            var scalingFactor = skiaElement.CanvasSize.Width / skiaElement.ActualWidth;
-            var scaledPoint = new Point(position.X * scalingFactor, position.Y * scalingFactor);
-
+            
+            var scaledPoint = ConvertMousePositionToCanvasCoordinate(skiaElement, position);
+            
             var matches = _windowViewModel
                 .Markers
                 .Values
@@ -424,6 +406,31 @@ namespace RoadCaptain.RouteBuilder
             _scaleX = 1;
             _scaleY = 1;
             TriggerRepaint();
+        }
+
+        private void EndMapDrag()
+        {
+            _dragActive = false;
+            _dragStartX = 0;
+            _dragStartY = 0;
+            _translateX += _dragDeltaX;
+            _translateY += _dragDeltaY;
+            _dragDeltaX = 0;
+            _dragDeltaY = 0;
+
+            TriggerRepaint();
+        }
+
+        private Point ConvertMousePositionToCanvasCoordinate(SKElement skiaElement, Point position)
+        {
+            // This is the canvas to WPF element scaling, not the canvas scaling itself
+            var scalingFactor = skiaElement.CanvasSize.Width / skiaElement.ActualWidth;
+
+            var matrixConverted =
+                _currentMatrix.MapPoint((float)(position.X * scalingFactor), (float)(position.Y * scalingFactor));
+
+            var parameter = new Point(matrixConverted.X, matrixConverted.Y);
+            return parameter;
         }
     }
 }
