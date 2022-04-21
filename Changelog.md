@@ -13,6 +13,7 @@
 - Fixed a layout issue where the buttons would overlap the map if the window is resized to a relatively small size.
 - Show a warning when you select a segment that can't be reached from the spawn point ([issue #33](https://github.com/sandermvanvliet/RoadCaptain/issues/33))
 - Fix issue where the route path direction would be incorrect for the starting segment when the direction is reversed. This would show the start marker on the wrong end of the starting segment ([issue #33](https://github.com/sandermvanvliet/RoadCaptain/issues/33))
+- It is now possible to zoom and pan the map view ([issue #29](https://github.com/sandermvanvliet/RoadCaptain/issues/29))
 
 ## 0.6.0.0
 
