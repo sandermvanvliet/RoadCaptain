@@ -27,9 +27,12 @@ namespace RoadCaptain.RouteBuilder
     {
         private const int KomMarkerHeight = 32;
         private const int KomMarkerWidth = 6;
+        private const float ScaleDelta = 0.1f;
 
         private readonly MainWindowViewModel _windowViewModel;
         private string _highlightedSegmentId;
+        private float _scaleX = 1;
+        private float _scaleY = 1;
 
         public MainWindow(MainWindowViewModel mainWindowViewModel)
         {
@@ -95,6 +98,8 @@ namespace RoadCaptain.RouteBuilder
         {
             // Purely for readability
             var canvas = args.Surface.Canvas;
+
+            canvas.Scale(_scaleX, _scaleY);
 
             canvas.Clear();
 
@@ -320,6 +325,28 @@ namespace RoadCaptain.RouteBuilder
             {
                 _windowViewModel.Model.ClearStatusBar();
             }
+        }
+
+        private void ZoomIn_Click(object sender, RoutedEventArgs e)
+        {
+            _scaleX += ScaleDelta;
+            _scaleY += ScaleDelta;
+
+            TriggerRepaint();
+        }
+
+        private void ZoomOut_Click(object sender, RoutedEventArgs e)
+        {
+            _scaleX -= ScaleDelta;
+            _scaleY -= ScaleDelta;
+
+            if (_scaleX <= 0)
+            {
+                _scaleX = 1;
+                _scaleY = 1;
+            }
+
+            TriggerRepaint();
         }
     }
 }

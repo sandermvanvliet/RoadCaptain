@@ -292,6 +292,8 @@
                 <Button Content="📂" Command="{Binding Path=OpenRouteCommand}" ToolTip="Open route" Cursor="Hand" />
                 <CheckBox Content="Show KOMs" VerticalAlignment="Center" Margin="8,0,0,0" IsChecked="{Binding Path=ShowClimbs}" ToolTip="Show the KOM start (red) and finish (green) markers on the map" Visibility="{Binding Path=Route.ReadyToBuild,Converter={StaticResource VisibilityConverter}}" />
                 <CheckBox Content="Show Sprints" VerticalAlignment="Center" Margin="8,0,0,0" IsChecked="{Binding Path=ShowSprints}" ToolTip="Show the sprint segments on the map" Visibility="{Binding Path=Route.ReadyToBuild,Converter={StaticResource VisibilityConverter}}" />
+                <Button Content="+" Margin="8,0,0,0" Click="ZoomIn_Click" />
+                <Button Content="-" Margin="8,0,0,0" Click="ZoomOut_Click" />
             </StackPanel>
 
             <Grid Grid.Row="0" Grid.RowSpan="2" Grid.Column="0">
