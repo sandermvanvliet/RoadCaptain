@@ -38,6 +38,12 @@ namespace RoadCaptain.RouteBuilder.ViewModels
         private List<Segment> _markers;
         private bool _showClimbs;
         private bool _showSprints;
+        private float _zoom = 1;
+        private Point _pan = new(0, 0);
+        private bool _isPanning;
+        private Point _previousPosition;
+
+        private const float ZoomDelta = 0.1f;
 
         public MainWindowViewModel(IRouteStore routeStore, ISegmentStore segmentStore, IVersionChecker versionChecker, IWindowService windowService, IWorldStore worldStore, UserPreferences userPreferences)
         {
@@ -50,9 +56,9 @@ namespace RoadCaptain.RouteBuilder.ViewModels
             Worlds = worldStore.LoadWorlds().Select(world => new WorldViewModel(world)).ToArray();
             Sports = new[] { new SportViewModel(SportType.Cycling), new SportViewModel(SportType.Running) };
             Route = new RouteViewModel(routeStore, segmentStore);
-            
+
             Route.PropertyChanged += (_, args) => HandleRoutePropertyChanged(segmentStore, args);
-            
+
             SelectDefaultSportFromPreferences();
 
             SaveRouteCommand = new RelayCommand(
@@ -106,13 +112,13 @@ namespace RoadCaptain.RouteBuilder.ViewModels
             SelectWorldCommand = new RelayCommand(
                 _ => SelectWorld(_ as WorldViewModel),
                 _ => (_ as WorldViewModel)?.CanSelect ?? false);
-            
+
             SelectSportCommand = new RelayCommand(
                 _ => SelectSport(_ as SportViewModel),
                 _ => true);
 
             ResetDefaultSportCommand = new RelayCommand(
-                _ => ResetDefaultSport(), 
+                _ => ResetDefaultSport(),
                 _ => true);
 
             Version = GetType().Assembly.GetName().Version?.ToString(4) ?? "0.0.0.0";
@@ -198,7 +204,7 @@ namespace RoadCaptain.RouteBuilder.ViewModels
                 {
                     _segments = new List<Segment>();
                 }
-                
+
                 TryLoadSegmentsForWorldAndSport(segmentStore);
             }
 
@@ -265,7 +271,7 @@ namespace RoadCaptain.RouteBuilder.ViewModels
             get => _showClimbs;
             set
             {
-                if(value == _showClimbs) return;
+                if (value == _showClimbs) return;
                 _showClimbs = value;
                 OnPropertyChanged();
             }
@@ -276,8 +282,30 @@ namespace RoadCaptain.RouteBuilder.ViewModels
             get => _showSprints;
             set
             {
-                if(value == _showSprints) return;
+                if (value == _showSprints) return;
                 _showSprints = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public float Zoom
+        {
+            get => _zoom;
+            set
+            {
+                if (Math.Abs(value - _zoom) < 0.001) return;
+                _zoom = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public Point Pan
+        {
+            get => _pan;
+            set
+            {
+                if (value == _pan) return;
+                _pan = value;
                 OnPropertyChanged();
             }
         }
@@ -454,7 +482,7 @@ namespace RoadCaptain.RouteBuilder.ViewModels
             }
 
             var lastSegment = Route.RemoveLast();
-            
+
             SelectedSegment = null;
             CreateRoutePath();
 
@@ -533,10 +561,10 @@ namespace RoadCaptain.RouteBuilder.ViewModels
                     .Points
                     .Select(point => TrackPoint.LatLongToGame(point.Longitude, -point.Latitude, point.Altitude))
                     .ToList();
-                
+
                 var startPoint = _overallOffsets.ScaleAndTranslate(gameCoordinates.First());
                 var endPoint = _overallOffsets.ScaleAndTranslate(gameCoordinates.Last());
-                
+
                 var skiaPathFromSegment = SkiaPathFromSegment(_overallOffsets, gameCoordinates);
                 skiaPathFromSegment.GetTightBounds(out var bounds);
 
@@ -582,7 +610,7 @@ namespace RoadCaptain.RouteBuilder.ViewModels
             RoutePath = new SKPath();
             SimulationState = SimulationState.NotStarted;
             _simulationIndex = 0;
-            
+
             _segments = null;
             SegmentPaths.Clear();
 
@@ -593,7 +621,7 @@ namespace RoadCaptain.RouteBuilder.ViewModels
             if (selectedSport != null)
             {
                 selectedSport.IsSelected = false;
-                
+
                 SelectDefaultSportFromPreferences();
             }
 
@@ -602,6 +630,8 @@ namespace RoadCaptain.RouteBuilder.ViewModels
             {
                 selectedWorld.IsSelected = false;
             }
+
+            ResetZoomAndPan();
 
             return commandResult;
         }
@@ -667,6 +697,8 @@ namespace RoadCaptain.RouteBuilder.ViewModels
             Route.OutputFilePath = fileName;
 
             SelectedSegment = null;
+            
+            ResetZoomAndPan();
 
             try
             {
@@ -685,7 +717,7 @@ namespace RoadCaptain.RouteBuilder.ViewModels
         private CommandResult SelectWorld(WorldViewModel world)
         {
             Route.World = _worldStore.LoadWorldById(world.Id);
-            
+
             var currentSelected = Worlds.SingleOrDefault(w => w.IsSelected);
             if (currentSelected != null)
             {
@@ -711,7 +743,7 @@ namespace RoadCaptain.RouteBuilder.ViewModels
                     sport.IsDefault = true;
                 }
             }
-            
+
             var currentSelected = Sports.SingleOrDefault(w => w.IsSelected);
             if (currentSelected != null)
             {
@@ -874,6 +906,64 @@ namespace RoadCaptain.RouteBuilder.ViewModels
             if (latestRelease != null && latestRelease.Version > currentVersion)
             {
                 _windowService.ShowNewVersionDialog(latestRelease);
+            }
+        }
+
+        public void ZoomIn()
+        {
+            Zoom += ZoomDelta;
+        }
+
+        public void ZoomOut()
+        {
+            Zoom -= ZoomDelta;
+
+            if (Zoom < 1)
+            {
+                Zoom = 1;
+            }
+        }
+
+        public void ResetZoomAndPan()
+        {
+            Zoom = 1;
+            Pan = new Point(0, 0);
+        }
+
+        public void StartPan(Point start)
+        {
+            IsPanning = true;
+            _previousPosition = start;
+        }
+
+        public void PanMove(Point position)
+        {
+            // When a drag operation is active,
+            // track the delta-x and delta-y values
+            // based on the start position of the
+            // drag operation
+            Pan = new Point(
+                Pan.X + (_previousPosition.X - position.X), 
+                Pan.Y + (_previousPosition.Y - position.Y));
+
+            _previousPosition = position;
+
+            OnPropertyChanged(nameof(Pan));
+        }
+
+        public void EndPan()
+        {
+            IsPanning = false;
+        }
+
+        public bool IsPanning
+        {
+            get => _isPanning;
+            set
+            {
+                if (value == _isPanning) return;
+                _isPanning = value;
+                OnPropertyChanged();
             }
         }
     }

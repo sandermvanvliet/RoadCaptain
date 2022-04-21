@@ -27,19 +27,9 @@ namespace RoadCaptain.RouteBuilder
     {
         private const int KomMarkerHeight = 32;
         private const int KomMarkerWidth = 6;
-        private const float ScaleDelta = 0.1f;
 
         private readonly MainWindowViewModel _windowViewModel;
         private string _highlightedSegmentId;
-        private float _scaleX = 1;
-        private float _scaleY = 1;
-        private bool _dragActive;
-        private double _dragStartX;
-        private double _dragStartY;
-        private double _dragDeltaX;
-        private double _dragDeltaY;
-        private double _translateY;
-        private double _translateX;
         private SKMatrix _currentMatrix;
 
         public MainWindow(MainWindowViewModel mainWindowViewModel)
@@ -85,6 +75,8 @@ namespace RoadCaptain.RouteBuilder
                 case nameof(_windowViewModel.RiderPosition):
                 case nameof(_windowViewModel.ShowClimbs):
                 case nameof(_windowViewModel.ShowSprints):
+                case nameof(_windowViewModel.Zoom):
+                case nameof(_windowViewModel.Pan):
                     TriggerRepaint();
                     break;
             }
@@ -107,8 +99,8 @@ namespace RoadCaptain.RouteBuilder
             // Purely for readability
             var canvas = args.Surface.Canvas;
             
-            canvas.Translate(-(float)(_translateX + _dragDeltaX), -(float)(_translateY + _dragDeltaY));
-            canvas.Scale(_scaleX, _scaleY);
+            canvas.Translate(-(float)_windowViewModel.Pan.X, -(float)_windowViewModel.Pan.Y);
+            canvas.Scale(_windowViewModel.Zoom, _windowViewModel.Zoom);
 
             // Store the inverse of the scale/translate matrix
             // so that we can convert a click on the canvas to
@@ -184,7 +176,7 @@ namespace RoadCaptain.RouteBuilder
                             DrawClimbMarker(canvas, SkiaPaints.MarkerSegmentStartPaint, marker.StartAngle,
                                 marker.StartDrawPoint);
                         }
-                        
+
                         // There are KOMs that end at the same(-ish) location which
                         // would cause the finish line to be drawn on top of each other.
                         // This prevents that.
@@ -262,14 +254,14 @@ namespace RoadCaptain.RouteBuilder
                 return;
             }
 
-            if(_dragActive)
+            if (_windowViewModel.IsPanning)
             {
-                EndMapDrag();
+                _windowViewModel.EndPan();
                 return;
             }
 
             var position = e.GetPosition((IInputElement)sender);
-            
+
             var canvasCoordinate = ConvertMousePositionToCanvasCoordinate(skiaElement, position);
 
             _windowViewModel.SelectSegmentCommand.Execute(canvasCoordinate);
@@ -319,33 +311,21 @@ namespace RoadCaptain.RouteBuilder
 
             if (e.LeftButton == MouseButtonState.Pressed)
             {
-                if (!_dragActive)
+                if(!_windowViewModel.IsPanning)
                 {
-                    // When the left mouse button is pressed and
-                    // dragging is not active, initialize the
-                    // start position
-                    _dragActive = true;
-                    _dragStartX = position.X;
-                    _dragStartY = position.Y;
+                    _windowViewModel.StartPan(position);
                 }
                 else
                 {
-                    // When a drag operation is active,
-                    // track the delta-x and delta-y values
-                    // based on the start position of the
-                    // drag operation
-                    _dragDeltaX = _dragStartX - position.X;
-                    _dragDeltaY = _dragStartY - position.Y;
-
-                    TriggerRepaint();
+                    _windowViewModel.PanMove(position);
                 }
 
                 return;
             }
 
-            if(_dragActive)
+            if (_windowViewModel.IsPanning)
             {
-                EndMapDrag();
+                _windowViewModel.EndPan();
                 return;
             }
 
@@ -356,9 +336,9 @@ namespace RoadCaptain.RouteBuilder
             {
                 return;
             }
-            
+
             var scaledPoint = ConvertMousePositionToCanvasCoordinate(skiaElement, position);
-            
+
             var matches = _windowViewModel
                 .Markers
                 .Values
@@ -368,7 +348,7 @@ namespace RoadCaptain.RouteBuilder
             if (matches.Count == 1)
             {
                 var marker = matches.Single();
-                
+
                 _windowViewModel.Model.StatusBarInfo("{0} {1}", marker.Type.ToString(), marker.Name);
             }
             else
@@ -379,44 +359,21 @@ namespace RoadCaptain.RouteBuilder
 
         private void ZoomIn_Click(object sender, RoutedEventArgs e)
         {
-            _scaleX += ScaleDelta;
-            _scaleY += ScaleDelta;
+            _windowViewModel.ZoomIn();
 
             TriggerRepaint();
         }
 
         private void ZoomOut_Click(object sender, RoutedEventArgs e)
         {
-            _scaleX -= ScaleDelta;
-            _scaleY -= ScaleDelta;
-
-            if (_scaleX <= 0)
-            {
-                _scaleX = 1;
-                _scaleY = 1;
-            }
+            _windowViewModel.ZoomOut();
 
             TriggerRepaint();
         }
 
         private void ResetZoom_Click(object sender, RoutedEventArgs e)
         {
-            _translateX = 0;
-            _translateY = 0;
-            _scaleX = 1;
-            _scaleY = 1;
-            TriggerRepaint();
-        }
-
-        private void EndMapDrag()
-        {
-            _dragActive = false;
-            _dragStartX = 0;
-            _dragStartY = 0;
-            _translateX += _dragDeltaX;
-            _translateY += _dragDeltaY;
-            _dragDeltaX = 0;
-            _dragDeltaY = 0;
+            _windowViewModel.ResetZoomAndPan();
 
             TriggerRepaint();
         }
@@ -426,11 +383,11 @@ namespace RoadCaptain.RouteBuilder
             // This is the canvas to WPF element scaling, not the canvas scaling itself
             var scalingFactor = skiaElement.CanvasSize.Width / skiaElement.ActualWidth;
 
-            var matrixConverted =
-                _currentMatrix.MapPoint((float)(position.X * scalingFactor), (float)(position.Y * scalingFactor));
+            var matrixConverted = _currentMatrix.MapPoint(
+                    (float)(position.X * scalingFactor), 
+                    (float)(position.Y * scalingFactor));
 
-            var parameter = new Point(matrixConverted.X, matrixConverted.Y);
-            return parameter;
+            return new Point(matrixConverted.X, matrixConverted.Y);
         }
     }
 }
