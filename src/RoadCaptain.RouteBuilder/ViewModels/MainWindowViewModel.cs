@@ -301,6 +301,11 @@ namespace RoadCaptain.RouteBuilder.ViewModels
 
             newSelectedSegment ??= boundedSegments.First();
 
+            return AddSegmentToRoute(newSelectedSegment);
+        }
+
+        public CommandResult AddSegmentToRoute(Segment newSelectedSegment)
+        {
             var segmentId = newSelectedSegment.Id;
 
             // 1. Figure out if this is the first segment on the route, if so add it to the route and set the selection to the new segment
@@ -308,7 +313,8 @@ namespace RoadCaptain.RouteBuilder.ViewModels
             {
                 if (!Route.IsSpawnPointSegment(segmentId))
                 {
-                    return CommandResult.Failure($"{newSelectedSegment.Name} is not a spawn point, we can't start here unfortunately");
+                    return CommandResult.Failure(
+                        $"{newSelectedSegment.Name} is not a spawn point, we can't start here unfortunately");
                 }
 
                 Route.StartOn(newSelectedSegment);
@@ -367,6 +373,11 @@ namespace RoadCaptain.RouteBuilder.ViewModels
             {
                 if (fromA != null)
                 {
+                    if (!IsValidSpawnPointProgression(out var commandResult, SegmentDirection.BtoA))
+                    {
+                        return commandResult;
+                    }
+
                     var newSegmentDirection = GetDirectionOnNewSegment(newSelectedSegment, lastSegment);
 
                     Route.NextStep(fromA.Direction, fromA.SegmentId, newSelectedSegment, SegmentDirection.BtoA,
@@ -379,6 +390,11 @@ namespace RoadCaptain.RouteBuilder.ViewModels
 
                 if (fromB != null)
                 {
+                    if (!IsValidSpawnPointProgression(out var commandResult, SegmentDirection.AtoB))
+                    {
+                        return commandResult;
+                    }
+
                     var newSegmentDirection = GetDirectionOnNewSegment(newSelectedSegment, lastSegment);
 
                     Route.NextStep(fromB.Direction, fromB.SegmentId, newSelectedSegment, SegmentDirection.AtoB,
@@ -391,6 +407,28 @@ namespace RoadCaptain.RouteBuilder.ViewModels
             }
 
             return CommandResult.Failure("Did not find a connection between the last segment and the selected segment");
+        }
+
+        private bool IsValidSpawnPointProgression(out CommandResult commandResult, SegmentDirection segmentDirection)
+        {
+            if (Route.Sequence.Count() == 1)
+            {
+                var startSegmentSequence = Route.Sequence.First();
+                if (!Route.World.SpawnPoints.Any(sp =>
+                        sp.SegmentId == startSegmentSequence.SegmentId &&
+                        sp.Direction == segmentDirection))
+                {
+                    {
+                        commandResult =
+                            CommandResult.Failure("Spawn point does not support the direction of the selected segment");
+                        return false;
+                    }
+                }
+            }
+
+            commandResult = null;
+
+            return true;
         }
 
         private CommandResult RemoveLastSegment()
