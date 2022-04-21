@@ -176,15 +176,19 @@
                 <ColumnDefinition Width="300" />
                 <ColumnDefinition />
             </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
 
-            <skia:SKElement Grid.Row="0" Grid.Column="1" 
+            <skia:SKElement Grid.Row="1" Grid.Column="1" 
                         PaintSurface="SKElement_OnPaintSurface" 
                         MouseLeftButtonUp="SkElement_OnMouseLeftButtonUp"
                         Name="SkElement"
                         Cursor="Hand">
             </skia:SKElement>
 
-            <Grid Grid.Row="0" Grid.Column="1"
+            <Grid Grid.Row="0" Grid.RowSpan="2" Grid.Column="1"
                   Visibility="{Binding Path=Route.ReadyToBuild,Converter={StaticResource VisibilityConverter},ConverterParameter=invert}"
                   d:Visibility="Visible"
                   Margin="3,40,4,4">
@@ -262,10 +266,10 @@
             </Grid>
 
             <StackPanel Grid.Row="0" Grid.Column="1" 
-                        Panel.ZIndex="2" 
                         VerticalAlignment="Top" 
                         HorizontalAlignment="Left" 
-                        Orientation="Horizontal">
+                        Orientation="Horizontal"
+                        Background="White">
                 <StackPanel.Resources>
                     <Style TargetType="{x:Type Button}" BasedOn="{StaticResource ButtonStyle}"/>
                 </StackPanel.Resources>

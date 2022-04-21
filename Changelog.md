@@ -10,7 +10,7 @@
 ![Screenshot of Route Builder map with KOM markers shown in green and red](./images/route-builder-koms.png)
 - Show sprint start (red), finish (green) and segment (purple) on the map ([issue #31](https://github.com/sandermvanvliet/RoadCaptain/issues/31)):
 ![Screenshot of Route Builder map with sprints markers shown in green and red](./images/route-builder-sprints.png)
-
+- Fixed a layout issue where the buttons would overlap the map if the window is resized to a relatively small size.
 
 ## 0.6.0.0
 
