@@ -134,6 +134,8 @@ namespace RoadCaptain.RouteBuilder
                 {
                     if (marker.Type == SegmentType.Climb && _windowViewModel.ShowClimbs)
                     {
+                        canvas.DrawPath(marker.Path, SkiaPaints.ClimbSegmentPaint);
+
                         using (new SKAutoCanvasRestore(canvas))
                         {
                             DrawClimbMarker(canvas, SkiaPaints.MarkerSegmentStartPaint, marker.StartAngle,

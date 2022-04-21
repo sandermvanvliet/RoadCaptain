@@ -42,5 +42,8 @@ namespace RoadCaptain.RouteBuilder
 
         public static readonly SKPaint SprintSegmentPaint = new()
             { Color = SKColor.Parse("#B200FF"), Style = SKPaintStyle.Stroke, StrokeWidth = 4 };
+
+        public static readonly SKPaint ClimbSegmentPaint = new()
+            { Color = SKColor.Parse("#FF6A00"), Style = SKPaintStyle.Stroke, StrokeWidth = 4 };
     }
 }
