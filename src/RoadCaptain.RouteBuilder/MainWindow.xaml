@@ -184,6 +184,7 @@
             <skia:SKElement Grid.Row="1" Grid.Column="1" 
                         PaintSurface="SKElement_OnPaintSurface" 
                         MouseLeftButtonUp="SkElement_OnMouseLeftButtonUp"
+                        MouseMove="SkElement_OnMouseMove"
                         Name="SkElement"
                         Cursor="Hand">
             </skia:SKElement>

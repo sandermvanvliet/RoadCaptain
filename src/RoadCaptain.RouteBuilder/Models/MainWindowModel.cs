@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows.Media;
+using Microsoft.VisualBasic;
 
 namespace RoadCaptain.RouteBuilder.Models
 {
@@ -81,6 +82,11 @@ namespace RoadCaptain.RouteBuilder.Models
             StatusBarText = string.Format(format, args);
             StatusBarBackground = Brushes.Red;
             StatusBarForeground = Brushes.White;
+        }
+
+        public void ClearStatusBar()
+        {
+            StatusBarInfo(string.Empty);
         }
     }
 }

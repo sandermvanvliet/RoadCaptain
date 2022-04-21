@@ -483,6 +483,9 @@ namespace RoadCaptain.RouteBuilder.ViewModels
                 
                 var startPoint = _overallOffsets.ScaleAndTranslate(gameCoordinates.First());
                 var endPoint = _overallOffsets.ScaleAndTranslate(gameCoordinates.Last());
+                
+                var skiaPathFromSegment = SkiaPathFromSegment(_overallOffsets, gameCoordinates);
+                skiaPathFromSegment.GetTightBounds(out var bounds);
 
                 var marker = new Marker
                 {
@@ -493,7 +496,8 @@ namespace RoadCaptain.RouteBuilder.ViewModels
                     EndDrawPoint = new SKPoint(endPoint.X, endPoint.Y),
                     StartAngle = (float)TrackPoint.Bearing(segment.Points[0], segment.Points[1]) + 90,
                     EndAngle = (float)TrackPoint.Bearing(segment.Points[^2], segment.Points[^1]) + 90,
-                    Path = SkiaPathFromSegment(_overallOffsets, gameCoordinates),
+                    Path = skiaPathFromSegment,
+                    Bounds = skiaPathFromSegment,
                     StartPoint = segment.Points.First(),
                     EndPoint = segment.Points.Last()
                 };
@@ -833,6 +837,7 @@ namespace RoadCaptain.RouteBuilder.ViewModels
         public SegmentType Type { get; set; }
         public TrackPoint StartPoint { get; set; }
         public TrackPoint EndPoint { get; set; }
+        public SKPath Bounds { get; set; }
     }
 
     public enum SimulationState

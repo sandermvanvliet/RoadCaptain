@@ -283,6 +283,44 @@ namespace RoadCaptain.RouteBuilder
         {
             Task.Factory.StartNew(() => _windowViewModel.CheckForNewVersion());
         }
+
+        private void SkElement_OnMouseMove(object sender, MouseEventArgs e)
+        {
+            if (sender is not SKElement skiaElement)
+            {
+                return;
+            }
+
+            // Hit test to see whether we're over a KOM/Sprint segment
+
+            // If sprints and climbs are not shown then exit
+            if (!_windowViewModel.ShowSprints && !_windowViewModel.ShowClimbs)
+            {
+                return;
+            }
+
+            var position = e.GetPosition((IInputElement)sender);
+
+            var scalingFactor = skiaElement.CanvasSize.Width / skiaElement.ActualWidth;
+            var scaledPoint = new Point(position.X * scalingFactor, position.Y * scalingFactor);
+
+            var matches = _windowViewModel
+                .Markers
+                .Values
+                .Where(kv => kv.Bounds.Contains((float)scaledPoint.X, (float)scaledPoint.Y))
+                .ToList();
+
+            if (matches.Count == 1)
+            {
+                var marker = matches.Single();
+                
+                _windowViewModel.Model.StatusBarInfo("{0} {1}", marker.Type.ToString(), marker.Name);
+            }
+            else
+            {
+                _windowViewModel.Model.ClearStatusBar();
+            }
+        }
     }
 }
 
