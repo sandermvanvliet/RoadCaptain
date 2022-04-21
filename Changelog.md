@@ -18,6 +18,7 @@
 ### Runner
 
 - Fix issue where the Runner would show `RoadCaptain.World` instead of `Watopia` as the world name after loading a route.
+- Fix issue where the Runner would show `RoadCaptain.World` instead of `Watopia` as the world name in the in-game window.
 
 ## 0.6.0.0
 

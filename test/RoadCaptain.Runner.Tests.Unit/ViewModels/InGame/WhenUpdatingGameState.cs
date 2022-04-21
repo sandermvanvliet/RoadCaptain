@@ -41,7 +41,7 @@ namespace RoadCaptain.Runner.Tests.Unit.ViewModels.InGame
                 .Model
                 .InstructionText
                 .Should()
-                .Be($"Start Zwift and start cycling in {World} on route:");
+                .Be($"Start Zwift and start cycling in {World.Name} on route:");
         }
 
         [Fact]
@@ -155,7 +155,7 @@ namespace RoadCaptain.Runner.Tests.Unit.ViewModels.InGame
                 .Model
                 .InstructionText
                 .Should()
-                .Be($"Start Zwift and start cycling in {World} on route:");
+                .Be($"Start Zwift and start cycling in {World.Name} on route:");
         }
 
         [Fact]
@@ -193,7 +193,7 @@ namespace RoadCaptain.Runner.Tests.Unit.ViewModels.InGame
                 .Model
                 .InstructionText
                 .Should()
-                .Be($"Start Zwift and start cycling in {World} on route:");
+                .Be($"Start Zwift and start cycling in {World.Name} on route:");
         }
 
         [Fact]
