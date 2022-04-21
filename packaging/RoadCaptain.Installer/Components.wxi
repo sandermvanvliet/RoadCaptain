@@ -119,6 +119,9 @@
       <Component Id="worlds.json" Guid="c3e0ea86-e9de-4c25-8a54-ae118602ba92">
         <File Id="worlds.json" Name="worlds.json" Source="$(var.RoadCaptain.Runner_TargetDir)worlds.json" />
       </Component>
+      <Component Id="markers.watopia.json" Guid="95abf4c9-84f2-4ccf-9099-129018e04c2d">
+        <File Id="markers.watopia.json" Name="markers-watopia.json" Source="$(var.RoadCaptain.Runner_TargetDir)markers-watopia.json" />
+      </Component>
     </ComponentGroup>
   </Fragment>
   <Fragment>
