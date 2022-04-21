@@ -15,6 +15,10 @@
 - Fix issue where the route path direction would be incorrect for the starting segment when the direction is reversed. This would show the start marker on the wrong end of the starting segment ([issue #33](https://github.com/sandermvanvliet/RoadCaptain/issues/33))
 - It is now possible to zoom and pan the map view ([issue #29](https://github.com/sandermvanvliet/RoadCaptain/issues/29))
 
+### Runner
+
+- Fix issue where the Runner would show `RoadCaptain.World` instead of `Watopia` as the world name after loading a route.
+
 ## 0.6.0.0
 
 This is a big release with two items that will make RoadCaptain a lot more versatile!
