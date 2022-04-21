@@ -3,6 +3,7 @@
 // See LICENSE or https://choosealicense.com/licenses/artistic-2.0/
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
@@ -72,6 +73,7 @@ namespace RoadCaptain.RouteBuilder
                     break;
                 case nameof(_windowViewModel.RiderPosition):
                 case nameof(_windowViewModel.ShowClimbs):
+                case nameof(_windowViewModel.ShowSprints):
                     TriggerRepaint();
                     break;
             }
@@ -97,7 +99,7 @@ namespace RoadCaptain.RouteBuilder
             canvas.Clear();
 
             canvas.DrawPath(_windowViewModel.RoutePath, SkiaPaints.RoutePathPaint);
-            
+
             // Lowest layer are the segments
             foreach (var (segmentId, skiaPath) in _windowViewModel.SegmentPaths)
             {
@@ -124,18 +126,57 @@ namespace RoadCaptain.RouteBuilder
                 canvas.DrawPath(skiaPath, segmentPaint);
             }
 
-            if (_windowViewModel.ShowClimbs)
+            if (_windowViewModel.ShowClimbs || _windowViewModel.ShowSprints)
             {
+                var drawnMarkers = new List<TrackPoint>();
+
                 foreach (var (_, marker) in _windowViewModel.Markers)
                 {
-                    using (new SKAutoCanvasRestore(canvas))
+                    if (marker.Type == SegmentType.Climb && _windowViewModel.ShowClimbs)
                     {
-                        DrawClimbMarker(canvas, SkiaPaints.MarkerSegmentStartPaint, marker.StartAngle, marker.StartPoint);
-                    }
+                        using (new SKAutoCanvasRestore(canvas))
+                        {
+                            DrawClimbMarker(canvas, SkiaPaints.MarkerSegmentStartPaint, marker.StartAngle,
+                                marker.StartDrawPoint);
+                        }
 
-                    using (new SKAutoCanvasRestore(canvas))
+                        // There are KOMs that end at the same(-ish) location which
+                        // would cause the finish line to be drawn on top of each other.
+                        // This prevents that.
+                        if (!drawnMarkers.Any(kv => kv.IsCloseTo(marker.EndPoint)))
+                        {
+                            drawnMarkers.Add(marker.EndPoint);
+
+                            using (new SKAutoCanvasRestore(canvas))
+                            {
+                                DrawClimbMarker(canvas, SkiaPaints.MarkerSegmentEndPaint, marker.EndAngle,
+                                    marker.EndDrawPoint);
+                            }
+                        }
+                    }
+                    else if (marker.Type == SegmentType.Sprint && _windowViewModel.ShowSprints)
                     {
-                        DrawClimbMarker(canvas, SkiaPaints.MarkerSegmentEndPaint, marker.EndAngle, marker.EndPoint);
+                        canvas.DrawPath(marker.Path, SkiaPaints.SprintSegmentPaint);
+
+                        using (new SKAutoCanvasRestore(canvas))
+                        {
+                            DrawClimbMarker(canvas, SkiaPaints.MarkerSegmentStartPaint, marker.StartAngle,
+                                marker.StartDrawPoint);
+                        }
+                        
+                        // There are KOMs that end at the same(-ish) location which
+                        // would cause the finish line to be drawn on top of each other.
+                        // This prevents that.
+                        if (!drawnMarkers.Any(kv => kv.IsCloseTo(marker.EndPoint)))
+                        {
+                            drawnMarkers.Add(marker.EndPoint);
+
+                            using (new SKAutoCanvasRestore(canvas))
+                            {
+                                DrawClimbMarker(canvas, SkiaPaints.MarkerSegmentEndPaint, marker.EndAngle,
+                                    marker.EndDrawPoint);
+                            }
+                        }
                     }
                 }
             }
@@ -145,15 +186,15 @@ namespace RoadCaptain.RouteBuilder
             {
                 // Route end marker
                 var endPoint = _windowViewModel.RoutePath.Points.Last();
-                
+
                 canvas.DrawCircle(endPoint, 15, SkiaPaints.StartMarkerPaint);
                 canvas.DrawCircle(endPoint, 15 - SkiaPaints.StartMarkerPaint.StrokeWidth, SkiaPaints.EndMarkerFillPaint);
-            
+
                 // Route start marker, needs to be after the end marker to
                 // ensure the start is always visible if the route starts and
                 // ends at the same location.
                 var startPoint = _windowViewModel.RoutePath.Points.First();
-                
+
                 canvas.DrawCircle(startPoint, 15, SkiaPaints.StartMarkerPaint);
                 canvas.DrawCircle(startPoint, 15 - SkiaPaints.StartMarkerPaint.StrokeWidth, SkiaPaints.StartMarkerFillPaint);
             }
@@ -178,7 +219,7 @@ namespace RoadCaptain.RouteBuilder
             canvas.DrawRect(
                 point.X - (KomMarkerWidth / 2),
                 point.Y - (KomMarkerHeight / 2),
-                KomMarkerWidth, 
+                KomMarkerWidth,
                 KomMarkerHeight,
                 paint);
         }
@@ -204,7 +245,7 @@ namespace RoadCaptain.RouteBuilder
 
             var scalingFactor = skiaElement.CanvasSize.Width / skiaElement.ActualWidth;
             var scaledPoint = new Point(position.X * scalingFactor, position.Y * scalingFactor);
-            
+
             _windowViewModel.SelectSegmentCommand.Execute(scaledPoint);
         }
 

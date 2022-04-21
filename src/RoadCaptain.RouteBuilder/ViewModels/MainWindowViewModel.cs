@@ -37,6 +37,7 @@ namespace RoadCaptain.RouteBuilder.ViewModels
         private SportViewModel[] _sports;
         private List<Segment> _markers;
         private bool _showClimbs;
+        private bool _showSprints;
 
         public MainWindowViewModel(IRouteStore routeStore, ISegmentStore segmentStore, IVersionChecker versionChecker, IWindowService windowService, IWorldStore worldStore, UserPreferences userPreferences)
         {
@@ -202,7 +203,7 @@ namespace RoadCaptain.RouteBuilder.ViewModels
         public RouteViewModel Route { get; set; }
         public Dictionary<string, SKPath> SegmentPaths { get; } = new();
         public Dictionary<string, Marker> Markers { get; } = new();
-        public SKPath RoutePath { get; private set; } = new SKPath();
+        public SKPath RoutePath { get; private set; } = new();
 
         public ICommand SaveRouteCommand { get; }
         public ICommand OpenRouteCommand { get; }
@@ -251,6 +252,17 @@ namespace RoadCaptain.RouteBuilder.ViewModels
             {
                 if(value == _showClimbs) return;
                 _showClimbs = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public bool ShowSprints
+        {
+            get => _showSprints;
+            set
+            {
+                if(value == _showSprints) return;
+                _showSprints = value;
                 OnPropertyChanged();
             }
         }
@@ -462,21 +474,28 @@ namespace RoadCaptain.RouteBuilder.ViewModels
                 return;
             }
 
-            foreach (var segment in _markers.Where(m => m.Type == SegmentType.Climb))
+            foreach (var segment in _markers.Where(m => m.Type == SegmentType.Climb || m.Type == SegmentType.Sprint))
             {
-                var firstPoint = segment.Points.First();
-                var lastPoint = segment.Points.Last();
-                var startPoint = _overallOffsets.ScaleAndTranslate(TrackPoint.LatLongToGame(firstPoint.Longitude, -firstPoint.Latitude, firstPoint.Altitude));
-                var endPoint = _overallOffsets.ScaleAndTranslate(TrackPoint.LatLongToGame(lastPoint.Longitude, -lastPoint.Latitude, lastPoint.Altitude));
+                var gameCoordinates = segment
+                    .Points
+                    .Select(point => TrackPoint.LatLongToGame(point.Longitude, -point.Latitude, point.Altitude))
+                    .ToList();
+                
+                var startPoint = _overallOffsets.ScaleAndTranslate(gameCoordinates.First());
+                var endPoint = _overallOffsets.ScaleAndTranslate(gameCoordinates.Last());
 
                 var marker = new Marker
                 {
                     Id = segment.Id,
                     Name = segment.Name,
-                    StartPoint = new SKPoint(startPoint.X, startPoint.Y),
-                    EndPoint = new SKPoint(endPoint.X, endPoint.Y),
+                    Type = segment.Type,
+                    StartDrawPoint = new SKPoint(startPoint.X, startPoint.Y),
+                    EndDrawPoint = new SKPoint(endPoint.X, endPoint.Y),
                     StartAngle = (float)TrackPoint.Bearing(segment.Points[0], segment.Points[1]) + 90,
-                    EndAngle = (float)TrackPoint.Bearing(segment.Points[^2], segment.Points[^1]) + 90
+                    EndAngle = (float)TrackPoint.Bearing(segment.Points[^2], segment.Points[^1]) + 90,
+                    Path = SkiaPathFromSegment(_overallOffsets, gameCoordinates),
+                    StartPoint = segment.Points.First(),
+                    EndPoint = segment.Points.Last()
                 };
 
                 Markers.Add(segment.Id, marker);
@@ -805,11 +824,15 @@ namespace RoadCaptain.RouteBuilder.ViewModels
     public class Marker
     {
         public string Id { get; set; }
-        public SKPoint StartPoint { get; set; }
-        public SKPoint EndPoint { get; set; }
+        public SKPoint StartDrawPoint { get; set; }
+        public SKPoint EndDrawPoint { get; set; }
         public float StartAngle { get; set; }
         public float EndAngle { get; set; }
         public string Name { get; set; }
+        public SKPath Path { get; set; }
+        public SegmentType Type { get; set; }
+        public TrackPoint StartPoint { get; set; }
+        public TrackPoint EndPoint { get; set; }
     }
 
     public enum SimulationState

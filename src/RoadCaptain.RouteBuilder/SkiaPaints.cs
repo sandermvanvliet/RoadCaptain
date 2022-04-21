@@ -39,5 +39,8 @@ namespace RoadCaptain.RouteBuilder
 
         public static readonly SKPaint MarkerSegmentEndPaint = new()
             { Color = SKColor.Parse("#14c817"), Style = SKPaintStyle.Fill };
+
+        public static readonly SKPaint SprintSegmentPaint = new()
+            { Color = SKColor.Parse("#B200FF"), Style = SKPaintStyle.Stroke, StrokeWidth = 4 };
     }
 }
