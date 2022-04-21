@@ -294,7 +294,7 @@
                 <CheckBox Content="Show Sprints" VerticalAlignment="Center" Margin="8,0,0,0" IsChecked="{Binding Path=ShowSprints}" ToolTip="Show the sprint segments on the map" Visibility="{Binding Path=Route.ReadyToBuild,Converter={StaticResource VisibilityConverter}}" />
             </StackPanel>
 
-            <Grid Grid.Row="0" Grid.Column="0">
+            <Grid Grid.Row="0" Grid.RowSpan="2" Grid.Column="0">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="56" />
                     <RowDefinition Height="*" />
