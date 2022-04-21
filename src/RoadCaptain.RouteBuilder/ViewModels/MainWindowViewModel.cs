@@ -16,7 +16,7 @@ using Point = System.Windows.Point;
 
 namespace RoadCaptain.RouteBuilder.ViewModels
 {
-    public sealed class MainWindowViewModel : INotifyPropertyChanged
+    public class MainWindowViewModel : INotifyPropertyChanged
     {
         private Segment _selectedSegment;
         private readonly Dictionary<string, SKRect> _segmentPathBounds = new();
@@ -304,7 +304,7 @@ namespace RoadCaptain.RouteBuilder.ViewModels
             return AddSegmentToRoute(newSelectedSegment);
         }
 
-        public CommandResult AddSegmentToRoute(Segment newSelectedSegment)
+        protected CommandResult AddSegmentToRoute(Segment newSelectedSegment)
         {
             var segmentId = newSelectedSegment.Id;
 
@@ -535,7 +535,7 @@ namespace RoadCaptain.RouteBuilder.ViewModels
                     StartAngle = (float)TrackPoint.Bearing(segment.Points[0], segment.Points[1]) + 90,
                     EndAngle = (float)TrackPoint.Bearing(segment.Points[^2], segment.Points[^1]) + 90,
                     Path = skiaPathFromSegment,
-                    Bounds = skiaPathFromSegment,
+                    Bounds = bounds,
                     StartPoint = segment.Points.First(),
                     EndPoint = segment.Points.Last()
                 };
@@ -875,7 +875,7 @@ namespace RoadCaptain.RouteBuilder.ViewModels
         public SegmentType Type { get; set; }
         public TrackPoint StartPoint { get; set; }
         public TrackPoint EndPoint { get; set; }
-        public SKPath Bounds { get; set; }
+        public SKRect Bounds { get; set; }
     }
 
     public enum SimulationState

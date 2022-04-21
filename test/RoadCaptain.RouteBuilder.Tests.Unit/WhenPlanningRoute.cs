@@ -10,10 +10,10 @@ namespace RoadCaptain.RouteBuilder.Tests.Unit
 {
     public class WhenPlanningRoute
     {
-        private readonly MainWindowViewModel _viewModel;
+        private readonly TestableMainWindowViewModel _viewModel;
         private readonly SegmentStore _segmentStore;
         private List<Segment> _segments;
-        private WorldStoreToDisk _worldStore;
+        private readonly WorldStoreToDisk _worldStore;
 
         public WhenPlanningRoute()
         {
@@ -21,7 +21,7 @@ namespace RoadCaptain.RouteBuilder.Tests.Unit
             var worldStore = new WorldStoreToDisk();
 
             _worldStore = worldStore;
-            _viewModel = new MainWindowViewModel(
+            _viewModel = new TestableMainWindowViewModel(
                 new RouteStoreToDisk(_segmentStore, _worldStore),
                 _segmentStore,
                 null,
@@ -35,6 +35,7 @@ namespace RoadCaptain.RouteBuilder.Tests.Unit
             _viewModel.SelectWorldCommand.Execute(new WorldViewModel(_worldStore.LoadWorldById(worldId)));
             _viewModel.SelectSportCommand.Execute(new SportViewModel(sportType));
             _viewModel.CreatePathsForSegments(800, 600);
+            _segments = _segmentStore.LoadSegments(_viewModel.Route.World, _viewModel.Route.Sport);
         }
 
         [Theory]
@@ -46,8 +47,8 @@ namespace RoadCaptain.RouteBuilder.Tests.Unit
         {
             GivenWorldAndSport("watopia", SportType.Cycling);
 
-            _viewModel.AddSegmentToRoute(GetSegmentById(startingSegmentId));
-            _viewModel.AddSegmentToRoute(GetSegmentById(nextSegmentId));
+            _viewModel.CallAddSegmentToRoute(GetSegmentById(startingSegmentId));
+            _viewModel.CallAddSegmentToRoute(GetSegmentById(nextSegmentId));
 
             _viewModel.Route.Sequence.First().Direction.Should().Be(expectedFirstSequenceDirection);
             _viewModel.Route.Sequence.Skip(1).First().Direction.Should().Be(expectedSecondSequenceDirection);
@@ -58,8 +59,8 @@ namespace RoadCaptain.RouteBuilder.Tests.Unit
         {
             GivenWorldAndSport("watopia", SportType.Cycling);
 
-            _viewModel.AddSegmentToRoute(GetSegmentById("watopia-beach-island-loop-001")); // This segment only has AtoB as a valid spawn direction
-            var result = _viewModel.AddSegmentToRoute(GetSegmentById("watopia-bambino-fondo-001-after-after-after-after-before-after"));
+            _viewModel.CallAddSegmentToRoute(GetSegmentById("watopia-beach-island-loop-001")); // This segment only has AtoB as a valid spawn direction
+            var result = _viewModel.CallAddSegmentToRoute(GetSegmentById("watopia-bambino-fondo-001-after-after-after-after-before-after"));
 
             result
                 .Result
@@ -77,8 +78,8 @@ namespace RoadCaptain.RouteBuilder.Tests.Unit
         {
             GivenWorldAndSport("watopia", SportType.Running);
 
-            _viewModel.AddSegmentToRoute(GetSegmentById("watopia-5k-loop-001-after-after-before-after")); // This segment only has AtoB as a valid spawn direction
-            var result = _viewModel.AddSegmentToRoute(GetSegmentById("watopia-5k-loop-001-after-after-after"));
+            _viewModel.CallAddSegmentToRoute(GetSegmentById("watopia-5k-loop-001-after-after-before-after")); // This segment only has AtoB as a valid spawn direction
+            var result = _viewModel.CallAddSegmentToRoute(GetSegmentById("watopia-5k-loop-001-after-after-after"));
 
             result
                 .Result
@@ -96,8 +97,8 @@ namespace RoadCaptain.RouteBuilder.Tests.Unit
         {
             GivenWorldAndSport("watopia", SportType.Cycling);
 
-            _viewModel.AddSegmentToRoute(GetSegmentById("watopia-beach-island-loop-001")); // This segment only has AtoB as a valid spawn direction
-            var result = _viewModel.AddSegmentToRoute(GetSegmentById("watopia-bambino-fondo-004-before-after"));
+            _viewModel.CallAddSegmentToRoute(GetSegmentById("watopia-beach-island-loop-001")); // This segment only has AtoB as a valid spawn direction
+            var result = _viewModel.CallAddSegmentToRoute(GetSegmentById("watopia-bambino-fondo-004-before-after"));
 
             result
                 .Result
@@ -115,8 +116,8 @@ namespace RoadCaptain.RouteBuilder.Tests.Unit
         {
             GivenWorldAndSport("watopia", SportType.Cycling);
 
-            _viewModel.AddSegmentToRoute(GetSegmentById("watopia-beach-island-loop-001")); // This segment only has AtoB as a valid spawn direction
-            var result = _viewModel.AddSegmentToRoute(GetSegmentById("watopia-bambino-fondo-004-after-before"));
+            _viewModel.CallAddSegmentToRoute(GetSegmentById("watopia-beach-island-loop-001")); // This segment only has AtoB as a valid spawn direction
+            var result = _viewModel.CallAddSegmentToRoute(GetSegmentById("watopia-bambino-fondo-004-after-before"));
 
             result
                 .Result
@@ -131,11 +132,6 @@ namespace RoadCaptain.RouteBuilder.Tests.Unit
 
         private Segment GetSegmentById(string id)
         {
-            if (_segments == null)
-            {
-                _segments = _segmentStore.LoadSegments(_viewModel.Route.World, _viewModel.Route.Sport);
-            }
-
             return _segments.Single(s => s.Id == id);
         }
     }
