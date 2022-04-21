@@ -70,6 +70,7 @@
             <Setter Property="Margin" Value="4,0,0,0" />
             <Setter Property="BorderThickness" Value="0" />
             <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Cursor" Value="Hand" />
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
@@ -287,13 +288,14 @@
                         </Style>
                     </Button.Style>
                 </Button>
-                <Button Content="🚮" Command="{Binding Path=ResetRouteCommand}" ToolTip="Reset route" Cursor="Hand" />
-                <Button Content="💾" Command="{Binding Path=SaveRouteCommand}" ToolTip="Save route" Cursor="Hand" />
-                <Button Content="📂" Command="{Binding Path=OpenRouteCommand}" ToolTip="Open route" Cursor="Hand" />
+                <Button Content="🚮" Command="{Binding Path=ResetRouteCommand}" ToolTip="Reset route" />
+                <Button Content="💾" Command="{Binding Path=SaveRouteCommand}" ToolTip="Save route" />
+                <Button Content="📂" Command="{Binding Path=OpenRouteCommand}" ToolTip="Open route" />
                 <CheckBox Content="Show KOMs" VerticalAlignment="Center" Margin="8,0,0,0" IsChecked="{Binding Path=ShowClimbs}" ToolTip="Show the KOM start (red) and finish (green) markers on the map" Visibility="{Binding Path=Route.ReadyToBuild,Converter={StaticResource VisibilityConverter}}" />
                 <CheckBox Content="Show Sprints" VerticalAlignment="Center" Margin="8,0,0,0" IsChecked="{Binding Path=ShowSprints}" ToolTip="Show the sprint segments on the map" Visibility="{Binding Path=Route.ReadyToBuild,Converter={StaticResource VisibilityConverter}}" />
-                <Button Content="+" Margin="8,0,0,0" Click="ZoomIn_Click" />
-                <Button Content="-" Margin="8,0,0,0" Click="ZoomOut_Click" />
+                <Button Content="+" Margin="8,0,0,0" Click="ZoomIn_Click" ToolTip="Zoom in" />
+                <Button Content="-" Margin="8,0,0,0" Click="ZoomOut_Click" ToolTip="Zoom out" />
+                <Button Content="◻" Margin="8,0,0,0" Click="ResetZoom_Click" ToolTip="Fit to screen" />
             </StackPanel>
 
             <Grid Grid.Row="0" Grid.RowSpan="2" Grid.Column="0">

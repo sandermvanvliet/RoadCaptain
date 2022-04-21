@@ -33,6 +33,13 @@ namespace RoadCaptain.RouteBuilder
         private string _highlightedSegmentId;
         private float _scaleX = 1;
         private float _scaleY = 1;
+        private bool _dragActive;
+        private double _dragStartX;
+        private double _dragStartY;
+        private double _dragDeltaX;
+        private double _dragDeltaY;
+        private double _translateY;
+        private double _translateX;
 
         public MainWindow(MainWindowViewModel mainWindowViewModel)
         {
@@ -98,7 +105,8 @@ namespace RoadCaptain.RouteBuilder
         {
             // Purely for readability
             var canvas = args.Surface.Canvas;
-
+            
+            canvas.Translate(-(float)(_translateX + _dragDeltaX), -(float)(_translateY + _dragDeltaY));
             canvas.Scale(_scaleX, _scaleY);
 
             canvas.Clear();
@@ -248,9 +256,23 @@ namespace RoadCaptain.RouteBuilder
                 return;
             }
 
+            if(_dragActive)
+            {
+                _dragActive = false;
+                _dragStartX = 0;
+                _dragStartY = 0;
+                _translateX += _dragDeltaX;
+                _translateY += _dragDeltaY;
+                _dragDeltaX = 0;
+                _dragDeltaY = 0;
+
+                TriggerRepaint();
+                return;
+            }
+
             var position = e.GetPosition((IInputElement)sender);
 
-            var scalingFactor = skiaElement.CanvasSize.Width / skiaElement.ActualWidth;
+            var scalingFactor = (skiaElement.CanvasSize.Width / skiaElement.ActualWidth) / _scaleX;
             var scaledPoint = new Point(position.X * scalingFactor, position.Y * scalingFactor);
 
             _windowViewModel.SelectSegmentCommand.Execute(scaledPoint);
@@ -296,6 +318,40 @@ namespace RoadCaptain.RouteBuilder
                 return;
             }
 
+            var position = e.GetPosition((IInputElement)sender);
+
+            if (e.LeftButton == MouseButtonState.Pressed)
+            {
+                if (!_dragActive)
+                {
+                    _dragActive = true;
+                    _dragStartX = position.X;
+                    _dragStartY = position.Y;
+                }
+                else
+                {
+                    _dragDeltaX = _dragStartX - position.X;
+                    _dragDeltaY = _dragStartY - position.Y;
+                }
+
+                TriggerRepaint();
+                return;
+            }
+
+            if(_dragActive)
+            {
+                _dragActive = false;
+                _dragStartX = 0;
+                _dragStartY = 0;
+                _translateX += _dragDeltaX;
+                _translateY += _dragDeltaY;
+                _dragDeltaX = 0;
+                _dragDeltaY = 0;
+
+                TriggerRepaint();
+                return;
+            }
+
             // Hit test to see whether we're over a KOM/Sprint segment
 
             // If sprints and climbs are not shown then exit
@@ -304,7 +360,6 @@ namespace RoadCaptain.RouteBuilder
                 return;
             }
 
-            var position = e.GetPosition((IInputElement)sender);
 
             var scalingFactor = skiaElement.CanvasSize.Width / skiaElement.ActualWidth;
             var scaledPoint = new Point(position.X * scalingFactor, position.Y * scalingFactor);
@@ -346,6 +401,15 @@ namespace RoadCaptain.RouteBuilder
                 _scaleY = 1;
             }
 
+            TriggerRepaint();
+        }
+
+        private void ResetZoom_Click(object sender, RoutedEventArgs e)
+        {
+            _translateX = 0;
+            _translateY = 0;
+            _scaleX = 1;
+            _scaleY = 1;
             TriggerRepaint();
         }
     }
