@@ -88,15 +88,32 @@ namespace RoadCaptain.RouteBuilder.ViewModels
 
         public void StartOn(Segment segment)
         {
+            var segmentDirection = SegmentDirection.Unknown;
+
+            var routesStartingOnSegment = _world.SpawnPoints.Where(s => s.SegmentId == segment.Id).Select(s => s.Direction).ToList();
+
+            if (routesStartingOnSegment.Count == 1)
+            {
+                segmentDirection = routesStartingOnSegment[0];
+            }
+            else if (routesStartingOnSegment.Distinct().Count() == 1)
+            {
+                segmentDirection = routesStartingOnSegment[0];
+            }
+
             _sequence.Add(new SegmentSequenceViewModel(
                 new SegmentSequence
                 {
                     SegmentId = segment.Id,
                     TurnToNextSegment = TurnDirection.None,
-                    NextSegmentId = null
+                    NextSegmentId = null,
+                    Direction = segmentDirection
                 },
                 segment,
-                _sequence.Count + 1));
+                _sequence.Count + 1)
+            {
+                Direction = segmentDirection
+            });
 
             IsTainted = true;
 

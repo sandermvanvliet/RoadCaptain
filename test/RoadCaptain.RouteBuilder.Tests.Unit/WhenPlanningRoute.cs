@@ -150,6 +150,54 @@ namespace RoadCaptain.RouteBuilder.Tests.Unit
             _viewModel.RoutePath.Points.First().Should().Be(expectedFirstPoint);
         }
 
+        [Fact]
+        public void GivenSegmentWhichIsSpawnPointForOnlyOneRoute_DirectionIsSetOnFirstSequenceItem()
+        {
+            GivenWorldAndSport("watopia", SportType.Cycling);
+
+            _viewModel.CallAddSegmentToRoute(GetSegmentById("watopia-bambino-fondo-004-before-before"));
+
+            _viewModel
+                .Route
+                .Sequence
+                .Single()
+                .Direction
+                .Should()
+                .Be(SegmentDirection.BtoA);
+        }
+
+        [Fact]
+        public void GivenSegmentWhichIsSpawnPointForMultipleRoutesAndDirections_DirectionIsNotSet()
+        {
+            GivenWorldAndSport("watopia", SportType.Cycling);
+            
+            _viewModel.CallAddSegmentToRoute(GetSegmentById("watopia-bambino-fondo-001-after-after-after-after-after-before"));
+
+            _viewModel
+                .Route
+                .Sequence
+                .Single()
+                .Direction
+                .Should()
+                .Be(SegmentDirection.Unknown);
+        }
+
+        [Fact]
+        public void GivenSegmentWhichIsSpawnPointForMultipleRoutesWithSameDirections_DirectionIsSetOnFirstSequenceItem()
+        {
+            GivenWorldAndSport("watopia", SportType.Cycling);
+            
+            _viewModel.CallAddSegmentToRoute(GetSegmentById("watopia-beach-island-loop-001"));
+
+            _viewModel
+                .Route
+                .Sequence
+                .Single()
+                .Direction
+                .Should()
+                .Be(SegmentDirection.AtoB);
+        }
+
         private Segment GetSegmentById(string id)
         {
             return _segments.Single(s => s.Id == id);

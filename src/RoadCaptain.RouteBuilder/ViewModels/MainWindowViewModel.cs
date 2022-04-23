@@ -449,7 +449,13 @@ namespace RoadCaptain.RouteBuilder.ViewModels
                 }
             }
 
-            return CommandResult.Failure("Did not find a connection between the last segment and the selected segment");
+            if (Route.Sequence.Count() == 1)
+            {
+                return CommandResult.Failure("Spawn point does not support the direction of the selected segment");
+            }
+
+            return CommandResult.Failure(
+                "Did not find a connection between the last segment and the selected segment");
         }
 
         private bool IsValidSpawnPointProgression(out CommandResult commandResult, SegmentDirection segmentDirection)
