@@ -10,5 +10,6 @@ namespace RoadCaptain.RouteBuilder
         void ShowNewVersionDialog(Release release);
         string ShowSaveFileDialog();
         bool ShowDefaultSportSelectionDialog(SportType sport);
+        MessageBoxResult ShowSaveRouteDialog();
     }
 }

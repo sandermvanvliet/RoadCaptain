@@ -33,5 +33,10 @@ namespace RoadCaptain.RouteBuilder.Tests.Unit
         {
             return false;
         }
+
+        public MessageBoxResult ShowSaveRouteDialog()
+        {
+            return MessageBoxResult.Cancel;
+        }
     }
 }

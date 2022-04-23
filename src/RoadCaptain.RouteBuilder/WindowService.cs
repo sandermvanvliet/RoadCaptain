@@ -63,5 +63,14 @@ namespace RoadCaptain.RouteBuilder
 
             return result == MessageBoxResult.Yes;
         }
+
+        public MessageBoxResult ShowSaveRouteDialog()
+        {
+            return MessageBox.Show(
+                "Do you want to save the current route?",
+                "Current route was changed",
+                MessageBoxButton.YesNoCancel,
+                MessageBoxImage.Information);
+        }
     }
 }

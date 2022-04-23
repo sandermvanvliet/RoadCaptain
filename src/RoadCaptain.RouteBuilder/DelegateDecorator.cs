@@ -45,6 +45,11 @@ namespace RoadCaptain.RouteBuilder
             return InvokeIfNeeded(() => _decorated.ShowDefaultSportSelectionDialog(sport));
         }
 
+        public MessageBoxResult ShowSaveRouteDialog()
+        {
+            return InvokeIfNeeded(() => _decorated.ShowSaveRouteDialog());
+        }
+
         private TResult InvokeIfNeeded<TResult>(Func<TResult> action)
         {
             if (!_dispatcher.CheckAccess())

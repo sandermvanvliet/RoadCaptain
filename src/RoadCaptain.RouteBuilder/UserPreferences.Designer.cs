@@ -34,5 +34,17 @@ namespace RoadCaptain.RouteBuilder {
                 this["DefaultSport"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string LastUsedFolder {
+            get {
+                return ((string)(this["LastUsedFolder"]));
+            }
+            set {
+                this["LastUsedFolder"] = value;
+            }
+        }
     }
 }

@@ -668,12 +668,7 @@ namespace RoadCaptain.RouteBuilder.ViewModels
         {
             if (Route.IsTainted)
             {
-                // First save
-                var questionResult = MessageBox.Show(
-                    "Do you want to save the current route?",
-                    "Current route was changed",
-                    MessageBoxButton.YesNoCancel,
-                    MessageBoxImage.Information);
+                MessageBoxResult questionResult = _windowService.ShowSaveRouteDialog();
 
                 if (questionResult == MessageBoxResult.Cancel)
                 {
