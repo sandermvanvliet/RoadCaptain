@@ -4,7 +4,7 @@ namespace RoadCaptain.RouteBuilder.Tests.Unit
 {
     public class StubWindowService : IWindowService
     {
-        public string ShowOpenFileDialog()
+        public string ShowOpenFileDialog(string previousLocation)
         {
             throw new System.NotImplementedException();
         }
@@ -24,7 +24,7 @@ namespace RoadCaptain.RouteBuilder.Tests.Unit
             throw new System.NotImplementedException();
         }
 
-        public string ShowSaveFileDialog()
+        public string ShowSaveFileDialog(string previousLocation)
         {
             throw new System.NotImplementedException();
         }

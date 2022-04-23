@@ -15,9 +15,9 @@ namespace RoadCaptain.RouteBuilder
             _dispatcher = dispatcher;
         }
 
-        public string ShowOpenFileDialog()
+        public string ShowOpenFileDialog(string previousLocation)
         {
-            return InvokeIfNeeded(() => _decorated.ShowOpenFileDialog());
+            return InvokeIfNeeded(() => _decorated.ShowOpenFileDialog(previousLocation));
         }
 
         public void ShowErrorDialog(string message, Window owner = null)
@@ -35,9 +35,9 @@ namespace RoadCaptain.RouteBuilder
             InvokeIfNeeded(() => _decorated.ShowNewVersionDialog(release));
         }
 
-        public string ShowSaveFileDialog()
+        public string ShowSaveFileDialog(string previousLocation)
         {
-            return InvokeIfNeeded(() => _decorated.ShowSaveFileDialog());
+            return InvokeIfNeeded(() => _decorated.ShowSaveFileDialog(previousLocation));
         }
 
         public bool ShowDefaultSportSelectionDialog(SportType sport)

@@ -281,11 +281,14 @@ namespace RoadCaptain.Runner.ViewModels
 
         private CommandResult LoadRoute()
         {
-            var fileName = _windowService.ShowOpenFileDialog();
+            var fileName = _windowService.ShowOpenFileDialog(_appSettings.LastUsedFolder);
 
             if (!string.IsNullOrEmpty(fileName))
             {
                 RoutePath = fileName;
+
+                _appSettings.LastUsedFolder = Path.GetDirectoryName(RoutePath);
+                _appSettings.Save();
 
                 var routeFileName = RoutePath;
 

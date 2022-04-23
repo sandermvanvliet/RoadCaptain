@@ -17,9 +17,9 @@ namespace RoadCaptain.Runner
             _dispatcher = dispatcher;
         }
 
-        public string ShowOpenFileDialog()
+        public string ShowOpenFileDialog(string previousLocation)
         {
-            return InvokeIfNeeded(() => _decorated.ShowOpenFileDialog());
+            return InvokeIfNeeded(() => _decorated.ShowOpenFileDialog(previousLocation));
         }
 
         public void ShowInGameWindow(InGameNavigationWindowViewModel viewModel)

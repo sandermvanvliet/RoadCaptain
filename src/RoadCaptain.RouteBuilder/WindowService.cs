@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Windows;
 using Autofac;
 using Microsoft.Win32;
@@ -31,15 +32,21 @@ namespace RoadCaptain.RouteBuilder
             }
         }
 
-        public string ShowSaveFileDialog()
+        public string ShowSaveFileDialog(string previousLocation)
         {
+            var initialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+
+            if (!string.IsNullOrEmpty(previousLocation) && Directory.Exists(previousLocation))
+            {
+                initialDirectory = previousLocation;
+            }
+
             var dialog = new SaveFileDialog
             {
-                RestoreDirectory = true,
                 AddExtension = true,
                 DefaultExt = ".json",
                 Filter = "JSON files (.json)|*.json|GPS Exchange Format (.gpx)|*.gpx",
-                InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
+                InitialDirectory = initialDirectory
             };
 
             var result = ShowDialog(dialog).GetValueOrDefault();

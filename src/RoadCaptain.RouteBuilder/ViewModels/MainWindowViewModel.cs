@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading;
@@ -644,7 +645,7 @@ namespace RoadCaptain.RouteBuilder.ViewModels
 
         private CommandResult SaveRoute()
         {
-            var routeOutputFilePath = _windowService.ShowSaveFileDialog();
+            var routeOutputFilePath = _windowService.ShowSaveFileDialog(_userPreferences.LastUsedFolder);
 
             if (string.IsNullOrEmpty(routeOutputFilePath))
             {
@@ -652,6 +653,9 @@ namespace RoadCaptain.RouteBuilder.ViewModels
             }
 
             Route.OutputFilePath = routeOutputFilePath;
+
+            _userPreferences.LastUsedFolder = Path.GetDirectoryName(Route.OutputFilePath);
+            _userPreferences.Save();
 
             try
             {
@@ -688,7 +692,7 @@ namespace RoadCaptain.RouteBuilder.ViewModels
                 }
             }
 
-            var fileName = _windowService.ShowOpenFileDialog();
+            var fileName = _windowService.ShowOpenFileDialog(_userPreferences.LastUsedFolder);
 
             if (string.IsNullOrEmpty(fileName))
             {
@@ -696,6 +700,9 @@ namespace RoadCaptain.RouteBuilder.ViewModels
             }
 
             Route.OutputFilePath = fileName;
+
+            _userPreferences.LastUsedFolder = Path.GetDirectoryName(Route.OutputFilePath);
+            _userPreferences.Save();
 
             SelectedSegment = null;
             
