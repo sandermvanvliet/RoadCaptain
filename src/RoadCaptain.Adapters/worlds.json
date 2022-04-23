@@ -50,7 +50,13 @@
         "segmentId": "watopia-beach-island-loop-001",
         "zwiftRouteName": "Volcano Circuit",
         "direction": "AtoB",
-        "sport": "both" 
+        "sport": "both"
+      },
+      {
+        "segmentId": "watopia-bambino-fondo-004-before-before",
+        "zwiftRouteName": "The Mega Pretzel",
+        "direction": "BtoA",
+        "sport": "both"
       },
       {
         "segmentId": "watopia-5k-loop-001-before-before",
