@@ -14,7 +14,7 @@
         xmlns:skia="clr-namespace:SkiaSharp.Views.WPF;assembly=SkiaSharp.Views.WPF"
         mc:Ignorable="d"
         Title="{Binding Path=Model.WindowTitle}" 
-        Height="450" Width="800"
+        Height="465" Width="867"
         d:DataContext="{d:DesignInstance viewModels:MainWindowViewModel}"
         Loaded="MainWindow_OnLoaded"
         SizeChanged="MainWindow_OnSizeChanged"
@@ -80,6 +80,11 @@
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter Property="Background" Value="DarkGray"/>
+                </Trigger>
+            </Style.Triggers>
         </Style>
         <Style x:Key="LinkButtonStyle" TargetType="Button">
             <Setter Property="Background" Value="Transparent" />
@@ -291,11 +296,12 @@
                 <Button Content="🚮" Command="{Binding Path=ResetRouteCommand}" ToolTip="Reset route" />
                 <Button Content="💾" Command="{Binding Path=SaveRouteCommand}" ToolTip="Save route" />
                 <Button Content="📂" Command="{Binding Path=OpenRouteCommand}" ToolTip="Open route" />
+                <Button Content="⭯" Command="{Binding Path=RemoveLastSegmentCommand}" ToolTip="Remove last segment"/>
                 <CheckBox Content="Show KOMs" VerticalAlignment="Center" Margin="8,0,0,0" IsChecked="{Binding Path=ShowClimbs}" ToolTip="Show the KOM start (red) and finish (green) markers on the map" Visibility="{Binding Path=Route.ReadyToBuild,Converter={StaticResource VisibilityConverter}}" />
                 <CheckBox Content="Show Sprints" VerticalAlignment="Center" Margin="8,0,0,0" IsChecked="{Binding Path=ShowSprints}" ToolTip="Show the sprint segments on the map" Visibility="{Binding Path=Route.ReadyToBuild,Converter={StaticResource VisibilityConverter}}" />
-                <Button Content="+" Margin="8,0,0,0" Click="ZoomIn_Click" ToolTip="Zoom in" />
-                <Button Content="-" Margin="8,0,0,0" Click="ZoomOut_Click" ToolTip="Zoom out" />
-                <Button Content="◻" Margin="8,0,0,0" Click="ResetZoom_Click" ToolTip="Fit to screen" />
+                <Button Content="+" Margin="8,0,0,0" Click="ZoomIn_Click" ToolTip="Zoom in" IsEnabled="{Binding Path=Route.ReadyToBuild}" Visibility="{Binding Path=Route.ReadyToBuild,Converter={StaticResource VisibilityConverter}}" />
+                <Button Content="-" Margin="8,0,0,0" Click="ZoomOut_Click" ToolTip="Zoom out" IsEnabled="{Binding Path=Route.ReadyToBuild}" Visibility="{Binding Path=Route.ReadyToBuild,Converter={StaticResource VisibilityConverter}}" />
+                <Button Content="◻" Margin="8,0,0,0" Click="ResetZoom_Click" ToolTip="Fit to screen" IsEnabled="{Binding Path=Route.ReadyToBuild}" Visibility="{Binding Path=Route.ReadyToBuild,Converter={StaticResource VisibilityConverter}}" />
             </StackPanel>
 
             <Grid Grid.Row="0" Grid.RowSpan="2" Grid.Column="0">

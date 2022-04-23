@@ -63,7 +63,7 @@ namespace RoadCaptain.RouteBuilder.ViewModels
 
             SaveRouteCommand = new RelayCommand(
                     _ => SaveRoute(),
-                    _ => true)
+                    _ => Route.Sequence.Any())
                 .OnSuccess(_ => Model.StatusBarInfo("Route saved successfully"))
                 .OnSuccessWithWarnings(_ => Model.StatusBarInfo("Route saved successfully: {0}", _.Message))
                 .OnFailure(_ => Model.StatusBarError("Failed to save route because: {0}", _.Message))
@@ -77,7 +77,7 @@ namespace RoadCaptain.RouteBuilder.ViewModels
 
             ResetRouteCommand = new RelayCommand(
                     _ => ResetRoute(),
-                    _ => true)
+                    _ => Route.ReadyToBuild)
                 .OnSuccess(_ => Model.StatusBarInfo("Route reset"))
                 .OnFailure(_ => Model.StatusBarError("Failed to reset route because: {0}", _.Message));
 
@@ -103,7 +103,7 @@ namespace RoadCaptain.RouteBuilder.ViewModels
 
             SimulateCommand = new RelayCommand(
                     _ => SimulateRoute(),
-                    _ => true);
+                    _ => Route.Sequence.Any());
 
             OpenLinkCommand = new RelayCommand(
                 _ => OpenLink(_ as string),
