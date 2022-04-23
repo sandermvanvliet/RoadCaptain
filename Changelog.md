@@ -10,6 +10,9 @@
 - Add spawn point just before the Fuego Flats finish arch which is from the Triple Flat Loops route ([issue #38](https://github.com/sandermvanvliet/RoadCaptain/issues/38))
 - Add spawn point in the volcano which is from the Tour of Fire and Ice route ([issue #38](https://github.com/sandermvanvliet/RoadCaptain/issues/38))
 
+### Routing
+
+- [Watopia] Fix the turn at the end of the Volcano to Villas segment ([issue #41](https://github.com/sandermvanvliet/RoadCaptain/issues/41))
 
 ## 0.6.1.0
 
