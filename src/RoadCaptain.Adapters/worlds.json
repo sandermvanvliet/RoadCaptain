@@ -59,6 +59,12 @@
         "sport": "both"
       },
       {
+        "segmentId": "watopia-big-foot-hills-004-after-after",
+        "zwiftRouteName": "Triple Flat Loops",
+        "direction": "AtoB",
+        "sport": "both" 
+      },
+      {
         "segmentId": "watopia-5k-loop-001-before-before",
         "zwiftRouteName": "5k Loop",
         "direction": "AtoB",
