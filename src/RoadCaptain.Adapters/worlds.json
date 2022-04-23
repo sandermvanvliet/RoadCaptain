@@ -62,6 +62,12 @@
         "segmentId": "watopia-big-foot-hills-004-after-after",
         "zwiftRouteName": "Triple Flat Loops",
         "direction": "AtoB",
+        "sport": "both"
+      },
+      {
+        "segmentId": "watopia-bambino-fondo-004-before-after",
+        "zwiftRouteName": "Tour of Fire and Ice",
+        "direction": "BtoA",
         "sport": "both" 
       },
       {

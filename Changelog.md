@@ -8,6 +8,8 @@
 - Enable buttons only when they would have an effect (disables reset, save, simulate when on the world selection view) ([issue #39](https://github.com/sandermvanvliet/RoadCaptain/issues/39))
 - Fix a visual bug where the start/end markers of the route would be reversed if the spawn point segment has a reverse direction.
 - Add spawn point just before the Fuego Flats finish arch which is from the Triple Flat Loops route ([issue #38](https://github.com/sandermvanvliet/RoadCaptain/issues/38))
+- Add spawn point in the volcano which is from the Tour of Fire and Ice route ([issue #38](https://github.com/sandermvanvliet/RoadCaptain/issues/38))
+
 
 ## 0.6.1.0
 
