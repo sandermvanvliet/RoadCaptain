@@ -38,5 +38,10 @@ namespace RoadCaptain.RouteBuilder.Tests.Unit
         {
             return MessageBoxResult.Cancel;
         }
+
+        public MessageBoxResult ShowClearRouteDialog()
+        {
+            return MessageBoxResult.Cancel;
+        }
     }
 }

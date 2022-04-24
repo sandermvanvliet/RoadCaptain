@@ -79,5 +79,14 @@ namespace RoadCaptain.RouteBuilder
                 MessageBoxButton.YesNoCancel,
                 MessageBoxImage.Information);
         }
+
+        public MessageBoxResult ShowClearRouteDialog()
+        {
+            return MessageBox.Show(
+                "This action will remove all segments from the current route. Are you sure?",
+                "Clear route",
+                MessageBoxButton.YesNo,
+                MessageBoxImage.Question);
+        }
     }
 }

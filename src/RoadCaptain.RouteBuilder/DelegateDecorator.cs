@@ -50,6 +50,11 @@ namespace RoadCaptain.RouteBuilder
             return InvokeIfNeeded(() => _decorated.ShowSaveRouteDialog());
         }
 
+        public MessageBoxResult ShowClearRouteDialog()
+        {
+            return InvokeIfNeeded(() => _decorated.ShowClearRouteDialog());
+        }
+
         private TResult InvokeIfNeeded<TResult>(Func<TResult> action)
         {
             if (!_dispatcher.CheckAccess())

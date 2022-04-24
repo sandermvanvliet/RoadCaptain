@@ -207,11 +207,17 @@ namespace RoadCaptain.RouteBuilder.ViewModels
 
         public CommandResult Reset()
         {
+            World = null;
+            Sport = SportType.Unknown;
+
+            return Clear();
+        }
+
+        public CommandResult Clear()
+        {
             _sequence.Clear();
             OutputFilePath = null;
             IsTainted = false;
-            World = null;
-            Sport = SportType.Unknown;
 
             OnPropertyChanged(nameof(Sequence));
             OnPropertyChanged(nameof(TotalDistance));

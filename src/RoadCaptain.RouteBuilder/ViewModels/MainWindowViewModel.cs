@@ -76,11 +76,11 @@ namespace RoadCaptain.RouteBuilder.ViewModels
                 .OnSuccess(_ => Model.StatusBarInfo("Route loaded successfully"))
                 .OnFailure(_ => Model.StatusBarError("Failed to load route because: {0}", _.Message));
 
-            ResetRouteCommand = new RelayCommand(
-                    _ => ResetRoute(),
-                    _ => Route.ReadyToBuild)
-                .OnSuccess(_ => Model.StatusBarInfo("Route reset"))
-                .OnFailure(_ => Model.StatusBarError("Failed to reset route because: {0}", _.Message));
+            ClearRouteCommand = new RelayCommand(
+                    _ => ClearRoute(),
+                    _ => Route.ReadyToBuild && Route.Sequence.Any())
+                .OnSuccess(_ => Model.StatusBarInfo("Route cleared"))
+                .OnFailure(_ => Model.StatusBarError("Failed to clear route because: {0}", _.Message));
 
             SelectSegmentCommand = new RelayCommand(
                     _ => SelectSegment((Point)_),
@@ -122,7 +122,57 @@ namespace RoadCaptain.RouteBuilder.ViewModels
                 _ => ResetDefaultSport(),
                 _ => true);
 
+            ResetWorldCommand = new RelayCommand(
+                _ => ResetWorldAndSport(),
+                _ => Route.World != null);
+
             Version = GetType().Assembly.GetName().Version?.ToString(4) ?? "0.0.0.0";
+        }
+
+        private CommandResult ResetWorldAndSport()
+        {
+            if (Route.IsTainted)
+            {
+                var result = _windowService.ShowSaveRouteDialog();
+
+                if (result == MessageBoxResult.Cancel)
+                {
+                    return CommandResult.Aborted();
+                }
+
+                if (result == MessageBoxResult.Yes)
+                {
+                    SaveRoute();
+                }
+            }
+
+            Route.Reset();
+            
+            ClearRoute();
+            
+            _segments = null;
+            SegmentPaths.Clear();
+
+            _markers = null;
+            Markers.Clear();
+
+            var selectedSport = Sports.SingleOrDefault(s => s.IsSelected);
+            if (selectedSport != null)
+            {
+                selectedSport.IsSelected = false;
+
+                SelectDefaultSportFromPreferences();
+            }
+
+            var selectedWorld = Worlds.SingleOrDefault(s => s.IsSelected);
+            if (selectedWorld != null)
+            {
+                selectedWorld.IsSelected = false;
+            }
+
+            ResetZoomAndPan();
+
+            return CommandResult.Success();
         }
 
         private CommandResult ResetDefaultSport()
@@ -229,7 +279,7 @@ namespace RoadCaptain.RouteBuilder.ViewModels
 
         public ICommand SaveRouteCommand { get; }
         public ICommand OpenRouteCommand { get; }
-        public ICommand ResetRouteCommand { get; }
+        public ICommand ClearRouteCommand { get; }
         public ICommand SelectSegmentCommand { get; }
         public ICommand RemoveLastSegmentCommand { get; }
         public ICommand SimulateCommand { get; }
@@ -237,6 +287,7 @@ namespace RoadCaptain.RouteBuilder.ViewModels
         public ICommand SelectWorldCommand { get; }
         public ICommand SelectSportCommand { get; }
         public ICommand ResetDefaultSportCommand { get; }
+        public ICommand ResetWorldCommand { get; }
 
         public Segment SelectedSegment
         {
@@ -608,37 +659,22 @@ namespace RoadCaptain.RouteBuilder.ViewModels
             return path;
         }
 
-        private CommandResult ResetRoute()
+        private CommandResult ClearRoute()
         {
-            var commandResult = Route.Reset();
+            var result = _windowService.ShowClearRouteDialog();
+
+            if (result == MessageBoxResult.No)
+            {
+                return CommandResult.Aborted();
+            }
+
+            var commandResult = Route.Clear();
 
             SelectedSegment = null;
 
-            RoutePath = new SKPath();
+            RoutePath.Reset();
             SimulationState = SimulationState.NotStarted;
             _simulationIndex = 0;
-
-            _segments = null;
-            SegmentPaths.Clear();
-
-            _markers = null;
-            Markers.Clear();
-
-            var selectedSport = Sports.SingleOrDefault(s => s.IsSelected);
-            if (selectedSport != null)
-            {
-                selectedSport.IsSelected = false;
-
-                SelectDefaultSportFromPreferences();
-            }
-
-            var selectedWorld = Worlds.SingleOrDefault(s => s.IsSelected);
-            if (selectedWorld != null)
-            {
-                selectedWorld.IsSelected = false;
-            }
-
-            ResetZoomAndPan();
 
             return commandResult;
         }

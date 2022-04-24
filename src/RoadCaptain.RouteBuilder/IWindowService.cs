@@ -11,5 +11,6 @@ namespace RoadCaptain.RouteBuilder
         string ShowSaveFileDialog(string previousLocation);
         bool ShowDefaultSportSelectionDialog(SportType sport);
         MessageBoxResult ShowSaveRouteDialog();
+        MessageBoxResult ShowClearRouteDialog();
     }
 }
