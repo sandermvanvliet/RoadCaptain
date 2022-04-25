@@ -256,8 +256,8 @@
   {
     "segmentId": "watopia-big-foot-hills-003-after",
     "turnsA": {
-      "right": "watopia-big-loop-rev-001-after-after",
-      "goStraight": "watopia-big-foot-hills-003-before"
+      "goStraight": "watopia-big-loop-rev-001-after-after",
+      "left": "watopia-big-foot-hills-003-before"
     },
     "turnsB": {
       "left": "watopia-bambino-fondo-001-after-after-before-before-after-after",
