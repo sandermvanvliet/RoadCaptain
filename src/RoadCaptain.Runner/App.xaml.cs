@@ -3,6 +3,8 @@
 // See LICENSE or https://choosealicense.com/licenses/artistic-2.0/
 
 using System;
+using System.Diagnostics;
+using System.Linq;
 using System.Windows;
 using Autofac;
 using Microsoft.Extensions.Configuration;
@@ -54,9 +56,24 @@ namespace RoadCaptain.Runner
         {
             _monitoringEvents.ApplicationStarted();
 
+            if (IsRoadCaptainRunning())
+            {
+                _windowService.ShowAlreadyRunningDialog();
+                _monitoringEvents.Warning("Another instance of RoadCaptain is already running");
+                Shutdown(-1);
+                return;
+            }
+
             _windowService.ShowMainWindow();
 
             _engine.Start();
+        }
+
+        private static bool IsRoadCaptainRunning()
+        {
+            var processName = Process.GetCurrentProcess().ProcessName;
+
+            return Process.GetProcesses().Count(p => p.ProcessName == processName) > 1;
         }
 
         private void App_OnExit(object sender, ExitEventArgs e)

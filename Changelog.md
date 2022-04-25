@@ -17,6 +17,7 @@
 - Open file dialog now re-opens at the last used location instead of always defaulting to My Documents ([issue #27](https://github.com/sandermvanvliet/RoadCaptain/issues/27))
 - You can now select the Rebel Routes from Zwift Insider as pre-built routes ([issue #28](https://github.com/sandermvanvliet/RoadCaptain/issues/28)):
 ![Screenshot of runner with Rebel Routes dropdown](./images/runner-rebel-routes.png)
+- Preent multiple instances of RoadCaptain from starting ([issue #53](https://github.com/sandermvanvliet/RoadCaptain/issues/53)):
 
 ### Routing
 

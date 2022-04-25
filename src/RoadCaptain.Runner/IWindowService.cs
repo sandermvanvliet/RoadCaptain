@@ -12,5 +12,6 @@ namespace RoadCaptain.Runner
         void ShowErrorDialog(string message, Window owner = null);
         void ShowMainWindow();
         void ShowNewVersionDialog(Release release);
+        void ShowAlreadyRunningDialog();
     }
 }

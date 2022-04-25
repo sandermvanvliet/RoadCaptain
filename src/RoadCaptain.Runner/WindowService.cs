@@ -31,6 +31,15 @@ namespace RoadCaptain.Runner
             }
         }
 
+        public void ShowAlreadyRunningDialog()
+        {
+            MessageBox.Show(
+                "Only one instance of RoadCaptain Runner can be active",
+                "Already running",
+                MessageBoxButton.OK,
+                MessageBoxImage.Warning);
+        }
+
         public void ShowInGameWindow(InGameNavigationWindowViewModel viewModel)
         {
             var inGameWindow = Resolve<InGameNavigationWindow>();
