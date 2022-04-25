@@ -105,7 +105,7 @@ namespace RoadCaptain.Adapters.CaptureFile
 
         private void Debug(string message)
         {
-            _monitoringEvents.Debug(message);
+            //_monitoringEvents.Debug(message);
         }
 
         private void Error(string message)

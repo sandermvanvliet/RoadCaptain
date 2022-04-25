@@ -190,7 +190,7 @@ namespace RoadCaptain.Adapters.CaptureFile
 
         private void Debug(string message)
         {
-            _monitoringEvents.Debug(message);
+            //_monitoringEvents.Debug(message);
         }
 
         private void Info(string message)
