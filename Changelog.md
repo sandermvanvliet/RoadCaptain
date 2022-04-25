@@ -10,6 +10,7 @@
 - Add spawn point just before the Fuego Flats finish arch which is from the Triple Flat Loops route ([issue #38](https://github.com/sandermvanvliet/RoadCaptain/issues/38))
 - Add spawn point in the volcano which is from the Tour of Fire and Ice route ([issue #38](https://github.com/sandermvanvliet/RoadCaptain/issues/38))
 - Open and save file dialogs now re-open at the last used location instead of always defaulting to My Documents ([issue #27](https://github.com/sandermvanvliet/RoadCaptain/issues/27))
+- The map now supports mouse-wheel / pinch zoom ([issue #44](https://github.com/sandermvanvliet/RoadCaptain/issues/44))
 
 ### Runner
 
