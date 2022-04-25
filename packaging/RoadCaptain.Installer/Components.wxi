@@ -215,4 +215,29 @@
       </Component>
     </ComponentGroup>
   </Fragment>
+  <Fragment>
+    <ComponentGroup Id="RunnerRoutesComponents" Directory="Routes">
+      <Component Id="Runner_RebelRoute.BigFlat8.json" Guid="03d8a7ff-37fd-43ec-a749-b122fcb0f0d1">
+        <File Id="Runner_RebelRoute.BigFlat8.json" Name="RebelRoute-BigFlat8.json" Source="$(var.RoadCaptain.Runner_TargetDir)Routes\RebelRoute-BigFlat8.json" />
+      </Component>
+      <Component Id="Runner_RebelRoute.DownUpDown.json" Guid="9b0cd848-676b-4cc1-9d03-9bf9c74bd8e2">
+        <File Id="Runner_RebelRoute.DownUpDown.json" Name="RebelRoute-DownUpDown.json" Source="$(var.RoadCaptain.Runner_TargetDir)Routes\RebelRoute-DownUpDown.json" />
+      </Component>
+      <Component Id="Runner_RebelRoute.HillyKOMBypass.json" Guid="a9c66926-e858-429b-9be8-9fde62faa3b9">
+        <File Id="Runner_RebelRoute.HillyKOMBypass.json" Name="RebelRoute-HillyKOMBypass.json" Source="$(var.RoadCaptain.Runner_TargetDir)Routes\RebelRoute-HillyKOMBypass.json" />
+      </Component>
+      <Component Id="Runner_RebelRoute.KOMonster.json" Guid="51a9ce4a-c646-440a-8dda-8fb4705f53fb">
+        <File Id="Runner_RebelRoute.KOMonster.json" Name="RebelRoute-KOMonster.json" Source="$(var.RoadCaptain.Runner_TargetDir)Routes\RebelRoute-KOMonster.json" />
+      </Component>
+      <Component Id="Runner_RebelRoute.SpiralIntoTheVolcano.json" Guid="91286b8d-c7ef-4709-9585-97aac0642eb5">
+        <File Id="Runner_RebelRoute.SpiralIntoTheVolcano.json" Name="RebelRoute-SpiralIntoTheVolcano.json" Source="$(var.RoadCaptain.Runner_TargetDir)Routes\RebelRoute-SpiralIntoTheVolcano.json" />
+      </Component>
+      <Component Id="Runner_RebelRoute.ThePerimeter.json" Guid="ed7d96c8-b827-4019-af09-96db29c553a7">
+        <File Id="Runner_RebelRoute.ThePerimeter.json" Name="RebelRoute-ThePerimeter.json" Source="$(var.RoadCaptain.Runner_TargetDir)Routes\RebelRoute-ThePerimeter.json" />
+      </Component>
+      <Component Id="Runner_RebelRoute.TheSnake.json" Guid="3203d6fd-1d07-48ae-9f17-0dbc40416c5a">
+        <File Id="Runner_RebelRoute.TheSnake.json" Name="RebelRoute-TheSnake.json" Source="$(var.RoadCaptain.Runner_TargetDir)Routes\RebelRoute-TheSnake.json" />
+      </Component>
+    </ComponentGroup>
+  </Fragment>
 </Include>

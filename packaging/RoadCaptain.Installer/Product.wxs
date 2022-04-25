@@ -40,6 +40,7 @@
 		<Feature Id="ProductFeature" Title="$(var.Name)" Level="1">
 			<ComponentGroupRef Id="CommonComponents"/>
 			<ComponentGroupRef Id="RunnerComponents" />
+			<ComponentGroupRef Id="RunnerRoutesComponents" />
 			<ComponentGroupRef Id="RouteBuilderComponents" />
 			<ComponentGroupRef Id="RunnerNativeComponents"/>
 			<ComponentGroupRef Id="RouteBuilderNativeComponents"/>
@@ -64,6 +65,7 @@
 								<Directory Id="native" Name="native" />
 							</Directory>
 						</Directory>
+						<Directory Id="Routes" Name="Routes" />
 					</Directory>
 				</Directory>
 			</Directory>

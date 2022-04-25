@@ -30,6 +30,7 @@ namespace RoadCaptain.WixComponentFileGenerator
         {
             var runnerFiles = Directory.GetFiles(runnerArtifactsPath).Select(Path.GetFileName).ToList();
             var runnerNativeFiles = Directory.GetFiles(Path.Combine(runnerArtifactsPath, "runtimes", "win-x64", "native")).Select(Path.GetFileName).ToList();
+            var runnerRouteFiles = Directory.GetFiles(Path.Combine(runnerArtifactsPath, "Routes")).Select(Path.GetFileName).ToList();
 
             var routeBuilderFiles = Directory.GetFiles(routeBuilderArtifactsPath).Select(Path.GetFileName).ToList();
             var routeBuilderNativeFiles = Directory.GetFiles(Path.Combine(routeBuilderArtifactsPath, "runtimes", "win-x64", "native")).Select(Path.GetFileName).ToList();
@@ -49,16 +50,16 @@ namespace RoadCaptain.WixComponentFileGenerator
             RenderFragment(runnerFiles, @"RunnerComponents", "Runner", "Runner");
             RenderFragment(routeBuilderFiles, @"RouteBuilderComponents", "RouteBuilder", "RouteBuilder");
             
-            RenderFragment(runnerNativeFiles, @"RunnerNativeComponents", "Runner", "Runner", "runtimes\\win-x64\\native\\");
-            RenderFragment(routeBuilderNativeFiles, @"RouteBuilderNativeComponents", "RouteBuilder", "RouteBuilder", "runtimes\\win-x64\\native\\");
-            
+            RenderFragment(runnerNativeFiles, @"RunnerNativeComponents", "Runner", "Runner", "runtimes\\win-x64\\native\\", "native");
+            RenderFragment(routeBuilderNativeFiles, @"RouteBuilderNativeComponents", "RouteBuilder", "RouteBuilder", "runtimes\\win-x64\\native\\", "native");
+
+            RenderFragment(runnerRouteFiles, @"RunnerRoutesComponents", "Runner", "Runner", "Routes\\", "Routes");
+
             _doc.Save(_outputPath, SaveOptions.OmitDuplicateNamespaces);
         }
 
-        private void RenderFragment(List<string> files, string componentId, string targetDir, string prefix = "", string targetDirPrefix = "")
+        private void RenderFragment(List<string> files, string componentId, string targetDir, string prefix = "", string targetDirPrefix = "", string componentDirectory = "INSTALLFOLDER")
         {
-            var componentDirectory = targetDirPrefix.EndsWith("native\\") ? "native" : @"INSTALLFOLDER";
-
             var componentGroup = _doc.XPathSelectElement($"/Include/Fragment/ComponentGroup[@Id='{componentId}']");
             
             if (componentGroup == null)
