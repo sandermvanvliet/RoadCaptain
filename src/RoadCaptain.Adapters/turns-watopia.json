@@ -115,7 +115,8 @@
       "goStraight": "watopia-bambino-fondo-001-after-after-after-before"
     },
     "turnsB": {
-      "goStraight": "watopia-bambino-fondo-001-after-after-after-after-before-after"
+      "goStraight": "watopia-bambino-fondo-001-after-after-after-after-before-after",
+      "right": "watopia-beach-island-loop-004"
     }
   },
   {
