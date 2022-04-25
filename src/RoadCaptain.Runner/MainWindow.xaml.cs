@@ -5,6 +5,7 @@
 using System;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using RoadCaptain.Ports;
 using RoadCaptain.Runner.ViewModels;
@@ -22,6 +23,14 @@ namespace RoadCaptain.Runner
         public MainWindow(MainWindowViewModel viewModel, IGameStateReceiver gameStateReceiver)
         {
             _viewModel = viewModel;
+            _viewModel.PropertyChanged += (sender, args) =>
+            {
+                if (args.PropertyName == nameof(_viewModel.RoutePath) && !string.IsNullOrEmpty(_viewModel.RoutePath))
+                {
+                    RebelRouteCombo.SelectedItem = null;
+                }
+            };
+
             gameStateReceiver.Register(route => viewModel.Route = route, null, viewModel.UpdateGameState);
 
             DataContext = viewModel;
@@ -45,6 +54,17 @@ namespace RoadCaptain.Runner
         private void MainWindow_OnActivated(object sender, EventArgs e)
         {
             Task.Factory.StartNew(() => _viewModel.CheckForNewVersion());
+        }
+
+        private void Selector_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var comboBox = sender as ComboBox;
+
+            if (comboBox.SelectedItem != null)
+            {
+                _viewModel.RoutePath = null;
+                _viewModel.Route = comboBox.SelectedItem as PlannedRoute;
+            }
         }
     }
 }

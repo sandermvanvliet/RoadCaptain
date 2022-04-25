@@ -1,9 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows;
+using System.Windows.Documents;
 using System.Windows.Input;
 using Microsoft.IdentityModel.JsonWebTokens;
 using RoadCaptain.Commands;
@@ -93,6 +96,18 @@ namespace RoadCaptain.Runner.ViewModels
                 _ => !string.IsNullOrEmpty(_ as string));
 
             Version = GetType().Assembly.GetName().Version?.ToString(4) ?? "0.0.0.0";
+
+            RebelRoutes = LoadRebelRoutes();
+        }
+
+        private List<PlannedRoute> LoadRebelRoutes()
+        {
+            return Directory
+                .GetFiles(
+                    Path.Combine(Environment.CurrentDirectory, "Routes"),
+                    "RebelRoute-*.json")
+                .Select(file => _routeStore.LoadFrom(file))
+                .ToList();
         }
 
         public bool CanStartRoute =>
@@ -218,6 +233,12 @@ namespace RoadCaptain.Runner.ViewModels
             }
         }
 
+        public List<PlannedRoute> RebelRoutes
+        {
+            get;
+            private set;
+        }
+
         public ICommand StartRouteCommand { get; set; }
         public ICommand LoadRouteCommand { get; set; }
         public ICommand LogInCommand { get; set; }
@@ -302,7 +323,7 @@ namespace RoadCaptain.Runner.ViewModels
                 }
 
                 WindowTitle = $"RoadCaptain - {routeFileName}";
-
+                
                 Route = _routeStore.LoadFrom(RoutePath);
             }
 

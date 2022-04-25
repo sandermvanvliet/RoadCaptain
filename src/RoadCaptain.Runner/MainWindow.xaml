@@ -107,6 +107,7 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="38" />
                     <RowDefinition Height="38" />
+                    <RowDefinition Height="38" />
                     <RowDefinition Height="96" />
                     <RowDefinition Height="60" />
                 </Grid.RowDefinitions>
@@ -133,12 +134,16 @@
                         IsEnabled="{Binding Path=LoggedInToZwift,Converter={StaticResource BooleanConverter},ConverterParameter=invert}"/>
 
                 <!-- row 2 -->
-                <TextBlock Text="Route:" HorizontalAlignment="Right" FontWeight="Bold" FontSize="16" Grid.Column="0" Grid.Row="1" VerticalAlignment="Center" Margin="0,2,0,0" />
-                <TextBox Text="{Binding Path=RoutePath}" Height="28" Grid.Column="1" Grid.Row="1" Margin="4,2,4,0" VerticalAlignment="Center" d:Text="c:\roadcaptain\routes\route-1.json" FontSize="16" Padding="4,0,0,0" />
-                <Button Content="Select" HorizontalAlignment="Right" Grid.Column="2" Grid.Row="1" Margin="0,2,4,0" VerticalAlignment="Center" Command="{Binding Path=LoadRouteCommand}" Width="72" />
-
+                <TextBlock Text="Rebel route:" HorizontalAlignment="Right" FontWeight="Bold" FontSize="16" Grid.Column="0" Grid.Row="1" VerticalAlignment="Center" Margin="0,2,0,0" />
+                <ComboBox Name="RebelRouteCombo" Grid.Row="1" Grid.Column="1" Margin="4,8,4,4" ItemsSource="{Binding Path=RebelRoutes}" Height="24" VerticalAlignment="Center" SelectionChanged="Selector_OnSelectionChanged" />
+                
                 <!-- row 3 -->
-                <Grid Grid.Row="2" Grid.Column="1" Margin="0,4,0,0" Visibility="{Binding Path=Route,Converter={StaticResource NullabilityConverter}}">
+                <TextBlock Text="Route from file:" HorizontalAlignment="Right" FontWeight="Bold" FontSize="16" Grid.Column="0" Grid.Row="2" VerticalAlignment="Center" Margin="0,2,0,0" />
+                <TextBox Text="{Binding Path=RoutePath}" Height="28" Grid.Column="1" Grid.Row="2" Margin="4,2,4,0" VerticalAlignment="Center" d:Text="c:\roadcaptain\routes\route-1.json" FontSize="16" Padding="4,0,0,0" />
+                <Button Content="Select" HorizontalAlignment="Right" Grid.Column="2" Grid.Row="2" Margin="0,2,4,0" VerticalAlignment="Center" Command="{Binding Path=LoadRouteCommand}" Width="72" />
+
+                <!-- row 4 -->
+                <Grid Grid.Row="3" Grid.Column="1" Margin="0,4,0,0" Visibility="{Binding Path=Route,Converter={StaticResource NullabilityConverter}}">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="24" />
                         <RowDefinition Height="24" />
@@ -160,7 +165,7 @@
                     <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding Path=Route.World.Name}" d:Text="Watopia" Margin="4,0,0,0" />
                     <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding Path=Route.ZwiftRouteName}" d:Text="Muir and the mountain" Margin="4,0,0,0" />
                 </Grid>
-                <Button Content="Build route" HorizontalAlignment="Left" Grid.Column="2" Grid.Row="2" Margin="-50,4,0,0" VerticalAlignment="Top" Command="{Binding Path=BuildRouteCommand}" Width="122" />
+                <Button Content="Build route" HorizontalAlignment="Left" Grid.Column="2" Grid.Row="3" Margin="-50,4,0,0" VerticalAlignment="Top" Command="{Binding Path=BuildRouteCommand}" Width="122" />
             </Grid>
             <Grid Grid.Row="2">
                 <Grid.ColumnDefinitions>
