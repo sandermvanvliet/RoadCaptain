@@ -9,6 +9,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using PacketDotNet;
 using RoadCaptain.Adapters.CaptureFile;
+using RoadCaptain.GameStates;
 using RoadCaptain.Ports;
 using SharpPcap;
 using SharpPcap.LibPcap;
@@ -28,16 +29,18 @@ namespace RoadCaptain.Adapters
         private readonly PacketAssembler _companionPacketAssemblerPcToApp;
         private readonly AutoResetEvent _enqueueResetEvent;
         private readonly MonitoringEvents _monitoringEvents;
+        private readonly IGameStateDispatcher _gameStateDispatcher;
         private readonly ConcurrentQueue<byte[]> _payloads = new();
         private readonly AutoResetEvent _receiveQueueResetEvent;
         private readonly CancellationTokenSource _tokenSource = new();
         private CaptureFileReaderDevice _device;
         private Task<Task> _receiveTask;
 
-        public MessageReceiverFromCaptureFile(string captureFilePath, MonitoringEvents monitoringEvents)
+        public MessageReceiverFromCaptureFile(string captureFilePath, MonitoringEvents monitoringEvents, IGameStateDispatcher gameStateDispatcher)
         {
             _captureFilePath = captureFilePath;
             _monitoringEvents = monitoringEvents;
+            _gameStateDispatcher = gameStateDispatcher;
             _receiveQueueResetEvent = new AutoResetEvent(false);
             _enqueueResetEvent = new AutoResetEvent(true);
 
@@ -47,6 +50,8 @@ namespace RoadCaptain.Adapters
 
         public byte[] ReceiveMessageBytes()
         {
+            _gameStateDispatcher.Dispatch(new ConnectedToZwiftState());
+
             if (_receiveTask == null)
             {
                 _receiveTask = Task.Factory.StartNew(() => StartCaptureFromFileAsync(_tokenSource.Token));
