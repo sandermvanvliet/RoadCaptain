@@ -18,6 +18,7 @@
 ### Routing
 
 - [Watopia] Fix the turn at the end of the Volcano to Villas segment ([issue #41](https://github.com/sandermvanvliet/RoadCaptain/issues/41))
+- [Watopia] Add right-turn from Italian Villas loop 4 to Italian Villas loop 3 ([issue #37](https://github.com/sandermvanvliet/RoadCaptain/issues/37))
 
 ## 0.6.1.0
 
