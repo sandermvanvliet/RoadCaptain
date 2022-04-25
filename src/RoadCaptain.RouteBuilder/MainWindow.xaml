@@ -191,6 +191,7 @@
                         PaintSurface="SKElement_OnPaintSurface" 
                         MouseLeftButtonUp="SkElement_OnMouseLeftButtonUp"
                         MouseMove="SkElement_OnMouseMove"
+                        MouseWheel="SkElement_OnMouseWheel"
                         Name="SkElement"
                         Cursor="Hand">
             </skia:SKElement>

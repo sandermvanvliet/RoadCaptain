@@ -389,6 +389,18 @@ namespace RoadCaptain.RouteBuilder
 
             return new Point(matrixConverted.X, matrixConverted.Y);
         }
+
+        private void SkElement_OnMouseWheel(object sender, MouseWheelEventArgs e)
+        {
+            if (e.Delta > 0)
+            {
+                _windowViewModel.ZoomIn();
+            }
+            else if (e.Delta < 0)
+            {
+                _windowViewModel.ZoomOut();
+            }
+        }
     }
 }
 
