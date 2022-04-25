@@ -98,9 +98,9 @@ namespace RoadCaptain.RouteBuilder
         {
             // Purely for readability
             var canvas = args.Surface.Canvas;
-            
+
             canvas.Translate(-(float)_windowViewModel.Pan.X, -(float)_windowViewModel.Pan.Y);
-            canvas.Scale(_windowViewModel.Zoom, _windowViewModel.Zoom);
+            canvas.Scale(_windowViewModel.Zoom, _windowViewModel.Zoom, (float)_windowViewModel.ZoomCenter.X, (float)_windowViewModel.ZoomCenter.Y);
 
             // Store the inverse of the scale/translate matrix
             // so that we can convert a click on the canvas to
@@ -311,7 +311,7 @@ namespace RoadCaptain.RouteBuilder
 
             if (e.LeftButton == MouseButtonState.Pressed)
             {
-                if(!_windowViewModel.IsPanning)
+                if (!_windowViewModel.IsPanning)
                 {
                     _windowViewModel.StartPan(position);
                 }
@@ -359,14 +359,14 @@ namespace RoadCaptain.RouteBuilder
 
         private void ZoomIn_Click(object sender, RoutedEventArgs e)
         {
-            _windowViewModel.ZoomIn();
+            _windowViewModel.ZoomIn(ConvertMousePositionToCanvasCoordinate(SkElement, new Point(SkElement.ActualWidth / 2, SkElement.ActualHeight / 2)));
 
             TriggerRepaint();
         }
 
         private void ZoomOut_Click(object sender, RoutedEventArgs e)
         {
-            _windowViewModel.ZoomOut();
+            _windowViewModel.ZoomOut(ConvertMousePositionToCanvasCoordinate(SkElement, new Point(SkElement.ActualWidth / 2, SkElement.ActualHeight / 2)));
 
             TriggerRepaint();
         }
@@ -384,7 +384,7 @@ namespace RoadCaptain.RouteBuilder
             var scalingFactor = skiaElement.CanvasSize.Width / skiaElement.ActualWidth;
 
             var matrixConverted = _currentMatrix.MapPoint(
-                    (float)(position.X * scalingFactor), 
+                    (float)(position.X * scalingFactor),
                     (float)(position.Y * scalingFactor));
 
             return new Point(matrixConverted.X, matrixConverted.Y);
@@ -392,13 +392,19 @@ namespace RoadCaptain.RouteBuilder
 
         private void SkElement_OnMouseWheel(object sender, MouseWheelEventArgs e)
         {
+            var skiaElement = sender as SKElement;
+
+            var position = e.GetPosition((IInputElement)sender);
+
+            var canvasCoordinate = ConvertMousePositionToCanvasCoordinate(skiaElement, position);
+
             if (e.Delta > 0)
             {
-                _windowViewModel.ZoomIn();
+                _windowViewModel.ZoomIn(canvasCoordinate);
             }
             else if (e.Delta < 0)
             {
-                _windowViewModel.ZoomOut();
+                _windowViewModel.ZoomOut(canvasCoordinate);
             }
         }
     }

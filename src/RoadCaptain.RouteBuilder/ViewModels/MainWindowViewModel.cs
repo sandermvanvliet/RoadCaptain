@@ -953,14 +953,16 @@ namespace RoadCaptain.RouteBuilder.ViewModels
             }
         }
 
-        public void ZoomIn()
+        public void ZoomIn(Point position)
         {
             Zoom += ZoomDelta;
+            ZoomCenter = position;
         }
 
-        public void ZoomOut()
+        public void ZoomOut(Point position)
         {
             Zoom -= ZoomDelta;
+            ZoomCenter = position;
 
             if (Zoom < 1)
             {
@@ -1010,6 +1012,8 @@ namespace RoadCaptain.RouteBuilder.ViewModels
                 OnPropertyChanged();
             }
         }
+
+        public Point ZoomCenter { get; private set; }
     }
 
     public class Marker
