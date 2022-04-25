@@ -161,7 +161,7 @@ namespace RoadCaptain.Adapters
             }
         }
 
-        private void OnZwiftPing(ZwiftAppToCompanion zwiftAppToCompanion)
+        protected virtual void OnZwiftPing(ZwiftAppToCompanion zwiftAppToCompanion)
         {
             Enqueue(new ZwiftPingMessage
             {
@@ -169,7 +169,7 @@ namespace RoadCaptain.Adapters
             });
         }
 
-        private void OnActivityDetails(uint riderId, ulong activityId)
+        protected virtual void OnActivityDetails(uint riderId, ulong activityId)
         {
             Enqueue(new ZwiftActivityDetailsMessage
             {
@@ -178,12 +178,12 @@ namespace RoadCaptain.Adapters
             });
         }
 
-        private void OnPowerUp(string type)
+        protected virtual void OnPowerUp(string type)
         {
             Enqueue(new ZwiftPowerUpMessage { Type = type });
         }
 
-        private void OnCommandAvailable(uint numericalCommandType, string description, ulong sequenceNumber)
+        protected virtual void OnCommandAvailable(uint numericalCommandType, string description, ulong sequenceNumber)
         {
             var commandType = CommandType.Unknown;
 
@@ -208,7 +208,7 @@ namespace RoadCaptain.Adapters
             });
         }
 
-        private void OnRiderPosition(float latitude, float longitude, float altitude)
+        protected virtual void OnRiderPosition(float latitude, float longitude, float altitude)
         {
             Enqueue(new ZwiftRiderPositionMessage
             {
@@ -273,6 +273,10 @@ namespace RoadCaptain.Adapters
                     if (_queue.Count == 0)
                     {
                         _throttleResetEvent.Set();
+                    }
+                    else
+                    {
+                        Thread.Sleep(_configuration.MessageThrottleDelayMilliseconds);
                     }
                 }
                 catch (Exception e)
