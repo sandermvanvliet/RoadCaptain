@@ -17,7 +17,19 @@ namespace RoadCaptain.Runner
 
             builder.RegisterType<Configuration>().AsSelf().SingleInstance();
 
-            builder.Register(_ => AppSettings.Default).SingleInstance();
+            builder.Register(_ =>
+            {
+                var appSettings = AppSettings.Default;
+                
+                if(appSettings.UpgradeSettings)
+                {
+                    appSettings.Upgrade();
+                    appSettings.UpgradeSettings = false;
+                    appSettings.Save();
+                }
+
+                return appSettings;
+            }).SingleInstance();
             
             // Wire up registrations through the autofac.json file
             builder.RegisterModule(new ConfigurationModule(configuration));

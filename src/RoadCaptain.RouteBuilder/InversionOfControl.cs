@@ -18,7 +18,19 @@ namespace RoadCaptain.RouteBuilder
             // Wire up registrations through the autofac.json file
             builder.RegisterModule(new ConfigurationModule(configuration));
 
-            builder.Register(_ => UserPreferences.Default).SingleInstance();
+            builder.Register(_ =>
+            {
+                var userPreferences = UserPreferences.Default;
+
+                if (userPreferences.UpgradeSettings)
+                {
+                    userPreferences.Upgrade();
+                    userPreferences.UpgradeSettings = false;
+                    userPreferences.Save();
+                }
+
+                return userPreferences;
+            }).SingleInstance();
 
             // Register dispatcher here because MainModule does not know of it
             builder.RegisterInstance(dispatcher).AsSelf().SingleInstance();

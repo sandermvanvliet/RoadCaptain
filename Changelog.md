@@ -1,5 +1,15 @@
 ﻿# Changelog
 
+## 0.6.2.1
+
+### Route Builder
+
+- Migrate settings from previous installed version of RoadCaptain so that settings are preserved ([issue #60](https://github.com/sandermvanvliet/RoadCaptain/issues/60))
+
+### Runner
+
+- Migrate settings from previous installed version of RoadCaptain so that settings are preserved ([issue #60](https://github.com/sandermvanvliet/RoadCaptain/issues/60))
+
 ## 0.6.2.0
 
 ### Route Builder
