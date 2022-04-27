@@ -6,7 +6,6 @@ using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows;
-using System.Windows.Documents;
 using System.Windows.Input;
 using Microsoft.IdentityModel.JsonWebTokens;
 using RoadCaptain.Commands;
@@ -230,6 +229,7 @@ namespace RoadCaptain.Runner.ViewModels
                 if (Equals(value, _route)) return;
                 _route = value;
                 OnPropertyChanged();
+                OnPropertyChanged(nameof(CanStartRoute));
             }
         }
 
@@ -353,7 +353,14 @@ namespace RoadCaptain.Runner.ViewModels
             _appSettings.Route = RoutePath;
             _appSettings.Save();
 
-            _loadRouteUseCase.Execute(new LoadRouteCommand { Path = RoutePath });
+            if (Route != null)
+            {
+                _gameStateDispatcher.RouteSelected(Route);
+            }
+            else
+            {
+                _loadRouteUseCase.Execute(new LoadRouteCommand { Path = RoutePath });
+            }
 
             _gameStateDispatcher.Dispatch(new WaitingForConnectionState());
 
