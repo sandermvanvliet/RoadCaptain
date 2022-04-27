@@ -148,7 +148,11 @@ namespace RoadCaptain.RouteBuilder.ViewModels
 
             Route.Reset();
             
-            ClearRoute();
+            SelectedSegment = null;
+
+            RoutePath.Reset();
+            SimulationState = SimulationState.NotStarted;
+            _simulationIndex = 0;
             
             _segments = null;
             SegmentPaths.Clear();

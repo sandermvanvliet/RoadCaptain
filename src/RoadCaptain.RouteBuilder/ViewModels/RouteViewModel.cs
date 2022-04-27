@@ -218,6 +218,7 @@ namespace RoadCaptain.RouteBuilder.ViewModels
             _sequence.Clear();
             OutputFilePath = null;
             IsTainted = false;
+            Name = string.Empty;
 
             OnPropertyChanged(nameof(Sequence));
             OnPropertyChanged(nameof(TotalDistance));
