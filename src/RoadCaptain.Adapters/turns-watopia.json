@@ -320,7 +320,7 @@
     "segmentId": "watopia-serpentine-8-001",
     "turnsA": {
       "right": "watopia-bambino-fondo-003-after-after-before",
-      "goStraight": "watopia-bambino-fondo-003-after-after-after"
+      "left": "watopia-bambino-fondo-003-after-after-after"
     },
     "turnsB": {
       "left": "watopia-bambino-fondo-003-after-before-after",
