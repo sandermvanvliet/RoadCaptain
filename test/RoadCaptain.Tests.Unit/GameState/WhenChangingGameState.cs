@@ -488,7 +488,8 @@ namespace RoadCaptain.Tests.Unit.GameState
                 NextSegmentsNodeB =
                 {
                     new Turn(TurnDirection.Left, "route-segment-2"),
-                    new Turn(TurnDirection.Right, "route-segment-3")
+                    new Turn(TurnDirection.Right, "route-segment-3"),
+                    new Turn(TurnDirection.GoStraight, "segment-4")
                 }
             },
             new Segment(new List<TrackPoint>()

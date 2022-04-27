@@ -144,6 +144,16 @@ namespace RoadCaptain.GameStates
                     return new UpcomingTurnState(RiderId, ActivityId, CurrentPosition, CurrentSegment, Route, Direction, x);
                 }
 
+                // For three-way junctions we only get left/right and the segment has left/right/go-straight
+                if (x.Count == 2 && 
+                    x.Contains(TurnDirection.Left) && 
+                    x.Contains(TurnDirection.Right) && 
+                    CurrentSegment.NextSegments(Direction).Count == 3)
+                {
+                    // We've got all the turn commands for this segment
+                    return new UpcomingTurnState(RiderId, ActivityId, CurrentPosition, CurrentSegment, Route, Direction, x);
+                }
+
                 // Add the new list of turn directions to
                 // a new state.
                 return new OnRouteState(RiderId, ActivityId, CurrentPosition, CurrentSegment, Route, Direction, x);
