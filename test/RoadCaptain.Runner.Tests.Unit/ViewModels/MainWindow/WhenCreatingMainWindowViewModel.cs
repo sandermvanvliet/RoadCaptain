@@ -125,7 +125,7 @@ namespace RoadCaptain.Runner.Tests.Unit.ViewModels.MainWindow
             var configuration = new Configuration(null)
             {
                 AccessToken = ValidToken(),
-                Route = "some route"
+                Route = "someroute.json"
             };
             
             CreateViewModel(configuration)

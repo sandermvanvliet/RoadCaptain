@@ -111,7 +111,7 @@ namespace RoadCaptain.Runner.ViewModels
         }
 
         public bool CanStartRoute =>
-            !string.IsNullOrEmpty(RoutePath) &&
+            Route != null &&
             LoggedInToZwift;
 
         public string RoutePath

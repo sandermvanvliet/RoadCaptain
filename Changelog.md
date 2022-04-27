@@ -11,6 +11,7 @@
 
 - Migrate settings from previous installed version of RoadCaptain so that settings are preserved ([issue #60](https://github.com/sandermvanvliet/RoadCaptain/issues/60))
 - Fix an issue where progress would not be tracked on the last segment of the route ([issue #64](https://github.com/sandermvanvliet/RoadCaptain/issues/64))
+- Fix an issue where the Let's Go! button would remain grey after logging in and selecting a Rebel Route ([issue #65](https://github.com/sandermvanvliet/RoadCaptain/issues/65))
 
 ## 0.6.2.0
 
