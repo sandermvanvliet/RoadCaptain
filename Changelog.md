@@ -2,6 +2,10 @@
 
 ## 0.6.2.1
 
+**Breaking change:**
+
+Due to changes in the turns for Watopia (see [issue #62](https://github.com/sandermvanvliet/RoadCaptain/issues/62)), routes that traversed the Jungle Loop Switchback segment won't work properly anymore. You will have to rebuild the route to make those routes work again.
+
 ### Route Builder
 
 - Migrate settings from previous installed version of RoadCaptain so that settings are preserved ([issue #60](https://github.com/sandermvanvliet/RoadCaptain/issues/60))
@@ -12,6 +16,7 @@
 - Migrate settings from previous installed version of RoadCaptain so that settings are preserved ([issue #60](https://github.com/sandermvanvliet/RoadCaptain/issues/60))
 - Fix an issue where progress would not be tracked on the last segment of the route ([issue #64](https://github.com/sandermvanvliet/RoadCaptain/issues/64))
 - Fix an issue where the Let's Go! button would remain grey after logging in and selecting a Rebel Route ([issue #65](https://github.com/sandermvanvliet/RoadCaptain/issues/65))
+- Handle 3-way junctions properly when only left/right turn commands are received from Zwift ([issue #57](https://github.com/sandermvanvliet/RoadCaptain/issues/57))
 
 ### Routing
 
