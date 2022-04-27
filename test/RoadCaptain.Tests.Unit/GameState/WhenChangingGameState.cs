@@ -361,7 +361,7 @@ namespace RoadCaptain.Tests.Unit.GameState
         }
 
         [Fact]
-        public void GivenOnRouteStateAndOnLastSegmentOfRoute_EnteringNewSegment_ResultingStateIsRouteCompletedState()
+        public void GivenOnRouteStateAndOnLastSegmentOfRoute_EnteringNewSegmentNotAdjacentToLastSegment_ResultingStateIsOnSegmentState()
         {
             _route.EnteredSegment("route-segment-1");
             _route.EnteredSegment("route-segment-2");
@@ -372,7 +372,7 @@ namespace RoadCaptain.Tests.Unit.GameState
 
             result
                 .Should()
-                .BeOfType<CompletedRouteState>()
+                .BeOfType<OnSegmentState>()
                 .Which
                 .CurrentPosition
                 .Should()
@@ -380,7 +380,7 @@ namespace RoadCaptain.Tests.Unit.GameState
         }
 
         [Fact]
-        public void GivenCompletedRouteStateAndEnteringLastSegmentOfRoute_ResultingStateIsRouteCompletedState()
+        public void GivenOnSegmentStateAndReEnteringLastSegmentOfRoute_ResultingStateIsOnSegmentState()
         {
             _route.EnteredSegment("route-segment-1");
             _route.EnteredSegment("route-segment-2");
@@ -392,11 +392,67 @@ namespace RoadCaptain.Tests.Unit.GameState
 
             result
                 .Should()
-                .BeOfType<CompletedRouteState>()
+                .BeOfType<OnSegmentState>()
                 .Which
                 .CurrentPosition
                 .Should()
                 .Be(RoutePosition3);
+        }
+
+        [Fact]
+        public void GivenOnSecondToLastSegmentOfRouteAndEnteringLastSegment_ResultingStateIsOnRouteState()
+        {
+            _route.EnteredSegment("route-segment-1");
+            _route.EnteredSegment("route-segment-2");
+            GameStates.GameState state = new OnRouteState(RiderId, ActivityId, RoutePosition2, SegmentById("route-segment-2"), _route);
+
+            var result = state.UpdatePosition(RoutePosition3, _segments, _route);
+
+            result
+                .Should()
+                .BeOfType<OnRouteState>()
+                .Which
+                .CurrentPosition
+                .Should()
+                .Be(RoutePosition3);
+        }
+
+        [Fact]
+        public void GivenOnLastSegmentOfRouteAndMovingToAnotherPointOnTheSegment_ResultingStateIsOnRouteState()
+        {
+            _route.EnteredSegment("route-segment-1");
+            _route.EnteredSegment("route-segment-2");
+            _route.EnteredSegment("route-segment-3");
+            GameStates.GameState state = new OnRouteState(RiderId, ActivityId, RoutePosition3, SegmentById("route-segment-3"), _route);
+
+            var result = state.UpdatePosition(RoutePosition3Point2, _segments, _route);
+
+            result
+                .Should()
+                .BeOfType<OnRouteState>()
+                .Which
+                .CurrentPosition
+                .Should()
+                .Be(RoutePosition3Point2);
+        }
+        
+        [Fact]
+        public void GivenCompletedRouteStateAndExitingLastSegmentOfRoute_ResultingStateIsRouteCompletedState()
+        {
+            _route.EnteredSegment("route-segment-1");
+            _route.EnteredSegment("route-segment-2");
+            _route.EnteredSegment("route-segment-3");
+            GameStates.GameState state = new OnRouteState(RiderId, ActivityId, RoutePosition3, SegmentById("route-segment-3"), _route);
+
+            var result = state.UpdatePosition(Position4, _segments, _route);
+
+            result
+                .Should()
+                .BeOfType<CompletedRouteState>()
+                .Which
+                .CurrentPosition
+                .Should()
+                .Be(Position4);
         }
 
         private Segment SegmentById(string id)
@@ -440,15 +496,47 @@ namespace RoadCaptain.Tests.Unit.GameState
                 RoutePosition2
             })
             {
-                Id = "route-segment-2"
+                Id = "route-segment-2",
+                NextSegmentsNodeA =
+                {
+                    new Turn(TurnDirection.GoStraight, "route-segment-1")
+                },
+                NextSegmentsNodeB =
+                {
+                    new Turn(TurnDirection.GoStraight, "route-segment-3")
+                }
             },
             new Segment(new List<TrackPoint>()
             {
-                RoutePosition3
+                RoutePosition3,
+                RoutePosition3Point2
             })
             {
-                Id = "route-segment-3"
+                Id = "route-segment-3",
+                NextSegmentsNodeA =
+                {
+                    new Turn(TurnDirection.GoStraight, "route-segment-2")
+                },
+                NextSegmentsNodeB =
+                {
+                    new Turn(TurnDirection.GoStraight, "segment-4")
+                }
             },
+            new Segment(new List<TrackPoint>
+            {
+                Position4
+            })
+            {
+                Id="segment-4",
+                NextSegmentsNodeA =
+                {
+                    new Turn(TurnDirection.GoStraight, "route-segment-3")
+                },
+                NextSegmentsNodeB =
+                {
+                    new Turn(TurnDirection.GoStraight, "segment-1")
+                }
+            }
         };
 
         // Note on the positions: Keep them far away from eachother otherwise you'll
@@ -464,14 +552,16 @@ namespace RoadCaptain.Tests.Unit.GameState
         private static readonly TrackPoint RoutePosition1Point3 = new(10, 3, 3);
         private static readonly TrackPoint RoutePosition2 = new(12, 2, 3);
         private static readonly TrackPoint RoutePosition3 = new(13, 3, 3);
+        private static readonly TrackPoint RoutePosition3Point2 = new(13, 4, 3);
+        private static readonly TrackPoint Position4 = new(14, 1, 3);
 
         private readonly PlannedRoute _route = new()
         {
             RouteSegmentSequence =
             {
-                new SegmentSequence { SegmentId = "route-segment-1", NextSegmentId = "route-segment-2", TurnToNextSegment = TurnDirection.Left },
-                new SegmentSequence { SegmentId = "route-segment-2", NextSegmentId = "route-segment-3", TurnToNextSegment = TurnDirection.Right },
-                new SegmentSequence { SegmentId = "route-segment-3" },
+                new SegmentSequence { SegmentId = "route-segment-1", NextSegmentId = "route-segment-2", TurnToNextSegment = TurnDirection.Left, Direction = SegmentDirection.AtoB},
+                new SegmentSequence { SegmentId = "route-segment-2", NextSegmentId = "route-segment-3", TurnToNextSegment = TurnDirection.Right, Direction = SegmentDirection.AtoB },
+                new SegmentSequence { SegmentId = "route-segment-3", Direction = SegmentDirection.AtoB },
             }
         };
     }

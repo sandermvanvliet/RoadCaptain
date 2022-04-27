@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Newtonsoft.Json;
 
 namespace RoadCaptain.GameStates
@@ -41,7 +42,39 @@ namespace RoadCaptain.GameStates
             {
                 if (plannedRoute.HasCompleted)
                 {
-                    return new CompletedRouteState(RiderId, ActivityId, segmentState.CurrentPosition, plannedRoute);
+                    if (plannedRoute.CurrentSegmentId != segmentState.CurrentSegment.Id)
+                    {
+                        var lastOfRoute = plannedRoute.RouteSegmentSequence[plannedRoute.SegmentSequenceIndex];
+                        var lastSegmentOfRoute = segments.Single(s => s.Id == plannedRoute.CurrentSegmentId);
+                        if (lastOfRoute.Direction == SegmentDirection.AtoB)
+                        {
+                            if (lastSegmentOfRoute.NextSegmentsNodeB.Any(t =>
+                                    t.SegmentId == segmentState.CurrentSegment.Id))
+                            {
+                                // Moved from last segment of route to the next segment at the end of that
+                                return new CompletedRouteState(RiderId, ActivityId, segmentState.CurrentPosition,
+                                    plannedRoute);
+                            }
+
+                            return segmentState;
+                        }
+
+                        if (lastOfRoute.Direction == SegmentDirection.BtoA)
+                        {
+                            if (lastSegmentOfRoute.NextSegmentsNodeA.Any(t =>
+                                    t.SegmentId == segmentState.CurrentSegment.Id))
+                            {
+                                // Moved from last segment of route to the next segment at the end of that
+                                return new CompletedRouteState(RiderId, ActivityId, segmentState.CurrentPosition,
+                                    plannedRoute);
+                            }
+
+                            return segmentState;
+                        }
+                    }
+
+                    return new OnRouteState(RiderId, ActivityId, segmentState.CurrentPosition,
+                        segmentState.CurrentSegment, Route, segmentState.Direction);
                 }
 
                 if (segmentState.CurrentSegment.Id == Route.NextSegmentId)

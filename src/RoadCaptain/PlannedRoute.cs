@@ -16,9 +16,7 @@ namespace RoadCaptain
         public string ZwiftRouteName { get; set; }
         public bool HasCompleted { get; private set; }
         public bool HasStarted { get; private set; }
-
         public int SegmentSequenceIndex { get; private set; }
-
         public string StartingSegmentId => RouteSegmentSequence[SegmentSequenceIndex].SegmentId;
         public string NextSegmentId => HasStarted ? RouteSegmentSequence[SegmentSequenceIndex].NextSegmentId : null;
         public TurnDirection TurnToNextSegment => HasStarted ? RouteSegmentSequence[SegmentSequenceIndex].TurnToNextSegment : TurnDirection.None;

@@ -5,10 +5,12 @@
 ### Route Builder
 
 - Migrate settings from previous installed version of RoadCaptain so that settings are preserved ([issue #60](https://github.com/sandermvanvliet/RoadCaptain/issues/60))
+- Reset route name when clearing the route, opening a route or navigating back to the world selection screen ([issue #54](https://github.com/sandermvanvliet/RoadCaptain/issues/54))
 
 ### Runner
 
 - Migrate settings from previous installed version of RoadCaptain so that settings are preserved ([issue #60](https://github.com/sandermvanvliet/RoadCaptain/issues/60))
+- Fix an issue where progress would not be tracked on the last segment of the route ([issue #64](https://github.com/sandermvanvliet/RoadCaptain/issues/64))
 
 ## 0.6.2.0
 
