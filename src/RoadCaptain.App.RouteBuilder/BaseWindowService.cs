@@ -11,7 +11,7 @@ namespace RoadCaptain.App.RouteBuilder
     public abstract class BaseWindowService
     {
         private readonly IComponentContext _componentContext;
-        private IApplicationLifetime _applicationLifetime;
+        private IApplicationLifetime? _applicationLifetime;
 
         protected BaseWindowService(IComponentContext componentContext)
         {
@@ -92,7 +92,7 @@ namespace RoadCaptain.App.RouteBuilder
             throw new NotImplementedException();
         }
 
-        protected virtual TType Resolve<TType>()
+        protected virtual TType Resolve<TType>() where TType : notnull
         {
             return _componentContext.Resolve<TType>();
         }
