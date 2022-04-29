@@ -19,6 +19,7 @@ namespace RoadCaptain.App.RouteBuilder.Views
         private SKMatrix? _currentMatrix;
         private string? _highlightedSegmentId;
 
+        // ReSharper disable once UnusedMember.Global because this constructor only exists for the Avalonia designer
         public MainWindow()
         {
         }
@@ -36,6 +37,7 @@ namespace RoadCaptain.App.RouteBuilder.Views
 
         private void WindowViewModelPropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
+            // TODO: Use reactive approach with WhenXxx() for this
             switch (e.PropertyName)
             {
                 case nameof(ViewModel.SelectedSegment):
