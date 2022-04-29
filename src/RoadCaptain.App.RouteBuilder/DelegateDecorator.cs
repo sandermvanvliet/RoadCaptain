@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Threading;
+using RoadCaptain.App.Shared.Dialogs;
 
 namespace RoadCaptain.App.RouteBuilder
 {
@@ -21,7 +23,7 @@ namespace RoadCaptain.App.RouteBuilder
             return InvokeIfNeeded(() => _decorated.ShowOpenFileDialog(previousLocation));
         }
 
-        public void ShowErrorDialog(string message, Window owner = null)
+        public void ShowErrorDialog(string message, Window owner)
         {
             InvokeIfNeeded(() => _decorated.ShowErrorDialog(message, owner));
         }
@@ -41,9 +43,9 @@ namespace RoadCaptain.App.RouteBuilder
             return InvokeIfNeeded(() => _decorated.ShowSaveFileDialog(previousLocation));
         }
 
-        public bool ShowDefaultSportSelectionDialog(SportType sport)
+        public async Task<bool> ShowDefaultSportSelectionDialog(SportType sport)
         {
-            return InvokeIfNeeded(() => _decorated.ShowDefaultSportSelectionDialog(sport));
+            return await InvokeIfNeededAsync(() => _decorated.ShowDefaultSportSelectionDialog(sport));
         }
 
         public MessageBoxResult ShowSaveRouteDialog()
@@ -64,6 +66,16 @@ namespace RoadCaptain.App.RouteBuilder
             }
 
             return action();
+        }
+
+        private async Task<TResult> InvokeIfNeededAsync<TResult>(Func<Task<TResult>> action)
+        {
+            if (!_dispatcher.CheckAccess())
+            {
+                return await _dispatcher.InvokeAsync(action);
+            }
+
+            return await action();
         }
 
         private void InvokeIfNeeded(Action action)

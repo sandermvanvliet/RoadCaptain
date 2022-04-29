@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading.Tasks;
 using Autofac;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using RoadCaptain.App.RouteBuilder.Views;
+using RoadCaptain.App.Shared.Dialogs;
+using RoadCaptain.App.Shared.Dialogs.ViewModels;
 
 namespace RoadCaptain.App.RouteBuilder
 {
@@ -57,62 +60,51 @@ namespace RoadCaptain.App.RouteBuilder
             return dialog.ShowAsync(CurrentWindow).GetAwaiter().GetResult();
         }
 
-        //public bool ShowDefaultSportSelectionDialog(SportType sport)
-        //{
-        //    var result = MessageBox.Show(
-        //        CurrentWindow,
-        //        $"Do you want to use {sport} as your default selection?\nIf you do you won't have to select it again when you build more routes.",
-        //        "Select default sport",
-        //        MessageBoxButton.YesNo,
-        //        MessageBoxImage.Question);
-
-        //    return result == MessageBoxResult.Yes;
-        //}
-
-        //public MessageBoxResult ShowSaveRouteDialog()
-        //{
-        //    return MessageBox.Show(
-        //        "Do you want to save the current route?",
-        //        "Current route was changed",
-        //        MessageBoxButton.YesNoCancel,
-        //        MessageBoxImage.Information);
-        //}
-
-        //public MessageBoxResult ShowClearRouteDialog()
-        //{
-        //    return MessageBox.Show(
-        //        "This action will remove all segments from the current route. Are you sure?",
-        //        "Clear route",
-        //        MessageBoxButton.YesNo,
-        //        MessageBoxImage.Question);
-        //}
-        public void ShowErrorDialog(string message, Window owner = null)
+        public async Task<bool> ShowDefaultSportSelectionDialog(SportType sport)
         {
-            throw new NotImplementedException();
-        }
+            var result = await MessageBox.ShowAsync(
+                $"Do you want to use {sport} as your default selection?\nIf you do you won't have to select it again when you build more routes.",
+                "Select default sport",
+                MessageBoxButton.YesNo,
+                CurrentWindow,
+                MessageBoxImage.Question);
 
-        public void ShowMainWindow(IApplicationLifetime applicationLifetime)
-        {
-            InitializeApplicationLifetime(applicationLifetime);
-
-            var desktopMainWindow = Resolve<MainWindow>();
-
-            base.Show(desktopMainWindow);
-        }
-
-        public bool ShowDefaultSportSelectionDialog(SportType sport)
-        {
-            throw new NotImplementedException();
+            return result == MessageBoxResult.Yes;
         }
 
         public MessageBoxResult ShowSaveRouteDialog()
         {
-            throw new NotImplementedException();
+            return MessageBox.ShowAsync(
+                "Do you want to save the current route?",
+                "Current route was changed",
+                MessageBoxButton.YesNoCancel,
+                CurrentWindow)
+                .GetAwaiter()
+                .GetResult();
         }
 
         public MessageBoxResult ShowClearRouteDialog()
         {
-            throw new NotImplementedException();
+            return MessageBox.ShowAsync(
+                    "This action will remove all segments from the current route. Are you sure?",
+                    "Clear route",
+                    MessageBoxButton.YesNo,
+                    CurrentWindow,
+                    MessageBoxImage.Question)
+                .GetAwaiter()
+                .GetResult();
+        }
+
+        public void ShowMainWindow(IApplicationLifetime applicationLifetime)
+        {
+            var desktopMainWindow = Resolve<MainWindow>();
+
+            if (applicationLifetime is IClassicDesktopStyleApplicationLifetime desktop && desktop.MainWindow == null)
+            {
+                desktop.MainWindow = desktopMainWindow;
+            }
+
+            base.Show(desktopMainWindow);
         }
     }
 }

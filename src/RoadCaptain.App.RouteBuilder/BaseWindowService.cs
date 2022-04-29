@@ -4,14 +4,14 @@ using System.IO;
 using System.Linq;
 using Autofac;
 using Avalonia.Controls;
-using Avalonia.Controls.ApplicationLifetimes;
+using RoadCaptain.App.Shared.Dialogs;
+using RoadCaptain.App.Shared.Dialogs.ViewModels;
 
 namespace RoadCaptain.App.RouteBuilder
 {
     public abstract class BaseWindowService
     {
         private readonly IComponentContext _componentContext;
-        private IApplicationLifetime? _applicationLifetime;
 
         protected BaseWindowService(IComponentContext componentContext)
         {
@@ -62,41 +62,21 @@ namespace RoadCaptain.App.RouteBuilder
 
         public virtual void ShowErrorDialog(string message, Window owner)
         {
-            //if (owner != null)
-            //{
-            //    MessageBox.Show(
-            //        owner,
-            //        message,
-            //        "An error occurred",
-            //        MessageBoxButton.OK,
-            //        MessageBoxImage.Error);
-            //}
-            //else if (CurrentWindow != null)
-            //{
-            //    MessageBox.Show(
-            //        CurrentWindow,
-            //        message,
-            //        "An error occurred",
-            //        MessageBoxButton.OK,
-            //        MessageBoxImage.Error);
-            //}
-            //else
-            //{
-            //    MessageBox.Show(
-            //        message,
-            //        "An error occurred",
-            //        MessageBoxButton.OK,
-            //        MessageBoxImage.Error);
-            //}
-            
-            throw new NotImplementedException();
+            MessageBox.ShowAsync(
+                message,
+                "An error occurred",
+                MessageBoxButton.Ok,
+                owner,
+                MessageBoxImage.Error)
+                .GetAwaiter()
+                .GetResult();
         }
 
         protected virtual TType Resolve<TType>() where TType : notnull
         {
             return _componentContext.Resolve<TType>();
         }
-        
+
         protected virtual bool? ShowDialog(Window window)
         {
             if (window.Owner == null)
@@ -111,11 +91,6 @@ namespace RoadCaptain.App.RouteBuilder
 
         protected virtual void Show(Window window)
         {
-            if (_applicationLifetime is IClassicDesktopStyleApplicationLifetime desktop && desktop.MainWindow == null)
-            {
-                desktop.MainWindow = window;
-            }
-
             CurrentWindow = window;
 
             window.Show();
@@ -137,10 +112,5 @@ namespace RoadCaptain.App.RouteBuilder
         //{
         //    return dialog.ShowDialog(CurrentWindow);
         //}
-
-        protected void InitializeApplicationLifetime(IApplicationLifetime applicationLifetime)
-        {
-            _applicationLifetime = applicationLifetime;
-        }
     }
 }

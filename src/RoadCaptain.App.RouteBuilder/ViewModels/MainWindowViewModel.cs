@@ -8,8 +8,11 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Avalonia;
+using Avalonia.Threading;
 using ReactiveUI;
 using RoadCaptain.App.RouteBuilder.Models;
+using RoadCaptain.App.Shared.Commands;
+using RoadCaptain.App.Shared.Dialogs;
 using CommandResult = RoadCaptain.App.Shared.Commands.CommandResult;
 using RelayCommand = RoadCaptain.App.Shared.Commands.RelayCommand;
 using Result = RoadCaptain.App.Shared.Commands.Result;
@@ -114,7 +117,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
                 _ => SelectWorld(_ as WorldViewModel),
                 _ => (_ as WorldViewModel)?.CanSelect ?? false);
 
-            SelectSportCommand = new RelayCommand(
+            SelectSportCommand = new AsyncRelayCommand(
                 _ => SelectSport(_ as SportViewModel),
                 _ => true);
 
@@ -777,13 +780,13 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             return CommandResult.Success();
         }
 
-        private CommandResult SelectSport(SportViewModel sport)
+        private async Task<CommandResult> SelectSport(SportViewModel sport)
         {
             Route.Sport = sport.Sport;
 
             if (string.IsNullOrEmpty(_userPreferences.DefaultSport))
             {
-                var result = _windowService.ShowDefaultSportSelectionDialog(sport.Sport);
+                var result = await _windowService.ShowDefaultSportSelectionDialog(sport.Sport);
 
                 if (result)
                 {

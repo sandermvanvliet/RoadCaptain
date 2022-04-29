@@ -1,9 +1,12 @@
 using System;
 using Autofac;
 using Avalonia;
+using Avalonia.Controls;
+using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using Avalonia.Threading;
 using Microsoft.Extensions.Configuration;
+using RoadCaptain.App.RouteBuilder.Views;
 using Serilog.Core;
 
 namespace RoadCaptain.App.RouteBuilder
@@ -42,12 +45,17 @@ namespace RoadCaptain.App.RouteBuilder
 
         public override void OnFrameworkInitializationCompleted()
         {
-            if (ApplicationLifetime == null)
+            if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop && desktop.MainWindow == null)
             {
-                throw new InvalidOperationException("Application lifetime has not been initialized");
+                if (Design.IsDesignMode)
+                {
+                    desktop.MainWindow = new MainWindow();
+                }
+                else
+                {
+                    _windowService.ShowMainWindow(ApplicationLifetime);
+                }
             }
-
-            _windowService.ShowMainWindow(ApplicationLifetime);
 
             base.OnFrameworkInitializationCompleted();
         }

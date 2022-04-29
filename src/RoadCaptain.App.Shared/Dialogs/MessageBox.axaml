@@ -1,0 +1,48 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:viewModels="clr-namespace:RoadCaptain.App.Shared.Dialogs.ViewModels"
+        mc:Ignorable="d" d:DesignWidth="350" d:DesignHeight="150"
+        x:Class="RoadCaptain.App.Shared.Dialogs.MessageBox"
+        Title="{Binding Path=Title}"
+        ShowInTaskbar="False"
+        CanResize="False"
+        WindowState="Normal"
+        WindowStartupLocation="CenterOwner"
+        Margin="0"
+        Width="350" Height="150">
+    <Window.DataContext>
+       <viewModels:MessageBoxViewModel>
+           <x:Arguments>
+               <viewModels:MessageBoxButton>YesNoCancel</viewModels:MessageBoxButton>
+               <x:String>Test title</x:String>
+               <x:String>Test message</x:String>
+           </x:Arguments>
+       </viewModels:MessageBoxViewModel>
+    </Window.DataContext>
+
+    <Window.Styles>
+        <Style Selector="Button">
+            <Setter Property="Margin" Value="4,0,0,0"/>
+            <Setter Property="Padding" Value="8,4,8,4"/>
+        </Style>
+    </Window.Styles>
+    
+    <Grid Margin="0">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="40"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Text="{Binding Message}" Grid.Row="0" Margin="8,16,8,8" Foreground="Black" />
+
+        <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right" Margin="4,0,8,8">
+            <Button Tag="OK" Content="OK" IsVisible="{Binding ShowOkButton}" Click="Button_OnClick" />
+            <Button Tag="Yes" Content="Yes" IsVisible="{Binding ShowYesButton}" Click="Button_OnClick" />
+            <Button Tag="No" Content="No" IsVisible="{Binding ShowNoButton}" Click="Button_OnClick" />
+            <Button Tag="Cancel" Content="Cancel" IsVisible="{Binding ShowCancelButton}" Click="Button_OnClick" />
+            <Button Tag="Close" Content="Close" IsVisible="{Binding ShowCloseButton}" Click="Button_OnClick" />
+        </StackPanel>
+    </Grid>
+</Window>

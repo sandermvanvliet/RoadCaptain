@@ -18,6 +18,7 @@ namespace RoadCaptain.App.RouteBuilder
             // Wire up registrations through the autofac.json file
             builder.RegisterModule(new ConfigurationModule(configuration));
 
+            builder.RegisterModule<MainModule>();
             //builder.Register(_ =>
             //{
             //    var userPreferences = UserPreferences.Default;
