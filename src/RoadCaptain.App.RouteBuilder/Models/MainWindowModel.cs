@@ -1,15 +1,17 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using Avalonia.Media;
+using JetBrains.Annotations;
 
 namespace RoadCaptain.App.RouteBuilder.Models
 {
     public class MainWindowModel : INotifyPropertyChanged
     {
         private string _windowTitle = "RoadCaptain - Route Builder";
-        private string _statusBarText;
-        private Brush _statusBarBackground = Brushes.DodgerBlue;
-        private Brush _statusBarForeground = Brushes.White;
-        public event PropertyChangedEventHandler PropertyChanged;
+        private string? _statusBarText;
+        private IBrush _statusBarBackground = Brushes.DodgerBlue;
+        private IBrush _statusBarForeground = Brushes.White;
+        public event PropertyChangedEventHandler? PropertyChanged;
 
         [NotifyPropertyChangedInvocator]
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
@@ -28,7 +30,7 @@ namespace RoadCaptain.App.RouteBuilder.Models
             }
         }
 
-        public string StatusBarText
+        public string? StatusBarText
         {
             get => _statusBarText;
             private set
@@ -39,7 +41,7 @@ namespace RoadCaptain.App.RouteBuilder.Models
             }
         }
 
-        public Brush StatusBarBackground
+        public IBrush StatusBarBackground
         {
             get => _statusBarBackground;
             private set
@@ -50,7 +52,7 @@ namespace RoadCaptain.App.RouteBuilder.Models
             }
         }
 
-        public Brush StatusBarForeground
+        public IBrush StatusBarForeground
         {
             get => _statusBarForeground;
             private set

@@ -7,11 +7,12 @@
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="RoadCaptain.App.RouteBuilder.Views.MainWindow"
         Icon="/Assets/avalonia-logo.ico"
-        Title="RoadCaptain.App.RouteBuilder">
-
-    <Design.DataContext>
-        <viewModels:MainWindowViewModel/>
-    </Design.DataContext>
+        Title="{Binding Path=Model.WindowTitle}"
+        Height="465" Width="867"
+        PropertyChanged="AvaloniaObject_OnPropertyChanged"
+        Initialized="MainWindow_Initialized"
+        Activated="MainWindow_OnActivated"
+        WindowState="Maximized">
     <Window.Resources>
         <DrawingImage x:Key="RunningDrawingImage">
             <DrawingImage.Drawing>
@@ -66,10 +67,10 @@
                 </Setter.Value>
             </Setter>
         </Style>
-        <Style Selector="Button:disabled">
+        <Style Selector="Button[IsEnabled=False]" x:Key="DisabledButtonStyle">
             <Setter Property="Background" Value="DarkGray"/>
         </Style>
-        <Style x:Key="LinkButtonStyle" Selector="Button">
+        <Style Selector="Button.link" x:Key="LinkButtonStyle">
             <Setter Property="Background" Value="Transparent" />
             <Setter Property="Foreground" Value="White" />
             <Setter Property="BorderThickness" Value="0" />
@@ -84,20 +85,22 @@
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
                         <Border Name="borderZero" Background="White" CornerRadius="5" BorderThickness="2"
-                                            Width="180" Height="100" Margin="8,8,8,8">
-                            <Border.Style>
+                                            Width="180" Height="100" Margin="8,8,8,8"
+                                            Classes.isSelected="{Binding Path=IsSelected}">
+                            <Border.Styles>
                                 <Style Selector="Border">
                                     <Setter Property="BorderBrush" Value="#1192CC" />
                                 </Style>
                                 <Style Selector="Border:pointerover">
                                     <Setter Property="BorderBrush" Value="#FF6141"/>
                                 </Style>
-                                <Style Selector="Border[IsSelected=True]">
+                                <Style Selector="Border.isSelected">
                                     <Setter Property="BorderBrush" Value="#FF6141"/>
                                 </Style>
-                            </Border.Style>
+                            </Border.Styles>
                             <Grid>
-                                <Grid.OpacityMask>
+                                <!-- TODO: Figure out OpacityMask with drawing -->
+                                <!--<Grid.OpacityMask>
                                     <DrawingBrush>
                                         <DrawingBrush.Drawing>
                                             <GeometryDrawing Brush="Black">
@@ -107,19 +110,20 @@
                                             </GeometryDrawing>
                                         </DrawingBrush.Drawing>
                                     </DrawingBrush>
-                                </Grid.OpacityMask>
-                                <Image Source="{Binding Path=Image}" Height="100" Stretch="Uniform" ClipToBounds="True" Margin="0">
-                                    <Image.Style>
+                                </Grid.OpacityMask>-->
+                                <Image Source="{Binding Path=Image}" Height="100" Stretch="Uniform" ClipToBounds="True" Margin="0"
+                                       Classes.isSelected="{Binding Path=IsSelected}">
+                                    <Image.Styles>
                                         <Style Selector="Image">
                                             <Setter Property="Opacity" Value="0.5" />
                                         </Style>
                                         <Style Selector="Image:pointerover">
                                             <Setter Property="Opacity" Value="1"/>
                                         </Style>
-                                        <Style Selector="Image[IsSelected=True]">
+                                        <Style Selector="Image.isSelected">
                                             <Setter Property="Opacity" Value="1"/>
                                         </Style>
-                                    </Image.Style>
+                                    </Image.Styles>
                                 </Image>
                                 <ContentPresenter />
                             </Grid>
@@ -128,10 +132,11 @@
                 </Setter.Value>
             </Setter>
         </Style>
-        <Style Selector="Button.world:pointerover">
+        <Style Selector="Button.world:pointerover" x:Key="WorldButtonHoverStyle">
             <Setter Property="Background" Value="#FF6141" />
         </Style>
         <converters:BooleanConverter x:Key="BooleanConverter" />
+        <converters:ValueToBooleanConverter x:Key="ValueToBooleanConverter" />
     </Window.Resources>
     <DockPanel>
         <Grid 
@@ -149,7 +154,7 @@
                        Foreground="{Binding Path=Model.StatusBarForeground,FallbackValue={x:Static Brushes.White}}" />
             <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Right" IsEnabled="True">
                 <TextBlock Text="Version:" Foreground="White" />
-                <Button Content="{Binding Path=Version}" d:Content="0.0.0.0" Margin="4,0,2,0" CommandParameter="{Binding Path=ChangelogUri}" Command="{Binding Path=OpenLinkCommand}" Style="{StaticResource LinkButtonStyle}" />
+                <Button Content="{Binding Path=Version}" d:Content="0.0.0.0" Margin="4,0,2,0" CommandParameter="{Binding Path=ChangelogUri}" Command="{Binding Path=OpenLinkCommand}" Classes="link" />
                 <TextBlock Text="🔗" Margin="0,0,4,0" />
             </StackPanel>
         </Grid>
@@ -163,13 +168,19 @@
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
 
-            <Canvas Grid.Row="1" Grid.Column="1" 
+            <!--<Canvas Grid.Row="1" Grid.Column="1" 
                         PaintSurface="SKElement_OnPaintSurface" 
                         MouseLeftButtonUp="SkElement_OnMouseLeftButtonUp"
                         MouseMove="SkElement_OnMouseMove"
                         MouseWheel="SkElement_OnMouseWheel"
                         Name="SkElement"
                         Cursor="Hand">
+            </Canvas>-->
+            <Canvas Grid.Row="1" Grid.Column="1" 
+                    PointerMoved="SkElement_OnPointerMoved"
+                    PointerReleased="SkElement_OnPointerReleased"
+                    Name="SkElement"
+                    Cursor="Hand">
             </Canvas>
 
             <Grid Grid.Row="0" Grid.RowSpan="2" Grid.Column="1"
@@ -183,7 +194,7 @@
                     <RowDefinition Height="150" />
                 </Grid.RowDefinitions>
                 <TextBlock Text="Select a world to build a route for:" FontSize="16" Grid.Row="0" />
-                <ItemsControl ItemsSource="{Binding Path=Worlds}" Grid.Row="1" >
+                <ItemsControl Items="{Binding Path=Worlds}" Grid.Row="1" >
                     <ItemsControl.Template>
                         <ControlTemplate TargetType="ItemsControl">
                             <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
@@ -215,11 +226,11 @@
 
                 <StackPanel Orientation="Horizontal" Grid.Row="2">
                     <TextBlock Text="Select a sport to build a route for:" FontSize="16" VerticalAlignment="Center" />
-                    <Button Content="(reset default)" Style="{StaticResource LinkButtonStyle}" Foreground="Blue" VerticalAlignment="Center" Margin="8,2,0,0" 
+                    <Button Content="(reset default)" Classes="link" Foreground="Blue" VerticalAlignment="Center" Margin="8,2,0,0" 
                             IsVisible="{Binding Path=HasDefaultSport}"
                             Command="{Binding Path=ResetDefaultSportCommand}"/>
                 </StackPanel>
-                <ItemsControl ItemsSource="{Binding Path=Sports}" Grid.Row="3">
+                <ItemsControl Items="{Binding Path=Sports}" Grid.Row="3">
                     <ItemsControl.Template>
                         <ControlTemplate TargetType="ItemsControl">
                             <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
@@ -255,28 +266,29 @@
                         Orientation="Horizontal"
                         Background="White">
                 <StackPanel.Resources>
-                    <Style Selector="Button" BasedOn="{StaticResource ButtonStyle}"/>
+                    <!--<Style Selector="Button" BasedOn="{StaticResource ButtonStyle}"/>-->
                 </StackPanel.Resources>
-                <Button Command="{Binding Path=SimulateCommand}" ToolTip="Simulate route" Cursor="Hand">
+                <Button Command="{Binding Path=SimulateCommand}" Cursor="Hand"
+                        Classes.simulationRunning="{Binding Path=SimulationState,Converter={StaticResource ValueToBooleanConverter},ConverterParameter=Running}">
                     <Button.Styles>
-                        <Style Selector="Button" BasedOn="{StaticResource ButtonStyle}">
+                        <Style Selector="Button">
                             <Setter Property="Content" Value="▶️" />
                         </Style>
-                        <Style Selector="Button[SimulationState=Running]">
+                        <Style Selector="Button.simulationRunning">
                             <Setter Property="Content" Value="⏸️" />
                         </Style>
                     </Button.Styles>
                 </Button>
-                <Button Content="🚮" Command="{Binding Path=ClearRouteCommand}" ToolTip="Clear route" />
-                <Button Content="🌐" Command="{Binding Path=ResetWorldCommand}" ToolTip="Select world and sport" />
-                <Button Content="💾" Command="{Binding Path=SaveRouteCommand}" ToolTip="Save route" />
-                <Button Content="📂" Command="{Binding Path=OpenRouteCommand}" ToolTip="Open route" />
-                <Button Content="⭯" Command="{Binding Path=RemoveLastSegmentCommand}" ToolTip="Remove last segment"/>
-                <CheckBox Content="Show KOMs" VerticalAlignment="Center" Margin="8,0,0,0" IsChecked="{Binding Path=ShowClimbs}" ToolTip="Show the KOM start (red) and finish (green) markers on the map" IsVisible="{Binding Path=Route.ReadyToBuild}" />
-                <CheckBox Content="Show Sprints" VerticalAlignment="Center" Margin="8,0,0,0" IsChecked="{Binding Path=ShowSprints}" ToolTip="Show the sprint segments on the map" IsVisible="{Binding Path=Route.ReadyToBuild}" />
-                <Button Content="+" Margin="8,0,0,0" Click="ZoomIn_Click" ToolTip="Zoom in" IsEnabled="{Binding Path=Route.ReadyToBuild}" IsVisible="{Binding Path=Route.ReadyToBuild}" />
-                <Button Content="-" Margin="8,0,0,0" Click="ZoomOut_Click" ToolTip="Zoom out" IsEnabled="{Binding Path=Route.ReadyToBuild}" IsVisible="{Binding Path=Route.ReadyToBuild}" />
-                <Button Content="◻" Margin="8,0,0,0" Click="ResetZoom_Click" ToolTip="Fit to screen" IsEnabled="{Binding Path=Route.ReadyToBuild}" IsVisible="{Binding Path=Route.ReadyToBuild}" />
+                <Button Content="🚮" Command="{Binding Path=ClearRouteCommand}" ToolTip.Tip="Clear route" />
+                <Button Content="🌐" Command="{Binding Path=ResetWorldCommand}" ToolTip.Tip="Select world and sport" />
+                <Button Content="💾" Command="{Binding Path=SaveRouteCommand}" ToolTip.Tip="Save route" />
+                <Button Content="📂" Command="{Binding Path=OpenRouteCommand}" ToolTip.Tip="Open route" />
+                <Button Content="⭯" Command="{Binding Path=RemoveLastSegmentCommand}" ToolTip.Tip="Remove last segment"/>
+                <CheckBox Content="Show KOMs" VerticalAlignment="Center" Margin="8,0,0,0" IsChecked="{Binding Path=ShowClimbs}" ToolTip.Tip="Show the KOM start (red) and finish (green) markers on the map" IsVisible="{Binding Path=Route.ReadyToBuild}" />
+                <CheckBox Content="Show Sprints" VerticalAlignment="Center" Margin="8,0,0,0" IsChecked="{Binding Path=ShowSprints}" ToolTip.Tip="Show the sprint segments on the map" IsVisible="{Binding Path=Route.ReadyToBuild}" />
+                <Button Content="+" Margin="8,0,0,0" Click="ZoomIn_Click" ToolTip.Tip="Zoom in" IsEnabled="{Binding Path=Route.ReadyToBuild}" IsVisible="{Binding Path=Route.ReadyToBuild}" />
+                <Button Content="-" Margin="8,0,0,0" Click="ZoomOut_Click" ToolTip.Tip="Zoom out" IsEnabled="{Binding Path=Route.ReadyToBuild}" IsVisible="{Binding Path=Route.ReadyToBuild}" />
+                <Button Content="◻" Margin="8,0,0,0" Click="ResetZoom_Click" ToolTip.Tip="Fit to screen" IsEnabled="{Binding Path=Route.ReadyToBuild}" IsVisible="{Binding Path=Route.ReadyToBuild}" />
             </StackPanel>
 
             <Grid Grid.Row="0" Grid.RowSpan="2" Grid.Column="0">
@@ -311,8 +323,7 @@
                           HorizontalAlignment="Stretch"
                           Padding="0" 
                           Margin="0"
-                          ItemsSource="{Binding Path=Route.Sequence}" 
-                          AlternationCount="2" 
+                          Items="{Binding Path=Route.Sequence}" 
                           BorderThickness="0"
                           ScrollViewer.HorizontalScrollBarVisibility="Disabled" 
                           ScrollViewer.VerticalScrollBarVisibility="Auto"
@@ -321,7 +332,7 @@
                           SelectionChanged="RouteListView_OnSelectionChanged"
                           KeyUp="RouteListView_KeyUp">
                     <ListBox.Resources>
-                        <Style Selector="ListBox">
+                        <Style Selector="ListBox" x:Key="ListBoxStyle">
                             <!-- TODO: Figure out if ListBox provides alternation as a pseudo selector -->
                             <!--<Style.Triggers>
                                 <Trigger Property="ItemsControl.AlternationIndex"  Value="0">
@@ -345,7 +356,7 @@
                         <DataTemplate DataType="viewModels:SegmentSequenceViewModel">
                             <Grid Margin="0">
                                 <Grid.Resources>
-                                    <Style Selector="TextBlock">
+                                    <Style Selector="TextBlock" x:Key="ListBoxItemStyle">
                                         <Setter Property="Foreground" Value="Black" />
                                         <Setter Property="FontWeight" Value="Bold" />
                                         <Setter Property="FontSize" Value="18" />

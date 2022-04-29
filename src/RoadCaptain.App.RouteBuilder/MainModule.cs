@@ -3,6 +3,8 @@
 // See LICENSE or https://choosealicense.com/licenses/artistic-2.0/
 
 using Autofac;
+using Avalonia.Controls;
+using RoadCaptain.App.RouteBuilder.Models;
 
 namespace RoadCaptain.App.RouteBuilder
 {
@@ -18,10 +20,12 @@ namespace RoadCaptain.App.RouteBuilder
             // Single instance because we keep track of the active window
             builder.RegisterType<WindowService>().As<IWindowService>().SingleInstance();
             builder.RegisterDecorator<DelegateDecorator, IWindowService>();
+            
+            builder.RegisterType<UserPreferences>().AsSelf().SingleInstance();
 
             builder
                 .RegisterAssemblyTypes(ThisAssembly)
-                .Where(type => type.Namespace.EndsWith(".Views"))
+                .Where(type => type.Namespace.EndsWith(".Views") && type.BaseType == typeof(Window))
                 .AsSelf();
 
             builder
