@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
@@ -17,15 +15,31 @@ namespace RoadCaptain.App.RouteBuilder.Views
         private const int KomMarkerHeight = 32;
         private const int KomMarkerWidth = 6;
 
-        private MainWindowViewModel _windowViewModel;
-        private SKMatrix _currentMatrix;
-        private string _highlightedSegmentId;
+        private SKMatrix? _currentMatrix;
+        private string? _highlightedSegmentId;
+        private MainWindowViewModel? _viewModel;
 
-        public MainWindow() 
+        public MainWindow()
         {
             InitializeComponent();
+        }
 
-            _windowViewModel = DataContext as MainWindowViewModel;
+        private MainWindowViewModel ViewModel
+        {
+            get
+            {
+                if (_viewModel == null)
+                {
+                    _viewModel = DataContext as MainWindowViewModel;
+                }
+
+                if (_viewModel == null)
+                {
+                    throw new InvalidOperationException("View model wasn't initialized properly, did you forget to assign it to the DataContext?");
+                }
+
+                return _viewModel;
+            }
         }
 
         private void TriggerRepaint()
@@ -36,7 +50,7 @@ namespace RoadCaptain.App.RouteBuilder.Views
             }
             else
             {
-                Dispatcher.UIThread.InvokeAsync((Action)TriggerRepaint);
+                Dispatcher.UIThread.InvokeAsync(TriggerRepaint);
             }
         }
 
@@ -179,19 +193,19 @@ namespace RoadCaptain.App.RouteBuilder.Views
             canvas.RotateDegrees(angle, point.X, point.Y);
 
             canvas.DrawRect(
-                point.X - (KomMarkerWidth / 2),
-                point.Y - (KomMarkerHeight / 2),
+                point.X - KomMarkerWidth / 2,
+                point.Y - KomMarkerHeight / 2,
                 KomMarkerWidth,
                 KomMarkerHeight,
                 paint);
         }
-        
+
         private void MainWindow_Initialized(object? sender, EventArgs eventArgs)
         {
             // TODO: Fix Skia canvas rendering
             //_windowViewModel.CreatePathsForSegments(SkElement.CanvasSize.Width, SkElement.CanvasSize.Height);
         }
-        
+
         private void SkElement_OnPointerReleased(object? sender, PointerReleasedEventArgs e)
         {
             if (sender is not Canvas skiaElement)
@@ -199,9 +213,9 @@ namespace RoadCaptain.App.RouteBuilder.Views
                 return;
             }
 
-            if (_windowViewModel.IsPanning)
+            if (ViewModel.IsPanning)
             {
-                _windowViewModel.EndPan();
+                ViewModel.EndPan();
                 return;
             }
 
@@ -209,7 +223,7 @@ namespace RoadCaptain.App.RouteBuilder.Views
 
             var canvasCoordinate = ConvertMousePositionToCanvasCoordinate(skiaElement, position);
 
-            _windowViewModel.SelectSegmentCommand.Execute(canvasCoordinate);
+            ViewModel.SelectSegmentCommand.Execute(canvasCoordinate);
         }
 
         private void RouteListView_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -229,9 +243,9 @@ namespace RoadCaptain.App.RouteBuilder.Views
         {
             if (sender is ListBox { SelectedItem: SegmentSequenceViewModel viewModel } && e.Key == Key.Delete)
             {
-                if (viewModel == _windowViewModel.Route.Last)
+                if (viewModel == ViewModel.Route.Last)
                 {
-                    _windowViewModel.RemoveLastSegmentCommand.Execute(null);
+                    ViewModel.RemoveLastSegmentCommand.Execute(null);
                     // TODO: Figure out how to do this
                     //if (RouteListView.HasItems)
                     //{
@@ -243,24 +257,18 @@ namespace RoadCaptain.App.RouteBuilder.Views
 
         private void MainWindow_OnActivated(object sender, EventArgs e)
         {
-            if (_windowViewModel == null)
-            {
-                _windowViewModel = DataContext as MainWindowViewModel;
-            }
-
-            Task.Factory.StartNew(() => _windowViewModel.CheckForNewVersion());
+            Task.Factory.StartNew(() => ViewModel.CheckForNewVersion());
         }
 
         private void SkElement_OnPointerMoved(object? sender, PointerEventArgs e)
         {
             if (sender is not Canvas skiaElement)
             {
-                return;
             }
 
             // TODO: Fix this
             //var position = e.GetPosition((IInputElement)sender);
-            
+
             //if (e.LeftButton == MouseButtonState.Pressed)
             //{
             //    if (!_windowViewModel.IsPanning)
@@ -311,21 +319,23 @@ namespace RoadCaptain.App.RouteBuilder.Views
 
         private void ZoomIn_Click(object sender, RoutedEventArgs e)
         {
-            _windowViewModel.ZoomIn(ConvertMousePositionToCanvasCoordinate(SkElement, new Point(SkElement.Width / 2, SkElement.Height / 2)));
+            ViewModel.ZoomIn(ConvertMousePositionToCanvasCoordinate(SkElement,
+                new Point(SkElement.Width / 2, SkElement.Height / 2)));
 
             TriggerRepaint();
         }
 
         private void ZoomOut_Click(object sender, RoutedEventArgs e)
         {
-            _windowViewModel.ZoomOut(ConvertMousePositionToCanvasCoordinate(SkElement, new Point(SkElement.Width / 2, SkElement.Height / 2)));
+            ViewModel.ZoomOut(ConvertMousePositionToCanvasCoordinate(SkElement,
+                new Point(SkElement.Width / 2, SkElement.Height / 2)));
 
             TriggerRepaint();
         }
 
         private void ResetZoom_Click(object sender, RoutedEventArgs e)
         {
-            _windowViewModel.ResetZoomAndPan();
+            ViewModel.ResetZoomAndPan();
 
             TriggerRepaint();
         }
@@ -335,9 +345,9 @@ namespace RoadCaptain.App.RouteBuilder.Views
             // This is the canvas to WPF element scaling, not the canvas scaling itself
             var scalingFactor = skiaElement.Width / skiaElement.Width;
 
-            var matrixConverted = _currentMatrix.MapPoint(
-                    (float)(position.X * scalingFactor),
-                    (float)(position.Y * scalingFactor));
+            var matrixConverted = _currentMatrix.Value.MapPoint(
+                (float)(position.X * scalingFactor),
+                (float)(position.Y * scalingFactor));
 
             return new Point(matrixConverted.X, matrixConverted.Y);
         }
@@ -359,6 +369,7 @@ namespace RoadCaptain.App.RouteBuilder.Views
         //        _windowViewModel.ZoomOut(canvasCoordinate);
         //    }
         //}
+
         private void AvaloniaObject_OnPropertyChanged(object? sender, AvaloniaPropertyChangedEventArgs e)
         {
             if (e.Property.Name == nameof(ClientSize))

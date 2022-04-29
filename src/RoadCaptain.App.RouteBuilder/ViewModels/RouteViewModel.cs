@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Linq;
 using ReactiveUI;
 using CommandResult = RoadCaptain.App.Shared.Commands.CommandResult;
@@ -15,9 +14,9 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
         private readonly ISegmentStore _segmentStore;
         private readonly ObservableCollection<SegmentSequenceViewModel> _sequence = new();
 
-        private string _name;
-        private World _world;
-        private SportType _sport;
+        private string? _name;
+        private World? _world;
+        private SportType _sport = SportType.Unknown;
 
         public RouteViewModel(IRouteStore routeStore, ISegmentStore segmentStore)
         {
@@ -31,13 +30,13 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
         public double TotalAscent => Math.Round(Sequence.Sum(s => s.Ascent), 1);
         public double TotalDescent => Math.Round(Sequence.Sum(s => s.Descent), 1);
 
-        public SegmentSequenceViewModel Last => Sequence.LastOrDefault();
-        public string OutputFilePath { get; set; }
+        public SegmentSequenceViewModel? Last => Sequence.LastOrDefault();
+        public string? OutputFilePath { get; set; }
         public bool IsTainted { get; private set; }
 
         public string Name
         {
-            get => _name;
+            get => _name ?? string.Empty;
             set
             {
                 if (value == _name)
@@ -50,7 +49,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             }
         }
 
-        public World World
+        public World? World
         {
             get => _world;
             set
@@ -84,10 +83,13 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
 
         public bool ReadyToBuild => World != null && Sport != SportType.Unknown;
 
-        public event PropertyChangedEventHandler PropertyChanged;
-
         public void StartOn(Segment segment)
         {
+            if (_world == null)
+            {
+                throw new InvalidOperationException("Can't set a start segment because the world hasn't been selected yet");
+            }
+
             var segmentDirection = SegmentDirection.Unknown;
 
             var routesStartingOnSegment = _world.SpawnPoints.Where(s => s.SegmentId == segment.Id).Select(s => s.Direction).ToList();
@@ -129,6 +131,11 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             SegmentDirection segmentDirection,
             SegmentDirection newSegmentDirection)
         {
+            if (Last == null)
+            {
+                throw new InvalidOperationException("Can't set turn on last segment because there is no last segment");
+            }
+
             Last.SetTurn(direction, ontoSegmentId, segmentDirection);
 
             var segmentSequenceViewModel = new SegmentSequenceViewModel(
@@ -192,11 +199,21 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
 
         private string GetZwiftRouteName(SegmentSequenceViewModel startingSegment)
         {
+            if (_world == null)
+            {
+                throw new InvalidOperationException("Can't get route name because no world has been selected");
+            }
+
             var spawnPoint = _world.SpawnPoints
                 .SingleOrDefault(s =>
                     s.SegmentId == startingSegment.SegmentId && s.Direction == startingSegment.Direction);
 
-            return spawnPoint?.ZwiftRouteName;
+            if (spawnPoint == null)
+            {
+                throw new InvalidOperationException($"No spawn point found for segment '{startingSegment.SegmentId}'");
+            }
+
+            return spawnPoint.ZwiftRouteName;
         }
 
         public CommandResult Reset()
@@ -268,30 +285,34 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             this.RaisePropertyChanged(nameof(TotalDescent));
         }
 
-        public SegmentSequenceViewModel RemoveLast()
+        public SegmentSequenceViewModel? RemoveLast()
         {
-            var lastSegment = Last;
-
-            if (lastSegment == _sequence.First())
+            if (Last != null)
             {
-                _sequence.Clear();
+                var lastSegment = Last;
+
+                if (lastSegment == _sequence.First())
+                {
+                    _sequence.Clear();
+                }
+                else
+                {
+                    _sequence.Remove(lastSegment);
+
+                    Last.ResetTurn();
+                }
+
+                IsTainted = _sequence.Any();
+
+                this.RaisePropertyChanged(nameof(Sequence));
+                this.RaisePropertyChanged(nameof(TotalDistance));
+                this.RaisePropertyChanged(nameof(TotalAscent));
+                this.RaisePropertyChanged(nameof(TotalDescent));
+
+                return lastSegment;
             }
-            else
-            {
-                _sequence.Remove(lastSegment);
 
-                Last.ResetTurn();
-            }
-            
-
-            IsTainted = _sequence.Any();
-
-            this.RaisePropertyChanged(nameof(Sequence));
-            this.RaisePropertyChanged(nameof(TotalDistance));
-            this.RaisePropertyChanged(nameof(TotalAscent));
-            this.RaisePropertyChanged(nameof(TotalDescent));
-
-            return lastSegment;
+            return null;
         }
     }
 }
