@@ -17,25 +17,6 @@ namespace RoadCaptain.App.RouteBuilder
         {
         }
 
-        //public void ShowMainWindow()
-        //{
-        //    if (CurrentWindow is MainWindow)
-        //    {
-        //        Activate(CurrentWindow);
-        //    }
-        //    else
-        //    {
-        //        var window = Resolve<MainWindow>();
-
-        //        if (CurrentWindow != null)
-        //        {
-        //            Close(CurrentWindow);
-        //        }
-
-        //        Show(window);
-        //    }
-        //}
-
         public string? ShowSaveFileDialog(string? previousLocation)
         {
             var initialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
