@@ -8,10 +8,10 @@ namespace RoadCaptain.App.Shared.Commands
     {
         private readonly Func<object?, bool>? _canExecute;
         private readonly Func<object?, Task<CommandResult>> _execute;
-        private Action<CommandResult>? _onFailure;
-        private Action<CommandResult>? _onSuccess;
-        private Action<CommandResult>? _onSuccessWithWarnings;
-        private Action<CommandResult>? _onNotExecuted;
+        private Func<CommandResult, Task>? _onFailure;
+        private Func<CommandResult, Task>? _onSuccess;
+        private Func<CommandResult, Task>? _onSuccessWithWarnings;
+        private Func<CommandResult, Task>? _onNotExecuted;
 
         public AsyncRelayCommand(Func<object?, Task<CommandResult>> execute, Func<object?, bool>? canExecute = null)
         {
@@ -34,41 +34,53 @@ namespace RoadCaptain.App.Shared.Commands
 
             if (result.Result == Result.Success)
             {
-                _onSuccess?.Invoke(result);
+                if (_onSuccess != null)
+                {
+                    await _onSuccess(result);
+                }
             }
             else if (result.Result == Result.SuccessWithWarnings)
             {
-                _onSuccessWithWarnings?.Invoke(result);
+                if (_onSuccessWithWarnings != null)
+                {
+                    await _onSuccessWithWarnings(result);
+                }
             }
             else if (result.Result == Result.Failure)
             {
-                _onFailure?.Invoke(result);
+                if (_onFailure != null)
+                {
+                    await _onFailure(result);
+                }
             }
             else if (result.Result == Result.NotExecuted)
             {
-                _onNotExecuted?.Invoke(result);
+                if (_onNotExecuted != null)
+                {
+                    await _onNotExecuted(result);
+                }
             }
         }
 
-        public AsyncRelayCommand OnSuccess(Action<CommandResult> action)
+        public AsyncRelayCommand OnSuccess(Func<CommandResult, Task> action)
         {
             _onSuccess = action;
             return this;
         }
 
-        public AsyncRelayCommand OnSuccessWithWarnings(Action<CommandResult> action)
+        public AsyncRelayCommand OnSuccessWithWarnings(Func<CommandResult, Task> action)
         {
             _onSuccessWithWarnings = action;
             return this;
         }
 
-        public AsyncRelayCommand OnFailure(Action<CommandResult> action)
+        public AsyncRelayCommand OnFailure(Func<CommandResult, Task> action)
         {
             _onFailure = action;
             return this;
         }
 
-        public AsyncRelayCommand OnNotExecuted(Action<CommandResult> action)
+        public AsyncRelayCommand OnNotExecuted(Func<CommandResult, Task> action)
         {
             _onNotExecuted = action;
             return this;

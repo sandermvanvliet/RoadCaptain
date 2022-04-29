@@ -119,7 +119,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
 
             SelectSportCommand = new AsyncRelayCommand(
                 _ => SelectSport(_ as SportViewModel),
-                _ => true);
+                _ => _ is SportViewModel);
 
             ResetDefaultSportCommand = new RelayCommand(
                 _ => ResetDefaultSport(),
