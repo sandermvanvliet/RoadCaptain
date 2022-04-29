@@ -28,8 +28,13 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             }
         }
 
-        public string Image =>
-            $"avares://RoadCaptain.App.Shared/Assets/world-{_world.Id.ToLower()}.jpg";
+        public string Image
+        {
+            get
+            {
+                return $"avares://RoadCaptain.App.Shared/Assets/world-{_world.Id.ToLower()}.jpg";
+            }
+        }
 
         public string Name => _world.Name;
         public bool CanSelect => _world.Status == WorldStatus.Available;

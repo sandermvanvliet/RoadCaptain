@@ -1,4 +1,5 @@
 using Avalonia;
+using Avalonia.Controls;
 using Avalonia.Media;
 using ReactiveUI;
 
@@ -48,11 +49,12 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
         public DrawingImage? Image {
             get
             {
-                var resource = Application.Current.Resources.ContainsKey($"{Sport}DrawingImage")
-                    ? Application.Current.Resources[$"{Sport}DrawingImage"]
-                    : null;
+                if (Application.Current.TryFindResource($"{Sport}DrawingImage", out var resource))
+                {
+                    return resource as DrawingImage;
+                }
 
-                return resource as DrawingImage;
+                return null;
             }
         }
     }
