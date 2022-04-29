@@ -1,5 +1,6 @@
 ﻿using System;
 using Avalonia.Controls;
+using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Threading;
 
 namespace RoadCaptain.App.RouteBuilder
@@ -15,7 +16,7 @@ namespace RoadCaptain.App.RouteBuilder
             _dispatcher = dispatcher;
         }
 
-        public string ShowOpenFileDialog(string previousLocation)
+        public string? ShowOpenFileDialog(string? previousLocation)
         {
             return InvokeIfNeeded(() => _decorated.ShowOpenFileDialog(previousLocation));
         }
@@ -25,9 +26,9 @@ namespace RoadCaptain.App.RouteBuilder
             InvokeIfNeeded(() => _decorated.ShowErrorDialog(message, owner));
         }
 
-        public void ShowMainWindow()
+        public void ShowMainWindow(IApplicationLifetime applicationLifetime)
         {
-            InvokeIfNeeded(() => _decorated.ShowMainWindow());
+            InvokeIfNeeded(() => _decorated.ShowMainWindow(applicationLifetime));
         }
 
         public void ShowNewVersionDialog(Release release)
@@ -35,7 +36,7 @@ namespace RoadCaptain.App.RouteBuilder
             InvokeIfNeeded(() => _decorated.ShowNewVersionDialog(release));
         }
 
-        public string ShowSaveFileDialog(string previousLocation)
+        public string? ShowSaveFileDialog(string? previousLocation)
         {
             return InvokeIfNeeded(() => _decorated.ShowSaveFileDialog(previousLocation));
         }

@@ -7,7 +7,7 @@ namespace RoadCaptain.App.RouteBuilder.Models
 
         public void Save()
         {
-            throw new System.NotImplementedException();
+            // TODO: Implement preferences saving
         }
     }
 }

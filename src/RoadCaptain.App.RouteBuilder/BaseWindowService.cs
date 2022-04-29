@@ -1,13 +1,17 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Autofac;
 using Avalonia.Controls;
+using Avalonia.Controls.ApplicationLifetimes;
 
 namespace RoadCaptain.App.RouteBuilder
 {
     public abstract class BaseWindowService
     {
         private readonly IComponentContext _componentContext;
+        private IApplicationLifetime _applicationLifetime;
 
         protected BaseWindowService(IComponentContext componentContext)
         {
@@ -16,31 +20,34 @@ namespace RoadCaptain.App.RouteBuilder
 
         protected Window? CurrentWindow { get; private set; }
 
-        public string ShowOpenFileDialog(string previousLocation)
+        public string? ShowOpenFileDialog(string? previousLocation)
         {
-            //var initialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+            var initialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
 
-            //if (!string.IsNullOrEmpty(previousLocation) && Directory.Exists(previousLocation))
-            //{
-            //    initialDirectory = previousLocation;
-            //}
+            if (!string.IsNullOrEmpty(previousLocation) && Directory.Exists(previousLocation))
+            {
+                initialDirectory = previousLocation;
+            }
 
-            //var dialog = new OpenFileDialog
-            //{
-            //    AddExtension = true,
-            //    DefaultExt = ".json",
-            //    Filter = "JSON files (.json)|*.json",
-            //    Multiselect = false,
-            //    InitialDirectory = initialDirectory
-            //};
+            var dialog = new OpenFileDialog
+            {
+                Directory = initialDirectory,
+                AllowMultiple = false,
+                Filters = new List<FileDialogFilter>
+                {
+                    new() { Extensions = new List<string>{"*.json"}, Name = "RoadCaptain route file (.json)"}
+                },
+                Title = "Open RoadCaptain route file"
+            };
 
-            //var result = ShowDialog(dialog).GetValueOrDefault();
+            var selectedFiles = dialog.ShowAsync(CurrentWindow).GetAwaiter().GetResult();
 
-            //return result
-            //    ? dialog.FileName
-            //    : null;
+            if (selectedFiles != null && selectedFiles.Any())
+            {
+                return selectedFiles.First();
+            }
 
-            throw new NotImplementedException();
+            return null;
         }
 
         public void ShowNewVersionDialog(Release release)
@@ -89,7 +96,7 @@ namespace RoadCaptain.App.RouteBuilder
         {
             return _componentContext.Resolve<TType>();
         }
-
+        
         protected virtual bool? ShowDialog(Window window)
         {
             if (window.Owner == null)
@@ -104,7 +111,13 @@ namespace RoadCaptain.App.RouteBuilder
 
         protected virtual void Show(Window window)
         {
+            if (_applicationLifetime is IClassicDesktopStyleApplicationLifetime desktop && desktop.MainWindow == null)
+            {
+                desktop.MainWindow = window;
+            }
+
             CurrentWindow = window;
+
             window.Show();
         }
 
@@ -124,5 +137,10 @@ namespace RoadCaptain.App.RouteBuilder
         //{
         //    return dialog.ShowDialog(CurrentWindow);
         //}
+
+        protected void InitializeApplicationLifetime(IApplicationLifetime applicationLifetime)
+        {
+            _applicationLifetime = applicationLifetime;
+        }
     }
 }

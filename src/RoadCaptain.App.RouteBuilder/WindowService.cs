@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using Autofac;
 using Avalonia.Controls;
+using Avalonia.Controls.ApplicationLifetimes;
 using RoadCaptain.App.RouteBuilder.Views;
 
 namespace RoadCaptain.App.RouteBuilder
@@ -31,32 +33,29 @@ namespace RoadCaptain.App.RouteBuilder
         //    }
         //}
 
-        //public string ShowSaveFileDialog(string previousLocation)
-        //{
-        //    var initialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+        public string? ShowSaveFileDialog(string? previousLocation)
+        {
+            var initialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
 
-        //    if (!string.IsNullOrEmpty(previousLocation) && Directory.Exists(previousLocation))
-        //    {
-        //        initialDirectory = previousLocation;
-        //    }
+            if (!string.IsNullOrEmpty(previousLocation) && Directory.Exists(previousLocation))
+            {
+                initialDirectory = previousLocation;
+            }
 
-        //    var dialog = new SaveFileDialog
-        //    {
-        //        AddExtension = true,
-        //        DefaultExt = ".json",
-        //        Filter = "JSON files (.json)|*.json|GPS Exchange Format (.gpx)|*.gpx",
-        //        InitialDirectory = initialDirectory
-        //    };
+            var dialog = new SaveFileDialog
+            {
+                Directory = initialDirectory,
+                DefaultExtension = "*.json",
+                Filters = new List<FileDialogFilter>
+                {
+                    new() { Extensions = new List<string>{"*.json"}, Name = "RoadCaptain route file (.json)"},
+                    new() { Extensions = new List<string>{"*.gpx"}, Name = "GPS Exchange Format (.gpx)"}
+                },
+                Title = "Save RoadCaptain route file",
+            };
 
-        //    var result = ShowDialog(dialog).GetValueOrDefault();
-
-        //    if (!result)
-        //    {
-        //        return null;
-        //    }
-
-        //    return dialog.FileName;
-        //}
+            return dialog.ShowAsync(CurrentWindow).GetAwaiter().GetResult();
+        }
 
         //public bool ShowDefaultSportSelectionDialog(SportType sport)
         //{
@@ -92,14 +91,13 @@ namespace RoadCaptain.App.RouteBuilder
             throw new NotImplementedException();
         }
 
-        public void ShowMainWindow()
+        public void ShowMainWindow(IApplicationLifetime applicationLifetime)
         {
-            throw new NotImplementedException();
-        }
+            InitializeApplicationLifetime(applicationLifetime);
 
-        public string ShowSaveFileDialog(string previousLocation)
-        {
-            throw new NotImplementedException();
+            var desktopMainWindow = Resolve<MainWindow>();
+
+            base.Show(desktopMainWindow);
         }
 
         public bool ShowDefaultSportSelectionDialog(SportType sport)

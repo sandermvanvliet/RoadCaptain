@@ -1,12 +1,9 @@
 using System;
 using Autofac;
 using Avalonia;
-using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using Avalonia.Threading;
 using Microsoft.Extensions.Configuration;
-using RoadCaptain.App.RouteBuilder.ViewModels;
-using RoadCaptain.App.RouteBuilder.Views;
 using Serilog.Core;
 
 namespace RoadCaptain.App.RouteBuilder
@@ -14,7 +11,7 @@ namespace RoadCaptain.App.RouteBuilder
     public partial class App : Application
     {
         private readonly Logger _logger;
-        private readonly IContainer _container;
+        private readonly IWindowService _windowService;
 
         public App()
         {
@@ -31,9 +28,11 @@ namespace RoadCaptain.App.RouteBuilder
                 .AddJsonFile("autofac.app.routebuilder.development.json", true)
                 .Build();
 
-            _container = InversionOfControl
+            var container = InversionOfControl
                 .ConfigureContainer(configuration, _logger, Dispatcher.UIThread)
                 .Build();
+
+            _windowService = container.Resolve<IWindowService>();
         }
 
         public override void Initialize()
@@ -43,12 +42,12 @@ namespace RoadCaptain.App.RouteBuilder
 
         public override void OnFrameworkInitializationCompleted()
         {
-            if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
+            if (ApplicationLifetime == null)
             {
-                var desktopMainWindow = _container.Resolve<MainWindow>();
-
-                desktop.MainWindow = desktopMainWindow;
+                throw new InvalidOperationException("Application lifetime has not been initialized");
             }
+
+            _windowService.ShowMainWindow(ApplicationLifetime);
 
             base.OnFrameworkInitializationCompleted();
         }
