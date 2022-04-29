@@ -6,6 +6,7 @@ using Autofac;
 using Autofac.Core.Activators.Reflection;
 using Avalonia.Controls;
 using RoadCaptain.App.RouteBuilder.Models;
+using RoadCaptain.App.RouteBuilder.ViewModels;
 
 namespace RoadCaptain.App.RouteBuilder
 {
@@ -26,13 +27,13 @@ namespace RoadCaptain.App.RouteBuilder
 
             builder
                 .RegisterAssemblyTypes(ThisAssembly)
-                .Where(type => type.Namespace.EndsWith(".Views") && type.BaseType == typeof(Window))
+                .Where(type => type.BaseType == typeof(Window) && type.Namespace.EndsWith(".Views"))
                 .UsingConstructor(new MostParametersConstructorSelector())
                 .AsSelf();
 
             builder
                 .RegisterAssemblyTypes(ThisAssembly)
-                .Where(type => type.Namespace.EndsWith(".ViewModels"))
+                .Where(type => type.BaseType == typeof(ViewModelBase) && type.Namespace.EndsWith(".ViewModels"))
                 .AsSelf();
         }
     }

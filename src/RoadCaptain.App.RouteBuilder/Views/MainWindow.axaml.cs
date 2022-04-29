@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
@@ -25,12 +26,54 @@ namespace RoadCaptain.App.RouteBuilder.Views
         public MainWindow(MainWindowViewModel viewModel) 
         {
             ViewModel = viewModel;
+            ViewModel.PropertyChanged += WindowViewModelPropertyChanged;
             DataContext = viewModel;
 
             InitializeComponent();
         }
 
         private MainWindowViewModel ViewModel { get; }
+
+        private void WindowViewModelPropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            switch (e.PropertyName)
+            {
+                case nameof(ViewModel.SelectedSegment):
+                case nameof(ViewModel.SegmentPaths):
+                    // Reset any manually selected item in the list
+                    _highlightedSegmentId = null;
+                    TriggerRepaint();
+                    break;
+                case nameof(ViewModel.Route):
+                    // Ensure the last added segment is visible
+                    if (RouteListView.ItemCount > 0)
+                    {
+                        RouteListView.ScrollIntoView(RouteListView.ItemCount - 1);
+                    }
+
+                    // When a world is selected the path segments
+                    // need to be generated which needs the canvas
+                    // size. Therefore we need to call that from
+                    // this handler
+                    if (ViewModel.Route.World != null && !ViewModel.SegmentPaths.Any())
+                    {
+                        ViewModel.CreatePathsForSegments((float)SkElement.Width, (float)SkElement.Height);
+                    }
+
+                    // Redraw when the route changes so that the
+                    // route path is painted correctly
+                    TriggerRepaint();
+                    break;
+                case nameof(ViewModel.RiderPosition):
+                case nameof(ViewModel.ShowClimbs):
+                case nameof(ViewModel.ShowSprints):
+                case nameof(ViewModel.Zoom):
+                case nameof(ViewModel.Pan):
+                    TriggerRepaint();
+                    break;
+            }
+        }
+
 
         private void TriggerRepaint()
         {
@@ -51,8 +94,8 @@ namespace RoadCaptain.App.RouteBuilder.Views
             // Purely for readability
             var canvas = args.Surface.Canvas;
 
-            canvas.Translate(-(float)_windowViewModel.Pan.X, -(float)_windowViewModel.Pan.Y);
-            canvas.Scale(_windowViewModel.Zoom, _windowViewModel.Zoom, (float)_windowViewModel.ZoomCenter.X, (float)_windowViewModel.ZoomCenter.Y);
+            canvas.Translate(-(float)ViewModel.Pan.X, -(float)ViewModel.Pan.Y);
+            canvas.Scale(ViewModel.Zoom, ViewModel.Zoom, (float)ViewModel.ZoomCenter.X, (float)ViewModel.ZoomCenter.Y);
 
             // Store the inverse of the scale/translate matrix
             // so that we can convert a click on the canvas to
@@ -61,15 +104,15 @@ namespace RoadCaptain.App.RouteBuilder.Views
 
             canvas.Clear();
 
-            canvas.DrawPath(_windowViewModel.RoutePath, SkiaPaints.RoutePathPaint);
+            canvas.DrawPath(ViewModel.RoutePath, SkiaPaints.RoutePathPaint);
 
             // Lowest layer are the segments
-            foreach (var (segmentId, skiaPath) in _windowViewModel.SegmentPaths)
+            foreach (var (segmentId, skiaPath) in ViewModel.SegmentPaths)
             {
                 SKPaint segmentPaint;
 
                 // Use a different color for the selected segment
-                if (segmentId == _windowViewModel.SelectedSegment?.Id)
+                if (segmentId == ViewModel.SelectedSegment?.Id)
                 {
                     segmentPaint = SkiaPaints.SelectedSegmentPathPaint;
                 }
@@ -77,7 +120,7 @@ namespace RoadCaptain.App.RouteBuilder.Views
                 {
                     segmentPaint = SkiaPaints.SegmentHighlightPaint;
                 }
-                else if (_windowViewModel.Route.Last == null && _windowViewModel.Route.IsSpawnPointSegment(segmentId))
+                else if (ViewModel.Route.Last == null && ViewModel.Route.IsSpawnPointSegment(segmentId))
                 {
                     segmentPaint = SkiaPaints.SpawnPointSegmentPathPaint;
                 }
@@ -89,13 +132,13 @@ namespace RoadCaptain.App.RouteBuilder.Views
                 canvas.DrawPath(skiaPath, segmentPaint);
             }
 
-            if (_windowViewModel.ShowClimbs || _windowViewModel.ShowSprints)
+            if (ViewModel.ShowClimbs || ViewModel.ShowSprints)
             {
                 var drawnMarkers = new List<TrackPoint>();
 
-                foreach (var (_, marker) in _windowViewModel.Markers)
+                foreach (var (_, marker) in ViewModel.Markers)
                 {
-                    if (marker.Type == SegmentType.Climb && _windowViewModel.ShowClimbs)
+                    if (marker.Type == SegmentType.Climb && ViewModel.ShowClimbs)
                     {
                         canvas.DrawPath(marker.Path, SkiaPaints.ClimbSegmentPaint);
 
@@ -119,7 +162,7 @@ namespace RoadCaptain.App.RouteBuilder.Views
                             }
                         }
                     }
-                    else if (marker.Type == SegmentType.Sprint && _windowViewModel.ShowSprints)
+                    else if (marker.Type == SegmentType.Sprint && ViewModel.ShowSprints)
                     {
                         canvas.DrawPath(marker.Path, SkiaPaints.SprintSegmentPaint);
 
@@ -147,10 +190,10 @@ namespace RoadCaptain.App.RouteBuilder.Views
             }
 
             // Route markers
-            if (_windowViewModel.RoutePath.Points.Any())
+            if (ViewModel.RoutePath.Points.Any())
             {
                 // Route end marker
-                var endPoint = _windowViewModel.RoutePath.Points.Last();
+                var endPoint = ViewModel.RoutePath.Points.Last();
 
                 canvas.DrawCircle(endPoint, 15, SkiaPaints.StartMarkerPaint);
                 canvas.DrawCircle(endPoint, 15 - SkiaPaints.StartMarkerPaint.StrokeWidth, SkiaPaints.EndMarkerFillPaint);
@@ -158,15 +201,15 @@ namespace RoadCaptain.App.RouteBuilder.Views
                 // Route start marker, needs to be after the end marker to
                 // ensure the start is always visible if the route starts and
                 // ends at the same location.
-                var startPoint = _windowViewModel.RoutePath.Points.First();
+                var startPoint = ViewModel.RoutePath.Points.First();
 
                 canvas.DrawCircle(startPoint, 15, SkiaPaints.StartMarkerPaint);
                 canvas.DrawCircle(startPoint, 15 - SkiaPaints.StartMarkerPaint.StrokeWidth, SkiaPaints.StartMarkerFillPaint);
             }
 
-            if (_windowViewModel.RiderPosition != null)
+            if (ViewModel.RiderPosition != null)
             {
-                var scaledAndTranslated = _windowViewModel.RiderPosition.Value;
+                var scaledAndTranslated = ViewModel.RiderPosition.Value;
                 const int radius = 15;
                 canvas
                     .DrawCircle(scaledAndTranslated.X, scaledAndTranslated.Y, radius, SkiaPaints.RiderPositionPaint);
@@ -193,7 +236,7 @@ namespace RoadCaptain.App.RouteBuilder.Views
         private void MainWindow_Initialized(object? sender, EventArgs eventArgs)
         {
             // TODO: Fix Skia canvas rendering
-            //_windowViewModel.CreatePathsForSegments(SkElement.CanvasSize.Width, SkElement.CanvasSize.Height);
+            //ViewModel.CreatePathsForSegments(SkElement.CanvasSize.Width, SkElement.CanvasSize.Height);
         }
 
         private void SkElement_OnPointerReleased(object? sender, PointerReleasedEventArgs e)
@@ -236,11 +279,10 @@ namespace RoadCaptain.App.RouteBuilder.Views
                 if (viewModel == ViewModel.Route.Last)
                 {
                     ViewModel.RemoveLastSegmentCommand.Execute(null);
-                    // TODO: Figure out how to do this
-                    //if (RouteListView.HasItems)
-                    //{
-                    //    RouteListView.SelectedItem = RouteListView.Items[^1];
-                    //}
+                    if (RouteListView.ItemCount > 0)
+                    {
+                        RouteListView.SelectedItem = RouteListView.Items.Cast<object>().Last();
+                    }
                 }
             }
         }
@@ -261,35 +303,35 @@ namespace RoadCaptain.App.RouteBuilder.Views
 
             //if (e.LeftButton == MouseButtonState.Pressed)
             //{
-            //    if (!_windowViewModel.IsPanning)
+            //    if (!ViewModel.IsPanning)
             //    {
-            //        _windowViewModel.StartPan(position);
+            //        ViewModel.StartPan(position);
             //    }
             //    else
             //    {
-            //        _windowViewModel.PanMove(position);
+            //        ViewModel.PanMove(position);
             //    }
 
             //    return;
             //}
 
-            //if (_windowViewModel.IsPanning)
+            //if (ViewModel.IsPanning)
             //{
-            //    _windowViewModel.EndPan();
+            //    ViewModel.EndPan();
             //    return;
             //}
 
             //// Hit test to see whether we're over a KOM/Sprint segment
 
             //// If sprints and climbs are not shown then exit
-            //if (!_windowViewModel.ShowSprints && !_windowViewModel.ShowClimbs)
+            //if (!ViewModel.ShowSprints && !ViewModel.ShowClimbs)
             //{
             //    return;
             //}
 
             //var scaledPoint = ConvertMousePositionToCanvasCoordinate(skiaElement, position);
 
-            //var matches = _windowViewModel
+            //var matches = ViewModel
             //    .Markers
             //    .Values
             //    .Where(kv => kv.Bounds.Contains((float)scaledPoint.X, (float)scaledPoint.Y))
@@ -299,11 +341,11 @@ namespace RoadCaptain.App.RouteBuilder.Views
             //{
             //    var marker = matches.Single();
 
-            //    _windowViewModel.Model.StatusBarInfo("{0} {1}", marker.Type.ToString(), marker.Name);
+            //    ViewModel.Model.StatusBarInfo("{0} {1}", marker.Type.ToString(), marker.Name);
             //}
             //else
             //{
-            //    _windowViewModel.Model.ClearStatusBar();
+            //    ViewModel.Model.ClearStatusBar();
             //}
         }
 
@@ -352,11 +394,11 @@ namespace RoadCaptain.App.RouteBuilder.Views
 
         //    if (e.Delta > 0)
         //    {
-        //        _windowViewModel.ZoomIn(canvasCoordinate);
+        //        ViewModel.ZoomIn(canvasCoordinate);
         //    }
         //    else if (e.Delta < 0)
         //    {
-        //        _windowViewModel.ZoomOut(canvasCoordinate);
+        //        ViewModel.ZoomOut(canvasCoordinate);
         //    }
         //}
 
@@ -365,7 +407,7 @@ namespace RoadCaptain.App.RouteBuilder.Views
             if (e.Property.Name == nameof(ClientSize))
             {
                 // TODO: Fix Skia canvas rendering
-                //_windowViewModel.CreatePathsForSegments(SkElement.CanvasSize.Width, SkElement.CanvasSize.Height);
+                //ViewModel.CreatePathsForSegments(SkElement.CanvasSize.Width, SkElement.CanvasSize.Height);
             }
         }
     }
