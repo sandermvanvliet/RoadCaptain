@@ -65,11 +65,9 @@
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
-            <Style.Triggers>
-                <Trigger Property="IsEnabled" Value="False">
-                    <Setter Property="Background" Value="DarkGray"/>
-                </Trigger>
-            </Style.Triggers>
+        </Style>
+        <Style Selector="Button:disabled">
+            <Setter Property="Background" Value="DarkGray"/>
         </Style>
         <Style x:Key="LinkButtonStyle" Selector="Button">
             <Setter Property="Background" Value="Transparent" />
@@ -79,7 +77,7 @@
             <Setter Property="Cursor" Value="Hand" />
             <Setter Property="Padding" Value="0" />
         </Style>
-        <Style x:Key="WorldButtonStyle" Selector="Button">
+        <Style x:Key="WorldButtonStyle" Selector="Button.world">
             <Setter Property="Background" Value="White" />
             <Setter Property="Cursor" Value="Hand" />
             <Setter Property="Template">
@@ -90,14 +88,12 @@
                             <Border.Style>
                                 <Style Selector="Border">
                                     <Setter Property="BorderBrush" Value="#1192CC" />
-                                    <Style.Triggers>
-                                        <Trigger Property="IsMouseOver" Value="True">
-                                            <Setter Property="BorderBrush" Value="#FF6141"/>
-                                        </Trigger>
-                                        <DataTrigger Binding="{Binding Path=IsSelected,Mode=OneWay}" Value="True">
-                                            <Setter Property="BorderBrush" Value="#FF6141"/>
-                                        </DataTrigger>
-                                    </Style.Triggers>
+                                </Style>
+                                <Style Selector="Border:pointerover">
+                                    <Setter Property="BorderBrush" Value="#FF6141"/>
+                                </Style>
+                                <Style Selector="Border[IsSelected=True]">
+                                    <Setter Property="BorderBrush" Value="#FF6141"/>
                                 </Style>
                             </Border.Style>
                             <Grid>
@@ -116,14 +112,12 @@
                                     <Image.Style>
                                         <Style Selector="Image">
                                             <Setter Property="Opacity" Value="0.5" />
-                                            <Style.Triggers>
-                                                <Trigger Property="IsMouseOver" Value="True">
-                                                    <Setter Property="Opacity" Value="1"/>
-                                                </Trigger>
-                                                <DataTrigger Binding="{Binding Path=IsSelected,Mode=OneWay}" Value="True">
-                                                    <Setter Property="Opacity" Value="1"/>
-                                                </DataTrigger>
-                                            </Style.Triggers>
+                                        </Style>
+                                        <Style Selector="Image:pointerover">
+                                            <Setter Property="Opacity" Value="1"/>
+                                        </Style>
+                                        <Style Selector="Image[IsSelected=True]">
+                                            <Setter Property="Opacity" Value="1"/>
                                         </Style>
                                     </Image.Style>
                                 </Image>
@@ -133,11 +127,9 @@
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
-            <Style.Triggers>
-                <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background" Value="#FF6141" />
-                </Trigger>
-            </Style.Triggers>
+        </Style>
+        <Style Selector="Button.world:pointerover">
+            <Setter Property="Background" Value="#FF6141" />
         </Style>
         <converters:BooleanConverter x:Key="BooleanConverter" />
     </Window.Resources>
@@ -210,7 +202,7 @@
                     </ItemsControl.ItemsPanel>
                     <ItemsControl.ItemTemplate>
                         <DataTemplate DataType="{x:Type viewModels:WorldViewModel}">
-                            <Button Style="{StaticResource WorldButtonStyle}" Command="{Binding Path=DataContext.SelectWorldCommand,RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}" CommandParameter="{Binding}">
+                            <Button Classes="world" Command="{Binding Path=DataContext.SelectWorldCommand,RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}" CommandParameter="{Binding}">
                                 <Button.Content>
                                     <Border Margin="0" Height="28" VerticalAlignment="Top" HorizontalAlignment="Right" BorderBrush="#FF6141" BorderThickness="1,0,0,1" CornerRadius="0,5,0,5" Background="White">
                                         <TextBlock Text="{Binding Path=Name}" FontWeight="Bold" FontSize="16" Foreground="Black" Padding="4,2,4,0"  />
@@ -242,7 +234,7 @@
                     </ItemsControl.ItemsPanel>
                     <ItemsControl.ItemTemplate>
                         <DataTemplate DataType="{x:Type viewModels:SportViewModel}">
-                            <Button Style="{StaticResource WorldButtonStyle}" 
+                            <Button Classes="world"
                                     Command="{Binding Path=DataContext.SelectSportCommand, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=Window}}" 
                                     CommandParameter="{Binding}">
                                 <Button.Content>
@@ -266,17 +258,14 @@
                     <Style Selector="Button" BasedOn="{StaticResource ButtonStyle}"/>
                 </StackPanel.Resources>
                 <Button Command="{Binding Path=SimulateCommand}" ToolTip="Simulate route" Cursor="Hand">
-                    <Button.Style>
+                    <Button.Styles>
                         <Style Selector="Button" BasedOn="{StaticResource ButtonStyle}">
                             <Setter Property="Content" Value="▶️" />
-                            <!-- default value -->
-                            <Style.Triggers>
-                                <DataTrigger Binding="{Binding Path=SimulationState}" Value="Running">
-                                    <Setter Property="Content" Value="⏸️" />
-                                </DataTrigger>
-                            </Style.Triggers>
                         </Style>
-                    </Button.Style>
+                        <Style Selector="Button[SimulationState=Running]">
+                            <Setter Property="Content" Value="⏸️" />
+                        </Style>
+                    </Button.Styles>
                 </Button>
                 <Button Content="🚮" Command="{Binding Path=ClearRouteCommand}" ToolTip="Clear route" />
                 <Button Content="🌐" Command="{Binding Path=ResetWorldCommand}" ToolTip="Select world and sport" />
@@ -333,7 +322,8 @@
                           KeyUp="RouteListView_KeyUp">
                     <ListBox.Resources>
                         <Style Selector="ListBox">
-                            <Style.Triggers>
+                            <!-- TODO: Figure out if ListBox provides alternation as a pseudo selector -->
+                            <!--<Style.Triggers>
                                 <Trigger Property="ItemsControl.AlternationIndex"  Value="0">
                                     <Setter Property="Background">
                                         <Setter.Value>
@@ -348,7 +338,7 @@
                                         </Setter.Value>
                                     </Setter>
                                 </Trigger>
-                            </Style.Triggers>
+                            </Style.Triggers>-->
                         </Style>
                     </ListBox.Resources>
                     <ListBox.ItemTemplate>
