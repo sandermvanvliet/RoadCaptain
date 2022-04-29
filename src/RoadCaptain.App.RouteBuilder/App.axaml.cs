@@ -46,8 +46,6 @@ namespace RoadCaptain.App.RouteBuilder
             if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
             {
                 var desktopMainWindow = _container.Resolve<MainWindow>();
-                
-                desktopMainWindow.DataContext = _container.Resolve<MainWindowViewModel>();
 
                 desktop.MainWindow = desktopMainWindow;
             }

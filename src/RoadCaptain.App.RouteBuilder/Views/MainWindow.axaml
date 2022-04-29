@@ -1,12 +1,12 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:viewModels="using:RoadCaptain.App.RouteBuilder.ViewModels"
-        xmlns:converters="using:RoadCaptain.App.Shared.Converters"
+        xmlns:converters="clr-namespace:RoadCaptain.App.Shared.Converters;assembly=RoadCaptain.App.Shared"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        mc:Ignorable="d"
         x:Class="RoadCaptain.App.RouteBuilder.Views.MainWindow"
-        Icon="/Assets/avalonia-logo.ico"
+        Icon="avares://RoadCaptain.App.Shared/icon.png"
         Title="{Binding Path=Model.WindowTitle}"
         Height="465" Width="867"
         PropertyChanged="AvaloniaObject_OnPropertyChanged"
@@ -154,7 +154,7 @@
                        Foreground="{Binding Path=Model.StatusBarForeground,FallbackValue={x:Static Brushes.White}}" />
             <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Right" IsEnabled="True">
                 <TextBlock Text="Version:" Foreground="White" />
-                <Button Content="{Binding Path=Version}" d:Content="0.0.0.0" Margin="4,0,2,0" CommandParameter="{Binding Path=ChangelogUri}" Command="{Binding Path=OpenLinkCommand}" Classes="link" />
+                <Button Content="{Binding Path=Version}" Margin="4,0,2,0" CommandParameter="{Binding Path=ChangelogUri}" Command="{Binding Path=OpenLinkCommand}" Classes="link" />
                 <TextBlock Text="🔗" Margin="0,0,4,0" />
             </StackPanel>
         </Grid>
@@ -185,7 +185,6 @@
 
             <Grid Grid.Row="0" Grid.RowSpan="2" Grid.Column="1"
                   IsVisible="{Binding Path=Route.ReadyToBuild,Converter={StaticResource BooleanConverter},ConverterParameter=invert}"
-                  d:IsVisible="True"
                   Margin="3,40,4,4">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="30" />
@@ -304,17 +303,17 @@
                             HorizontalAlignment="Stretch" Padding="8,4,0,0" Height="56">
                     <StackPanel DataContext="{Binding Path=Route}" Orientation="Vertical" VerticalAlignment="Top">
                         <StackPanel Orientation="Horizontal" Height="30">
-                            <TextBlock Text="{Binding Path=TotalDistance,StringFormat=0.0}" d:Text="12.34" FontSize="26" Foreground="White" FontWeight="Bold" VerticalAlignment="Bottom"/>
+                            <TextBlock Text="{Binding Path=TotalDistance,StringFormat=0.0}" FontSize="26" Foreground="White" FontWeight="Bold" VerticalAlignment="Bottom"/>
                             <TextBlock Text="km" FontSize="16" Foreground="White" FontWeight="Bold" VerticalAlignment="Bottom" Padding="2,0,0,2"/>
                         </StackPanel>
 
                         <StackPanel Orientation="Horizontal" Height="18">
                             <TextBlock Text="🡽" FontSize="15" Margin="0,-2,0,0" Padding="0" FontWeight="Light" />
-                            <TextBlock Text="{Binding Path=TotalAscent,StringFormat=0.0}" d:Text="125" FontSize="16" FontWeight="Bold" VerticalAlignment="Bottom" />
+                            <TextBlock Text="{Binding Path=TotalAscent,StringFormat=0.0}" FontSize="16" FontWeight="Bold" VerticalAlignment="Bottom" />
                             <TextBlock Text="m" FontSize="10" FontWeight="Bold" VerticalAlignment="Bottom" Padding="0,0,0,1.5"/>
 
                             <TextBlock Text="🡾" FontSize="15" Margin="0,-2,0,0" Padding="0" FontWeight="Light" />
-                            <TextBlock Text="{Binding Path=TotalDescent,StringFormat=0.0}" d:Text="54" FontSize="16" FontWeight="Bold" VerticalAlignment="Bottom" />
+                            <TextBlock Text="{Binding Path=TotalDescent,StringFormat=0.0}" FontSize="16" FontWeight="Bold" VerticalAlignment="Bottom" />
                             <TextBlock Text="m" FontSize="10" FontWeight="Bold" VerticalAlignment="Bottom" Padding="0,0,0,1.5"/>
                         </StackPanel>
                     </StackPanel>
@@ -372,7 +371,7 @@
                                 </Grid.ColumnDefinitions>
 
                                 <TextBlock Grid.Column="0" Grid.Row="0" Text="{Binding Path=SequenceNumber}" HorizontalAlignment="Center" />
-                                <TextBlock Grid.Column="0" Grid.Row="1" Text="{Binding Path=TurnGlyph}"  d:Text="🡽" FontSize="14" Foreground="#1192CC"  Margin="4,-2,0,0" Padding="0" FontWeight="Light" HorizontalAlignment="Left" VerticalAlignment="Center" />
+                                <TextBlock Grid.Column="0" Grid.Row="1" Text="{Binding Path=TurnGlyph}"  FontSize="14" Foreground="#1192CC"  Margin="4,-2,0,0" Padding="0" FontWeight="Light" HorizontalAlignment="Left" VerticalAlignment="Center" />
 
                                 <TextBlock Grid.Column="1" Grid.Row="0" Text="{Binding Path=SegmentName}" Margin="4,0,0,0" />
 
@@ -397,7 +396,7 @@
                 </ListBox>
                 <StackPanel Orientation="Horizontal" Grid.Row="2">
                     <TextBlock Text="Route name:" VerticalAlignment="Center" Margin="4,0,0,0" FontWeight="Bold" />
-                    <TextBox Text="{Binding Path=Route.Name}" Margin="4,4,4,2" Width="215" VerticalAlignment="Center" d:Text="Derp derp derp" />
+                    <TextBox Text="{Binding Path=Route.Name}" Margin="4,4,4,2" Width="215" VerticalAlignment="Center" />
                 </StackPanel>
             </Grid>
         </Grid>

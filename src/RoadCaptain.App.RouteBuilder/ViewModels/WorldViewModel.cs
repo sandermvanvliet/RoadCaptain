@@ -29,7 +29,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
         }
 
         public string Image =>
-            $"pack://application:,,,/RoadCaptain.UserInterface.Shared;component/Assets/world-{_world.Id}.jpg";
+            $"avares://RoadCaptain.App.Shared/Assets/world-{_world.Id.ToLower()}.jpg";
 
         public string Name => _world.Name;
         public bool CanSelect => _world.Status == WorldStatus.Available;

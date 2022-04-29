@@ -3,6 +3,7 @@
 // See LICENSE or https://choosealicense.com/licenses/artistic-2.0/
 
 using Autofac;
+using Autofac.Core.Activators.Reflection;
 using Avalonia.Controls;
 using RoadCaptain.App.RouteBuilder.Models;
 
@@ -26,6 +27,7 @@ namespace RoadCaptain.App.RouteBuilder
             builder
                 .RegisterAssemblyTypes(ThisAssembly)
                 .Where(type => type.Namespace.EndsWith(".Views") && type.BaseType == typeof(Window))
+                .UsingConstructor(new MostParametersConstructorSelector())
                 .AsSelf();
 
             builder

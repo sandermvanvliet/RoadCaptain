@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
 		<TargetFramework>net6.0</TargetFramework>
@@ -12,5 +12,10 @@
 		<!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
 		<PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="0.10.12" />
 		<PackageReference Include="ReactiveUI" Version="13.2.10" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <AvaloniaResource Include="icon.png" />
+	  <AvaloniaResource Include="Assets\**" />
 	</ItemGroup>
 </Project>

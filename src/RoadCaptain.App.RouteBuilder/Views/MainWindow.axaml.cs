@@ -17,30 +17,20 @@ namespace RoadCaptain.App.RouteBuilder.Views
 
         private SKMatrix? _currentMatrix;
         private string? _highlightedSegmentId;
-        private MainWindowViewModel? _viewModel;
 
         public MainWindow()
         {
+        }
+
+        public MainWindow(MainWindowViewModel viewModel) 
+        {
+            ViewModel = viewModel;
+            DataContext = viewModel;
+
             InitializeComponent();
         }
 
-        private MainWindowViewModel ViewModel
-        {
-            get
-            {
-                if (_viewModel == null)
-                {
-                    _viewModel = DataContext as MainWindowViewModel;
-                }
-
-                if (_viewModel == null)
-                {
-                    throw new InvalidOperationException("View model wasn't initialized properly, did you forget to assign it to the DataContext?");
-                }
-
-                return _viewModel;
-            }
-        }
+        private MainWindowViewModel ViewModel { get; }
 
         private void TriggerRepaint()
         {
