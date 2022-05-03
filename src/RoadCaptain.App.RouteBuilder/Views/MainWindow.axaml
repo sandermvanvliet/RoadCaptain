@@ -94,6 +94,7 @@
                 Grid.Row="1" Grid.Column="1"
                         PointerMoved="SkElement_OnPointerMoved"
                         PointerReleased="SkElement_OnPointerReleased"
+				PointerWheelChanged="SkElement_OnPointerWheelChanged"
                         Name="SkElement"
                         Cursor="Hand"
                 DataContext="{Binding}"/>

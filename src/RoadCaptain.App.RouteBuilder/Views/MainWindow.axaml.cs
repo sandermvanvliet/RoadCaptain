@@ -242,24 +242,24 @@ namespace RoadCaptain.App.RouteBuilder.Views
 
             return new Point(matrixConverted.X, matrixConverted.Y);
         }
+        
+        private void SkElement_OnPointerWheelChanged(object? sender, PointerWheelEventArgs e)
+        {
+            var skiaCanvas = sender as SkiaCanvas;
 
-        //private void SkElement_OnMouseWheel(object sender, MouseWheelEventArgs e)
-        //{
-        //    var skiaCanvas = sender as Canvas;
+            var position = e.GetPosition((IInputElement)sender);
 
-        //    var position = e.GetPosition((IInputElement)sender);
-
-        //    var canvasCoordinate = ConvertMousePositionToCanvasCoordinate(skiaCanvas, position);
-
-        //    if (e.Delta > 0)
-        //    {
-        //        ViewModel.ZoomIn(canvasCoordinate);
-        //    }
-        //    else if (e.Delta < 0)
-        //    {
-        //        ViewModel.ZoomOut(canvasCoordinate);
-        //    }
-        //}
+            var canvasCoordinate = ConvertMousePositionToCanvasCoordinate(skiaCanvas, position);
+            
+            if (e.Delta.Y > 0)
+            {
+                ViewModel.ZoomIn(canvasCoordinate);
+            }
+            else if (e.Delta.Y < 0)
+            {
+                ViewModel.ZoomOut(canvasCoordinate);
+            }
+        }
 
         private void AvaloniaObject_OnPropertyChanged(object? sender, AvaloniaPropertyChangedEventArgs e)
         {
