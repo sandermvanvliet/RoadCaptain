@@ -11,8 +11,6 @@
         Title="{Binding Path=Model.WindowTitle}"
         Height="465" Width="867"
         d:DesignHeight="465" d:DesignWidth="867"
-        PropertyChanged="AvaloniaObject_OnPropertyChanged"
-        Initialized="MainWindow_Initialized"
         Activated="MainWindow_OnActivated"
         WindowState="Maximized">
 	<Window.Styles>

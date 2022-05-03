@@ -98,10 +98,6 @@ namespace RoadCaptain.App.RouteBuilder.Views
             }
         }
 
-        private void MainWindow_Initialized(object? sender, EventArgs eventArgs)
-        {
-        }
-
         private void SkElement_OnPointerReleased(object? sender, PointerReleasedEventArgs e)
         {
             if (sender is not SkiaCanvas skiaCanvas)
@@ -258,14 +254,6 @@ namespace RoadCaptain.App.RouteBuilder.Views
             else if (e.Delta.Y < 0)
             {
                 ViewModel.ZoomOut(canvasCoordinate);
-            }
-        }
-
-        private void AvaloniaObject_OnPropertyChanged(object? sender, AvaloniaPropertyChangedEventArgs e)
-        {
-            if (e.Property.Name == nameof(ClientSize))
-            {
-                ViewModel.CreatePathsForSegments((float)SkElement.CanvasSize.Width, (float)SkElement.CanvasSize.Height);
             }
         }
     }
