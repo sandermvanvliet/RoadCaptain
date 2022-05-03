@@ -48,7 +48,7 @@ namespace RoadCaptain.App.RouteBuilder
                 "Select default sport",
                 MessageBoxButton.YesNo,
                 CurrentWindow,
-                MessageBoxImage.Question);
+                MessageBoxIcon.Question);
 
             return result == MessageBoxResult.Yes;
         }
@@ -71,7 +71,7 @@ namespace RoadCaptain.App.RouteBuilder
                     "Clear route",
                     MessageBoxButton.YesNo,
                     CurrentWindow,
-                    MessageBoxImage.Question)
+                    MessageBoxIcon.Question)
                 .GetAwaiter()
                 .GetResult();
         }

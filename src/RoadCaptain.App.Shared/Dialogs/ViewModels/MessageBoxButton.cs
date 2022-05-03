@@ -2,16 +2,21 @@
 {
     public enum MessageBoxButton
     {
-        Ok,
-        Close,
-        YesNo,
-        YesNoCancel
+        Ok = 0,
+        OkCancel = 1,
+        AbortRetryIgnore = 2,
+        YesNoCancel = 3,
+        YesNo = 4,
+        RetryCancel = 5,
+        CancelTryContinue = 6,
     }
 
-    public enum MessageBoxImage
+    public enum MessageBoxIcon
     {
+        None,
         Question,
         Information,
-        Error
+        Error,
+        Warning
     }
 }

@@ -21,11 +21,19 @@ namespace RoadCaptain.App.Shared.Dialogs
 
         private void Button_OnClick(object? sender, RoutedEventArgs e)
         {
-            var tagValue = (sender as Button).Tag as string;
+            var tagValue = (sender as Button)?.Tag as string;
 
-            var result = Enum.Parse<MessageBoxResult>(tagValue);
-            
-            Close(result);
+            if (string.IsNullOrEmpty(tagValue) ||
+                "Default".Equals(tagValue, StringComparison.InvariantCultureIgnoreCase))
+            {
+                Close(MessageBoxResult.None);
+            }
+            else
+            {
+                var result = Enum.Parse<MessageBoxResult>(tagValue);
+
+                Close(result);
+            }
         }
 
         public static async Task<MessageBoxResult> ShowAsync(
@@ -33,11 +41,11 @@ namespace RoadCaptain.App.Shared.Dialogs
             string title,
             MessageBoxButton buttons,
             Window owner, 
-            MessageBoxImage image = MessageBoxImage.Information)
+            MessageBoxIcon icon = MessageBoxIcon.Information)
         {
             var messageBox = new MessageBox
             {
-                DataContext = new MessageBoxViewModel(buttons, title, message)
+                DataContext = new MessageBoxViewModel(buttons, title, message, icon)
             };
 
             return await messageBox.ShowDialog<MessageBoxResult>(owner);

@@ -67,7 +67,7 @@ namespace RoadCaptain.App.RouteBuilder
                 "An error occurred",
                 MessageBoxButton.Ok,
                 owner,
-                MessageBoxImage.Error)
+                MessageBoxIcon.Error)
                 .GetAwaiter()
                 .GetResult();
         }
