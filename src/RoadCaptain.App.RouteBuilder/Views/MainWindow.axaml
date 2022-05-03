@@ -4,11 +4,13 @@
         xmlns:converters="clr-namespace:RoadCaptain.App.Shared.Converters;assembly=RoadCaptain.App.Shared"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:controls="clr-namespace:RoadCaptain.App.RouteBuilder.Controls"
         mc:Ignorable="d"
         x:Class="RoadCaptain.App.RouteBuilder.Views.MainWindow"
         Icon="avares://RoadCaptain.App.Shared/icon.png"
         Title="{Binding Path=Model.WindowTitle}"
         Height="465" Width="867"
+        d:DesignHeight="465" d:DesignWidth="867"
         PropertyChanged="AvaloniaObject_OnPropertyChanged"
         Initialized="MainWindow_Initialized"
         Activated="MainWindow_OnActivated"
@@ -86,20 +88,20 @@
 				<RowDefinition Height="*" />
 			</Grid.RowDefinitions>
 
-			<!--<Canvas Grid.Row="1" Grid.Column="1" 
-                        PaintSurface="SKElement_OnPaintSurface" 
-                        MouseLeftButtonUp="SkElement_OnMouseLeftButtonUp"
-                        MouseMove="SkElement_OnMouseMove"
-                        MouseWheel="SkElement_OnMouseWheel"
+			<controls:SkiaCanvas
+                Grid.Row="1" Grid.Column="1"
+                        PointerMoved="SkElement_OnPointerMoved"
+                        PointerReleased="SkElement_OnPointerReleased"
                         Name="SkElement"
-                        Cursor="Hand">
-            </Canvas>-->
-			<Canvas Grid.Row="1" Grid.Column="1"
+                        Cursor="Hand"
+                DataContext="{Binding}"/>
+
+			<!--<Canvas Grid.Row="1" Grid.Column="1"
                     PointerMoved="SkElement_OnPointerMoved"
                     PointerReleased="SkElement_OnPointerReleased"
                     Name="SkElement"
                     Cursor="Hand">
-			</Canvas>
+			</Canvas>-->
 
 			<Grid Grid.Row="0" Grid.RowSpan="2" Grid.Column="1"
                   IsVisible="{Binding Path=Route.ReadyToBuild,Converter={StaticResource BooleanConverter},ConverterParameter=invert}"
@@ -236,10 +238,10 @@
 															</Style>
 														</Image.Styles>
 													</Image>
-                                                    <Border Margin="0" Height="28" VerticalAlignment="Top" HorizontalAlignment="Right" BorderBrush="#FF6141" BorderThickness="1,0,0,1" CornerRadius="0,5,0,5" Background="White"
+													<Border Margin="0" Height="28" VerticalAlignment="Top" HorizontalAlignment="Right" BorderBrush="#FF6141" BorderThickness="1,0,0,1" CornerRadius="0,5,0,5" Background="White"
                                                             IsVisible="{Binding Path=IsDefault}">
-                                                        <TextBlock Text="Default" FontSize="16" Foreground="Black" Padding="4,2,4,0"  />
-                                                    </Border>
+														<TextBlock Text="Default" FontSize="16" Foreground="Black" Padding="4,2,4,0"  />
+													</Border>
 												</Grid>
 											</Border>
 										</ControlTemplate>
