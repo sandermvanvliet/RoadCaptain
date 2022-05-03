@@ -7,13 +7,15 @@ using SkiaSharp;
 
 namespace RoadCaptain.App.RouteBuilder.Controls
 {
-    public class SkiaCanvas : Control
+    public class SkiaCanvas : UserControl 
     {
         private CustomDrawOp? _customDrawOp;
 
         public SkiaCanvas()
         {
             ClipToBounds = true;
+            IsHitTestVisible = true;
+            Background = new SolidColorBrush(Colors.Transparent);
         }
 
         public override void Render(DrawingContext context)
