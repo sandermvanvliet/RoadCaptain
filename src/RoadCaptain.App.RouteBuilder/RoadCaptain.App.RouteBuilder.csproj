@@ -1,52 +1,65 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <OutputType>WinExe</OutputType>
-    <TargetFramework>net6.0</TargetFramework>
-    <Nullable>enable</Nullable>
-    <!--Avalonia doesen't support TrimMode=link currently,but we are working on that https://github.com/AvaloniaUI/Avalonia/issues/6892 -->
-    <TrimMode>copyused</TrimMode>
-    <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
-  </PropertyGroup>
-  <ItemGroup>
-    <AvaloniaResource Include="Assets\**" />
-    <None Remove=".gitignore" />
-  </ItemGroup>
-  <ItemGroup>
-    <!--This helps with theme dll-s trimming.
+	<PropertyGroup>
+		<OutputType>WinExe</OutputType>
+		<TargetFramework Condition="'$(RuntimeIdentifier)'!='win-x64'">net6.0</TargetFramework>
+		<TargetFramework Condition="'$(RuntimeIdentifier)'=='win-x64'">net6.0-windows</TargetFramework>
+		<Nullable>enable</Nullable>
+		<!--Avalonia doesen't support TrimMode=link currently,but we are working on that https://github.com/AvaloniaUI/Avalonia/issues/6892 -->
+		<TrimMode>copyused</TrimMode>
+		<BuiltInComInteropSupport>true</BuiltInComInteropSupport>
+		<DefineConstants Condition="'$(RuntimeIdentifier)'=='win-x64'">WIN</DefineConstants>
+		<DefineConstants Condition="'$(RuntimeIdentifier)'=='linux-x64'">LINUX</DefineConstants>
+		<DefineConstants Condition="'$(RuntimeIdentifier)'=='osx-x64'">MACOS</DefineConstants>
+	</PropertyGroup>
+	<ItemGroup>
+		<AvaloniaResource Include="Assets\**" />
+		<None Remove=".gitignore" />
+	</ItemGroup>
+	<ItemGroup>
+		<!--This helps with theme dll-s trimming.
 	If you will publish your application in self-contained mode with p:PublishTrimmed=true and it will use Fluent theme Default theme will be trimmed from the output and vice versa.
 	https://github.com/AvaloniaUI/Avalonia/issues/5593 -->
-    <TrimmableAssembly Include="Avalonia.Themes.Fluent" />
-    <TrimmableAssembly Include="Avalonia.Themes.Default" />
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="Avalonia" Version="0.10.12" />
-    <PackageReference Include="Avalonia.Desktop" Version="0.10.12" />
-    <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
-    <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="0.10.12" />
-    <PackageReference Include="Avalonia.ReactiveUI" Version="0.10.12" />
-    <PackageReference Include="JetBrains.Annotations" Version="10.3.0" />
-    <PackageReference Include="Serilog.Sinks.Debug" Version="2.0.0" />
-    <PackageReference Include="XamlNameReferenceGenerator" Version="1.3.4" />
-    <PackageReference Include="Autofac" Version="6.3.0" />
-    <PackageReference Include="Autofac.Configuration" Version="6.0.0" />
-    <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="7.2.0" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="6.0.0" />
-    <PackageReference Include="Serilog" Version="2.10.0" />
-    <PackageReference Include="Serilog.Extensions.Hosting" Version="4.2.0" />
-    <PackageReference Include="Serilog.Sinks.Console" Version="4.0.1" />
-    <PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\RoadCaptain.Adapters\RoadCaptain.Adapters.csproj" />
-    <ProjectReference Include="..\RoadCaptain.App.Shared\RoadCaptain.App.Shared.csproj" />
-    <ProjectReference Include="..\RoadCaptain\RoadCaptain.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Update="autofac.app.routebuilder.development.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="autofac.app.routebuilder.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
+		<TrimmableAssembly Include="Avalonia.Themes.Fluent" />
+		<TrimmableAssembly Include="Avalonia.Themes.Default" />
+	</ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Avalonia" Version="0.10.12" />
+		<PackageReference Include="Avalonia.Desktop" Version="0.10.12" />
+		<!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
+		<PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="0.10.12" />
+		<PackageReference Include="Avalonia.ReactiveUI" Version="0.10.12" />
+		<PackageReference Include="JetBrains.Annotations" Version="10.3.0" />
+		<PackageReference Include="Serilog.Sinks.Debug" Version="2.0.0" />
+		<PackageReference Include="XamlNameReferenceGenerator" Version="1.3.4" />
+		<PackageReference Include="Autofac" Version="6.3.0" />
+		<PackageReference Include="Autofac.Configuration" Version="6.0.0" />
+		<PackageReference Include="Autofac.Extensions.DependencyInjection" Version="7.2.0" />
+		<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="6.0.0" />
+		<PackageReference Include="Serilog" Version="2.10.0" />
+		<PackageReference Include="Serilog.Extensions.Hosting" Version="4.2.0" />
+		<PackageReference Include="Serilog.Sinks.Console" Version="4.0.1" />
+		<PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
+	</ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\RoadCaptain.Adapters\RoadCaptain.Adapters.csproj" />
+		<ProjectReference Include="..\RoadCaptain.App.Shared\RoadCaptain.App.Shared.csproj" />
+		<ProjectReference Include="..\RoadCaptain\RoadCaptain.csproj" />
+	</ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\RoadCaptain.App.Windows\RoadCaptain.App.Windows.csproj" Condition="'$(RuntimeIdentifier)'=='win-x64'" />
+	</ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\RoadCaptain.App.Linux\RoadCaptain.App.Linux.csproj" Condition="'$(RuntimeIdentifier)'=='linux-x64'" />
+	</ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\RoadCaptain.App.MacOs\RoadCaptain.App.MacOs.csproj" Condition="'$(RuntimeIdentifier)'=='osx-x64'" />
+	</ItemGroup>
+	<ItemGroup>
+		<None Update="autofac.app.routebuilder.development.json">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="autofac.app.routebuilder.json">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+	</ItemGroup>
 </Project>

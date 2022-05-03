@@ -5,8 +5,9 @@
 using Autofac;
 using Autofac.Core.Activators.Reflection;
 using Avalonia.Controls;
-using RoadCaptain.App.RouteBuilder.Models;
 using RoadCaptain.App.RouteBuilder.ViewModels;
+using RoadCaptain.App.Shared.UserPreferences;
+using Module = Autofac.Module;
 
 namespace RoadCaptain.App.RouteBuilder
 {
@@ -22,14 +23,22 @@ namespace RoadCaptain.App.RouteBuilder
             // Single instance because we keep track of the active window
             builder.RegisterType<WindowService>().As<IWindowService>().SingleInstance();
             builder.RegisterDecorator<DelegateDecorator, IWindowService>();
-            
-            builder.RegisterType<UserPreferences>().AsSelf().SingleInstance();
 
             builder
                 .RegisterAssemblyTypes(ThisAssembly)
                 .Where(type => type.BaseType == typeof(Window) && type.Namespace.EndsWith(".Views"))
                 .UsingConstructor(new MostParametersConstructorSelector())
                 .AsSelf();
+
+#if WIN
+            builder.RegisterModule(new RoadCaptain.App.Windows.WindowsModule());
+#elif LINUX
+            builder.RegisterModule(new RoadCaptain.App.Linux.LinuxModule());
+#elif MACOS
+            builder.RegisterModule(new RoadCaptain.App.MacOs.MacOsModule());
+#else
+            builder.RegisterType<DummyUserPreferences>().As<IUserPreferences>().SingleInstance();
+#endif
 
             builder
                 .RegisterAssemblyTypes(ThisAssembly)

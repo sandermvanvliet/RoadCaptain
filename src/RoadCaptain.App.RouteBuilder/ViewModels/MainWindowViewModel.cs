@@ -8,11 +8,11 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Avalonia;
-using Avalonia.Threading;
 using ReactiveUI;
 using RoadCaptain.App.RouteBuilder.Models;
 using RoadCaptain.App.Shared.Commands;
 using RoadCaptain.App.Shared.Dialogs;
+using RoadCaptain.App.Shared.UserPreferences;
 using CommandResult = RoadCaptain.App.Shared.Commands.CommandResult;
 using RelayCommand = RoadCaptain.App.Shared.Commands.RelayCommand;
 using Result = RoadCaptain.App.Shared.Commands.Result;
@@ -37,7 +37,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
         private readonly IVersionChecker _versionChecker;
         private readonly IWindowService _windowService;
         private readonly IWorldStore _worldStore;
-        private readonly UserPreferences _userPreferences;
+        private readonly IUserPreferences _userPreferences;
         private WorldViewModel[] _worlds;
         private SportViewModel[] _sports;
         private List<Segment> _markers;
@@ -50,13 +50,16 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
 
         private const float ZoomDelta = 0.1f;
 
-        public MainWindowViewModel(IRouteStore routeStore, ISegmentStore segmentStore, IVersionChecker versionChecker, IWindowService windowService, IWorldStore worldStore, UserPreferences userPreferences)
+        public MainWindowViewModel(IRouteStore routeStore, ISegmentStore segmentStore, IVersionChecker versionChecker, IWindowService windowService, IWorldStore worldStore, IUserPreferences userPreferences)
         {
             _segments = new List<Segment>();
             _versionChecker = versionChecker;
             _windowService = windowService;
             _worldStore = worldStore;
+            
             _userPreferences = userPreferences;
+            _userPreferences.Load();
+
             Model = new MainWindowModel();
             Worlds = worldStore.LoadWorlds().Select(world => new WorldViewModel(world)).ToArray();
             Sports = new[] { new SportViewModel(SportType.Cycling), new SportViewModel(SportType.Running) };
