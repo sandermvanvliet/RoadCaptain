@@ -36,7 +36,7 @@
 				</Setter.Value>
 			</Setter>
 		</Style>
-		<Style Selector="Button.toolbar[IsEnabled=False]">
+		<Style Selector="Button.toolbar:disabled">
 			<Setter Property="Background" Value="DarkGray"/>
 		</Style>
 		<Style Selector="Button.link">

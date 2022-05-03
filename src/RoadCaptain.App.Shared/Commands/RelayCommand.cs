@@ -1,4 +1,6 @@
 ﻿using System;
+using System.ComponentModel;
+using System.Linq.Expressions;
 using System.Windows.Input;
 
 namespace RoadCaptain.App.Shared.Commands
@@ -73,9 +75,51 @@ namespace RoadCaptain.App.Shared.Commands
             return this;
         }
 
-        protected virtual void OnCanExecuteChanged()
+        public RelayCommand SubscribeTo<T>(INotifyPropertyChanged notifyPropertyChanged, Expression<Func<T>> expr)
         {
-            CanExecuteChanged?.Invoke(this, EventArgs.Empty);
+            var memberExpr = expr.Body as MemberExpression;
+            if (memberExpr == null)
+            {
+                throw new InvalidOperationException("Can only subscribe to a property");
+            }
+
+            var memberName = memberExpr.Member.Name;
+
+            if (memberExpr.Expression is MemberExpression m2)
+            {
+                var propChangedName = m2.Member.Name;
+
+                var propertyInfo = notifyPropertyChanged.GetType().GetProperty(propChangedName);
+                if(propertyInfo == null)
+                {
+                    return this;
+                }
+
+                var propertyChanged = propertyInfo.GetValue(notifyPropertyChanged) as INotifyPropertyChanged;
+                if (propertyChanged == null)
+                {
+                    return this;
+                }
+
+                notifyPropertyChanged = propertyChanged;
+            }
+
+            notifyPropertyChanged.PropertyChanged += (_, args) =>
+            {
+                if (args.PropertyName == memberName)
+                {
+                    OnCanExecuteChanged();
+                }
+            };
+
+            return this;
+        }
+
+        private void OnCanExecuteChanged()
+        {
+            var eventHandler = CanExecuteChanged;
+
+            eventHandler?.Invoke(this, EventArgs.Empty);
         }
     }
 }

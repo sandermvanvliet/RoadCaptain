@@ -22,7 +22,8 @@ using SkiaSharp;
 namespace RoadCaptain.App.RouteBuilder.ViewModels
 {
     public class MainWindowViewModel : ViewModelBase
-    {private Segment _selectedSegment;
+    {
+        private Segment _selectedSegment;
         private readonly Dictionary<string, SKRect> _segmentPathBounds = new();
         private List<Segment> _segments;
         private Task _simulationTask;
@@ -68,6 +69,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             SaveRouteCommand = new RelayCommand(
                     _ => SaveRoute(),
                     _ => Route.Sequence.Any())
+                .SubscribeTo(this, () => Route.Sequence)
                 .OnSuccess(_ => Model.StatusBarInfo("Route saved successfully"))
                 .OnSuccessWithWarnings(_ => Model.StatusBarInfo("Route saved successfully: {0}", _.Message))
                 .OnFailure(_ => Model.StatusBarError("Failed to save route because: {0}", _.Message))
@@ -82,6 +84,8 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             ClearRouteCommand = new RelayCommand(
                     _ => ClearRoute(),
                     _ => Route.ReadyToBuild && Route.Sequence.Any())
+                .SubscribeTo(this, () => Route.Sequence)
+                .SubscribeTo(this, () => Route.ReadyToBuild)
                 .OnSuccess(_ => Model.StatusBarInfo("Route cleared"))
                 .OnFailure(_ => Model.StatusBarError("Failed to clear route because: {0}", _.Message));
 
@@ -93,21 +97,23 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
                 .OnFailure(_ => Model.StatusBarWarning(_.Message));
 
             RemoveLastSegmentCommand = new RelayCommand(
-                _ => RemoveLastSegment(),
-                _ => Route.Sequence.Any())
-                    .OnSuccess(_ =>
-                    {
-                        Model.StatusBarInfo("Removed segment");
-                    })
-                    .OnSuccessWithWarnings(_ =>
-                    {
-                        Model.StatusBarInfo("Removed segment {0}", _.Message);
-                    })
-                    .OnFailure(_ => Model.StatusBarWarning(_.Message));
+                    _ => RemoveLastSegment(),
+                    _ => Route.Sequence.Any())
+                .SubscribeTo(this, () => Route.Sequence)
+                .OnSuccess(_ =>
+                {
+                    Model.StatusBarInfo("Removed segment");
+                })
+                .OnSuccessWithWarnings(_ =>
+                {
+                    Model.StatusBarInfo("Removed segment {0}", _.Message);
+                })
+                .OnFailure(_ => Model.StatusBarWarning(_.Message));
 
             SimulateCommand = new RelayCommand(
                     _ => SimulateRoute(),
-                    _ => Route.Sequence.Any());
+                    _ => Route.Sequence.Any())
+                .SubscribeTo(this, () => Route.Sequence);
 
             OpenLinkCommand = new RelayCommand(
                 _ => OpenLink(_ as string),
@@ -127,7 +133,8 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
 
             ResetWorldCommand = new RelayCommand(
                 _ => ResetWorldAndSport(),
-                _ => Route.World != null);
+                _ => Route.World != null)
+                .SubscribeTo(this, () => Route.World);
 
             Version = GetType().Assembly.GetName().Version?.ToString(4) ?? "0.0.0.0";
         }
@@ -150,13 +157,13 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             }
 
             Route.Reset();
-            
+
             SelectedSegment = null;
 
             RoutePath.Reset();
             SimulationState = SimulationState.NotStarted;
             _simulationIndex = 0;
-            
+
             _segments = null;
             SegmentPaths.Clear();
 
@@ -319,7 +326,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             {
                 _userPreferences.DefaultSport = value;
                 _userPreferences.Save();
-                
+
                 this.RaisePropertyChanged(nameof(DefaultSport));
                 this.RaisePropertyChanged(nameof(HasDefaultSport));
             }
@@ -748,7 +755,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             _userPreferences.Save();
 
             SelectedSegment = null;
-            
+
             ResetZoomAndPan();
 
             try
@@ -935,7 +942,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
                 this.RaisePropertyChanged(nameof(Sports));
             }
         }
-        
+
         public void CheckForNewVersion()
         {
             if (_haveCheckedVersion)
@@ -990,7 +997,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             // based on the start position of the
             // drag operation
             Pan = new Point(
-                Pan.X + (_previousPosition.X - position.X), 
+                Pan.X + (_previousPosition.X - position.X),
                 Pan.Y + (_previousPosition.Y - position.Y));
 
             _previousPosition = position;
