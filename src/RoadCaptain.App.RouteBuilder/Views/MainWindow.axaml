@@ -15,8 +15,8 @@
         Initialized="MainWindow_Initialized"
         Activated="MainWindow_OnActivated"
         WindowState="Maximized">
-	<Window.Resources>
-		<Style Selector="Button" x:Key="ButtonStyle">
+	<Window.Styles>
+		<Style Selector="Button.toolbar">
 			<Setter Property="Background" Value="#FF6141" />
 			<Setter Property="Foreground" Value="White" />
 			<Setter Property="Width" Value="40" />
@@ -30,16 +30,16 @@
 				<Setter.Value>
 					<ControlTemplate TargetType="Button">
 						<Border Name="borderZero" Background="{TemplateBinding Background}" CornerRadius="5">
-							<ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+							<ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" Content="{TemplateBinding Content}" />
 						</Border>
 					</ControlTemplate>
 				</Setter.Value>
 			</Setter>
 		</Style>
-		<Style Selector="Button[IsEnabled=False]" x:Key="DisabledButtonStyle">
+		<Style Selector="Button.toolbar[IsEnabled=False]">
 			<Setter Property="Background" Value="DarkGray"/>
 		</Style>
-		<Style Selector="Button.link" x:Key="LinkButtonStyle">
+		<Style Selector="Button.link">
 			<Setter Property="Background" Value="Transparent" />
 			<Setter Property="Foreground" Value="White" />
 			<Setter Property="BorderThickness" Value="0" />
@@ -47,13 +47,15 @@
 			<Setter Property="Cursor" Value="Hand" />
 			<Setter Property="Padding" Value="0" />
 		</Style>
-		<Style x:Key="WorldButtonStyle" Selector="Button.world">
+		<Style Selector="Button.world">
 			<Setter Property="Background" Value="White" />
 			<Setter Property="Cursor" Value="Hand" />
 		</Style>
-		<Style Selector="Button.world:pointerover" x:Key="WorldButtonHoverStyle">
+		<Style Selector="Button.world:pointerover">
 			<Setter Property="Background" Value="#FF6141" />
 		</Style>
+	</Window.Styles>
+	<Window.Resources>
 		<converters:BooleanConverter x:Key="BooleanConverter" />
 		<converters:ValueToBooleanConverter x:Key="ValueToBooleanConverter" />
 		<converters:BitmapConverter x:Key="BitmapConverter" />
@@ -258,9 +260,6 @@
                         HorizontalAlignment="Left"
                         Orientation="Horizontal"
                         Background="White">
-				<StackPanel.Resources>
-					<!--<Style Selector="Button" BasedOn="{StaticResource ButtonStyle}"/>-->
-				</StackPanel.Resources>
 				<Button Command="{Binding Path=SimulateCommand}" Cursor="Hand"
                         Classes.simulationRunning="{Binding Path=SimulationState,Converter={StaticResource ValueToBooleanConverter},ConverterParameter=Running}">
 					<Button.Styles>
@@ -272,16 +271,16 @@
 						</Style>
 					</Button.Styles>
 				</Button>
-				<Button Content="🚮" Command="{Binding Path=ClearRouteCommand}" ToolTip.Tip="Clear route" />
-				<Button Content="🌐" Command="{Binding Path=ResetWorldCommand}" ToolTip.Tip="Select world and sport" />
-				<Button Content="💾" Command="{Binding Path=SaveRouteCommand}" ToolTip.Tip="Save route" />
-				<Button Content="📂" Command="{Binding Path=OpenRouteCommand}" ToolTip.Tip="Open route" />
-				<Button Content="⭯" Command="{Binding Path=RemoveLastSegmentCommand}" ToolTip.Tip="Remove last segment"/>
+				<Button Content="🚮" Command="{Binding Path=ClearRouteCommand}" ToolTip.Tip="Clear route" Classes="toolbar" />
+				<Button Content="🌐" Command="{Binding Path=ResetWorldCommand}" ToolTip.Tip="Select world and sport" Classes="toolbar" />
+				<Button Content="💾" Command="{Binding Path=SaveRouteCommand}" ToolTip.Tip="Save route" Classes="toolbar" />
+				<Button Content="📂" Command="{Binding Path=OpenRouteCommand}" ToolTip.Tip="Open route" Classes="toolbar" />
+				<Button Content="⭯" Command="{Binding Path=RemoveLastSegmentCommand}" ToolTip.Tip="Remove last segment" Classes="toolbar"/>
 				<CheckBox Content="Show KOMs" VerticalAlignment="Center" Margin="8,0,0,0" IsChecked="{Binding Path=ShowClimbs}" ToolTip.Tip="Show the KOM start (red) and finish (green) markers on the map" IsVisible="{Binding Path=Route.ReadyToBuild}" />
 				<CheckBox Content="Show Sprints" VerticalAlignment="Center" Margin="8,0,0,0" IsChecked="{Binding Path=ShowSprints}" ToolTip.Tip="Show the sprint segments on the map" IsVisible="{Binding Path=Route.ReadyToBuild}" />
-				<Button Content="+" Margin="8,0,0,0" Click="ZoomIn_Click" ToolTip.Tip="Zoom in" IsEnabled="{Binding Path=Route.ReadyToBuild}" IsVisible="{Binding Path=Route.ReadyToBuild}" />
-				<Button Content="-" Margin="8,0,0,0" Click="ZoomOut_Click" ToolTip.Tip="Zoom out" IsEnabled="{Binding Path=Route.ReadyToBuild}" IsVisible="{Binding Path=Route.ReadyToBuild}" />
-				<Button Content="◻" Margin="8,0,0,0" Click="ResetZoom_Click" ToolTip.Tip="Fit to screen" IsEnabled="{Binding Path=Route.ReadyToBuild}" IsVisible="{Binding Path=Route.ReadyToBuild}" />
+				<Button Content="+" Margin="8,0,0,0" Click="ZoomIn_Click" ToolTip.Tip="Zoom in" IsEnabled="{Binding Path=Route.ReadyToBuild}" IsVisible="{Binding Path=Route.ReadyToBuild}" Classes="toolbar" />
+				<Button Content="-" Margin="8,0,0,0" Click="ZoomOut_Click" ToolTip.Tip="Zoom out" IsEnabled="{Binding Path=Route.ReadyToBuild}" IsVisible="{Binding Path=Route.ReadyToBuild}" Classes="toolbar" />
+				<Button Content="◻" Margin="8,0,0,0" Click="ResetZoom_Click" ToolTip.Tip="Fit to screen" IsEnabled="{Binding Path=Route.ReadyToBuild}" IsVisible="{Binding Path=Route.ReadyToBuild}" Classes="toolbar" />
 			</StackPanel>
 
 			<Grid Grid.Row="0" Grid.RowSpan="2" Grid.Column="0">
