@@ -52,8 +52,6 @@ namespace RoadCaptain.App.RouteBuilder.Controls
             }
 
             canvas.Save();
-
-            CurrentMatrix = canvas.TotalMatrix.Invert();
            
             RenderCanvas(canvas);
 

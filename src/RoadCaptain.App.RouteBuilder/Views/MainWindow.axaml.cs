@@ -157,10 +157,6 @@ namespace RoadCaptain.App.RouteBuilder.Views
 
         private void SkElement_OnPointerMoved(object? sender, PointerEventArgs e)
         {
-            if (sender is not Canvas skiaCanvas)
-            {
-            }
-
             // TODO: Fix this
             //var position = e.GetPosition((IInputElement)sender);
 
@@ -215,7 +211,7 @@ namespace RoadCaptain.App.RouteBuilder.Views
         private void ZoomIn_Click(object sender, RoutedEventArgs e)
         {
             ViewModel.ZoomIn(ConvertMousePositionToCanvasCoordinate(SkElement,
-                new Point(SkElement.Width / 2, SkElement.Height / 2)));
+                new Point(SkElement.Bounds.Width / 2, SkElement.Bounds.Height / 2)));
 
             TriggerRepaint();
         }
@@ -223,7 +219,7 @@ namespace RoadCaptain.App.RouteBuilder.Views
         private void ZoomOut_Click(object sender, RoutedEventArgs e)
         {
             ViewModel.ZoomOut(ConvertMousePositionToCanvasCoordinate(SkElement,
-                new Point(SkElement.Width / 2, SkElement.Height / 2)));
+                new Point(SkElement.Bounds.Width / 2, SkElement.Bounds.Height / 2)));
 
             TriggerRepaint();
         }

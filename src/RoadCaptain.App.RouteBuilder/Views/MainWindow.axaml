@@ -98,13 +98,6 @@
                         Cursor="Hand"
                 DataContext="{Binding}"/>
 
-			<!--<Canvas Grid.Row="1" Grid.Column="1"
-                    PointerMoved="SkElement_OnPointerMoved"
-                    PointerReleased="SkElement_OnPointerReleased"
-                    Name="SkElement"
-                    Cursor="Hand">
-			</Canvas>-->
-
 			<Grid Grid.Row="0" Grid.RowSpan="2" Grid.Column="1"
                   IsVisible="{Binding Path=Route.ReadyToBuild,Converter={StaticResource BooleanConverter},ConverterParameter=invert}"
                   Margin="3,40,4,4">
