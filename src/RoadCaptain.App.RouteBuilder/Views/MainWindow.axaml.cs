@@ -6,6 +6,7 @@ using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Threading;
+using Avalonia.VisualTree;
 using RoadCaptain.App.RouteBuilder.Controls;
 using RoadCaptain.App.RouteBuilder.ViewModels;
 
@@ -98,6 +99,58 @@ namespace RoadCaptain.App.RouteBuilder.Views
             }
         }
 
+        private void SkElement_OnPointerPressed(object? sender, PointerPressedEventArgs e)
+        {
+            var currentPoint = e.GetCurrentPoint(sender as IVisual);
+
+            if (currentPoint.Properties.IsLeftButtonPressed)
+            {
+                ViewModel.StartPan(currentPoint.Position);
+            }
+        }
+
+        private void SkElement_OnPointerMoved(object? sender, PointerEventArgs e)
+        {
+            var position = e.GetPosition((IInputElement?)sender);
+
+            if (!ViewModel.IsPanning)
+            {
+                return;
+            }
+
+            if (ViewModel.IsPanning)
+            {
+                ViewModel.PanMove(position);
+
+                return;
+            }
+
+            // Hit test to see whether we're over a KOM/Sprint segment
+
+            // If sprints and climbs are not shown then exit
+            if (!ViewModel.ShowSprints && !ViewModel.ShowClimbs)
+            {
+                return;
+            }
+
+            var matches = ViewModel
+                .Markers
+                .Values
+                .Where(kv => kv.Bounds.Contains((float)position.X, (float)position.Y))
+                .ToList();
+
+            if (matches.Count == 1)
+            {
+                var marker = matches.Single();
+
+                ViewModel.Model.StatusBarInfo("{0} {1}", marker.Type.ToString(), marker.Name);
+            }
+            else
+            {
+                ViewModel.Model.ClearStatusBar();
+            }
+        }
+
         private void SkElement_OnPointerReleased(object? sender, PointerReleasedEventArgs e)
         {
             if (sender is not SkiaCanvas skiaCanvas)
@@ -113,9 +166,7 @@ namespace RoadCaptain.App.RouteBuilder.Views
 
             var position = e.GetPosition((IInputElement)sender);
 
-            var canvasCoordinate = ConvertMousePositionToCanvasCoordinate(skiaCanvas, position);
-
-            ViewModel.SelectSegmentCommand.Execute(canvasCoordinate);
+            ViewModel.SelectSegmentCommand.Execute(position);
         }
 
         private void RouteListView_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -151,71 +202,16 @@ namespace RoadCaptain.App.RouteBuilder.Views
             Task.Factory.StartNew(() => ViewModel.CheckForNewVersion());
         }
 
-        private void SkElement_OnPointerMoved(object? sender, PointerEventArgs e)
-        {
-            // TODO: Fix this
-            //var position = e.GetPosition((IInputElement)sender);
-
-            //if (e.LeftButton == MouseButtonState.Pressed)
-            //{
-            //    if (!ViewModel.IsPanning)
-            //    {
-            //        ViewModel.StartPan(position);
-            //    }
-            //    else
-            //    {
-            //        ViewModel.PanMove(position);
-            //    }
-
-            //    return;
-            //}
-
-            //if (ViewModel.IsPanning)
-            //{
-            //    ViewModel.EndPan();
-            //    return;
-            //}
-
-            //// Hit test to see whether we're over a KOM/Sprint segment
-
-            //// If sprints and climbs are not shown then exit
-            //if (!ViewModel.ShowSprints && !ViewModel.ShowClimbs)
-            //{
-            //    return;
-            //}
-
-            //var scaledPoint = ConvertMousePositionToCanvasCoordinate(skiaCanvas, position);
-
-            //var matches = ViewModel
-            //    .Markers
-            //    .Values
-            //    .Where(kv => kv.Bounds.Contains((float)scaledPoint.X, (float)scaledPoint.Y))
-            //    .ToList();
-
-            //if (matches.Count == 1)
-            //{
-            //    var marker = matches.Single();
-
-            //    ViewModel.Model.StatusBarInfo("{0} {1}", marker.Type.ToString(), marker.Name);
-            //}
-            //else
-            //{
-            //    ViewModel.Model.ClearStatusBar();
-            //}
-        }
-
         private void ZoomIn_Click(object sender, RoutedEventArgs e)
         {
-            ViewModel.ZoomIn(ConvertMousePositionToCanvasCoordinate(SkElement,
-                new Point(SkElement.Bounds.Width / 2, SkElement.Bounds.Height / 2)));
+            ViewModel.ZoomIn(new Point(SkElement.Bounds.Width / 2, SkElement.Bounds.Height / 2));
 
             TriggerRepaint();
         }
 
         private void ZoomOut_Click(object sender, RoutedEventArgs e)
         {
-            ViewModel.ZoomOut(ConvertMousePositionToCanvasCoordinate(SkElement,
-                new Point(SkElement.Bounds.Width / 2, SkElement.Bounds.Height / 2)));
+            ViewModel.ZoomOut(new Point(SkElement.Bounds.Width / 2, SkElement.Bounds.Height / 2));
 
             TriggerRepaint();
         }
@@ -227,26 +223,12 @@ namespace RoadCaptain.App.RouteBuilder.Views
             TriggerRepaint();
         }
 
-        private Point ConvertMousePositionToCanvasCoordinate(SkiaCanvas skiaCanvas, Point position)
-        {
-            // This is the canvas to WPF element scaling, not the canvas scaling itself
-            var scalingFactor = skiaCanvas.CanvasSize.Width / skiaCanvas.CanvasSize.Width;
-
-            var matrixConverted = skiaCanvas.CurrentMatrix.MapPoint(
-                (float)(position.X * scalingFactor),
-                (float)(position.Y * scalingFactor));
-
-            return new Point(matrixConverted.X, matrixConverted.Y);
-        }
-        
         private void SkElement_OnPointerWheelChanged(object? sender, PointerWheelEventArgs e)
         {
-            var skiaCanvas = sender as SkiaCanvas;
-
             var position = e.GetPosition((IInputElement)sender);
 
-            var canvasCoordinate = ConvertMousePositionToCanvasCoordinate(skiaCanvas, position);
-            
+            var canvasCoordinate = position;
+
             if (e.Delta.Y > 0)
             {
                 ViewModel.ZoomIn(canvasCoordinate);

@@ -3,7 +3,6 @@ using Avalonia.Controls;
 using Avalonia.Media;
 using Avalonia.Threading;
 using RoadCaptain.App.RouteBuilder.ViewModels;
-using SkiaSharp;
 
 namespace RoadCaptain.App.RouteBuilder.Controls
 {
@@ -20,16 +19,10 @@ namespace RoadCaptain.App.RouteBuilder.Controls
 
         public override void Render(DrawingContext context)
         {
-            var noSkia = new FormattedText()
-            {
-                Text = "Current rendering API is not Skia"
-            };
-
             if (_customDrawOp == null)
             {
                 _customDrawOp = new CustomDrawOp(
-                    new Rect(0, 0, Bounds.Width, Bounds.Height), 
-                    noSkia,
+                    new Rect(0, 0, Bounds.Width, Bounds.Height),
                     DataContext as MainWindowViewModel);
             }
 
@@ -48,6 +41,10 @@ namespace RoadCaptain.App.RouteBuilder.Controls
         {
             if (change.Property.Name == nameof(Bounds))
             {
+                _customDrawOp = new CustomDrawOp(
+                    new Rect(0, 0, Bounds.Width, Bounds.Height),
+                    DataContext as MainWindowViewModel);
+
                 Dispatcher.UIThread.InvokeAsync(InvalidateVisual, DispatcherPriority.Background);
             }
 
@@ -56,12 +53,16 @@ namespace RoadCaptain.App.RouteBuilder.Controls
 
         public Size CanvasSize => new((float)Bounds.Width, (float)Bounds.Height);
 
-        public SKMatrix CurrentMatrix => _customDrawOp.CurrentMatrix;
-
         public string? HighlightedSegmentId
         {
-            get => _customDrawOp.HighlightedSegmentId;
-            set => _customDrawOp.HighlightedSegmentId = value;
+            get => _customDrawOp?.HighlightedSegmentId;
+            set
+            {
+                if (_customDrawOp != null)
+                {
+                    _customDrawOp.HighlightedSegmentId = value;
+                }
+            }
         }
     }
 }

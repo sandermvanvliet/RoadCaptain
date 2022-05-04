@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using Avalonia;
-using Avalonia.Media;
 using Avalonia.Platform;
 using Avalonia.Rendering.SceneGraph;
 using Avalonia.Skia;
@@ -17,11 +15,8 @@ namespace RoadCaptain.App.RouteBuilder.Controls
         private const int KomMarkerHeight = 32;
         private const int KomMarkerWidth = 6;
 
-        private readonly FormattedText _noSkia;
-
-        public CustomDrawOp(Rect bounds, FormattedText noSkia, MainWindowViewModel viewModel)
+        public CustomDrawOp(Rect bounds, MainWindowViewModel viewModel)
         {
-            _noSkia = noSkia;
             Bounds = bounds;
             ViewModel = viewModel;
         }
@@ -33,25 +28,22 @@ namespace RoadCaptain.App.RouteBuilder.Controls
 
         public Rect Bounds { get; }
         public MainWindowViewModel ViewModel { get; }
-        
         public bool HitTest(Point p) => false;
-        
         public bool Equals(ICustomDrawOperation other) => false;
-
-        public SKMatrix CurrentMatrix { get; private set; }
-
         public string? HighlightedSegmentId { get; set; }
 
         public void Render(IDrawingContextImpl context)
         {
             var canvas = (context as ISkiaDrawingContextImpl)?.SkCanvas;
+            
             if (canvas == null)
             {
-                context.DrawText(Brushes.Black, new Point(), _noSkia.PlatformImpl);
                 return;
             }
 
             canvas.Save();
+
+            canvas.Clear(SKColor.Parse("#FFFFFF"));
            
             RenderCanvas(canvas);
 
@@ -61,15 +53,15 @@ namespace RoadCaptain.App.RouteBuilder.Controls
         
         private void RenderCanvas(SKCanvas canvas)
         {
-            canvas.Translate(-(float)ViewModel.Pan.X, -(float)ViewModel.Pan.Y);
-            canvas.Scale(ViewModel.Zoom, ViewModel.Zoom, (float)ViewModel.ZoomCenter.X, (float)ViewModel.ZoomCenter.Y);
+            if (ViewModel.Pan.X != 0 || ViewModel.Pan.Y != 0)
+            {
+                canvas.Translate(-(float)ViewModel.Pan.X, -(float)ViewModel.Pan.Y);
+            }
 
-            // Store the inverse of the scale/translate matrix
-            // so that we can convert a click on the canvas to
-            // the correct coordinates of a segment.
-            CurrentMatrix = canvas.TotalMatrix.Invert();
-
-            canvas.Clear(SKColor.Parse("#FFFFFF"));
+            if (Math.Abs(ViewModel.Zoom - 1) > 0.01)
+            {
+                canvas.Scale(ViewModel.Zoom, ViewModel.Zoom, (float)ViewModel.ZoomCenter.X, (float)ViewModel.ZoomCenter.Y);
+            }
 
             canvas.DrawPath(ViewModel.RoutePath, SkiaPaints.RoutePathPaint);
 
