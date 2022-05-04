@@ -251,8 +251,10 @@
                         VerticalAlignment="Top"
                         HorizontalAlignment="Left"
                         Orientation="Horizontal"
-                        Background="White">
+                        Background="White"
+                        Margin="4,0,0,0">
 				<Button Command="{Binding Path=SimulateCommand}" Cursor="Hand"
+                        Classes="toolbar"
                         Classes.simulationRunning="{Binding Path=SimulationState,Converter={StaticResource ValueToBooleanConverter},ConverterParameter=Running}">
 					<Button.Styles>
 						<Style Selector="Button">
