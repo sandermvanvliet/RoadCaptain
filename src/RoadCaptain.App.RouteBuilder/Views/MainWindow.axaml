@@ -62,7 +62,7 @@
 		<Grid
                             Background="{Binding Path=Model.StatusBarBackground,FallbackValue={x:Static Brushes.DodgerBlue}}"
                             DockPanel.Dock="Bottom"
-                            Height="22"
+                            Height="26"
                             VerticalAlignment="Center"
                             Margin="0,0,0,0">
 			<Grid.ColumnDefinitions>
@@ -71,11 +71,11 @@
 			</Grid.ColumnDefinitions>
 			<TextBlock Margin="6,2,0,0"
                        Text="{Binding Path=Model.StatusBarText, FallbackValue=Ready,TargetNullValue=Ready}"
-                       Foreground="{Binding Path=Model.StatusBarForeground,FallbackValue={x:Static Brushes.White}}" />
+                       Foreground="{Binding Path=Model.StatusBarForeground,FallbackValue={x:Static Brushes.White}}" VerticalAlignment="Center" />
 			<StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Right" IsEnabled="True">
-				<TextBlock Text="Version:" Foreground="White" />
-				<Button Content="{Binding Path=Version}" Margin="4,0,2,0" CommandParameter="{Binding Path=ChangelogUri}" Command="{Binding Path=OpenLinkCommand}" Classes="link" />
-				<TextBlock Text="🔗" Margin="0,0,4,0" />
+				<TextBlock Text="Version:" Foreground="White" VerticalAlignment="Center" />
+				<Button Content="{Binding Path=Version}" Margin="4,0,2,0" CommandParameter="{Binding Path=ChangelogUri}" Command="{Binding Path=OpenLinkCommand}" Classes="link" VerticalAlignment="Center" />
+				<TextBlock Text="🔗" Margin="0,0,4,0" VerticalAlignment="Center" />
 			</StackPanel>
 		</Grid>
 		<Grid Margin="0,2,2,0">
