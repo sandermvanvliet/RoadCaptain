@@ -30,6 +30,11 @@ namespace RoadCaptain.App.RouteBuilder.Views
 
             InitializeComponent();
 
+            KeyBindings.Add(new KeyBinding{ Command = ViewModel.OpenRouteCommand, Gesture = new KeyGesture(Key.O, KeyModifiers.Control)});
+            KeyBindings.Add(new KeyBinding{ Command = ViewModel.SaveRouteCommand, Gesture = new KeyGesture(Key.S, KeyModifiers.Control)});
+            KeyBindings.Add(new KeyBinding{ Command = ViewModel.ClearRouteCommand, Gesture = new KeyGesture(Key.R, KeyModifiers.Control)});
+            KeyBindings.Add(new KeyBinding{ Command = ViewModel.RemoveLastSegmentCommand, Gesture = new KeyGesture(Key.Z, KeyModifiers.Control)});
+
             SkElement
                 .PropertyChanged += (sender, args) =>
             {
