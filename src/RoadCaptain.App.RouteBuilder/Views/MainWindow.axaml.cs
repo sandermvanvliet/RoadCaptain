@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
 using Avalonia;
@@ -34,9 +35,9 @@ namespace RoadCaptain.App.RouteBuilder.Views
             {
                 if (args.Property.Name == "Bounds")
                 {
-                    if (sender is SkiaCanvas skiaCanvas && !double.IsNaN(skiaCanvas.CanvasSize.Width) && !double.IsNaN(skiaCanvas.CanvasSize.Height))
+                    if (sender is ZwiftMap zwiftMap && !double.IsNaN(zwiftMap.CanvasSize.Width) && !double.IsNaN(zwiftMap.CanvasSize.Height))
                     {
-                        ViewModel.CreatePathsForSegments((float)skiaCanvas.CanvasSize.Width, (float)skiaCanvas.CanvasSize.Height);
+                        ViewModel.CreatePathsForSegments((float)zwiftMap.CanvasSize.Width, (float)zwiftMap.CanvasSize.Height);
                         TriggerRepaint();
                     }
                 }
@@ -47,7 +48,6 @@ namespace RoadCaptain.App.RouteBuilder.Views
 
         private void WindowViewModelPropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            // TODO: Use reactive approach with WhenXxx() for this
             switch (e.PropertyName)
             {
                 case nameof(ViewModel.SelectedSegment):
@@ -153,7 +153,7 @@ namespace RoadCaptain.App.RouteBuilder.Views
 
         private void SkElement_OnPointerReleased(object? sender, PointerReleasedEventArgs e)
         {
-            if (sender is not SkiaCanvas skiaCanvas)
+            if (sender is not ZwiftMap zwiftMap)
             {
                 return;
             }
@@ -164,14 +164,16 @@ namespace RoadCaptain.App.RouteBuilder.Views
                 return;
             }
 
-            var position = e.GetPosition((IInputElement)sender);
+            var position = e.GetPosition(zwiftMap);
 
             ViewModel.SelectSegmentCommand.Execute(position);
         }
-
+        
+        // ReSharper disable once UnusedMember.Local
+        // ReSharper disable once UnusedParameter.Local
         private void RouteListView_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (sender is ListBox { SelectedItem: SegmentSequenceViewModel viewModel })
+            if (e.AddedItems.Count == 1 && e.AddedItems[0] is SegmentSequenceViewModel viewModel)
             {
                 SkElement.HighlightedSegmentId = viewModel.SegmentId;
                 TriggerRepaint();
@@ -182,6 +184,7 @@ namespace RoadCaptain.App.RouteBuilder.Views
             }
         }
 
+        // ReSharper disable once UnusedMember.Local
         private void RouteListView_KeyUp(object sender, KeyEventArgs e)
         {
             if (sender is ListBox { SelectedItem: SegmentSequenceViewModel viewModel } && e.Key == Key.Delete)
@@ -196,19 +199,24 @@ namespace RoadCaptain.App.RouteBuilder.Views
                 }
             }
         }
-
+        
+        [SuppressMessage("ReSharper", "UnusedParameter.Local")]
         private void MainWindow_OnActivated(object sender, EventArgs e)
         {
             Task.Factory.StartNew(() => ViewModel.CheckForNewVersion());
         }
 
+        // ReSharper disable once UnusedMember.Local
+        [SuppressMessage("ReSharper", "UnusedParameter.Local")]
         private void ZoomIn_Click(object sender, RoutedEventArgs e)
         {
             ViewModel.ZoomIn(new Point(SkElement.Bounds.Width / 2, SkElement.Bounds.Height / 2));
 
             TriggerRepaint();
         }
-
+        
+        // ReSharper disable once UnusedMember.Local
+        [SuppressMessage("ReSharper", "UnusedParameter.Local")]
         private void ZoomOut_Click(object sender, RoutedEventArgs e)
         {
             ViewModel.ZoomOut(new Point(SkElement.Bounds.Width / 2, SkElement.Bounds.Height / 2));
@@ -216,6 +224,8 @@ namespace RoadCaptain.App.RouteBuilder.Views
             TriggerRepaint();
         }
 
+        // ReSharper disable once UnusedMember.Local
+        [SuppressMessage("ReSharper", "UnusedParameter.Local")]
         private void ResetZoom_Click(object sender, RoutedEventArgs e)
         {
             ViewModel.ResetZoomAndPan();
@@ -225,17 +235,20 @@ namespace RoadCaptain.App.RouteBuilder.Views
 
         private void SkElement_OnPointerWheelChanged(object? sender, PointerWheelEventArgs e)
         {
-            var position = e.GetPosition((IInputElement)sender);
-
-            var canvasCoordinate = position;
+            if (sender is not IInputElement inputElement)
+            {
+                return;
+            }
+            
+            var position = e.GetPosition(inputElement);
 
             if (e.Delta.Y > 0)
             {
-                ViewModel.ZoomIn(canvasCoordinate);
+                ViewModel.ZoomIn(position);
             }
             else if (e.Delta.Y < 0)
             {
-                ViewModel.ZoomOut(canvasCoordinate);
+                ViewModel.ZoomOut(position);
             }
         }
     }

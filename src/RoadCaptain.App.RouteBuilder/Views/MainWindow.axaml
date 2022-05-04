@@ -88,7 +88,7 @@
 				<RowDefinition Height="*" />
 			</Grid.RowDefinitions>
 
-			<controls:SkiaCanvas
+			<controls:ZwiftMap
                 Grid.Row="1" Grid.Column="1"
                         PointerMoved="SkElement_OnPointerMoved"
                         PointerReleased="SkElement_OnPointerReleased"

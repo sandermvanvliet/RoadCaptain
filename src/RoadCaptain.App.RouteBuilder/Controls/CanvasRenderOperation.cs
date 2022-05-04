@@ -10,12 +10,15 @@ using SkiaSharp;
 
 namespace RoadCaptain.App.RouteBuilder.Controls
 {
-    internal class CustomDrawOp : ICustomDrawOperation
+    internal class CanvasRenderOperation : ICustomDrawOperation
     {
+        private static readonly SKColor CanvasBackgroundColor = SKColor.Parse("#FFFFFF");
         private const int KomMarkerHeight = 32;
         private const int KomMarkerWidth = 6;
+        private const int KomMarkerCenterX = 3;
+        private protected const int KomMarkerCenterY = 16;
 
-        public CustomDrawOp(Rect bounds, MainWindowViewModel viewModel)
+        public CanvasRenderOperation(Rect bounds, MainWindowViewModel viewModel)
         {
             Bounds = bounds;
             ViewModel = viewModel;
@@ -29,7 +32,7 @@ namespace RoadCaptain.App.RouteBuilder.Controls
         public Rect Bounds { get; }
         public MainWindowViewModel ViewModel { get; }
         public bool HitTest(Point p) => false;
-        public bool Equals(ICustomDrawOperation other) => false;
+        public bool Equals(ICustomDrawOperation? other) => false;
         public string? HighlightedSegmentId { get; set; }
 
         public void Render(IDrawingContextImpl context)
@@ -43,7 +46,7 @@ namespace RoadCaptain.App.RouteBuilder.Controls
 
             canvas.Save();
 
-            canvas.Clear(SKColor.Parse("#FFFFFF"));
+            canvas.Clear(CanvasBackgroundColor);
            
             RenderCanvas(canvas);
 
@@ -179,13 +182,13 @@ namespace RoadCaptain.App.RouteBuilder.Controls
             canvas.Flush();
         }
 
-        private void DrawClimbMarker(SKCanvas canvas, SKPaint paint, float angle, SKPoint point)
+        private static void DrawClimbMarker(SKCanvas canvas, SKPaint paint, float angle, SKPoint point)
         {
             canvas.RotateDegrees(angle, point.X, point.Y);
 
             canvas.DrawRect(
-                point.X - KomMarkerWidth / 2,
-                point.Y - KomMarkerHeight / 2,
+                point.X - KomMarkerCenterX,
+                point.Y - KomMarkerCenterY,
                 KomMarkerWidth,
                 KomMarkerHeight,
                 paint);
