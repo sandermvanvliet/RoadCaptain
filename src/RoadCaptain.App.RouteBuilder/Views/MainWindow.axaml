@@ -279,7 +279,7 @@
 				<Grid.RowDefinitions>
 					<RowDefinition Height="56" />
 					<RowDefinition Height="*" />
-					<RowDefinition Height="24" />
+					<RowDefinition Height="38" />
 				</Grid.RowDefinitions>
 
 				<Border
@@ -381,7 +381,7 @@
 				</ListBox>
 				<StackPanel Orientation="Horizontal" Grid.Row="2">
 					<TextBlock Text="Route name:" VerticalAlignment="Center" Margin="4,0,0,0" FontWeight="Bold" />
-					<TextBox Text="{Binding Path=Route.Name}" Margin="4,4,4,2" Width="215" VerticalAlignment="Center" />
+					<TextBox Text="{Binding Path=Route.Name}" Width="200" Height="30" Margin="4,4,4,2" HorizontalAlignment="Stretch" VerticalAlignment="Center" />
 				</StackPanel>
 			</Grid>
 		</Grid>
