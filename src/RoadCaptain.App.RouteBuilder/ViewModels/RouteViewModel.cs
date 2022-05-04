@@ -220,6 +220,8 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
         {
             World = null;
             Sport = SportType.Unknown;
+            
+            this.RaisePropertyChanged(nameof(ReadyToBuild));
 
             return Clear();
         }
@@ -283,6 +285,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             this.RaisePropertyChanged(nameof(TotalDistance));
             this.RaisePropertyChanged(nameof(TotalAscent));
             this.RaisePropertyChanged(nameof(TotalDescent));
+            this.RaisePropertyChanged(nameof(ReadyToBuild));
         }
 
         public SegmentSequenceViewModel? RemoveLast()
