@@ -1,5 +1,4 @@
-﻿using System;
-using Avalonia;
+﻿using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Media;
 using Avalonia.Threading;
@@ -10,24 +9,29 @@ namespace RoadCaptain.App.RouteBuilder.Controls
     public class ZwiftMap : UserControl 
     {
         private CanvasRenderOperation? _customDrawOp;
-        private readonly MainWindowViewModel _mainWindowViewModel;
+        private MainWindowViewModel? ViewModel => DataContext as MainWindowViewModel;
 
         public ZwiftMap()
         {
             ClipToBounds = true;
             IsHitTestVisible = true;
             Background = new SolidColorBrush(Colors.Transparent);
+
             
-            _mainWindowViewModel = DataContext as MainWindowViewModel ?? throw new ArgumentException($"{nameof(DataContext)} value must be a {nameof(MainWindowViewModel)}");
         }
 
         public override void Render(DrawingContext context)
         {
+            if (ViewModel == null)
+            {
+                return;
+            }
+
             if (_customDrawOp == null)
             {
                 _customDrawOp = new CanvasRenderOperation(
                     new Rect(0, 0, Bounds.Width, Bounds.Height),
-                    _mainWindowViewModel);
+                    ViewModel);
             }
 
             context.Custom(_customDrawOp);
@@ -43,11 +47,11 @@ namespace RoadCaptain.App.RouteBuilder.Controls
 
         protected override void OnPropertyChanged<T>(AvaloniaPropertyChangedEventArgs<T> change)
         {
-            if (change.Property.Name == nameof(Bounds))
+            if (change.Property.Name == nameof(Bounds) && ViewModel != null)
             {
                 _customDrawOp = new CanvasRenderOperation(
                     new Rect(0, 0, Bounds.Width, Bounds.Height),
-                    _mainWindowViewModel);
+                    ViewModel);
 
                 Dispatcher.UIThread.InvokeAsync(InvalidateVisual, DispatcherPriority.Background);
             }
