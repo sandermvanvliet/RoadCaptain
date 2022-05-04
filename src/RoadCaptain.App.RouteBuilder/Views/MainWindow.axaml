@@ -116,7 +116,7 @@
 						</ItemsControl.ItemsPanel>
 						<ItemsControl.ItemTemplate>
 							<DataTemplate DataType="{x:Type viewModels:WorldViewModel}">
-								<Button Classes="world" Command="{Binding Path=DataContext.SelectWorldCommand,RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}" CommandParameter="{Binding}" Cursor="Hand">
+								<Button Classes="world" Command="{Binding Path=ViewModel.SelectWorldCommand,RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}" CommandParameter="{Binding}" Cursor="Hand">
 									<Button.Template>
 										<ControlTemplate>
 											<Border Name="borderZero" Background="White" CornerRadius="5" BorderThickness="2"
@@ -188,7 +188,7 @@
 						</ItemsControl.ItemsPanel>
 						<ItemsControl.ItemTemplate>
 							<DataTemplate DataType="{x:Type viewModels:SportViewModel}">
-								<Button Classes="world" Command="{Binding Path=DataContext.SelectSportCommand,RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}" CommandParameter="{Binding}" Cursor="Hand">
+								<Button Classes="world" Command="{Binding Path=ViewModel.SelectSportCommand,RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}" CommandParameter="{Binding}" Cursor="Hand">
 									<Button.Template>
 										<ControlTemplate>
 											<Border Name="borderZero" Background="White" CornerRadius="5" BorderThickness="2"
