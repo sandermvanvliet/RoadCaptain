@@ -32,8 +32,8 @@ namespace RoadCaptain.App.RouteBuilder
                 DefaultExtension = "*.json",
                 Filters = new List<FileDialogFilter>
                 {
-                    new() { Extensions = new List<string>{"*.json"}, Name = "RoadCaptain route file (.json)"},
-                    new() { Extensions = new List<string>{"*.gpx"}, Name = "GPS Exchange Format (.gpx)"}
+                    new() { Extensions = new List<string>{"json"}, Name = "RoadCaptain route file (.json)"},
+                    new() { Extensions = new List<string>{"gpx"}, Name = "GPS Exchange Format (.gpx)"}
                 },
                 Title = "Save RoadCaptain route file",
             };

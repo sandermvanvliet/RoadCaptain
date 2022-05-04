@@ -36,7 +36,7 @@ namespace RoadCaptain.App.RouteBuilder
                 AllowMultiple = false,
                 Filters = new List<FileDialogFilter>
                 {
-                    new() { Extensions = new List<string>{"*.json"}, Name = "RoadCaptain route file (.json)"}
+                    new() { Extensions = new List<string>{"json"}, Name = "RoadCaptain route file (.json)"}
                 },
                 Title = "Open RoadCaptain route file"
             };
