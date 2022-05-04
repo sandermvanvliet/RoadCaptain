@@ -1,4 +1,6 @@
 ﻿using System;
+using System.ComponentModel;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
@@ -8,10 +10,14 @@ namespace RoadCaptain.App.Shared.Commands
     {
         private readonly Func<object?, bool>? _canExecute;
         private readonly Func<object?, Task<CommandResult>> _execute;
-        private Func<CommandResult, Task>? _onFailure;
-        private Func<CommandResult, Task>? _onSuccess;
-        private Func<CommandResult, Task>? _onSuccessWithWarnings;
-        private Func<CommandResult, Task>? _onNotExecuted;
+        private Action<CommandResult>? _onFailure;
+        private Func<CommandResult, Task>? _onFailureAsync;
+        private Action<CommandResult>? _onSuccess;
+        private Func<CommandResult, Task>? _onSuccessAsync;
+        private Action<CommandResult>? _onSuccessWithWarnings;
+        private Func<CommandResult, Task>? _onSuccessWithWarningsAsync;
+        private Action<CommandResult>? _onNotExecuted;
+        private Func<CommandResult, Task>? _onNotExecutedAsync;
 
         public AsyncRelayCommand(Func<object?, Task<CommandResult>> execute, Func<object?, bool>? canExecute = null)
         {
@@ -34,35 +40,57 @@ namespace RoadCaptain.App.Shared.Commands
 
             if (result.Result == Result.Success)
             {
-                if (_onSuccess != null)
+                if (_onSuccessAsync != null)
                 {
-                    await _onSuccess(result);
+                    await _onSuccessAsync(result);
+                }
+                else if (_onSuccess != null)
+                {
+                    _onSuccess(result);
                 }
             }
             else if (result.Result == Result.SuccessWithWarnings)
             {
                 if (_onSuccessWithWarnings != null)
                 {
-                    await _onSuccessWithWarnings(result);
+                    _onSuccessWithWarnings(result);
+                }
+                else if (_onSuccessWithWarningsAsync != null)
+                {
+                    await _onSuccessWithWarningsAsync(result);
                 }
             }
             else if (result.Result == Result.Failure)
             {
                 if (_onFailure != null)
                 {
-                    await _onFailure(result);
+                    _onFailure(result);
+                }
+                else if (_onFailureAsync != null)
+                {
+                    await _onFailureAsync(result);
                 }
             }
             else if (result.Result == Result.NotExecuted)
             {
                 if (_onNotExecuted != null)
                 {
-                    await _onNotExecuted(result);
+                    _onNotExecuted(result);
+                }
+                else if (_onNotExecutedAsync != null)
+                {
+                    await _onNotExecutedAsync(result);
                 }
             }
         }
 
         public AsyncRelayCommand OnSuccess(Func<CommandResult, Task> action)
+        {
+            _onSuccessAsync = action;
+            return this;
+        }
+
+        public AsyncRelayCommand OnSuccess(Action<CommandResult> action)
         {
             _onSuccess = action;
             return this;
@@ -70,11 +98,23 @@ namespace RoadCaptain.App.Shared.Commands
 
         public AsyncRelayCommand OnSuccessWithWarnings(Func<CommandResult, Task> action)
         {
+            _onSuccessWithWarningsAsync = action;
+            return this;
+        }
+
+        public AsyncRelayCommand OnSuccessWithWarnings(Action<CommandResult> action)
+        {
             _onSuccessWithWarnings = action;
             return this;
         }
 
         public AsyncRelayCommand OnFailure(Func<CommandResult, Task> action)
+        {
+            _onFailureAsync = action;
+            return this;
+        }
+
+        public AsyncRelayCommand OnFailure(Action<CommandResult> action)
         {
             _onFailure = action;
             return this;
@@ -82,13 +122,61 @@ namespace RoadCaptain.App.Shared.Commands
 
         public AsyncRelayCommand OnNotExecuted(Func<CommandResult, Task> action)
         {
+            _onNotExecutedAsync = action;
+            return this;
+        }
+
+        public AsyncRelayCommand OnNotExecuted(Action<CommandResult> action)
+        {
             _onNotExecuted = action;
             return this;
         }
 
-        protected virtual void OnCanExecuteChanged()
+        public AsyncRelayCommand SubscribeTo<T>(INotifyPropertyChanged notifyPropertyChanged, Expression<Func<T>> expr)
         {
-            CanExecuteChanged?.Invoke(this, EventArgs.Empty);
+            var memberExpr = expr.Body as MemberExpression;
+            if (memberExpr == null)
+            {
+                throw new InvalidOperationException("Can only subscribe to a property");
+            }
+
+            var memberName = memberExpr.Member.Name;
+
+            if (memberExpr.Expression is MemberExpression m2)
+            {
+                var propChangedName = m2.Member.Name;
+
+                var propertyInfo = notifyPropertyChanged.GetType().GetProperty(propChangedName);
+                if(propertyInfo == null)
+                {
+                    return this;
+                }
+
+                var propertyChanged = propertyInfo.GetValue(notifyPropertyChanged) as INotifyPropertyChanged;
+                if (propertyChanged == null)
+                {
+                    return this;
+                }
+
+                notifyPropertyChanged = propertyChanged;
+            }
+
+            notifyPropertyChanged.PropertyChanged += (_, args) =>
+            {
+                if (args.PropertyName == memberName)
+                {
+                    OnCanExecuteChanged();
+                }
+            };
+
+            return this;
+        }
+
+        private void OnCanExecuteChanged()
+        {
+            var eventHandler = CanExecuteChanged;
+
+            eventHandler?.Invoke(this, EventArgs.Empty);
         }
     }
 }

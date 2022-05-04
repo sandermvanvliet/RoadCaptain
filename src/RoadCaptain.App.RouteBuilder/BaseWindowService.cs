@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using Autofac;
 using Avalonia.Controls;
 using RoadCaptain.App.Shared.Dialogs;
@@ -20,7 +21,7 @@ namespace RoadCaptain.App.RouteBuilder
 
         protected Window? CurrentWindow { get; private set; }
 
-        public string? ShowOpenFileDialog(string? previousLocation)
+        public async Task<string?> ShowOpenFileDialog(string? previousLocation)
         {
             var initialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
 
@@ -40,7 +41,7 @@ namespace RoadCaptain.App.RouteBuilder
                 Title = "Open RoadCaptain route file"
             };
 
-            var selectedFiles = dialog.ShowAsync(CurrentWindow).GetAwaiter().GetResult();
+            var selectedFiles = await dialog.ShowAsync(CurrentWindow);
 
             if (selectedFiles != null && selectedFiles.Any())
             {

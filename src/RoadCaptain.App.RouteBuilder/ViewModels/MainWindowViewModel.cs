@@ -23,7 +23,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
 {
     public class MainWindowViewModel : ViewModelBase
     {
-        private Segment _selectedSegment;
+        private Segment? _selectedSegment;
         private readonly Dictionary<string, SKRect> _segmentPathBounds = new();
         private List<Segment> _segments;
         private Task _simulationTask;
@@ -69,7 +69,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
 
             SelectDefaultSportFromPreferences();
 
-            SaveRouteCommand = new RelayCommand(
+            SaveRouteCommand = new AsyncRelayCommand(
                     _ => SaveRoute(),
                     _ => Route.Sequence.Any())
                 .SubscribeTo(this, () => Route.Sequence)
@@ -78,13 +78,13 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
                 .OnFailure(_ => Model.StatusBarError("Failed to save route because: {0}", _.Message))
                 .OnNotExecuted(_ => Model.StatusBarInfo("Route hasn't changed dit not need to not saved"));
 
-            OpenRouteCommand = new RelayCommand(
+            OpenRouteCommand = new AsyncRelayCommand(
                     _ => OpenRoute(),
                     _ => true)
                 .OnSuccess(_ => Model.StatusBarInfo("Route loaded successfully"))
                 .OnFailure(_ => Model.StatusBarError("Failed to load route because: {0}", _.Message));
 
-            ClearRouteCommand = new RelayCommand(
+            ClearRouteCommand = new AsyncRelayCommand(
                     _ => ClearRoute(),
                     _ => Route.ReadyToBuild && Route.Sequence.Any())
                 .SubscribeTo(this, () => Route.Sequence)
@@ -122,7 +122,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
                 _ => OpenLink(_ as string),
                 _ => !string.IsNullOrEmpty(_ as string));
 
-            SelectWorldCommand = new RelayCommand(
+            SelectWorldCommand = new AsyncRelayCommand(
                 _ => SelectWorld(_ as WorldViewModel),
                 _ => (_ as WorldViewModel)?.CanSelect ?? false);
 
@@ -134,7 +134,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
                 _ => ResetDefaultSport(),
                 _ => true);
 
-            ResetWorldCommand = new RelayCommand(
+            ResetWorldCommand = new AsyncRelayCommand(
                 _ => ResetWorldAndSport(),
                 _ => Route.World != null)
                 .SubscribeTo(this, () => Route.World);
@@ -142,11 +142,11 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             Version = GetType().Assembly.GetName().Version?.ToString(4) ?? "0.0.0.0";
         }
 
-        private CommandResult ResetWorldAndSport()
+        private async Task<CommandResult> ResetWorldAndSport()
         {
             if (Route.IsTainted)
             {
-                var result = _windowService.ShowSaveRouteDialog();
+                var result = await _windowService.ShowSaveRouteDialog();
 
                 if (result == MessageBoxResult.Cancel)
                 {
@@ -155,7 +155,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
 
                 if (result == MessageBoxResult.Yes)
                 {
-                    SaveRoute();
+                    await SaveRoute();
                 }
             }
 
@@ -306,7 +306,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
         public ICommand ResetDefaultSportCommand { get; }
         public ICommand ResetWorldCommand { get; }
 
-        public Segment SelectedSegment
+        public Segment? SelectedSegment
         {
             get => _selectedSegment;
             private set
@@ -317,12 +317,9 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             }
         }
 
-        public bool HasDefaultSport
-        {
-            get => !string.IsNullOrEmpty(DefaultSport);
-        }
+        public bool HasDefaultSport => !string.IsNullOrEmpty(DefaultSport);
 
-        public string DefaultSport
+        public string? DefaultSport
         {
             get => _userPreferences.DefaultSport;
             private set
@@ -378,8 +375,6 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
                 this.RaisePropertyChanged(nameof(Pan));
             }
         }
-
-        public event PropertyChangedEventHandler PropertyChanged;
 
         private CommandResult SelectSegment(Point scaledPoint)
         {
@@ -437,7 +432,9 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             }
 
             // Prevent selecting the same segment again
+#pragma warning disable CS8602 // Because the check on Route.Sequence.Any() already ensures that Route.Last can't be null
             if (Route.Last.SegmentId == segmentId)
+#pragma warning restore CS8602
             {
                 return CommandResult.Aborted();
             }
@@ -676,9 +673,9 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             return path;
         }
 
-        private CommandResult ClearRoute()
+        private async Task<CommandResult> ClearRoute()
         {
-            var result = _windowService.ShowClearRouteDialog();
+            var result = await _windowService.ShowClearRouteDialog();
 
             if (result == MessageBoxResult.No)
             {
@@ -696,9 +693,9 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             return commandResult;
         }
 
-        private CommandResult SaveRoute()
+        private async Task<CommandResult> SaveRoute()
         {
-            var routeOutputFilePath = _windowService.ShowSaveFileDialog(_userPreferences.LastUsedFolder);
+            var routeOutputFilePath = await _windowService.ShowSaveFileDialog(_userPreferences.LastUsedFolder);
 
             if (string.IsNullOrEmpty(routeOutputFilePath))
             {
@@ -721,11 +718,11 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             }
         }
 
-        private CommandResult OpenRoute()
+        private async Task<CommandResult> OpenRoute()
         {
             if (Route.IsTainted)
             {
-                MessageBoxResult questionResult = _windowService.ShowSaveRouteDialog();
+                MessageBoxResult questionResult = await _windowService.ShowSaveRouteDialog();
 
                 if (questionResult == MessageBoxResult.Cancel)
                 {
@@ -734,7 +731,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
 
                 if (questionResult == MessageBoxResult.Yes)
                 {
-                    var saveResult = SaveRoute();
+                    var saveResult = await SaveRoute();
 
                     // If saving was not successful then return the
                     // result of SaveRoute instead of proceeding.
@@ -745,7 +742,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
                 }
             }
 
-            var fileName = _windowService.ShowOpenFileDialog(_userPreferences.LastUsedFolder);
+            var fileName = await _windowService.ShowOpenFileDialog(_userPreferences.LastUsedFolder);
 
             if (string.IsNullOrEmpty(fileName))
             {
@@ -775,7 +772,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             }
         }
 
-        private CommandResult SelectWorld(WorldViewModel world)
+        private async Task<CommandResult> SelectWorld(WorldViewModel world)
         {
             Route.World = _worldStore.LoadWorldById(world.Id);
 

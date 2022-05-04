@@ -17,7 +17,7 @@ namespace RoadCaptain.App.RouteBuilder
         {
         }
 
-        public string? ShowSaveFileDialog(string? previousLocation)
+        public async Task<string?> ShowSaveFileDialog(string? previousLocation)
         {
             var initialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
 
@@ -38,7 +38,7 @@ namespace RoadCaptain.App.RouteBuilder
                 Title = "Save RoadCaptain route file",
             };
 
-            return dialog.ShowAsync(CurrentWindow).GetAwaiter().GetResult();
+            return await dialog.ShowAsync(CurrentWindow);
         }
 
         public async Task<bool> ShowDefaultSportSelectionDialog(SportType sport)
@@ -53,27 +53,23 @@ namespace RoadCaptain.App.RouteBuilder
             return result == MessageBoxResult.Yes;
         }
 
-        public MessageBoxResult ShowSaveRouteDialog()
+        public async Task<MessageBoxResult> ShowSaveRouteDialog()
         {
-            return MessageBox.ShowAsync(
+            return await MessageBox.ShowAsync(
                 "Do you want to save the current route?",
                 "Current route was changed",
                 MessageBoxButton.YesNoCancel,
-                CurrentWindow)
-                .GetAwaiter()
-                .GetResult();
+                CurrentWindow);
         }
 
-        public MessageBoxResult ShowClearRouteDialog()
+        public async Task<MessageBoxResult> ShowClearRouteDialog()
         {
-            return MessageBox.ShowAsync(
+            return await MessageBox.ShowAsync(
                     "This action will remove all segments from the current route. Are you sure?",
                     "Clear route",
                     MessageBoxButton.YesNo,
                     CurrentWindow,
-                    MessageBoxIcon.Question)
-                .GetAwaiter()
-                .GetResult();
+                    MessageBoxIcon.Question);
         }
 
         public void ShowMainWindow(IApplicationLifetime applicationLifetime)

@@ -18,9 +18,9 @@ namespace RoadCaptain.App.RouteBuilder
             _dispatcher = dispatcher;
         }
 
-        public string? ShowOpenFileDialog(string? previousLocation)
+        public async Task<string?> ShowOpenFileDialog(string? previousLocation)
         {
-            return InvokeIfNeeded(() => _decorated.ShowOpenFileDialog(previousLocation));
+            return await InvokeIfNeededAsync(() => _decorated.ShowOpenFileDialog(previousLocation));
         }
 
         public void ShowErrorDialog(string message, Window owner)
@@ -38,9 +38,9 @@ namespace RoadCaptain.App.RouteBuilder
             InvokeIfNeeded(() => _decorated.ShowNewVersionDialog(release));
         }
 
-        public string? ShowSaveFileDialog(string? previousLocation)
+        public async Task<string?> ShowSaveFileDialog(string? previousLocation)
         {
-            return InvokeIfNeeded(() => _decorated.ShowSaveFileDialog(previousLocation));
+            return await InvokeIfNeededAsync(() => _decorated.ShowSaveFileDialog(previousLocation));
         }
 
         public async Task<bool> ShowDefaultSportSelectionDialog(SportType sport)
@@ -48,24 +48,14 @@ namespace RoadCaptain.App.RouteBuilder
             return await InvokeIfNeededAsync(() => _decorated.ShowDefaultSportSelectionDialog(sport));
         }
 
-        public MessageBoxResult ShowSaveRouteDialog()
+        public async Task<MessageBoxResult> ShowSaveRouteDialog()
         {
-            return InvokeIfNeeded(() => _decorated.ShowSaveRouteDialog());
+            return await InvokeIfNeededAsync(() => _decorated.ShowSaveRouteDialog());
         }
 
-        public MessageBoxResult ShowClearRouteDialog()
+        public async Task<MessageBoxResult> ShowClearRouteDialog()
         {
-            return InvokeIfNeeded(() => _decorated.ShowClearRouteDialog());
-        }
-
-        private TResult InvokeIfNeeded<TResult>(Func<TResult> action)
-        {
-            if (!_dispatcher.CheckAccess())
-            {
-                return _dispatcher.InvokeAsync(action).GetAwaiter().GetResult();
-            }
-
-            return action();
+            return await InvokeIfNeededAsync(() => _decorated.ShowClearRouteDialog());
         }
 
         private async Task<TResult> InvokeIfNeededAsync<TResult>(Func<Task<TResult>> action)
