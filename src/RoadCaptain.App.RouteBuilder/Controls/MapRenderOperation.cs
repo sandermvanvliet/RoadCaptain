@@ -10,30 +10,27 @@ using SkiaSharp;
 
 namespace RoadCaptain.App.RouteBuilder.Controls
 {
-    internal class CanvasRenderOperation : ICustomDrawOperation
+    internal class MapRenderOperation : ICustomDrawOperation
     {
         private static readonly SKColor CanvasBackgroundColor = SKColor.Parse("#FFFFFF");
         private const int KomMarkerHeight = 32;
         private const int KomMarkerWidth = 6;
         private const int KomMarkerCenterX = 3;
         private protected const int KomMarkerCenterY = 16;
-
-        public CanvasRenderOperation(Rect bounds, MainWindowViewModel viewModel)
-        {
-            Bounds = bounds;
-            ViewModel = viewModel;
-        }
-
+        
         public void Dispose()
         {
-            // No-op
         }
 
-        public Rect Bounds { get; }
-        public MainWindowViewModel ViewModel { get; }
+        public Rect Bounds { get; set; }
+
         public bool HitTest(Point p) => false;
         public bool Equals(ICustomDrawOperation? other) => false;
         public string? HighlightedSegmentId { get; set; }
+        public Point Pan { get; set; } = new(0, 0);
+        public float ZoomLevel { get; set; } = 1;
+        public Point ZoomCenter { get; set; } = new(0, 0);
+        public MainWindowViewModel? ViewModel { get; set; }
 
         public void Render(IDrawingContextImpl context)
         {
@@ -53,17 +50,16 @@ namespace RoadCaptain.App.RouteBuilder.Controls
             canvas.Restore();
         }
         
-        
         private void RenderCanvas(SKCanvas canvas)
         {
-            if (ViewModel.Pan.X != 0 || ViewModel.Pan.Y != 0)
+            if (Pan.X != 0 || Pan.Y != 0)
             {
-                canvas.Translate(-(float)ViewModel.Pan.X, -(float)ViewModel.Pan.Y);
+                canvas.Translate(-(float)Pan.X, -(float)Pan.Y);
             }
 
-            if (Math.Abs(ViewModel.Zoom - 1) > 0.01)
+            if (Math.Abs(ZoomLevel - 1) > 0.01)
             {
-                canvas.Scale(ViewModel.Zoom, ViewModel.Zoom, (float)ViewModel.ZoomCenter.X, (float)ViewModel.ZoomCenter.Y);
+                canvas.Scale(ZoomLevel, ZoomLevel, (float)ZoomCenter.X, (float)ZoomCenter.Y);
             }
 
             canvas.DrawPath(ViewModel.RoutePath, SkiaPaints.RoutePathPaint);

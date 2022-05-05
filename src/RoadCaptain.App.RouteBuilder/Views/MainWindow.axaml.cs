@@ -84,8 +84,6 @@ namespace RoadCaptain.App.RouteBuilder.Views
                 case nameof(ViewModel.RiderPosition):
                 case nameof(ViewModel.ShowClimbs):
                 case nameof(ViewModel.ShowSprints):
-                case nameof(ViewModel.Zoom):
-                case nameof(ViewModel.Pan):
                     TriggerRepaint();
                     break;
             }
@@ -104,31 +102,9 @@ namespace RoadCaptain.App.RouteBuilder.Views
             }
         }
 
-        private void SkElement_OnPointerPressed(object? sender, PointerPressedEventArgs e)
-        {
-            var currentPoint = e.GetCurrentPoint(sender as IVisual);
-
-            if (currentPoint.Properties.IsLeftButtonPressed)
-            {
-                ViewModel.StartPan(currentPoint.Position);
-            }
-        }
-
         private void SkElement_OnPointerMoved(object? sender, PointerEventArgs e)
         {
             var position = e.GetPosition((IInputElement?)sender);
-
-            if (!ViewModel.IsPanning)
-            {
-                return;
-            }
-
-            if (ViewModel.IsPanning)
-            {
-                ViewModel.PanMove(position);
-
-                return;
-            }
 
             // Hit test to see whether we're over a KOM/Sprint segment
 
@@ -160,12 +136,6 @@ namespace RoadCaptain.App.RouteBuilder.Views
         {
             if (sender is not ZwiftMap zwiftMap)
             {
-                return;
-            }
-
-            if (ViewModel.IsPanning)
-            {
-                ViewModel.EndPan();
                 return;
             }
 
@@ -215,46 +185,21 @@ namespace RoadCaptain.App.RouteBuilder.Views
         [SuppressMessage("ReSharper", "UnusedParameter.Local")]
         private void ZoomIn_Click(object sender, RoutedEventArgs e)
         {
-            ViewModel.ZoomIn(new Point(SkElement.Bounds.Width / 2, SkElement.Bounds.Height / 2));
-
-            TriggerRepaint();
+            SkElement.ZoomIn(new Point(SkElement.Bounds.Width / 2, SkElement.Bounds.Height / 2));
         }
         
         // ReSharper disable once UnusedMember.Local
         [SuppressMessage("ReSharper", "UnusedParameter.Local")]
         private void ZoomOut_Click(object sender, RoutedEventArgs e)
         {
-            ViewModel.ZoomOut(new Point(SkElement.Bounds.Width / 2, SkElement.Bounds.Height / 2));
-
-            TriggerRepaint();
+            SkElement.ZoomOut(new Point(SkElement.Bounds.Width / 2, SkElement.Bounds.Height / 2));
         }
 
         // ReSharper disable once UnusedMember.Local
         [SuppressMessage("ReSharper", "UnusedParameter.Local")]
         private void ResetZoom_Click(object sender, RoutedEventArgs e)
         {
-            ViewModel.ResetZoomAndPan();
-
-            TriggerRepaint();
-        }
-
-        private void SkElement_OnPointerWheelChanged(object? sender, PointerWheelEventArgs e)
-        {
-            if (sender is not IInputElement inputElement)
-            {
-                return;
-            }
-            
-            var position = e.GetPosition(inputElement);
-
-            if (e.Delta.Y > 0)
-            {
-                ViewModel.ZoomIn(position);
-            }
-            else if (e.Delta.Y < 0)
-            {
-                ViewModel.ZoomOut(position);
-            }
+            SkElement.ResetZoom();
         }
     }
 }

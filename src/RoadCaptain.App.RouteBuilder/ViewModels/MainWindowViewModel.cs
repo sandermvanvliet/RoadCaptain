@@ -26,11 +26,11 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
         private Segment? _selectedSegment;
         private readonly Dictionary<string, SKRect> _segmentPathBounds = new();
         private List<Segment> _segments;
-        private Task _simulationTask;
+        private Task? _simulationTask;
         private SKPoint? _riderPosition;
         private SimulationState _simulationState = SimulationState.NotStarted;
         private int _simulationIndex;
-        private Offsets _overallOffsets;
+        private Offsets? _overallOffsets;
         private string _version;
         private string _changelogUri;
         private bool _haveCheckedVersion;
@@ -43,12 +43,6 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
         private List<Segment> _markers;
         private bool _showClimbs;
         private bool _showSprints;
-        private float _zoom = 1;
-        private Point _pan = new(0, 0);
-        private bool _isPanning;
-        private Point _previousPosition;
-
-        private const float ZoomDelta = 0.1f;
 
         public MainWindowViewModel(IRouteStore routeStore, ISegmentStore segmentStore, IVersionChecker versionChecker, IWindowService windowService, IWorldStore worldStore, IUserPreferences userPreferences)
         {
@@ -186,8 +180,6 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             {
                 selectedWorld.IsSelected = false;
             }
-
-            ResetZoomAndPan();
 
             return CommandResult.Success();
         }
@@ -351,28 +343,6 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
                 if (value == _showSprints) return;
                 _showSprints = value;
                 this.RaisePropertyChanged(nameof(ShowSprints));
-            }
-        }
-
-        public float Zoom
-        {
-            get => _zoom;
-            set
-            {
-                if (Math.Abs(value - _zoom) < 0.001) return;
-                _zoom = value;
-                this.RaisePropertyChanged(nameof(Zoom));
-            }
-        }
-
-        public Point Pan
-        {
-            get => _pan;
-            set
-            {
-                if (value == _pan) return;
-                _pan = value;
-                this.RaisePropertyChanged(nameof(Pan));
             }
         }
 
@@ -756,8 +726,6 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
 
             SelectedSegment = null;
 
-            ResetZoomAndPan();
-
             try
             {
                 Route.Load();
@@ -960,67 +928,5 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
                 _windowService.ShowNewVersionDialog(latestRelease);
             }
         }
-
-        public void ZoomIn(Point position)
-        {
-            Zoom += ZoomDelta;
-            ZoomCenter = position;
-        }
-
-        public void ZoomOut(Point position)
-        {
-            Zoom -= ZoomDelta;
-            ZoomCenter = position;
-
-            if (Zoom < 1)
-            {
-                Zoom = 1;
-            }
-        }
-
-        public void ResetZoomAndPan()
-        {
-            Zoom = 1;
-            Pan = new Point(0, 0);
-        }
-
-        public void StartPan(Point start)
-        {
-            IsPanning = true;
-            _previousPosition = start;
-        }
-
-        public void PanMove(Point position)
-        {
-            // When a drag operation is active,
-            // track the delta-x and delta-y values
-            // based on the start position of the
-            // drag operation
-            Pan = new Point(
-                Pan.X + (_previousPosition.X - position.X),
-                Pan.Y + (_previousPosition.Y - position.Y));
-
-            _previousPosition = position;
-
-            this.RaisePropertyChanged(nameof(Pan));
-        }
-
-        public void EndPan()
-        {
-            IsPanning = false;
-        }
-
-        public bool IsPanning
-        {
-            get => _isPanning;
-            set
-            {
-                if (value == _isPanning) return;
-                _isPanning = value;
-                this.RaisePropertyChanged(nameof(IsPanning));
-            }
-        }
-
-        public Point ZoomCenter { get; private set; }
     }
 }
