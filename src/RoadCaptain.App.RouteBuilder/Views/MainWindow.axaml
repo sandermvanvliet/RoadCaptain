@@ -269,8 +269,8 @@
 				<Button Content="💾" Command="{Binding Path=SaveRouteCommand}" ToolTip.Tip="Save route" Classes="toolbar" />
 				<Button Content="📂" Command="{Binding Path=OpenRouteCommand}" ToolTip.Tip="Open route" Classes="toolbar" />
 				<Button Content="⭯" Command="{Binding Path=RemoveLastSegmentCommand}" ToolTip.Tip="Remove last segment" Classes="toolbar"/>
-				<CheckBox Content="Show KOMs" VerticalAlignment="Center" Margin="8,0,0,0" IsChecked="{Binding Path=ShowClimbs}" ToolTip.Tip="Show the KOM start (red) and finish (green) markers on the map" IsVisible="{Binding Path=Route.ReadyToBuild}" />
-				<CheckBox Content="Show Sprints" VerticalAlignment="Center" Margin="8,0,0,0" IsChecked="{Binding Path=ShowSprints}" ToolTip.Tip="Show the sprint segments on the map" IsVisible="{Binding Path=Route.ReadyToBuild}" />
+				<CheckBox Content="Show KOMs" VerticalAlignment="Center" Margin="8,0,0,0" IsChecked="{Binding ElementName=SkElement, Path=ShowClimbs}" ToolTip.Tip="Show the KOM start (red) and finish (green) markers on the map" IsVisible="{Binding Path=Route.ReadyToBuild}" />
+				<CheckBox Content="Show Sprints" VerticalAlignment="Center" Margin="8,0,0,0" IsChecked="{Binding ElementName=SkElement, Path=ShowSprints}" ToolTip.Tip="Show the sprint segments on the map" IsVisible="{Binding Path=Route.ReadyToBuild}" />
 				<Button Content="+" Margin="8,0,0,0" Click="ZoomIn_Click" ToolTip.Tip="Zoom in" IsEnabled="{Binding Path=Route.ReadyToBuild}" IsVisible="{Binding Path=Route.ReadyToBuild}" Classes="toolbar" />
 				<Button Content="-" Margin="8,0,0,0" Click="ZoomOut_Click" ToolTip.Tip="Zoom out" IsEnabled="{Binding Path=Route.ReadyToBuild}" IsVisible="{Binding Path=Route.ReadyToBuild}" Classes="toolbar" />
 				<Button Content="◻" Margin="8,0,0,0" Click="ResetZoom_Click" ToolTip.Tip="Fit to screen" IsEnabled="{Binding Path=Route.ReadyToBuild}" IsVisible="{Binding Path=Route.ReadyToBuild}" Classes="toolbar" />

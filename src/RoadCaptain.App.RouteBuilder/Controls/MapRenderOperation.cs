@@ -31,6 +31,8 @@ namespace RoadCaptain.App.RouteBuilder.Controls
         public float ZoomLevel { get; set; } = 1;
         public Point ZoomCenter { get; set; } = new(0, 0);
         public MainWindowViewModel? ViewModel { get; set; }
+        public bool ShowSprints { get; set; }
+        public bool ShowClimbs { get; set; }
 
         public void Render(IDrawingContextImpl context)
         {
@@ -90,13 +92,13 @@ namespace RoadCaptain.App.RouteBuilder.Controls
                 canvas.DrawPath(skiaPath, segmentPaint);
             }
 
-            if (ViewModel.ShowClimbs || ViewModel.ShowSprints)
+            if (ShowClimbs || ShowSprints)
             {
                 var drawnMarkers = new List<TrackPoint>();
 
                 foreach (var (_, marker) in ViewModel.Markers)
                 {
-                    if (marker.Type == SegmentType.Climb && ViewModel.ShowClimbs)
+                    if (marker.Type == SegmentType.Climb && ShowClimbs)
                     {
                         canvas.DrawPath(marker.Path, SkiaPaints.ClimbSegmentPaint);
 
@@ -120,7 +122,7 @@ namespace RoadCaptain.App.RouteBuilder.Controls
                             }
                         }
                     }
-                    else if (marker.Type == SegmentType.Sprint && ViewModel.ShowSprints)
+                    else if (marker.Type == SegmentType.Sprint && ShowSprints)
                     {
                         canvas.DrawPath(marker.Path, SkiaPaints.SprintSegmentPaint);
 

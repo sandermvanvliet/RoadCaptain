@@ -6,7 +6,6 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
-using Avalonia.Threading;
 using RoadCaptain.App.RouteBuilder.Controls;
 using RoadCaptain.App.RouteBuilder.ViewModels;
 
@@ -41,6 +40,7 @@ namespace RoadCaptain.App.RouteBuilder.Views
                 {
                     if (sender is ZwiftMap zwiftMap && !double.IsNaN(zwiftMap.CanvasSize.Width) && !double.IsNaN(zwiftMap.CanvasSize.Height))
                     {
+                        // TODO: Move segment paths to ZwiftMap control
                         ViewModel.CreatePathsForSegments((float)zwiftMap.CanvasSize.Width, (float)zwiftMap.CanvasSize.Height);
                         TriggerRepaint();
                     }
@@ -81,8 +81,6 @@ namespace RoadCaptain.App.RouteBuilder.Views
                     TriggerRepaint();
                     break;
                 case nameof(ViewModel.RiderPosition):
-                case nameof(ViewModel.ShowClimbs):
-                case nameof(ViewModel.ShowSprints):
                     TriggerRepaint();
                     break;
             }
@@ -108,7 +106,7 @@ namespace RoadCaptain.App.RouteBuilder.Views
             // Hit test to see whether we're over a KOM/Sprint segment
 
             // If sprints and climbs are not shown then exit
-            if (!ViewModel.ShowSprints && !ViewModel.ShowClimbs)
+            if (!SkElement.ShowSprints && !SkElement.ShowClimbs)
             {
                 return;
             }

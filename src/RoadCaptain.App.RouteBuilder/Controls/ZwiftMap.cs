@@ -74,6 +74,28 @@ namespace RoadCaptain.App.RouteBuilder.Controls
             }
         }
 
+        public bool ShowClimbs
+        {
+            get => _renderOperation.ShowClimbs;
+            set
+            {
+                _renderOperation.ShowClimbs = value;
+
+                InvalidateVisual();
+            }
+        }
+
+        public bool ShowSprints
+        {
+            get => _renderOperation.ShowSprints;
+            set
+            {
+                _renderOperation.ShowSprints = value;
+
+                InvalidateVisual();
+            }
+        }
+
         protected override void OnPointerMoved(PointerEventArgs e)
         {
             // Move pan
