@@ -91,14 +91,14 @@ namespace RoadCaptain.App.RouteBuilder.Views
 
         private void TriggerRepaint()
         {
-            if (SkElement.CheckAccess())
-            {
-                SkElement.InvalidateVisual();
-            }
-            else
-            {
-                Dispatcher.UIThread.InvokeAsync(TriggerRepaint);
-            }
+            //if (SkElement.CheckAccess())
+            //{
+            //    SkElement.InvalidateVisual();
+            //}
+            //else
+            //{
+            //    Dispatcher.UIThread.InvokeAsync(TriggerRepaint);
+            //}
         }
 
         private void SkElement_OnPointerMoved(object? sender, PointerEventArgs e)

@@ -3,7 +3,6 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Media;
-using Avalonia.Threading;
 using RoadCaptain.App.RouteBuilder.ViewModels;
 
 namespace RoadCaptain.App.RouteBuilder.Controls
@@ -38,8 +37,6 @@ namespace RoadCaptain.App.RouteBuilder.Controls
             }
 
             context.Custom(_renderOperation);
-
-            Dispatcher.UIThread.InvokeAsync(InvalidateVisual, DispatcherPriority.Background);
         }
 
         protected override Size MeasureOverride(Size availableSize)
@@ -69,7 +66,12 @@ namespace RoadCaptain.App.RouteBuilder.Controls
         public string? HighlightedSegmentId
         {
             get => _renderOperation.HighlightedSegmentId;
-            set => _renderOperation.HighlightedSegmentId = value;
+            set
+            {
+                _renderOperation.HighlightedSegmentId = value;
+
+                InvalidateVisual();
+            }
         }
 
         protected override void OnPointerMoved(PointerEventArgs e)
@@ -119,6 +121,8 @@ namespace RoadCaptain.App.RouteBuilder.Controls
             
             _renderOperation.Pan = newPanPosition;
             _previousPanPosition = position;
+
+            InvalidateVisual();
         }
 
         protected override void OnPointerWheelChanged(PointerWheelEventArgs e)
@@ -141,6 +145,8 @@ namespace RoadCaptain.App.RouteBuilder.Controls
         {
             _renderOperation.ZoomLevel += ZoomDelta;
             _renderOperation.ZoomCenter = position;
+
+            InvalidateVisual();
         }
 
         public void ZoomOut(Point position)
@@ -152,6 +158,8 @@ namespace RoadCaptain.App.RouteBuilder.Controls
 
             _renderOperation.ZoomLevel -= ZoomDelta;
             _renderOperation.ZoomCenter = position;
+
+            InvalidateVisual();
         }
 
         public void ResetZoom()
@@ -159,6 +167,8 @@ namespace RoadCaptain.App.RouteBuilder.Controls
             _renderOperation.ZoomLevel = 1;
             _renderOperation.ZoomCenter = new Point(0, 0);
             _renderOperation.Pan = new Point(0, 0);
+
+            InvalidateVisual();
         }
     }
 }
