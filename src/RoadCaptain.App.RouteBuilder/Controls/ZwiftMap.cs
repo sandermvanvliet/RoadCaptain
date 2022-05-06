@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
@@ -117,9 +116,7 @@ namespace RoadCaptain.App.RouteBuilder.Controls
             var newPanPosition = new Point(
                 _renderOperation.Pan.X + (_previousPanPosition.X - position.X),
                 _renderOperation.Pan.Y + (_previousPanPosition.Y - position.Y));
-
-            Debug.WriteLine($"Panning from {_renderOperation.Pan.X:0.0} {_renderOperation.Pan.Y:0.0} to {newPanPosition.X:0.0} {newPanPosition.Y:0.0}");
-
+            
             _renderOperation.Pan = newPanPosition;
             _previousPanPosition = position;
         }
