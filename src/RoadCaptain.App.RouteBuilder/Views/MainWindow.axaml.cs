@@ -57,7 +57,7 @@ namespace RoadCaptain.App.RouteBuilder.Views
                 case nameof(ViewModel.SelectedSegment):
                 case nameof(ViewModel.SegmentPaths):
                     // Reset any manually selected item in the list
-                    SkElement.HighlightedSegmentId = null;
+                    SkElement.HighlightedSegment = null;
                     TriggerRepaint();
                     break;
                 case nameof(ViewModel.Route):
@@ -147,12 +147,11 @@ namespace RoadCaptain.App.RouteBuilder.Views
         {
             if (e.AddedItems.Count == 1 && e.AddedItems[0] is SegmentSequenceViewModel viewModel)
             {
-                SkElement.HighlightedSegmentId = viewModel.SegmentId;
-                TriggerRepaint();
+                ViewModel.HighlightSegment(viewModel.SegmentId);
             }
             else
             {
-                SkElement.HighlightedSegmentId = null;
+                ViewModel.ClearSegmentHighlight();
             }
         }
 

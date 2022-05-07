@@ -8,6 +8,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Avalonia;
+using Google.Protobuf.Reflection;
 using ReactiveUI;
 using RoadCaptain.App.RouteBuilder.Models;
 using RoadCaptain.App.Shared.Commands;
@@ -43,6 +44,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
         private List<Segment> _markers;
         private bool _showClimbs;
         private bool _showSprints;
+        private Segment _highlightedSegment;
 
         public MainWindowViewModel(IRouteStore routeStore, ISegmentStore segmentStore, IVersionChecker versionChecker, IWindowService windowService, IWorldStore worldStore, IUserPreferences userPreferences)
         {
@@ -911,6 +913,20 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             }
         }
 
+        public Segment? HighlightedSegment
+        {
+            get => _highlightedSegment;
+            set
+            {
+                if (value == _highlightedSegment)
+                {
+                    return;
+                }
+                _highlightedSegment = value;
+                this.RaisePropertyChanged(nameof(HighlightedSegment));
+            }
+        }
+
         public void CheckForNewVersion()
         {
             if (_haveCheckedVersion)
@@ -927,6 +943,23 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             {
                 _windowService.ShowNewVersionDialog(latestRelease);
             }
+        }
+
+        public void HighlightSegment(string segmentId)
+        {
+            if (string.IsNullOrEmpty(segmentId))
+            {
+                HighlightedSegment = null;
+            }
+            else
+            {
+                HighlightedSegment = _segments.SingleOrDefault(s => s.Id == segmentId);
+            }
+        }
+
+        public void ClearSegmentHighlight()
+        {
+            HighlightedSegment = null;
         }
     }
 }

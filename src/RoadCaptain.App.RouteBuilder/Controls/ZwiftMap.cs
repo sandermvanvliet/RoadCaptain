@@ -13,10 +13,12 @@ namespace RoadCaptain.App.RouteBuilder.Controls
         private readonly MapRenderOperation _renderOperation;
         private Point _previousPanPosition;
         private bool _isPanning;
+        private Segment? _highlightedSegment;
         private MainWindowViewModel? ViewModel => DataContext as MainWindowViewModel;
         
         public static readonly DirectProperty<ZwiftMap, bool> ShowClimbsProperty = AvaloniaProperty.RegisterDirect<ZwiftMap, bool>(nameof(ShowClimbs), map =>  map.ShowClimbs, (map,value) => map.ShowClimbs = value);
         public static readonly DirectProperty<ZwiftMap, bool> ShowSprintsProperty = AvaloniaProperty.RegisterDirect<ZwiftMap, bool>(nameof(ShowSprints), map =>  map.ShowSprints, (map,value) => map.ShowSprints = value);
+        public static readonly DirectProperty<ZwiftMap, Segment?> HighlightedSegmentProperty = AvaloniaProperty.RegisterDirect<ZwiftMap, Segment?>(nameof(HighlightedSegment), map =>  map.HighlightedSegment, (map,value) => map.HighlightedSegment = value);
 
         public ZwiftMap()
         {
@@ -66,12 +68,22 @@ namespace RoadCaptain.App.RouteBuilder.Controls
 
         public Size CanvasSize => new((float)Bounds.Width, (float)Bounds.Height);
 
-        public string? HighlightedSegmentId
+        public Segment? HighlightedSegment
         {
-            get => _renderOperation.HighlightedSegmentId;
+            get
+            {
+                if(_highlightedSegment?.Id != _renderOperation.HighlightedSegmentId)
+                {
+                    _renderOperation.HighlightedSegmentId = null;
+                    _highlightedSegment = null;
+                }
+
+                return null;
+            }
             set
             {
-                _renderOperation.HighlightedSegmentId = value;
+                _highlightedSegment = value;
+                _renderOperation.HighlightedSegmentId = value?.Id;
 
                 InvalidateVisual();
             }
