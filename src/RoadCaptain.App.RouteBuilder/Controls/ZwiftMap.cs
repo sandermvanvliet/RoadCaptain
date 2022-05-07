@@ -14,6 +14,9 @@ namespace RoadCaptain.App.RouteBuilder.Controls
         private Point _previousPanPosition;
         private bool _isPanning;
         private MainWindowViewModel? ViewModel => DataContext as MainWindowViewModel;
+        
+        public static readonly DirectProperty<ZwiftMap, bool> ShowClimbsProperty = AvaloniaProperty.RegisterDirect<ZwiftMap, bool>(nameof(ShowClimbs), map =>  map.ShowClimbs, (map,value) => map.ShowClimbs = value);
+        public static readonly DirectProperty<ZwiftMap, bool> ShowSprintsProperty = AvaloniaProperty.RegisterDirect<ZwiftMap, bool>(nameof(ShowSprints), map =>  map.ShowSprints, (map,value) => map.ShowSprints = value);
 
         public ZwiftMap()
         {
