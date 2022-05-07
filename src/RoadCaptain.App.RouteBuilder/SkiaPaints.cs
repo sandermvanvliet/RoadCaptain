@@ -19,14 +19,11 @@ namespace RoadCaptain.App.RouteBuilder
         public static readonly SKPaint RoutePathPaint = new()
             { Color = SKColor.Parse("#0000ff"), Style = SKPaintStyle.Stroke, StrokeWidth = 8 };
 
-        public static readonly SKPaint RiderPositionPaint = new()
-            { Color = SKColor.Parse("#ffffff"), Style = SKPaintStyle.StrokeAndFill, StrokeWidth = 4 };
-
         public static readonly SKPaint RiderPositionFillPaint = new()
             { Color = SKColor.Parse("#FF6141"), Style = SKPaintStyle.Fill };
 
-        public static readonly SKPaint StartMarkerPaint = new()
-            { Color = SKColor.Parse("#ffffff"), Style = SKPaintStyle.StrokeAndFill, StrokeWidth = 4 };
+        public static readonly SKPaint CircleMarkerPaint = new()
+            { Color = SKColor.Parse("#ffffff"), Style = SKPaintStyle.StrokeAndFill, StrokeWidth = 2 };
 
         public static readonly SKPaint StartMarkerFillPaint = new()
             { Color = SKColor.Parse("#14c817"), Style = SKPaintStyle.Fill };

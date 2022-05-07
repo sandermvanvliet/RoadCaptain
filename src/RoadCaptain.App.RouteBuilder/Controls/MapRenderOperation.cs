@@ -17,7 +17,8 @@ namespace RoadCaptain.App.RouteBuilder.Controls
         private const int KomMarkerWidth = 6;
         private const int KomMarkerCenterX = 3;
         private protected const int KomMarkerCenterY = 16;
-        
+        private const int CircleMarkerRadius = 10;
+
         public void Dispose()
         {
         }
@@ -153,31 +154,26 @@ namespace RoadCaptain.App.RouteBuilder.Controls
             if (ViewModel.RoutePath.Points.Any())
             {
                 // Route end marker
-                var endPoint = ViewModel.RoutePath.Points.Last();
-
-                canvas.DrawCircle(endPoint, 15, SkiaPaints.StartMarkerPaint);
-                canvas.DrawCircle(endPoint, 15 - SkiaPaints.StartMarkerPaint.StrokeWidth, SkiaPaints.EndMarkerFillPaint);
+                DrawCircleMarker(canvas, ViewModel.RoutePath.Points.Last(), SkiaPaints.EndMarkerFillPaint);
 
                 // Route start marker, needs to be after the end marker to
                 // ensure the start is always visible if the route starts and
                 // ends at the same location.
-                var startPoint = ViewModel.RoutePath.Points.First();
-
-                canvas.DrawCircle(startPoint, 15, SkiaPaints.StartMarkerPaint);
-                canvas.DrawCircle(startPoint, 15 - SkiaPaints.StartMarkerPaint.StrokeWidth, SkiaPaints.StartMarkerFillPaint);
+                DrawCircleMarker(canvas, ViewModel.RoutePath.Points.First(), SkiaPaints.StartMarkerFillPaint);
             }
 
             if (ViewModel.RiderPosition != null)
             {
-                var scaledAndTranslated = ViewModel.RiderPosition.Value;
-                const int radius = 15;
-                canvas
-                    .DrawCircle(scaledAndTranslated.X, scaledAndTranslated.Y, radius, SkiaPaints.RiderPositionPaint);
-                canvas
-                    .DrawCircle(scaledAndTranslated.X, scaledAndTranslated.Y, radius - SkiaPaints.RiderPositionPaint.StrokeWidth, SkiaPaints.RiderPositionFillPaint);
+                DrawCircleMarker(canvas, ViewModel.RiderPosition.Value, SkiaPaints.RiderPositionFillPaint);
             }
 
             canvas.Flush();
+        }
+
+        private static void DrawCircleMarker(SKCanvas canvas, SKPoint point, SKPaint fill)
+        {
+            canvas.DrawCircle(point, CircleMarkerRadius, SkiaPaints.CircleMarkerPaint);
+            canvas.DrawCircle(point, CircleMarkerRadius - SkiaPaints.CircleMarkerPaint.StrokeWidth, fill);
         }
 
         private static void DrawClimbMarker(SKCanvas canvas, SKPaint paint, float angle, SKPoint point)
