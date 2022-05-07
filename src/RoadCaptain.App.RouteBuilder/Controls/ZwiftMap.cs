@@ -76,6 +76,8 @@ namespace RoadCaptain.App.RouteBuilder.Controls
                 {
                     _renderOperation.HighlightedSegmentId = null;
                     _highlightedSegment = null;
+
+                    InvalidateVisual();
                 }
 
                 return null;
