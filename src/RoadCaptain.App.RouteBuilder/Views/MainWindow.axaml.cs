@@ -57,8 +57,7 @@ namespace RoadCaptain.App.RouteBuilder.Views
                 case nameof(ViewModel.SelectedSegment):
                 case nameof(ViewModel.SegmentPaths):
                     // Reset any manually selected item in the list
-                    SkElement.HighlightedSegment = null;
-                    TriggerRepaint();
+                    ViewModel.ClearSegmentHighlight();
                     break;
                 case nameof(ViewModel.Route):
                     // Ensure the last added segment is visible
