@@ -87,9 +87,7 @@ namespace RoadCaptain.App.RouteBuilder.Controls
             canvas.Clear(CanvasBackgroundColor);
 
             ScaleAndTranslate(canvas);
-
-            canvas.DrawPath(ViewModel.RoutePath, SkiaPaints.RoutePathPaint);
-
+            
             // Lowest layer are the segments
             foreach (var (segmentId, skiaPath) in ViewModel.SegmentPaths)
             {
@@ -107,6 +105,10 @@ namespace RoadCaptain.App.RouteBuilder.Controls
                 else if (ViewModel.Route.Last == null && ViewModel.Route.IsSpawnPointSegment(segmentId))
                 {
                     segmentPaint = SkiaPaints.SpawnPointSegmentPathPaint;
+                }
+                else if (ViewModel.Route.Sequence.Any(s => s.SegmentId == segmentId))
+                {
+                    segmentPaint = SkiaPaints.RoutePathPaint;
                 }
                 else
                 {
