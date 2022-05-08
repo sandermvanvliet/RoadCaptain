@@ -226,6 +226,28 @@ namespace RoadCaptain.App.RouteBuilder.Controls
                 return;
             }
 
+            if (ShowSprints || ShowClimbs)
+            {
+                var position = currentPoint.Position;
+
+                var matches = _renderOperation
+                    .Markers
+                    .Values
+                    .Where(kv => kv.Bounds.Contains((float)position.X, (float)position.Y))
+                    .ToList();
+
+                if (matches.Count == 1)
+                {
+                    var marker = matches.Single();
+
+                    ViewModel.Model.StatusBarInfo("{0} {1}", marker.Type.ToString(), marker.Name);
+                }
+                else
+                {
+                    ViewModel.Model.ClearStatusBar();
+                }
+            }
+
             base.OnPointerMoved(e);
         }
 
