@@ -13,6 +13,8 @@ namespace RoadCaptain.App.RouteBuilder.Controls
     internal class MapRenderOperation : ICustomDrawOperation
     {
         private static readonly SKColor CanvasBackgroundColor = SKColor.Parse("#FFFFFF");
+        public SKMatrix MainMatrix { get; private set; }
+        public SKMatrix CurrentMatrix { get; private set; }
         private const int KomMarkerHeight = 32;
         private const int KomMarkerWidth = 6;
         private const int KomMarkerCenterX = 3;
@@ -28,6 +30,7 @@ namespace RoadCaptain.App.RouteBuilder.Controls
         public bool HitTest(Point p) => false;
         public bool Equals(ICustomDrawOperation? other) => false;
         public string? HighlightedSegmentId { get; set; }
+        public string? SelectedSegmentId { get; set; }
         public Point Pan { get; set; } = new(0, 0);
         public float ZoomLevel { get; set; } = 1;
         public Point ZoomCenter { get; set; } = new(0, 0);
@@ -38,31 +41,44 @@ namespace RoadCaptain.App.RouteBuilder.Controls
         public void Render(IDrawingContextImpl context)
         {
             var canvas = (context as ISkiaDrawingContextImpl)?.SkCanvas;
-            
+
             if (canvas == null)
             {
                 return;
             }
 
+            MainMatrix = canvas.TotalMatrix;
+
             canvas.Save();
 
             canvas.Clear(CanvasBackgroundColor);
-           
+
             RenderCanvas(canvas);
 
             canvas.Restore();
         }
-        
+
         private void RenderCanvas(SKCanvas canvas)
         {
+            SKMatrix matrix = SKMatrix.Empty;
+
             if (Pan.X != 0 || Pan.Y != 0)
             {
-                canvas.Translate(-(float)Pan.X, -(float)Pan.Y);
+                matrix = matrix.PreConcat(SKMatrix.CreateTranslation(-(float)Pan.X, -(float)Pan.Y));
             }
 
             if (Math.Abs(ZoomLevel - 1) > 0.01)
             {
-                canvas.Scale(ZoomLevel, ZoomLevel, (float)ZoomCenter.X, (float)ZoomCenter.Y);
+                matrix = SKMatrix.CreateScale(ZoomLevel, ZoomLevel, (float)ZoomCenter.X, (float)ZoomCenter.Y);
+            }
+
+            CurrentMatrix = matrix;
+
+            if (matrix != SKMatrix.Empty)
+
+            {
+                var postConcat = MainMatrix.PostConcat(matrix);
+                canvas.SetMatrix(postConcat);
             }
 
             canvas.DrawPath(ViewModel.RoutePath, SkiaPaints.RoutePathPaint);
@@ -73,7 +89,7 @@ namespace RoadCaptain.App.RouteBuilder.Controls
                 SKPaint segmentPaint;
 
                 // Use a different color for the selected segment
-                if (segmentId == ViewModel.SelectedSegment?.Id)
+                if (segmentId == SelectedSegmentId)
                 {
                     segmentPaint = SkiaPaints.SelectedSegmentPathPaint;
                 }

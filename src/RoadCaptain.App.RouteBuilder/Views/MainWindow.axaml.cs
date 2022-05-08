@@ -136,8 +136,9 @@ namespace RoadCaptain.App.RouteBuilder.Views
             }
 
             var position = e.GetPosition(zwiftMap);
+            var positionOnCanvas = zwiftMap.GetPositionOnCanvas(position);
 
-            ViewModel.SelectSegmentCommand.Execute(position);
+            ViewModel.SelectSegmentCommand.Execute(positionOnCanvas);
         }
         
         // ReSharper disable once UnusedMember.Local

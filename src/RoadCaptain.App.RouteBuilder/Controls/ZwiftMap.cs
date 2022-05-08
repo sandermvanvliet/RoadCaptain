@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Diagnostics;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Media;
 using RoadCaptain.App.RouteBuilder.ViewModels;
+using SkiaSharp;
 
 namespace RoadCaptain.App.RouteBuilder.Controls
 {
@@ -14,11 +16,14 @@ namespace RoadCaptain.App.RouteBuilder.Controls
         private Point _previousPanPosition;
         private bool _isPanning;
         private Segment? _highlightedSegment;
+        private Segment? _selectedSegment;
+
         private MainWindowViewModel? ViewModel => DataContext as MainWindowViewModel;
         
         public static readonly DirectProperty<ZwiftMap, bool> ShowClimbsProperty = AvaloniaProperty.RegisterDirect<ZwiftMap, bool>(nameof(ShowClimbs), map =>  map.ShowClimbs, (map,value) => map.ShowClimbs = value);
         public static readonly DirectProperty<ZwiftMap, bool> ShowSprintsProperty = AvaloniaProperty.RegisterDirect<ZwiftMap, bool>(nameof(ShowSprints), map =>  map.ShowSprints, (map,value) => map.ShowSprints = value);
         public static readonly DirectProperty<ZwiftMap, Segment?> HighlightedSegmentProperty = AvaloniaProperty.RegisterDirect<ZwiftMap, Segment?>(nameof(HighlightedSegment), map =>  map.HighlightedSegment, (map,value) => map.HighlightedSegment = value);
+        public static readonly DirectProperty<ZwiftMap, Segment?> SelectedSegmentProperty = AvaloniaProperty.RegisterDirect<ZwiftMap, Segment?>(nameof(SelectedSegment), map =>  map.SelectedSegment, (map,value) => map.SelectedSegment = value);
 
         public ZwiftMap()
         {
@@ -86,6 +91,29 @@ namespace RoadCaptain.App.RouteBuilder.Controls
             {
                 _highlightedSegment = value;
                 _renderOperation.HighlightedSegmentId = value?.Id;
+
+                InvalidateVisual();
+            }
+        }
+
+        public Segment? SelectedSegment
+        {
+            get
+            {
+                if(_selectedSegment?.Id != _renderOperation.SelectedSegmentId)
+                {
+                    _renderOperation.SelectedSegmentId = null;
+                    _selectedSegment = null;
+
+                    InvalidateVisual();
+                }
+
+                return null;
+            }
+            set
+            {
+                _selectedSegment = value;
+                _renderOperation.SelectedSegmentId = value?.Id;
 
                 InvalidateVisual();
             }
@@ -208,6 +236,24 @@ namespace RoadCaptain.App.RouteBuilder.Controls
             _renderOperation.Pan = new Point(0, 0);
 
             InvalidateVisual();
+        }
+
+        public Point GetPositionOnCanvas(Point position)
+        {
+            Debug.WriteLine($"[Main] TransX: {_renderOperation.MainMatrix.TransX} TransY: {_renderOperation.MainMatrix.TransY} ScaleX: {_renderOperation.MainMatrix.ScaleX} ScaleY: {_renderOperation.MainMatrix.ScaleY}");
+            Debug.WriteLine($"[Current] TransX: {_renderOperation.CurrentMatrix.TransX} TransY: {_renderOperation.CurrentMatrix.TransY} ScaleX: {_renderOperation.CurrentMatrix.ScaleX} ScaleY: {_renderOperation.CurrentMatrix.ScaleY}");
+
+            Debug.WriteLine($"[Start]  X: {position.X:0.0} Y: {position.Y:0.0}");
+
+            if (_renderOperation.CurrentMatrix == SKMatrix.Empty)
+            {
+                return position;
+            }
+
+            var step1 = _renderOperation.CurrentMatrix.Invert().MapPoint((float)position.X, (float)position.Y);
+            Debug.WriteLine($"[Step 1] X: {step1.X:0.0} Y: {step1.Y:0.0}");
+            
+            return new Point(step1.X, step1.Y);
         }
     }
 }
