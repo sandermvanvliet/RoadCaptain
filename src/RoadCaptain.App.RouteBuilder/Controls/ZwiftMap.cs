@@ -1,8 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Windows.Input;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Media;
+using RoadCaptain.App.RouteBuilder.Models;
 using RoadCaptain.App.RouteBuilder.ViewModels;
 using SkiaSharp;
 
@@ -16,6 +20,7 @@ namespace RoadCaptain.App.RouteBuilder.Controls
         private bool _isPanning;
         private Segment? _highlightedSegment;
         private Segment? _selectedSegment;
+        private List<Segment>? _segments;
 
         private MainWindowViewModel? ViewModel => DataContext as MainWindowViewModel;
         
@@ -24,6 +29,16 @@ namespace RoadCaptain.App.RouteBuilder.Controls
         public static readonly DirectProperty<ZwiftMap, Segment?> HighlightedSegmentProperty = AvaloniaProperty.RegisterDirect<ZwiftMap, Segment?>(nameof(HighlightedSegment), map =>  map.HighlightedSegment, (map,value) => map.HighlightedSegment = value);
         public static readonly DirectProperty<ZwiftMap, Segment?> SelectedSegmentProperty = AvaloniaProperty.RegisterDirect<ZwiftMap, Segment?>(nameof(SelectedSegment), map =>  map.SelectedSegment, (map,value) => map.SelectedSegment = value);
         public static readonly DirectProperty<ZwiftMap, SKPoint?> RiderPositionProperty = AvaloniaProperty.RegisterDirect<ZwiftMap, SKPoint?>(nameof(RiderPosition), map =>  map.RiderPosition, (map,value) => map.RiderPosition = value);
+        public static readonly DirectProperty<ZwiftMap, List<Segment>?> SegmentsProperty = AvaloniaProperty.RegisterDirect<ZwiftMap, List<Segment>?>(nameof(Segments), map =>  map.Segments, (map,value) => map.Segments = value);
+        public static readonly DirectProperty<ZwiftMap, List<Segment>?> MarkersProperty = AvaloniaProperty.RegisterDirect<ZwiftMap, List<Segment>?>(nameof(Markers), map =>  map.Markers, (map,value) => map.Markers = value);
+        public static readonly DirectProperty<ZwiftMap, RouteViewModel?> RouteProperty = AvaloniaProperty.RegisterDirect<ZwiftMap, RouteViewModel?>(nameof(Route), map =>  map.Route, (map,value) => map.Route = value);
+        public static readonly DirectProperty<ZwiftMap, ICommand> SelectSegmentCommandProperty = AvaloniaProperty.RegisterDirect<ZwiftMap, ICommand>(nameof(SelectSegmentCommand), map => map.SelectSegmentCommand, (map,value) => map.SelectSegmentCommand = value);
+
+        private Offsets? _overallOffsets;
+        private readonly Dictionary<string, SKRect> _segmentPathBounds = new();
+        private readonly Dictionary<string, SKPath> _segmentPaths = new();
+        private RouteViewModel? _route;
+        private List<Segment> _markers = new();
 
         public ZwiftMap()
         {
@@ -37,11 +52,6 @@ namespace RoadCaptain.App.RouteBuilder.Controls
             if (ViewModel == null)
             {
                 return;
-            }
-
-            if (_renderOperation.ViewModel == null)
-            {
-                _renderOperation.ViewModel = ViewModel;
             }
 
             if (IsVisible)
@@ -153,6 +163,51 @@ namespace RoadCaptain.App.RouteBuilder.Controls
             }
         }
 
+        public List<Segment>? Segments
+        {
+            get => _segments;
+            set
+            {
+                _segments = value;
+                
+                if (_segments != null)
+                {
+                    CreatePathsForSegments(_segments, _renderOperation.Bounds);
+                }
+
+                InvalidateVisual();
+            }
+        }
+
+        public List<Segment>? Markers
+        {
+            get => _markers;
+            set
+            {
+                _markers = value ?? new List<Segment>();
+                
+                CreateMarkers();
+
+                InvalidateVisual();
+            }
+        }
+
+        public RouteViewModel? Route
+        {
+            get => _route;
+            set
+            {
+                _route = value;
+                _renderOperation.Route = value;
+
+                CreateRoutePath();
+
+                InvalidateVisual();
+            }
+        }
+
+        public ICommand SelectSegmentCommand { get; set; }
+
         protected override void OnPointerMoved(PointerEventArgs e)
         {
             // Move pan
@@ -185,7 +240,46 @@ namespace RoadCaptain.App.RouteBuilder.Controls
                 return;
             }
 
+            var position = GetPositionOnCanvas(e.GetPosition(this));
+
+            SelectSegment(position);
+
             base.OnPointerReleased(e);
+        }
+
+        private void SelectSegment(Point scaledPoint)
+        {
+            // Find SKPath that contains this coordinate (or close enough)
+            var pathsInBounds = _segmentPathBounds
+                .Where(p => p.Value.Contains((float)scaledPoint.X, (float)scaledPoint.Y))
+                .OrderBy(x => x.Value, new SkRectComparer()) // Sort by bounds area, good enough for now
+                .ToList();
+
+            if (!pathsInBounds.Any())
+            {
+                return;
+            }
+
+            // Do expensive point to segment matching now that we've narrowed down the set
+            var boundedSegments = pathsInBounds.Select(kv => Segments.Single(s => s.Id == kv.Key)).ToList();
+
+            var reverseScaled = _overallOffsets.ReverseScaleAndTranslate(scaledPoint.X, scaledPoint.Y);
+            var scaledPointToPosition = TrackPoint.FromGameLocation(reverseScaled.Latitude, reverseScaled.Longitude, reverseScaled.Altitude);
+            scaledPointToPosition = new TrackPoint(-scaledPointToPosition.Longitude, scaledPointToPosition.Latitude, scaledPointToPosition.Altitude);
+
+            Segment newSelectedSegment = null;
+
+            foreach (var segment in boundedSegments)
+            {
+                if (segment.Contains(scaledPointToPosition))
+                {
+                    newSelectedSegment = segment;
+                }
+            }
+
+            newSelectedSegment ??= boundedSegments.First();
+
+            SelectSegmentCommand?.Execute(newSelectedSegment);
         }
 
         public void PanMove(Point position)
@@ -262,6 +356,130 @@ namespace RoadCaptain.App.RouteBuilder.Controls
             var intermediate = invertedLogical.MapPoint((float)position.X, (float)position.Y);
             
             return new Point(intermediate.X, intermediate.Y);
+        }
+
+        private void CreatePathsForSegments(List<Segment> segments, Rect size)
+        {
+            _segmentPaths.Clear();
+            _segmentPathBounds.Clear();
+
+            if (!segments.Any())
+            {
+                return;
+            }
+
+            var segmentsWithOffsets = segments
+                .Select(seg => new
+                {
+                    Segment = seg,
+                    GameCoordinates = seg.Points.Select(point =>
+                        TrackPoint.LatLongToGame(point.Longitude, -point.Latitude, point.Altitude)).ToList()
+                })
+                .Select(x => new
+                {
+                    x.Segment,
+                    x.GameCoordinates,
+                    Offsets = new Offsets((float)size.Width, (float)size.Height, x.GameCoordinates)
+                })
+                .ToList();
+
+            _overallOffsets = Offsets.From(segmentsWithOffsets.Select(s => s.Offsets).ToList());
+
+            foreach (var segment in segmentsWithOffsets)
+            {
+                var skiaPathFromSegment = SkiaPathFromSegment(_overallOffsets, segment.GameCoordinates);
+                skiaPathFromSegment.GetTightBounds(out var bounds);
+
+                _segmentPaths.Add(segment.Segment.Id, skiaPathFromSegment);
+                _segmentPathBounds.Add(segment.Segment.Id, bounds);
+            }
+
+            _renderOperation.SegmentPaths = _segmentPaths;
+        }
+
+        private void CreateMarkers()
+        {
+            var markers = new Dictionary<string, Marker>();
+
+            markers.Clear();
+
+            if (!_markers.Any())
+            {
+                return;
+            }
+
+            foreach (var segment in _markers.Where(m => m.Type == SegmentType.Climb || m.Type == SegmentType.Sprint))
+            {
+                var gameCoordinates = segment
+                    .Points
+                    .Select(point => TrackPoint.LatLongToGame(point.Longitude, -point.Latitude, point.Altitude))
+                    .ToList();
+
+                var startPoint = _overallOffsets.ScaleAndTranslate(gameCoordinates.First());
+                var endPoint = _overallOffsets.ScaleAndTranslate(gameCoordinates.Last());
+
+                var skiaPathFromSegment = SkiaPathFromSegment(_overallOffsets, gameCoordinates);
+                skiaPathFromSegment.GetTightBounds(out var bounds);
+
+                var marker = new Marker
+                {
+                    Id = segment.Id,
+                    Name = segment.Name,
+                    Type = segment.Type,
+                    StartDrawPoint = new SKPoint(startPoint.X, startPoint.Y),
+                    EndDrawPoint = new SKPoint(endPoint.X, endPoint.Y),
+                    StartAngle = (float)TrackPoint.Bearing(segment.Points[0], segment.Points[1]) + 90,
+                    EndAngle = (float)TrackPoint.Bearing(segment.Points[^2], segment.Points[^1]) + 90,
+                    Path = skiaPathFromSegment,
+                    Bounds = bounds,
+                    StartPoint = segment.Points.First(),
+                    EndPoint = segment.Points.Last()
+                };
+
+                markers.Add(segment.Id, marker);
+            }
+
+            _renderOperation.Markers = markers;
+        }
+
+        private static SKPath SkiaPathFromSegment(Offsets offsets, List<TrackPoint> data)
+        {
+            var path = new SKPath();
+
+            path.AddPoly(
+                data
+                    .Select(offsets.ScaleAndTranslate)
+                    .Select(point => new SKPoint(point.X, point.Y))
+                    .ToArray(),
+                false);
+
+            return path;
+        }
+
+        private void CreateRoutePath()
+        {
+            var routePath = new SKPath();
+
+            if (Route == null)
+            {
+                _renderOperation.RoutePath = routePath;
+                return;
+            }
+
+            // RoutePath needs to be set to the total route we just loaded
+            foreach (var segment in Route.Sequence)
+            {
+                var points = _segmentPaths[segment.SegmentId].Points;
+
+                if (segment.Direction == SegmentDirection.BtoA)
+                {
+                    points = points.Reverse().ToArray();
+                }
+
+                routePath.AddPoly(points, false);
+            }
+
+            _renderOperation.RoutePath = routePath;
         }
     }
 }

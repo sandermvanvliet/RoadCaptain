@@ -6,7 +6,6 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
-using RoadCaptain.App.RouteBuilder.Controls;
 using RoadCaptain.App.RouteBuilder.ViewModels;
 
 namespace RoadCaptain.App.RouteBuilder.Views
@@ -32,19 +31,6 @@ namespace RoadCaptain.App.RouteBuilder.Views
             KeyBindings.Add(new KeyBinding{ Command = ViewModel.SaveRouteCommand, Gesture = new KeyGesture(Key.S, KeyModifiers.Control)});
             KeyBindings.Add(new KeyBinding{ Command = ViewModel.ClearRouteCommand, Gesture = new KeyGesture(Key.R, KeyModifiers.Control)});
             KeyBindings.Add(new KeyBinding{ Command = ViewModel.RemoveLastSegmentCommand, Gesture = new KeyGesture(Key.Z, KeyModifiers.Control)});
-
-            SkElement
-                .PropertyChanged += (sender, args) =>
-            {
-                if (args.Property.Name == "Bounds")
-                {
-                    if (sender is ZwiftMap zwiftMap && !double.IsNaN(zwiftMap.CanvasSize.Width) && !double.IsNaN(zwiftMap.CanvasSize.Height))
-                    {
-                        // TODO: Move segment paths to ZwiftMap control
-                        ViewModel.CreatePathsForSegments((float)zwiftMap.CanvasSize.Width, (float)zwiftMap.CanvasSize.Height);
-                    }
-                }
-            };
         }
 
         private MainWindowViewModel ViewModel { get; }
@@ -63,15 +49,6 @@ namespace RoadCaptain.App.RouteBuilder.Views
                     if (RouteListView.ItemCount > 0)
                     {
                         RouteListView.ScrollIntoView(RouteListView.ItemCount - 1);
-                    }
-
-                    // When a world is selected the path segments
-                    // need to be generated which needs the canvas
-                    // size. Therefore we need to call that from
-                    // this handler
-                    if (ViewModel.Route.World != null && !ViewModel.SegmentPaths.Any())
-                    {
-                        ViewModel.CreatePathsForSegments((float)SkElement.CanvasSize.Width, (float)SkElement.CanvasSize.Height);
                     }
 
                     // Redraw when the route changes so that the
@@ -93,34 +70,22 @@ namespace RoadCaptain.App.RouteBuilder.Views
                 return;
             }
 
-            var matches = ViewModel
-                .Markers
-                .Values
-                .Where(kv => kv.Bounds.Contains((float)position.X, (float)position.Y))
-                .ToList();
+            //var matches = ViewModel
+            //    .Markers
+            //    .Values
+            //    .Where(kv => kv.Bounds.Contains((float)position.X, (float)position.Y))
+            //    .ToList();
 
-            if (matches.Count == 1)
-            {
-                var marker = matches.Single();
+            //if (matches.Count == 1)
+            //{
+            //    var marker = matches.Single();
 
-                ViewModel.Model.StatusBarInfo("{0} {1}", marker.Type.ToString(), marker.Name);
-            }
-            else
-            {
-                ViewModel.Model.ClearStatusBar();
-            }
-        }
-
-        private void SkElement_OnPointerReleased(object? sender, PointerReleasedEventArgs e)
-        {
-            if (sender is not ZwiftMap zwiftMap)
-            {
-                return;
-            }
-            
-            var position = zwiftMap.GetPositionOnCanvas(e.GetPosition(zwiftMap));
-
-            ViewModel.SelectSegmentCommand.Execute(position);
+            //    ViewModel.Model.StatusBarInfo("{0} {1}", marker.Type.ToString(), marker.Name);
+            //}
+            //else
+            //{
+            //    ViewModel.Model.ClearStatusBar();
+            //}
         }
         
         // ReSharper disable once UnusedMember.Local

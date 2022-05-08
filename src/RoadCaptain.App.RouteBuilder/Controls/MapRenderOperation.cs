@@ -5,6 +5,7 @@ using Avalonia;
 using Avalonia.Platform;
 using Avalonia.Rendering.SceneGraph;
 using Avalonia.Skia;
+using RoadCaptain.App.RouteBuilder.Models;
 using RoadCaptain.App.RouteBuilder.ViewModels;
 using SkiaSharp;
 
@@ -26,10 +27,14 @@ namespace RoadCaptain.App.RouteBuilder.Controls
         public Point Pan { get; set; } = new(0, 0);
         public float ZoomLevel { get; set; } = 1;
         public Point ZoomCenter { get; set; } = new(0, 0);
-        public MainWindowViewModel? ViewModel { get; set; }
         public bool ShowSprints { get; set; }
         public bool ShowClimbs { get; set; }
         public SKPoint? RiderPosition { get; set; }
+        public Dictionary<string, SKPath> SegmentPaths { get; set; } = new();
+        public Dictionary<string, Marker> Markers { get; set; } = new();
+        public SKPath RoutePath { get; set; } = new();
+
+        public RouteViewModel? Route { get; set; }
 
         public void Dispose()
         {
@@ -45,6 +50,7 @@ namespace RoadCaptain.App.RouteBuilder.Controls
                 InitializeBitmap();
             }
         }
+
 
         public bool HitTest(Point p)
         {
@@ -86,7 +92,7 @@ namespace RoadCaptain.App.RouteBuilder.Controls
             ScaleAndTranslate(canvas);
 
             // Lowest layer are the segments
-            foreach (var (segmentId, skiaPath) in ViewModel.SegmentPaths)
+            foreach (var (segmentId, skiaPath) in SegmentPaths)
             {
                 SKPaint segmentPaint;
 
@@ -99,11 +105,11 @@ namespace RoadCaptain.App.RouteBuilder.Controls
                 {
                     segmentPaint = SkiaPaints.SegmentHighlightPaint;
                 }
-                else if (ViewModel.Route.Last == null && ViewModel.Route.IsSpawnPointSegment(segmentId))
+                else if (Route is { Last: null } && Route.IsSpawnPointSegment(segmentId))
                 {
                     segmentPaint = SkiaPaints.SpawnPointSegmentPathPaint;
                 }
-                else if (ViewModel.Route.Sequence.Any(s => s.SegmentId == segmentId))
+                else if (Route != null && Route.Sequence.Any(s => s.SegmentId == segmentId))
                 {
                     segmentPaint = SkiaPaints.RoutePathPaint;
                 }
@@ -119,7 +125,7 @@ namespace RoadCaptain.App.RouteBuilder.Controls
             {
                 var drawnMarkers = new List<TrackPoint>();
 
-                foreach (var (_, marker) in ViewModel.Markers)
+                foreach (var (_, marker) in Markers)
                 {
                     if (marker.Type == SegmentType.Climb && ShowClimbs)
                     {
@@ -173,15 +179,26 @@ namespace RoadCaptain.App.RouteBuilder.Controls
             }
 
             // Route markers
-            if (ViewModel.RoutePath.Points.Any())
+            if (RoutePath.Points.Any())
             {
+                var startSegment = Route.Sequence.First();
+                var endSegment = Route.Sequence.Last();
+
+                var routeStartPoint = startSegment.Direction == SegmentDirection.AtoB
+                    ? SegmentPaths[startSegment.SegmentId].Points[0]
+                    : SegmentPaths[startSegment.SegmentId].Points[^1];
+                
+                var routeEndPoint = endSegment.Direction == SegmentDirection.AtoB
+                    ? SegmentPaths[endSegment.SegmentId].Points[^1]
+                    : SegmentPaths[endSegment.SegmentId].Points[0];
+
                 // Route end marker
-                DrawCircleMarker(canvas, ViewModel.RoutePath.Points.Last(), SkiaPaints.EndMarkerFillPaint);
+                DrawCircleMarker(canvas, routeEndPoint, SkiaPaints.EndMarkerFillPaint);
 
                 // Route start marker, needs to be after the end marker to
                 // ensure the start is always visible if the route starts and
                 // ends at the same location.
-                DrawCircleMarker(canvas, ViewModel.RoutePath.Points.First(), SkiaPaints.StartMarkerFillPaint);
+                DrawCircleMarker(canvas, routeStartPoint, SkiaPaints.StartMarkerFillPaint);
             }
 
             if (RiderPosition != null)

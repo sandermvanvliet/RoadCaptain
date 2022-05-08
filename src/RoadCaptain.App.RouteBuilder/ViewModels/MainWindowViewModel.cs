@@ -7,8 +7,6 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using Avalonia;
-using Google.Protobuf.Reflection;
 using ReactiveUI;
 using RoadCaptain.App.RouteBuilder.Models;
 using RoadCaptain.App.Shared.Commands;
@@ -25,13 +23,11 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
     public class MainWindowViewModel : ViewModelBase
     {
         private Segment? _selectedSegment;
-        private readonly Dictionary<string, SKRect> _segmentPathBounds = new();
         private List<Segment> _segments;
         private Task? _simulationTask;
         private SKPoint? _riderPosition;
         private SimulationState _simulationState = SimulationState.NotStarted;
         private int _simulationIndex;
-        private Offsets? _overallOffsets;
         private string _version;
         private string _changelogUri;
         private bool _haveCheckedVersion;
@@ -45,10 +41,10 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
         private bool _showClimbs;
         private bool _showSprints;
         private Segment _highlightedSegment;
-
+        
         public MainWindowViewModel(IRouteStore routeStore, ISegmentStore segmentStore, IVersionChecker versionChecker, IWindowService windowService, IWorldStore worldStore, IUserPreferences userPreferences)
         {
-            _segments = new List<Segment>();
+            Segments = new List<Segment>();
             _versionChecker = versionChecker;
             _windowService = windowService;
             _worldStore = worldStore;
@@ -89,7 +85,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
                 .OnFailure(_ => Model.StatusBarError("Failed to clear route because: {0}", _.Message));
 
             SelectSegmentCommand = new RelayCommand(
-                    _ => SelectSegment((Point)_),
+                    _ => SelectSegment((Segment)_),
                     _ => true)
                 .OnSuccess(_ => Model.StatusBarInfo("Added segment"))
                 .OnSuccessWithWarnings(_ => Model.StatusBarInfo("Added segment {0}", _.Message))
@@ -158,16 +154,14 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             Route.Reset();
 
             SelectedSegment = null;
-
-            RoutePath.Reset();
+            
             SimulationState = SimulationState.NotStarted;
             _simulationIndex = 0;
 
-            _segments = null;
+            Segments = new List<Segment>();
             SegmentPaths.Clear();
 
-            _markers = null;
-            Markers.Clear();
+            Markers = new();
 
             var selectedSport = Sports.SingleOrDefault(s => s.IsSelected);
             if (selectedSport != null)
@@ -222,39 +216,39 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
         {
             if (args.PropertyName == nameof(Route.Sequence))
             {
-                if (Route.Sequence.Any())
-                {
-                    if (Route.Sequence.Count() == 2)
-                    {
-                        RoutePath.Reset();
-                        var firstSequence = Route.Sequence.First();
+                //if (Route.Sequence.Any())
+                //{
+                //    if (Route.Sequence.Count() == 2)
+                //    {
+                //        RoutePath.Reset();
+                //        var firstSequence = Route.Sequence.First();
 
-                        SKPoint[] pointsOfFirstSegment = SegmentPaths[firstSequence.SegmentId].Points;
+                //        SKPoint[] pointsOfFirstSegment = SegmentPaths[firstSequence.SegmentId].Points;
 
-                        if (firstSequence.Direction == SegmentDirection.BtoA)
-                        {
-                            pointsOfFirstSegment = pointsOfFirstSegment.Reverse().ToArray();
-                        }
+                //        if (firstSequence.Direction == SegmentDirection.BtoA)
+                //        {
+                //            pointsOfFirstSegment = pointsOfFirstSegment.Reverse().ToArray();
+                //        }
 
-                        RoutePath.AddPoly(pointsOfFirstSegment, false);
-                    }
+                //        RoutePath.AddPoly(pointsOfFirstSegment, false);
+                //    }
 
-                    var points = SegmentPaths[Route.Last.SegmentId].Points;
+                //    var points = SegmentPaths[Route.Last.SegmentId].Points;
 
-                    if (Route.Sequence.Last().Direction == SegmentDirection.BtoA)
-                    {
-                        points = points.Reverse().ToArray();
-                    }
+                //    if (Route.Sequence.Last().Direction == SegmentDirection.BtoA)
+                //    {
+                //        points = points.Reverse().ToArray();
+                //    }
 
-                    RoutePath.AddPoly(points, false);
-                }
+                //    RoutePath.AddPoly(points, false);
+                //}
             }
 
             if (args.PropertyName == nameof(Route.World))
             {
                 if (Route.World == null)
                 {
-                    _segments = new List<Segment>();
+                    Segments = new List<Segment>();
                 }
 
                 TryLoadSegmentsForWorldAndSport(segmentStore);
@@ -264,7 +258,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             {
                 if (Route.Sport == SportType.Unknown)
                 {
-                    _segments = new List<Segment>();
+                    Segments = new List<Segment>();
                 }
 
                 TryLoadSegmentsForWorldAndSport(segmentStore);
@@ -277,16 +271,30 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
         {
             if (Route.World != null && Route.Sport != SportType.Unknown)
             {
-                _segments = segmentStore.LoadSegments(Route.World, Route.Sport);
-                _markers = segmentStore.LoadMarkers(Route.World);
+                Segments = segmentStore.LoadSegments(Route.World, Route.Sport);
+                Markers = segmentStore.LoadMarkers(Route.World);
             }
         }
 
         public MainWindowModel Model { get; }
         public RouteViewModel Route { get; set; }
         public Dictionary<string, SKPath> SegmentPaths { get; } = new();
-        public Dictionary<string, Marker> Markers { get; } = new();
-        public SKPath RoutePath { get; private set; } = new();
+
+        public List<Segment> Markers
+        {
+            get => _markers;
+            set
+            {
+                if (value == _markers)
+                {
+                    return;
+                }
+
+                _markers = value ?? new List<Segment>();
+
+                this.RaisePropertyChanged(nameof(Markers));
+            }
+        }
 
         public ICommand SaveRouteCommand { get; }
         public ICommand OpenRouteCommand { get; }
@@ -348,42 +356,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             }
         }
 
-        private CommandResult SelectSegment(Point scaledPoint)
-        {
-            // Find SKPath that contains this coordinate (or close enough)
-            var pathsInBounds = _segmentPathBounds
-                .Where(p => p.Value.Contains((float)scaledPoint.X, (float)scaledPoint.Y))
-                .OrderBy(x => x.Value, new SkRectComparer()) // Sort by bounds area, good enough for now
-                .ToList();
-
-            if (!pathsInBounds.Any())
-            {
-                return CommandResult.Aborted();
-            }
-
-            // Do expensive point to segment matching now that we've narrowed down the set
-            var boundedSegments = pathsInBounds.Select(kv => _segments.Single(s => s.Id == kv.Key)).ToList();
-
-            var reverseScaled = _overallOffsets.ReverseScaleAndTranslate(scaledPoint.X, scaledPoint.Y);
-            var scaledPointToPosition = TrackPoint.FromGameLocation(reverseScaled.Latitude, reverseScaled.Longitude, reverseScaled.Altitude);
-            scaledPointToPosition = new TrackPoint(-scaledPointToPosition.Longitude, scaledPointToPosition.Latitude, scaledPointToPosition.Altitude);
-
-            Segment newSelectedSegment = null;
-
-            foreach (var segment in boundedSegments)
-            {
-                if (segment.Contains(scaledPointToPosition))
-                {
-                    newSelectedSegment = segment;
-                }
-            }
-
-            newSelectedSegment ??= boundedSegments.First();
-
-            return AddSegmentToRoute(newSelectedSegment);
-        }
-
-        protected CommandResult AddSegmentToRoute(Segment newSelectedSegment)
+        protected CommandResult SelectSegment(Segment newSelectedSegment)
         {
             var segmentId = newSelectedSegment.Id;
 
@@ -417,7 +390,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             }
 
             // 2. Figure out if the newly selected segment is reachable from the last segment
-            var lastSegment = _segments.Single(s => s.Id == Route.Last.SegmentId);
+            var lastSegment = Segments.Single(s => s.Id == Route.Last.SegmentId);
 
             var fromA = lastSegment.NextSegmentsNodeA.SingleOrDefault(t => t.SegmentId == newSelectedSegment.Id);
             var fromB = lastSegment.NextSegmentsNodeB.SingleOrDefault(t => t.SegmentId == newSelectedSegment.Id);
@@ -528,7 +501,6 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             var lastSegment = Route.RemoveLast();
 
             SelectedSegment = null;
-            CreateRoutePath();
 
             return CommandResult.SuccessWithWarning(lastSegment.SegmentName);
         }
@@ -549,102 +521,6 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             return newSegmentDirection;
         }
 
-        public void CreatePathsForSegments(float width, float height)
-        {
-            SegmentPaths.Clear();
-            _segmentPathBounds.Clear();
-
-            if (_segments == null || !_segments.Any())
-            {
-                return;
-            }
-
-            var segmentsWithOffsets = _segments
-                .Select(seg => new
-                {
-                    Segment = seg,
-                    GameCoordinates = seg.Points.Select(point =>
-                        TrackPoint.LatLongToGame(point.Longitude, -point.Latitude, point.Altitude)).ToList()
-                })
-                .Select(x => new
-                {
-                    x.Segment,
-                    x.GameCoordinates,
-                    Offsets = new Offsets(width, height, x.GameCoordinates)
-                })
-                .ToList();
-
-            _overallOffsets = Offsets.From(segmentsWithOffsets.Select(s => s.Offsets).ToList());
-
-            foreach (var segment in segmentsWithOffsets)
-            {
-                var skiaPathFromSegment = SkiaPathFromSegment(_overallOffsets, segment.GameCoordinates);
-                skiaPathFromSegment.GetTightBounds(out var bounds);
-
-                SegmentPaths.Add(segment.Segment.Id, skiaPathFromSegment);
-                _segmentPathBounds.Add(segment.Segment.Id, bounds);
-            }
-
-            CreateRoutePath();
-
-            CreateMarkers();
-        }
-
-        private void CreateMarkers()
-        {
-            Markers.Clear();
-
-            if (_markers == null || !_markers.Any())
-            {
-                return;
-            }
-
-            foreach (var segment in _markers.Where(m => m.Type == SegmentType.Climb || m.Type == SegmentType.Sprint))
-            {
-                var gameCoordinates = segment
-                    .Points
-                    .Select(point => TrackPoint.LatLongToGame(point.Longitude, -point.Latitude, point.Altitude))
-                    .ToList();
-
-                var startPoint = _overallOffsets.ScaleAndTranslate(gameCoordinates.First());
-                var endPoint = _overallOffsets.ScaleAndTranslate(gameCoordinates.Last());
-
-                var skiaPathFromSegment = SkiaPathFromSegment(_overallOffsets, gameCoordinates);
-                skiaPathFromSegment.GetTightBounds(out var bounds);
-
-                var marker = new Marker
-                {
-                    Id = segment.Id,
-                    Name = segment.Name,
-                    Type = segment.Type,
-                    StartDrawPoint = new SKPoint(startPoint.X, startPoint.Y),
-                    EndDrawPoint = new SKPoint(endPoint.X, endPoint.Y),
-                    StartAngle = (float)TrackPoint.Bearing(segment.Points[0], segment.Points[1]) + 90,
-                    EndAngle = (float)TrackPoint.Bearing(segment.Points[^2], segment.Points[^1]) + 90,
-                    Path = skiaPathFromSegment,
-                    Bounds = bounds,
-                    StartPoint = segment.Points.First(),
-                    EndPoint = segment.Points.Last()
-                };
-
-                Markers.Add(segment.Id, marker);
-            }
-        }
-
-        private static SKPath SkiaPathFromSegment(Offsets offsets, List<TrackPoint> data)
-        {
-            var path = new SKPath();
-
-            path.AddPoly(
-                data
-                    .Select(offsets.ScaleAndTranslate)
-                    .Select(point => new SKPoint(point.X, point.Y))
-                    .ToArray(),
-                false);
-
-            return path;
-        }
-
         private async Task<CommandResult> ClearRoute()
         {
             var result = await _windowService.ShowClearRouteDialog();
@@ -657,8 +533,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             var commandResult = Route.Clear();
 
             SelectedSegment = null;
-
-            RoutePath.Reset();
+            
             SimulationState = SimulationState.NotStarted;
             _simulationIndex = 0;
 
@@ -732,8 +607,6 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             {
                 Route.Load();
 
-                CreateRoutePath();
-
                 return CommandResult.Success();
             }
             catch (Exception e)
@@ -783,24 +656,6 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             return CommandResult.Success();
         }
 
-        private void CreateRoutePath()
-        {
-            RoutePath = new SKPath();
-
-            // RoutePath needs to be set to the total route we just loaded
-            foreach (var segment in Route.Sequence)
-            {
-                var points = SegmentPaths[segment.SegmentId].Points;
-
-                if (segment.Direction == SegmentDirection.BtoA)
-                {
-                    points = points.Reverse().ToArray();
-                }
-
-                RoutePath.AddPoly(points, false);
-            }
-        }
-
         private CommandResult SimulateRoute()
         {
             if (_simulationTask != null && SimulationState == SimulationState.Running)
@@ -811,18 +666,18 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
 
             _simulationTask = Task.Factory.StartNew(() =>
             {
-                SimulationState = SimulationState.Running;
+                //SimulationState = SimulationState.Running;
 
-                while (SimulationState == SimulationState.Running && _simulationIndex < RoutePath.PointCount)
-                {
-                    RiderPosition = RoutePath.Points[_simulationIndex++];
-                    Thread.Sleep(15);
-                }
+                //while (SimulationState == SimulationState.Running && _simulationIndex < RoutePath.PointCount)
+                //{
+                //    _simulationIndex++;
+                //    Thread.Sleep(15);
+                //}
 
-                if (SimulationState != SimulationState.Paused)
-                {
-                    _simulationIndex = 0;
-                }
+                //if (SimulationState != SimulationState.Paused)
+                //{
+                //    _simulationIndex = 0;
+                //}
 
                 SimulationState = SimulationState.Completed;
                 RiderPosition = null;
@@ -927,6 +782,21 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             }
         }
 
+        public List<Segment> Segments
+        {
+            get => _segments;
+            set
+            {
+                if (value == _segments)
+                {
+                    return;
+                }
+
+                _segments = value;
+                this.RaisePropertyChanged(nameof(Segments));
+            }
+        }
+
         public void CheckForNewVersion()
         {
             if (_haveCheckedVersion)
@@ -953,7 +823,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             }
             else
             {
-                HighlightedSegment = _segments.SingleOrDefault(s => s.Id == segmentId);
+                HighlightedSegment = Segments.SingleOrDefault(s => s.Id == segmentId);
             }
         }
 

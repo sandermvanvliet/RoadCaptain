@@ -92,7 +92,6 @@
 			<controls:ZwiftMap
                 Grid.Row="1" Grid.Column="1"
                         PointerMoved="SkElement_OnPointerMoved"
-                        PointerReleased="SkElement_OnPointerReleased"
                         Name="SkElement"
                         Cursor="Hand"
                 DataContext="{Binding Path=ViewModel,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=Window}}"
@@ -101,6 +100,10 @@
 				HighlightedSegment="{Binding Path=HighlightedSegment}"
 				SelectedSegment="{Binding Path=SelectedSegment}"
 				RiderPosition="{Binding Path=RiderPosition}"
+				Segments="{Binding Path=Segments}"
+				Route="{Binding Path=Route}"
+				Markers="{Binding Path=Markers}"
+				SelectSegmentCommand="{Binding Path=SelectSegmentCommand}"
                  />
 
 			<Grid Grid.Row="0" Grid.RowSpan="2" Grid.Column="1"
