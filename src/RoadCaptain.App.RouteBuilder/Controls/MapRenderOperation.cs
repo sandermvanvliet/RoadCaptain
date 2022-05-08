@@ -238,7 +238,7 @@ namespace RoadCaptain.App.RouteBuilder.Controls
 
         private void InitializeBitmap()
         {
-            _bitmap = new SKBitmap((int)Bounds.Width, (int)Bounds.Height);
+            _bitmap = new SKBitmap((int)Bounds.Width, (int)Bounds.Height, SKColorType.RgbaF16, SKAlphaType.Opaque);
 
             using var canvas = new SKCanvas(_bitmap);
             canvas.Clear(CanvasBackgroundColor);
