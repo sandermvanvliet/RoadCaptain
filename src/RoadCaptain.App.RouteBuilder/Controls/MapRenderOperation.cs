@@ -87,44 +87,7 @@ namespace RoadCaptain.App.RouteBuilder.Controls
         {
             canvas.Clear(CanvasBackgroundColor);
 
-            var translationMatrix = SKMatrix.Empty;
-            var scaleMatrix = SKMatrix.Empty;
-            LogicalMatrix = canvas.TotalMatrix;
-
-            if (Pan.X != 0 || Pan.Y != 0)
-            {
-                translationMatrix = SKMatrix.CreateTranslation(-(float)Pan.X, -(float)Pan.Y);
-            }
-
-            if (Math.Abs(ZoomLevel - 1) > 0.01)
-            {
-                scaleMatrix = SKMatrix.CreateScale(ZoomLevel, ZoomLevel, (float)ZoomCenter.X, (float)ZoomCenter.Y);
-            }
-
-            if (translationMatrix != SKMatrix.Empty)
-            {
-                LogicalMatrix = translationMatrix;
-                canvas.SetMatrix(canvas.TotalMatrix.PostConcat(translationMatrix));
-            }
-
-            if (scaleMatrix != SKMatrix.Empty)
-            {
-                if (LogicalMatrix != SKMatrix.Empty)
-                {
-                    LogicalMatrix = LogicalMatrix.PostConcat(scaleMatrix);
-                }
-                else
-                {
-                    LogicalMatrix = scaleMatrix;
-                }
-
-                canvas.SetMatrix(canvas.TotalMatrix.PostConcat(scaleMatrix));
-            }
-
-            if (scaleMatrix == SKMatrix.Empty && translationMatrix == SKMatrix.Empty)
-            {
-                LogicalMatrix = SKMatrix.Empty;
-            }
+            ScaleAndTranslate(canvas);
 
             canvas.DrawPath(ViewModel.RoutePath, SkiaPaints.RoutePathPaint);
 
@@ -229,6 +192,52 @@ namespace RoadCaptain.App.RouteBuilder.Controls
             }
 
             canvas.Flush();
+        }
+
+        private void ScaleAndTranslate(SKCanvas canvas)
+        {
+            // Start by resetting the logical matrix because otherwise
+            // we'd keep adding to it over and over again which is not
+            // very sensible...
+            LogicalMatrix = canvas.TotalMatrix;
+
+            var translationMatrix = SKMatrix.Empty;
+            var scaleMatrix = SKMatrix.Empty;
+
+            if (Pan.X != 0 || Pan.Y != 0)
+            {
+                translationMatrix = SKMatrix.CreateTranslation(-(float)Pan.X, -(float)Pan.Y);
+            }
+
+            if (Math.Abs(ZoomLevel - 1) > 0.01)
+            {
+                scaleMatrix = SKMatrix.CreateScale(ZoomLevel, ZoomLevel, (float)ZoomCenter.X, (float)ZoomCenter.Y);
+            }
+
+            if (translationMatrix != SKMatrix.Empty)
+            {
+                LogicalMatrix = translationMatrix;
+                canvas.SetMatrix(canvas.TotalMatrix.PostConcat(translationMatrix));
+            }
+
+            if (scaleMatrix != SKMatrix.Empty)
+            {
+                if (LogicalMatrix != SKMatrix.Empty)
+                {
+                    LogicalMatrix = LogicalMatrix.PostConcat(scaleMatrix);
+                }
+                else
+                {
+                    LogicalMatrix = scaleMatrix;
+                }
+
+                canvas.SetMatrix(canvas.TotalMatrix.PostConcat(scaleMatrix));
+            }
+
+            if (scaleMatrix == SKMatrix.Empty && translationMatrix == SKMatrix.Empty)
+            {
+                LogicalMatrix = SKMatrix.Empty;
+            }
         }
 
         private static void DrawCircleMarker(SKCanvas canvas, SKPoint point, SKPaint fill)
