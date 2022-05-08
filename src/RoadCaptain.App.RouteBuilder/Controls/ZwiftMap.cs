@@ -27,8 +27,6 @@ namespace RoadCaptain.App.RouteBuilder.Controls
 
         public ZwiftMap()
         {
-            ClipToBounds = true;
-            IsHitTestVisible = true;
             Background = new SolidColorBrush(Colors.Transparent);
 
             _renderOperation = new MapRenderOperation();
