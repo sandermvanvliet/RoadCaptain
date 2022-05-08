@@ -68,6 +68,7 @@ namespace RoadCaptain.App.RouteBuilder.Controls
 
             canvas.Clear(CanvasBackgroundColor);
 
+            // TODO: Something smart so that we only render when actually needed
             using (var mapCanvas = new SKCanvas(_bitmap))
             {
                 RenderCanvas(mapCanvas);
