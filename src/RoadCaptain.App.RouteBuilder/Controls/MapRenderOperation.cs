@@ -65,24 +65,30 @@ namespace RoadCaptain.App.RouteBuilder.Controls
 
         private void RenderCanvas(SKCanvas canvas)
         {
-            SKMatrix matrix = SKMatrix.Empty;
+            var translationMatrix = SKMatrix.Empty;
+            var scaleMatrix = SKMatrix.Empty;
 
             if (Pan.X != 0 || Pan.Y != 0)
             {
-                matrix = matrix.PreConcat(SKMatrix.CreateTranslation(-(float)Pan.X, -(float)Pan.Y));
+                translationMatrix = SKMatrix.CreateTranslation(-(float)Pan.X, -(float)Pan.Y);
             }
 
             if (Math.Abs(ZoomLevel - 1) > 0.01)
             {
-                matrix = SKMatrix.CreateScale(ZoomLevel, ZoomLevel, (float)ZoomCenter.X, (float)ZoomCenter.Y);
+                scaleMatrix = SKMatrix.CreateScale(ZoomLevel, ZoomLevel, (float)ZoomCenter.X, (float)ZoomCenter.Y);
             }
 
-            LogicalMatrix = matrix;
+            LogicalMatrix = translationMatrix;
 
-            if (matrix != SKMatrix.Empty)
-
+            if (translationMatrix != SKMatrix.Empty)
             {
-                var postConcat = MainMatrix.PostConcat(matrix);
+                var postConcat = canvas.TotalMatrix.PostConcat(translationMatrix);
+                canvas.SetMatrix(postConcat);
+            }
+
+            if (scaleMatrix != SKMatrix.Empty)
+            {
+                var postConcat = canvas.TotalMatrix.PostConcat(scaleMatrix);
                 canvas.SetMatrix(postConcat);
             }
 
