@@ -23,6 +23,7 @@ namespace RoadCaptain.App.RouteBuilder.Controls
         public static readonly DirectProperty<ZwiftMap, bool> ShowSprintsProperty = AvaloniaProperty.RegisterDirect<ZwiftMap, bool>(nameof(ShowSprints), map =>  map.ShowSprints, (map,value) => map.ShowSprints = value);
         public static readonly DirectProperty<ZwiftMap, Segment?> HighlightedSegmentProperty = AvaloniaProperty.RegisterDirect<ZwiftMap, Segment?>(nameof(HighlightedSegment), map =>  map.HighlightedSegment, (map,value) => map.HighlightedSegment = value);
         public static readonly DirectProperty<ZwiftMap, Segment?> SelectedSegmentProperty = AvaloniaProperty.RegisterDirect<ZwiftMap, Segment?>(nameof(SelectedSegment), map =>  map.SelectedSegment, (map,value) => map.SelectedSegment = value);
+        public static readonly DirectProperty<ZwiftMap, SKPoint?> RiderPositionProperty = AvaloniaProperty.RegisterDirect<ZwiftMap, SKPoint?>(nameof(RiderPosition), map =>  map.RiderPosition, (map,value) => map.RiderPosition = value);
 
         public ZwiftMap()
         {
@@ -135,6 +136,17 @@ namespace RoadCaptain.App.RouteBuilder.Controls
             set
             {
                 _renderOperation.ShowSprints = value;
+
+                InvalidateVisual();
+            }
+        }
+
+        public SKPoint? RiderPosition
+        {
+            get => _renderOperation.RiderPosition;
+            set
+            {
+                _renderOperation.RiderPosition = value;
 
                 InvalidateVisual();
             }

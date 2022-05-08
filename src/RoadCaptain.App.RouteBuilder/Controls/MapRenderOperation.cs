@@ -29,6 +29,7 @@ namespace RoadCaptain.App.RouteBuilder.Controls
         public MainWindowViewModel? ViewModel { get; set; }
         public bool ShowSprints { get; set; }
         public bool ShowClimbs { get; set; }
+        public SKPoint? RiderPosition { get; set; }
         
         public void Dispose()
         {
@@ -187,9 +188,9 @@ namespace RoadCaptain.App.RouteBuilder.Controls
                 DrawCircleMarker(canvas, ViewModel.RoutePath.Points.First(), SkiaPaints.StartMarkerFillPaint);
             }
 
-            if (ViewModel.RiderPosition != null)
+            if (RiderPosition != null)
             {
-                DrawCircleMarker(canvas, ViewModel.RiderPosition.Value, SkiaPaints.RiderPositionFillPaint);
+                DrawCircleMarker(canvas, RiderPosition.Value, SkiaPaints.RiderPositionFillPaint);
             }
 
             canvas.Flush();

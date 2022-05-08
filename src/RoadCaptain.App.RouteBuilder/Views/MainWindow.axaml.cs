@@ -42,7 +42,6 @@ namespace RoadCaptain.App.RouteBuilder.Views
                     {
                         // TODO: Move segment paths to ZwiftMap control
                         ViewModel.CreatePathsForSegments((float)zwiftMap.CanvasSize.Width, (float)zwiftMap.CanvasSize.Height);
-                        TriggerRepaint();
                     }
                 }
             };
@@ -77,26 +76,10 @@ namespace RoadCaptain.App.RouteBuilder.Views
 
                     // Redraw when the route changes so that the
                     // route path is painted correctly
-                    TriggerRepaint();
-                    break;
-                case nameof(ViewModel.RiderPosition):
-                    TriggerRepaint();
                     break;
             }
         }
 
-
-        private void TriggerRepaint()
-        {
-            //if (SkElement.CheckAccess())
-            //{
-            //    SkElement.InvalidateVisual();
-            //}
-            //else
-            //{
-            //    Dispatcher.UIThread.InvokeAsync(TriggerRepaint);
-            //}
-        }
 
         private void SkElement_OnPointerMoved(object? sender, PointerEventArgs e)
         {

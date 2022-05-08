@@ -100,6 +100,7 @@
                 ShowSprints="{Binding Path=ShowSprints}"
 				HighlightedSegment="{Binding Path=HighlightedSegment}"
 				SelectedSegment="{Binding Path=SelectedSegment}"
+				RiderPosition="{Binding Path=RiderPosition}"
                  />
 
 			<Grid Grid.Row="0" Grid.RowSpan="2" Grid.Column="1"
