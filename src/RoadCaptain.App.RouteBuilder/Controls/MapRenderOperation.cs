@@ -30,7 +30,7 @@ namespace RoadCaptain.App.RouteBuilder.Controls
         public bool ShowSprints { get; set; }
         public bool ShowClimbs { get; set; }
         public SKPoint? RiderPosition { get; set; }
-        
+
         public void Dispose()
         {
         }
@@ -69,14 +69,14 @@ namespace RoadCaptain.App.RouteBuilder.Controls
 
             canvas.Clear(CanvasBackgroundColor);
 
-            // TODO: Something smart so that we only render when actually needed
-            using (var mapCanvas = new SKCanvas(_bitmap))
+            if (_bitmap is { Width: > 0 })
             {
-                RenderCanvas(mapCanvas);
-            }
+                // TODO: Something smart so that we only render when actually needed
+                using (var mapCanvas = new SKCanvas(_bitmap))
+                {
+                    RenderCanvas(mapCanvas);
+                }
 
-            if (_bitmap is { DrawsNothing: false })
-            {
                 canvas.DrawBitmap(_bitmap, 0, 0);
             }
 
@@ -88,7 +88,7 @@ namespace RoadCaptain.App.RouteBuilder.Controls
             canvas.Clear(CanvasBackgroundColor);
 
             ScaleAndTranslate(canvas);
-            
+
             // Lowest layer are the segments
             foreach (var (segmentId, skiaPath) in ViewModel.SegmentPaths)
             {
@@ -202,7 +202,7 @@ namespace RoadCaptain.App.RouteBuilder.Controls
             // we'd keep adding to it over and over again which is not
             // very sensible...
             LogicalMatrix = canvas.TotalMatrix;
-            
+
             if (Pan.X != 0 || Pan.Y != 0)
             {
                 var translationMatrix = SKMatrix.CreateTranslation(-(float)Pan.X, -(float)Pan.Y);
@@ -213,9 +213,9 @@ namespace RoadCaptain.App.RouteBuilder.Controls
             if (Math.Abs(ZoomLevel - 1) > 0.01)
             {
                 var scaleMatrix = SKMatrix.CreateScale(ZoomLevel, ZoomLevel, (float)ZoomCenter.X, (float)ZoomCenter.Y);
-           
-                LogicalMatrix = LogicalMatrix != SKMatrix.Empty 
-                    ? LogicalMatrix.PostConcat(scaleMatrix) 
+
+                LogicalMatrix = LogicalMatrix != SKMatrix.Empty
+                    ? LogicalMatrix.PostConcat(scaleMatrix)
                     : scaleMatrix;
 
                 canvas.SetMatrix(canvas.TotalMatrix.PostConcat(scaleMatrix));
