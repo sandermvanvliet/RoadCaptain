@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
@@ -173,14 +172,6 @@ namespace RoadCaptain.App.RouteBuilder.Controls
                 return;
             }
 
-            if (Debugger.IsAttached)
-            {
-                var positionOnCanvas = GetPositionOnCanvas(e.GetPosition(this));
-                _renderOperation.ClickedPosition = positionOnCanvas;
-
-                InvalidateVisual();
-            }
-
             base.OnPointerReleased(e);
         }
 
@@ -249,38 +240,15 @@ namespace RoadCaptain.App.RouteBuilder.Controls
         public Point GetPositionOnCanvas(Point position)
         {
             var invertedLogical = _renderOperation.LogicalMatrix.Invert();
-            var invertedFinal = _renderOperation.FinalMatrix.Invert();
-
-            DumpMatrix(_renderOperation.MainMatrix, "Main");
-            DumpMatrix(_renderOperation.LogicalMatrix, "Logical");
-            DumpMatrix(invertedLogical, "Inverted");
-            DumpMatrix(_renderOperation.FinalMatrix, "Final");
-            DumpMatrix(invertedFinal, "Inverted");
-
-            Debug.WriteLine($" [Start] X: {position.X:0.00} Y: {position.Y:0.00}");
             
-            Point pointOnCanvas;
-
             if (_renderOperation.LogicalMatrix == SKMatrix.Empty)
             {
-                pointOnCanvas = position;
-            }
-            else
-            {
-                var conversion = invertedLogical;
-                var intermediate = conversion.MapPoint((float)position.X, (float)position.Y);
-                pointOnCanvas = new Point(intermediate.X, intermediate.Y);
+                return position;
             }
 
-            Debug.WriteLine($"[Result] X: {pointOnCanvas.X:0.00} Y: {pointOnCanvas.Y:0.00}");
+            var intermediate = invertedLogical.MapPoint((float)position.X, (float)position.Y);
             
-            return pointOnCanvas;
-        }
-
-        private static void DumpMatrix(SKMatrix matrix, string name)
-        {
-            Debug.WriteLine(
-                $"[{name,10}] TransX: {matrix.TransX:0.000} TransY: {matrix.TransY:0.000} ScaleX: {matrix.ScaleX:0.000} ScaleY: {matrix.ScaleY:0.000}");
+            return new Point(intermediate.X, intermediate.Y);
         }
     }
 }

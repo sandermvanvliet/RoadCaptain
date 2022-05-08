@@ -12,25 +12,15 @@ namespace RoadCaptain.App.RouteBuilder.Controls
 {
     internal class MapRenderOperation : ICustomDrawOperation
     {
-        private static readonly SKColor CanvasBackgroundColor = SKColor.Parse("#FFFFFF");
-        public SKMatrix MainMatrix { get; private set; }
-        public SKMatrix LogicalMatrix { get; private set; }
-        public SKMatrix FinalMatrix { get; private set; }
-
         private const int KomMarkerHeight = 32;
         private const int KomMarkerWidth = 6;
         private const int KomMarkerCenterX = 3;
         private protected const int KomMarkerCenterY = 16;
         private const int CircleMarkerRadius = 10;
-
-        public void Dispose()
-        {
-        }
-
-        public Rect Bounds { get; set; }
-
-        public bool HitTest(Point p) => false;
-        public bool Equals(ICustomDrawOperation? other) => false;
+        private static readonly SKColor CanvasBackgroundColor = SKColor.Parse("#FFFFFF");
+        private SKBitmap? _bitmap;
+        private Rect _bounds;
+        public SKMatrix LogicalMatrix { get; private set; }
         public string? HighlightedSegmentId { get; set; }
         public string? SelectedSegmentId { get; set; }
         public Point Pan { get; set; } = new(0, 0);
@@ -39,7 +29,31 @@ namespace RoadCaptain.App.RouteBuilder.Controls
         public MainWindowViewModel? ViewModel { get; set; }
         public bool ShowSprints { get; set; }
         public bool ShowClimbs { get; set; }
-        public Point ClickedPosition { get; set; }
+
+        public void Dispose()
+        {
+        }
+
+        public Rect Bounds
+        {
+            get => _bounds;
+            set
+            {
+                _bounds = value;
+
+                InitializeBitmap();
+            }
+        }
+
+        public bool HitTest(Point p)
+        {
+            return false;
+        }
+
+        public bool Equals(ICustomDrawOperation? other)
+        {
+            return false;
+        }
 
         public void Render(IDrawingContextImpl context)
         {
@@ -50,23 +64,30 @@ namespace RoadCaptain.App.RouteBuilder.Controls
                 return;
             }
 
-            MainMatrix = canvas.TotalMatrix;
-
-            DrawCircleMarker(canvas, new SKPoint(100, 100), new SKPaint() {Color = SKColor.Parse("#ff0000"), Style = SKPaintStyle.Fill});
-
             canvas.Save();
 
             canvas.Clear(CanvasBackgroundColor);
 
-            RenderCanvas(canvas);
+            using (var mapCanvas = new SKCanvas(_bitmap))
+            {
+                RenderCanvas(mapCanvas);
+            }
+
+            if (_bitmap is { DrawsNothing: false })
+            {
+                canvas.DrawBitmap(_bitmap, 0, 0);
+            }
 
             canvas.Restore();
         }
 
         private void RenderCanvas(SKCanvas canvas)
         {
+            canvas.Clear(CanvasBackgroundColor);
+
             var translationMatrix = SKMatrix.Empty;
             var scaleMatrix = SKMatrix.Empty;
+            LogicalMatrix = canvas.TotalMatrix;
 
             if (Pan.X != 0 || Pan.Y != 0)
             {
@@ -78,21 +99,30 @@ namespace RoadCaptain.App.RouteBuilder.Controls
                 scaleMatrix = SKMatrix.CreateScale(ZoomLevel, ZoomLevel, (float)ZoomCenter.X, (float)ZoomCenter.Y);
             }
 
-            LogicalMatrix = translationMatrix;
-
             if (translationMatrix != SKMatrix.Empty)
             {
-                var postConcat = canvas.TotalMatrix.PostConcat(translationMatrix);
-                canvas.SetMatrix(postConcat);
+                LogicalMatrix = translationMatrix;
+                canvas.SetMatrix(canvas.TotalMatrix.PostConcat(translationMatrix));
             }
 
             if (scaleMatrix != SKMatrix.Empty)
             {
-                var postConcat = canvas.TotalMatrix.PostConcat(scaleMatrix);
-                canvas.SetMatrix(postConcat);
+                if (LogicalMatrix != SKMatrix.Empty)
+                {
+                    LogicalMatrix = LogicalMatrix.PostConcat(scaleMatrix);
+                }
+                else
+                {
+                    LogicalMatrix = scaleMatrix;
+                }
+
+                canvas.SetMatrix(canvas.TotalMatrix.PostConcat(scaleMatrix));
             }
 
-            FinalMatrix = canvas.TotalMatrix;
+            if (scaleMatrix == SKMatrix.Empty && translationMatrix == SKMatrix.Empty)
+            {
+                LogicalMatrix = SKMatrix.Empty;
+            }
 
             canvas.DrawPath(ViewModel.RoutePath, SkiaPaints.RoutePathPaint);
 
@@ -196,16 +226,6 @@ namespace RoadCaptain.App.RouteBuilder.Controls
                 DrawCircleMarker(canvas, ViewModel.RiderPosition.Value, SkiaPaints.RiderPositionFillPaint);
             }
 
-            DrawCircleMarker(canvas, new SKPoint(100, 100), new SKPaint() {Color = SKColor.Parse("#0000ff"), Style = SKPaintStyle.Fill});
-            DrawCircleMarker(canvas, new SKPoint(100, 10), new SKPaint() {Color = SKColor.Parse("#0000ff"), Style = SKPaintStyle.Fill});
-            DrawCircleMarker(canvas, new SKPoint(10, 100), new SKPaint() {Color = SKColor.Parse("#0000ff"), Style = SKPaintStyle.Fill});
-            DrawCircleMarker(canvas, new SKPoint(200, 200), new SKPaint() {Color = SKColor.Parse("#0000ff"), Style = SKPaintStyle.Fill});
-
-            if (ClickedPosition != new Point(0, 0))
-            {
-                DrawCircleMarker(canvas, new SKPoint((float)ClickedPosition.X, (float)ClickedPosition.Y), SkiaPaints.RiderPositionFillPaint);
-            }
-
             canvas.Flush();
         }
 
@@ -225,6 +245,14 @@ namespace RoadCaptain.App.RouteBuilder.Controls
                 KomMarkerWidth,
                 KomMarkerHeight,
                 paint);
+        }
+
+        private void InitializeBitmap()
+        {
+            _bitmap = new SKBitmap((int)Bounds.Width, (int)Bounds.Height);
+
+            using var canvas = new SKCanvas(_bitmap);
+            canvas.Clear(CanvasBackgroundColor);
         }
     }
 }
