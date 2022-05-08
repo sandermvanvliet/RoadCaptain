@@ -46,7 +46,10 @@ namespace RoadCaptain.App.RouteBuilder.Controls
                 _renderOperation.ViewModel = ViewModel;
             }
 
-            context.Custom(_renderOperation);
+            if (IsVisible)
+            {
+                context.Custom(_renderOperation);
+            }
         }
 
         protected override Size MeasureOverride(Size availableSize)
