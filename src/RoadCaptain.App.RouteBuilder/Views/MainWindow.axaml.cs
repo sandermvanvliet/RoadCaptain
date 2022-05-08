@@ -134,11 +134,10 @@ namespace RoadCaptain.App.RouteBuilder.Views
             {
                 return;
             }
+            
+            var position = zwiftMap.GetPositionOnCanvas(e.GetPosition(zwiftMap));
 
-            var position = e.GetPosition(zwiftMap);
-            var positionOnCanvas = zwiftMap.GetPositionOnCanvas(position);
-
-            ViewModel.SelectSegmentCommand.Execute(positionOnCanvas);
+            ViewModel.SelectSegmentCommand.Execute(position);
         }
         
         // ReSharper disable once UnusedMember.Local

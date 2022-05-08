@@ -173,6 +173,14 @@ namespace RoadCaptain.App.RouteBuilder.Controls
                 return;
             }
 
+            if (Debugger.IsAttached)
+            {
+                var positionOnCanvas = GetPositionOnCanvas(e.GetPosition(this));
+                _renderOperation.ClickedPosition = positionOnCanvas;
+
+                InvalidateVisual();
+            }
+
             base.OnPointerReleased(e);
         }
 
@@ -240,20 +248,39 @@ namespace RoadCaptain.App.RouteBuilder.Controls
 
         public Point GetPositionOnCanvas(Point position)
         {
-            Debug.WriteLine($"[Main] TransX: {_renderOperation.MainMatrix.TransX} TransY: {_renderOperation.MainMatrix.TransY} ScaleX: {_renderOperation.MainMatrix.ScaleX} ScaleY: {_renderOperation.MainMatrix.ScaleY}");
-            Debug.WriteLine($"[Current] TransX: {_renderOperation.CurrentMatrix.TransX} TransY: {_renderOperation.CurrentMatrix.TransY} ScaleX: {_renderOperation.CurrentMatrix.ScaleX} ScaleY: {_renderOperation.CurrentMatrix.ScaleY}");
+            var invertedLogical = _renderOperation.LogicalMatrix.Invert();
+            var invertedFinal = _renderOperation.FinalMatrix.Invert();
 
-            Debug.WriteLine($"[Start]  X: {position.X:0.0} Y: {position.Y:0.0}");
+            DumpMatrix(_renderOperation.MainMatrix, "Main");
+            DumpMatrix(_renderOperation.LogicalMatrix, "Logical");
+            DumpMatrix(invertedLogical, "Inverted");
+            DumpMatrix(_renderOperation.FinalMatrix, "Final");
+            DumpMatrix(invertedFinal, "Inverted");
 
-            if (_renderOperation.CurrentMatrix == SKMatrix.Empty)
+            Debug.WriteLine($" [Start] X: {position.X:0.00} Y: {position.Y:0.00}");
+            
+            Point pointOnCanvas;
+
+            if (_renderOperation.LogicalMatrix == SKMatrix.Empty)
             {
-                return position;
+                pointOnCanvas = position;
+            }
+            else
+            {
+                var conversion = invertedLogical;
+                var intermediate = conversion.MapPoint((float)position.X, (float)position.Y);
+                pointOnCanvas = new Point(intermediate.X, intermediate.Y);
             }
 
-            var step1 = _renderOperation.CurrentMatrix.Invert().MapPoint((float)position.X, (float)position.Y);
-            Debug.WriteLine($"[Step 1] X: {step1.X:0.0} Y: {step1.Y:0.0}");
+            Debug.WriteLine($"[Result] X: {pointOnCanvas.X:0.00} Y: {pointOnCanvas.Y:0.00}");
             
-            return new Point(step1.X, step1.Y);
+            return pointOnCanvas;
+        }
+
+        private static void DumpMatrix(SKMatrix matrix, string name)
+        {
+            Debug.WriteLine(
+                $"[{name,10}] TransX: {matrix.TransX:0.000} TransY: {matrix.TransY:0.000} ScaleX: {matrix.ScaleX:0.000} ScaleY: {matrix.ScaleY:0.000}");
         }
     }
 }

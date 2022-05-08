@@ -14,7 +14,9 @@ namespace RoadCaptain.App.RouteBuilder.Controls
     {
         private static readonly SKColor CanvasBackgroundColor = SKColor.Parse("#FFFFFF");
         public SKMatrix MainMatrix { get; private set; }
-        public SKMatrix CurrentMatrix { get; private set; }
+        public SKMatrix LogicalMatrix { get; private set; }
+        public SKMatrix FinalMatrix { get; private set; }
+
         private const int KomMarkerHeight = 32;
         private const int KomMarkerWidth = 6;
         private const int KomMarkerCenterX = 3;
@@ -37,6 +39,7 @@ namespace RoadCaptain.App.RouteBuilder.Controls
         public MainWindowViewModel? ViewModel { get; set; }
         public bool ShowSprints { get; set; }
         public bool ShowClimbs { get; set; }
+        public Point ClickedPosition { get; set; }
 
         public void Render(IDrawingContextImpl context)
         {
@@ -48,6 +51,8 @@ namespace RoadCaptain.App.RouteBuilder.Controls
             }
 
             MainMatrix = canvas.TotalMatrix;
+
+            DrawCircleMarker(canvas, new SKPoint(100, 100), new SKPaint() {Color = SKColor.Parse("#ff0000"), Style = SKPaintStyle.Fill});
 
             canvas.Save();
 
@@ -72,7 +77,7 @@ namespace RoadCaptain.App.RouteBuilder.Controls
                 matrix = SKMatrix.CreateScale(ZoomLevel, ZoomLevel, (float)ZoomCenter.X, (float)ZoomCenter.Y);
             }
 
-            CurrentMatrix = matrix;
+            LogicalMatrix = matrix;
 
             if (matrix != SKMatrix.Empty)
 
@@ -80,6 +85,8 @@ namespace RoadCaptain.App.RouteBuilder.Controls
                 var postConcat = MainMatrix.PostConcat(matrix);
                 canvas.SetMatrix(postConcat);
             }
+
+            FinalMatrix = canvas.TotalMatrix;
 
             canvas.DrawPath(ViewModel.RoutePath, SkiaPaints.RoutePathPaint);
 
@@ -181,6 +188,16 @@ namespace RoadCaptain.App.RouteBuilder.Controls
             if (ViewModel.RiderPosition != null)
             {
                 DrawCircleMarker(canvas, ViewModel.RiderPosition.Value, SkiaPaints.RiderPositionFillPaint);
+            }
+
+            DrawCircleMarker(canvas, new SKPoint(100, 100), new SKPaint() {Color = SKColor.Parse("#0000ff"), Style = SKPaintStyle.Fill});
+            DrawCircleMarker(canvas, new SKPoint(100, 10), new SKPaint() {Color = SKColor.Parse("#0000ff"), Style = SKPaintStyle.Fill});
+            DrawCircleMarker(canvas, new SKPoint(10, 100), new SKPaint() {Color = SKColor.Parse("#0000ff"), Style = SKPaintStyle.Fill});
+            DrawCircleMarker(canvas, new SKPoint(200, 200), new SKPaint() {Color = SKColor.Parse("#0000ff"), Style = SKPaintStyle.Fill});
+
+            if (ClickedPosition != new Point(0, 0))
+            {
+                DrawCircleMarker(canvas, new SKPoint((float)ClickedPosition.X, (float)ClickedPosition.Y), SkiaPaints.RiderPositionFillPaint);
             }
 
             canvas.Flush();
