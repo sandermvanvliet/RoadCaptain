@@ -41,7 +41,7 @@ namespace RoadCaptain.App.RouteBuilder.Controls
             set
             {
                 _bounds = value;
-
+                
                 InitializeBitmap();
             }
         }
@@ -65,8 +65,6 @@ namespace RoadCaptain.App.RouteBuilder.Controls
                 return;
             }
 
-            canvas.Save();
-
             canvas.Clear(CanvasBackgroundColor);
 
             if (_bitmap is { Width: > 0 })
@@ -76,11 +74,9 @@ namespace RoadCaptain.App.RouteBuilder.Controls
                 {
                     RenderCanvas(mapCanvas);
                 }
-
+                
                 canvas.DrawBitmap(_bitmap, 0, 0);
             }
-
-            canvas.Restore();
         }
 
         private void RenderCanvas(SKCanvas canvas)
