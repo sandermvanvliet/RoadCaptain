@@ -32,6 +32,8 @@ namespace RoadCaptain.App.RouteBuilder.Controls
 
         public void Dispose()
         {
+            _bitmap?.Dispose();
+            _bitmap = null;
         }
 
         public Rect Bounds
