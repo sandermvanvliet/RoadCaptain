@@ -8,7 +8,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
         private SegmentDirection _direction;
         private readonly double _ascent;
         private readonly double _descent;
-        private string _turnGlyph;
+        private string? _turnGlyph;
 
         public SegmentSequenceViewModel(SegmentSequence segmentSequence, Segment segment, int sequenceNumber)
         {
@@ -23,7 +23,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             NoSelectReason = segment.NoSelectReason;
         }
 
-        private static string GlyphFromTurn(TurnDirection turnDirection)
+        private static string? GlyphFromTurn(TurnDirection turnDirection)
         {
             return turnDirection switch
             {
@@ -38,7 +38,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
 
         public int SequenceNumber { get; }
 
-        public string TurnGlyph
+        public string? TurnGlyph
         {
             get => _turnGlyph;
             private set
@@ -107,10 +107,8 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
         {
             Model.TurnToNextSegment = TurnDirection.None;
             Model.NextSegmentId = null;
-            Model.Direction = SegmentDirection.Unknown;
 
             TurnGlyph = null;
-            Direction = SegmentDirection.Unknown;
         }
     }
 }
