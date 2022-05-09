@@ -40,16 +40,16 @@ namespace RoadCaptain.App.Runner
 
         public void ShowInGameWindow(InGameNavigationWindowViewModel viewModel)
         {
-            //var inGameWindow = Resolve<InGameNavigationWindow>();
+            var inGameWindow = Resolve<InGameNavigationWindow>();
 
-            //inGameWindow.DataContext = viewModel;
+            inGameWindow.DataContext = viewModel;
 
-            //if (CurrentWindow != null)
-            //{
-            //    Close(CurrentWindow);
-            //}
+            if (CurrentWindow != null)
+            {
+                Close(CurrentWindow);
+            }
 
-            //Show(inGameWindow);
+            Show(inGameWindow);
         }
 
         public async Task<TokenResponse?> ShowLogInDialog(Window owner)
