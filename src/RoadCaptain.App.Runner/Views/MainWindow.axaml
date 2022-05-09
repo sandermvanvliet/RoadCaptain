@@ -180,7 +180,10 @@
                     <Button Content="Changelog (Github)" Margin="4,0,0,0" CommandParameter="{Binding Path=ChangelogUri}" Command="{Binding Path=OpenLinkCommand}" Classes="linkButton" />
                 </StackPanel>
                 <Button Grid.Column="1"
-                    Content="Let's Go!" HorizontalAlignment="Right" Margin="2,4,4,2" VerticalAlignment="Center" 
+                    Content="Let's Go!" HorizontalAlignment="Right" 
+                    Margin="2,4,4,2" Padding="0,0,4,0" 
+                    Width="100"
+                    VerticalAlignment="Center" 
                     Command="{Binding Path=StartRouteCommand}" 
                     CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}"
                     IsEnabled="{Binding Path=CanStartRoute}" />
