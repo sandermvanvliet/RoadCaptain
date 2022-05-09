@@ -6,6 +6,8 @@ namespace RoadCaptain.App.MacOs.UserPreferences
     {
         public string? DefaultSport { get; set; }
         public string? LastUsedFolder { get; set; }
+        public string? Route { get; set; }
+
         public void Load()
         {
             var configDirectory = Path.Combine("~", "Library", "RoadCaptain");

@@ -1,8 +1,8 @@
 using RoadCaptain.App.Shared.UserPreferences;
 
-namespace RoadCaptain.App.RouteBuilder
+namespace RoadCaptain.App.Runner
 {
-    internal class DummyUserPreferences : IUserPreferences
+    public class DummyUserPreferences : IUserPreferences
     {
         public string? DefaultSport { get; set; } = "Cycling";
         public string? LastUsedFolder { get; set; }

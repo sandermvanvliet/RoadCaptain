@@ -55,9 +55,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RoadCaptain.App.Shared", "s
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RoadCaptain.App.Windows", "src\RoadCaptain.App.Windows\RoadCaptain.App.Windows.csproj", "{A00865F7-B19B-43F6-9710-55A247588729}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RoadCaptain.App.Linux", "src\RoadCaptain.App.Linux\RoadCaptain.App.Linux.csproj", "{8F2FBE3A-4381-4673-B8A8-1B03D44D0886}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RoadCaptain.App.Linux", "src\RoadCaptain.App.Linux\RoadCaptain.App.Linux.csproj", "{8F2FBE3A-4381-4673-B8A8-1B03D44D0886}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RoadCaptain.App.MacOs", "src\RoadCaptain.App.MacOs\RoadCaptain.App.MacOs.csproj", "{2811B499-EA37-4560-952F-361E9410EB09}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RoadCaptain.App.MacOs", "src\RoadCaptain.App.MacOs\RoadCaptain.App.MacOs.csproj", "{2811B499-EA37-4560-952F-361E9410EB09}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RoadCaptain.App.Runner", "src\RoadCaptain.App.Runner\RoadCaptain.App.Runner.csproj", "{1F095D25-5DF6-48C7-8666-8FA1CCFD368F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -409,6 +411,24 @@ Global
 		{2811B499-EA37-4560-952F-361E9410EB09}.ReleaseFull|x64.Build.0 = Release|Any CPU
 		{2811B499-EA37-4560-952F-361E9410EB09}.ReleaseFull|x86.ActiveCfg = Release|Any CPU
 		{2811B499-EA37-4560-952F-361E9410EB09}.ReleaseFull|x86.Build.0 = Release|Any CPU
+		{1F095D25-5DF6-48C7-8666-8FA1CCFD368F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1F095D25-5DF6-48C7-8666-8FA1CCFD368F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1F095D25-5DF6-48C7-8666-8FA1CCFD368F}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{1F095D25-5DF6-48C7-8666-8FA1CCFD368F}.Debug|x64.Build.0 = Debug|Any CPU
+		{1F095D25-5DF6-48C7-8666-8FA1CCFD368F}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{1F095D25-5DF6-48C7-8666-8FA1CCFD368F}.Debug|x86.Build.0 = Debug|Any CPU
+		{1F095D25-5DF6-48C7-8666-8FA1CCFD368F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1F095D25-5DF6-48C7-8666-8FA1CCFD368F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1F095D25-5DF6-48C7-8666-8FA1CCFD368F}.Release|x64.ActiveCfg = Release|Any CPU
+		{1F095D25-5DF6-48C7-8666-8FA1CCFD368F}.Release|x64.Build.0 = Release|Any CPU
+		{1F095D25-5DF6-48C7-8666-8FA1CCFD368F}.Release|x86.ActiveCfg = Release|Any CPU
+		{1F095D25-5DF6-48C7-8666-8FA1CCFD368F}.Release|x86.Build.0 = Release|Any CPU
+		{1F095D25-5DF6-48C7-8666-8FA1CCFD368F}.ReleaseFull|Any CPU.ActiveCfg = Release|Any CPU
+		{1F095D25-5DF6-48C7-8666-8FA1CCFD368F}.ReleaseFull|Any CPU.Build.0 = Release|Any CPU
+		{1F095D25-5DF6-48C7-8666-8FA1CCFD368F}.ReleaseFull|x64.ActiveCfg = Release|Any CPU
+		{1F095D25-5DF6-48C7-8666-8FA1CCFD368F}.ReleaseFull|x64.Build.0 = Release|Any CPU
+		{1F095D25-5DF6-48C7-8666-8FA1CCFD368F}.ReleaseFull|x86.ActiveCfg = Release|Any CPU
+		{1F095D25-5DF6-48C7-8666-8FA1CCFD368F}.ReleaseFull|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -433,6 +453,7 @@ Global
 		{A00865F7-B19B-43F6-9710-55A247588729} = {BEA7E74A-4BB1-47E5-864C-8F017CD224BB}
 		{8F2FBE3A-4381-4673-B8A8-1B03D44D0886} = {BEA7E74A-4BB1-47E5-864C-8F017CD224BB}
 		{2811B499-EA37-4560-952F-361E9410EB09} = {BEA7E74A-4BB1-47E5-864C-8F017CD224BB}
+		{1F095D25-5DF6-48C7-8666-8FA1CCFD368F} = {BEA7E74A-4BB1-47E5-864C-8F017CD224BB}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {EFDBED01-0D64-4ACF-89AA-107DDFD90387}
