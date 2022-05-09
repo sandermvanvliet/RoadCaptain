@@ -5,9 +5,6 @@
     },
     {
       "type": "RoadCaptain.Adapters.AdaptersModule, RoadCaptain.Adapters"
-    },
-    {
-      "type": "RoadCaptain.App.Runner.MainModule, RoadCaptain.App.Runner"
     }
   ]
 }
