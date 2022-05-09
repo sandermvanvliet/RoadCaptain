@@ -24,8 +24,6 @@ namespace RoadCaptain.App.RouteBuilder.Controls
         private Segment? _selectedSegment;
         private List<Segment>? _segments;
 
-        private MainWindowViewModel? ViewModel => DataContext as MainWindowViewModel;
-
         public static readonly DirectProperty<ZwiftMap, bool> ShowClimbsProperty = AvaloniaProperty.RegisterDirect<ZwiftMap, bool>(nameof(ShowClimbs), map => map.ShowClimbs, (map, value) => map.ShowClimbs = value);
         public static readonly DirectProperty<ZwiftMap, bool> ShowSprintsProperty = AvaloniaProperty.RegisterDirect<ZwiftMap, bool>(nameof(ShowSprints), map => map.ShowSprints, (map, value) => map.ShowSprints = value);
         public static readonly DirectProperty<ZwiftMap, Segment?> HighlightedSegmentProperty = AvaloniaProperty.RegisterDirect<ZwiftMap, Segment?>(nameof(HighlightedSegment), map => map.HighlightedSegment, (map, value) => map.HighlightedSegment = value);
@@ -58,11 +56,6 @@ namespace RoadCaptain.App.RouteBuilder.Controls
 
         public override void Render(DrawingContext context)
         {
-            if (ViewModel == null)
-            {
-                return;
-            }
-
             if (IsVisible)
             {
                 context.Custom(_renderOperation);
@@ -77,7 +70,7 @@ namespace RoadCaptain.App.RouteBuilder.Controls
 
         protected override void OnPropertyChanged<T>(AvaloniaPropertyChangedEventArgs<T> change)
         {
-            if (change.Property.Name == nameof(Bounds) && ViewModel != null)
+            if (change.Property.Name == nameof(Bounds))
             {
                 // Always construct a new Rect without translation,
                 // otherwise the rendering is offset _within_ the control
