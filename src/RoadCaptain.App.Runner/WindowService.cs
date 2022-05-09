@@ -54,15 +54,14 @@ namespace RoadCaptain.App.Runner
 
         public async Task<TokenResponse?> ShowLogInDialog(Window owner)
         {
-            //var zwiftLoginWindow = Resolve<ZwiftLoginWindow>();
+            var zwiftLoginWindow = Resolve<ZwiftLoginWindow>();
+            
+            zwiftLoginWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
 
-            //zwiftLoginWindow.Owner = owner;
-            //zwiftLoginWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
-
-            //if (ShowDialog(zwiftLoginWindow) ?? false)
-            //{
-            //    return zwiftLoginWindow.TokenResponse;
-            //}
+            if (await ShowDialog(zwiftLoginWindow) ?? false)
+            {
+                return zwiftLoginWindow.TokenResponse;
+            }
 
             return null;
         }

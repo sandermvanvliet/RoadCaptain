@@ -78,14 +78,9 @@ namespace RoadCaptain.App.Runner
             return _componentContext.Resolve<TType>();
         }
 
-        protected virtual bool? ShowDialog(Window window)
+        protected virtual async Task<bool?> ShowDialog(Window window)
         {
-            if (window.Owner == null)
-            {
-                //window.Owner = CurrentWindow;
-            }
-
-            window.ShowDialog(CurrentWindow).GetAwaiter().GetResult();
+            await window.ShowDialog(CurrentWindow);
 
             return true;
         }
