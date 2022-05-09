@@ -92,4 +92,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\background.jpg" />
+  </ItemGroup>
 </Project>

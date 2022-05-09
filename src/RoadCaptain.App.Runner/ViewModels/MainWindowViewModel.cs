@@ -113,7 +113,7 @@ namespace RoadCaptain.App.Runner.ViewModels
             Route != null &&
             LoggedInToZwift;
 
-        public string RoutePath
+        public string? RoutePath
         {
             get => _routePath;
             set
@@ -253,7 +253,7 @@ namespace RoadCaptain.App.Runner.ViewModels
             }
         }
 
-        public void CheckForNewVersion()
+        public async Task CheckForNewVersion()
         {
             if (_haveCheckedVersion)
             {
@@ -267,7 +267,7 @@ namespace RoadCaptain.App.Runner.ViewModels
 
             if (latestRelease != null && latestRelease.Version > currentVersion)
             {
-                _windowService.ShowNewVersionDialog(latestRelease);
+                await _windowService.ShowNewVersionDialog(latestRelease);
             }
         }
 

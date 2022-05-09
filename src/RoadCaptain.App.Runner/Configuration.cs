@@ -13,7 +13,7 @@ namespace RoadCaptain.App.Runner
             configuration?.GetSection("Zwift").Bind(this);
         }
 
-        public string Route { get; set; }
+        public string? Route { get; set; }
         public string? AccessToken { get; set; }
     }
 }
