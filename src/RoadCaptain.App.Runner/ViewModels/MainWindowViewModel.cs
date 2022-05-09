@@ -79,17 +79,19 @@ namespace RoadCaptain.App.Runner.ViewModels
             }
 
             StartRouteCommand = new RelayCommand(
-                _ => StartRoute(),
-                _ => CanStartRoute
-            );
+                    _ => StartRoute(),
+                    _ => CanStartRoute
+                )
+                .SubscribeTo(this, () => CanStartRoute);
 
             LoadRouteCommand = new AsyncRelayCommand(
                 _ => LoadRoute(),
                 _ => true);
 
             LogInCommand = new AsyncRelayCommand(
-                _ => LogInToZwift(_ as Window),
-                _ => !LoggedInToZwift);
+                    _ => LogInToZwift(_ as Window),
+                    _ => !LoggedInToZwift)
+                .SubscribeTo(this, () => LoggedInToZwift);
 
             BuildRouteCommand = new AsyncRelayCommand(
                     _ => LaunchRouteBuilder(),
