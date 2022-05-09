@@ -234,6 +234,8 @@ namespace RoadCaptain.App.RouteBuilder.Controls
             // gets triggered for that position _after_ we show the tool tip initially
             if (position != new Point(0,0) && (ShowSprints || ShowClimbs))
             {
+                position = GetPositionOnCanvas(position);
+
                 var matches = _renderOperation
                     .Markers
                     .Values
