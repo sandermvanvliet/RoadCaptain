@@ -124,7 +124,7 @@
                             Grid.Column="1"
                             IsVisible="{Binding Path=LoggedInToZwift}">
                     <Border BorderBrush="DarkGray" BorderThickness="1" CornerRadius="0" Margin="4,0,0,0" Height="32" Width="32" Padding="0">
-                        <Image Source="{Binding Path=ZwiftAvatarUri}" Height="32" ClipToBounds="True" />
+                        <Image Source="{Binding Path=ZwiftAvatar}" Height="32" ClipToBounds="True" />
                     </Border>
                     <TextBlock Text="{Binding Path=ZwiftName}" FontSize="16" VerticalAlignment="Center" Margin="4,0,0,0" />
                 </StackPanel>

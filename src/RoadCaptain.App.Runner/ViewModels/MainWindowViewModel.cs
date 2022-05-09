@@ -3,9 +3,14 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Media;
+using Avalonia.Media.Imaging;
+using Avalonia.Platform;
 using Microsoft.IdentityModel.JsonWebTokens;
 using ReactiveUI;
 using RoadCaptain.App.Shared.Commands;
@@ -35,6 +40,7 @@ namespace RoadCaptain.App.Runner.ViewModels
         private PlannedRoute? _route;
         private readonly IVersionChecker _versionChecker;
         private bool _haveCheckedVersion;
+        private IImage? _zwiftAvatar;
 
         public MainWindowViewModel(Configuration configuration,
             IUserPreferences appSettings,
@@ -179,6 +185,21 @@ namespace RoadCaptain.App.Runner.ViewModels
                 }
 
                 _zwiftName = value;
+                this.RaisePropertyChanged();
+            }
+        }
+
+        public IImage? ZwiftAvatar
+        {
+            get => _zwiftAvatar;
+            set
+            {
+                if (value == _zwiftAvatar)
+                {
+                    return;
+                }
+
+                _zwiftAvatar = value;
                 this.RaisePropertyChanged();
             }
         }
@@ -372,6 +393,7 @@ namespace RoadCaptain.App.Runner.ViewModels
                     ZwiftName =
                         $"{tokenResponse.UserProfile.FirstName} {tokenResponse.UserProfile.LastName}";
                     ZwiftAvatarUri = tokenResponse.UserProfile.Avatar;
+                    ZwiftAvatar = DownloadAvatarImage(ZwiftAvatarUri);
                 }
 
                 LoggedInToZwift = true;
@@ -382,6 +404,33 @@ namespace RoadCaptain.App.Runner.ViewModels
             }
 
             return CommandResult.Aborted();
+        }
+
+        private IImage DownloadAvatarImage(string? uri)
+        {
+            if (uri.StartsWith("https://"))
+            {
+                using var client = new HttpClient();
+                try
+                {
+                    var imageBytes = client.GetByteArrayAsync(uri).GetAwaiter().GetResult();
+
+                    return new Bitmap(new MemoryStream(imageBytes));
+                }
+                catch 
+                {
+                    // Nop
+                }
+            }
+            
+            var assets = AvaloniaLocator.Current.GetService<IAssetLoader>();
+
+            if (uri.StartsWith("avares://"))
+            {
+                return new Bitmap(assets.Open(new Uri(uri)));
+            }
+
+            return new Bitmap(assets.Open(new Uri("avares://RoadCaptain.App.Shared/Assets/profile-default.png")));
         }
 
         private CommandResult OpenLink(string url)
