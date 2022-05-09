@@ -79,14 +79,14 @@
                 <TextBlock Text="RoadCaptain" FontWeight="ExtraBold" FontSize="32" VerticalAlignment="Center" />
             </StackPanel>
             <Button Content="X" Background="Red" Foreground="White" Grid.Row="0" HorizontalAlignment="Right" Width="40" Height="20" Margin="0,-3,-3,0" VerticalAlignment="Top" 
-                Click="CloseButton_Click">
+                Click="CloseButton_Click" FontSize="14">
                 <Button.Styles>
                     <Style Selector="Button">
                         <Setter Property="Template">
                             <Setter.Value>
                                 <ControlTemplate TargetType="Button">
                                     <Border Name="borderZero" Background="{TemplateBinding Background}" CornerRadius="0,8,0,0">
-                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" Content="{TemplateBinding Content}" />
                                     </Border>
                                 </ControlTemplate>
                             </Setter.Value>
@@ -175,8 +175,8 @@
                     <ColumnDefinition Width="96" />
                 </Grid.ColumnDefinitions>
                 <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center" IsEnabled="True">
-                    <TextBlock Text="Version:" />
-                    <TextBlock Text="{Binding Path=Version}" Margin="4,0,0,0" />
+                    <TextBlock Text="Version:" VerticalAlignment="Center" />
+                    <TextBlock Text="{Binding Path=Version}" Margin="4,0,0,0" VerticalAlignment="Center" />
                     <Button Content="Changelog (Github)" Margin="4,0,0,0" CommandParameter="{Binding Path=ChangelogUri}" Command="{Binding Path=OpenLinkCommand}" Classes="linkButton" />
                 </StackPanel>
                 <Button Grid.Column="1"
