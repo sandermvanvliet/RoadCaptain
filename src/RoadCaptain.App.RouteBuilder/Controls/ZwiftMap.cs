@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Windows.Input;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Media;
+using Avalonia.Threading;
 using RoadCaptain.App.RouteBuilder.Models;
 using RoadCaptain.App.RouteBuilder.ViewModels;
 using SkiaSharp;
@@ -23,28 +25,35 @@ namespace RoadCaptain.App.RouteBuilder.Controls
         private List<Segment>? _segments;
 
         private MainWindowViewModel? ViewModel => DataContext as MainWindowViewModel;
-        
-        public static readonly DirectProperty<ZwiftMap, bool> ShowClimbsProperty = AvaloniaProperty.RegisterDirect<ZwiftMap, bool>(nameof(ShowClimbs), map =>  map.ShowClimbs, (map,value) => map.ShowClimbs = value);
-        public static readonly DirectProperty<ZwiftMap, bool> ShowSprintsProperty = AvaloniaProperty.RegisterDirect<ZwiftMap, bool>(nameof(ShowSprints), map =>  map.ShowSprints, (map,value) => map.ShowSprints = value);
-        public static readonly DirectProperty<ZwiftMap, Segment?> HighlightedSegmentProperty = AvaloniaProperty.RegisterDirect<ZwiftMap, Segment?>(nameof(HighlightedSegment), map =>  map.HighlightedSegment, (map,value) => map.HighlightedSegment = value);
-        public static readonly DirectProperty<ZwiftMap, Segment?> SelectedSegmentProperty = AvaloniaProperty.RegisterDirect<ZwiftMap, Segment?>(nameof(SelectedSegment), map =>  map.SelectedSegment, (map,value) => map.SelectedSegment = value);
-        public static readonly DirectProperty<ZwiftMap, SKPoint?> RiderPositionProperty = AvaloniaProperty.RegisterDirect<ZwiftMap, SKPoint?>(nameof(RiderPosition), map =>  map.RiderPosition, (map,value) => map.RiderPosition = value);
-        public static readonly DirectProperty<ZwiftMap, List<Segment>?> SegmentsProperty = AvaloniaProperty.RegisterDirect<ZwiftMap, List<Segment>?>(nameof(Segments), map =>  map.Segments, (map,value) => map.Segments = value);
-        public static readonly DirectProperty<ZwiftMap, List<Segment>?> MarkersProperty = AvaloniaProperty.RegisterDirect<ZwiftMap, List<Segment>?>(nameof(Markers), map =>  map.Markers, (map,value) => map.Markers = value);
-        public static readonly DirectProperty<ZwiftMap, RouteViewModel?> RouteProperty = AvaloniaProperty.RegisterDirect<ZwiftMap, RouteViewModel?>(nameof(Route), map =>  map.Route, (map,value) => map.Route = value);
-        public static readonly DirectProperty<ZwiftMap, ICommand> SelectSegmentCommandProperty = AvaloniaProperty.RegisterDirect<ZwiftMap, ICommand>(nameof(SelectSegmentCommand), map => map.SelectSegmentCommand, (map,value) => map.SelectSegmentCommand = value);
+
+        public static readonly DirectProperty<ZwiftMap, bool> ShowClimbsProperty = AvaloniaProperty.RegisterDirect<ZwiftMap, bool>(nameof(ShowClimbs), map => map.ShowClimbs, (map, value) => map.ShowClimbs = value);
+        public static readonly DirectProperty<ZwiftMap, bool> ShowSprintsProperty = AvaloniaProperty.RegisterDirect<ZwiftMap, bool>(nameof(ShowSprints), map => map.ShowSprints, (map, value) => map.ShowSprints = value);
+        public static readonly DirectProperty<ZwiftMap, Segment?> HighlightedSegmentProperty = AvaloniaProperty.RegisterDirect<ZwiftMap, Segment?>(nameof(HighlightedSegment), map => map.HighlightedSegment, (map, value) => map.HighlightedSegment = value);
+        public static readonly DirectProperty<ZwiftMap, Segment?> SelectedSegmentProperty = AvaloniaProperty.RegisterDirect<ZwiftMap, Segment?>(nameof(SelectedSegment), map => map.SelectedSegment, (map, value) => map.SelectedSegment = value);
+        public static readonly DirectProperty<ZwiftMap, SKPoint?> RiderPositionProperty = AvaloniaProperty.RegisterDirect<ZwiftMap, SKPoint?>(nameof(RiderPosition), map => map.RiderPosition, (map, value) => map.RiderPosition = value);
+        public static readonly DirectProperty<ZwiftMap, List<Segment>?> SegmentsProperty = AvaloniaProperty.RegisterDirect<ZwiftMap, List<Segment>?>(nameof(Segments), map => map.Segments, (map, value) => map.Segments = value);
+        public static readonly DirectProperty<ZwiftMap, List<Segment>?> MarkersProperty = AvaloniaProperty.RegisterDirect<ZwiftMap, List<Segment>?>(nameof(Markers), map => map.Markers, (map, value) => map.Markers = value);
+        public static readonly DirectProperty<ZwiftMap, RouteViewModel?> RouteProperty = AvaloniaProperty.RegisterDirect<ZwiftMap, RouteViewModel?>(nameof(Route), map => map.Route, (map, value) => map.Route = value);
+        public static readonly DirectProperty<ZwiftMap, ICommand> SelectSegmentCommandProperty = AvaloniaProperty.RegisterDirect<ZwiftMap, ICommand>(nameof(SelectSegmentCommand), map => map.SelectSegmentCommand, (map, value) => map.SelectSegmentCommand = value);
 
         private Offsets? _overallOffsets;
         private readonly Dictionary<string, SKRect> _segmentPathBounds = new();
         private readonly Dictionary<string, SKPath> _segmentPaths = new();
         private RouteViewModel? _route;
         private List<Segment> _markers = new();
+        private readonly Timer _closeTimer;
+        private string? _toolTipIdentity;
 
         public ZwiftMap()
         {
             Background = new SolidColorBrush(Colors.Transparent);
 
             _renderOperation = new MapRenderOperation();
+
+            _closeTimer = new Timer(state => Dispatcher.UIThread.InvokeAsync(() => ToolTip.SetIsOpen(this, false)),
+                null,
+                Timeout.InfiniteTimeSpan,
+                Timeout.InfiniteTimeSpan);
         }
 
         public override void Render(DrawingContext context)
@@ -88,7 +97,7 @@ namespace RoadCaptain.App.RouteBuilder.Controls
         {
             get
             {
-                if(_highlightedSegment?.Id != _renderOperation.HighlightedSegmentId)
+                if (_highlightedSegment?.Id != _renderOperation.HighlightedSegmentId)
                 {
                     _renderOperation.HighlightedSegmentId = null;
                     _highlightedSegment = null;
@@ -111,7 +120,7 @@ namespace RoadCaptain.App.RouteBuilder.Controls
         {
             get
             {
-                if(_selectedSegment?.Id != _renderOperation.SelectedSegmentId)
+                if (_selectedSegment?.Id != _renderOperation.SelectedSegmentId)
                 {
                     _renderOperation.SelectedSegmentId = null;
                     _selectedSegment = null;
@@ -169,7 +178,7 @@ namespace RoadCaptain.App.RouteBuilder.Controls
             set
             {
                 _segments = value;
-                
+
                 if (_segments != null)
                 {
                     CreatePathsForSegments(_segments, _renderOperation.Bounds);
@@ -185,7 +194,7 @@ namespace RoadCaptain.App.RouteBuilder.Controls
             set
             {
                 _markers = value ?? new List<Segment>();
-                
+
                 CreateMarkers();
 
                 InvalidateVisual();
@@ -225,11 +234,13 @@ namespace RoadCaptain.App.RouteBuilder.Controls
                 e.Handled = true;
                 return;
             }
+            
+            var position = currentPoint.Position;
 
-            if (ShowSprints || ShowClimbs)
+            // Check position against 0,0 because for some reason this event
+            // gets triggered for that position _after_ we show the tool tip initially
+            if (position != new Point(0,0) && (ShowSprints || ShowClimbs))
             {
-                var position = currentPoint.Position;
-
                 var matches = _renderOperation
                     .Markers
                     .Values
@@ -240,11 +251,35 @@ namespace RoadCaptain.App.RouteBuilder.Controls
                 {
                     var marker = matches.Single();
 
-                    ViewModel.Model.StatusBarInfo("{0} {1}", marker.Type.ToString(), marker.Name);
+                    // When the mouse moved to another marker and the tool tip
+                    // is still open it doesn't reposition until it's closed.
+                    // To ensure the tool tip doesn't hang around at the old
+                    // position we close it here to have it re-open again at
+                    // the right position.
+                    if (_toolTipIdentity != marker.Id && ToolTip.GetIsOpen(this))
+                    {
+                        ToolTip.SetIsOpen(this, false);
+                    }
+
+                    _toolTipIdentity = marker.Id;
+
+                    if ((marker.Type == SegmentType.Sprint && !ShowSprints) ||
+                        (marker.Type == SegmentType.Climb && !ShowClimbs))
+                    {
+                        return;
+                    }
+
+                    ToolTip.SetTip(this, $"{marker.Type} {marker.Name}");
+
+                    if (!ToolTip.GetIsOpen(this))
+                    {
+                        ToolTip.SetIsOpen(this, true);
+                        ToolTip.SetPlacement(this, PlacementMode.Pointer);
+                    }
                 }
-                else
+                else if (ToolTip.GetIsOpen(this))
                 {
-                    ViewModel.Model.ClearStatusBar();
+                    _closeTimer.Change(TimeSpan.FromSeconds(1), Timeout.InfiniteTimeSpan);
                 }
             }
 
@@ -313,7 +348,7 @@ namespace RoadCaptain.App.RouteBuilder.Controls
             var newPanPosition = new Point(
                 _renderOperation.Pan.X + (_previousPanPosition.X - position.X),
                 _renderOperation.Pan.Y + (_previousPanPosition.Y - position.Y));
-            
+
             _renderOperation.Pan = newPanPosition;
             _previousPanPosition = position;
 
@@ -369,14 +404,14 @@ namespace RoadCaptain.App.RouteBuilder.Controls
         public Point GetPositionOnCanvas(Point position)
         {
             var invertedLogical = _renderOperation.LogicalMatrix.Invert();
-            
+
             if (_renderOperation.LogicalMatrix == SKMatrix.Empty)
             {
                 return position;
             }
 
             var intermediate = invertedLogical.MapPoint((float)position.X, (float)position.Y);
-            
+
             return new Point(intermediate.X, intermediate.Y);
         }
 

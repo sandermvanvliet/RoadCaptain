@@ -56,37 +56,6 @@ namespace RoadCaptain.App.RouteBuilder.Views
                     break;
             }
         }
-
-
-        private void SkElement_OnPointerMoved(object? sender, PointerEventArgs e)
-        {
-            var position = e.GetPosition((IInputElement?)sender);
-
-            // Hit test to see whether we're over a KOM/Sprint segment
-
-            // If sprints and climbs are not shown then exit
-            if (!SkElement.ShowSprints && !SkElement.ShowClimbs)
-            {
-                return;
-            }
-
-            //var matches = ViewModel
-            //    .Markers
-            //    .Values
-            //    .Where(kv => kv.Bounds.Contains((float)position.X, (float)position.Y))
-            //    .ToList();
-
-            //if (matches.Count == 1)
-            //{
-            //    var marker = matches.Single();
-
-            //    ViewModel.Model.StatusBarInfo("{0} {1}", marker.Type.ToString(), marker.Name);
-            //}
-            //else
-            //{
-            //    ViewModel.Model.ClearStatusBar();
-            //}
-        }
         
         // ReSharper disable once UnusedMember.Local
         // ReSharper disable once UnusedParameter.Local
