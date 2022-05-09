@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Avalonia.Controls;
+using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Threading;
 using RoadCaptain.App.Runner.Models;
 using RoadCaptain.App.Runner.ViewModels;
@@ -28,19 +29,19 @@ namespace RoadCaptain.App.Runner
             InvokeIfNeeded(() => _decorated.ShowInGameWindow(viewModel));
         }
 
-        public async Task<TokenResponse> ShowLogInDialog(Window owner)
+        public async Task<TokenResponse?> ShowLogInDialog(Window owner)
         {
             return await InvokeIfNeededAsync(() => _decorated.ShowLogInDialog(owner));
         }
 
-        public async Task ShowErrorDialog(string message, Window owner = null)
+        public async Task ShowErrorDialog(string message, Window owner)
         {
             await InvokeIfNeededAsync(() => _decorated.ShowErrorDialog(message, owner));
         }
 
-        public void ShowMainWindow()
+        public void ShowMainWindow(IApplicationLifetime applicationLifetime)
         {
-            InvokeIfNeeded(() => _decorated.ShowMainWindow());
+            InvokeIfNeeded(() => _decorated.ShowMainWindow(applicationLifetime));
         }
 
         public async Task ShowNewVersionDialog(Release release)

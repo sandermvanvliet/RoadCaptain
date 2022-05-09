@@ -9,6 +9,6 @@ namespace RoadCaptain.App.Runner.Models
         [JsonPropertyName("lastName")]
         public string LastName { get; set; }
         [JsonPropertyName("avatar")] 
-        public string Avatar { get; set; }
+        public string? Avatar { get; set; }
     }
 }

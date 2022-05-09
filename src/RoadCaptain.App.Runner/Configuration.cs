@@ -14,6 +14,6 @@ namespace RoadCaptain.App.Runner
         }
 
         public string Route { get; set; }
-        public string AccessToken { get; set; }
+        public string? AccessToken { get; set; }
     }
 }

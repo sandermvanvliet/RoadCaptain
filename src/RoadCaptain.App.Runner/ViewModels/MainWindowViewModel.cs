@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using Avalonia.Controls;
-using JetBrains.Annotations;
 using Microsoft.IdentityModel.JsonWebTokens;
+using ReactiveUI;
 using RoadCaptain.App.Shared.Commands;
 using RoadCaptain.App.Shared.UserPreferences;
 using RoadCaptain.Commands;
@@ -18,22 +17,22 @@ using RoadCaptain.UseCases;
 
 namespace RoadCaptain.App.Runner.ViewModels
 {
-    public class MainWindowViewModel : INotifyPropertyChanged
+    public class MainWindowViewModel : ViewModelBase
     {
         private readonly IUserPreferences _appSettings;
         private readonly Configuration _configuration;
         private readonly IGameStateDispatcher _gameStateDispatcher;
         private readonly IWindowService _windowService;
         private bool _loggedInToZwift;
-        private string _routePath;
+        private string? _routePath;
         private string _windowTitle = "RoadCaptain";
-        private string _zwiftAvatarUri = "Assets/profile-default.png";
-        private string _zwiftName;
+        private string? _zwiftAvatarUri = "Assets/profile-default.png";
+        private string? _zwiftName;
         private readonly LoadRouteUseCase _loadRouteUseCase;
         private readonly IRouteStore _routeStore;
-        private string _version;
-        private string _changelogUri;
-        private PlannedRoute _route;
+        private string _version = "0.0.0.0";
+        private string? _changelogUri;
+        private PlannedRoute? _route;
         private readonly IVersionChecker _versionChecker;
         private bool _haveCheckedVersion;
 
@@ -78,18 +77,18 @@ namespace RoadCaptain.App.Runner.ViewModels
                 _ => CanStartRoute
             );
 
-            LoadRouteCommand = new RelayCommand(
+            LoadRouteCommand = new AsyncRelayCommand(
                 _ => LoadRoute(),
                 _ => true);
 
-            LogInCommand = new RelayCommand(
+            LogInCommand = new AsyncRelayCommand(
                 _ => LogInToZwift(_ as Window),
                 _ => !LoggedInToZwift);
 
-            BuildRouteCommand = new RelayCommand(
+            BuildRouteCommand = new AsyncRelayCommand(
                     _ => LaunchRouteBuilder(),
                     _ => true)
-                .OnFailure(result => _windowService.ShowErrorDialog(result.Message));
+                .OnFailure(async result => await _windowService.ShowErrorDialog(result.Message, null));
 
             OpenLinkCommand = new RelayCommand(
                 _ => OpenLink(_ as string),
@@ -125,8 +124,8 @@ namespace RoadCaptain.App.Runner.ViewModels
                 }
 
                 _routePath = value;
-                OnPropertyChanged();
-                OnPropertyChanged(nameof(CanStartRoute));
+                this.RaisePropertyChanged();
+                this.RaisePropertyChanged(nameof(CanStartRoute));
             }
         }
 
@@ -141,7 +140,7 @@ namespace RoadCaptain.App.Runner.ViewModels
                 }
 
                 _windowTitle = value;
-                OnPropertyChanged();
+                this.RaisePropertyChanged();
             }
         }
 
@@ -156,9 +155,9 @@ namespace RoadCaptain.App.Runner.ViewModels
                 }
 
                 _loggedInToZwift = value;
-                OnPropertyChanged();
-                OnPropertyChanged(nameof(ZwiftLoggedInText));
-                OnPropertyChanged(nameof(CanStartRoute));
+                this.RaisePropertyChanged();
+                this.RaisePropertyChanged(nameof(ZwiftLoggedInText));
+                this.RaisePropertyChanged(nameof(CanStartRoute));
             }
         }
 
@@ -167,9 +166,9 @@ namespace RoadCaptain.App.Runner.ViewModels
                 ? "Logged in to Zwift"
                 : "Not yet logged in to Zwift";
 
-        public string ZwiftAccessToken { get; set; }
+        public string? ZwiftAccessToken { get; set; }
 
-        public string ZwiftName
+        public string? ZwiftName
         {
             get => _zwiftName;
             set
@@ -180,11 +179,11 @@ namespace RoadCaptain.App.Runner.ViewModels
                 }
 
                 _zwiftName = value;
-                OnPropertyChanged();
+                this.RaisePropertyChanged();
             }
         }
 
-        public string ZwiftAvatarUri
+        public string? ZwiftAvatarUri
         {
             get => _zwiftAvatarUri;
             set
@@ -195,7 +194,7 @@ namespace RoadCaptain.App.Runner.ViewModels
                 }
 
                 _zwiftAvatarUri = value;
-                OnPropertyChanged();
+                this.RaisePropertyChanged();
             }
         }
 
@@ -207,7 +206,7 @@ namespace RoadCaptain.App.Runner.ViewModels
                 if (value == _version) return;
                 _version = value;
                 ChangelogUri = $"https://github.com/sandermvanvliet/RoadCaptain/blob/main/Changelog.md/#{Version.Replace(".", "")}";
-                OnPropertyChanged();
+                this.RaisePropertyChanged();
             }
         }
 
@@ -218,19 +217,19 @@ namespace RoadCaptain.App.Runner.ViewModels
             {
                 if (value == _changelogUri) return;
                 _changelogUri = value;
-                OnPropertyChanged();
+                this.RaisePropertyChanged();
             }
         }
 
-        public PlannedRoute Route
+        public PlannedRoute? Route
         {
             get => _route;
             set
             {
                 if (Equals(value, _route)) return;
                 _route = value;
-                OnPropertyChanged();
-                OnPropertyChanged(nameof(CanStartRoute));
+                this.RaisePropertyChanged();
+                this.RaisePropertyChanged(nameof(CanStartRoute));
             }
         }
 
@@ -245,8 +244,6 @@ namespace RoadCaptain.App.Runner.ViewModels
         public ICommand LogInCommand { get; set; }
         public ICommand BuildRouteCommand { get; set; }
         public ICommand OpenLinkCommand { get; set; }
-
-        public event PropertyChangedEventHandler PropertyChanged;
 
         public void UpdateGameState(object state)
         {
@@ -282,7 +279,7 @@ namespace RoadCaptain.App.Runner.ViewModels
             LoggedInToZwift = false;
         }
 
-        private static bool IsValidToken(string accessToken)
+        private static bool IsValidToken(string? accessToken)
         {
             if (string.IsNullOrEmpty(accessToken))
             {
@@ -295,15 +292,9 @@ namespace RoadCaptain.App.Runner.ViewModels
             return token.ValidTo > DateTime.UtcNow.AddHours(1);
         }
 
-        [NotifyPropertyChangedInvocator]
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        private async Task<CommandResult> LoadRoute()
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-
-        private CommandResult LoadRoute()
-        {
-            var fileName = _windowService.ShowOpenFileDialog(_appSettings.LastUsedFolder);
+            var fileName = await _windowService.ShowOpenFileDialog(_appSettings.LastUsedFolder);
 
             if (!string.IsNullOrEmpty(fileName))
             {
@@ -331,7 +322,7 @@ namespace RoadCaptain.App.Runner.ViewModels
             return CommandResult.Success();
         }
 
-        private CommandResult LaunchRouteBuilder()
+        private async Task<CommandResult> LaunchRouteBuilder()
         {
             var assemblyLocation = GetType().Assembly.Location;
             var installationDirectory = Path.GetDirectoryName(assemblyLocation);
@@ -368,9 +359,9 @@ namespace RoadCaptain.App.Runner.ViewModels
             return CommandResult.Success();
         }
 
-        private CommandResult LogInToZwift(Window window)
+        private async Task<CommandResult> LogInToZwift(Window window)
         {
-            var tokenResponse = _windowService.ShowLogInDialog(window);
+            var tokenResponse = await _windowService.ShowLogInDialog(window);
 
             if (tokenResponse != null &&
                 !string.IsNullOrEmpty(tokenResponse.AccessToken))

@@ -20,6 +20,8 @@ namespace RoadCaptain.App.Runner
             // Wire up registrations through the autofac.json file
             builder.RegisterModule(new ConfigurationModule(configuration));
 
+            builder.RegisterModule<MainModule>();
+
             // Register dispatcher here because MainModule does not know of it
             builder.RegisterInstance(dispatcher).AsSelf().SingleInstance();
 

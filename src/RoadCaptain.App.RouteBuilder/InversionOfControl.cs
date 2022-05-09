@@ -19,19 +19,6 @@ namespace RoadCaptain.App.RouteBuilder
             builder.RegisterModule(new ConfigurationModule(configuration));
 
             builder.RegisterModule<MainModule>();
-            //builder.Register(_ =>
-            //{
-            //    var userPreferences = UserPreferences.Default;
-
-            //    if (userPreferences.UpgradeSettings)
-            //    {
-            //        userPreferences.Upgrade();
-            //        userPreferences.UpgradeSettings = false;
-            //        userPreferences.Save();
-            //    }
-
-            //    return userPreferences;
-            //}).SingleInstance();
 
             // Register dispatcher here because MainModule does not know of it
             builder.RegisterInstance(dispatcher).AsSelf().SingleInstance();

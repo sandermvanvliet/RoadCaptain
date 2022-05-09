@@ -3,6 +3,9 @@
 // See LICENSE or https://choosealicense.com/licenses/artistic-2.0/
 
 using Autofac;
+using Autofac.Core.Activators.Reflection;
+using Avalonia.Controls;
+using RoadCaptain.App.Runner.ViewModels;
 using RoadCaptain.App.Shared.UserPreferences;
 
 namespace RoadCaptain.App.Runner
@@ -30,11 +33,16 @@ namespace RoadCaptain.App.Runner
             builder.RegisterType<DummyUserPreferences>().As<IUserPreferences>().SingleInstance();
 #endif
             
+            
             builder
                 .RegisterAssemblyTypes(ThisAssembly)
-                .Where(type => type != typeof(Configuration) &&
-                               type != typeof(MonitoringEventsWithSerilog) &&
-                               type != typeof(WindowService))
+                .Where(type => type.BaseType == typeof(Window) && type.Namespace.EndsWith(".Views"))
+                .UsingConstructor(new MostParametersConstructorSelector())
+                .AsSelf();
+            
+            builder
+                .RegisterAssemblyTypes(ThisAssembly)
+                .Where(type => type.BaseType == typeof(ViewModelBase) && type.Namespace.EndsWith(".ViewModels"))
                 .AsSelf();
         }
     }

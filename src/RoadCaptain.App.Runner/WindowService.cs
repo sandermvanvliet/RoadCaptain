@@ -1,5 +1,7 @@
-﻿using Autofac;
+﻿using System.Threading.Tasks;
+using Autofac;
 using Avalonia.Controls;
+using Avalonia.Controls.ApplicationLifetimes;
 using RoadCaptain.App.Runner.Models;
 using RoadCaptain.App.Runner.ViewModels;
 using RoadCaptain.App.Runner.Views;
@@ -14,59 +16,53 @@ namespace RoadCaptain.App.Runner
         {
         }
 
-        public void ShowMainWindow()
+        public void ShowMainWindow(IApplicationLifetime applicationLifetime)
         {
-            if (CurrentWindow is MainWindow)
-            {
-                Activate(CurrentWindow);
-            }
-            else
-            {
-                var window = Resolve<MainWindow>();
+            var desktopMainWindow = Resolve<MainWindow>();
 
-                if (CurrentWindow != null)
-                {
-                    Close(CurrentWindow);
-                }
-                
-                Show(window);
+            if (applicationLifetime is IClassicDesktopStyleApplicationLifetime desktop && desktop.MainWindow == null)
+            {
+                desktop.MainWindow = desktopMainWindow;
             }
+
+            base.Show(desktopMainWindow);
         }
 
-        public void ShowAlreadyRunningDialog()
+        public async Task ShowAlreadyRunningDialog()
         {
-            MessageBox.Show(
+            await MessageBox.ShowAsync(
                 "Only one instance of RoadCaptain Runner can be active",
                 "Already running",
-                MessageBoxButton.OK,
-                MessageBoxImage.Warning);
+                MessageBoxButton.Ok,
+                CurrentWindow,
+                MessageBoxIcon.Warning);
         }
 
         public void ShowInGameWindow(InGameNavigationWindowViewModel viewModel)
         {
-            var inGameWindow = Resolve<InGameNavigationWindow>();
+            //var inGameWindow = Resolve<InGameNavigationWindow>();
 
-            inGameWindow.DataContext = viewModel;
+            //inGameWindow.DataContext = viewModel;
 
-            if (CurrentWindow != null)
-            {
-                Close(CurrentWindow);
-            }
+            //if (CurrentWindow != null)
+            //{
+            //    Close(CurrentWindow);
+            //}
 
-            Show(inGameWindow);
+            //Show(inGameWindow);
         }
 
-        public TokenResponse ShowLogInDialog(Window owner)
+        public async Task<TokenResponse?> ShowLogInDialog(Window owner)
         {
-            var zwiftLoginWindow = Resolve<ZwiftLoginWindow>();
+            //var zwiftLoginWindow = Resolve<ZwiftLoginWindow>();
 
-            zwiftLoginWindow.Owner = owner;
-            zwiftLoginWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+            //zwiftLoginWindow.Owner = owner;
+            //zwiftLoginWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
 
-            if (ShowDialog(zwiftLoginWindow) ?? false)
-            {
-                return zwiftLoginWindow.TokenResponse;
-            }
+            //if (ShowDialog(zwiftLoginWindow) ?? false)
+            //{
+            //    return zwiftLoginWindow.TokenResponse;
+            //}
 
             return null;
         }
