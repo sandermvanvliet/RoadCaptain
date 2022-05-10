@@ -24,14 +24,14 @@ namespace RoadCaptain.App.Runner.ViewModels
 {
     public class MainWindowViewModel : ViewModelBase
     {
-        private readonly IUserPreferences _appSettings;
+        private readonly IUserPreferences _userPreferences;
         private readonly Configuration _configuration;
         private readonly IGameStateDispatcher _gameStateDispatcher;
         private readonly IWindowService _windowService;
         private bool _loggedInToZwift;
         private string? _routePath;
         private string _windowTitle = "RoadCaptain";
-        private string? _zwiftAvatarUri = "Assets/profile-default.png";
+        private string? _zwiftAvatarUri = "avares://RoadCaptain.App.Shared/Assets/profile-default.png";
         private string? _zwiftName;
         private readonly LoadRouteUseCase _loadRouteUseCase;
         private readonly IRouteStore _routeStore;
@@ -43,7 +43,7 @@ namespace RoadCaptain.App.Runner.ViewModels
         private IImage? _zwiftAvatar;
 
         public MainWindowViewModel(Configuration configuration,
-            IUserPreferences appSettings,
+            IUserPreferences userPreferences,
             IWindowService windowService,
             IGameStateDispatcher gameStateDispatcher,
             LoadRouteUseCase loadRouteUseCase,
@@ -51,7 +51,7 @@ namespace RoadCaptain.App.Runner.ViewModels
             IVersionChecker versionChecker)
         {
             _configuration = configuration;
-            _appSettings = appSettings;
+            _userPreferences = userPreferences;
             _windowService = windowService;
             _gameStateDispatcher = gameStateDispatcher;
             _loadRouteUseCase = loadRouteUseCase;
@@ -61,7 +61,8 @@ namespace RoadCaptain.App.Runner.ViewModels
             if (IsValidToken(configuration.AccessToken))
             {
                 ZwiftAccessToken = configuration.AccessToken;
-                ZwiftAvatarUri = "Assets/profile-default.png";
+                ZwiftAvatarUri = "avares://RoadCaptain.App.Shared/Assets/profile-default.png";
+                ZwiftAvatar = DownloadAvatarImage(ZwiftAvatarUri);
                 ZwiftName = "(stored token)";
                 LoggedInToZwift = true;
                 _gameStateDispatcher.Dispatch(new LoggedInState(ZwiftAccessToken));
@@ -72,9 +73,9 @@ namespace RoadCaptain.App.Runner.ViewModels
                 RoutePath = configuration.Route;
                 Route = _routeStore.LoadFrom(RoutePath);
             }
-            else if (!string.IsNullOrEmpty(appSettings.Route))
+            else if (!string.IsNullOrEmpty(userPreferences.Route))
             {
-                RoutePath = appSettings.Route;
+                RoutePath = userPreferences.Route;
                 Route = _routeStore.LoadFrom(RoutePath);
             }
 
@@ -317,14 +318,14 @@ namespace RoadCaptain.App.Runner.ViewModels
 
         private async Task<CommandResult> LoadRoute()
         {
-            var fileName = await _windowService.ShowOpenFileDialog(_appSettings.LastUsedFolder);
+            var fileName = await _windowService.ShowOpenFileDialog(_userPreferences.LastUsedFolder);
 
             if (!string.IsNullOrEmpty(fileName))
             {
                 RoutePath = fileName;
 
-                _appSettings.LastUsedFolder = Path.GetDirectoryName(RoutePath);
-                _appSettings.Save();
+                _userPreferences.LastUsedFolder = Path.GetDirectoryName(RoutePath);
+                _userPreferences.Save();
 
                 var routeFileName = RoutePath;
 
@@ -365,8 +366,8 @@ namespace RoadCaptain.App.Runner.ViewModels
         {
             _configuration.Route = RoutePath;
 
-            _appSettings.Route = RoutePath;
-            _appSettings.Save();
+            _userPreferences.Route = RoutePath;
+            _userPreferences.Save();
 
             if (Route != null)
             {
