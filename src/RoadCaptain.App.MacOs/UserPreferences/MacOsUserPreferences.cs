@@ -1,59 +1,14 @@
-﻿using System.Drawing;
-using RoadCaptain.App.Shared.UserPreferences;
+﻿using RoadCaptain.App.Shared.UserPreferences;
 
 namespace RoadCaptain.App.MacOs.UserPreferences
 {
-    internal class MacOsUserPreferences : IUserPreferences
+    internal class MacOsUserPreferences : UserPreferencesBase
     {
-        public string? DefaultSport { get; set; }
-        public string? LastUsedFolder { get; set; }
-        public string? Route { get; set; }
-        public Point? InGameWindowLocation { get; set; }
-
-        public void Load()
+        protected override string GetPreferencesPath()
         {
             var configDirectory = Path.Combine("~", "Library", "RoadCaptain");
             
-            var configPath = Path.Combine(configDirectory, "Configuration");
-
-            if (File.Exists(configPath))
-            {
-                var settings = File
-                    .ReadAllLines(configPath)
-                    .Select(line => line.Trim())
-                    .Where(line => !line.StartsWith("#") && !string.IsNullOrWhiteSpace(line))
-                    .Select(line => line.Split('=', StringSplitOptions.RemoveEmptyEntries))
-                    .Where(parts => parts.Length == 2)
-                    .ToDictionary(parts => parts[0], parts => parts[1]);
-
-                if (settings.ContainsKey(nameof(DefaultSport)))
-                {
-                    DefaultSport = settings[nameof(DefaultSport)];
-                }
-
-                if (settings.ContainsKey(nameof(LastUsedFolder)))
-                {
-                    DefaultSport = settings[nameof(LastUsedFolder)];
-                }
-            }
-        }
-
-        public void Save()
-        {
-            var configDirectory = Path.Combine("~", "Library", "RoadCaptain");
-
-            if (!Directory.Exists(configDirectory))
-            {
-                Directory.CreateDirectory(configDirectory);
-            }
-
-            var configPath = Path.Combine(configDirectory, "Configuration");
-
-            File.WriteAllLines(configPath, new[]
-            {
-                $"{nameof(DefaultSport)}={DefaultSport??string.Empty}",
-                $"{nameof(LastUsedFolder)}={LastUsedFolder??string.Empty}"
-            });
+            return Path.Combine(configDirectory, "Configuration");
         }
     }
 }

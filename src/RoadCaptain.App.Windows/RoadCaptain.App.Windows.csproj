@@ -15,19 +15,4 @@
 		<PackageReference Include="Autofac" Version="6.3.0" />
 	</ItemGroup>
 
-	<ItemGroup>
-		<Compile Update="UserPreferences\WindowsUserPreferencesStorage.Designer.cs">
-			<DesignTimeSharedInput>True</DesignTimeSharedInput>
-			<DependentUpon>WindowsUserPreferencesStorage.settings</DependentUpon>
-			<AutoGen>True</AutoGen>
-		</Compile>
-	</ItemGroup>
-
-	<ItemGroup>
-		<None Update="UserPreferences\WindowsUserPreferencesStorage.settings">
-			<LastGenOutput>WindowsUserPreferencesStorage.Designer.cs</LastGenOutput>
-			<Generator>SettingsSingleFileGenerator</Generator>
-		</None>
-	</ItemGroup>
-
 </Project>

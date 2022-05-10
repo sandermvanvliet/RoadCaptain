@@ -1,4 +1,9 @@
 ﻿using System.Drawing;
+using System.IO;
+using System.Text;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using Newtonsoft.Json.Serialization;
 
 namespace RoadCaptain.App.Shared.UserPreferences
 {
@@ -11,5 +16,91 @@ namespace RoadCaptain.App.Shared.UserPreferences
 
         public void Load();
         public void Save();
+    }
+
+    public abstract class UserPreferencesBase : IUserPreferences
+    {
+        private readonly JsonSerializerSettings _serializerSettings = new()
+        {
+            ContractResolver = new CamelCasePropertyNamesContractResolver(),
+            Converters = { new StringEnumConverter() }
+        };
+
+        public string? DefaultSport { get; set; }
+        public string? LastUsedFolder { get; set; }
+        public string? Route { get; set; }
+        public Point? InGameWindowLocation { get; set; }
+        
+        public void Load()
+        {
+            var preferencesPath = GetPreferencesPath();
+
+            if (!File.Exists(preferencesPath))
+            {
+                return;
+            }
+
+            var serializedContents = File.ReadAllText(preferencesPath, Encoding.UTF8);
+
+            var storageObject = JsonConvert.DeserializeObject<UserPreferencesStorageObject>(serializedContents, _serializerSettings);
+
+            DefaultSport = storageObject.DefaultSport;
+            LastUsedFolder = storageObject.LastUsedFolder;
+            Route = storageObject.Route;
+            InGameWindowLocation = storageObject.InGameWindowLocation;
+        }
+
+        public void Save()
+        {
+            var storageObject = new UserPreferencesStorageObject
+            {
+                DefaultSport = DefaultSport,
+                InGameWindowLocation = InGameWindowLocation,
+                LastUsedFolder = LastUsedFolder,
+                Route = Route
+            };
+
+            var serializedContents = JsonConvert.SerializeObject(storageObject, Formatting.Indented, _serializerSettings);
+            
+            var preferencesPath = GetPreferencesPath();
+
+            EnsurePreferencesPathExists(preferencesPath);
+
+            File.WriteAllText(preferencesPath, serializedContents, Encoding.UTF8);
+        }
+
+        private void EnsurePreferencesPathExists(string path)
+        {
+            var parts = path.Split(Path.DirectorySeparatorChar);
+
+            string directory = null;
+
+            foreach (var part in parts)
+            {
+                if (directory == null)
+                {
+                    directory = part;
+                }
+                else
+                {
+                    directory = Path.Combine(directory, part);
+                }
+
+                if (!Directory.Exists(directory))
+                {
+                    Directory.CreateDirectory(directory);
+                }
+            }
+        }
+
+        protected abstract string GetPreferencesPath();
+    }
+
+    internal class UserPreferencesStorageObject
+    {
+        public string? DefaultSport { get; set; }
+        public string? LastUsedFolder { get; set; }
+        public string? Route { get; set; }
+        public Point? InGameWindowLocation { get; set; }
     }
 }

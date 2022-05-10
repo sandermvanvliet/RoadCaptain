@@ -1,36 +1,14 @@
-﻿using System.Drawing;
-using RoadCaptain.App.Shared.UserPreferences;
+﻿using RoadCaptain.App.Shared.UserPreferences;
 
 namespace RoadCaptain.App.Windows.UserPreferences
 {
-    internal class WindowsUserPreferences : IUserPreferences
+    internal class WindowsUserPreferences : UserPreferencesBase
     {
-        public string? DefaultSport { get; set; }
-        public string? LastUsedFolder { get; set; }
-        public string? Route { get; set; }
-        public Point? InGameWindowLocation { get; set; }
-
-        public void Load()
+        protected override string GetPreferencesPath()
         {
-            var userPreferences = WindowsUserPreferencesStorage.Default;
-            
-            if (userPreferences.UpgradeSettings)
-            {
-                userPreferences.Upgrade();
-                userPreferences.UpgradeSettings = false;
-                userPreferences.Save();
-            }
+            var appDataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
 
-            DefaultSport = userPreferences.DefaultSport;
-            LastUsedFolder = userPreferences.LastUsedFolder;
-        }
-
-        public void Save()
-        {
-            var userPreferences = WindowsUserPreferencesStorage.Default;
-            userPreferences.DefaultSport = DefaultSport;
-            userPreferences.LastUsedFolder = LastUsedFolder;
-            userPreferences.Save();
+            return Path.Combine(appDataPath, "Codenizer BV", "RoadCaptain", "userpreferences.json");
         }
     }
 }
