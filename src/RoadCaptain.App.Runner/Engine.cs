@@ -102,7 +102,10 @@ namespace RoadCaptain.App.Runner
             {
                 _monitoringEvents.Information("Connected to Zwift");
 
-                _loadRouteUseCase.Execute(new LoadRouteCommand { Path = _configuration.Route });
+                if (!string.IsNullOrEmpty(_configuration.Route))
+                {
+                    _loadRouteUseCase.Execute(new LoadRouteCommand { Path = _configuration.Route });
+                }
 
                 // Start handling Zwift messages
                 StartMessageHandler();
