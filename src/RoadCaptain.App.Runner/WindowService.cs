@@ -12,20 +12,33 @@ namespace RoadCaptain.App.Runner
 {
     public class WindowService : BaseWindowService, IWindowService
     {
+        private IClassicDesktopStyleApplicationLifetime _applicationLifetime;
+
         public WindowService(IComponentContext componentContext, MonitoringEvents monitoringEvents) : base(componentContext, monitoringEvents)
         {
         }
 
-        public void ShowMainWindow(IApplicationLifetime applicationLifetime)
+        public void SetLifetime(IApplicationLifetime applicationLifetime)
         {
-            var desktopMainWindow = Resolve<MainWindow>();
+            _applicationLifetime = applicationLifetime as IClassicDesktopStyleApplicationLifetime;
+        }
 
-            if (applicationLifetime is IClassicDesktopStyleApplicationLifetime desktop && desktop.MainWindow == null)
+        public void Shutdown(int exitCode)
+        {
+            _applicationLifetime.Shutdown(exitCode);
+        }
+
+        public void ShowMainWindow()
+        {
+            var mainWindow = Resolve<MainWindow>();
+            
+            if (CurrentWindow != null)
             {
-                desktop.MainWindow = desktopMainWindow;
+                _applicationLifetime.MainWindow = mainWindow;
+                Close(CurrentWindow);
             }
 
-            base.Show(desktopMainWindow);
+            base.Show(mainWindow);
         }
 
         public async Task ShowAlreadyRunningDialog()
@@ -46,6 +59,7 @@ namespace RoadCaptain.App.Runner
 
             if (CurrentWindow != null)
             {
+                _applicationLifetime.MainWindow = inGameWindow;
                 Close(CurrentWindow);
             }
 

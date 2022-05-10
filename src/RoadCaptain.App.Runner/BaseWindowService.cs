@@ -62,6 +62,11 @@ namespace RoadCaptain.App.Runner
             await ShowDialog(window);
         }
 
+        public virtual async Task ShowErrorDialog(string message)
+        {
+            await ShowErrorDialog(message, CurrentWindow);
+        }
+
         public virtual async Task ShowErrorDialog(string message, Window owner)
         {
             await MessageBox.ShowAsync(

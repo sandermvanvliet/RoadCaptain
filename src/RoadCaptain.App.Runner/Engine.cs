@@ -117,8 +117,8 @@ namespace RoadCaptain.App.Runner
 
                 // Clear token info on main window view model
                 // and show main window
-                _windowService.ShowErrorDialog(invalidCredentials.Exception.Message, null);
-                _windowService.ShowMainWindow(null);
+                _windowService.ShowErrorDialog(invalidCredentials.Exception.Message);
+                _windowService.ShowMainWindow();
             }
 
             if (gameState is InGameState && _previousGameState is not InGameState)
@@ -131,7 +131,7 @@ namespace RoadCaptain.App.Runner
 
             if (gameState is ErrorState errorState)
             {
-                _windowService.ShowErrorDialog(errorState.Exception.Message, null);
+                _windowService.ShowErrorDialog(errorState.Exception.Message);
             }
 
             _previousGameState = gameState;

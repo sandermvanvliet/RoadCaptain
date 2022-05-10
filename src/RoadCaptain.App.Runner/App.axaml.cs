@@ -57,6 +57,7 @@ namespace RoadCaptain.App.Runner
         {
             if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop && desktop.MainWindow == null)
             {
+                _windowService.SetLifetime(desktop);
                 desktop.Startup += App_OnStartup;
                 desktop.Exit += App_OnExit;
 
@@ -66,7 +67,7 @@ namespace RoadCaptain.App.Runner
                 }
                 else
                 {
-                    _windowService.ShowMainWindow(ApplicationLifetime);
+                    _windowService.ShowMainWindow();
                 }
             }
 
@@ -90,7 +91,7 @@ namespace RoadCaptain.App.Runner
 
                     _monitoringEvents.Warning("Another instance of RoadCaptain is already running");
 
-                    ((IClassicDesktopStyleApplicationLifetime)ApplicationLifetime).Shutdown(-1);
+                    _windowService.Shutdown(-1);
                 }
             });
 

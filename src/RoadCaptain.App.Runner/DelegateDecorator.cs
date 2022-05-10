@@ -39,9 +39,14 @@ namespace RoadCaptain.App.Runner
             await InvokeIfNeededAsync(() => _decorated.ShowErrorDialog(message, owner));
         }
 
-        public void ShowMainWindow(IApplicationLifetime applicationLifetime)
+        public async Task ShowErrorDialog(string message)
         {
-            InvokeIfNeeded(() => _decorated.ShowMainWindow(applicationLifetime));
+            await InvokeIfNeededAsync(() => _decorated.ShowErrorDialog(message));
+        }
+
+        public void ShowMainWindow()
+        {
+            InvokeIfNeeded(() => _decorated.ShowMainWindow());
         }
 
         public async Task ShowNewVersionDialog(Release release)
@@ -52,6 +57,16 @@ namespace RoadCaptain.App.Runner
         public async Task ShowAlreadyRunningDialog()
         {
             await InvokeIfNeededAsync(() => _decorated.ShowAlreadyRunningDialog());
+        }
+
+        public void SetLifetime(IApplicationLifetime applicationLifetime)
+        {
+            _decorated.SetLifetime(applicationLifetime);
+        }
+
+        public void Shutdown(int exitCode)
+        {
+            InvokeIfNeeded(() => _decorated.Shutdown(exitCode));
         }
 
         private async Task<TResult> InvokeIfNeededAsync<TResult>(Func<Task<TResult>> action)

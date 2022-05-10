@@ -12,8 +12,11 @@ namespace RoadCaptain.App.Runner
         void ShowInGameWindow(InGameNavigationWindowViewModel viewModel);
         Task<TokenResponse?> ShowLogInDialog(Window owner);
         Task ShowErrorDialog(string message, Window owner);
-        void ShowMainWindow(IApplicationLifetime applicationLifetime);
+        Task ShowErrorDialog(string message);
+        void ShowMainWindow();
         Task ShowNewVersionDialog(Release release);
         Task ShowAlreadyRunningDialog();
+        void SetLifetime(IApplicationLifetime applicationLifetime);
+        void Shutdown(int exitCode);
     }
 }
