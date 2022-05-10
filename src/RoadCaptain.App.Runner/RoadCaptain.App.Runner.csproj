@@ -44,13 +44,6 @@
 		<PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.16.0" />
 	</ItemGroup>
 	<ItemGroup>
-		<Page Include="Views\ZwiftLoginWindow.xaml">
-			<XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
-			<SubType>Designer</SubType>
-			<Generator>MSBuild:Compile</Generator>
-		</Page>
-	</ItemGroup>
-	<ItemGroup>
 		<ProjectReference Include="..\RoadCaptain.App.Shared\RoadCaptain.App.Shared.csproj" />
 		<ProjectReference Include="..\RoadCaptain\RoadCaptain.csproj" />
 		<ProjectReference Include="..\RoadCaptain.Adapters\RoadCaptain.Adapters.csproj" />
