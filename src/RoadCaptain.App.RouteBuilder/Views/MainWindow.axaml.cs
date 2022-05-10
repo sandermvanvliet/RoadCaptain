@@ -6,6 +6,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
+using Avalonia.Threading;
 using RoadCaptain.App.RouteBuilder.ViewModels;
 
 namespace RoadCaptain.App.RouteBuilder.Views
@@ -90,7 +91,7 @@ namespace RoadCaptain.App.RouteBuilder.Views
         [SuppressMessage("ReSharper", "UnusedParameter.Local")]
         private void MainWindow_OnActivated(object sender, EventArgs e)
         {
-            Task.Factory.StartNew(() => ViewModel.CheckForNewVersion());
+            Dispatcher.UIThread.InvokeAsync(() => ViewModel.CheckForNewVersion());
         }
 
         // ReSharper disable once UnusedMember.Local

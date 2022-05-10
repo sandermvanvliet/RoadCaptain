@@ -5,6 +5,9 @@
     },
     {
       "type": "RoadCaptain.Adapters.AdaptersModule, RoadCaptain.Adapters"
+    },
+    {
+      "type": "RoadCaptain.App.Shared.SharedModule, RoadCaptain.App.Shared"
     }
   ]
 }

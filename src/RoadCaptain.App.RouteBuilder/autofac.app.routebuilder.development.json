@@ -12,6 +12,9 @@
     },
     {
       "type": "RoadCaptain.App.RouteBuilder.MainModule, RoadCaptain.App.RouteBuilder"
+    },
+    {
+      "type": "RoadCaptain.App.Shared.SharedModule, RoadCaptain.App.Shared"
     }
   ]
 }

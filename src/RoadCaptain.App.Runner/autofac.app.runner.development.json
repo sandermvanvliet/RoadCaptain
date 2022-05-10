@@ -9,6 +9,9 @@
         "MessageReceiverSource": "socket",
         "CaptureFilePath": "c:\\git\\temp\\zwift\\rc-run-13.pcapng"
       }
+    },
+    {
+      "type": "RoadCaptain.App.Shared.SharedModule, RoadCaptain.App.Shared"
     }
   ]
 }

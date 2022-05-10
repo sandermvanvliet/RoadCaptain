@@ -12,7 +12,7 @@ namespace RoadCaptain.App.Runner
 {
     public class WindowService : BaseWindowService, IWindowService
     {
-        public WindowService(IComponentContext componentContext) : base(componentContext)
+        public WindowService(IComponentContext componentContext, MonitoringEvents monitoringEvents) : base(componentContext, monitoringEvents)
         {
         }
 

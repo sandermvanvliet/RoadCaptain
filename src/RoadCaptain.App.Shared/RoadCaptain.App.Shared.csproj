@@ -14,10 +14,15 @@
 		<PackageReference Include="Avalonia.ReactiveUI" Version="0.10.12" />
 		<PackageReference Include="ReactiveUI" Version="13.2.10" />
 		<PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="6.0.0" />
+		<PackageReference Include="Autofac" Version="6.3.0" />
 	</ItemGroup>
 
 	<ItemGroup>
 	  <AvaloniaResource Include="icon.png" />
 	  <AvaloniaResource Include="Assets\**" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\RoadCaptain\RoadCaptain.csproj" />
 	</ItemGroup>
 </Project>

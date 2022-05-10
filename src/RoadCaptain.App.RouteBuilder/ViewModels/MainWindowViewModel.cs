@@ -797,7 +797,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             }
         }
 
-        public void CheckForNewVersion()
+        public async Task CheckForNewVersion()
         {
             if (_haveCheckedVersion)
             {
@@ -811,7 +811,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
 
             if (latestRelease != null && latestRelease.Version > currentVersion)
             {
-                _windowService.ShowNewVersionDialog(latestRelease);
+                await _windowService.ShowNewVersionDialog(latestRelease);
             }
         }
 

@@ -23,9 +23,9 @@ namespace RoadCaptain.App.RouteBuilder
             return await InvokeIfNeededAsync(() => _decorated.ShowOpenFileDialog(previousLocation));
         }
 
-        public void ShowErrorDialog(string message, Window owner)
+        public async Task ShowErrorDialog(string message, Window owner)
         {
-            InvokeIfNeeded(() => _decorated.ShowErrorDialog(message, owner));
+            await InvokeIfNeededAsync(() => _decorated.ShowErrorDialog(message, owner));
         }
 
         public void ShowMainWindow(IApplicationLifetime applicationLifetime)
@@ -33,9 +33,9 @@ namespace RoadCaptain.App.RouteBuilder
             InvokeIfNeeded(() => _decorated.ShowMainWindow(applicationLifetime));
         }
 
-        public void ShowNewVersionDialog(Release release)
+        public async Task ShowNewVersionDialog(Release release)
         {
-            InvokeIfNeeded(() => _decorated.ShowNewVersionDialog(release));
+            await InvokeIfNeededAsync(() => _decorated.ShowNewVersionDialog(release));
         }
 
         public async Task<string?> ShowSaveFileDialog(string? previousLocation)
@@ -66,6 +66,16 @@ namespace RoadCaptain.App.RouteBuilder
             }
 
             return await action();
+        }
+
+        private async Task InvokeIfNeededAsync(Func<Task> action)
+        {
+            if (!_dispatcher.CheckAccess())
+            {
+                await _dispatcher.InvokeAsync(action);
+            }
+
+            await action();
         }
 
         private void InvokeIfNeeded(Action action)

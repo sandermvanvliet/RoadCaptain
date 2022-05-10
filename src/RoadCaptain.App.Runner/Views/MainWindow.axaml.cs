@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
+using Avalonia.Threading;
 using RoadCaptain.App.Runner.ViewModels;
 using RoadCaptain.Ports;
 
@@ -61,7 +62,7 @@ namespace RoadCaptain.App.Runner.Views
 
         private void WindowBase_OnActivated(object? sender, EventArgs e)
         {
-            Task.Factory.StartNew(() => _viewModel.CheckForNewVersion());
+            Dispatcher.UIThread.InvokeAsync(() => _viewModel.CheckForNewVersion());
         }
     }
 }

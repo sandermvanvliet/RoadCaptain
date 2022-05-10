@@ -13,10 +13,12 @@ namespace RoadCaptain.App.Runner
     public abstract class BaseWindowService
     {
         private readonly IComponentContext _componentContext;
+        private readonly MonitoringEvents _monitoringEvents;
 
-        protected BaseWindowService(IComponentContext componentContext)
+        protected BaseWindowService(IComponentContext componentContext, MonitoringEvents monitoringEvents)
         {
             _componentContext = componentContext;
+            _monitoringEvents = monitoringEvents;
         }
 
         protected Window? CurrentWindow { get; private set; }
@@ -53,29 +55,34 @@ namespace RoadCaptain.App.Runner
 
         public async Task ShowNewVersionDialog(Release release)
         {
-            throw new NotImplementedException();
-            //var window = Resolve<UpdateAvailableWindow>();
+            var window = Resolve<UpdateAvailableWindow>();
 
-            //window.DataContext = new UpdateAvailableViewModel(release);
+            window.DataContext = new UpdateAvailableViewModel(release);
 
-            //ShowDialog(window);
+            await ShowDialog(window);
         }
 
         public virtual async Task ShowErrorDialog(string message, Window owner)
         {
-            MessageBox.ShowAsync(
+            await MessageBox.ShowAsync(
                 message,
                 "An error occurred",
                 MessageBoxButton.Ok,
                 owner,
-                MessageBoxIcon.Error)
-                .GetAwaiter()
-                .GetResult();
+                MessageBoxIcon.Error);
         }
 
         protected virtual TType Resolve<TType>() where TType : notnull
         {
-            return _componentContext.Resolve<TType>();
+            try
+            {
+                return _componentContext.Resolve<TType>();
+            }
+            catch (Exception e)
+            {
+                _monitoringEvents.Error(e, "Unable to resolve window");
+                throw;
+            }
         }
 
         protected virtual async Task<bool?> ShowDialog(Window window)
@@ -103,10 +110,5 @@ namespace RoadCaptain.App.Runner
             window.Activate();
             return true;
         }
-
-        //protected virtual bool? ShowDialog(CommonDialog dialog)
-        //{
-        //    return dialog.ShowDialog(CurrentWindow);
-        //}
     }
 }

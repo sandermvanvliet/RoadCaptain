@@ -8,9 +8,9 @@ namespace RoadCaptain.App.RouteBuilder
     public interface IWindowService
     {
         Task<string?> ShowOpenFileDialog(string? previousLocation);
-        void ShowErrorDialog(string message, Window owner);
+        Task ShowErrorDialog(string message, Window owner);
         void ShowMainWindow(IApplicationLifetime applicationLifetime);
-        void ShowNewVersionDialog(Release release);
+        Task ShowNewVersionDialog(Release release);
         Task<string?> ShowSaveFileDialog(string? previousLocation);
         Task<bool> ShowDefaultSportSelectionDialog(SportType sport);
         Task<MessageBoxResult> ShowSaveRouteDialog();
