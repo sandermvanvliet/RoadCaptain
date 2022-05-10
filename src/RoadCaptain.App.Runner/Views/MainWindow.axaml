@@ -42,11 +42,9 @@
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
-            <!--<Style.Triggers>
-                <Trigger Property="IsEnabled" Value="False">
-                    <Setter Property="Background" Value="LightGray"/>
-                </Trigger>
-            </Style.Triggers>-->
+        </Style>
+        <Style Selector="Button:disabled">
+            <Setter Property="Background" Value="LightGray"/>
         </Style>
         <Style Selector="Button.linkButton">
             <Setter Property="Background" Value="White" />
