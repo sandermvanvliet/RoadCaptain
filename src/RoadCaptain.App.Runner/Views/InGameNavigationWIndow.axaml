@@ -7,7 +7,7 @@
         x:Class="RoadCaptain.App.Runner.Views.InGameNavigationWindow"
         Title="{Binding Path=Model.WindowTitle}" 
         Height="234" Width="400"
-        PointerMoved="InputElement_OnPointerMoved"
+        PointerPressed="InputElement_OnPointerPressed"
         SystemDecorations="None"
         CanResize="False"
         Background="Transparent"

@@ -20,7 +20,7 @@
         WindowStartupLocation="CenterScreen"
         Background="Transparent"
         TransparencyLevelHint="Transparent"
-        PointerMoved="InputElement_OnPointerMoved"
+        PointerPressed="InputElement_OnPointerPressed"
         Activated="WindowBase_OnActivated"
         Icon="avares://RoadCaptain.App.Shared/icon.png">
     <Window.Styles>

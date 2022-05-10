@@ -39,11 +39,6 @@ namespace RoadCaptain.App.Runner.Views
             InitializeComponent();
         }
 
-        private void InputElement_OnPointerMoved(object? sender, PointerEventArgs e)
-        {
-            // TODO: Make drag-move work
-        }
-
         private void CloseButton_Click(object? sender, RoutedEventArgs e)
         {
             Close();
@@ -63,6 +58,14 @@ namespace RoadCaptain.App.Runner.Views
         private void WindowBase_OnActivated(object? sender, EventArgs e)
         {
             Dispatcher.UIThread.InvokeAsync(() => _viewModel.CheckForNewVersion());
+        }
+
+        private void InputElement_OnPointerPressed(object? sender, PointerPressedEventArgs e)
+        {
+            if (e.GetCurrentPoint(this).Properties.IsLeftButtonPressed)
+            {
+                BeginMoveDrag(e);
+            }
         }
     }
 }

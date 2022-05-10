@@ -10,6 +10,7 @@
         Width="800"
         SystemDecorations="Full"
         Icon="avares://RoadCaptain.App.Shared/icon.png"
-        Activated="WindowBase_OnActivated">
+        Activated="WindowBase_OnActivated"
+        WindowStartupLocation="CenterOwner">
     <webview:WebView Name="ZwiftAuthView" Width="800" Height="800" Margin="0" />
 </Window>
