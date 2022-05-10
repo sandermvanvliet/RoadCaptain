@@ -96,7 +96,7 @@ namespace RoadCaptain.App.Runner.ViewModels
             BuildRouteCommand = new AsyncRelayCommand(
                     _ => LaunchRouteBuilder(),
                     _ => true)
-                .OnFailure(async result => await _windowService.ShowErrorDialog(result.Message, null));
+                .OnFailure(async result => await _windowService.ShowErrorDialog(result.Message));
 
             OpenLinkCommand = new RelayCommand(
                 _ => OpenLink(_ as string),
