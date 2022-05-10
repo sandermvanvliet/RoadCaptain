@@ -44,6 +44,8 @@ namespace RoadCaptain.App.Runner
                 .RegisterAssemblyTypes(ThisAssembly)
                 .Where(type => type.BaseType == typeof(ViewModelBase) && type.Namespace.EndsWith(".ViewModels"))
                 .AsSelf();
+
+            builder.RegisterType<Engine>().AsSelf().SingleInstance();
         }
     }
 }
