@@ -104,6 +104,15 @@ namespace RoadCaptain.App.Runner
             window.Show();
         }
 
+        protected virtual void SwapWindows(Window window)
+        {
+            var toClose = CurrentWindow;
+
+            Show(window);
+            toClose?.Close();
+            CurrentWindow = window;
+        }
+
         protected virtual void Close(Window window)
         {
             window.Close();

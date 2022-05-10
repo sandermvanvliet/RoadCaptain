@@ -32,13 +32,9 @@ namespace RoadCaptain.App.Runner
         {
             var mainWindow = Resolve<MainWindow>();
             
-            if (CurrentWindow != null)
-            {
-                _applicationLifetime.MainWindow = mainWindow;
-                Close(CurrentWindow);
-            }
-
-            base.Show(mainWindow);
+            _applicationLifetime.MainWindow = mainWindow;
+            
+            SwapWindows(mainWindow);
         }
 
         public async Task ShowAlreadyRunningDialog()
@@ -57,13 +53,9 @@ namespace RoadCaptain.App.Runner
 
             inGameWindow.DataContext = viewModel;
 
-            if (CurrentWindow != null)
-            {
-                _applicationLifetime.MainWindow = inGameWindow;
-                Close(CurrentWindow);
-            }
+            _applicationLifetime.MainWindow = inGameWindow;
 
-            Show(inGameWindow);
+            SwapWindows(inGameWindow);
         }
 
         public async Task<TokenResponse?> ShowLogInDialog(Window owner)
