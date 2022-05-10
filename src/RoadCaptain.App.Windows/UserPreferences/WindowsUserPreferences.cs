@@ -1,4 +1,5 @@
-﻿using RoadCaptain.App.Shared.UserPreferences;
+﻿using System.Drawing;
+using RoadCaptain.App.Shared.UserPreferences;
 
 namespace RoadCaptain.App.Windows.UserPreferences
 {
@@ -7,6 +8,7 @@ namespace RoadCaptain.App.Windows.UserPreferences
         public string? DefaultSport { get; set; }
         public string? LastUsedFolder { get; set; }
         public string? Route { get; set; }
+        public Point? InGameWindowLocation { get; set; }
 
         public void Load()
         {

@@ -1,3 +1,4 @@
+using System.Drawing;
 using RoadCaptain.App.Shared.UserPreferences;
 
 namespace RoadCaptain.App.RouteBuilder
@@ -7,6 +8,7 @@ namespace RoadCaptain.App.RouteBuilder
         public string? DefaultSport { get; set; } = "Cycling";
         public string? LastUsedFolder { get; set; }
         public string? Route { get; set; }
+        public Point? InGameWindowLocation { get; set; } = new Point(600, 200);
 
         public void Load()
         {
