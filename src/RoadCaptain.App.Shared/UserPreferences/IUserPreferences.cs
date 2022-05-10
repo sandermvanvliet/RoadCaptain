@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
 using System.IO;
 using System.Text;
 using Newtonsoft.Json;
@@ -42,12 +43,19 @@ namespace RoadCaptain.App.Shared.UserPreferences
 
             var serializedContents = File.ReadAllText(preferencesPath, Encoding.UTF8);
 
-            var storageObject = JsonConvert.DeserializeObject<UserPreferencesStorageObject>(serializedContents, _serializerSettings);
+            try
+            {
+                var storageObject = JsonConvert.DeserializeObject<UserPreferencesStorageObject>(serializedContents, _serializerSettings);
 
-            DefaultSport = storageObject.DefaultSport;
-            LastUsedFolder = storageObject.LastUsedFolder;
-            Route = storageObject.Route;
-            InGameWindowLocation = storageObject.InGameWindowLocation;
+                DefaultSport = storageObject.DefaultSport;
+                LastUsedFolder = storageObject.LastUsedFolder;
+                Route = storageObject.Route;
+                InGameWindowLocation = storageObject.InGameWindowLocation;
+            }
+            catch
+            {
+                // Nop
+            }
         }
 
         public void Save()
@@ -71,7 +79,8 @@ namespace RoadCaptain.App.Shared.UserPreferences
 
         private void EnsurePreferencesPathExists(string path)
         {
-            var parts = path.Split(Path.DirectorySeparatorChar);
+            var fullDirectory = Path.GetDirectoryName(path);
+            var parts = fullDirectory.Split(Path.DirectorySeparatorChar, StringSplitOptions.RemoveEmptyEntries);
 
             string directory = null;
 
