@@ -1,5 +1,4 @@
 using System;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
@@ -44,8 +43,6 @@ namespace RoadCaptain.App.Runner.Views
 
         private void ZwiftAuthViewOnBeforeResourceLoad(ResourceHandler resourcehandler)
         {
-            Debug.WriteLine($"[OnBeforeResourceLoad] {resourcehandler.Url}");
-
             if (resourcehandler.Url == "https://www.zwift.com/auth/login")
             {
                 // Get the underlying request from the resource handler,
