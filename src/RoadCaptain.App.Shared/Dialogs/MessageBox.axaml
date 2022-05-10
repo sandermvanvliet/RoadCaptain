@@ -77,7 +77,7 @@
 					Orientation="Horizontal"
 					HorizontalAlignment="Right"
 					Margin="0,0,6,0">
-					<Button Tag="OK" Content="OK" IsVisible="{Binding ShowOkButton}" Click="Button_OnClick" />
+					<Button Tag="Ok" Content="Ok" IsVisible="{Binding ShowOkButton}" Click="Button_OnClick" />
 					<Button Tag="Yes" Content="Yes" IsVisible="{Binding ShowYesButton}" Click="Button_OnClick" />
 					<Button Tag="No" Content="No" IsVisible="{Binding ShowNoButton}" Click="Button_OnClick" />
 					<Button Tag="Abort" Content="Abort" IsVisible="{Binding ShowAbortButton}" Click="Button_OnClick" />
