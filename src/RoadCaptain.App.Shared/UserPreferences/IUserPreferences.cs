@@ -72,35 +72,12 @@ namespace RoadCaptain.App.Shared.UserPreferences
             
             var preferencesPath = GetPreferencesPath();
 
-            EnsurePreferencesPathExists(preferencesPath);
+            EnsureConfigDirectoryExists();
 
             File.WriteAllText(preferencesPath, serializedContents, Encoding.UTF8);
         }
 
-        private void EnsurePreferencesPathExists(string path)
-        {
-            var fullDirectory = Path.GetDirectoryName(path);
-            var parts = fullDirectory.Split(Path.DirectorySeparatorChar, StringSplitOptions.RemoveEmptyEntries);
-
-            string directory = null;
-
-            foreach (var part in parts)
-            {
-                if (directory == null)
-                {
-                    directory = part;
-                }
-                else
-                {
-                    directory = Path.Combine(directory, part);
-                }
-
-                if (!Directory.Exists(directory))
-                {
-                    Directory.CreateDirectory(directory);
-                }
-            }
-        }
+        protected abstract void EnsureConfigDirectoryExists();
 
         protected abstract string GetPreferencesPath();
     }
