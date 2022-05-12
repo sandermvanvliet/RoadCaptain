@@ -43,8 +43,16 @@ namespace RoadCaptain.App.RouteBuilder
             // there when running as a regular user. Good Windows citizenship also
             // means we should write data to the right place which is in the user
             // AppData folder.
+            #if WIN
             var localAppDataFolder = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-            
+            #elif MACOS
+            var localAppDataFolder = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+            #elif LINUX
+            var localAppDataFolder = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+            #else
+            var localAppDataFolder = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+            #endif
+
             CreateDirectoryIfNotExists(Path.Combine(localAppDataFolder, CompanyName));
             CreateDirectoryIfNotExists(Path.Combine(localAppDataFolder, CompanyName, ApplicationName));
             
