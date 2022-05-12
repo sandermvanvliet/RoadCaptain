@@ -45,21 +45,26 @@ namespace RoadCaptain.App.RouteBuilder
             // AppData folder.
             #if WIN
             var localAppDataFolder = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-            #elif MACOS
-            var localAppDataFolder = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-            #elif LINUX
-            var localAppDataFolder = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-            #else
-            var localAppDataFolder = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-            #endif
-
             CreateDirectoryIfNotExists(Path.Combine(localAppDataFolder, CompanyName));
             CreateDirectoryIfNotExists(Path.Combine(localAppDataFolder, CompanyName, ApplicationName));
+            var logDirectory = Path.Combine(localAppDataFolder, CompanyName, ApplicationName);
+            #elif MACOS
+            var localAppDataFolder = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+            CreateDirectoryIfNotExists(Path.Combine(localAppDataFolder, ApplicationName));
+            var logDirectory = Path.Combine(localAppDataFolder, ApplicationName);
+            #elif LINUX
+            var localAppDataFolder = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+            CreateDirectoryIfNotExists(Path.Combine(localAppDataFolder, ApplicationName));
+            var logDirectory = Path.Combine(localAppDataFolder, ApplicationName);
+            #else
+            var localAppDataFolder = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+            CreateDirectoryIfNotExists(Path.Combine(localAppDataFolder, CompanyName));
+            CreateDirectoryIfNotExists(Path.Combine(localAppDataFolder, CompanyName, ApplicationName));
+            var logDirectory = Path.Combine(localAppDataFolder, CompanyName, ApplicationName);
+            #endif
             
             var logFilePath = Path.Combine(
-                localAppDataFolder,
-                CompanyName, 
-                ApplicationName, 
+                logDirectory, 
                 logFileName);
 
             return logFilePath;
