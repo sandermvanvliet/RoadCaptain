@@ -10,11 +10,26 @@
 		<DefineConstants Condition="'$(RuntimeIdentifier)'=='win-x64'">WIN</DefineConstants>
 		<DefineConstants Condition="'$(RuntimeIdentifier)'=='linux-x64'">LINUX</DefineConstants>
 		<DefineConstants Condition="'$(RuntimeIdentifier)'=='osx-x64'">MACOS</DefineConstants>
+		<UseAppHost Condition="'$(RuntimeIdentifier)'=='osx-x64'">true</UseAppHost>
+	</PropertyGroup>
+	<PropertyGroup>
+		<!-- Also defines .app file name -->
+		<CFBundleName>RoadCaptain.App.Runner</CFBundleName>
+		<CFBundleDisplayName>RoadCaptain Runner</CFBundleDisplayName>
+		<CFBundleIdentifier>nl.codenizer.roadcaptain.app.runner</CFBundleIdentifier>
+		<CFBundleVersion>$(Version)</CFBundleVersion>
+		<CFBundleShortVersionString>$(Version)</CFBundleShortVersionString>
+		<CFBundlePackageType>APPL</CFBundlePackageType>
+		<CFBundleSignature>????</CFBundleSignature>
+		<CFBundleExecutable>RoadCaptain.App.Runner</CFBundleExecutable>
+		<!-- Will be copied from output directory -->
+		<CFBundleIconFile>icon.icns</CFBundleIconFile>
+		<NSPrincipalClass>NSApplication</NSPrincipalClass>
+		<NSHighResolutionCapable>true</NSHighResolutionCapable>
 	</PropertyGroup>
 	<ItemGroup>
 		<AvaloniaResource Include="Assets\**" />
 		<None Remove=".gitignore" />
-		<None Remove="Views\ZwiftLoginWindow.xaml" />
 	</ItemGroup>
 	<ItemGroup>
 		<!--This helps with theme dll-s trimming.
@@ -42,6 +57,7 @@
 		<PackageReference Include="Serilog.Sinks.Debug" Version="2.0.0" />
 		<PackageReference Include="Microsoft.Web.WebView2" Version="1.0.1150.38" />
 		<PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.16.0" />
+		<PackageReference Include="Dotnet.Bundle" Version="0.9.13" />
 	</ItemGroup>
 	<ItemGroup>
 		<ProjectReference Include="..\RoadCaptain.App.Shared\RoadCaptain.App.Shared.csproj" />
@@ -91,5 +107,10 @@
 	</ItemGroup>
 	<ItemGroup>
 		<Resource Include="Assets\background.jpg" />
+	</ItemGroup>
+	<ItemGroup>
+		<None Include="..\RoadCaptain.App.Shared\icon.icns" Link="icon.icns">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
 	</ItemGroup>
 </Project>
