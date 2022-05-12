@@ -6,7 +6,9 @@ namespace RoadCaptain.App.MacOs.UserPreferences
     {
         protected override string GetPreferencesPath()
         {
-            var configDirectory = Path.Combine("~", "Library", "RoadCaptain");
+            var home = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+
+            var configDirectory = Path.Combine(home, "Library", "RoadCaptain");
             
             return Path.Combine(configDirectory, "Configuration");
         }
