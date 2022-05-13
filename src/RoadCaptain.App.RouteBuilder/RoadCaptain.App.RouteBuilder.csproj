@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
-		<OutputType Condition="'$(RuntimeIdentifier)'=='win-x64'">WinExe</OutputType>
-		<OutputType>Exe</OutputType>
+		<OutputType>WinExe</OutputType>
+		<OutputType Condition="'$(RuntimeIdentifier)'=='linux-x64' Or '$(RuntimeIdentifier)'=='osx.11.0-x64'">Exe</OutputType>
 		<TargetFramework Condition="'$(RuntimeIdentifier)'!='win-x64'">net6.0</TargetFramework>
 		<TargetFramework Condition="'$(RuntimeIdentifier)'=='win-x64'">net6.0-windows</TargetFramework>
 		<Nullable>enable</Nullable>
