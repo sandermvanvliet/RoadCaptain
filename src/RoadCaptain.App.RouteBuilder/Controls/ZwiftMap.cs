@@ -28,7 +28,7 @@ namespace RoadCaptain.App.RouteBuilder.Controls
         public static readonly DirectProperty<ZwiftMap, bool> ShowSprintsProperty = AvaloniaProperty.RegisterDirect<ZwiftMap, bool>(nameof(ShowSprints), map => map.ShowSprints, (map, value) => map.ShowSprints = value);
         public static readonly DirectProperty<ZwiftMap, Segment?> HighlightedSegmentProperty = AvaloniaProperty.RegisterDirect<ZwiftMap, Segment?>(nameof(HighlightedSegment), map => map.HighlightedSegment, (map, value) => map.HighlightedSegment = value);
         public static readonly DirectProperty<ZwiftMap, Segment?> SelectedSegmentProperty = AvaloniaProperty.RegisterDirect<ZwiftMap, Segment?>(nameof(SelectedSegment), map => map.SelectedSegment, (map, value) => map.SelectedSegment = value);
-        public static readonly DirectProperty<ZwiftMap, SKPoint?> RiderPositionProperty = AvaloniaProperty.RegisterDirect<ZwiftMap, SKPoint?>(nameof(RiderPosition), map => map.RiderPosition, (map, value) => map.RiderPosition = value);
+        public static readonly DirectProperty<ZwiftMap, TrackPoint?> RiderPositionProperty = AvaloniaProperty.RegisterDirect<ZwiftMap, TrackPoint?>(nameof(RiderPosition), map => map.RiderPosition, (map, value) => map.RiderPosition = value);
         public static readonly DirectProperty<ZwiftMap, List<Segment>?> SegmentsProperty = AvaloniaProperty.RegisterDirect<ZwiftMap, List<Segment>?>(nameof(Segments), map => map.Segments, (map, value) => map.Segments = value);
         public static readonly DirectProperty<ZwiftMap, List<Segment>?> MarkersProperty = AvaloniaProperty.RegisterDirect<ZwiftMap, List<Segment>?>(nameof(Markers), map => map.Markers, (map, value) => map.Markers = value);
         public static readonly DirectProperty<ZwiftMap, RouteViewModel?> RouteProperty = AvaloniaProperty.RegisterDirect<ZwiftMap, RouteViewModel?>(nameof(Route), map => map.Route, (map, value) => map.Route = value);
@@ -154,14 +154,16 @@ namespace RoadCaptain.App.RouteBuilder.Controls
             }
         }
 
-        public SKPoint? RiderPosition
+        public TrackPoint? RiderPosition
         {
-            get => _renderOperation.RiderPosition;
+            get => null;
             set
             {
-                _renderOperation.RiderPosition = value;
+                if(value != null)
+                {_renderOperation.RiderPosition = _segmentPaths[value.Segment.Id].Points[value.Index.Value];
 
                 InvalidateVisual();
+                }
             }
         }
 

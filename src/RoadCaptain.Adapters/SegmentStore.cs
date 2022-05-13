@@ -85,6 +85,11 @@ namespace RoadCaptain.Adapters
                         segment.NextSegmentsNodeB.AddRange(turnsForSegment.TurnsB.AsTurns());
                     }
                 }
+
+                foreach (var point in segment.Points)
+                {
+                    point.Segment = segment;
+                }
             }
 
             _loadedSegments.Add(CacheKey(sport, world), segments);

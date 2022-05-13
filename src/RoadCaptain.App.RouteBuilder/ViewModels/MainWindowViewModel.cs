@@ -25,7 +25,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
         private Segment? _selectedSegment;
         private List<Segment> _segments;
         private Task? _simulationTask;
-        private SKPoint? _riderPosition;
+        private TrackPoint _riderPosition;
         private SimulationState _simulationState = SimulationState.NotStarted;
         private int _simulationIndex;
         private string _version;
@@ -105,7 +105,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
                 })
                 .OnFailure(_ => Model.StatusBarWarning(_.Message));
 
-            SimulateCommand = new RelayCommand(
+            SimulateCommand = new AsyncRelayCommand(
                     _ => SimulateRoute(),
                     _ => Route.Sequence.Any())
                 .SubscribeTo(this, () => Route.Sequence);
@@ -656,7 +656,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             return CommandResult.Success();
         }
 
-        private CommandResult SimulateRoute()
+        private async Task<CommandResult> SimulateRoute()
         {
             if (_simulationTask != null && SimulationState == SimulationState.Running)
             {
@@ -666,18 +666,32 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
 
             _simulationTask = Task.Factory.StartNew(() =>
             {
-                //SimulationState = SimulationState.Running;
+                SimulationState = SimulationState.Running;
 
-                //while (SimulationState == SimulationState.Running && _simulationIndex < RoutePath.PointCount)
-                //{
-                //    _simulationIndex++;
-                //    Thread.Sleep(15);
-                //}
+                var routePoints = new List<TrackPoint>();
 
-                //if (SimulationState != SimulationState.Paused)
-                //{
-                //    _simulationIndex = 0;
-                //}
+                foreach (var seq in Route.Sequence)
+                {
+                    var points = _segments.Single(s => s.Id == seq.SegmentId).Points;
+
+                    if (seq.Direction == SegmentDirection.BtoA)
+                    {
+                        points.Reverse();
+                    }
+
+                    routePoints.AddRange(points);
+                }
+
+                while (SimulationState == SimulationState.Running && _simulationIndex < routePoints.Count)
+                {
+                    RiderPosition = routePoints[_simulationIndex++];
+                    Thread.Sleep(15);
+                }
+
+                if (SimulationState != SimulationState.Paused)
+                {
+                    _simulationIndex = 0;
+                }
 
                 SimulationState = SimulationState.Completed;
                 RiderPosition = null;
@@ -703,7 +717,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             return CommandResult.Failure("Invalid url");
         }
 
-        public SKPoint? RiderPosition
+        public TrackPoint RiderPosition
         {
             get => _riderPosition;
             set
