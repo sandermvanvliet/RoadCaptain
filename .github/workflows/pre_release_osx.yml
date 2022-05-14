@@ -51,4 +51,4 @@ jobs:
     - name: Create DMG
       run: |
         chmod +x ./packaging/create-dmg
-        ./packaging/create-dmg --volname "RoadCaptain" --volicon ./src/RoadCaptain.App.Shared/icon.icns --window-pos 200 120 --window-size 800 400 --icon-size 128 --icon "RoadCaptain RouteBuilder.app" 200 190 --hide-extension "RoadCaptain RouteBuilder.app" --add-drop-link 600 185 "$RUNNER_TEMP/RoadCaptain.dmg" "$RUNNER_TEMP/Bundles"
+        ./packaging/create-dmg --volname "RoadCaptain" --volicon ./src/RoadCaptain.App.Shared/icon.icns --window-pos 200 120 --window-size 800 400 --icon-size 128 --icon "RoadCaptain RouteBuilder.app" 200 190 --hide-extension "RoadCaptain RouteBuilder.app" --app-drop-link 600 185 "$RUNNER_TEMP/RoadCaptain.dmg" "$RUNNER_TEMP/Bundles"
