@@ -19,12 +19,12 @@ jobs:
       id: get_version
       uses: mavrosxristoforos/get-xml-info@1.0
       with:
-        xml-file: '.\Directory.Build.props'
+        xml-file: './Directory.Build.props'
         xpath: '//Version'
     - name: Restore dependencies
       run: dotnet restore -r osx.11.0-x64
     - name: Build
-      run: dotnet build --no-restore -c Release -r osx.11.0-x64 .\RoadCaptain.sln
+      run: dotnet build --no-restore -c Release -r osx.11.0-x64 ./RoadCaptain.sln
     # - name: Test
     #   run: dotnet test --no-build --verbosity normal -c Release
 
