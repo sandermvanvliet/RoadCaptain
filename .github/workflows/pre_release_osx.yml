@@ -1,6 +1,8 @@
-name: pre_release
+name: pre_release_osx
 
-on: workflow_dispatch
+on:
+  push:
+    branches: [ feature/avalonia ]
 
 jobs:
   build:
@@ -23,15 +25,15 @@ jobs:
       run: dotnet restore -r osx.11.0-x64
     - name: Build
       run: dotnet build --no-restore -c Release -r osx.11.0-x64 .\RoadCaptain.sln
-    - name: Test
-      run: dotnet test --no-build --verbosity normal -c Release
+    # - name: Test
+    #   run: dotnet test --no-build --verbosity normal -c Release
 
-    - name: Publish Runner
-      run: dotnet publish --no-restore --no-build -c Release -r osx.11.0-x64 --no-self-contained -o $RUNNER_TEMP/RoadCaptain.Runner.app/Contents/MacOS src/RoadCaptain.App.Runner/RoadCaptain.App.Runner.csproj
-    - name: Copy App Bundle info and replace version
-      run: cat src/RoadCaptain.App.Runner/Info.plist | sed -e "s/##VERSION##/${{ steps.get_version.outputs.info }}" > $RUNNER_TEMP/RoadCaptain.Runner.app/Contents/Info.plist
-    - name: Copy App Bundle icon
-      run: mkdir $RUNNER_TEMP/RoadCaptain.Runner.app/Contents/Resources && cp src/RoadCaptain.App.Shared/icon.icns $RUNNER_TEMP/RoadCaptain.Runner.app/Contents/Resources/icon.icns
+    # - name: Publish Runner
+    #   run: dotnet publish --no-restore --no-build -c Release -r osx.11.0-x64 --no-self-contained -o $RUNNER_TEMP/RoadCaptain.Runner.app/Contents/MacOS src/RoadCaptain.App.Runner/RoadCaptain.App.Runner.csproj
+    # - name: Copy App Bundle info and replace version
+    #   run: cat src/RoadCaptain.App.Runner/Info.plist | sed -e "s/##VERSION##/${{ steps.get_version.outputs.info }}" > $RUNNER_TEMP/RoadCaptain.Runner.app/Contents/Info.plist
+    # - name: Copy App Bundle icon
+    #   run: mkdir $RUNNER_TEMP/RoadCaptain.Runner.app/Contents/Resources && cp src/RoadCaptain.App.Shared/icon.icns $RUNNER_TEMP/RoadCaptain.Runner.app/Contents/Resources/icon.icns
 
     - name: Publish RouteBuilder
       run: dotnet publish --no-restore --no-build -c Release -r osx.11.0-x64 --no-self-contained -o $RUNNER_TEMP/RoadCaptain.RouteBuilder.app/Contents/MacOS src/RoadCaptain.RouteBuilder/RoadCaptain.App.RouteBuilder.csproj
