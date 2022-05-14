@@ -40,6 +40,8 @@ jobs:
     - name: Make app executable
       run: chmod +x $RUNNER_TEMP/RoadCaptain.RouteBuilder.app/Contents/MacOS/RoadCaptain.App.RouteBuilder
     - name: Copy App Bundle info
-      run: cat src/RoadCaptain.App.RouteBuilder/Info.plist | sed -e "s/##VERSION##/${{ steps.get_version.outputs.info }}" > $RUNNER_TEMP/RoadCaptain.RouteBuilder.app/Contents/Info.plist
+      run: |
+        VERSION=`echo ${{ steps.get_version.outputs.info }} | tr -d '\n'`
+        cat src/RoadCaptain.App.RouteBuilder/Info.plist | sed -e "s/##VERSION##/$VERSION" > $RUNNER_TEMP/RoadCaptain.RouteBuilder.app/Contents/Info.plist
     - name: Copy App Bundle icon
       run: mkdir $RUNNER_TEMP/RoadCaptain.RouteBuilder.app/Contents/Resources && cp src/RoadCaptain.App.Shared/icon.icns $RUNNER_TEMP/RoadCaptain.RouteBuilder.app/Contents/Resources/icon.icns
