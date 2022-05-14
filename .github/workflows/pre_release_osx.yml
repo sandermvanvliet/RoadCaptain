@@ -36,7 +36,7 @@ jobs:
     #   run: mkdir $RUNNER_TEMP/RoadCaptain.Runner.app/Contents/Resources && cp src/RoadCaptain.App.Shared/icon.icns $RUNNER_TEMP/RoadCaptain.Runner.app/Contents/Resources/icon.icns
 
     - name: Publish RouteBuilder
-      run: dotnet publish --no-restore -c Release -r osx.11.0-x64 --no-self-contained -o $RUNNER_TEMP/RoadCaptain.RouteBuilder.app/Contents/MacOS src/RoadCaptain.RouteBuilder/RoadCaptain.App.RouteBuilder.csproj
+      run: dotnet publish --no-restore -c Release -r osx.11.0-x64 --no-self-contained -o $RUNNER_TEMP/RoadCaptain.RouteBuilder.app/Contents/MacOS src/RoadCaptain.App.RouteBuilder/RoadCaptain.App.RouteBuilder.csproj
     - name: Make app executable
       run: chmod +x $RUNNER_TEMP/RoadCaptain.RouteBuilder.app/Contents/MacOS/RoadCaptain.App.RouteBuilder
     - name: Copy App Bundle info
