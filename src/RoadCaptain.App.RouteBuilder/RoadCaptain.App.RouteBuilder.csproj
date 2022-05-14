@@ -13,21 +13,6 @@
 		<DefineConstants Condition="'$(RuntimeIdentifier)'=='osx.11.0-x64'">MACOS</DefineConstants>
 		<UseAppHost Condition="'$(RuntimeIdentifier)'=='osx.11.0-x64'">true</UseAppHost>
 	</PropertyGroup>
-	<PropertyGroup>
-		<!-- Also defines .app file name -->
-		<CFBundleName>RoadCaptain.App.RouteBuilder</CFBundleName>
-		<CFBundleDisplayName>RoadCaptain RouteBuilder</CFBundleDisplayName>
-		<CFBundleIdentifier>nl.codenizer.roadcaptain.app.routebuilder</CFBundleIdentifier>
-		<CFBundleVersion>$(Version)</CFBundleVersion>
-		<CFBundleShortVersionString>$(Version)</CFBundleShortVersionString>
-		<CFBundlePackageType>APPL</CFBundlePackageType>
-		<CFBundleSignature>????</CFBundleSignature>
-		<CFBundleExecutable>RoadCaptain.App.RouteBuilder</CFBundleExecutable>
-		<!-- Will be copied from output directory -->
-		<CFBundleIconFile>icon.icns</CFBundleIconFile>
-		<NSPrincipalClass>NSApplication</NSPrincipalClass>
-		<NSHighResolutionCapable>true</NSHighResolutionCapable>
-	</PropertyGroup>
 	<ItemGroup>
 		<AvaloniaResource Include="Assets\**" />
 		<None Remove=".gitignore" />
