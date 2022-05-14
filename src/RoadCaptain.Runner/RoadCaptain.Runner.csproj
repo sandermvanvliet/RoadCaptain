@@ -28,7 +28,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\RoadCaptain.Adapters\RoadCaptain.Adapters.csproj" />
-    <ProjectReference Include="..\RoadCaptain.UserInterface.Shared\RoadCaptain.UserInterface.Shared.csproj" />
     <ProjectReference Include="..\RoadCaptain\RoadCaptain.csproj" />
   </ItemGroup>
 

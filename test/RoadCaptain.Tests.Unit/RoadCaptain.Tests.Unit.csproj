@@ -23,7 +23,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\RoadCaptain.Adapters\RoadCaptain.Adapters.csproj" />
-    <ProjectReference Include="..\..\src\RoadCaptain.RouteBuilder\RoadCaptain.RouteBuilder.csproj" />
+    <ProjectReference Include="..\..\src\RoadCaptain.App.RouteBuilder\RoadCaptain.App.RouteBuilder.csproj" />
     <ProjectReference Include="..\..\src\RoadCaptain.SegmentBuilder\RoadCaptain.SegmentBuilder.csproj" />
     <ProjectReference Include="..\..\src\RoadCaptain\RoadCaptain.csproj" />
   </ItemGroup>
