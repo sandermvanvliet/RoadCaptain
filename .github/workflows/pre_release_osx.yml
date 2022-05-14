@@ -28,6 +28,8 @@ jobs:
 
     # - name: Publish Runner
     #   run: dotnet publish --no-restore -c Release -r osx.11.0-x64 --no-self-contained -o $RUNNER_TEMP/RoadCaptain.Runner.app/Contents/MacOS src/RoadCaptain.App.Runner/RoadCaptain.App.Runner.csproj
+    # - name: Make app executable
+    #   run: chmod +x $RUNNER_TEMP/RoadCaptain.Runner.app/Contents/MacOS/RoadCaptain.App.Runner
     # - name: Copy App Bundle info and replace version
     #   run: cat src/RoadCaptain.App.Runner/Info.plist | sed -e "s/##VERSION##/${{ steps.get_version.outputs.info }}" > $RUNNER_TEMP/RoadCaptain.Runner.app/Contents/Info.plist
     # - name: Copy App Bundle icon
@@ -35,6 +37,8 @@ jobs:
 
     - name: Publish RouteBuilder
       run: dotnet publish --no-restore -c Release -r osx.11.0-x64 --no-self-contained -o $RUNNER_TEMP/RoadCaptain.RouteBuilder.app/Contents/MacOS src/RoadCaptain.RouteBuilder/RoadCaptain.App.RouteBuilder.csproj
+    - name: Make app executable
+      run: chmod +x $RUNNER_TEMP/RoadCaptain.RouteBuilder.app/Contents/MacOS/RoadCaptain.App.RouteBuilder
     - name: Copy App Bundle info
       run: cat src/RoadCaptain.App.RouteBuilder/Info.plist | sed -e "s/##VERSION##/${{ steps.get_version.outputs.info }}" > $RUNNER_TEMP/RoadCaptain.RouteBuilder.app/Contents/Info.plist
     - name: Copy App Bundle icon
