@@ -376,11 +376,11 @@
 										<TextBlock Text="km" FontSize="10" FontWeight="Bold" VerticalAlignment="Bottom" Padding="0,0,0,1.5"/>
 
 
-										<TextBlock Text="🡽" FontSize="15" Margin="0,-2,0,0" Padding="0" FontWeight="Light" />
+										<TextBlock Text="⬈" FontSize="15" Margin="0,-2,0,0" Padding="0" FontWeight="Light" />
 										<TextBlock Text="{Binding Path=Ascent,StringFormat=0.0}" FontSize="16" FontWeight="Bold" VerticalAlignment="Bottom" />
 										<TextBlock Text="m" FontSize="10" FontWeight="Bold" VerticalAlignment="Bottom" Padding="0,0,0,1.5"/>
 
-										<TextBlock Text="🡾" FontSize="15" Margin="0,-2,0,0" Padding="0" FontWeight="Light" />
+										<TextBlock Text="⬊" FontSize="15" Margin="0,-2,0,0" Padding="0" FontWeight="Light" />
 										<TextBlock Text="{Binding Path=Descent,StringFormat=0.0}" FontSize="16" FontWeight="Bold" VerticalAlignment="Bottom" />
 										<TextBlock Text="m" FontSize="10" FontWeight="Bold" VerticalAlignment="Bottom" Padding="0,0,0,1.5"/>
 									</StackPanel>
