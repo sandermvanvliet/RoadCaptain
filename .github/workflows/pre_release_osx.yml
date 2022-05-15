@@ -26,29 +26,30 @@ jobs:
     # - name: Test
     #   run: dotnet test --no-build --verbosity normal -c Release
 
-    # - name: Publish Runner
-    #   run: dotnet publish --no-restore -c Release -r osx.11.0-x64 --no-self-contained -o $RUNNER_TEMP/Bundles/RoadCaptain.Runner.app/Contents/MacOS src/RoadCaptain.App.Runner/RoadCaptain.App.Runner.csproj
-    # - name: Make app executable
-    #   run: chmod +x $RUNNER_TEMP/Bundles/RoadCaptain.Runner.app/Contents/MacOS/RoadCaptain.App.Runner
-    # - name: Copy App Bundle info and replace version
-    #   run: |
-    #     VERSION=`echo ${{ steps.get_version.outputs.info }} | tr -d '\n'`
-    #     cat src/RoadCaptain.App.Runner/Info.plist | sed -e "s/##VERSION##/${{ steps.get_version.outputs.info }}/" > $RUNNER_TEMP/Bundles/RoadCaptain.Runner.app/Contents/Info.plist
-    # - name: Copy App Bundle icon
-    #   run: mkdir $RUNNER_TEMP/Bundles/RoadCaptain.Runner.app/Contents/Resources && cp src/RoadCaptain.App.Shared/icon.icns $RUNNER_TEMP/Bundles/RoadCaptain.Runner.app/Contents/Resources/icon.icns
-
-    - name: Publish RouteBuilder
-      run: dotnet publish --no-restore -c Release -r osx.11.0-x64 --no-self-contained -o $RUNNER_TEMP/Bundles/RoadCaptain.RouteBuilder.app/Contents/MacOS src/RoadCaptain.App.RouteBuilder/RoadCaptain.App.RouteBuilder.csproj
+    - name: Publish Runner
+      run: dotnet publish --no-restore -c Release -r osx.11.0-x64 --no-self-contained -o "$RUNNER_TEMP/Bundles/RoadCaptain Runner.app/Contents/MacOS" src/RoadCaptain.App.Runner/RoadCaptain.App.Runner.csproj
     - name: Make app executable
-      run: chmod +x $RUNNER_TEMP/Bundles/RoadCaptain.RouteBuilder.app/Contents/MacOS/RoadCaptain.App.RouteBuilder
+      run: chmod +x "$RUNNER_TEMP/Bundles/RoadCaptain Runner.app/Contents/MacOS/RoadCaptain.App.Runner"
     - name: Copy App Bundle info
       run: |
         VERSION=`echo ${{ steps.get_version.outputs.info }} | tr -d '\n'`
-        cat src/RoadCaptain.App.RouteBuilder/Info.plist | sed -e "s/##VERSION##/$VERSION/" > $RUNNER_TEMP/Bundles/RoadCaptain.RouteBuilder.app/Contents/Info.plist
+        cat src/RoadCaptain.App.Runner/Info.plist | sed -e "s/##VERSION##/$VERSION/" > "$RUNNER_TEMP/Bundles/RoadCaptain Runner.app/Contents/Info.plist"
     - name: Copy App Bundle icon
-      run: mkdir $RUNNER_TEMP/Bundles/RoadCaptain.RouteBuilder.app/Contents/Resources && cp src/RoadCaptain.App.Shared/icon.icns $RUNNER_TEMP/Bundles/RoadCaptain.RouteBuilder.app/Contents/Resources/icon.icns
+      run: mkdir "$RUNNER_TEMP/Bundles/RoadCaptain Runner.app/Contents/Resources" && cp src/RoadCaptain.App.Shared/icon.icns "$RUNNER_TEMP/Bundles/RoadCaptain Runner.app/Contents/Resources/icon.icns"
+
+    - name: Publish RouteBuilder
+      run: dotnet publish --no-restore -c Release -r osx.11.0-x64 --no-self-contained -o "$RUNNER_TEMP/Bundles/RoadCaptain RouteBuilder.app/Contents/MacOS" src/RoadCaptain.App.RouteBuilder/RoadCaptain.App.RouteBuilder.csproj
+    - name: Make app executable
+      run: chmod +x "$RUNNER_TEMP/Bundles/RoadCaptain RouteBuilder.app/Contents/MacOS/RoadCaptain.App.RouteBuilder"
+    - name: Copy App Bundle info
+      run: |
+        VERSION=`echo ${{ steps.get_version.outputs.info }} | tr -d '\n'`
+        cat src/RoadCaptain.App.RouteBuilder/Info.plist | sed -e "s/##VERSION##/$VERSION/" > "$RUNNER_TEMP/Bundles/RoadCaptain RouteBuilder.app/Contents/Info.plist"
+    - name: Copy App Bundle icon
+      run: mkdir "$RUNNER_TEMP/Bundles/RoadCaptain RouteBuilder.app/Contents/Resources" && cp src/RoadCaptain.App.Shared/icon.icns "$RUNNER_TEMP/Bundles/RoadCaptain RouteBuilder.app/Contents/Resources/icon.icns"
 
     - name: Create DMG
       run: |
+        VERSION=`echo ${{ steps.get_version.outputs.info }} | tr -d '\n'`
         chmod +x ./packaging/create-dmg
-        ./packaging/create-dmg --volname "RoadCaptain" --volicon ./src/RoadCaptain.App.Shared/icon.icns --window-pos 200 120 --window-size 800 400 --icon-size 128 --hide-extension "RoadCaptain RouteBuilder.app" --app-drop-link 600 185 "$RUNNER_TEMP/RoadCaptain.dmg" "$RUNNER_TEMP/Bundles"
+	./packaging/create-dmg --volname "RoadCaptain" --volicon ./src/RoadCaptain.App.Shared/icon.icns --window-pos 200 120 --window-size 800 533 --icon-size 128 --icon "RoadCaptain RouteBuilder.app" 200 40 --icon "RoadCaptain Runner.app" 200 260 --app-drop-link 600 40 --background "./src/RoadCaptain.App.Shared/Assets/installer-background.jpg" "$RUNNER_TEMP/RoadCaptain-$VERSION.dmg" "$RUNNER_TEMP/Bundles"
