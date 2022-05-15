@@ -29,9 +29,9 @@ namespace RoadCaptain.App.Runner.Models
         {
             return turnDirection switch
             {
-                TurnDirection.Left => "🡸",
-                TurnDirection.Right => "🡺",
-                TurnDirection.GoStraight => "🡹",
+                TurnDirection.Left => "⬅",
+                TurnDirection.Right => "⮕",
+                TurnDirection.GoStraight => "⬆",
                 _ => "🏁"
             };
         }
