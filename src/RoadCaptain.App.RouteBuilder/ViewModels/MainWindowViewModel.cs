@@ -25,9 +25,8 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
         private Segment? _selectedSegment;
         private List<Segment> _segments;
         private Task? _simulationTask;
-        private TrackPoint _riderPosition;
+        private TrackPoint? _riderPosition;
         private SimulationState _simulationState = SimulationState.NotStarted;
-        private int _simulationIndex;
         private string _version;
         private string _changelogUri;
         private bool _haveCheckedVersion;
@@ -41,7 +40,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
         private bool _showClimbs;
         private bool _showSprints;
         private Segment _highlightedSegment;
-        
+
         public MainWindowViewModel(IRouteStore routeStore, ISegmentStore segmentStore, IVersionChecker versionChecker, IWindowService windowService, IWorldStore worldStore, IUserPreferences userPreferences)
         {
             Segments = new List<Segment>();
@@ -156,7 +155,6 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             SelectedSegment = null;
             
             SimulationState = SimulationState.NotStarted;
-            _simulationIndex = 0;
 
             Segments = new List<Segment>();
             SegmentPaths.Clear();
@@ -535,7 +533,6 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             SelectedSegment = null;
             
             SimulationState = SimulationState.NotStarted;
-            _simulationIndex = 0;
 
             return commandResult;
         }
@@ -660,10 +657,10 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
         {
             if (_simulationTask != null && SimulationState == SimulationState.Running)
             {
-                SimulationState = SimulationState.Paused;
+                SimulationState = SimulationState.Completed;
                 return CommandResult.Success();
             }
-
+            
             _simulationTask = Task.Factory.StartNew(() =>
             {
                 SimulationState = SimulationState.Running;
@@ -676,21 +673,24 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
 
                     if (seq.Direction == SegmentDirection.BtoA)
                     {
-                        points.Reverse();
+                        // Don't call Reverse() because that does an
+                        // in-place reverse and given that we're 
+                        // _referencing_ the list of points of the
+                        // segment that means that the actual segment
+                        // is modified. Reverse() does not return a
+                        // new IEnumerable<T>
+                        points = points.OrderByDescending(p => p.Index).ToList();
                     }
 
                     routePoints.AddRange(points);
                 }
 
-                while (SimulationState == SimulationState.Running && _simulationIndex < routePoints.Count)
-                {
-                    RiderPosition = routePoints[_simulationIndex++];
-                    Thread.Sleep(15);
-                }
+                var simulationIndex = 0;
 
-                if (SimulationState != SimulationState.Paused)
+                while (SimulationState == SimulationState.Running && simulationIndex < routePoints.Count)
                 {
-                    _simulationIndex = 0;
+                    RiderPosition = routePoints[simulationIndex++];
+                    Thread.Sleep(15);
                 }
 
                 SimulationState = SimulationState.Completed;
@@ -717,7 +717,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             return CommandResult.Failure("Invalid url");
         }
 
-        public TrackPoint RiderPosition
+        public TrackPoint? RiderPosition
         {
             get => _riderPosition;
             set

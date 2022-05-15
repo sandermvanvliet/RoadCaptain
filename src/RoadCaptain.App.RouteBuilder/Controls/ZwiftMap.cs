@@ -160,9 +160,14 @@ namespace RoadCaptain.App.RouteBuilder.Controls
             set
             {
                 if(value != null)
-                {_renderOperation.RiderPosition = _segmentPaths[value.Segment.Id].Points[value.Index.Value];
+                {
+                    _renderOperation.RiderPosition = _segmentPaths[value.Segment.Id].Points[value.Index.Value];
 
-                InvalidateVisual();
+                    InvalidateVisual();
+                }
+                else
+                {
+                    _renderOperation.RiderPosition = null;
                 }
             }
         }
