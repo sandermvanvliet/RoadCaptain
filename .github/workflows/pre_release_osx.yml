@@ -52,4 +52,4 @@ jobs:
       run: |
         VERSION=`echo ${{ steps.get_version.outputs.info }} | tr -d '\n'`
         chmod +x ./packaging/create-dmg
-	./packaging/create-dmg --volname "RoadCaptain" --volicon ./src/RoadCaptain.App.Shared/icon.icns --window-pos 200 120 --window-size 800 533 --icon-size 128 --icon "RoadCaptain RouteBuilder.app" 200 40 --icon "RoadCaptain Runner.app" 200 260 --app-drop-link 600 40 --background "./src/RoadCaptain.App.Shared/Assets/installer-background.jpg" "$RUNNER_TEMP/RoadCaptain-$VERSION.dmg" "$RUNNER_TEMP/Bundles"
+        ./packaging/create-dmg --volname "RoadCaptain" --volicon ./src/RoadCaptain.App.Shared/icon.icns --window-pos 200 120 --window-size 800 533 --icon-size 128 --icon "RoadCaptain RouteBuilder.app" 200 40 --icon "RoadCaptain Runner.app" 200 260 --app-drop-link 600 40 --background "./src/RoadCaptain.App.Shared/Assets/installer-background.jpg" "$RUNNER_TEMP/RoadCaptain-$VERSION.dmg" "$RUNNER_TEMP/Bundles"
