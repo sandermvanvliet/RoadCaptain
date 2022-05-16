@@ -1,8 +1,6 @@
 name: pre_release_osx
 
-on:
-  push:
-    branches: [ feature/avalonia ]
+on: workflow_dispatch
 
 jobs:
   build:
