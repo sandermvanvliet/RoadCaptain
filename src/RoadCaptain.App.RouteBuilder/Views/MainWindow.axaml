@@ -303,11 +303,11 @@
 						</StackPanel>
 
 						<StackPanel Orientation="Horizontal" Height="18">
-							<TextBlock Text="⬈" FontSize="15" Margin="0,-2,0,0" Padding="0" FontWeight="Light" />
+							<TextBlock Text="⬈" FontSize="15" Margin="0,-2,0,0" Padding="0" FontWeight="ExtraBold" />
 							<TextBlock Text="{Binding Path=TotalAscent,StringFormat=\{0:0.0\}}" FontSize="16" FontWeight="Bold" VerticalAlignment="Bottom" />
 							<TextBlock Text="m" FontSize="10" FontWeight="Bold" VerticalAlignment="Bottom" Padding="0,0,0,1.5"/>
 
-							<TextBlock Text="⬊" FontSize="15" Margin="0,-2,0,0" Padding="0" FontWeight="Light" />
+							<TextBlock Text="⬊" FontSize="15" Margin="0,-2,0,0" Padding="0" FontWeight="ExtraBold" />
 							<TextBlock Text="{Binding Path=TotalDescent,StringFormat=\{0:0.0\}}" FontSize="16" FontWeight="Bold" VerticalAlignment="Bottom" />
 							<TextBlock Text="m" FontSize="10" FontWeight="Bold" VerticalAlignment="Bottom" Padding="0,0,0,1.5"/>
 						</StackPanel>
@@ -366,7 +366,7 @@
 								</Grid.ColumnDefinitions>
 
 								<TextBlock Grid.Column="0" Grid.Row="0" Text="{Binding Path=SequenceNumber}" HorizontalAlignment="Center" />
-								<TextBlock Grid.Column="0" Grid.Row="1" Text="{Binding Path=TurnGlyph}"  FontSize="14" Foreground="#1192CC"  Margin="4,-2,0,0" Padding="0" FontWeight="Light" HorizontalAlignment="Left" VerticalAlignment="Center" />
+								<TextBlock Grid.Column="0" Grid.Row="1" Text="{Binding Path=TurnGlyph}"  FontSize="14" Foreground="#1192CC"  Margin="4,-2,0,0" Padding="0" FontWeight="ExtraBold" HorizontalAlignment="Left" VerticalAlignment="Center" />
 
 								<TextBlock Grid.Column="1" Grid.Row="0" Text="{Binding Path=SegmentName}" Margin="4,0,0,0" />
 
@@ -376,11 +376,11 @@
 										<TextBlock Text="km" FontSize="10" FontWeight="Bold" VerticalAlignment="Bottom" Padding="0,0,0,1.5"/>
 
 
-										<TextBlock Text="⬈" FontSize="15" Margin="0,-2,0,0" Padding="0" FontWeight="Light" />
+										<TextBlock Text="⬈" FontSize="15" Margin="0,-2,0,0" Padding="0" FontWeight="ExtraBold" />
 										<TextBlock Text="{Binding Path=Ascent,StringFormat=\{0:0.0\}}" FontSize="16" FontWeight="Bold" VerticalAlignment="Bottom" />
 										<TextBlock Text="m" FontSize="10" FontWeight="Bold" VerticalAlignment="Bottom" Padding="0,0,0,1.5"/>
 
-										<TextBlock Text="⬊" FontSize="15" Margin="0,-2,0,0" Padding="0" FontWeight="Light" />
+										<TextBlock Text="⬊" FontSize="15" Margin="0,-2,0,0" Padding="0" FontWeight="ExtraBold" />
 										<TextBlock Text="{Binding Path=Descent,StringFormat=\{0:0.0\}}" FontSize="16" FontWeight="Bold" VerticalAlignment="Bottom" />
 										<TextBlock Text="m" FontSize="10" FontWeight="Bold" VerticalAlignment="Bottom" Padding="0,0,0,1.5"/>
 									</StackPanel>
