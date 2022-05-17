@@ -3,9 +3,28 @@ name: pre_release
 on: workflow_dispatch
 
 jobs:
-  build:
+  create_release:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Create Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ steps.get_version.outputs.info }}
+        release_name: ${{ steps.get_version.outputs.info }}
+        draft: true
+        prerelease: true
+    outputs:
+      upload_url: ${{ steps.create_release.outputs.upload_url }}
+
+  build_win:
 
     runs-on: windows-2022
+
+    needs: create_release
 
     steps:
     - uses: actions/checkout@v2
@@ -22,36 +41,86 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore
     - name: Build
-      run: dotnet build --no-restore -c Release .\RoadCaptain.sln
+      run: dotnet build --no-restore -c Release -r win-x64 .\RoadCaptain.sln
     - name: Test
-      run: dotnet test --no-build --verbosity normal -c Release
+      run: dotnet test --no-build --verbosity normal -c Release -r win-x64
     - name: Publish Runner
-      run: dotnet publish --no-restore --no-build -c Release src\RoadCaptain.Runner\RoadCaptain.Runner.csproj
+      run: dotnet publish --no-restore --no-build -c Release -r win-x64 src\RoadCaptain.Runner\RoadCaptain.Runner.csproj
     - name: Publish RouteBuilder
-      run: dotnet publish --no-restore --no-build -c Release src\RoadCaptain.RouteBuilder\RoadCaptain.RouteBuilder.csproj
+      run: dotnet publish --no-restore --no-build -c Release -r win-x64 src\RoadCaptain.RouteBuilder\RoadCaptain.RouteBuilder.csproj
     - name: Update Wix components file
-      run: dotnet run --project .\packaging\RoadCaptain.WixComponentFileGenerator\RoadCaptain.WixComponentFileGenerator.csproj src\RoadCaptain.Runner\bin\Release\net6.0-windows\publish src\RoadCaptain.RouteBuilder\bin\Release\net6.0-windows\publish .\packaging\RoadCaptain.Installer\Components.wxi
+      run: dotnet run --project .\packaging\RoadCaptain.WixComponentFileGenerator\RoadCaptain.WixComponentFileGenerator.csproj src\RoadCaptain.App.Runner\bin\Release\net6.0-windows\win-x64\publish src\RoadCaptain.App.RouteBuilder\bin\Release\net6.0-windows\win-x64\publish .\packaging\RoadCaptain.Installer\Components.wxi
     - name: Add msbuild to PATH
       uses: microsoft/setup-msbuild@v1.1
     - name: Build MSI
       run: msbuild .\packaging\RoadCaptain.Installer\RoadCaptain.Installer.wixproj -property:Configuration=Release
-    - name: Create Release
-      id: create_release
-      uses: actions/create-release@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        tag_name: ${{ steps.get_version.outputs.info }}
-        release_name: ${{ steps.get_version.outputs.info }}
-        draft: true
-        prerelease: true
     - name: Upload Installer
       id: upload-release-asset 
       uses: actions/upload-release-asset@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
+        upload_url: ${{ needs.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
         asset_path: D:\a\RoadCaptain\RoadCaptain\packaging\RoadCaptain.Installer\bin\Release\RoadCaptain_${{ steps.get_version.outputs.info }}.msi
         asset_name: RoadCaptain_${{ steps.get_version.outputs.info }}.msi
         asset_content_type: application/x-msi
+
+  build_macos:
+
+    runs-on: macos-11
+
+    needs: create_release
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 6.0.x
+    - name: Get the version
+      id: get_version
+      uses: mavrosxristoforos/get-xml-info@1.0
+      with:
+        xml-file: './Directory.Build.props'
+        xpath: '//Version'
+    - name: Restore dependencies
+      run: dotnet restore -r osx.11.0-x64
+
+    - name: Publish Runner
+      run: dotnet publish --no-restore -c Release -r osx.11.0-x64 --no-self-contained -o "$RUNNER_TEMP/Bundles/RoadCaptain Runner.app/Contents/MacOS" src/RoadCaptain.App.Runner/RoadCaptain.App.Runner.csproj
+    - name: Make app executable
+      run: chmod +x "$RUNNER_TEMP/Bundles/RoadCaptain Runner.app/Contents/MacOS/RoadCaptain.App.Runner"
+    - name: Copy App Bundle info
+      run: |
+        VERSION=`echo ${{ steps.get_version.outputs.info }} | tr -d '\n'`
+        cat src/RoadCaptain.App.Runner/Info.plist | sed -e "s/##VERSION##/$VERSION/" > "$RUNNER_TEMP/Bundles/RoadCaptain Runner.app/Contents/Info.plist"
+    - name: Copy App Bundle icon
+      run: mkdir "$RUNNER_TEMP/Bundles/RoadCaptain Runner.app/Contents/Resources" && cp src/RoadCaptain.App.Shared/icon.icns "$RUNNER_TEMP/Bundles/RoadCaptain Runner.app/Contents/Resources/icon.icns"
+
+    - name: Publish RouteBuilder
+      run: dotnet publish --no-restore -c Release -r osx.11.0-x64 --no-self-contained -o "$RUNNER_TEMP/Bundles/RoadCaptain RouteBuilder.app/Contents/MacOS" src/RoadCaptain.App.RouteBuilder/RoadCaptain.App.RouteBuilder.csproj
+    - name: Make app executable
+      run: chmod +x "$RUNNER_TEMP/Bundles/RoadCaptain RouteBuilder.app/Contents/MacOS/RoadCaptain.App.RouteBuilder"
+    - name: Copy App Bundle info
+      run: |
+        VERSION=`echo ${{ steps.get_version.outputs.info }} | tr -d '\n'`
+        cat src/RoadCaptain.App.RouteBuilder/Info.plist | sed -e "s/##VERSION##/$VERSION/" > "$RUNNER_TEMP/Bundles/RoadCaptain RouteBuilder.app/Contents/Info.plist"
+    - name: Copy App Bundle icon
+      run: mkdir "$RUNNER_TEMP/Bundles/RoadCaptain RouteBuilder.app/Contents/Resources" && cp src/RoadCaptain.App.Shared/icon.icns "$RUNNER_TEMP/Bundles/RoadCaptain RouteBuilder.app/Contents/Resources/icon.icns"
+
+    - name: Create DMG
+      run: |
+        VERSION=`echo ${{ steps.get_version.outputs.info }} | tr -d '\n'`
+        chmod +x ./packaging/create-dmg
+        ./packaging/create-dmg --volname "RoadCaptain" --volicon ./src/RoadCaptain.App.Shared/icon.icns --window-pos 200 120 --window-size 800 533 --icon-size 128 --icon "RoadCaptain RouteBuilder.app" 200 40 --icon "RoadCaptain Runner.app" 200 260 --app-drop-link 600 40 --background "./src/RoadCaptain.App.Shared/Assets/installer-background.jpg" "$RUNNER_TEMP/RoadCaptain-$VERSION.dmg" "$RUNNER_TEMP/Bundles"
+
+    - name: Upload Installer
+      id: upload-release-asset 
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ needs.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
+        asset_path: "/Users/runner/work/_temp/RoadCaptain-${{ steps.get_version.outputs.info }}.dmg" # Explicit path here because $RUNNER_TEMP doesn't get expanded...
+        asset_name: RoadCaptain-${{ steps.get_version.outputs.info }}.dmg
+        asset_content_type: application/x-apple-diskimage
