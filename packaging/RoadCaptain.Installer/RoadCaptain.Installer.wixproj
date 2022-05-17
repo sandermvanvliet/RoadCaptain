@@ -9,7 +9,9 @@
 		<SchemaVersion>2.0</SchemaVersion>
 		<OutputName>RoadCaptain_$(Version)</OutputName>
 		<OutputType>Package</OutputType>
-		<DefineConstants>ProductVersion=$(Version)</DefineConstants>
+		<RunnerTargetDir Condition="'$(RunnerTargetDir)'==''">..\..\src\RoadCaptain.App.Runner\bin\$(Configuration)\net6.0-windows\win-x64\</RunnerTargetDir>
+		<RouteBuilderTargetDir Condition="'$(RouteBuilderTargetDir)'==''">..\..\src\RoadCaptain.App.RouteBuilder\bin\$(Configuration)\net6.0-windows\win-x64\</RouteBuilderTargetDir>
+		<DefineConstants>ProductVersion=$(Version);RunnerTargetDir=$(RunnerTargetDir);RouteBuilderTargetDir=$(RouteBuilderTargetDir)</DefineConstants>
 	</PropertyGroup>
 	<PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
 		<OutputPath>bin\$(Configuration)\</OutputPath>
@@ -30,24 +32,6 @@
 		<Content Include="icon.ico" />
 		<Content Include="License.rtf" />
 		<Content Include="RoadCaptain.Installer.wax" />
-	</ItemGroup>
-	<ItemGroup>
-		<ProjectReference Include="..\..\src\RoadCaptain.App.RouteBuilder\RoadCaptain.App.RouteBuilder.csproj">
-			<Name>RoadCaptain.RouteBuilder</Name>
-			<Project>{a53b6a87-4058-4392-8f37-02c7b896ace8}</Project>
-			<Private>True</Private>
-			<DoNotHarvest>True</DoNotHarvest>
-			<RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
-			<RefTargetDir>INSTALLFOLDER</RefTargetDir>
-		</ProjectReference>
-		<ProjectReference Include="..\..\src\RoadCaptain.App.Runner\RoadCaptain.App.Runner.csproj">
-			<Name>RoadCaptain.Runner</Name>
-			<Project>{946f1bd8-59d6-4f2b-b056-dc9270f29870}</Project>
-			<Private>True</Private>
-			<DoNotHarvest>True</DoNotHarvest>
-			<RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
-			<RefTargetDir>INSTALLFOLDER</RefTargetDir>
-		</ProjectReference>
 	</ItemGroup>
 	<ItemGroup>
 		<WixExtension Include="WixUIExtension">

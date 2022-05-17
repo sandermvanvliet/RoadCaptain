@@ -14,8 +14,8 @@
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
   <!-- The relative path is to ensure we pick the right target framework
 	as Wix insists on using net6.0 for reasons I don't understand... -->
-  <?define RoadCaptain.Runner_TargetDir=$(var.RoadCaptain.Runner.TargetDir)..\net6.0-windows\win-x64\?>
-  <?define RoadCaptain.RouteBuilder_TargetDir=$(var.RoadCaptain.RouteBuilder.TargetDir)..\net6.0-windows\win-x64\?>
+  <?define RoadCaptain.Runner_TargetDir=$(var.RunnerTargetDir)?>
+  <?define RoadCaptain.RouteBuilder_TargetDir=$(var.RouteBuilderTargetDir)?>
   <Product Id="*" Name="$(var.Name)" Language="1033" Version="$(var.ProductVersion)" Manufacturer="$(var.Manufacturer)" UpgradeCode="$(var.UpgradeCode)">
     <Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" InstallPrivileges="elevated" />
     <MajorUpgrade Schedule="afterInstallInitialize" DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
