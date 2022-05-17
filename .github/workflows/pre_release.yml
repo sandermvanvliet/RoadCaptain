@@ -43,7 +43,7 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore
     - name: Build
-      run: dotnet build --no-restore -c Release -r win-x64 .\RoadCaptain.sln
+      run: dotnet build --no-restore -c Release .\RoadCaptain.sln
     - name: Test
       run: dotnet test --no-build --verbosity normal -c Release -r win-x64
     - name: Publish Runner
