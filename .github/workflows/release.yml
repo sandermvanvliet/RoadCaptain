@@ -16,7 +16,7 @@ jobs:
       id: get_version
       uses: mavrosxristoforos/get-xml-info@1.0
       with:
-        xml-file: '.\Directory.Build.props'
+        xml-file: './Directory.Build.props'
         xpath: '//Version'
     - name: Create Release
       id: create_release
