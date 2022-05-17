@@ -7,6 +7,13 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
+    - uses: actions/checkout@v2
+    - name: Get the version
+      id: get_version
+      uses: mavrosxristoforos/get-xml-info@1.0
+      with:
+        xml-file: '.\Directory.Build.props'
+        xpath: '//Version'
     - name: Create Release
       id: create_release
       uses: actions/create-release@v1
@@ -15,10 +22,11 @@ jobs:
       with:
         tag_name: ${{ steps.get_version.outputs.info }}
         release_name: ${{ steps.get_version.outputs.info }}
-        draft: true
-        prerelease: true
+        draft: false
+        prerelease: false
     outputs:
       upload_url: ${{ steps.create_release.outputs.upload_url }}
+      version: ${{ steps.get_version.outputs.info }}
 
   build_win:
 
@@ -32,12 +40,6 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 6.0.x
-    - name: Get the version
-      id: get_version
-      uses: mavrosxristoforos/get-xml-info@1.0
-      with:
-        xml-file: '.\Directory.Build.props'
-        xpath: '//Version'
     - name: Restore dependencies
       run: dotnet restore
     - name: Build
@@ -61,8 +63,8 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ needs.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
-        asset_path: D:\a\RoadCaptain\RoadCaptain\packaging\RoadCaptain.Installer\bin\Release\RoadCaptain_${{ steps.get_version.outputs.info }}.msi
-        asset_name: RoadCaptain_${{ steps.get_version.outputs.info }}.msi
+        asset_path: D:\a\RoadCaptain\RoadCaptain\packaging\RoadCaptain.Installer\bin\Release\RoadCaptain_${{ needs.create_release.outputs.version }}.msi
+        asset_name: RoadCaptain_${{ needs.create_release.outputs.version }}.msi
         asset_content_type: application/x-msi
 
   build_macos:
@@ -77,12 +79,6 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 6.0.x
-    - name: Get the version
-      id: get_version
-      uses: mavrosxristoforos/get-xml-info@1.0
-      with:
-        xml-file: './Directory.Build.props'
-        xpath: '//Version'
     - name: Restore dependencies
       run: dotnet restore -r osx.11.0-x64
 
@@ -92,7 +88,7 @@ jobs:
       run: chmod +x "$RUNNER_TEMP/Bundles/RoadCaptain Runner.app/Contents/MacOS/RoadCaptain.App.Runner"
     - name: Copy App Bundle info
       run: |
-        VERSION=`echo ${{ steps.get_version.outputs.info }} | tr -d '\n'`
+        VERSION=`echo ${{ needs.create_release.outputs.version }} | tr -d '\n'`
         cat src/RoadCaptain.App.Runner/Info.plist | sed -e "s/##VERSION##/$VERSION/" > "$RUNNER_TEMP/Bundles/RoadCaptain Runner.app/Contents/Info.plist"
     - name: Copy App Bundle icon
       run: mkdir "$RUNNER_TEMP/Bundles/RoadCaptain Runner.app/Contents/Resources" && cp src/RoadCaptain.App.Shared/icon.icns "$RUNNER_TEMP/Bundles/RoadCaptain Runner.app/Contents/Resources/icon.icns"
@@ -103,14 +99,14 @@ jobs:
       run: chmod +x "$RUNNER_TEMP/Bundles/RoadCaptain RouteBuilder.app/Contents/MacOS/RoadCaptain.App.RouteBuilder"
     - name: Copy App Bundle info
       run: |
-        VERSION=`echo ${{ steps.get_version.outputs.info }} | tr -d '\n'`
+        VERSION=`echo ${{ needs.create_release.outputs.version }} | tr -d '\n'`
         cat src/RoadCaptain.App.RouteBuilder/Info.plist | sed -e "s/##VERSION##/$VERSION/" > "$RUNNER_TEMP/Bundles/RoadCaptain RouteBuilder.app/Contents/Info.plist"
     - name: Copy App Bundle icon
       run: mkdir "$RUNNER_TEMP/Bundles/RoadCaptain RouteBuilder.app/Contents/Resources" && cp src/RoadCaptain.App.Shared/icon.icns "$RUNNER_TEMP/Bundles/RoadCaptain RouteBuilder.app/Contents/Resources/icon.icns"
 
     - name: Create DMG
       run: |
-        VERSION=`echo ${{ steps.get_version.outputs.info }} | tr -d '\n'`
+        VERSION=`echo ${{ needs.create_release.outputs.version }} | tr -d '\n'`
         chmod +x ./packaging/create-dmg
         ./packaging/create-dmg --volname "RoadCaptain" --volicon ./src/RoadCaptain.App.Shared/icon.icns --window-pos 200 120 --window-size 800 533 --icon-size 128 --icon "RoadCaptain RouteBuilder.app" 200 40 --icon "RoadCaptain Runner.app" 200 260 --app-drop-link 600 40 --background "./src/RoadCaptain.App.Shared/Assets/installer-background.jpg" "$RUNNER_TEMP/RoadCaptain-$VERSION.dmg" "$RUNNER_TEMP/Bundles"
 
@@ -121,6 +117,6 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ needs.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
-        asset_path: "/Users/runner/work/_temp/RoadCaptain-${{ steps.get_version.outputs.info }}.dmg" # Explicit path here because $RUNNER_TEMP doesn't get expanded...
-        asset_name: RoadCaptain-${{ steps.get_version.outputs.info }}.dmg
+        asset_path: "/Users/runner/work/_temp/RoadCaptain-${{ needs.create_release.outputs.version }}.dmg" # Explicit path here because $RUNNER_TEMP doesn't get expanded...
+        asset_name: RoadCaptain-${{ needs.create_release.outputs.version }}.dmg
         asset_content_type: application/x-apple-diskimage
