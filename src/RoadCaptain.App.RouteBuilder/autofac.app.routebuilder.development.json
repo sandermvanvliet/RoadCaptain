@@ -1,0 +1,20 @@
+{
+  "modules": [
+    {
+      "type": "RoadCaptain.DomainModule, RoadCaptain"
+    },
+    {
+      "type": "RoadCaptain.Adapters.AdaptersModule, RoadCaptain.Adapters",
+      "properties": {
+        "MessageReceiverSource": "socket",
+        "CaptureFilePath": "c:\\git\\temp\\zwift\\rc-run-13.pcapng"
+      }
+    },
+    {
+      "type": "RoadCaptain.App.RouteBuilder.MainModule, RoadCaptain.App.RouteBuilder"
+    },
+    {
+      "type": "RoadCaptain.App.Shared.SharedModule, RoadCaptain.App.Shared"
+    }
+  ]
+}

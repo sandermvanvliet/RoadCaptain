@@ -1,0 +1,93 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:viewModels="clr-namespace:RoadCaptain.App.Shared.Dialogs.ViewModels"
+        mc:Ignorable="d" d:DesignWidth="350" d:DesignHeight="160"
+        x:Class="RoadCaptain.App.Shared.Dialogs.MessageBox"
+        Title="{Binding Path=Title}"
+        ShowInTaskbar="False"
+        CanResize="False"
+        WindowState="Normal"
+        WindowStartupLocation="CenterOwner"
+        Margin="0"
+        Width="350" Height="160"
+        Icon="{x:Null}"
+        SystemDecorations="BorderOnly">
+	<Window.DataContext>
+		<viewModels:MessageBoxViewModel>
+			<x:Arguments>
+				<viewModels:MessageBoxButton>YesNoCancel</viewModels:MessageBoxButton>
+				<x:String>Test title</x:String>
+				<x:String>Test message</x:String>
+				<viewModels:MessageBoxIcon>Information</viewModels:MessageBoxIcon>
+			</x:Arguments>
+		</viewModels:MessageBoxViewModel>
+	</Window.DataContext>
+
+	<Window.Styles>
+		<Style Selector="Button">
+			<Setter Property="Margin" Value="4,0,0,0"/>
+			<Setter Property="Padding" Value="8,4,8,4"/>
+			<Setter Property="Width" Value="80" />
+			<Setter Property="Height" Value="30"/>
+			<Setter Property="HorizontalContentAlignment" Value="Center" />
+			<Setter Property="VerticalContentAlignment" Value="Center" />
+		</Style>
+	</Window.Styles>
+
+	<Border BorderBrush="Black" Margin="0,0,0,0" BorderThickness="1">
+		<Grid Margin="0">
+			<Grid.RowDefinitions>
+				<RowDefinition Height="24" />
+				<RowDefinition Height="*" />
+				<RowDefinition Height="50"/>
+			</Grid.RowDefinitions>
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="64" />
+				<ColumnDefinition Width="*" />
+			</Grid.ColumnDefinitions>
+
+			<Grid Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Height="24">
+				<TextBlock Text="{Binding Path=Title}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="4,0,0,0" />
+				<Button Content="X"  Foreground="Gray" HorizontalAlignment="Right"  Width="40" Height="24" Background="White" Click="Button_OnClick" Tag="Default"/>
+			</Grid>
+
+			<Image Source="{Binding Path=Icon}"
+				   Grid.Row="1" Grid.Column="0"
+				   VerticalAlignment="Center"
+				   HorizontalAlignment="Center"
+				   Width="32"
+				   Height="32" />
+
+			<TextBlock Text="{Binding Message}"
+					   Grid.Row="1"
+					   Grid.Column="1"
+					   FontSize="12"
+					   Margin="8,16,8,8" Foreground="Black"
+					   TextWrapping="Wrap"
+					   VerticalAlignment="Center"/>
+
+			<Grid
+				Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="2"
+				Height="50"
+				Margin="0,0,1,0"
+				Background="#EEEEEE">
+				<StackPanel
+					Orientation="Horizontal"
+					HorizontalAlignment="Right"
+					Margin="0,0,6,0">
+					<Button Tag="Ok" Content="Ok" IsVisible="{Binding ShowOkButton}" Click="Button_OnClick" />
+					<Button Tag="Yes" Content="Yes" IsVisible="{Binding ShowYesButton}" Click="Button_OnClick" />
+					<Button Tag="No" Content="No" IsVisible="{Binding ShowNoButton}" Click="Button_OnClick" />
+					<Button Tag="Abort" Content="Abort" IsVisible="{Binding ShowAbortButton}" Click="Button_OnClick" />
+					<Button Tag="Retry" Content="Retry" IsVisible="{Binding ShowRetryButton}" Click="Button_OnClick" />
+					<Button Tag="Cancel" Content="Cancel" IsVisible="{Binding ShowCancelButton}" Click="Button_OnClick" />
+					<Button Tag="Ignore" Content="Ignore" IsVisible="{Binding ShowIgnoreButton}" Click="Button_OnClick" />
+					<Button Tag="TryAgain" Content="TryAgain" IsVisible="{Binding ShowTryAgainButton}" Click="Button_OnClick" />
+					<Button Tag="Continue" Content="Continue" IsVisible="{Binding ShowContinueButton}" Click="Button_OnClick" />
+				</StackPanel>
+			</Grid>
+		</Grid>
+	</Border>
+</Window>

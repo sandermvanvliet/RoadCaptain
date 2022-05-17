@@ -1,242 +1,940 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Include>
   <Fragment>
-    <ComponentGroup Id="CommonComponents" Directory="INSTALLFOLDER">
-      <Component Id="Autofac.Configuration.dll" Guid="e5e62a7c-6c9f-44f7-94c7-0dfab0ae644d">
-        <File Id="Autofac.Configuration.dll" Name="Autofac.Configuration.dll" Source="$(var.RoadCaptain.Runner_TargetDir)Autofac.Configuration.dll" />
+    <ComponentGroup Id="CefGlueBrowserProcessComponents" Directory="CefGlueBrowserProcess">
+      <Component Id="CefGlueBrowserProcess_api.ms.win.core.console.l1.1.0.dll" Guid="7835e6bb-aad1-4003-8411-72443c49392e">
+        <File Id="CefGlueBrowserProcess_api.ms.win.core.console.l1.1.0.dll" Name="api-ms-win-core-console-l1-1-0.dll" Source="$(var.RoadCaptain.Runner_TargetDir)CefGlueBrowserProcess\api-ms-win-core-console-l1-1-0.dll" />
       </Component>
-      <Component Id="Autofac.dll" Guid="64807812-0525-416a-a7ff-a21047386245">
-        <File Id="Autofac.dll" Name="Autofac.dll" Source="$(var.RoadCaptain.Runner_TargetDir)Autofac.dll" />
+      <Component Id="CefGlueBrowserProcess_api.ms.win.core.console.l1.2.0.dll" Guid="c7a848e6-2dcd-4397-bd52-2b89453afdd1">
+        <File Id="CefGlueBrowserProcess_api.ms.win.core.console.l1.2.0.dll" Name="api-ms-win-core-console-l1-2-0.dll" Source="$(var.RoadCaptain.Runner_TargetDir)CefGlueBrowserProcess\api-ms-win-core-console-l1-2-0.dll" />
       </Component>
-      <Component Id="Autofac.Extensions.DependencyInjection.dll" Guid="4aaed0dc-20f2-4dbf-9787-238c9fedf913">
-        <File Id="Autofac.Extensions.DependencyInjection.dll" Name="Autofac.Extensions.DependencyInjection.dll" Source="$(var.RoadCaptain.Runner_TargetDir)Autofac.Extensions.DependencyInjection.dll" />
+      <Component Id="CefGlueBrowserProcess_api.ms.win.core.datetime.l1.1.0.dll" Guid="ff7d9d92-6387-4b73-adc8-508c87b6bd04">
+        <File Id="CefGlueBrowserProcess_api.ms.win.core.datetime.l1.1.0.dll" Name="api-ms-win-core-datetime-l1-1-0.dll" Source="$(var.RoadCaptain.Runner_TargetDir)CefGlueBrowserProcess\api-ms-win-core-datetime-l1-1-0.dll" />
       </Component>
-      <Component Id="Codenizer.HttpClient.Testable.dll" Guid="35808824-5a79-4d73-93d7-6fb40ebe9cb9">
-        <File Id="Codenizer.HttpClient.Testable.dll" Name="Codenizer.HttpClient.Testable.dll" Source="$(var.RoadCaptain.Runner_TargetDir)Codenizer.HttpClient.Testable.dll" />
+      <Component Id="CefGlueBrowserProcess_api.ms.win.core.debug.l1.1.0.dll" Guid="987db308-db81-4b12-9f36-36f16dcf3641">
+        <File Id="CefGlueBrowserProcess_api.ms.win.core.debug.l1.1.0.dll" Name="api-ms-win-core-debug-l1-1-0.dll" Source="$(var.RoadCaptain.Runner_TargetDir)CefGlueBrowserProcess\api-ms-win-core-debug-l1-1-0.dll" />
       </Component>
-      <Component Id="Google.Protobuf.dll" Guid="818a6612-2abd-44fc-9ff9-640590f1c01f">
-        <File Id="Google.Protobuf.dll" Name="Google.Protobuf.dll" Source="$(var.RoadCaptain.Runner_TargetDir)Google.Protobuf.dll" />
+      <Component Id="CefGlueBrowserProcess_api.ms.win.core.errorhandling.l1.1.0.dll" Guid="1db7d256-8010-41aa-b6a2-7dedcadc6a6f">
+        <File Id="CefGlueBrowserProcess_api.ms.win.core.errorhandling.l1.1.0.dll" Name="api-ms-win-core-errorhandling-l1-1-0.dll" Source="$(var.RoadCaptain.Runner_TargetDir)CefGlueBrowserProcess\api-ms-win-core-errorhandling-l1-1-0.dll" />
       </Component>
-      <Component Id="Microsoft.Extensions.Configuration.Abstractions.dll" Guid="83fd8fca-1a9e-41ce-aaa6-98d8c4ff2f30">
-        <File Id="Microsoft.Extensions.Configuration.Abstractions.dll" Name="Microsoft.Extensions.Configuration.Abstractions.dll" Source="$(var.RoadCaptain.Runner_TargetDir)Microsoft.Extensions.Configuration.Abstractions.dll" />
+      <Component Id="CefGlueBrowserProcess_api.ms.win.core.file.l1.1.0.dll" Guid="366758fe-070d-48aa-a1f8-7b40a1c18f41">
+        <File Id="CefGlueBrowserProcess_api.ms.win.core.file.l1.1.0.dll" Name="api-ms-win-core-file-l1-1-0.dll" Source="$(var.RoadCaptain.Runner_TargetDir)CefGlueBrowserProcess\api-ms-win-core-file-l1-1-0.dll" />
       </Component>
-      <Component Id="Microsoft.Extensions.Configuration.Binder.dll" Guid="eec1800f-8e7b-483b-93fe-447af737fab9">
-        <File Id="Microsoft.Extensions.Configuration.Binder.dll" Name="Microsoft.Extensions.Configuration.Binder.dll" Source="$(var.RoadCaptain.Runner_TargetDir)Microsoft.Extensions.Configuration.Binder.dll" />
+      <Component Id="CefGlueBrowserProcess_api.ms.win.core.file.l1.2.0.dll" Guid="eec43090-de29-4ec3-8130-f1c9f151bd62">
+        <File Id="CefGlueBrowserProcess_api.ms.win.core.file.l1.2.0.dll" Name="api-ms-win-core-file-l1-2-0.dll" Source="$(var.RoadCaptain.Runner_TargetDir)CefGlueBrowserProcess\api-ms-win-core-file-l1-2-0.dll" />
       </Component>
-      <Component Id="Microsoft.Extensions.Configuration.dll" Guid="b7159fbc-dad9-46b7-98a4-d8dd286816db">
-        <File Id="Microsoft.Extensions.Configuration.dll" Name="Microsoft.Extensions.Configuration.dll" Source="$(var.RoadCaptain.Runner_TargetDir)Microsoft.Extensions.Configuration.dll" />
+      <Component Id="CefGlueBrowserProcess_api.ms.win.core.file.l2.1.0.dll" Guid="49b520b7-198a-4a67-a933-cf9ab26a7d4f">
+        <File Id="CefGlueBrowserProcess_api.ms.win.core.file.l2.1.0.dll" Name="api-ms-win-core-file-l2-1-0.dll" Source="$(var.RoadCaptain.Runner_TargetDir)CefGlueBrowserProcess\api-ms-win-core-file-l2-1-0.dll" />
       </Component>
-      <Component Id="Microsoft.Extensions.Configuration.FileExtensions.dll" Guid="669b4ab0-7735-40f3-a794-37d6f70f38b6">
-        <File Id="Microsoft.Extensions.Configuration.FileExtensions.dll" Name="Microsoft.Extensions.Configuration.FileExtensions.dll" Source="$(var.RoadCaptain.Runner_TargetDir)Microsoft.Extensions.Configuration.FileExtensions.dll" />
+      <Component Id="CefGlueBrowserProcess_api.ms.win.core.handle.l1.1.0.dll" Guid="cacc8fee-75c5-48ed-9e31-992ddb793690">
+        <File Id="CefGlueBrowserProcess_api.ms.win.core.handle.l1.1.0.dll" Name="api-ms-win-core-handle-l1-1-0.dll" Source="$(var.RoadCaptain.Runner_TargetDir)CefGlueBrowserProcess\api-ms-win-core-handle-l1-1-0.dll" />
       </Component>
-      <Component Id="Microsoft.Extensions.Configuration.Json.dll" Guid="70039fce-716c-4faa-a950-9c14134e77a1">
-        <File Id="Microsoft.Extensions.Configuration.Json.dll" Name="Microsoft.Extensions.Configuration.Json.dll" Source="$(var.RoadCaptain.Runner_TargetDir)Microsoft.Extensions.Configuration.Json.dll" />
+      <Component Id="CefGlueBrowserProcess_api.ms.win.core.heap.l1.1.0.dll" Guid="6cfb673e-85bd-4c60-9c93-589cc9387a5b">
+        <File Id="CefGlueBrowserProcess_api.ms.win.core.heap.l1.1.0.dll" Name="api-ms-win-core-heap-l1-1-0.dll" Source="$(var.RoadCaptain.Runner_TargetDir)CefGlueBrowserProcess\api-ms-win-core-heap-l1-1-0.dll" />
       </Component>
-      <Component Id="Microsoft.Extensions.DependencyInjection.Abstractions.dll" Guid="ef23b02d-5e61-433e-b69b-8096dc0996dd">
-        <File Id="Microsoft.Extensions.DependencyInjection.Abstractions.dll" Name="Microsoft.Extensions.DependencyInjection.Abstractions.dll" Source="$(var.RoadCaptain.Runner_TargetDir)Microsoft.Extensions.DependencyInjection.Abstractions.dll" />
+      <Component Id="CefGlueBrowserProcess_api.ms.win.core.interlocked.l1.1.0.dll" Guid="470beb6f-dcad-482e-98dd-bc78d44e925e">
+        <File Id="CefGlueBrowserProcess_api.ms.win.core.interlocked.l1.1.0.dll" Name="api-ms-win-core-interlocked-l1-1-0.dll" Source="$(var.RoadCaptain.Runner_TargetDir)CefGlueBrowserProcess\api-ms-win-core-interlocked-l1-1-0.dll" />
       </Component>
-      <Component Id="Microsoft.Extensions.FileProviders.Abstractions.dll" Guid="2d8bdcb3-910f-4258-8d9a-834364a1e917">
-        <File Id="Microsoft.Extensions.FileProviders.Abstractions.dll" Name="Microsoft.Extensions.FileProviders.Abstractions.dll" Source="$(var.RoadCaptain.Runner_TargetDir)Microsoft.Extensions.FileProviders.Abstractions.dll" />
+      <Component Id="CefGlueBrowserProcess_api.ms.win.core.libraryloader.l1.1.0.dll" Guid="76d6cee6-cf4a-42e6-8e2a-15d1112dff75">
+        <File Id="CefGlueBrowserProcess_api.ms.win.core.libraryloader.l1.1.0.dll" Name="api-ms-win-core-libraryloader-l1-1-0.dll" Source="$(var.RoadCaptain.Runner_TargetDir)CefGlueBrowserProcess\api-ms-win-core-libraryloader-l1-1-0.dll" />
       </Component>
-      <Component Id="Microsoft.Extensions.FileProviders.Physical.dll" Guid="ba9f9ab9-61b5-4bc6-bda5-8b598e6232d5">
-        <File Id="Microsoft.Extensions.FileProviders.Physical.dll" Name="Microsoft.Extensions.FileProviders.Physical.dll" Source="$(var.RoadCaptain.Runner_TargetDir)Microsoft.Extensions.FileProviders.Physical.dll" />
+      <Component Id="CefGlueBrowserProcess_api.ms.win.core.localization.l1.2.0.dll" Guid="ffe73548-fc8b-4e21-b353-3fa6d27ff6eb">
+        <File Id="CefGlueBrowserProcess_api.ms.win.core.localization.l1.2.0.dll" Name="api-ms-win-core-localization-l1-2-0.dll" Source="$(var.RoadCaptain.Runner_TargetDir)CefGlueBrowserProcess\api-ms-win-core-localization-l1-2-0.dll" />
       </Component>
-      <Component Id="Microsoft.Extensions.FileSystemGlobbing.dll" Guid="422dd5d4-96c1-4374-849d-7a4e82761bb7">
-        <File Id="Microsoft.Extensions.FileSystemGlobbing.dll" Name="Microsoft.Extensions.FileSystemGlobbing.dll" Source="$(var.RoadCaptain.Runner_TargetDir)Microsoft.Extensions.FileSystemGlobbing.dll" />
+      <Component Id="CefGlueBrowserProcess_api.ms.win.core.memory.l1.1.0.dll" Guid="8084b794-cf54-451c-b9c4-9fd96a163a96">
+        <File Id="CefGlueBrowserProcess_api.ms.win.core.memory.l1.1.0.dll" Name="api-ms-win-core-memory-l1-1-0.dll" Source="$(var.RoadCaptain.Runner_TargetDir)CefGlueBrowserProcess\api-ms-win-core-memory-l1-1-0.dll" />
       </Component>
-      <Component Id="Microsoft.Extensions.Hosting.Abstractions.dll" Guid="9047e9c4-bc9b-4de9-b257-78e29dc31ff1">
-        <File Id="Microsoft.Extensions.Hosting.Abstractions.dll" Name="Microsoft.Extensions.Hosting.Abstractions.dll" Source="$(var.RoadCaptain.Runner_TargetDir)Microsoft.Extensions.Hosting.Abstractions.dll" />
+      <Component Id="CefGlueBrowserProcess_api.ms.win.core.namedpipe.l1.1.0.dll" Guid="3be5037e-d72e-4345-81d7-c799a87f9310">
+        <File Id="CefGlueBrowserProcess_api.ms.win.core.namedpipe.l1.1.0.dll" Name="api-ms-win-core-namedpipe-l1-1-0.dll" Source="$(var.RoadCaptain.Runner_TargetDir)CefGlueBrowserProcess\api-ms-win-core-namedpipe-l1-1-0.dll" />
       </Component>
-      <Component Id="Microsoft.Extensions.Logging.Abstractions.dll" Guid="b696696d-9492-426b-83f2-9821242586d7">
-        <File Id="Microsoft.Extensions.Logging.Abstractions.dll" Name="Microsoft.Extensions.Logging.Abstractions.dll" Source="$(var.RoadCaptain.Runner_TargetDir)Microsoft.Extensions.Logging.Abstractions.dll" />
+      <Component Id="CefGlueBrowserProcess_api.ms.win.core.processenvironment.l1.1.0.dll" Guid="361ccdfc-1093-4f81-b18c-bd9eabbd91e0">
+        <File Id="CefGlueBrowserProcess_api.ms.win.core.processenvironment.l1.1.0.dll" Name="api-ms-win-core-processenvironment-l1-1-0.dll" Source="$(var.RoadCaptain.Runner_TargetDir)CefGlueBrowserProcess\api-ms-win-core-processenvironment-l1-1-0.dll" />
       </Component>
-      <Component Id="Microsoft.Extensions.Logging.dll" Guid="024603c0-252b-462e-a4a5-0e0f88b63df9">
-        <File Id="Microsoft.Extensions.Logging.dll" Name="Microsoft.Extensions.Logging.dll" Source="$(var.RoadCaptain.Runner_TargetDir)Microsoft.Extensions.Logging.dll" />
+      <Component Id="CefGlueBrowserProcess_api.ms.win.core.processthreads.l1.1.0.dll" Guid="22634958-c2ec-4df2-be6f-dcec86c066d8">
+        <File Id="CefGlueBrowserProcess_api.ms.win.core.processthreads.l1.1.0.dll" Name="api-ms-win-core-processthreads-l1-1-0.dll" Source="$(var.RoadCaptain.Runner_TargetDir)CefGlueBrowserProcess\api-ms-win-core-processthreads-l1-1-0.dll" />
       </Component>
-      <Component Id="Microsoft.Extensions.Options.dll" Guid="e201c03d-8c90-44ba-9a76-9c28009c3c73">
-        <File Id="Microsoft.Extensions.Options.dll" Name="Microsoft.Extensions.Options.dll" Source="$(var.RoadCaptain.Runner_TargetDir)Microsoft.Extensions.Options.dll" />
+      <Component Id="CefGlueBrowserProcess_api.ms.win.core.processthreads.l1.1.1.dll" Guid="490ab65f-18c2-4af9-82a8-0a6dd6d9e975">
+        <File Id="CefGlueBrowserProcess_api.ms.win.core.processthreads.l1.1.1.dll" Name="api-ms-win-core-processthreads-l1-1-1.dll" Source="$(var.RoadCaptain.Runner_TargetDir)CefGlueBrowserProcess\api-ms-win-core-processthreads-l1-1-1.dll" />
       </Component>
-      <Component Id="Microsoft.Extensions.Primitives.dll" Guid="d36d9a75-3c77-4d40-8b6e-5d0a39951400">
-        <File Id="Microsoft.Extensions.Primitives.dll" Name="Microsoft.Extensions.Primitives.dll" Source="$(var.RoadCaptain.Runner_TargetDir)Microsoft.Extensions.Primitives.dll" />
+      <Component Id="CefGlueBrowserProcess_api.ms.win.core.profile.l1.1.0.dll" Guid="225d8eb2-1527-4bf6-aa2f-1406c3ad2cf7">
+        <File Id="CefGlueBrowserProcess_api.ms.win.core.profile.l1.1.0.dll" Name="api-ms-win-core-profile-l1-1-0.dll" Source="$(var.RoadCaptain.Runner_TargetDir)CefGlueBrowserProcess\api-ms-win-core-profile-l1-1-0.dll" />
       </Component>
-      <Component Id="Newtonsoft.Json.dll" Guid="b0ff4ff0-369e-47b6-a0d8-e979d0cce0ff">
-        <File Id="Newtonsoft.Json.dll" Name="Newtonsoft.Json.dll" Source="$(var.RoadCaptain.Runner_TargetDir)Newtonsoft.Json.dll" />
+      <Component Id="CefGlueBrowserProcess_api.ms.win.core.rtlsupport.l1.1.0.dll" Guid="4c9b8a61-84de-444f-858d-18a6398f9fe4">
+        <File Id="CefGlueBrowserProcess_api.ms.win.core.rtlsupport.l1.1.0.dll" Name="api-ms-win-core-rtlsupport-l1-1-0.dll" Source="$(var.RoadCaptain.Runner_TargetDir)CefGlueBrowserProcess\api-ms-win-core-rtlsupport-l1-1-0.dll" />
       </Component>
-      <Component Id="PacketDotNet.dll" Guid="61b23b97-2154-4a6a-9908-61538c4fc59a">
-        <File Id="PacketDotNet.dll" Name="PacketDotNet.dll" Source="$(var.RoadCaptain.Runner_TargetDir)PacketDotNet.dll" />
+      <Component Id="CefGlueBrowserProcess_api.ms.win.core.string.l1.1.0.dll" Guid="64666e45-5a73-47e5-bf97-b43c2a0fb4b3">
+        <File Id="CefGlueBrowserProcess_api.ms.win.core.string.l1.1.0.dll" Name="api-ms-win-core-string-l1-1-0.dll" Source="$(var.RoadCaptain.Runner_TargetDir)CefGlueBrowserProcess\api-ms-win-core-string-l1-1-0.dll" />
       </Component>
-      <Component Id="RoadCaptain.Adapters.dll" Guid="1d120d83-856c-44a2-9ade-1f757e823d0b">
-        <File Id="RoadCaptain.Adapters.dll" Name="RoadCaptain.Adapters.dll" Source="$(var.RoadCaptain.Runner_TargetDir)RoadCaptain.Adapters.dll" />
+      <Component Id="CefGlueBrowserProcess_api.ms.win.core.synch.l1.1.0.dll" Guid="e0945abc-c069-40cf-b133-ab037ced2f94">
+        <File Id="CefGlueBrowserProcess_api.ms.win.core.synch.l1.1.0.dll" Name="api-ms-win-core-synch-l1-1-0.dll" Source="$(var.RoadCaptain.Runner_TargetDir)CefGlueBrowserProcess\api-ms-win-core-synch-l1-1-0.dll" />
       </Component>
-      <Component Id="RoadCaptain.Adapters.pdb" Guid="17e7af99-d251-499b-8153-8e61fd773088">
-        <File Id="RoadCaptain.Adapters.pdb" Name="RoadCaptain.Adapters.pdb" Source="$(var.RoadCaptain.Runner_TargetDir)RoadCaptain.Adapters.pdb" />
+      <Component Id="CefGlueBrowserProcess_api.ms.win.core.synch.l1.2.0.dll" Guid="58c4e844-589a-4155-8e37-701024d1039c">
+        <File Id="CefGlueBrowserProcess_api.ms.win.core.synch.l1.2.0.dll" Name="api-ms-win-core-synch-l1-2-0.dll" Source="$(var.RoadCaptain.Runner_TargetDir)CefGlueBrowserProcess\api-ms-win-core-synch-l1-2-0.dll" />
       </Component>
-      <Component Id="RoadCaptain.dll" Guid="ec4ea5c3-609d-4e54-b8a3-f06d24a9e5fd">
-        <File Id="RoadCaptain.dll" Name="RoadCaptain.dll" Source="$(var.RoadCaptain.Runner_TargetDir)RoadCaptain.dll" />
+      <Component Id="CefGlueBrowserProcess_api.ms.win.core.sysinfo.l1.1.0.dll" Guid="f4e95d15-8ff1-4033-b68e-c44892e2a181">
+        <File Id="CefGlueBrowserProcess_api.ms.win.core.sysinfo.l1.1.0.dll" Name="api-ms-win-core-sysinfo-l1-1-0.dll" Source="$(var.RoadCaptain.Runner_TargetDir)CefGlueBrowserProcess\api-ms-win-core-sysinfo-l1-1-0.dll" />
       </Component>
-      <Component Id="RoadCaptain.pdb" Guid="ab0b9113-2eb3-4f04-a977-1f5d6f0a1ffd">
-        <File Id="RoadCaptain.pdb" Name="RoadCaptain.pdb" Source="$(var.RoadCaptain.Runner_TargetDir)RoadCaptain.pdb" />
+      <Component Id="CefGlueBrowserProcess_api.ms.win.core.timezone.l1.1.0.dll" Guid="be820161-e339-4e59-9426-3a187b03faac">
+        <File Id="CefGlueBrowserProcess_api.ms.win.core.timezone.l1.1.0.dll" Name="api-ms-win-core-timezone-l1-1-0.dll" Source="$(var.RoadCaptain.Runner_TargetDir)CefGlueBrowserProcess\api-ms-win-core-timezone-l1-1-0.dll" />
       </Component>
-      <Component Id="RoadCaptain.UserInterface.Shared.dll" Guid="cbcdb4d8-af7f-427a-9cb5-ebab028e0e1b">
-        <File Id="RoadCaptain.UserInterface.Shared.dll" Name="RoadCaptain.UserInterface.Shared.dll" Source="$(var.RoadCaptain.Runner_TargetDir)RoadCaptain.UserInterface.Shared.dll" />
+      <Component Id="CefGlueBrowserProcess_api.ms.win.core.util.l1.1.0.dll" Guid="aa307358-b2ca-4d88-80b2-30906b4e0ee5">
+        <File Id="CefGlueBrowserProcess_api.ms.win.core.util.l1.1.0.dll" Name="api-ms-win-core-util-l1-1-0.dll" Source="$(var.RoadCaptain.Runner_TargetDir)CefGlueBrowserProcess\api-ms-win-core-util-l1-1-0.dll" />
       </Component>
-      <Component Id="RoadCaptain.UserInterface.Shared.pdb" Guid="5e64b027-7495-4f18-b9a3-4bde2a6419c3">
-        <File Id="RoadCaptain.UserInterface.Shared.pdb" Name="RoadCaptain.UserInterface.Shared.pdb" Source="$(var.RoadCaptain.Runner_TargetDir)RoadCaptain.UserInterface.Shared.pdb" />
+      <Component Id="CefGlueBrowserProcess_api.ms.win.crt.conio.l1.1.0.dll" Guid="152e15a3-2550-4cbb-920c-57b38e4b0110">
+        <File Id="CefGlueBrowserProcess_api.ms.win.crt.conio.l1.1.0.dll" Name="api-ms-win-crt-conio-l1-1-0.dll" Source="$(var.RoadCaptain.Runner_TargetDir)CefGlueBrowserProcess\api-ms-win-crt-conio-l1-1-0.dll" />
       </Component>
-      <Component Id="Serilog.dll" Guid="ba164d8e-a541-4fed-8e21-06f2d53c20c2">
-        <File Id="Serilog.dll" Name="Serilog.dll" Source="$(var.RoadCaptain.Runner_TargetDir)Serilog.dll" />
+      <Component Id="CefGlueBrowserProcess_api.ms.win.crt.convert.l1.1.0.dll" Guid="cccae726-5734-4761-923f-b5b3a567521d">
+        <File Id="CefGlueBrowserProcess_api.ms.win.crt.convert.l1.1.0.dll" Name="api-ms-win-crt-convert-l1-1-0.dll" Source="$(var.RoadCaptain.Runner_TargetDir)CefGlueBrowserProcess\api-ms-win-crt-convert-l1-1-0.dll" />
       </Component>
-      <Component Id="Serilog.Extensions.Hosting.dll" Guid="c5a2aed4-5952-419c-a9dd-cb554e4792ff">
-        <File Id="Serilog.Extensions.Hosting.dll" Name="Serilog.Extensions.Hosting.dll" Source="$(var.RoadCaptain.Runner_TargetDir)Serilog.Extensions.Hosting.dll" />
+      <Component Id="CefGlueBrowserProcess_api.ms.win.crt.environment.l1.1.0.dll" Guid="9b516963-ffe2-454b-ae59-8895212cb6a7">
+        <File Id="CefGlueBrowserProcess_api.ms.win.crt.environment.l1.1.0.dll" Name="api-ms-win-crt-environment-l1-1-0.dll" Source="$(var.RoadCaptain.Runner_TargetDir)CefGlueBrowserProcess\api-ms-win-crt-environment-l1-1-0.dll" />
       </Component>
-      <Component Id="Serilog.Extensions.Logging.dll" Guid="d5e4ace5-a023-4d85-ae58-3db20c3f6fed">
-        <File Id="Serilog.Extensions.Logging.dll" Name="Serilog.Extensions.Logging.dll" Source="$(var.RoadCaptain.Runner_TargetDir)Serilog.Extensions.Logging.dll" />
+      <Component Id="CefGlueBrowserProcess_api.ms.win.crt.filesystem.l1.1.0.dll" Guid="5ef067d3-2f07-46b3-8353-ef7533822c95">
+        <File Id="CefGlueBrowserProcess_api.ms.win.crt.filesystem.l1.1.0.dll" Name="api-ms-win-crt-filesystem-l1-1-0.dll" Source="$(var.RoadCaptain.Runner_TargetDir)CefGlueBrowserProcess\api-ms-win-crt-filesystem-l1-1-0.dll" />
       </Component>
-      <Component Id="Serilog.Sinks.Console.dll" Guid="c7f100ee-b4e9-44e9-af33-b4f84a09feea">
-        <File Id="Serilog.Sinks.Console.dll" Name="Serilog.Sinks.Console.dll" Source="$(var.RoadCaptain.Runner_TargetDir)Serilog.Sinks.Console.dll" />
+      <Component Id="CefGlueBrowserProcess_api.ms.win.crt.heap.l1.1.0.dll" Guid="fa5a681e-a2a1-4b95-bbe1-52150dc690d7">
+        <File Id="CefGlueBrowserProcess_api.ms.win.crt.heap.l1.1.0.dll" Name="api-ms-win-crt-heap-l1-1-0.dll" Source="$(var.RoadCaptain.Runner_TargetDir)CefGlueBrowserProcess\api-ms-win-crt-heap-l1-1-0.dll" />
       </Component>
-      <Component Id="Serilog.Sinks.File.dll" Guid="f82b86eb-8f37-49af-8b72-24f17111913b">
-        <File Id="Serilog.Sinks.File.dll" Name="Serilog.Sinks.File.dll" Source="$(var.RoadCaptain.Runner_TargetDir)Serilog.Sinks.File.dll" />
+      <Component Id="CefGlueBrowserProcess_api.ms.win.crt.locale.l1.1.0.dll" Guid="78e3194d-bffa-401b-93e1-bcbfe6135956">
+        <File Id="CefGlueBrowserProcess_api.ms.win.crt.locale.l1.1.0.dll" Name="api-ms-win-crt-locale-l1-1-0.dll" Source="$(var.RoadCaptain.Runner_TargetDir)CefGlueBrowserProcess\api-ms-win-crt-locale-l1-1-0.dll" />
       </Component>
-      <Component Id="SharpPcap.dll" Guid="dcf7a848-f78f-4b74-915c-3ee7f780cb81">
-        <File Id="SharpPcap.dll" Name="SharpPcap.dll" Source="$(var.RoadCaptain.Runner_TargetDir)SharpPcap.dll" />
+      <Component Id="CefGlueBrowserProcess_api.ms.win.crt.math.l1.1.0.dll" Guid="51791fb9-838d-409a-a142-cf84aac49899">
+        <File Id="CefGlueBrowserProcess_api.ms.win.crt.math.l1.1.0.dll" Name="api-ms-win-crt-math-l1-1-0.dll" Source="$(var.RoadCaptain.Runner_TargetDir)CefGlueBrowserProcess\api-ms-win-crt-math-l1-1-0.dll" />
       </Component>
-      <Component Id="System.IO.Pipelines.dll" Guid="65688271-0047-47a5-be14-1d401a7ebb97">
-        <File Id="System.IO.Pipelines.dll" Name="System.IO.Pipelines.dll" Source="$(var.RoadCaptain.Runner_TargetDir)System.IO.Pipelines.dll" />
+      <Component Id="CefGlueBrowserProcess_api.ms.win.crt.multibyte.l1.1.0.dll" Guid="37077d7b-4a9f-405b-b2de-754673a045ed">
+        <File Id="CefGlueBrowserProcess_api.ms.win.crt.multibyte.l1.1.0.dll" Name="api-ms-win-crt-multibyte-l1-1-0.dll" Source="$(var.RoadCaptain.Runner_TargetDir)CefGlueBrowserProcess\api-ms-win-crt-multibyte-l1-1-0.dll" />
       </Component>
-      <Component Id="segments.makuri_islands.json" Guid="a0b82c3d-e0a9-480a-bb57-835787c9cad5">
-        <File Id="segments.makuri_islands.json" Name="segments-makuri_islands.json" Source="$(var.RoadCaptain.Runner_TargetDir)segments-makuri_islands.json" />
+      <Component Id="CefGlueBrowserProcess_api.ms.win.crt.private.l1.1.0.dll" Guid="69682d29-01af-4b36-a3d7-4aa849ea0a78">
+        <File Id="CefGlueBrowserProcess_api.ms.win.crt.private.l1.1.0.dll" Name="api-ms-win-crt-private-l1-1-0.dll" Source="$(var.RoadCaptain.Runner_TargetDir)CefGlueBrowserProcess\api-ms-win-crt-private-l1-1-0.dll" />
       </Component>
-      <Component Id="segments.watopia.json" Guid="d3c39a07-f6fb-4a86-98aa-cb60179c8843">
-        <File Id="segments.watopia.json" Name="segments-watopia.json" Source="$(var.RoadCaptain.Runner_TargetDir)segments-watopia.json" />
+      <Component Id="CefGlueBrowserProcess_api.ms.win.crt.process.l1.1.0.dll" Guid="72f12e38-96e4-4cc8-a2b7-1af47265fbb8">
+        <File Id="CefGlueBrowserProcess_api.ms.win.crt.process.l1.1.0.dll" Name="api-ms-win-crt-process-l1-1-0.dll" Source="$(var.RoadCaptain.Runner_TargetDir)CefGlueBrowserProcess\api-ms-win-crt-process-l1-1-0.dll" />
       </Component>
-      <Component Id="turns.makuri_islands.json" Guid="56b5e506-7ac1-4ebd-a179-77429d6fb0cf">
-        <File Id="turns.makuri_islands.json" Name="turns-makuri_islands.json" Source="$(var.RoadCaptain.Runner_TargetDir)turns-makuri_islands.json" />
+      <Component Id="CefGlueBrowserProcess_api.ms.win.crt.runtime.l1.1.0.dll" Guid="c6027c16-3db7-4478-a648-b93958420357">
+        <File Id="CefGlueBrowserProcess_api.ms.win.crt.runtime.l1.1.0.dll" Name="api-ms-win-crt-runtime-l1-1-0.dll" Source="$(var.RoadCaptain.Runner_TargetDir)CefGlueBrowserProcess\api-ms-win-crt-runtime-l1-1-0.dll" />
       </Component>
-      <Component Id="turns.watopia.json" Guid="144d48d4-0bbb-47fd-aa4b-8066e25dda09">
-        <File Id="turns.watopia.json" Name="turns-watopia.json" Source="$(var.RoadCaptain.Runner_TargetDir)turns-watopia.json" />
+      <Component Id="CefGlueBrowserProcess_api.ms.win.crt.stdio.l1.1.0.dll" Guid="7bb74c37-94a2-4b95-ac58-7e5672568a72">
+        <File Id="CefGlueBrowserProcess_api.ms.win.crt.stdio.l1.1.0.dll" Name="api-ms-win-crt-stdio-l1-1-0.dll" Source="$(var.RoadCaptain.Runner_TargetDir)CefGlueBrowserProcess\api-ms-win-crt-stdio-l1-1-0.dll" />
       </Component>
-      <Component Id="worlds.json" Guid="c3e0ea86-e9de-4c25-8a54-ae118602ba92">
-        <File Id="worlds.json" Name="worlds.json" Source="$(var.RoadCaptain.Runner_TargetDir)worlds.json" />
+      <Component Id="CefGlueBrowserProcess_api.ms.win.crt.string.l1.1.0.dll" Guid="e7881de0-42ab-4ba5-b6ce-b2c8726fb918">
+        <File Id="CefGlueBrowserProcess_api.ms.win.crt.string.l1.1.0.dll" Name="api-ms-win-crt-string-l1-1-0.dll" Source="$(var.RoadCaptain.Runner_TargetDir)CefGlueBrowserProcess\api-ms-win-crt-string-l1-1-0.dll" />
       </Component>
-      <Component Id="markers.watopia.json" Guid="95abf4c9-84f2-4ccf-9099-129018e04c2d">
-        <File Id="markers.watopia.json" Name="markers-watopia.json" Source="$(var.RoadCaptain.Runner_TargetDir)markers-watopia.json" />
+      <Component Id="CefGlueBrowserProcess_api.ms.win.crt.time.l1.1.0.dll" Guid="e1926f1b-e5b9-4d60-bc1d-a4cd2ae11a49">
+        <File Id="CefGlueBrowserProcess_api.ms.win.crt.time.l1.1.0.dll" Name="api-ms-win-crt-time-l1-1-0.dll" Source="$(var.RoadCaptain.Runner_TargetDir)CefGlueBrowserProcess\api-ms-win-crt-time-l1-1-0.dll" />
+      </Component>
+      <Component Id="CefGlueBrowserProcess_api.ms.win.crt.utility.l1.1.0.dll" Guid="dd1f5839-c064-4844-9e56-36e74cd552c6">
+        <File Id="CefGlueBrowserProcess_api.ms.win.crt.utility.l1.1.0.dll" Name="api-ms-win-crt-utility-l1-1-0.dll" Source="$(var.RoadCaptain.Runner_TargetDir)CefGlueBrowserProcess\api-ms-win-crt-utility-l1-1-0.dll" />
+      </Component>
+      <Component Id="CefGlueBrowserProcess_clrcompression.dll" Guid="5b0b05be-b0b4-4063-94c0-a75b25663a3f">
+        <File Id="CefGlueBrowserProcess_clrcompression.dll" Name="clrcompression.dll" Source="$(var.RoadCaptain.Runner_TargetDir)CefGlueBrowserProcess\clrcompression.dll" />
+      </Component>
+      <Component Id="CefGlueBrowserProcess_clretwrc.dll" Guid="5d5bd0f7-ef0c-48ad-b2f3-cdb85e50c88f">
+        <File Id="CefGlueBrowserProcess_clretwrc.dll" Name="clretwrc.dll" Source="$(var.RoadCaptain.Runner_TargetDir)CefGlueBrowserProcess\clretwrc.dll" />
+      </Component>
+      <Component Id="CefGlueBrowserProcess_clrjit.dll" Guid="2eadf538-92d2-44b5-bc50-d7d30cbbb071">
+        <File Id="CefGlueBrowserProcess_clrjit.dll" Name="clrjit.dll" Source="$(var.RoadCaptain.Runner_TargetDir)CefGlueBrowserProcess\clrjit.dll" />
+      </Component>
+      <Component Id="CefGlueBrowserProcess_coreclr.dll" Guid="22fb7747-686a-40ba-be80-29da502b40b7">
+        <File Id="CefGlueBrowserProcess_coreclr.dll" Name="coreclr.dll" Source="$(var.RoadCaptain.Runner_TargetDir)CefGlueBrowserProcess\coreclr.dll" />
+      </Component>
+      <Component Id="CefGlueBrowserProcess_createdump.exe" Guid="b7d3b42e-7dfe-460f-8f21-292779e825b4">
+        <File Id="CefGlueBrowserProcess_createdump.exe" Name="createdump.exe" Source="$(var.RoadCaptain.Runner_TargetDir)CefGlueBrowserProcess\createdump.exe" KeyPath="yes" />
+      </Component>
+      <Component Id="CefGlueBrowserProcess_dbgshim.dll" Guid="64195a1e-c39f-46a4-b54f-18ee1aa812a0">
+        <File Id="CefGlueBrowserProcess_dbgshim.dll" Name="dbgshim.dll" Source="$(var.RoadCaptain.Runner_TargetDir)CefGlueBrowserProcess\dbgshim.dll" />
+      </Component>
+      <Component Id="CefGlueBrowserProcess_hostfxr.dll" Guid="ccb4a8b8-879d-431d-9e2b-f1c358f06118">
+        <File Id="CefGlueBrowserProcess_hostfxr.dll" Name="hostfxr.dll" Source="$(var.RoadCaptain.Runner_TargetDir)CefGlueBrowserProcess\hostfxr.dll" />
+      </Component>
+      <Component Id="CefGlueBrowserProcess_hostpolicy.dll" Guid="68ff8ea3-ddc3-49b3-a944-d54e98823c53">
+        <File Id="CefGlueBrowserProcess_hostpolicy.dll" Name="hostpolicy.dll" Source="$(var.RoadCaptain.Runner_TargetDir)CefGlueBrowserProcess\hostpolicy.dll" />
+      </Component>
+      <Component Id="CefGlueBrowserProcess_Microsoft.DiaSymReader.Native.amd64.dll" Guid="a2207124-0634-471c-bd1a-76bbb2d9221f">
+        <File Id="CefGlueBrowserProcess_Microsoft.DiaSymReader.Native.amd64.dll" Name="Microsoft.DiaSymReader.Native.amd64.dll" Source="$(var.RoadCaptain.Runner_TargetDir)CefGlueBrowserProcess\Microsoft.DiaSymReader.Native.amd64.dll" />
+      </Component>
+      <Component Id="CefGlueBrowserProcess_Microsoft.Win32.Primitives.dll" Guid="60ab19b3-f117-4d56-aee2-ff0e0e874813">
+        <File Id="CefGlueBrowserProcess_Microsoft.Win32.Primitives.dll" Name="Microsoft.Win32.Primitives.dll" Source="$(var.RoadCaptain.Runner_TargetDir)CefGlueBrowserProcess\Microsoft.Win32.Primitives.dll" />
+      </Component>
+      <Component Id="CefGlueBrowserProcess_Microsoft.Win32.Registry.dll" Guid="8369e693-b0f1-4ac4-a241-865270bcb924">
+        <File Id="CefGlueBrowserProcess_Microsoft.Win32.Registry.dll" Name="Microsoft.Win32.Registry.dll" Source="$(var.RoadCaptain.Runner_TargetDir)CefGlueBrowserProcess\Microsoft.Win32.Registry.dll" />
+      </Component>
+      <Component Id="CefGlueBrowserProcess_mscordaccore.dll" Guid="1de44259-3cad-4acc-bcd1-91f10a4bdca9">
+        <File Id="CefGlueBrowserProcess_mscordaccore.dll" Name="mscordaccore.dll" Source="$(var.RoadCaptain.Runner_TargetDir)CefGlueBrowserProcess\mscordaccore.dll" />
+      </Component>
+      <Component Id="CefGlueBrowserProcess_mscordaccore_amd64_amd64_5.0.1321.56516.dll" Guid="700df086-6adb-438d-acd7-bf3b34085f5b">
+        <File Id="CefGlueBrowserProcess_mscordaccore_amd64_amd64_5.0.1321.56516.dll" Name="mscordaccore_amd64_amd64_5.0.1321.56516.dll" Source="$(var.RoadCaptain.Runner_TargetDir)CefGlueBrowserProcess\mscordaccore_amd64_amd64_5.0.1321.56516.dll" />
+      </Component>
+      <Component Id="CefGlueBrowserProcess_mscordbi.dll" Guid="9d7437c0-8315-441a-8584-ab47cc39e8d4">
+        <File Id="CefGlueBrowserProcess_mscordbi.dll" Name="mscordbi.dll" Source="$(var.RoadCaptain.Runner_TargetDir)CefGlueBrowserProcess\mscordbi.dll" />
+      </Component>
+      <Component Id="CefGlueBrowserProcess_mscorrc.dll" Guid="d83b90b4-fb45-4ef5-8881-1a98488d8fe9">
+        <File Id="CefGlueBrowserProcess_mscorrc.dll" Name="mscorrc.dll" Source="$(var.RoadCaptain.Runner_TargetDir)CefGlueBrowserProcess\mscorrc.dll" />
+      </Component>
+      <Component Id="CefGlueBrowserProcess_System.Collections.Concurrent.dll" Guid="06839604-4795-4a64-b185-4fd816c3b1a1">
+        <File Id="CefGlueBrowserProcess_System.Collections.Concurrent.dll" Name="System.Collections.Concurrent.dll" Source="$(var.RoadCaptain.Runner_TargetDir)CefGlueBrowserProcess\System.Collections.Concurrent.dll" />
+      </Component>
+      <Component Id="CefGlueBrowserProcess_System.Collections.dll" Guid="e6285e0e-8dc2-4fc8-adbf-c3f6d49ee12d">
+        <File Id="CefGlueBrowserProcess_System.Collections.dll" Name="System.Collections.dll" Source="$(var.RoadCaptain.Runner_TargetDir)CefGlueBrowserProcess\System.Collections.dll" />
+      </Component>
+      <Component Id="CefGlueBrowserProcess_System.Collections.Immutable.dll" Guid="c36125fe-562b-46e7-8a0a-e02348ac07fe">
+        <File Id="CefGlueBrowserProcess_System.Collections.Immutable.dll" Name="System.Collections.Immutable.dll" Source="$(var.RoadCaptain.Runner_TargetDir)CefGlueBrowserProcess\System.Collections.Immutable.dll" />
+      </Component>
+      <Component Id="CefGlueBrowserProcess_System.Collections.NonGeneric.dll" Guid="1a55cca3-223d-4a7b-8867-5776fdc77f56">
+        <File Id="CefGlueBrowserProcess_System.Collections.NonGeneric.dll" Name="System.Collections.NonGeneric.dll" Source="$(var.RoadCaptain.Runner_TargetDir)CefGlueBrowserProcess\System.Collections.NonGeneric.dll" />
+      </Component>
+      <Component Id="CefGlueBrowserProcess_System.Collections.Specialized.dll" Guid="3292c6d7-132f-4944-85a2-74cde71b94df">
+        <File Id="CefGlueBrowserProcess_System.Collections.Specialized.dll" Name="System.Collections.Specialized.dll" Source="$(var.RoadCaptain.Runner_TargetDir)CefGlueBrowserProcess\System.Collections.Specialized.dll" />
+      </Component>
+      <Component Id="CefGlueBrowserProcess_System.ComponentModel.dll" Guid="2a931df7-2715-4384-b9e9-409197da5a21">
+        <File Id="CefGlueBrowserProcess_System.ComponentModel.dll" Name="System.ComponentModel.dll" Source="$(var.RoadCaptain.Runner_TargetDir)CefGlueBrowserProcess\System.ComponentModel.dll" />
+      </Component>
+      <Component Id="CefGlueBrowserProcess_System.ComponentModel.Primitives.dll" Guid="dde7bdb4-8a43-4713-9674-52100fe1fa2e">
+        <File Id="CefGlueBrowserProcess_System.ComponentModel.Primitives.dll" Name="System.ComponentModel.Primitives.dll" Source="$(var.RoadCaptain.Runner_TargetDir)CefGlueBrowserProcess\System.ComponentModel.Primitives.dll" />
+      </Component>
+      <Component Id="CefGlueBrowserProcess_System.Diagnostics.DiagnosticSource.dll" Guid="92d3c405-2518-4b27-b59c-801580d6433e">
+        <File Id="CefGlueBrowserProcess_System.Diagnostics.DiagnosticSource.dll" Name="System.Diagnostics.DiagnosticSource.dll" Source="$(var.RoadCaptain.Runner_TargetDir)CefGlueBrowserProcess\System.Diagnostics.DiagnosticSource.dll" />
+      </Component>
+      <Component Id="CefGlueBrowserProcess_System.Diagnostics.Process.dll" Guid="7d2ddcfa-e27f-4b92-a91f-8b0c92df4706">
+        <File Id="CefGlueBrowserProcess_System.Diagnostics.Process.dll" Name="System.Diagnostics.Process.dll" Source="$(var.RoadCaptain.Runner_TargetDir)CefGlueBrowserProcess\System.Diagnostics.Process.dll" />
+      </Component>
+      <Component Id="CefGlueBrowserProcess_System.Diagnostics.StackTrace.dll" Guid="24afbcf4-a976-43fe-b080-cb0822b1220c">
+        <File Id="CefGlueBrowserProcess_System.Diagnostics.StackTrace.dll" Name="System.Diagnostics.StackTrace.dll" Source="$(var.RoadCaptain.Runner_TargetDir)CefGlueBrowserProcess\System.Diagnostics.StackTrace.dll" />
+      </Component>
+      <Component Id="CefGlueBrowserProcess_System.Diagnostics.TraceSource.dll" Guid="9c5df354-01a6-48d9-bb45-fa22ebcb6cf6">
+        <File Id="CefGlueBrowserProcess_System.Diagnostics.TraceSource.dll" Name="System.Diagnostics.TraceSource.dll" Source="$(var.RoadCaptain.Runner_TargetDir)CefGlueBrowserProcess\System.Diagnostics.TraceSource.dll" />
+      </Component>
+      <Component Id="CefGlueBrowserProcess_System.Formats.Asn1.dll" Guid="fd2ec998-9aec-4335-91a2-5d5b7918ce51">
+        <File Id="CefGlueBrowserProcess_System.Formats.Asn1.dll" Name="System.Formats.Asn1.dll" Source="$(var.RoadCaptain.Runner_TargetDir)CefGlueBrowserProcess\System.Formats.Asn1.dll" />
+      </Component>
+      <Component Id="CefGlueBrowserProcess_System.IO.Compression.Brotli.dll" Guid="b13ee1cf-4c20-4cce-a244-feaf5a0b3e3f">
+        <File Id="CefGlueBrowserProcess_System.IO.Compression.Brotli.dll" Name="System.IO.Compression.Brotli.dll" Source="$(var.RoadCaptain.Runner_TargetDir)CefGlueBrowserProcess\System.IO.Compression.Brotli.dll" />
+      </Component>
+      <Component Id="CefGlueBrowserProcess_System.IO.Compression.dll" Guid="159d0dde-0844-469b-a703-3277188d43bf">
+        <File Id="CefGlueBrowserProcess_System.IO.Compression.dll" Name="System.IO.Compression.dll" Source="$(var.RoadCaptain.Runner_TargetDir)CefGlueBrowserProcess\System.IO.Compression.dll" />
+      </Component>
+      <Component Id="CefGlueBrowserProcess_System.IO.FileSystem.dll" Guid="3ab8a3ea-179d-4f80-a41d-4e3e431f0fc0">
+        <File Id="CefGlueBrowserProcess_System.IO.FileSystem.dll" Name="System.IO.FileSystem.dll" Source="$(var.RoadCaptain.Runner_TargetDir)CefGlueBrowserProcess\System.IO.FileSystem.dll" />
+      </Component>
+      <Component Id="CefGlueBrowserProcess_System.IO.MemoryMappedFiles.dll" Guid="95803c88-4874-4e99-a003-bdf6dae84807">
+        <File Id="CefGlueBrowserProcess_System.IO.MemoryMappedFiles.dll" Name="System.IO.MemoryMappedFiles.dll" Source="$(var.RoadCaptain.Runner_TargetDir)CefGlueBrowserProcess\System.IO.MemoryMappedFiles.dll" />
+      </Component>
+      <Component Id="CefGlueBrowserProcess_System.IO.Pipes.dll" Guid="75558a0c-740a-4d63-99a7-bae5f4b90536">
+        <File Id="CefGlueBrowserProcess_System.IO.Pipes.dll" Name="System.IO.Pipes.dll" Source="$(var.RoadCaptain.Runner_TargetDir)CefGlueBrowserProcess\System.IO.Pipes.dll" />
+      </Component>
+      <Component Id="CefGlueBrowserProcess_System.Linq.dll" Guid="717e80d8-83ff-4c50-a1d5-194cd6bd946a">
+        <File Id="CefGlueBrowserProcess_System.Linq.dll" Name="System.Linq.dll" Source="$(var.RoadCaptain.Runner_TargetDir)CefGlueBrowserProcess\System.Linq.dll" />
+      </Component>
+      <Component Id="CefGlueBrowserProcess_System.Linq.Expressions.dll" Guid="a97d6058-a836-4622-b13a-db9aefbbcfc3">
+        <File Id="CefGlueBrowserProcess_System.Linq.Expressions.dll" Name="System.Linq.Expressions.dll" Source="$(var.RoadCaptain.Runner_TargetDir)CefGlueBrowserProcess\System.Linq.Expressions.dll" />
+      </Component>
+      <Component Id="CefGlueBrowserProcess_System.Memory.dll" Guid="968f1a6d-099e-44b5-b249-a18f4f540720">
+        <File Id="CefGlueBrowserProcess_System.Memory.dll" Name="System.Memory.dll" Source="$(var.RoadCaptain.Runner_TargetDir)CefGlueBrowserProcess\System.Memory.dll" />
+      </Component>
+      <Component Id="CefGlueBrowserProcess_System.Net.Http.dll" Guid="d8756952-e4bb-4056-b7b1-c470cea1c6a0">
+        <File Id="CefGlueBrowserProcess_System.Net.Http.dll" Name="System.Net.Http.dll" Source="$(var.RoadCaptain.Runner_TargetDir)CefGlueBrowserProcess\System.Net.Http.dll" />
+      </Component>
+      <Component Id="CefGlueBrowserProcess_System.Net.NameResolution.dll" Guid="83e096c0-0aa3-497f-b0f9-f21084781a56">
+        <File Id="CefGlueBrowserProcess_System.Net.NameResolution.dll" Name="System.Net.NameResolution.dll" Source="$(var.RoadCaptain.Runner_TargetDir)CefGlueBrowserProcess\System.Net.NameResolution.dll" />
+      </Component>
+      <Component Id="CefGlueBrowserProcess_System.Net.NetworkInformation.dll" Guid="6c99bfeb-2465-49b5-8d7c-3015377f05ec">
+        <File Id="CefGlueBrowserProcess_System.Net.NetworkInformation.dll" Name="System.Net.NetworkInformation.dll" Source="$(var.RoadCaptain.Runner_TargetDir)CefGlueBrowserProcess\System.Net.NetworkInformation.dll" />
+      </Component>
+      <Component Id="CefGlueBrowserProcess_System.Net.Primitives.dll" Guid="6c497239-f1dd-455c-8bb5-af04ed7e8748">
+        <File Id="CefGlueBrowserProcess_System.Net.Primitives.dll" Name="System.Net.Primitives.dll" Source="$(var.RoadCaptain.Runner_TargetDir)CefGlueBrowserProcess\System.Net.Primitives.dll" />
+      </Component>
+      <Component Id="CefGlueBrowserProcess_System.Net.Security.dll" Guid="e344be22-2a1c-4c04-be60-830f4e5f0a21">
+        <File Id="CefGlueBrowserProcess_System.Net.Security.dll" Name="System.Net.Security.dll" Source="$(var.RoadCaptain.Runner_TargetDir)CefGlueBrowserProcess\System.Net.Security.dll" />
+      </Component>
+      <Component Id="CefGlueBrowserProcess_System.Net.Sockets.dll" Guid="f7a28a4d-c7de-4507-9dec-76e602e1d3fd">
+        <File Id="CefGlueBrowserProcess_System.Net.Sockets.dll" Name="System.Net.Sockets.dll" Source="$(var.RoadCaptain.Runner_TargetDir)CefGlueBrowserProcess\System.Net.Sockets.dll" />
+      </Component>
+      <Component Id="CefGlueBrowserProcess_System.ObjectModel.dll" Guid="1b757808-6023-4ef0-86fd-c254f4fcf8dd">
+        <File Id="CefGlueBrowserProcess_System.ObjectModel.dll" Name="System.ObjectModel.dll" Source="$(var.RoadCaptain.Runner_TargetDir)CefGlueBrowserProcess\System.ObjectModel.dll" />
+      </Component>
+      <Component Id="CefGlueBrowserProcess_System.Private.CoreLib.dll" Guid="c889783a-0dca-4c14-8a9c-2273e56b33f3">
+        <File Id="CefGlueBrowserProcess_System.Private.CoreLib.dll" Name="System.Private.CoreLib.dll" Source="$(var.RoadCaptain.Runner_TargetDir)CefGlueBrowserProcess\System.Private.CoreLib.dll" />
+      </Component>
+      <Component Id="CefGlueBrowserProcess_System.Private.Uri.dll" Guid="380c43b2-3671-42c8-8ed5-83b167502ca0">
+        <File Id="CefGlueBrowserProcess_System.Private.Uri.dll" Name="System.Private.Uri.dll" Source="$(var.RoadCaptain.Runner_TargetDir)CefGlueBrowserProcess\System.Private.Uri.dll" />
+      </Component>
+      <Component Id="CefGlueBrowserProcess_System.Private.Xml.dll" Guid="1d6dfacd-fd68-4f86-b90c-e1deaca5e527">
+        <File Id="CefGlueBrowserProcess_System.Private.Xml.dll" Name="System.Private.Xml.dll" Source="$(var.RoadCaptain.Runner_TargetDir)CefGlueBrowserProcess\System.Private.Xml.dll" />
+      </Component>
+      <Component Id="CefGlueBrowserProcess_System.Private.Xml.Linq.dll" Guid="456a809c-233d-4ce0-abb1-f85a89df087f">
+        <File Id="CefGlueBrowserProcess_System.Private.Xml.Linq.dll" Name="System.Private.Xml.Linq.dll" Source="$(var.RoadCaptain.Runner_TargetDir)CefGlueBrowserProcess\System.Private.Xml.Linq.dll" />
+      </Component>
+      <Component Id="CefGlueBrowserProcess_System.Reflection.Metadata.dll" Guid="f55c300c-e6f2-470f-a741-e913867015ee">
+        <File Id="CefGlueBrowserProcess_System.Reflection.Metadata.dll" Name="System.Reflection.Metadata.dll" Source="$(var.RoadCaptain.Runner_TargetDir)CefGlueBrowserProcess\System.Reflection.Metadata.dll" />
+      </Component>
+      <Component Id="CefGlueBrowserProcess_System.Runtime.CompilerServices.Unsafe.dll" Guid="fd505216-511d-43b0-8750-c9f8367579c3">
+        <File Id="CefGlueBrowserProcess_System.Runtime.CompilerServices.Unsafe.dll" Name="System.Runtime.CompilerServices.Unsafe.dll" Source="$(var.RoadCaptain.Runner_TargetDir)CefGlueBrowserProcess\System.Runtime.CompilerServices.Unsafe.dll" />
+      </Component>
+      <Component Id="CefGlueBrowserProcess_System.Runtime.Numerics.dll" Guid="18d0689f-3137-4518-a006-6ea96b7a370e">
+        <File Id="CefGlueBrowserProcess_System.Runtime.Numerics.dll" Name="System.Runtime.Numerics.dll" Source="$(var.RoadCaptain.Runner_TargetDir)CefGlueBrowserProcess\System.Runtime.Numerics.dll" />
+      </Component>
+      <Component Id="CefGlueBrowserProcess_System.Runtime.Serialization.Formatters.dll" Guid="6a5fa0f5-b37c-4345-bdb7-cf0ffb217cad">
+        <File Id="CefGlueBrowserProcess_System.Runtime.Serialization.Formatters.dll" Name="System.Runtime.Serialization.Formatters.dll" Source="$(var.RoadCaptain.Runner_TargetDir)CefGlueBrowserProcess\System.Runtime.Serialization.Formatters.dll" />
+      </Component>
+      <Component Id="CefGlueBrowserProcess_System.Security.AccessControl.dll" Guid="ab97f0df-b4b3-4982-907f-d0b091899d21">
+        <File Id="CefGlueBrowserProcess_System.Security.AccessControl.dll" Name="System.Security.AccessControl.dll" Source="$(var.RoadCaptain.Runner_TargetDir)CefGlueBrowserProcess\System.Security.AccessControl.dll" />
+      </Component>
+      <Component Id="CefGlueBrowserProcess_System.Security.Claims.dll" Guid="44d8a032-748d-41c5-9d63-d618de497495">
+        <File Id="CefGlueBrowserProcess_System.Security.Claims.dll" Name="System.Security.Claims.dll" Source="$(var.RoadCaptain.Runner_TargetDir)CefGlueBrowserProcess\System.Security.Claims.dll" />
+      </Component>
+      <Component Id="CefGlueBrowserProcess_System.Security.Cryptography.Algorithms.dll" Guid="75675ac3-999c-4c75-a604-da2d673b4b51">
+        <File Id="CefGlueBrowserProcess_System.Security.Cryptography.Algorithms.dll" Name="System.Security.Cryptography.Algorithms.dll" Source="$(var.RoadCaptain.Runner_TargetDir)CefGlueBrowserProcess\System.Security.Cryptography.Algorithms.dll" />
+      </Component>
+      <Component Id="CefGlueBrowserProcess_System.Security.Cryptography.Cng.dll" Guid="e72db76b-28ad-4616-9e8f-955d769ba332">
+        <File Id="CefGlueBrowserProcess_System.Security.Cryptography.Cng.dll" Name="System.Security.Cryptography.Cng.dll" Source="$(var.RoadCaptain.Runner_TargetDir)CefGlueBrowserProcess\System.Security.Cryptography.Cng.dll" />
+      </Component>
+      <Component Id="CefGlueBrowserProcess_System.Security.Cryptography.Csp.dll" Guid="d7f75249-ce34-40da-ad78-065d11873b06">
+        <File Id="CefGlueBrowserProcess_System.Security.Cryptography.Csp.dll" Name="System.Security.Cryptography.Csp.dll" Source="$(var.RoadCaptain.Runner_TargetDir)CefGlueBrowserProcess\System.Security.Cryptography.Csp.dll" />
+      </Component>
+      <Component Id="CefGlueBrowserProcess_System.Security.Cryptography.Encoding.dll" Guid="8f42f8dd-d7af-4785-959d-a3750b8ebc64">
+        <File Id="CefGlueBrowserProcess_System.Security.Cryptography.Encoding.dll" Name="System.Security.Cryptography.Encoding.dll" Source="$(var.RoadCaptain.Runner_TargetDir)CefGlueBrowserProcess\System.Security.Cryptography.Encoding.dll" />
+      </Component>
+      <Component Id="CefGlueBrowserProcess_System.Security.Cryptography.Primitives.dll" Guid="3d7103f3-3a78-4479-97dd-754788ec2ef5">
+        <File Id="CefGlueBrowserProcess_System.Security.Cryptography.Primitives.dll" Name="System.Security.Cryptography.Primitives.dll" Source="$(var.RoadCaptain.Runner_TargetDir)CefGlueBrowserProcess\System.Security.Cryptography.Primitives.dll" />
+      </Component>
+      <Component Id="CefGlueBrowserProcess_System.Security.Cryptography.X509Certificates.dll" Guid="3d1e1858-10e2-4828-92be-b4632b302a76">
+        <File Id="CefGlueBrowserProcess_System.Security.Cryptography.X509Certificates.dll" Name="System.Security.Cryptography.X509Certificates.dll" Source="$(var.RoadCaptain.Runner_TargetDir)CefGlueBrowserProcess\System.Security.Cryptography.X509Certificates.dll" />
+      </Component>
+      <Component Id="CefGlueBrowserProcess_System.Security.Principal.Windows.dll" Guid="3db64f79-e55d-426a-81d5-1c003f9fb764">
+        <File Id="CefGlueBrowserProcess_System.Security.Principal.Windows.dll" Name="System.Security.Principal.Windows.dll" Source="$(var.RoadCaptain.Runner_TargetDir)CefGlueBrowserProcess\System.Security.Principal.Windows.dll" />
+      </Component>
+      <Component Id="CefGlueBrowserProcess_System.Text.Encodings.Web.dll" Guid="f471ddf4-0876-4a2a-adc0-e3a773b29ac1">
+        <File Id="CefGlueBrowserProcess_System.Text.Encodings.Web.dll" Name="System.Text.Encodings.Web.dll" Source="$(var.RoadCaptain.Runner_TargetDir)CefGlueBrowserProcess\System.Text.Encodings.Web.dll" />
+      </Component>
+      <Component Id="CefGlueBrowserProcess_System.Text.Json.dll" Guid="307d3a90-3c1c-4d66-b9df-56028b895d4f">
+        <File Id="CefGlueBrowserProcess_System.Text.Json.dll" Name="System.Text.Json.dll" Source="$(var.RoadCaptain.Runner_TargetDir)CefGlueBrowserProcess\System.Text.Json.dll" />
+      </Component>
+      <Component Id="CefGlueBrowserProcess_System.Text.RegularExpressions.dll" Guid="d45da28f-f19c-4391-a27b-825a697ce14c">
+        <File Id="CefGlueBrowserProcess_System.Text.RegularExpressions.dll" Name="System.Text.RegularExpressions.dll" Source="$(var.RoadCaptain.Runner_TargetDir)CefGlueBrowserProcess\System.Text.RegularExpressions.dll" />
+      </Component>
+      <Component Id="CefGlueBrowserProcess_System.Threading.Channels.dll" Guid="44addeeb-2371-43da-9c4c-e7485c04b9b2">
+        <File Id="CefGlueBrowserProcess_System.Threading.Channels.dll" Name="System.Threading.Channels.dll" Source="$(var.RoadCaptain.Runner_TargetDir)CefGlueBrowserProcess\System.Threading.Channels.dll" />
+      </Component>
+      <Component Id="CefGlueBrowserProcess_ucrtbase.dll" Guid="178c155e-773e-4473-a4b2-2dc518322ec3">
+        <File Id="CefGlueBrowserProcess_ucrtbase.dll" Name="ucrtbase.dll" Source="$(var.RoadCaptain.Runner_TargetDir)CefGlueBrowserProcess\ucrtbase.dll" />
+      </Component>
+      <Component Id="CefGlueBrowserProcess_Xilium.CefGlue.BrowserProcess.deps.json" Guid="4bb8a510-88ec-47be-976d-67e25fc0a3c9">
+        <File Id="CefGlueBrowserProcess_Xilium.CefGlue.BrowserProcess.deps.json" Name="Xilium.CefGlue.BrowserProcess.deps.json" Source="$(var.RoadCaptain.Runner_TargetDir)CefGlueBrowserProcess\Xilium.CefGlue.BrowserProcess.deps.json" />
+      </Component>
+      <Component Id="CefGlueBrowserProcess_Xilium.CefGlue.BrowserProcess.dll" Guid="7de35d1d-b591-4116-be0d-e29d5edd9f39">
+        <File Id="CefGlueBrowserProcess_Xilium.CefGlue.BrowserProcess.dll" Name="Xilium.CefGlue.BrowserProcess.dll" Source="$(var.RoadCaptain.Runner_TargetDir)CefGlueBrowserProcess\Xilium.CefGlue.BrowserProcess.dll" />
+      </Component>
+      <Component Id="CefGlueBrowserProcess_Xilium.CefGlue.BrowserProcess.exe" Guid="63b455cb-455b-42a9-a4ae-0499c450bfe0">
+        <File Id="CefGlueBrowserProcess_Xilium.CefGlue.BrowserProcess.exe" Name="Xilium.CefGlue.BrowserProcess.exe" Source="$(var.RoadCaptain.Runner_TargetDir)CefGlueBrowserProcess\Xilium.CefGlue.BrowserProcess.exe" KeyPath="yes" />
+      </Component>
+      <Component Id="CefGlueBrowserProcess_Xilium.CefGlue.BrowserProcess.pdb" Guid="0e76001d-079e-4a56-8189-b0be82867263">
+        <File Id="CefGlueBrowserProcess_Xilium.CefGlue.BrowserProcess.pdb" Name="Xilium.CefGlue.BrowserProcess.pdb" Source="$(var.RoadCaptain.Runner_TargetDir)CefGlueBrowserProcess\Xilium.CefGlue.BrowserProcess.pdb" />
+      </Component>
+      <Component Id="CefGlueBrowserProcess_Xilium.CefGlue.BrowserProcess.runtimeconfig.json" Guid="c946b2f1-7aaa-4667-9de2-fa6ab97674d4">
+        <File Id="CefGlueBrowserProcess_Xilium.CefGlue.BrowserProcess.runtimeconfig.json" Name="Xilium.CefGlue.BrowserProcess.runtimeconfig.json" Source="$(var.RoadCaptain.Runner_TargetDir)CefGlueBrowserProcess\Xilium.CefGlue.BrowserProcess.runtimeconfig.json" />
+      </Component>
+      <Component Id="CefGlueBrowserProcess_Xilium.CefGlue.BrowserProcess.xml" Guid="3b237205-0da8-49c1-9919-9dfb9b731a7f">
+        <File Id="CefGlueBrowserProcess_Xilium.CefGlue.BrowserProcess.xml" Name="Xilium.CefGlue.BrowserProcess.xml" Source="$(var.RoadCaptain.Runner_TargetDir)CefGlueBrowserProcess\Xilium.CefGlue.BrowserProcess.xml" />
+      </Component>
+      <Component Id="CefGlueBrowserProcess_Xilium.CefGlue.Common.Shared.dll" Guid="b5355bb9-b9fb-4ac4-9fa0-ac4740df5481">
+        <File Id="CefGlueBrowserProcess_Xilium.CefGlue.Common.Shared.dll" Name="Xilium.CefGlue.Common.Shared.dll" Source="$(var.RoadCaptain.Runner_TargetDir)CefGlueBrowserProcess\Xilium.CefGlue.Common.Shared.dll" />
+      </Component>
+      <Component Id="CefGlueBrowserProcess_Xilium.CefGlue.Common.Shared.pdb" Guid="59d31844-7cb5-47c0-a2b7-707932c4dc24">
+        <File Id="CefGlueBrowserProcess_Xilium.CefGlue.Common.Shared.pdb" Name="Xilium.CefGlue.Common.Shared.pdb" Source="$(var.RoadCaptain.Runner_TargetDir)CefGlueBrowserProcess\Xilium.CefGlue.Common.Shared.pdb" />
+      </Component>
+      <Component Id="CefGlueBrowserProcess_Xilium.CefGlue.Common.Shared.xml" Guid="93624331-e50d-4013-8c90-7dffc207c979">
+        <File Id="CefGlueBrowserProcess_Xilium.CefGlue.Common.Shared.xml" Name="Xilium.CefGlue.Common.Shared.xml" Source="$(var.RoadCaptain.Runner_TargetDir)CefGlueBrowserProcess\Xilium.CefGlue.Common.Shared.xml" />
+      </Component>
+      <Component Id="CefGlueBrowserProcess_Xilium.CefGlue.dll" Guid="2dea0781-779a-41a0-9626-117f89737775">
+        <File Id="CefGlueBrowserProcess_Xilium.CefGlue.dll" Name="Xilium.CefGlue.dll" Source="$(var.RoadCaptain.Runner_TargetDir)CefGlueBrowserProcess\Xilium.CefGlue.dll" />
+      </Component>
+      <Component Id="CefGlueBrowserProcess_Xilium.CefGlue.pdb" Guid="b4471ba9-995b-4d8b-85bc-3b9f732ed719">
+        <File Id="CefGlueBrowserProcess_Xilium.CefGlue.pdb" Name="Xilium.CefGlue.pdb" Source="$(var.RoadCaptain.Runner_TargetDir)CefGlueBrowserProcess\Xilium.CefGlue.pdb" />
+      </Component>
+      <Component Id="CefGlueBrowserProcess_Xilium.CefGlue.xml" Guid="b76592ba-56a5-41e9-a7d1-0866b5fba178">
+        <File Id="CefGlueBrowserProcess_Xilium.CefGlue.xml" Name="Xilium.CefGlue.xml" Source="$(var.RoadCaptain.Runner_TargetDir)CefGlueBrowserProcess\Xilium.CefGlue.xml" />
+      </Component>
+    </ComponentGroup>
+  </Fragment>
+  <Fragment>
+    <ComponentGroup Id="localesComponents" Directory="locales">
+      <Component Id="locales_am.pak" Guid="41879f4b-3712-4a8b-b363-00a262e6fe2b">
+        <File Id="locales_am.pak" Name="am.pak" Source="$(var.RoadCaptain.Runner_TargetDir)locales\am.pak" />
+      </Component>
+      <Component Id="locales_ar.pak" Guid="80d0db7c-e59a-4de3-8d2b-227e02145735">
+        <File Id="locales_ar.pak" Name="ar.pak" Source="$(var.RoadCaptain.Runner_TargetDir)locales\ar.pak" />
+      </Component>
+      <Component Id="locales_bg.pak" Guid="8a1f8eb8-a2ca-415b-ae10-5a92e12c9a44">
+        <File Id="locales_bg.pak" Name="bg.pak" Source="$(var.RoadCaptain.Runner_TargetDir)locales\bg.pak" />
+      </Component>
+      <Component Id="locales_bn.pak" Guid="17d4b3d0-5ef2-4430-8285-a5af7ca1196c">
+        <File Id="locales_bn.pak" Name="bn.pak" Source="$(var.RoadCaptain.Runner_TargetDir)locales\bn.pak" />
+      </Component>
+      <Component Id="locales_ca.pak" Guid="fa610b5d-a004-413b-af93-8fa390d0409e">
+        <File Id="locales_ca.pak" Name="ca.pak" Source="$(var.RoadCaptain.Runner_TargetDir)locales\ca.pak" />
+      </Component>
+      <Component Id="locales_cs.pak" Guid="cf9ae0a1-abbf-42ce-ac43-a9d1c4e887d2">
+        <File Id="locales_cs.pak" Name="cs.pak" Source="$(var.RoadCaptain.Runner_TargetDir)locales\cs.pak" />
+      </Component>
+      <Component Id="locales_da.pak" Guid="7697acaf-0254-46f8-a19f-1aa571a824d8">
+        <File Id="locales_da.pak" Name="da.pak" Source="$(var.RoadCaptain.Runner_TargetDir)locales\da.pak" />
+      </Component>
+      <Component Id="locales_de.pak" Guid="95c527a2-c1b6-41c6-8203-cfe9dc6e04f7">
+        <File Id="locales_de.pak" Name="de.pak" Source="$(var.RoadCaptain.Runner_TargetDir)locales\de.pak" />
+      </Component>
+      <Component Id="locales_el.pak" Guid="58d54109-82c1-42fa-b16f-57142819b041">
+        <File Id="locales_el.pak" Name="el.pak" Source="$(var.RoadCaptain.Runner_TargetDir)locales\el.pak" />
+      </Component>
+      <Component Id="locales_en.GB.pak" Guid="8833ddce-7f8a-4d5c-8491-ff4ad97e9e4a">
+        <File Id="locales_en.GB.pak" Name="en-GB.pak" Source="$(var.RoadCaptain.Runner_TargetDir)locales\en-GB.pak" />
+      </Component>
+      <Component Id="locales_en.US.pak" Guid="7c2baec2-4777-4cc4-892d-df4ed7d1afa6">
+        <File Id="locales_en.US.pak" Name="en-US.pak" Source="$(var.RoadCaptain.Runner_TargetDir)locales\en-US.pak" />
+      </Component>
+      <Component Id="locales_es.419.pak" Guid="9521bbf3-eddc-46a2-bb2f-2b3dbeae9370">
+        <File Id="locales_es.419.pak" Name="es-419.pak" Source="$(var.RoadCaptain.Runner_TargetDir)locales\es-419.pak" />
+      </Component>
+      <Component Id="locales_es.pak" Guid="5ee548d1-ffc5-491a-be8e-cb6225e28060">
+        <File Id="locales_es.pak" Name="es.pak" Source="$(var.RoadCaptain.Runner_TargetDir)locales\es.pak" />
+      </Component>
+      <Component Id="locales_et.pak" Guid="a3d0cbb5-adc6-4631-a37e-74eac4e79af5">
+        <File Id="locales_et.pak" Name="et.pak" Source="$(var.RoadCaptain.Runner_TargetDir)locales\et.pak" />
+      </Component>
+      <Component Id="locales_fa.pak" Guid="cbcad07d-efc4-4abe-bc8d-0e833f32afbf">
+        <File Id="locales_fa.pak" Name="fa.pak" Source="$(var.RoadCaptain.Runner_TargetDir)locales\fa.pak" />
+      </Component>
+      <Component Id="locales_fi.pak" Guid="6dac9a8a-1bdb-4482-9e9b-2d33fa0e8871">
+        <File Id="locales_fi.pak" Name="fi.pak" Source="$(var.RoadCaptain.Runner_TargetDir)locales\fi.pak" />
+      </Component>
+      <Component Id="locales_fil.pak" Guid="4b08cd2a-85f0-4d09-b1fe-c3e6f0da635b">
+        <File Id="locales_fil.pak" Name="fil.pak" Source="$(var.RoadCaptain.Runner_TargetDir)locales\fil.pak" />
+      </Component>
+      <Component Id="locales_fr.pak" Guid="d509ada1-995c-4537-9a59-a82e31f0bcb1">
+        <File Id="locales_fr.pak" Name="fr.pak" Source="$(var.RoadCaptain.Runner_TargetDir)locales\fr.pak" />
+      </Component>
+      <Component Id="locales_gu.pak" Guid="4c70cbb6-8c72-46fe-931b-05b9454d5c38">
+        <File Id="locales_gu.pak" Name="gu.pak" Source="$(var.RoadCaptain.Runner_TargetDir)locales\gu.pak" />
+      </Component>
+      <Component Id="locales_he.pak" Guid="c2d812d3-4200-4d74-8b15-0292c5b76123">
+        <File Id="locales_he.pak" Name="he.pak" Source="$(var.RoadCaptain.Runner_TargetDir)locales\he.pak" />
+      </Component>
+      <Component Id="locales_hi.pak" Guid="1924aa5c-82e0-448a-a730-f21a5c0518c3">
+        <File Id="locales_hi.pak" Name="hi.pak" Source="$(var.RoadCaptain.Runner_TargetDir)locales\hi.pak" />
+      </Component>
+      <Component Id="locales_hr.pak" Guid="3f21268b-880d-43cd-8b97-d83a4a69398f">
+        <File Id="locales_hr.pak" Name="hr.pak" Source="$(var.RoadCaptain.Runner_TargetDir)locales\hr.pak" />
+      </Component>
+      <Component Id="locales_hu.pak" Guid="9885023c-852c-4977-9997-c26b5be6d755">
+        <File Id="locales_hu.pak" Name="hu.pak" Source="$(var.RoadCaptain.Runner_TargetDir)locales\hu.pak" />
+      </Component>
+      <Component Id="locales_id.pak" Guid="e9948fda-4439-47d3-882d-5a21244201b0">
+        <File Id="locales_id.pak" Name="id.pak" Source="$(var.RoadCaptain.Runner_TargetDir)locales\id.pak" />
+      </Component>
+      <Component Id="locales_it.pak" Guid="64c3d7c7-61ae-4efc-822a-cc3c937b5a65">
+        <File Id="locales_it.pak" Name="it.pak" Source="$(var.RoadCaptain.Runner_TargetDir)locales\it.pak" />
+      </Component>
+      <Component Id="locales_ja.pak" Guid="1c5c7e77-3520-40cb-83ad-b25898423c18">
+        <File Id="locales_ja.pak" Name="ja.pak" Source="$(var.RoadCaptain.Runner_TargetDir)locales\ja.pak" />
+      </Component>
+      <Component Id="locales_kn.pak" Guid="f134454a-78f4-40f4-ad85-520ca6c438be">
+        <File Id="locales_kn.pak" Name="kn.pak" Source="$(var.RoadCaptain.Runner_TargetDir)locales\kn.pak" />
+      </Component>
+      <Component Id="locales_ko.pak" Guid="9d7888ce-f2a1-4f51-8935-6edebcf2c3da">
+        <File Id="locales_ko.pak" Name="ko.pak" Source="$(var.RoadCaptain.Runner_TargetDir)locales\ko.pak" />
+      </Component>
+      <Component Id="locales_lt.pak" Guid="941c3c15-7cb6-4903-888c-e9511d88894a">
+        <File Id="locales_lt.pak" Name="lt.pak" Source="$(var.RoadCaptain.Runner_TargetDir)locales\lt.pak" />
+      </Component>
+      <Component Id="locales_lv.pak" Guid="560b6c97-58a5-4b9d-83d6-334dd2da0b11">
+        <File Id="locales_lv.pak" Name="lv.pak" Source="$(var.RoadCaptain.Runner_TargetDir)locales\lv.pak" />
+      </Component>
+      <Component Id="locales_ml.pak" Guid="8cf1bf64-8803-4507-a50b-14a14bf74645">
+        <File Id="locales_ml.pak" Name="ml.pak" Source="$(var.RoadCaptain.Runner_TargetDir)locales\ml.pak" />
+      </Component>
+      <Component Id="locales_mr.pak" Guid="f317a574-6199-41de-9827-0919b7cc5048">
+        <File Id="locales_mr.pak" Name="mr.pak" Source="$(var.RoadCaptain.Runner_TargetDir)locales\mr.pak" />
+      </Component>
+      <Component Id="locales_ms.pak" Guid="614cbe73-095f-44ce-9c73-c33dbdd68aac">
+        <File Id="locales_ms.pak" Name="ms.pak" Source="$(var.RoadCaptain.Runner_TargetDir)locales\ms.pak" />
+      </Component>
+      <Component Id="locales_nb.pak" Guid="f69a45b1-a2e1-4fc1-9a43-0e324694d644">
+        <File Id="locales_nb.pak" Name="nb.pak" Source="$(var.RoadCaptain.Runner_TargetDir)locales\nb.pak" />
+      </Component>
+      <Component Id="locales_nl.pak" Guid="2d493032-9d7e-4e54-a72a-3082b1d6a376">
+        <File Id="locales_nl.pak" Name="nl.pak" Source="$(var.RoadCaptain.Runner_TargetDir)locales\nl.pak" />
+      </Component>
+      <Component Id="locales_pl.pak" Guid="3655d69a-bc3b-4b43-baca-eb9c7bdf4806">
+        <File Id="locales_pl.pak" Name="pl.pak" Source="$(var.RoadCaptain.Runner_TargetDir)locales\pl.pak" />
+      </Component>
+      <Component Id="locales_pt.BR.pak" Guid="04f718f0-6842-4267-aa6b-cda095ebe0b3">
+        <File Id="locales_pt.BR.pak" Name="pt-BR.pak" Source="$(var.RoadCaptain.Runner_TargetDir)locales\pt-BR.pak" />
+      </Component>
+      <Component Id="locales_pt.PT.pak" Guid="d4072752-c274-4d44-95e9-52a19ae4910e">
+        <File Id="locales_pt.PT.pak" Name="pt-PT.pak" Source="$(var.RoadCaptain.Runner_TargetDir)locales\pt-PT.pak" />
+      </Component>
+      <Component Id="locales_ro.pak" Guid="0899f259-4a19-4106-8757-c1e0f1f8206a">
+        <File Id="locales_ro.pak" Name="ro.pak" Source="$(var.RoadCaptain.Runner_TargetDir)locales\ro.pak" />
+      </Component>
+      <Component Id="locales_ru.pak" Guid="1bb1f01c-4880-40c7-9363-f27a2e7d2ec7">
+        <File Id="locales_ru.pak" Name="ru.pak" Source="$(var.RoadCaptain.Runner_TargetDir)locales\ru.pak" />
+      </Component>
+      <Component Id="locales_sk.pak" Guid="4391da88-a347-4ff9-8d80-d785d071c1be">
+        <File Id="locales_sk.pak" Name="sk.pak" Source="$(var.RoadCaptain.Runner_TargetDir)locales\sk.pak" />
+      </Component>
+      <Component Id="locales_sl.pak" Guid="6ff26d6f-40c5-412e-a7f7-5771fae5098d">
+        <File Id="locales_sl.pak" Name="sl.pak" Source="$(var.RoadCaptain.Runner_TargetDir)locales\sl.pak" />
+      </Component>
+      <Component Id="locales_sr.pak" Guid="e0aa3da2-6985-4fc5-aef3-a6ed3da2adcb">
+        <File Id="locales_sr.pak" Name="sr.pak" Source="$(var.RoadCaptain.Runner_TargetDir)locales\sr.pak" />
+      </Component>
+      <Component Id="locales_sv.pak" Guid="e7ade391-19b3-4424-876c-911fc73d37de">
+        <File Id="locales_sv.pak" Name="sv.pak" Source="$(var.RoadCaptain.Runner_TargetDir)locales\sv.pak" />
+      </Component>
+      <Component Id="locales_sw.pak" Guid="4a452407-d75a-469e-9fb3-13ee21242e5b">
+        <File Id="locales_sw.pak" Name="sw.pak" Source="$(var.RoadCaptain.Runner_TargetDir)locales\sw.pak" />
+      </Component>
+      <Component Id="locales_ta.pak" Guid="3509fb6d-12ad-4ce3-90b8-14db647baa0c">
+        <File Id="locales_ta.pak" Name="ta.pak" Source="$(var.RoadCaptain.Runner_TargetDir)locales\ta.pak" />
+      </Component>
+      <Component Id="locales_te.pak" Guid="05a5b08f-8d56-4e7a-be2c-64b17aa68233">
+        <File Id="locales_te.pak" Name="te.pak" Source="$(var.RoadCaptain.Runner_TargetDir)locales\te.pak" />
+      </Component>
+      <Component Id="locales_th.pak" Guid="4171e233-910d-4c36-8f9e-1cc10d92b8b7">
+        <File Id="locales_th.pak" Name="th.pak" Source="$(var.RoadCaptain.Runner_TargetDir)locales\th.pak" />
+      </Component>
+      <Component Id="locales_tr.pak" Guid="bc6a5002-8ceb-441c-bc72-010512d19868">
+        <File Id="locales_tr.pak" Name="tr.pak" Source="$(var.RoadCaptain.Runner_TargetDir)locales\tr.pak" />
+      </Component>
+      <Component Id="locales_uk.pak" Guid="130ebcba-2ed0-4197-9696-ab974a530336">
+        <File Id="locales_uk.pak" Name="uk.pak" Source="$(var.RoadCaptain.Runner_TargetDir)locales\uk.pak" />
+      </Component>
+      <Component Id="locales_vi.pak" Guid="d240395f-c6f8-4f0a-8c57-8a6315692fc3">
+        <File Id="locales_vi.pak" Name="vi.pak" Source="$(var.RoadCaptain.Runner_TargetDir)locales\vi.pak" />
+      </Component>
+      <Component Id="locales_zh.CN.pak" Guid="47ea23ba-d46d-4013-9377-f9d9d21d28dc">
+        <File Id="locales_zh.CN.pak" Name="zh-CN.pak" Source="$(var.RoadCaptain.Runner_TargetDir)locales\zh-CN.pak" />
+      </Component>
+      <Component Id="locales_zh.TW.pak" Guid="4df61f6d-7490-4d64-aaa1-5e36a3417748">
+        <File Id="locales_zh.TW.pak" Name="zh-TW.pak" Source="$(var.RoadCaptain.Runner_TargetDir)locales\zh-TW.pak" />
+      </Component>
+    </ComponentGroup>
+  </Fragment>
+  <Fragment>
+    <ComponentGroup Id="RoutesComponents" Directory="Routes">
+      <Component Id="Routes_RebelRoute.BigFlat8.json" Guid="74709c26-bac4-4b59-98c4-aa717e72b263">
+        <File Id="Routes_RebelRoute.BigFlat8.json" Name="RebelRoute-BigFlat8.json" Source="$(var.RoadCaptain.Runner_TargetDir)Routes\RebelRoute-BigFlat8.json" />
+      </Component>
+      <Component Id="Routes_RebelRoute.DownUpDown.json" Guid="5dfacb8b-d8b9-40b3-a084-9320f4956071">
+        <File Id="Routes_RebelRoute.DownUpDown.json" Name="RebelRoute-DownUpDown.json" Source="$(var.RoadCaptain.Runner_TargetDir)Routes\RebelRoute-DownUpDown.json" />
+      </Component>
+      <Component Id="Routes_RebelRoute.HillyKOMBypass.json" Guid="7bf4eac3-5503-4da7-8c43-acb394797cf2">
+        <File Id="Routes_RebelRoute.HillyKOMBypass.json" Name="RebelRoute-HillyKOMBypass.json" Source="$(var.RoadCaptain.Runner_TargetDir)Routes\RebelRoute-HillyKOMBypass.json" />
+      </Component>
+      <Component Id="Routes_RebelRoute.KOMonster.json" Guid="0ffcad21-05ad-42e8-8053-d3ca778e20b8">
+        <File Id="Routes_RebelRoute.KOMonster.json" Name="RebelRoute-KOMonster.json" Source="$(var.RoadCaptain.Runner_TargetDir)Routes\RebelRoute-KOMonster.json" />
+      </Component>
+      <Component Id="Routes_RebelRoute.SpiralIntoTheVolcano.json" Guid="846b3bce-b071-4dbb-9d17-0ae6790375df">
+        <File Id="Routes_RebelRoute.SpiralIntoTheVolcano.json" Name="RebelRoute-SpiralIntoTheVolcano.json" Source="$(var.RoadCaptain.Runner_TargetDir)Routes\RebelRoute-SpiralIntoTheVolcano.json" />
+      </Component>
+      <Component Id="Routes_RebelRoute.ThePerimeter.json" Guid="8e3c18c4-ab16-415c-9222-7d5c1079a48b">
+        <File Id="Routes_RebelRoute.ThePerimeter.json" Name="RebelRoute-ThePerimeter.json" Source="$(var.RoadCaptain.Runner_TargetDir)Routes\RebelRoute-ThePerimeter.json" />
+      </Component>
+      <Component Id="Routes_RebelRoute.TheSnake.json" Guid="0245b188-132f-416d-ac6d-e90379ecb2d9">
+        <File Id="Routes_RebelRoute.TheSnake.json" Name="RebelRoute-TheSnake.json" Source="$(var.RoadCaptain.Runner_TargetDir)Routes\RebelRoute-TheSnake.json" />
+      </Component>
+    </ComponentGroup>
+  </Fragment>
+  <Fragment>
+    <ComponentGroup Id="nativeComponents" Directory="native">
+      <Component Id="native_WebView2Loader.dll" Guid="8818cd88-830b-4f18-8139-a18edad71adc">
+        <File Id="native_WebView2Loader.dll" Name="WebView2Loader.dll" Source="$(var.RoadCaptain.Runner_TargetDir)runtimes\win-x64\native\WebView2Loader.dll" />
+      </Component>
+    </ComponentGroup>
+  </Fragment>
+  <Fragment>
+    <ComponentGroup Id="swiftshaderComponents" Directory="swiftshader">
+      <Component Id="swiftshader_libEGL.dll" Guid="bedd1c51-1f09-4e5a-842a-ececdf87fcad">
+        <File Id="swiftshader_libEGL.dll" Name="libEGL.dll" Source="$(var.RoadCaptain.Runner_TargetDir)swiftshader\libEGL.dll" />
+      </Component>
+      <Component Id="swiftshader_libGLESv2.dll" Guid="db914524-77ce-43df-83bd-d880130e5886">
+        <File Id="swiftshader_libGLESv2.dll" Name="libGLESv2.dll" Source="$(var.RoadCaptain.Runner_TargetDir)swiftshader\libGLESv2.dll" />
       </Component>
     </ComponentGroup>
   </Fragment>
   <Fragment>
     <ComponentGroup Id="RunnerComponents" Directory="INSTALLFOLDER">
-      <Component Id="Runner_autofac.runner.json" Guid="312ae12a-6e87-4d1c-9e52-767e1e45bb11">
-        <File Id="Runner_autofac.runner.json" Name="autofac.runner.json" Source="$(var.RoadCaptain.Runner_TargetDir)autofac.runner.json" />
+      <Component Id="Runner_autofac.app.runner.development.json" Guid="b25cbb18-42ca-49d8-8eab-be45422dcfeb">
+        <File Id="Runner_autofac.app.runner.development.json" Name="autofac.app.runner.development.json" Source="$(var.RoadCaptain.Runner_TargetDir)autofac.app.runner.development.json" />
       </Component>
-      <Component Id="Runner_Microsoft.IdentityModel.JsonWebTokens.dll" Guid="bf77cec0-8d7d-467e-8a62-7fa0ccd8388e">
+      <Component Id="Runner_autofac.app.runner.json" Guid="2d648010-30fb-42db-a4cf-074095329089">
+        <File Id="Runner_autofac.app.runner.json" Name="autofac.app.runner.json" Source="$(var.RoadCaptain.Runner_TargetDir)autofac.app.runner.json" />
+      </Component>
+      <Component Id="Runner_chrome_100_percent.pak" Guid="1d29ab20-db51-47fa-94da-058c521f41cc">
+        <File Id="Runner_chrome_100_percent.pak" Name="chrome_100_percent.pak" Source="$(var.RoadCaptain.Runner_TargetDir)chrome_100_percent.pak" />
+      </Component>
+      <Component Id="Runner_chrome_200_percent.pak" Guid="b46e9d5f-d616-4369-a9ab-f68bd98f54ae">
+        <File Id="Runner_chrome_200_percent.pak" Name="chrome_200_percent.pak" Source="$(var.RoadCaptain.Runner_TargetDir)chrome_200_percent.pak" />
+      </Component>
+      <Component Id="Runner_chrome_elf.dll" Guid="5e2090ae-a24b-471c-880b-83834a00b4a4">
+        <File Id="Runner_chrome_elf.dll" Name="chrome_elf.dll" Source="$(var.RoadCaptain.Runner_TargetDir)chrome_elf.dll" />
+      </Component>
+      <Component Id="Runner_d3dcompiler_47.dll" Guid="c2612c84-4a7a-4e67-90f9-90c3eff08a0d">
+        <File Id="Runner_d3dcompiler_47.dll" Name="d3dcompiler_47.dll" Source="$(var.RoadCaptain.Runner_TargetDir)d3dcompiler_47.dll" />
+      </Component>
+      <Component Id="Runner_icudtl.dat" Guid="c7c35725-d6be-41e5-83a3-90e1a62c641d">
+        <File Id="Runner_icudtl.dat" Name="icudtl.dat" Source="$(var.RoadCaptain.Runner_TargetDir)icudtl.dat" />
+      </Component>
+      <Component Id="Runner_libcef.dll" Guid="69af67b3-e903-40eb-a07f-1658c1ed0408">
+        <File Id="Runner_libcef.dll" Name="libcef.dll" Source="$(var.RoadCaptain.Runner_TargetDir)libcef.dll" />
+      </Component>
+      <Component Id="Runner_libEGL.dll" Guid="834ab128-278f-4f1d-a9c4-0e4f50cdf889">
+        <File Id="Runner_libEGL.dll" Name="libEGL.dll" Source="$(var.RoadCaptain.Runner_TargetDir)libEGL.dll" />
+      </Component>
+      <Component Id="Runner_libGLESv2.dll" Guid="1d0be499-0cc6-4bba-bcb2-c9091900dc9f">
+        <File Id="Runner_libGLESv2.dll" Name="libGLESv2.dll" Source="$(var.RoadCaptain.Runner_TargetDir)libGLESv2.dll" />
+      </Component>
+      <Component Id="Runner_LICENSE.txt" Guid="0434955a-bab9-444d-881c-29b51b17014d">
+        <File Id="Runner_LICENSE.txt" Name="LICENSE.txt" Source="$(var.RoadCaptain.Runner_TargetDir)LICENSE.txt" />
+      </Component>
+      <Component Id="Runner_Microsoft.IdentityModel.JsonWebTokens.dll" Guid="d63b16bb-4096-4797-956f-e7aa4b4c7ecb">
         <File Id="Runner_Microsoft.IdentityModel.JsonWebTokens.dll" Name="Microsoft.IdentityModel.JsonWebTokens.dll" Source="$(var.RoadCaptain.Runner_TargetDir)Microsoft.IdentityModel.JsonWebTokens.dll" />
       </Component>
-      <Component Id="Runner_Microsoft.IdentityModel.Logging.dll" Guid="7ec9da8b-c3fd-4b74-810b-3f18faf43f47">
+      <Component Id="Runner_Microsoft.IdentityModel.Logging.dll" Guid="0c0cab8d-bcd5-4055-8f2f-8f807785d9b5">
         <File Id="Runner_Microsoft.IdentityModel.Logging.dll" Name="Microsoft.IdentityModel.Logging.dll" Source="$(var.RoadCaptain.Runner_TargetDir)Microsoft.IdentityModel.Logging.dll" />
       </Component>
-      <Component Id="Runner_Microsoft.IdentityModel.Tokens.dll" Guid="feb0bb3f-4ce9-4afd-81a5-8ff59aee1832">
+      <Component Id="Runner_Microsoft.IdentityModel.Tokens.dll" Guid="a2aed3e4-6068-4963-a4d2-c3c1097bd7cf">
         <File Id="Runner_Microsoft.IdentityModel.Tokens.dll" Name="Microsoft.IdentityModel.Tokens.dll" Source="$(var.RoadCaptain.Runner_TargetDir)Microsoft.IdentityModel.Tokens.dll" />
       </Component>
-      <Component Id="Runner_Microsoft.Web.WebView2.Core.dll" Guid="8cce168a-4c72-4923-bd8e-d0d73abd50dc">
+      <Component Id="Runner_Microsoft.Web.WebView2.Core.dll" Guid="158fa426-0152-4d2d-a33f-7f703465faf0">
         <File Id="Runner_Microsoft.Web.WebView2.Core.dll" Name="Microsoft.Web.WebView2.Core.dll" Source="$(var.RoadCaptain.Runner_TargetDir)Microsoft.Web.WebView2.Core.dll" />
       </Component>
-      <Component Id="Runner_Microsoft.Web.WebView2.WinForms.dll" Guid="351bb6f0-eb2a-44d4-ac20-724cdc759333">
+      <Component Id="Runner_Microsoft.Web.WebView2.WinForms.dll" Guid="1a419a4e-f678-4627-a4f7-96a8a071ea7c">
         <File Id="Runner_Microsoft.Web.WebView2.WinForms.dll" Name="Microsoft.Web.WebView2.WinForms.dll" Source="$(var.RoadCaptain.Runner_TargetDir)Microsoft.Web.WebView2.WinForms.dll" />
       </Component>
-      <Component Id="Runner_Microsoft.Web.WebView2.Wpf.dll" Guid="3b055fe3-21bc-4c47-8021-443f61fb669d">
+      <Component Id="Runner_Microsoft.Web.WebView2.Wpf.dll" Guid="d7f00347-d873-4a4e-8e3b-a0668d3ac93d">
         <File Id="Runner_Microsoft.Web.WebView2.Wpf.dll" Name="Microsoft.Web.WebView2.Wpf.dll" Source="$(var.RoadCaptain.Runner_TargetDir)Microsoft.Web.WebView2.Wpf.dll" />
       </Component>
-      <Component Id="Runner_RoadCaptain.Runner.deps.json" Guid="dbe5e072-2a92-4b08-8d95-590dc9d3dc61">
-        <File Id="Runner_RoadCaptain.Runner.deps.json" Name="RoadCaptain.Runner.deps.json" Source="$(var.RoadCaptain.Runner_TargetDir)RoadCaptain.Runner.deps.json" />
+      <Component Id="Runner_NLog.dll" Guid="ff8aacd8-7f54-48ab-800d-a39115484806">
+        <File Id="Runner_NLog.dll" Name="NLog.dll" Source="$(var.RoadCaptain.Runner_TargetDir)NLog.dll" />
       </Component>
-      <Component Id="Runner_RoadCaptain.Runner.dll" Guid="38053dda-e717-40d3-8110-1d5dbc0cc311">
-        <File Id="Runner_RoadCaptain.Runner.dll" Name="RoadCaptain.Runner.dll" Source="$(var.RoadCaptain.Runner_TargetDir)RoadCaptain.Runner.dll" />
+      <Component Id="Runner_README.txt" Guid="63a064a6-69fb-48b3-92cf-084b84093fe8">
+        <File Id="Runner_README.txt" Name="README.txt" Source="$(var.RoadCaptain.Runner_TargetDir)README.txt" />
       </Component>
-      <Component Id="Runner_RoadCaptain.Runner.exe" Guid="973395c9-8e44-4948-bcb1-591614111a2b">
-        <File Id="Runner_RoadCaptain.Runner.exe" Name="RoadCaptain.Runner.exe" Source="$(var.RoadCaptain.Runner_TargetDir)RoadCaptain.Runner.exe" KeyPath="yes" />
+      <Component Id="Runner_resources.pak" Guid="6b15d5d1-6c07-41a2-b2ad-b811876743a4">
+        <File Id="Runner_resources.pak" Name="resources.pak" Source="$(var.RoadCaptain.Runner_TargetDir)resources.pak" />
       </Component>
-      <Component Id="Runner_RoadCaptain.Runner.pdb" Guid="403e26e2-efd0-4b93-addb-a0d1e25e45c8">
-        <File Id="Runner_RoadCaptain.Runner.pdb" Name="RoadCaptain.Runner.pdb" Source="$(var.RoadCaptain.Runner_TargetDir)RoadCaptain.Runner.pdb" />
+      <Component Id="Runner_RoadCaptain.App.Runner.deps.json" Guid="88d8f699-ab6e-41e6-b7dc-0c4d8c859cbb">
+        <File Id="Runner_RoadCaptain.App.Runner.deps.json" Name="RoadCaptain.App.Runner.deps.json" Source="$(var.RoadCaptain.Runner_TargetDir)RoadCaptain.App.Runner.deps.json" />
       </Component>
-      <Component Id="Runner_RoadCaptain.Runner.runtimeconfig.json" Guid="63f3cae4-16a7-45e0-8914-d9169c2e30a6">
-        <File Id="Runner_RoadCaptain.Runner.runtimeconfig.json" Name="RoadCaptain.Runner.runtimeconfig.json" Source="$(var.RoadCaptain.Runner_TargetDir)RoadCaptain.Runner.runtimeconfig.json" />
+      <Component Id="Runner_RoadCaptain.App.Runner.dll" Guid="5083d87d-86db-4e6c-a4c4-67c67d356cf2">
+        <File Id="Runner_RoadCaptain.App.Runner.dll" Name="RoadCaptain.App.Runner.dll" Source="$(var.RoadCaptain.Runner_TargetDir)RoadCaptain.App.Runner.dll" />
       </Component>
-      <Component Id="Runner_Serilog.Sinks.Debug.dll" Guid="f0a065bd-819f-4f66-bdab-f23d965db60c">
-        <File Id="Runner_Serilog.Sinks.Debug.dll" Name="Serilog.Sinks.Debug.dll" Source="$(var.RoadCaptain.Runner_TargetDir)Serilog.Sinks.Debug.dll" />
+      <Component Id="Runner_RoadCaptain.App.Runner.exe" Guid="6e833346-6b79-4590-a40b-2740b38ddf5a">
+        <File Id="Runner_RoadCaptain.App.Runner.exe" Name="RoadCaptain.App.Runner.exe" Source="$(var.RoadCaptain.Runner_TargetDir)RoadCaptain.App.Runner.exe" KeyPath="yes" />
       </Component>
-      <Component Id="Runner_System.IdentityModel.Tokens.Jwt.dll" Guid="9bb9baa9-b607-480e-b022-c4f5ad0ffdac">
+      <Component Id="Runner_RoadCaptain.App.Runner.pdb" Guid="77836cc6-9aac-4b7b-b1e7-4d2a4c379af2">
+        <File Id="Runner_RoadCaptain.App.Runner.pdb" Name="RoadCaptain.App.Runner.pdb" Source="$(var.RoadCaptain.Runner_TargetDir)RoadCaptain.App.Runner.pdb" />
+      </Component>
+      <Component Id="Runner_RoadCaptain.App.Runner.runtimeconfig.json" Guid="4599c3f6-49d9-4044-9f51-87bb5705cb4f">
+        <File Id="Runner_RoadCaptain.App.Runner.runtimeconfig.json" Name="RoadCaptain.App.Runner.runtimeconfig.json" Source="$(var.RoadCaptain.Runner_TargetDir)RoadCaptain.App.Runner.runtimeconfig.json" />
+      </Component>
+      <Component Id="Runner_snapshot_blob.bin" Guid="d31c7a61-368b-4c9d-a033-9d7e554def01">
+        <File Id="Runner_snapshot_blob.bin" Name="snapshot_blob.bin" Source="$(var.RoadCaptain.Runner_TargetDir)snapshot_blob.bin" />
+      </Component>
+      <Component Id="Runner_System.IdentityModel.Tokens.Jwt.dll" Guid="8ede4fb4-99c3-43f9-9b71-7e93a4a2c459">
         <File Id="Runner_System.IdentityModel.Tokens.Jwt.dll" Name="System.IdentityModel.Tokens.Jwt.dll" Source="$(var.RoadCaptain.Runner_TargetDir)System.IdentityModel.Tokens.Jwt.dll" />
+      </Component>
+      <Component Id="Runner_System.Text.Json.dll" Guid="3e9d28f9-0578-41f1-b65c-4d2e623a1990">
+        <File Id="Runner_System.Text.Json.dll" Name="System.Text.Json.dll" Source="$(var.RoadCaptain.Runner_TargetDir)System.Text.Json.dll" />
+      </Component>
+      <Component Id="Runner_v8_context_snapshot.bin" Guid="a63d45b1-967d-42fc-aefb-ee9f87979027">
+        <File Id="Runner_v8_context_snapshot.bin" Name="v8_context_snapshot.bin" Source="$(var.RoadCaptain.Runner_TargetDir)v8_context_snapshot.bin" />
+      </Component>
+      <Component Id="Runner_WebView2Loader.dll" Guid="1c63a4f9-a4fc-4c9a-ba9b-b2bab5805dfb">
+        <File Id="Runner_WebView2Loader.dll" Name="WebView2Loader.dll" Source="$(var.RoadCaptain.Runner_TargetDir)WebView2Loader.dll" />
+      </Component>
+      <Component Id="Runner_WebViewControl.Avalonia.dll" Guid="d7412724-27c0-47e8-bfba-e3f57e65dbab">
+        <File Id="Runner_WebViewControl.Avalonia.dll" Name="WebViewControl.Avalonia.dll" Source="$(var.RoadCaptain.Runner_TargetDir)WebViewControl.Avalonia.dll" />
+      </Component>
+      <Component Id="Runner_Xilium.CefGlue.Avalonia.dll" Guid="f4416d03-2bbb-40cf-905c-3c290619d30f">
+        <File Id="Runner_Xilium.CefGlue.Avalonia.dll" Name="Xilium.CefGlue.Avalonia.dll" Source="$(var.RoadCaptain.Runner_TargetDir)Xilium.CefGlue.Avalonia.dll" />
+      </Component>
+      <Component Id="Runner_Xilium.CefGlue.Common.dll" Guid="d01f1d4f-9244-4e0d-945d-a18bdfed2e4f">
+        <File Id="Runner_Xilium.CefGlue.Common.dll" Name="Xilium.CefGlue.Common.dll" Source="$(var.RoadCaptain.Runner_TargetDir)Xilium.CefGlue.Common.dll" />
+      </Component>
+      <Component Id="Runner_Xilium.CefGlue.Common.Shared.dll" Guid="49c933b5-805a-45aa-b7ac-d2c74559b418">
+        <File Id="Runner_Xilium.CefGlue.Common.Shared.dll" Name="Xilium.CefGlue.Common.Shared.dll" Source="$(var.RoadCaptain.Runner_TargetDir)Xilium.CefGlue.Common.Shared.dll" />
+      </Component>
+      <Component Id="Runner_Xilium.CefGlue.dll" Guid="fe988120-0303-4e27-9e42-cfb0209b0044">
+        <File Id="Runner_Xilium.CefGlue.dll" Name="Xilium.CefGlue.dll" Source="$(var.RoadCaptain.Runner_TargetDir)Xilium.CefGlue.dll" />
       </Component>
     </ComponentGroup>
   </Fragment>
   <Fragment>
     <ComponentGroup Id="RouteBuilderComponents" Directory="INSTALLFOLDER">
-      <Component Id="RouteBuilder_autofac.routebuilder.json" Guid="362e30ce-9475-404e-9125-d0a42f42810d">
-        <File Id="RouteBuilder_autofac.routebuilder.json" Name="autofac.routebuilder.json" Source="$(var.RoadCaptain.RouteBuilder_TargetDir)autofac.routebuilder.json" />
+      <Component Id="RouteBuilder_autofac.app.routebuilder.development.json" Guid="0f8ae106-940b-4cc3-9710-fbaa6ffbff70">
+        <File Id="RouteBuilder_autofac.app.routebuilder.development.json" Name="autofac.app.routebuilder.development.json" Source="$(var.RoadCaptain.RouteBuilder_TargetDir)autofac.app.routebuilder.development.json" />
       </Component>
-      <Component Id="RouteBuilder_RoadCaptain.RouteBuilder.deps.json" Guid="a7ebca60-60a4-42df-9963-323578f4bc74">
-        <File Id="RouteBuilder_RoadCaptain.RouteBuilder.deps.json" Name="RoadCaptain.RouteBuilder.deps.json" Source="$(var.RoadCaptain.RouteBuilder_TargetDir)RoadCaptain.RouteBuilder.deps.json" />
+      <Component Id="RouteBuilder_autofac.app.routebuilder.json" Guid="114aaa1e-814c-4e58-8061-f4c93045bd56">
+        <File Id="RouteBuilder_autofac.app.routebuilder.json" Name="autofac.app.routebuilder.json" Source="$(var.RoadCaptain.RouteBuilder_TargetDir)autofac.app.routebuilder.json" />
       </Component>
-      <Component Id="RouteBuilder_RoadCaptain.RouteBuilder.dll" Guid="bae97ca1-f749-4d27-827e-ec17a3eaedc9">
-        <File Id="RouteBuilder_RoadCaptain.RouteBuilder.dll" Name="RoadCaptain.RouteBuilder.dll" Source="$(var.RoadCaptain.RouteBuilder_TargetDir)RoadCaptain.RouteBuilder.dll" />
+      <Component Id="RouteBuilder_RoadCaptain.App.RouteBuilder.deps.json" Guid="df03dac7-4ecf-4d42-a6b6-f827ffe29b95">
+        <File Id="RouteBuilder_RoadCaptain.App.RouteBuilder.deps.json" Name="RoadCaptain.App.RouteBuilder.deps.json" Source="$(var.RoadCaptain.RouteBuilder_TargetDir)RoadCaptain.App.RouteBuilder.deps.json" />
       </Component>
-      <Component Id="RouteBuilder_RoadCaptain.RouteBuilder.exe" Guid="48dddb50-163a-40c6-90ba-a2c9d27b3e94">
-        <File Id="RouteBuilder_RoadCaptain.RouteBuilder.exe" Name="RoadCaptain.RouteBuilder.exe" Source="$(var.RoadCaptain.RouteBuilder_TargetDir)RoadCaptain.RouteBuilder.exe" KeyPath="yes" />
+      <Component Id="RouteBuilder_RoadCaptain.App.RouteBuilder.dll" Guid="debf78c2-de44-48f1-a296-a70aca5a0d53">
+        <File Id="RouteBuilder_RoadCaptain.App.RouteBuilder.dll" Name="RoadCaptain.App.RouteBuilder.dll" Source="$(var.RoadCaptain.RouteBuilder_TargetDir)RoadCaptain.App.RouteBuilder.dll" />
       </Component>
-      <Component Id="RouteBuilder_RoadCaptain.RouteBuilder.pdb" Guid="f7b8b333-7eeb-44ad-969e-de8117177485">
-        <File Id="RouteBuilder_RoadCaptain.RouteBuilder.pdb" Name="RoadCaptain.RouteBuilder.pdb" Source="$(var.RoadCaptain.RouteBuilder_TargetDir)RoadCaptain.RouteBuilder.pdb" />
+      <Component Id="RouteBuilder_RoadCaptain.App.RouteBuilder.exe" Guid="2b26144b-f3be-4e52-8310-62dfd4c77c45">
+        <File Id="RouteBuilder_RoadCaptain.App.RouteBuilder.exe" Name="RoadCaptain.App.RouteBuilder.exe" Source="$(var.RoadCaptain.RouteBuilder_TargetDir)RoadCaptain.App.RouteBuilder.exe" KeyPath="yes" />
       </Component>
-      <Component Id="RouteBuilder_RoadCaptain.RouteBuilder.runtimeconfig.json" Guid="241e26f9-fbac-4c61-87c1-c2956a799eb6">
-        <File Id="RouteBuilder_RoadCaptain.RouteBuilder.runtimeconfig.json" Name="RoadCaptain.RouteBuilder.runtimeconfig.json" Source="$(var.RoadCaptain.RouteBuilder_TargetDir)RoadCaptain.RouteBuilder.runtimeconfig.json" />
+      <Component Id="RouteBuilder_RoadCaptain.App.RouteBuilder.pdb" Guid="7394c60c-fe09-4ed4-8002-444036bc26da">
+        <File Id="RouteBuilder_RoadCaptain.App.RouteBuilder.pdb" Name="RoadCaptain.App.RouteBuilder.pdb" Source="$(var.RoadCaptain.RouteBuilder_TargetDir)RoadCaptain.App.RouteBuilder.pdb" />
       </Component>
-      <Component Id="RouteBuilder_SkiaSharp.dll" Guid="ae6a43e9-3aba-4e51-aecf-bdbe49f8155b">
-        <File Id="RouteBuilder_SkiaSharp.dll" Name="SkiaSharp.dll" Source="$(var.RoadCaptain.RouteBuilder_TargetDir)SkiaSharp.dll" />
-      </Component>
-      <Component Id="RouteBuilder_SkiaSharp.Views.Desktop.Common.dll" Guid="6e25ebab-5b2b-431d-9dee-ae73ff3155c7">
-        <File Id="RouteBuilder_SkiaSharp.Views.Desktop.Common.dll" Name="SkiaSharp.Views.Desktop.Common.dll" Source="$(var.RoadCaptain.RouteBuilder_TargetDir)SkiaSharp.Views.Desktop.Common.dll" />
-      </Component>
-      <Component Id="RouteBuilder_SkiaSharp.Views.WPF.dll" Guid="a7db8c62-01ec-4062-8c41-445d27a228db">
-        <File Id="RouteBuilder_SkiaSharp.Views.WPF.dll" Name="SkiaSharp.Views.WPF.dll" Source="$(var.RoadCaptain.RouteBuilder_TargetDir)SkiaSharp.Views.WPF.dll" />
+      <Component Id="RouteBuilder_RoadCaptain.App.RouteBuilder.runtimeconfig.json" Guid="7475a736-65c2-4e70-9110-cabe5274d9c2">
+        <File Id="RouteBuilder_RoadCaptain.App.RouteBuilder.runtimeconfig.json" Name="RoadCaptain.App.RouteBuilder.runtimeconfig.json" Source="$(var.RoadCaptain.RouteBuilder_TargetDir)RoadCaptain.App.RouteBuilder.runtimeconfig.json" />
       </Component>
     </ComponentGroup>
   </Fragment>
   <Fragment>
-    <ComponentGroup Id="RunnerNativeComponents" Directory="native">
-      <Component Id="Runner_WebView2Loader.dll" Guid="6e7bcd13-9060-4293-8853-2c663b76697d">
-        <File Id="Runner_WebView2Loader.dll" Name="WebView2Loader.dll" Source="$(var.RoadCaptain.Runner_TargetDir)runtimes\win-x64\native\WebView2Loader.dll" />
+    <ComponentGroup Id="CommonComponents" Directory="INSTALLFOLDER">
+      <Component Id="Common_Autofac.Configuration.dll" Guid="e43092d3-d320-468a-9645-4668fd3e4c89">
+        <File Id="Common_Autofac.Configuration.dll" Name="Autofac.Configuration.dll" Source="$(var.RoadCaptain.Runner_TargetDir)Autofac.Configuration.dll" />
       </Component>
-    </ComponentGroup>
-  </Fragment>
-  <Fragment>
-    <ComponentGroup Id="RouteBuilderNativeComponents" Directory="native">
-      <Component Id="RouteBuilder_libSkiaSharp.dll" Guid="33bf3208-3cc0-419b-bff1-c49071e80add">
-        <File Id="RouteBuilder_libSkiaSharp.dll" Name="libSkiaSharp.dll" Source="$(var.RoadCaptain.RouteBuilder_TargetDir)runtimes\win-x64\native\libSkiaSharp.dll" />
+      <Component Id="Common_Autofac.dll" Guid="7f78d91f-ddeb-40dd-97de-7ff5bdf199c2">
+        <File Id="Common_Autofac.dll" Name="Autofac.dll" Source="$(var.RoadCaptain.Runner_TargetDir)Autofac.dll" />
       </Component>
-    </ComponentGroup>
-  </Fragment>
-  <Fragment>
-    <ComponentGroup Id="RunnerRoutesComponents" Directory="Routes">
-      <Component Id="Runner_RebelRoute.BigFlat8.json" Guid="03d8a7ff-37fd-43ec-a749-b122fcb0f0d1">
-        <File Id="Runner_RebelRoute.BigFlat8.json" Name="RebelRoute-BigFlat8.json" Source="$(var.RoadCaptain.Runner_TargetDir)Routes\RebelRoute-BigFlat8.json" />
+      <Component Id="Common_Autofac.Extensions.DependencyInjection.dll" Guid="ce4072b0-8dd9-4918-a17d-b98b11f59aff">
+        <File Id="Common_Autofac.Extensions.DependencyInjection.dll" Name="Autofac.Extensions.DependencyInjection.dll" Source="$(var.RoadCaptain.Runner_TargetDir)Autofac.Extensions.DependencyInjection.dll" />
       </Component>
-      <Component Id="Runner_RebelRoute.DownUpDown.json" Guid="9b0cd848-676b-4cc1-9d03-9bf9c74bd8e2">
-        <File Id="Runner_RebelRoute.DownUpDown.json" Name="RebelRoute-DownUpDown.json" Source="$(var.RoadCaptain.Runner_TargetDir)Routes\RebelRoute-DownUpDown.json" />
+      <Component Id="Common_Avalonia.Animation.dll" Guid="13062c33-f06e-4ee9-be54-0fca8f67581c">
+        <File Id="Common_Avalonia.Animation.dll" Name="Avalonia.Animation.dll" Source="$(var.RoadCaptain.Runner_TargetDir)Avalonia.Animation.dll" />
       </Component>
-      <Component Id="Runner_RebelRoute.HillyKOMBypass.json" Guid="a9c66926-e858-429b-9be8-9fde62faa3b9">
-        <File Id="Runner_RebelRoute.HillyKOMBypass.json" Name="RebelRoute-HillyKOMBypass.json" Source="$(var.RoadCaptain.Runner_TargetDir)Routes\RebelRoute-HillyKOMBypass.json" />
+      <Component Id="Common_Avalonia.Base.dll" Guid="0d5d40a1-b72e-47d0-8e2d-dc83f66961c8">
+        <File Id="Common_Avalonia.Base.dll" Name="Avalonia.Base.dll" Source="$(var.RoadCaptain.Runner_TargetDir)Avalonia.Base.dll" />
       </Component>
-      <Component Id="Runner_RebelRoute.KOMonster.json" Guid="51a9ce4a-c646-440a-8dda-8fb4705f53fb">
-        <File Id="Runner_RebelRoute.KOMonster.json" Name="RebelRoute-KOMonster.json" Source="$(var.RoadCaptain.Runner_TargetDir)Routes\RebelRoute-KOMonster.json" />
+      <Component Id="Common_Avalonia.Controls.dll" Guid="5d739bab-cdd9-4974-95b9-9d56fe2bcf34">
+        <File Id="Common_Avalonia.Controls.dll" Name="Avalonia.Controls.dll" Source="$(var.RoadCaptain.Runner_TargetDir)Avalonia.Controls.dll" />
       </Component>
-      <Component Id="Runner_RebelRoute.SpiralIntoTheVolcano.json" Guid="91286b8d-c7ef-4709-9585-97aac0642eb5">
-        <File Id="Runner_RebelRoute.SpiralIntoTheVolcano.json" Name="RebelRoute-SpiralIntoTheVolcano.json" Source="$(var.RoadCaptain.Runner_TargetDir)Routes\RebelRoute-SpiralIntoTheVolcano.json" />
+      <Component Id="Common_Avalonia.DesignerSupport.dll" Guid="f1ee7cd8-a54d-4cda-bd5a-0b47d9964ed2">
+        <File Id="Common_Avalonia.DesignerSupport.dll" Name="Avalonia.DesignerSupport.dll" Source="$(var.RoadCaptain.Runner_TargetDir)Avalonia.DesignerSupport.dll" />
       </Component>
-      <Component Id="Runner_RebelRoute.ThePerimeter.json" Guid="ed7d96c8-b827-4019-af09-96db29c553a7">
-        <File Id="Runner_RebelRoute.ThePerimeter.json" Name="RebelRoute-ThePerimeter.json" Source="$(var.RoadCaptain.Runner_TargetDir)Routes\RebelRoute-ThePerimeter.json" />
+      <Component Id="Common_Avalonia.Desktop.dll" Guid="b4fbc986-c5f7-451d-ab84-fb6069f70362">
+        <File Id="Common_Avalonia.Desktop.dll" Name="Avalonia.Desktop.dll" Source="$(var.RoadCaptain.Runner_TargetDir)Avalonia.Desktop.dll" />
       </Component>
-      <Component Id="Runner_RebelRoute.TheSnake.json" Guid="3203d6fd-1d07-48ae-9f17-0dbc40416c5a">
-        <File Id="Runner_RebelRoute.TheSnake.json" Name="RebelRoute-TheSnake.json" Source="$(var.RoadCaptain.Runner_TargetDir)Routes\RebelRoute-TheSnake.json" />
+      <Component Id="Common_Avalonia.DesktopRuntime.dll" Guid="877d94eb-191d-47ff-9df0-724452075fca">
+        <File Id="Common_Avalonia.DesktopRuntime.dll" Name="Avalonia.DesktopRuntime.dll" Source="$(var.RoadCaptain.Runner_TargetDir)Avalonia.DesktopRuntime.dll" />
+      </Component>
+      <Component Id="Common_Avalonia.Dialogs.dll" Guid="ea04c091-33a2-45b2-9176-dc05e27f2246">
+        <File Id="Common_Avalonia.Dialogs.dll" Name="Avalonia.Dialogs.dll" Source="$(var.RoadCaptain.Runner_TargetDir)Avalonia.Dialogs.dll" />
+      </Component>
+      <Component Id="Common_Avalonia.dll" Guid="da50988a-a302-493c-8a4b-ea7e0b4b8a7d">
+        <File Id="Common_Avalonia.dll" Name="Avalonia.dll" Source="$(var.RoadCaptain.Runner_TargetDir)Avalonia.dll" />
+      </Component>
+      <Component Id="Common_Avalonia.FreeDesktop.dll" Guid="390ab8ca-7837-4743-a71f-1d20df34e7f5">
+        <File Id="Common_Avalonia.FreeDesktop.dll" Name="Avalonia.FreeDesktop.dll" Source="$(var.RoadCaptain.Runner_TargetDir)Avalonia.FreeDesktop.dll" />
+      </Component>
+      <Component Id="Common_Avalonia.Input.dll" Guid="7872c4d9-9575-48cb-a670-2f0b39c78c9f">
+        <File Id="Common_Avalonia.Input.dll" Name="Avalonia.Input.dll" Source="$(var.RoadCaptain.Runner_TargetDir)Avalonia.Input.dll" />
+      </Component>
+      <Component Id="Common_Avalonia.Interactivity.dll" Guid="f7cda6f8-ef50-4783-adf3-d9e21d75d136">
+        <File Id="Common_Avalonia.Interactivity.dll" Name="Avalonia.Interactivity.dll" Source="$(var.RoadCaptain.Runner_TargetDir)Avalonia.Interactivity.dll" />
+      </Component>
+      <Component Id="Common_Avalonia.Layout.dll" Guid="d210057e-5784-4c81-a026-7b88768dd29c">
+        <File Id="Common_Avalonia.Layout.dll" Name="Avalonia.Layout.dll" Source="$(var.RoadCaptain.Runner_TargetDir)Avalonia.Layout.dll" />
+      </Component>
+      <Component Id="Common_Avalonia.Markup.dll" Guid="d6a9f645-d483-4510-b5ff-e44e572cea87">
+        <File Id="Common_Avalonia.Markup.dll" Name="Avalonia.Markup.dll" Source="$(var.RoadCaptain.Runner_TargetDir)Avalonia.Markup.dll" />
+      </Component>
+      <Component Id="Common_Avalonia.Markup.Xaml.dll" Guid="9bd9158a-1130-4eb6-8d04-1ce8e707f580">
+        <File Id="Common_Avalonia.Markup.Xaml.dll" Name="Avalonia.Markup.Xaml.dll" Source="$(var.RoadCaptain.Runner_TargetDir)Avalonia.Markup.Xaml.dll" />
+      </Component>
+      <Component Id="Common_Avalonia.MicroCom.dll" Guid="14d30c0b-0c6b-43ae-ab67-b53a3f11615d">
+        <File Id="Common_Avalonia.MicroCom.dll" Name="Avalonia.MicroCom.dll" Source="$(var.RoadCaptain.Runner_TargetDir)Avalonia.MicroCom.dll" />
+      </Component>
+      <Component Id="Common_Avalonia.Native.dll" Guid="066f5a4c-7b70-4ff9-8c0f-3250ef5b0666">
+        <File Id="Common_Avalonia.Native.dll" Name="Avalonia.Native.dll" Source="$(var.RoadCaptain.Runner_TargetDir)Avalonia.Native.dll" />
+      </Component>
+      <Component Id="Common_Avalonia.OpenGL.dll" Guid="4e2b376b-ba86-41fc-b13e-ebb49d72a91e">
+        <File Id="Common_Avalonia.OpenGL.dll" Name="Avalonia.OpenGL.dll" Source="$(var.RoadCaptain.Runner_TargetDir)Avalonia.OpenGL.dll" />
+      </Component>
+      <Component Id="Common_Avalonia.ReactiveUI.dll" Guid="99aacbe6-6fab-4998-adde-17adfcc29a2b">
+        <File Id="Common_Avalonia.ReactiveUI.dll" Name="Avalonia.ReactiveUI.dll" Source="$(var.RoadCaptain.Runner_TargetDir)Avalonia.ReactiveUI.dll" />
+      </Component>
+      <Component Id="Common_Avalonia.Remote.Protocol.dll" Guid="2c724561-8bbc-4aae-bd38-4c56a0fe1848">
+        <File Id="Common_Avalonia.Remote.Protocol.dll" Name="Avalonia.Remote.Protocol.dll" Source="$(var.RoadCaptain.Runner_TargetDir)Avalonia.Remote.Protocol.dll" />
+      </Component>
+      <Component Id="Common_Avalonia.Skia.dll" Guid="5bb5dca9-6e8b-46f6-bcf1-a486c9cd0aa2">
+        <File Id="Common_Avalonia.Skia.dll" Name="Avalonia.Skia.dll" Source="$(var.RoadCaptain.Runner_TargetDir)Avalonia.Skia.dll" />
+      </Component>
+      <Component Id="Common_Avalonia.Styling.dll" Guid="39fd3737-5139-4b71-a490-4d30d720c414">
+        <File Id="Common_Avalonia.Styling.dll" Name="Avalonia.Styling.dll" Source="$(var.RoadCaptain.Runner_TargetDir)Avalonia.Styling.dll" />
+      </Component>
+      <Component Id="Common_Avalonia.Themes.Default.dll" Guid="1149768f-fc64-4322-8ae5-c056532a1530">
+        <File Id="Common_Avalonia.Themes.Default.dll" Name="Avalonia.Themes.Default.dll" Source="$(var.RoadCaptain.Runner_TargetDir)Avalonia.Themes.Default.dll" />
+      </Component>
+      <Component Id="Common_Avalonia.Themes.Fluent.dll" Guid="46bd3056-4188-444a-999b-ff81104218b5">
+        <File Id="Common_Avalonia.Themes.Fluent.dll" Name="Avalonia.Themes.Fluent.dll" Source="$(var.RoadCaptain.Runner_TargetDir)Avalonia.Themes.Fluent.dll" />
+      </Component>
+      <Component Id="Common_Avalonia.Visuals.dll" Guid="a68cfed5-7ecf-4f8c-8091-2c4569cd8d9a">
+        <File Id="Common_Avalonia.Visuals.dll" Name="Avalonia.Visuals.dll" Source="$(var.RoadCaptain.Runner_TargetDir)Avalonia.Visuals.dll" />
+      </Component>
+      <Component Id="Common_Avalonia.Win32.dll" Guid="c7af5151-ca89-4b89-bb63-72a778c70662">
+        <File Id="Common_Avalonia.Win32.dll" Name="Avalonia.Win32.dll" Source="$(var.RoadCaptain.Runner_TargetDir)Avalonia.Win32.dll" />
+      </Component>
+      <Component Id="Common_Avalonia.X11.dll" Guid="78b4e7f2-f890-48f8-b3a1-efc77e473fe8">
+        <File Id="Common_Avalonia.X11.dll" Name="Avalonia.X11.dll" Source="$(var.RoadCaptain.Runner_TargetDir)Avalonia.X11.dll" />
+      </Component>
+      <Component Id="Common_Codenizer.HttpClient.Testable.dll" Guid="08ac0523-d36d-44c9-82f7-ad60c7273cdb">
+        <File Id="Common_Codenizer.HttpClient.Testable.dll" Name="Codenizer.HttpClient.Testable.dll" Source="$(var.RoadCaptain.Runner_TargetDir)Codenizer.HttpClient.Testable.dll" />
+      </Component>
+      <Component Id="Common_DynamicData.dll" Guid="0ca7b31d-835f-4ffd-927b-c51af98cb8ed">
+        <File Id="Common_DynamicData.dll" Name="DynamicData.dll" Source="$(var.RoadCaptain.Runner_TargetDir)DynamicData.dll" />
+      </Component>
+      <Component Id="Common_Google.Protobuf.dll" Guid="f0a250ca-17fc-4fc6-bcdc-652189ae3d37">
+        <File Id="Common_Google.Protobuf.dll" Name="Google.Protobuf.dll" Source="$(var.RoadCaptain.Runner_TargetDir)Google.Protobuf.dll" />
+      </Component>
+      <Component Id="Common_HarfBuzzSharp.dll" Guid="5a21509d-d642-41ce-8161-29182a487aec">
+        <File Id="Common_HarfBuzzSharp.dll" Name="HarfBuzzSharp.dll" Source="$(var.RoadCaptain.Runner_TargetDir)HarfBuzzSharp.dll" />
+      </Component>
+      <Component Id="Common_icon.icns" Guid="0664f74e-a0b8-4411-845b-de72b2779dcc">
+        <File Id="Common_icon.icns" Name="icon.icns" Source="$(var.RoadCaptain.Runner_TargetDir)icon.icns" />
+      </Component>
+      <Component Id="Common_JetBrains.Annotations.dll" Guid="5921c8ad-71b8-4afa-9337-22500ba7a878">
+        <File Id="Common_JetBrains.Annotations.dll" Name="JetBrains.Annotations.dll" Source="$(var.RoadCaptain.Runner_TargetDir)JetBrains.Annotations.dll" />
+      </Component>
+      <Component Id="Common_libHarfBuzzSharp.dll" Guid="27bcf397-464e-4077-938f-e777b4cbbb7b">
+        <File Id="Common_libHarfBuzzSharp.dll" Name="libHarfBuzzSharp.dll" Source="$(var.RoadCaptain.Runner_TargetDir)libHarfBuzzSharp.dll" />
+      </Component>
+      <Component Id="Common_libSkiaSharp.dll" Guid="9473ef4b-711c-4e9d-b686-20a8cc34ba6e">
+        <File Id="Common_libSkiaSharp.dll" Name="libSkiaSharp.dll" Source="$(var.RoadCaptain.Runner_TargetDir)libSkiaSharp.dll" />
+      </Component>
+      <Component Id="Common_markers.watopia.json" Guid="5c3fcbe3-f00b-48d1-9e5c-d56272b0fe36">
+        <File Id="Common_markers.watopia.json" Name="markers-watopia.json" Source="$(var.RoadCaptain.Runner_TargetDir)markers-watopia.json" />
+      </Component>
+      <Component Id="Common_Microsoft.Extensions.Configuration.Abstractions.dll" Guid="40c2d292-e4ef-41bf-8bdb-67814b980330">
+        <File Id="Common_Microsoft.Extensions.Configuration.Abstractions.dll" Name="Microsoft.Extensions.Configuration.Abstractions.dll" Source="$(var.RoadCaptain.Runner_TargetDir)Microsoft.Extensions.Configuration.Abstractions.dll" />
+      </Component>
+      <Component Id="Common_Microsoft.Extensions.Configuration.Binder.dll" Guid="498c79a7-bc5c-46b1-8332-f0e19286d1c7">
+        <File Id="Common_Microsoft.Extensions.Configuration.Binder.dll" Name="Microsoft.Extensions.Configuration.Binder.dll" Source="$(var.RoadCaptain.Runner_TargetDir)Microsoft.Extensions.Configuration.Binder.dll" />
+      </Component>
+      <Component Id="Common_Microsoft.Extensions.Configuration.dll" Guid="4e932fae-105c-47d2-90e5-e5a3e6c571e7">
+        <File Id="Common_Microsoft.Extensions.Configuration.dll" Name="Microsoft.Extensions.Configuration.dll" Source="$(var.RoadCaptain.Runner_TargetDir)Microsoft.Extensions.Configuration.dll" />
+      </Component>
+      <Component Id="Common_Microsoft.Extensions.Configuration.FileExtensions.dll" Guid="65675b1b-1fde-4701-a188-93f03d28a5c3">
+        <File Id="Common_Microsoft.Extensions.Configuration.FileExtensions.dll" Name="Microsoft.Extensions.Configuration.FileExtensions.dll" Source="$(var.RoadCaptain.Runner_TargetDir)Microsoft.Extensions.Configuration.FileExtensions.dll" />
+      </Component>
+      <Component Id="Common_Microsoft.Extensions.Configuration.Json.dll" Guid="519b2da5-5cbb-45a0-a68d-8673fdf85e86">
+        <File Id="Common_Microsoft.Extensions.Configuration.Json.dll" Name="Microsoft.Extensions.Configuration.Json.dll" Source="$(var.RoadCaptain.Runner_TargetDir)Microsoft.Extensions.Configuration.Json.dll" />
+      </Component>
+      <Component Id="Common_Microsoft.Extensions.DependencyInjection.Abstractions.dll" Guid="e05c1c29-442b-46a4-bd92-25d3d4f0d871">
+        <File Id="Common_Microsoft.Extensions.DependencyInjection.Abstractions.dll" Name="Microsoft.Extensions.DependencyInjection.Abstractions.dll" Source="$(var.RoadCaptain.Runner_TargetDir)Microsoft.Extensions.DependencyInjection.Abstractions.dll" />
+      </Component>
+      <Component Id="Common_Microsoft.Extensions.FileProviders.Abstractions.dll" Guid="14e7c797-c993-4cf6-b65f-fba5fa9a33a3">
+        <File Id="Common_Microsoft.Extensions.FileProviders.Abstractions.dll" Name="Microsoft.Extensions.FileProviders.Abstractions.dll" Source="$(var.RoadCaptain.Runner_TargetDir)Microsoft.Extensions.FileProviders.Abstractions.dll" />
+      </Component>
+      <Component Id="Common_Microsoft.Extensions.FileProviders.Physical.dll" Guid="69dea0d6-0137-49fb-8dca-c3317c70f6e9">
+        <File Id="Common_Microsoft.Extensions.FileProviders.Physical.dll" Name="Microsoft.Extensions.FileProviders.Physical.dll" Source="$(var.RoadCaptain.Runner_TargetDir)Microsoft.Extensions.FileProviders.Physical.dll" />
+      </Component>
+      <Component Id="Common_Microsoft.Extensions.FileSystemGlobbing.dll" Guid="73e4478e-d509-4307-b28b-8e1f9ca04e71">
+        <File Id="Common_Microsoft.Extensions.FileSystemGlobbing.dll" Name="Microsoft.Extensions.FileSystemGlobbing.dll" Source="$(var.RoadCaptain.Runner_TargetDir)Microsoft.Extensions.FileSystemGlobbing.dll" />
+      </Component>
+      <Component Id="Common_Microsoft.Extensions.Hosting.Abstractions.dll" Guid="b06dfa4e-15d3-4b99-bd3f-ff7c760b5c51">
+        <File Id="Common_Microsoft.Extensions.Hosting.Abstractions.dll" Name="Microsoft.Extensions.Hosting.Abstractions.dll" Source="$(var.RoadCaptain.Runner_TargetDir)Microsoft.Extensions.Hosting.Abstractions.dll" />
+      </Component>
+      <Component Id="Common_Microsoft.Extensions.Logging.Abstractions.dll" Guid="b3f6f50f-f122-4f59-bc8c-cdc0b48c0d7a">
+        <File Id="Common_Microsoft.Extensions.Logging.Abstractions.dll" Name="Microsoft.Extensions.Logging.Abstractions.dll" Source="$(var.RoadCaptain.Runner_TargetDir)Microsoft.Extensions.Logging.Abstractions.dll" />
+      </Component>
+      <Component Id="Common_Microsoft.Extensions.Logging.dll" Guid="40f596bd-8f52-4fbd-88fe-dac407ebf382">
+        <File Id="Common_Microsoft.Extensions.Logging.dll" Name="Microsoft.Extensions.Logging.dll" Source="$(var.RoadCaptain.Runner_TargetDir)Microsoft.Extensions.Logging.dll" />
+      </Component>
+      <Component Id="Common_Microsoft.Extensions.Options.dll" Guid="416e7906-613a-4501-898c-f55547cb5052">
+        <File Id="Common_Microsoft.Extensions.Options.dll" Name="Microsoft.Extensions.Options.dll" Source="$(var.RoadCaptain.Runner_TargetDir)Microsoft.Extensions.Options.dll" />
+      </Component>
+      <Component Id="Common_Microsoft.Extensions.Primitives.dll" Guid="45601898-ea88-4d2e-9e37-9887da1c0dc5">
+        <File Id="Common_Microsoft.Extensions.Primitives.dll" Name="Microsoft.Extensions.Primitives.dll" Source="$(var.RoadCaptain.Runner_TargetDir)Microsoft.Extensions.Primitives.dll" />
+      </Component>
+      <Component Id="Common_Newtonsoft.Json.dll" Guid="b00a1d0b-62dc-4393-a7ba-cc7569e470c1">
+        <File Id="Common_Newtonsoft.Json.dll" Name="Newtonsoft.Json.dll" Source="$(var.RoadCaptain.Runner_TargetDir)Newtonsoft.Json.dll" />
+      </Component>
+      <Component Id="Common_PacketDotNet.dll" Guid="b1759a29-3094-4a5b-b764-f8a97a8d38ae">
+        <File Id="Common_PacketDotNet.dll" Name="PacketDotNet.dll" Source="$(var.RoadCaptain.Runner_TargetDir)PacketDotNet.dll" />
+      </Component>
+      <Component Id="Common_ReactiveUI.dll" Guid="c229a986-aa88-4513-af4c-6b4f933e357a">
+        <File Id="Common_ReactiveUI.dll" Name="ReactiveUI.dll" Source="$(var.RoadCaptain.Runner_TargetDir)ReactiveUI.dll" />
+      </Component>
+      <Component Id="Common_RoadCaptain.Adapters.dll" Guid="0f819ab4-5bf2-42c9-8139-c82ad936ad7c">
+        <File Id="Common_RoadCaptain.Adapters.dll" Name="RoadCaptain.Adapters.dll" Source="$(var.RoadCaptain.Runner_TargetDir)RoadCaptain.Adapters.dll" />
+      </Component>
+      <Component Id="Common_RoadCaptain.Adapters.pdb" Guid="a664c7c0-3ab8-44fd-b1db-d13d360dd651">
+        <File Id="Common_RoadCaptain.Adapters.pdb" Name="RoadCaptain.Adapters.pdb" Source="$(var.RoadCaptain.Runner_TargetDir)RoadCaptain.Adapters.pdb" />
+      </Component>
+      <Component Id="Common_RoadCaptain.App.Shared.dll" Guid="f5e822f2-a3c5-4c33-9502-fbec8428a786">
+        <File Id="Common_RoadCaptain.App.Shared.dll" Name="RoadCaptain.App.Shared.dll" Source="$(var.RoadCaptain.Runner_TargetDir)RoadCaptain.App.Shared.dll" />
+      </Component>
+      <Component Id="Common_RoadCaptain.App.Shared.pdb" Guid="54458919-7cf8-46e4-8bd7-ea919bb4f245">
+        <File Id="Common_RoadCaptain.App.Shared.pdb" Name="RoadCaptain.App.Shared.pdb" Source="$(var.RoadCaptain.Runner_TargetDir)RoadCaptain.App.Shared.pdb" />
+      </Component>
+      <Component Id="Common_RoadCaptain.App.Windows.dll" Guid="e491e85f-7a79-4ae1-8183-8a78c27dd08f">
+        <File Id="Common_RoadCaptain.App.Windows.dll" Name="RoadCaptain.App.Windows.dll" Source="$(var.RoadCaptain.Runner_TargetDir)RoadCaptain.App.Windows.dll" />
+      </Component>
+      <Component Id="Common_RoadCaptain.App.Windows.pdb" Guid="7b317a2a-a21a-4fbc-a485-69aae309fcee">
+        <File Id="Common_RoadCaptain.App.Windows.pdb" Name="RoadCaptain.App.Windows.pdb" Source="$(var.RoadCaptain.Runner_TargetDir)RoadCaptain.App.Windows.pdb" />
+      </Component>
+      <Component Id="Common_RoadCaptain.dll" Guid="aacf57bf-e22c-409a-b8d5-87c076474cec">
+        <File Id="Common_RoadCaptain.dll" Name="RoadCaptain.dll" Source="$(var.RoadCaptain.Runner_TargetDir)RoadCaptain.dll" />
+      </Component>
+      <Component Id="Common_RoadCaptain.pdb" Guid="98d810a5-a0e4-4c25-98ab-0137555bc5d9">
+        <File Id="Common_RoadCaptain.pdb" Name="RoadCaptain.pdb" Source="$(var.RoadCaptain.Runner_TargetDir)RoadCaptain.pdb" />
+      </Component>
+      <Component Id="Common_segments.makuri_islands.json" Guid="c182992d-142f-40c5-937f-8a6878962289">
+        <File Id="Common_segments.makuri_islands.json" Name="segments-makuri_islands.json" Source="$(var.RoadCaptain.Runner_TargetDir)segments-makuri_islands.json" />
+      </Component>
+      <Component Id="Common_segments.watopia.json" Guid="87f51032-d4bd-4054-b95f-728167d797eb">
+        <File Id="Common_segments.watopia.json" Name="segments-watopia.json" Source="$(var.RoadCaptain.Runner_TargetDir)segments-watopia.json" />
+      </Component>
+      <Component Id="Common_Serilog.dll" Guid="dbdd1269-5a06-42db-a7d0-f9d2666d589b">
+        <File Id="Common_Serilog.dll" Name="Serilog.dll" Source="$(var.RoadCaptain.Runner_TargetDir)Serilog.dll" />
+      </Component>
+      <Component Id="Common_Serilog.Extensions.Hosting.dll" Guid="fba3a4f6-5b5c-43e2-91e7-de9d3127e292">
+        <File Id="Common_Serilog.Extensions.Hosting.dll" Name="Serilog.Extensions.Hosting.dll" Source="$(var.RoadCaptain.Runner_TargetDir)Serilog.Extensions.Hosting.dll" />
+      </Component>
+      <Component Id="Common_Serilog.Extensions.Logging.dll" Guid="57910b37-ae30-40a7-8227-f1d2faa7081c">
+        <File Id="Common_Serilog.Extensions.Logging.dll" Name="Serilog.Extensions.Logging.dll" Source="$(var.RoadCaptain.Runner_TargetDir)Serilog.Extensions.Logging.dll" />
+      </Component>
+      <Component Id="Common_Serilog.Sinks.Console.dll" Guid="1e040a92-3e96-4b3b-b79f-bd5f92db6206">
+        <File Id="Common_Serilog.Sinks.Console.dll" Name="Serilog.Sinks.Console.dll" Source="$(var.RoadCaptain.Runner_TargetDir)Serilog.Sinks.Console.dll" />
+      </Component>
+      <Component Id="Common_Serilog.Sinks.Debug.dll" Guid="bb50cd63-4a64-4979-a26c-046ca9cd04a6">
+        <File Id="Common_Serilog.Sinks.Debug.dll" Name="Serilog.Sinks.Debug.dll" Source="$(var.RoadCaptain.Runner_TargetDir)Serilog.Sinks.Debug.dll" />
+      </Component>
+      <Component Id="Common_Serilog.Sinks.File.dll" Guid="de3ff52f-e36e-44c6-b5c4-6628336fa443">
+        <File Id="Common_Serilog.Sinks.File.dll" Name="Serilog.Sinks.File.dll" Source="$(var.RoadCaptain.Runner_TargetDir)Serilog.Sinks.File.dll" />
+      </Component>
+      <Component Id="Common_SharpPcap.dll" Guid="97286b39-9eb0-47fe-985a-9030b3af7922">
+        <File Id="Common_SharpPcap.dll" Name="SharpPcap.dll" Source="$(var.RoadCaptain.Runner_TargetDir)SharpPcap.dll" />
+      </Component>
+      <Component Id="Common_SkiaSharp.dll" Guid="e95312f2-be5e-4b34-b9e2-2846689b42e3">
+        <File Id="Common_SkiaSharp.dll" Name="SkiaSharp.dll" Source="$(var.RoadCaptain.Runner_TargetDir)SkiaSharp.dll" />
+      </Component>
+      <Component Id="Common_Splat.dll" Guid="c0104e4c-0ca3-45ec-b917-90839b4ce29b">
+        <File Id="Common_Splat.dll" Name="Splat.dll" Source="$(var.RoadCaptain.Runner_TargetDir)Splat.dll" />
+      </Component>
+      <Component Id="Common_System.IO.Pipelines.dll" Guid="84d1dbef-3dfc-44cf-9aad-2cb25a74be88">
+        <File Id="Common_System.IO.Pipelines.dll" Name="System.IO.Pipelines.dll" Source="$(var.RoadCaptain.Runner_TargetDir)System.IO.Pipelines.dll" />
+      </Component>
+      <Component Id="Common_System.Reactive.dll" Guid="cbc0005d-1e27-4194-992e-dcd2bfc09458">
+        <File Id="Common_System.Reactive.dll" Name="System.Reactive.dll" Source="$(var.RoadCaptain.Runner_TargetDir)System.Reactive.dll" />
+      </Component>
+      <Component Id="Common_Tmds.DBus.dll" Guid="2c8c07f3-de13-440c-90e5-952750ce1823">
+        <File Id="Common_Tmds.DBus.dll" Name="Tmds.DBus.dll" Source="$(var.RoadCaptain.Runner_TargetDir)Tmds.DBus.dll" />
+      </Component>
+      <Component Id="Common_turns.makuri_islands.json" Guid="d3fad888-f65b-4181-9d33-7d735b30f9e7">
+        <File Id="Common_turns.makuri_islands.json" Name="turns-makuri_islands.json" Source="$(var.RoadCaptain.Runner_TargetDir)turns-makuri_islands.json" />
+      </Component>
+      <Component Id="Common_turns.watopia.json" Guid="8258062c-f918-414a-a19f-d62791eee32e">
+        <File Id="Common_turns.watopia.json" Name="turns-watopia.json" Source="$(var.RoadCaptain.Runner_TargetDir)turns-watopia.json" />
+      </Component>
+      <Component Id="Common_worlds.json" Guid="e2d7dc16-dc02-4499-848b-af83f81a4674">
+        <File Id="Common_worlds.json" Name="worlds.json" Source="$(var.RoadCaptain.Runner_TargetDir)worlds.json" />
       </Component>
     </ComponentGroup>
   </Fragment>

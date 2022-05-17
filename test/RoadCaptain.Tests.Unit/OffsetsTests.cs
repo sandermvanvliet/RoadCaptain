@@ -4,7 +4,7 @@
 
 using System.Collections.Generic;
 using FluentAssertions;
-using RoadCaptain.RouteBuilder;
+using RoadCaptain.App.RouteBuilder.Models;
 using Xunit;
 
 namespace RoadCaptain.Tests.Unit

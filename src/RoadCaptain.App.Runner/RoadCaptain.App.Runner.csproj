@@ -1,0 +1,101 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<OutputType>WinExe</OutputType>
+		<OutputType Condition="'$(RuntimeIdentifier)'=='linux-x64' Or '$(RuntimeIdentifier)'=='osx.11.0-x64'">Exe</OutputType>
+		<TargetFramework Condition="'$(RuntimeIdentifier)'!='win-x64'">net6.0</TargetFramework>
+		<TargetFramework Condition="'$(RuntimeIdentifier)'=='win-x64'">net6.0-windows</TargetFramework>
+		<Nullable>enable</Nullable>
+		<!--Avalonia doesen't support TrimMode=link currently,but we are working on that https://github.com/AvaloniaUI/Avalonia/issues/6892 -->
+		<TrimMode>copyused</TrimMode>
+		<BuiltInComInteropSupport>true</BuiltInComInteropSupport>
+		<DefineConstants Condition="'$(RuntimeIdentifier)'=='win-x64'">WIN</DefineConstants>
+		<DefineConstants Condition="'$(RuntimeIdentifier)'=='linux-x64'">LINUX</DefineConstants>
+		<DefineConstants Condition="'$(RuntimeIdentifier)'=='osx.11.0-x64'">MACOS</DefineConstants>
+		<UseAppHost Condition="'$(RuntimeIdentifier)'=='osx.11.0-x64'">true</UseAppHost>
+	</PropertyGroup>
+	<ItemGroup>
+		<AvaloniaResource Include="Assets\**" />
+		<None Remove=".gitignore" />
+	</ItemGroup>
+	<ItemGroup>
+		<!--This helps with theme dll-s trimming.
+	If you will publish your application in self-contained mode with p:PublishTrimmed=true and it will use Fluent theme Default theme will be trimmed from the output and vice versa.
+	https://github.com/AvaloniaUI/Avalonia/issues/5593 -->
+		<TrimmableAssembly Include="Avalonia.Themes.Fluent" />
+		<TrimmableAssembly Include="Avalonia.Themes.Default" />
+	</ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Avalonia" Version="0.10.12" />
+		<PackageReference Include="Avalonia.Desktop" Version="0.10.12" />
+		<!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
+		<PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="0.10.12" />
+		<PackageReference Include="Avalonia.ReactiveUI" Version="0.10.12" />
+		<PackageReference Include="WebViewControl-Avalonia" Version="2.91.23" />
+		<PackageReference Include="XamlNameReferenceGenerator" Version="1.3.4" />
+		<PackageReference Include="Autofac" Version="6.3.0" />
+		<PackageReference Include="Autofac.Configuration" Version="6.0.0" />
+		<PackageReference Include="Autofac.Extensions.DependencyInjection" Version="7.2.0" />
+		<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="6.0.0" />
+		<PackageReference Include="Serilog" Version="2.10.0" />
+		<PackageReference Include="Serilog.Extensions.Hosting" Version="4.2.0" />
+		<PackageReference Include="Serilog.Sinks.Console" Version="4.0.1" />
+		<PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
+		<PackageReference Include="Serilog.Sinks.Debug" Version="2.0.0" />
+		<PackageReference Include="Microsoft.Web.WebView2" Version="1.0.1150.38" />
+		<PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.16.0" />
+	</ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\RoadCaptain.App.Shared\RoadCaptain.App.Shared.csproj" />
+		<ProjectReference Include="..\RoadCaptain\RoadCaptain.csproj" />
+		<ProjectReference Include="..\RoadCaptain.Adapters\RoadCaptain.Adapters.csproj" />
+	</ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\RoadCaptain.App.Windows\RoadCaptain.App.Windows.csproj" Condition="'$(RuntimeIdentifier)'=='win-x64'" />
+	</ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\RoadCaptain.App.Linux\RoadCaptain.App.Linux.csproj" Condition="'$(RuntimeIdentifier)'=='linux-x64'" />
+	</ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\RoadCaptain.App.MacOs\RoadCaptain.App.MacOs.csproj" Condition="'$(RuntimeIdentifier)'=='osx.11.0-x64'" />
+	</ItemGroup>
+	<ItemGroup>
+		<None Update="appsettings.json" Condition="'$(Configuration)'=='Debug'">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="autofac.app.runner.development.json">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="autofac.app.runner.json">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Routes\RebelRoute-BigFlat8.json">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Routes\RebelRoute-DownUpDown.json">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Routes\RebelRoute-HillyKOMBypass.json">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Routes\RebelRoute-KOMonster.json">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Routes\RebelRoute-SpiralIntoTheVolcano.json">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Routes\RebelRoute-ThePerimeter.json">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Routes\RebelRoute-TheSnake.json">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+	</ItemGroup>
+	<ItemGroup>
+		<Resource Include="Assets\background.jpg" />
+	</ItemGroup>
+	<ItemGroup>
+		<None Include="..\RoadCaptain.App.Shared\icon.icns" Link="icon.icns">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+	</ItemGroup>
+</Project>

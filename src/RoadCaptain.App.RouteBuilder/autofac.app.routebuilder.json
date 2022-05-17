@@ -1,0 +1,16 @@
+{
+  "modules": [
+    {
+      "type": "RoadCaptain.DomainModule, RoadCaptain"
+    },
+    {
+      "type": "RoadCaptain.Adapters.AdaptersModule, RoadCaptain.Adapters"
+    },
+    {
+      "type": "RoadCaptain.App.RouteBuilder.MainModule, RoadCaptain.App.RouteBuilder"
+    },
+    {
+      "type": "RoadCaptain.App.Shared.SharedModule, RoadCaptain.App.Shared"
+    }
+  ]
+}
