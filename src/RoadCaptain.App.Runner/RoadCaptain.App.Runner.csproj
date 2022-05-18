@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<OutputType>WinExe</OutputType>
-		<OutputType Condition="'$(RuntimeIdentifier)'=='linux-x64' Or '$(RuntimeIdentifier)'=='osx.11.0-x64'">Exe</OutputType>
+		<OutputType Condition="'$(RuntimeIdentifier)'=='linux-x64' Or '$(RuntimeIdentifier)'=='osx-x64'">Exe</OutputType>
 		<TargetFramework Condition="'$(RuntimeIdentifier)'!='win-x64'">net6.0</TargetFramework>
 		<TargetFramework Condition="'$(RuntimeIdentifier)'=='win-x64'">net6.0-windows</TargetFramework>
 		<Nullable>enable</Nullable>
@@ -10,8 +10,8 @@
 		<BuiltInComInteropSupport>true</BuiltInComInteropSupport>
 		<DefineConstants Condition="'$(RuntimeIdentifier)'=='win-x64'">WIN</DefineConstants>
 		<DefineConstants Condition="'$(RuntimeIdentifier)'=='linux-x64'">LINUX</DefineConstants>
-		<DefineConstants Condition="'$(RuntimeIdentifier)'=='osx.11.0-x64'">MACOS</DefineConstants>
-		<UseAppHost Condition="'$(RuntimeIdentifier)'=='osx.11.0-x64'">true</UseAppHost>
+		<DefineConstants Condition="'$(RuntimeIdentifier)'=='osx-x64'">MACOS</DefineConstants>
+		<UseAppHost Condition="'$(RuntimeIdentifier)'=='osx-x64'">true</UseAppHost>
 	</PropertyGroup>
 	<ItemGroup>
 		<AvaloniaResource Include="Assets\**" />
@@ -55,7 +55,7 @@
 		<ProjectReference Include="..\RoadCaptain.App.Linux\RoadCaptain.App.Linux.csproj" Condition="'$(RuntimeIdentifier)'=='linux-x64'" />
 	</ItemGroup>
 	<ItemGroup>
-		<ProjectReference Include="..\RoadCaptain.App.MacOs\RoadCaptain.App.MacOs.csproj" Condition="'$(RuntimeIdentifier)'=='osx.11.0-x64'" />
+		<ProjectReference Include="..\RoadCaptain.App.MacOs\RoadCaptain.App.MacOs.csproj" Condition="'$(RuntimeIdentifier)'=='osx-x64'" />
 	</ItemGroup>
 	<ItemGroup>
 		<None Update="appsettings.json" Condition="'$(Configuration)'=='Debug'">

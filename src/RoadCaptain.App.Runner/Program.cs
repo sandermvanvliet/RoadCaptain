@@ -2,6 +2,7 @@ using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.ReactiveUI;
 using System;
+using Serilog.Core;
 #if MACOS
 using System.IO;
 #endif
@@ -10,6 +11,8 @@ namespace RoadCaptain.App.Runner
 {
     internal class Program
     {
+        internal static Logger Logger = null!;
+
         // Initialization code. Don't use any Avalonia, third-party APIs or any
         // SynchronizationContext-reliant code before AppMain is called: things aren't initialized
         // yet and stuff might break.
@@ -25,8 +28,25 @@ namespace RoadCaptain.App.Runner
             }
 #endif
 
-            BuildAvaloniaApp()
-                .StartWithClassicDesktopLifetime(args);
+            Logger = LoggerBootstrapper.CreateLogger();
+
+            try
+            {
+                Logger.Information("Starting Runner");
+
+                BuildAvaloniaApp()
+                    .StartWithClassicDesktopLifetime(args);
+
+                Logger.Information("Runner exiting");
+            }
+            catch (Exception ex)
+            {
+                Logger.Fatal(ex, "Something went really wrong!");
+            }
+            finally
+            {
+                Logger.Dispose();
+            }
         }
 
         // Avalonia configuration, don't remove; also used by visual designer.

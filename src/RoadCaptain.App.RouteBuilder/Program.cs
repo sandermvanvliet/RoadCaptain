@@ -1,6 +1,7 @@
 using Avalonia;
 using Avalonia.ReactiveUI;
 using System;
+using Serilog.Core;
 #if MACOS
 using System.IO;
 #endif
@@ -9,6 +10,8 @@ namespace RoadCaptain.App.RouteBuilder
 {
     internal class Program
     {
+        internal static Logger Logger = null!;
+        
         // Initialization code. Don't use any Avalonia, third-party APIs or any
         // SynchronizationContext-reliant code before AppMain is called: things aren't initialized
         // yet and stuff might break.
@@ -23,9 +26,26 @@ namespace RoadCaptain.App.RouteBuilder
                 Environment.CurrentDirectory = Path.GetDirectoryName(typeof(Program).Assembly.Location);
             }
             #endif
+            
+            Logger = LoggerBootstrapper.CreateLogger();
 
-            BuildAvaloniaApp()
-                .StartWithClassicDesktopLifetime(args);
+            try
+            {
+                Logger.Information("Starting RouteBuilder");
+
+                BuildAvaloniaApp()
+                    .StartWithClassicDesktopLifetime(args);
+
+                Logger.Information("RouteBuilder exiting");
+            }
+            catch (Exception ex)
+            {
+                Logger.Fatal(ex, "Something went really wrong!");
+            }
+            finally
+            {
+                Logger.Dispose();
+            }
         }
 
         // Avalonia configuration, don't remove; also used by visual designer.

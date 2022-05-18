@@ -19,7 +19,7 @@ namespace RoadCaptain.App.Runner
             
             // In debug builds always write to the current directory for simplicity sake
             // as that makes the log file easier to pick up from bin\Debug
-            var logFilePath = $"roadcaptain-log-{DateTime.UtcNow:yyyy-MM-ddTHHmmss}.log";
+            var logFilePath = $"roadcaptain-runner-log-{DateTime.UtcNow:yyyy-MM-ddTHHmmss}.log";
             
 #if !DEBUG
             logFilePath = CreateLoggerForReleaseMode(logFilePath);
@@ -43,15 +43,28 @@ namespace RoadCaptain.App.Runner
             // there when running as a regular user. Good Windows citizenship also
             // means we should write data to the right place which is in the user
             // AppData folder.
+            #if WIN
             var localAppDataFolder = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-            
             CreateDirectoryIfNotExists(Path.Combine(localAppDataFolder, CompanyName));
             CreateDirectoryIfNotExists(Path.Combine(localAppDataFolder, CompanyName, ApplicationName));
+            var logDirectory = Path.Combine(localAppDataFolder, CompanyName, ApplicationName);
+            #elif MACOS
+            var localAppDataFolder = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+            CreateDirectoryIfNotExists(Path.Combine(localAppDataFolder, ApplicationName));
+            var logDirectory = Path.Combine(localAppDataFolder, ApplicationName);
+            #elif LINUX
+            var localAppDataFolder = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+            CreateDirectoryIfNotExists(Path.Combine(localAppDataFolder, ApplicationName));
+            var logDirectory = Path.Combine(localAppDataFolder, ApplicationName);
+            #else
+            var localAppDataFolder = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+            CreateDirectoryIfNotExists(Path.Combine(localAppDataFolder, CompanyName));
+            CreateDirectoryIfNotExists(Path.Combine(localAppDataFolder, CompanyName, ApplicationName));
+            var logDirectory = Path.Combine(localAppDataFolder, CompanyName, ApplicationName);
+            #endif
             
             var logFilePath = Path.Combine(
-                localAppDataFolder,
-                CompanyName, 
-                ApplicationName, 
+                logDirectory, 
                 logFileName);
 
             return logFilePath;

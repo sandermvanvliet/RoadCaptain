@@ -19,7 +19,7 @@ namespace RoadCaptain.App.RouteBuilder
             
             // In debug builds always write to the current directory for simplicity sake
             // as that makes the log file easier to pick up from bin\Debug
-            var logFilePath = $"roadcaptain-log-{DateTime.UtcNow:yyyy-MM-ddTHHmmss}.log";
+            var logFilePath = $"roadcaptain-routebuilder-log-{DateTime.UtcNow:yyyy-MM-ddTHHmmss}.log";
             
 #if !DEBUG
             logFilePath = CreateLoggerForReleaseMode(logFilePath);

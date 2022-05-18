@@ -26,7 +26,7 @@ namespace RoadCaptain.App.Runner
 
         public App()
         {
-            _logger = LoggerBootstrapper.CreateLogger();
+            _logger = Program.Logger;
 
             AppDomain.CurrentDomain.UnhandledException += (sender, args) =>
             {

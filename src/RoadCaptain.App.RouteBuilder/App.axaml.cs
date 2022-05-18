@@ -18,7 +18,7 @@ namespace RoadCaptain.App.RouteBuilder
 
         public App()
         {
-            _logger = LoggerBootstrapper.CreateLogger();
+            _logger = Program.Logger;
             
             AppDomain.CurrentDomain.UnhandledException += (sender, args) =>
             {
