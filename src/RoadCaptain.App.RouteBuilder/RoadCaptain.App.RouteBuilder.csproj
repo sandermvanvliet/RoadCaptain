@@ -10,7 +10,7 @@
 		<BuiltInComInteropSupport>true</BuiltInComInteropSupport>
 		<DefineConstants Condition="'$(RuntimeIdentifier)'=='win-x64'">WIN</DefineConstants>
 		<DefineConstants Condition="'$(RuntimeIdentifier)'=='linux-x64'">LINUX</DefineConstants>
-		<DefineConstants Condition="'$(RuntimeIdentifier)'=='osx-x64'">MACOS</DefineConstants>
+		<DefineConstants Condition="'$(RuntimeIdentifier)'=='osx-x64' Or $([MSBuild]::IsOSPlatform('OSX'))">MACOS</DefineConstants>
 		<UseAppHost Condition="'$(RuntimeIdentifier)'=='osx-x64'">true</UseAppHost>
 	</PropertyGroup>
 	<ItemGroup>
@@ -54,7 +54,7 @@
 		<ProjectReference Include="..\RoadCaptain.App.Linux\RoadCaptain.App.Linux.csproj" Condition="'$(RuntimeIdentifier)'=='linux-x64'" />
 	</ItemGroup>
 	<ItemGroup>
-		<ProjectReference Include="..\RoadCaptain.App.MacOs\RoadCaptain.App.MacOs.csproj" Condition="'$(RuntimeIdentifier)'=='osx-x64'" />
+		<ProjectReference Include="..\RoadCaptain.App.MacOs\RoadCaptain.App.MacOs.csproj" Condition="'$(RuntimeIdentifier)'=='osx-x64' Or $([MSBuild]::IsOSPlatform('OSX'))" />
 	</ItemGroup>
 	<ItemGroup>
 		<None Update="autofac.app.routebuilder.development.json">

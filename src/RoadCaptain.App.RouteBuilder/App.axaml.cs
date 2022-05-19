@@ -83,8 +83,11 @@ namespace RoadCaptain.App.RouteBuilder
                 about = new NativeMenuItem("About RoadCaptain");
                 about.Click += async (sender, args) =>
                 {
-                    var dialog = new AboutRoadCaptainDialog();
-
+                    var dialog = new AboutRoadCaptainDialog
+                    {
+                        WindowStartupLocation = WindowStartupLocation.CenterOwner
+                    };
+                    
                     if (Application.Current is
                         { ApplicationLifetime: IClassicDesktopStyleApplicationLifetime { MainWindow: { } mainWindow } })
                     {

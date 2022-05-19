@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Runtime.InteropServices;
 using System.Windows.Input;
 using ReactiveUI;
 using RoadCaptain.App.Shared.Commands;
@@ -62,12 +63,14 @@ namespace RoadCaptain.App.Shared.Dialogs.ViewModels
         {
             if (Uri.TryCreate(url, UriKind.Absolute, out var uri))
             {
-                var startInfo = new ProcessStartInfo(uri.ToString())
+                // Code from Avalonia: AboutAvaloniaDialog.cs
+                using var process = Process.Start(new ProcessStartInfo
                 {
-                    UseShellExecute = true
-                };
-
-                Process.Start(startInfo);
+                    FileName = RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? url : "open",
+                    Arguments = RuntimeInformation.IsOSPlatform(OSPlatform.OSX) ? url : "",
+                    CreateNoWindow = true,
+                    UseShellExecute = RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
+                });
 
                 return CommandResult.Success();
             }

@@ -2,7 +2,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="267"
+        mc:Ignorable="d" Width="400" Height="267"
         x:Class="RoadCaptain.App.Shared.Dialogs.AboutRoadCaptainDialog"
         Title="About RoadCaptain">
 	<Grid>
@@ -10,7 +10,7 @@
 			<RowDefinition />
 			<RowDefinition Height="40" />
 		</Grid.RowDefinitions>
-		<Image Source="../Assets/background.jpg" Grid.Row="0" Grid.RowSpan="2" />
+		<Image Source="avares://RoadCaptain.App.Shared/Assets/background.jpg" Grid.Row="0" Grid.RowSpan="2" Stretch="UniformToFill" />
 		<StackPanel Grid.Row="0" Margin="8" Orientation="Vertical" HorizontalAlignment="Left">
 			<StackPanel Orientation="Horizontal">
 				<TextBlock FontSize="18">RoadCaptain version </TextBlock>
@@ -20,7 +20,7 @@
 				<TextBlock>Licensed under the Artistic License 2.0</TextBlock>
             </StackPanel>
             <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
-                <Button Content="More info on GitHub" Background="Transparent" Margin="0" Padding="0" Foreground="Blue" Cursor="Hand" Command="{Binding Path=OpenLink}" />
+                <Button Content="More info on GitHub" Background="Transparent" Margin="0" Padding="0" Foreground="Blue" Cursor="Hand" Command="{Binding Path=OpenLinkCommand}" />
             </StackPanel>
 		</StackPanel>
 		<Button Content="Close" Grid.Row="1" HorizontalAlignment="Right" Margin="4" Click="CloseButton_OnClick" Background="LightGray" Cursor="Hand" />
