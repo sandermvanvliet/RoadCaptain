@@ -101,7 +101,7 @@ jobs:
         # Allow codesign to access keychain
         security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k "${{ secrets.KEYCHAIN_PASSWORD}}" build.keychain
         # Add app password for notarytool
-        xcrun notarytool store-credentials "AC_PASSWORD" --apple-id "AC_USERNAME" --team-id ${{ env.TEAM_ID }} --password "${{ secrets.NOTARY_TOOL_PASSWORD }}"
+        xcrun notarytool store-credentials "AC_PASSWORD" --apple-id "${{ secrets.APPLE_ID }}" --team-id ${{ env.TEAM_ID }} --password "${{ secrets.NOTARY_TOOL_PASSWORD }}"
 
     - name: Build and package Runner
       run: |
