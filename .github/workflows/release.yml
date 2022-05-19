@@ -77,6 +77,10 @@ jobs:
 
     needs: create_release
 
+    env:
+      TEAM_ID: 44HHP3V8VR
+      SIGNING_IDENTITY: "Developer ID Application: Codenizer BV (44HHP3V8VR)" # matches Keychain Access certificate name
+
     steps:
     - uses: actions/checkout@v2
     - name: Setup .NET
@@ -84,35 +88,43 @@ jobs:
       with:
         dotnet-version: 6.0.x
     - name: Restore dependencies
-      run: dotnet restore -r osx.11.0-x64
+      run: dotnet restore -r osx-x64
 
-    - name: Publish Runner
-      run: dotnet publish --no-restore -c Release -r osx.11.0-x64 --no-self-contained -o "$RUNNER_TEMP/Bundles/RoadCaptain Runner.app/Contents/MacOS" src/RoadCaptain.App.Runner/RoadCaptain.App.Runner.csproj
-    - name: Make app executable
-      run: chmod +x "$RUNNER_TEMP/Bundles/RoadCaptain Runner.app/Contents/MacOS/RoadCaptain.App.Runner"
-    - name: Copy App Bundle info
+    - name: Import signing certificate and set up keychain
       run: |
-        VERSION=`echo ${{ needs.create_release.outputs.version }} | tr -d '\n'`
-        cat src/RoadCaptain.App.Runner/Info.plist | sed -e "s/##VERSION##/$VERSION/" > "$RUNNER_TEMP/Bundles/RoadCaptain Runner.app/Contents/Info.plist"
-    - name: Copy App Bundle icon
-      run: mkdir "$RUNNER_TEMP/Bundles/RoadCaptain Runner.app/Contents/Resources" && cp src/RoadCaptain.App.Shared/icon.icns "$RUNNER_TEMP/Bundles/RoadCaptain Runner.app/Contents/Resources/icon.icns"
+        # Set up new build keychain
+        security create-keychain -p "${{ secrets.KEYCHAIN_PASSWORD}}" build.keychain
+        security default-keychain -s build.keychain
+        security unlock-keychain -p "${{ secrets.KEYCHAIN_PASSWORD}}" build.keychain
+        # Decode certificate to file
+        echo "${{ secrets.MACOS_CERTIFICATE }}" | base64 --decode > certificate.p12
+        security import certificate.p12 -k build.keychain -P "${{ secrets.MACOS_CERTIFICATE_PWD}}" -T /usr/bin/codesign
+        # Allow codesign to access keychain
+        security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k "${{ secrets.KEYCHAIN_PASSWORD}}" build.keychain
+        # Add app password for notarytool
+        xcrun notarytool store-credentials "AC_PASSWORD" --apple-id "${{ secrets.APPLE_ID }}" --team-id ${{ env.TEAM_ID }} --password "${{ secrets.NOTARY_TOOL_PASSWORD }}"
 
-    - name: Publish RouteBuilder
-      run: dotnet publish --no-restore -c Release -r osx.11.0-x64 --no-self-contained -o "$RUNNER_TEMP/Bundles/RoadCaptain RouteBuilder.app/Contents/MacOS" src/RoadCaptain.App.RouteBuilder/RoadCaptain.App.RouteBuilder.csproj
-    - name: Make app executable
-      run: chmod +x "$RUNNER_TEMP/Bundles/RoadCaptain RouteBuilder.app/Contents/MacOS/RoadCaptain.App.RouteBuilder"
-    - name: Copy App Bundle info
+    - name: Build and package Runner
       run: |
-        VERSION=`echo ${{ needs.create_release.outputs.version }} | tr -d '\n'`
-        cat src/RoadCaptain.App.RouteBuilder/Info.plist | sed -e "s/##VERSION##/$VERSION/" > "$RUNNER_TEMP/Bundles/RoadCaptain RouteBuilder.app/Contents/Info.plist"
-    - name: Copy App Bundle icon
-      run: mkdir "$RUNNER_TEMP/Bundles/RoadCaptain RouteBuilder.app/Contents/Resources" && cp src/RoadCaptain.App.Shared/icon.icns "$RUNNER_TEMP/Bundles/RoadCaptain RouteBuilder.app/Contents/Resources/icon.icns"
+        PUBLISH_DIR="$RUNNER_TEMP/Bundles"
+        VERSION=$(grep Version Directory.Build.props | sed -e 's/<Version>//g' -e 's/<\/Version>//g' | tr -d '\t ')
+        ./packaging/build-macos-app "$PUBLISH_DIR" "$VERSION" "Runner" "${{ env.SIGNING_IDENTITY }}"
+
+    - name: Build and package RouteBuilder
+      run: |
+        PUBLISH_DIR="$RUNNER_TEMP/Bundles"
+        VERSION=$(grep Version Directory.Build.props | sed -e 's/<Version>//g' -e 's/<\/Version>//g' | tr -d '\t ')
+        ./packaging/build-macos-app "$PUBLISH_DIR" "$VERSION" "RouteBuilder" "${{ env.SIGNING_IDENTITY }}"
 
     - name: Create DMG
       run: |
         VERSION=`echo ${{ needs.create_release.outputs.version }} | tr -d '\n'`
+        DISK_IMAGE="$RUNNER_TEMP/RoadCaptain-$VERSION.dmg"
         chmod +x ./packaging/create-dmg
-        ./packaging/create-dmg --volname "RoadCaptain" --volicon ./src/RoadCaptain.App.Shared/icon.icns --window-pos 200 120 --window-size 800 533 --icon-size 128 --icon "RoadCaptain RouteBuilder.app" 200 40 --icon "RoadCaptain Runner.app" 200 260 --app-drop-link 600 40 --background "./src/RoadCaptain.App.Shared/Assets/installer-background.jpg" "$RUNNER_TEMP/RoadCaptain-$VERSION.dmg" "$RUNNER_TEMP/Bundles"
+        ./packaging/create-dmg --volname "RoadCaptain $VERSION" --volicon ./src/RoadCaptain.App.Shared/icon.icns --window-pos 200 120 --window-size 800 533 --icon-size 128 --icon "RoadCaptain RouteBuilder.app" 200 40 --icon "RoadCaptain Runner.app" 200 260 --app-drop-link 600 40 --background "./src/RoadCaptain.App.Shared/Assets/installer-background.jpg" --codesign A357F29F30B7179DCBA515D2A6ECE77620951CBD "$DISK_IMAGE" "$RUNNER_TEMP/Bundles"
+        # Notarize disk image
+        xcrun notarytool submit "$DISK_IMAGE" --keychain-profile "AC_PASSWORD" --wait
+        xcrun stapler staple "$DISK_IMAGE"
 
     - name: Upload Installer
       id: upload-release-asset 
