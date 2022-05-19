@@ -107,13 +107,13 @@ jobs:
       run: |
         PUBLISH_DIR="$RUNNER_TEMP/Bundles"
         VERSION=$(grep Version Directory.Build.props | sed -e 's/<Version>//g' -e 's/<\/Version>//g' | tr -d '\t ')
-        ./packaging/build-macos-app "$PUBLISH_DIR" "$VERSION" "Runner" "${{ env.$SIGNING_IDENTITY }}"
+        ./packaging/build-macos-app "$PUBLISH_DIR" "$VERSION" "Runner" "${{ env.SIGNING_IDENTITY }}"
 
     - name: Build and package RouteBuilder
       run: |
         PUBLISH_DIR="$RUNNER_TEMP/Bundles"
         VERSION=$(grep Version Directory.Build.props | sed -e 's/<Version>//g' -e 's/<\/Version>//g' | tr -d '\t ')
-        ./packaging/build-macos-app "$PUBLISH_DIR" "$VERSION" "RouteBuilder" "${{ env.$SIGNING_IDENTITY }}"
+        ./packaging/build-macos-app "$PUBLISH_DIR" "$VERSION" "RouteBuilder" "${{ env.SIGNING_IDENTITY }}"
 
     - name: Create DMG
       run: |
