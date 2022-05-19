@@ -2,13 +2,14 @@
 
 set -e -o pipefail
 
-PUBLISH_DIR=/tmp/RoadCaptain
+RID="osx-x64"
+PUBLISH_DIR="/tmp/RoadCaptain-$RID"
 VERSION=$(grep Version Directory.Build.props | sed -e 's/<Version>//g' -e 's/<\/Version>//g' | tr -d '\t ')
 SIGNING_IDENTITY="Developer ID Application: Codenizer BV (44HHP3V8VR)" # matches Keychain Access certificate name
-DISK_IMAGE=/tmp/RoadCaptain.dmg
+DISK_IMAGE="/tmp/RoadCaptain-$RID.dmg"
 
-./packaging/build-macos-app "$PUBLISH_DIR" "$VERSION" "Runner" "$SIGNING_IDENTITY"
-./packaging/build-macos-app "$PUBLISH_DIR" "$VERSION" "RouteBuilder" "$SIGNING_IDENTITY"
+./packaging/build-macos-app "$PUBLISH_DIR" "$VERSION" "Runner" "$SIGNING_IDENTITY" $RID
+./packaging/build-macos-app "$PUBLISH_DIR" "$VERSION" "RouteBuilder" "$SIGNING_IDENTITY" $RID
 
 echo "[INFO] Creating disk image"
 
