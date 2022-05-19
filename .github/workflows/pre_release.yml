@@ -133,7 +133,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ needs.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
-        asset_path: "/Users/runner/work/_temp/RoadCaptain-${{ needs.create_release.outputs.version }}.dmg" # Explicit path here because $RUNNER_TEMP doesn't get expanded...
+        asset_path: "/Users/runner/work/_temp/RoadCaptain-${{ needs.create_release.outputs.version }}-${{ env.RID }}.dmg" # Explicit path here because $RUNNER_TEMP doesn't get expanded...
         asset_name: RoadCaptain-${{ needs.create_release.outputs.version }}-${{ env.RID }}.dmg
         asset_content_type: application/x-apple-diskimage
 
@@ -202,6 +202,6 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ needs.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
-        asset_path: "/Users/runner/work/_temp/RoadCaptain-${{ needs.create_release.outputs.version }}.dmg" # Explicit path here because $RUNNER_TEMP doesn't get expanded...
+        asset_path: "/Users/runner/work/_temp/RoadCaptain-${{ needs.create_release.outputs.version }}-${{ env.RID }}.dmg" # Explicit path here because $RUNNER_TEMP doesn't get expanded...
         asset_name: RoadCaptain-${{ needs.create_release.outputs.version }}-${{ env.RID }}.dmg
         asset_content_type: application/x-apple-diskimage
