@@ -1,14 +1,23 @@
-#!/bin/sh
+#!/bin/bash
 
 PUBLISH_DIR=$1
 VERSION=$2
 APPNAME=$3
 SIGNING_IDENTITY=$4
 
+echo "PUBLISH_DIR: $PUBLISH_DIR"
+echo "VERSION: $VERSION"
+echo "APPNAME: $APPNAME"
+echo "SIGNING_IDENTITY: $SIGNING_IDENTITY"
+
 # Don't change variables below
 BUNDLE_NAME="RoadCaptain $APPNAME.app"
 ENTITLEMENTS="src/RoadCaptain.App.$APPNAME/$APPNAME.entitlements"
-NOTARY_ZIP="$PUBLISH_DIR/$BUNDLE_NAME.zip"
+NOTARY_ZIP="$PUBLISH_DIR/../$BUNDLE_NAME.zip"
+
+echo "BUNDLE_NAME: $BUNDLE_NAME"
+echo "ENTITLEMENTS: $ENTITLEMENTS"
+echo "NOTARY_ZIP: $NOTARY_ZIP"
 
 echo "[INFO] Publishing $APPNAME"
 dotnet publish -c Release -r osx-x64 --no-self-contained -o "$PUBLISH_DIR/$BUNDLE_NAME/Contents/MacOS" "src/RoadCaptain.App.$APPNAME/RoadCaptain.App.$APPNAME.csproj"
