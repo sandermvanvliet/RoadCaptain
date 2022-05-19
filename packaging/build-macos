@@ -1,10 +1,10 @@
 #!/bin/sh
 
 PUBLISH_DIR=/tmp/RoadCaptain
-VERSION=`cat Directory.Build.props | grep Version | sed -e 's/<Version>//g' -e 's/<\/Version>//g' | tr -d '\t '`
+VERSION=$(grep Version Directory.Build.props | sed -e 's/<Version>//g' -e 's/<\/Version>//g' | tr -d '\t ')
 
 dotnet publish -c Release -r osx-x64 --no-self-contained -o "$PUBLISH_DIR/RoadCaptainRouteBuilder.app/Contents/MacOS" src/RoadCaptain.App.RouteBuilder/RoadCaptain.App.RouteBuilder.csproj
-cat src/RoadCaptain.App.RouteBuilder/Info.plist | sed -e "s/##VERSION##/$VERSION/g" > "$PUBLISH_DIR/RoadCaptainRouteBuilder.app/Contents/Info.plist"
+sed -e "s/##VERSION##/$VERSION/g" < src/RoadCaptain.App.RouteBuilder/Info.plist > "$PUBLISH_DIR/RoadCaptainRouteBuilder.app/Contents/Info.plist"
 if [ ! -d "$PUBLISH_DIR/RoadCaptainRouteBuilder.app/Contents/Resources" ]
 then
 	mkdir "$PUBLISH_DIR/RoadCaptainRouteBuilder.app/Contents/Resources"
@@ -32,7 +32,7 @@ xcrun notarytool submit "$PUBLISH_DIR/../RoadCaptainRouteBuilder.zip" --wait --k
 xcrun stapler staple "$PUBLISH_DIR/RoadCaptainRouteBuilder.app"
 
 dotnet publish -c Release -r osx-x64 --no-self-contained -o "$PUBLISH_DIR/RoadCaptainRunner.app/Contents/MacOS" src/RoadCaptain.App.Runner/RoadCaptain.App.Runner.csproj
-cat src/RoadCaptain.App.Runner/Info.plist | sed -e "s/##VERSION##/$VERSION/g" > "$PUBLISH_DIR/RoadCaptainRunner.app/Contents/Info.plist"
+sed -e "s/##VERSION##/$VERSION/g" < src/RoadCaptain.App.Runner/Info.plist > "$PUBLISH_DIR/RoadCaptainRunner.app/Contents/Info.plist"
 if [ ! -d "$PUBLISH_DIR/RoadCaptainRunner.app/Contents/Resources" ]
 then
 	mkdir "$PUBLISH_DIR/RoadCaptainRunner.app/Contents/Resources"
