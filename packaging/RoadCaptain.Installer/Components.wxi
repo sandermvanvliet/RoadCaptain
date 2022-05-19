@@ -544,13 +544,6 @@
     </ComponentGroup>
   </Fragment>
   <Fragment>
-    <ComponentGroup Id="nativeComponents" Directory="native">
-      <Component Id="native_WebView2Loader.dll" Guid="8818cd88-830b-4f18-8139-a18edad71adc">
-        <File Id="native_WebView2Loader.dll" Name="WebView2Loader.dll" Source="$(var.RoadCaptain.Runner_TargetDir)runtimes\win-x64\native\WebView2Loader.dll" />
-      </Component>
-    </ComponentGroup>
-  </Fragment>
-  <Fragment>
     <ComponentGroup Id="swiftshaderComponents" Directory="swiftshader">
       <Component Id="swiftshader_libEGL.dll" Guid="bedd1c51-1f09-4e5a-842a-ececdf87fcad">
         <File Id="swiftshader_libEGL.dll" Name="libEGL.dll" Source="$(var.RoadCaptain.Runner_TargetDir)swiftshader\libEGL.dll" />

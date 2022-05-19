@@ -30,7 +30,6 @@
       <ComponentGroupRef Id="RunnerComponents" />
       <ComponentGroupRef Id="RouteBuilderComponents" />
       <ComponentGroupRef Id="swiftshaderComponents" />
-      <ComponentGroupRef Id="nativeComponents" />
       <ComponentGroupRef Id="RoutesComponents" />
       <ComponentGroupRef Id="localesComponents" />
       <ComponentGroupRef Id="CefGlueBrowserProcessComponents" />
