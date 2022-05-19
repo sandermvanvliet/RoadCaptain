@@ -1,0 +1,50 @@
+#!/bin/sh
+
+PUBLISH_DIR=$1
+VERSION=$2
+APPNAME=$3
+SIGNING_IDENTITY=$4
+
+# Don't change variables below
+BUNDLE_NAME="RoadCaptain $APPNAME.app"
+ENTITLEMENTS="src/RoadCaptain.App.$APPNAME/$APPNAME.entitlements"
+NOTARY_ZIP="$PUBLISH_DIR/$BUNDLE_NAME.zip"
+
+echo "[INFO] Publishing $APPNAME"
+dotnet publish -c Release -r osx-x64 --no-self-contained -o "$PUBLISH_DIR/$BUNDLE_NAME/Contents/MacOS" "src/RoadCaptain.App.$APPNAME/RoadCaptain.App.$APPNAME.csproj"
+
+sed -e "s/##VERSION##/$VERSION/g" < "src/RoadCaptain.App.$APPNAME/Info.plist" > "$PUBLISH_DIR/$BUNDLE_NAME/Contents/Info.plist"
+
+if [ ! -d "$PUBLISH_DIR/$BUNDLE_NAME/Contents/Resources" ]
+then
+	mkdir "$PUBLISH_DIR/$BUNDLE_NAME/Contents/Resources"
+fi
+
+cp src/RoadCaptain.App.Shared/icon.icns "$PUBLISH_DIR/$BUNDLE_NAME/Contents/Resources/icon.icns"
+
+# Note: Ensure that the app itself is actually executable
+chmod +x "$PUBLISH_DIR/$BUNDLE_NAME/Contents/MacOS/RoadCaptain.App.$APPNAME"
+
+echo "[INFO] Signing app bundle"
+
+find "$PUBLISH_DIR/$BUNDLE_NAME/Contents/MacOS/"|while read fname; do
+    if [ -f "$fname" ]
+    then
+        echo "[INFO] Signing $fname"
+        codesign --force --timestamp --options=runtime --entitlements "$ENTITLEMENTS" --sign "$SIGNING_IDENTITY" "$fname"
+    fi
+done
+
+echo "[INFO] Signing app file"
+
+codesign --force --timestamp --options=runtime --entitlements "$ENTITLEMENTS" --sign "$SIGNING_IDENTITY" "$PUBLISH_DIR/$BUNDLE_NAME"
+
+echo "[INFO] Notarizing app bundle"
+
+# Note: Use ditto instead of zip because using zip will make notarization fail due to missing file attributes (I _think_)
+ditto -c -k --sequesterRsrc --keepParent "$PUBLISH_DIR/$BUNDLE_NAME" "$NOTARY_ZIP"
+
+# Note: AC_PASSWORD is an app password created from your Apple account which needs to be present in the login KeyChain
+xcrun notarytool submit "$NOTARY_ZIP" --wait --keychain-profile "AC_PASSWORD"
+
+xcrun stapler staple "$PUBLISH_DIR/$BUNDLE_NAME"

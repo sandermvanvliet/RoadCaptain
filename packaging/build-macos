@@ -2,64 +2,17 @@
 
 PUBLISH_DIR=/tmp/RoadCaptain
 VERSION=$(grep Version Directory.Build.props | sed -e 's/<Version>//g' -e 's/<\/Version>//g' | tr -d '\t ')
-
-dotnet publish -c Release -r osx-x64 --no-self-contained -o "$PUBLISH_DIR/RoadCaptainRouteBuilder.app/Contents/MacOS" src/RoadCaptain.App.RouteBuilder/RoadCaptain.App.RouteBuilder.csproj
-sed -e "s/##VERSION##/$VERSION/g" < src/RoadCaptain.App.RouteBuilder/Info.plist > "$PUBLISH_DIR/RoadCaptainRouteBuilder.app/Contents/Info.plist"
-if [ ! -d "$PUBLISH_DIR/RoadCaptainRouteBuilder.app/Contents/Resources" ]
-then
-	mkdir "$PUBLISH_DIR/RoadCaptainRouteBuilder.app/Contents/Resources"
-fi
-cp src/RoadCaptain.App.Shared/icon.icns "$PUBLISH_DIR/RoadCaptainRouteBuilder.app/Contents/Resources/icon.icns"
-chmod +x "$PUBLISH_DIR/RoadCaptainRouteBuilder.app/Contents/MacOS/RoadCaptain.App.RouteBuilder"
-
-APP_NAME="$PUBLISH_DIR/RoadCaptainRouteBuilder.app"
-ENTITLEMENTS="src/RoadCaptain.App.RouteBuilder/RouteBuilder.entitlements"
 SIGNING_IDENTITY="Developer ID Application: Codenizer BV (44HHP3V8VR)" # matches Keychain Access certificate name
 
-find "$APP_NAME/Contents/MacOS/"|while read fname; do
-    if [[ -f $fname ]]; then
-        echo "[INFO] Signing $fname"
-        codesign --force --timestamp --options=runtime --entitlements "$ENTITLEMENTS" --sign "$SIGNING_IDENTITY" "$fname"
-    fi
-done
+./packaging/build-macos-app "$PUBLISH_DIR" "$VERSION" "Runner" "$SIGNING_IDENTITY"
+./packaging/build-macos-app "$PUBLISH_DIR" "$VERSION" "RouteBuilder" "$SIGNING_IDENTITY"
 
-echo "[INFO] Signing app file"
-
-codesign --force --timestamp --options=runtime --entitlements "$ENTITLEMENTS" --sign "$SIGNING_IDENTITY" "$APP_NAME"
-
-ditto -c -k --sequesterRsrc --keepParent "$PUBLISH_DIR/RoadCaptainRouteBuilder.app" "$PUBLISH_DIR/../RoadCaptainRouteBuilder.zip"
-xcrun notarytool submit "$PUBLISH_DIR/../RoadCaptainRouteBuilder.zip" --wait --keychain-profile "AC_PASSWORD"
-xcrun stapler staple "$PUBLISH_DIR/RoadCaptainRouteBuilder.app"
-
-dotnet publish -c Release -r osx-x64 --no-self-contained -o "$PUBLISH_DIR/RoadCaptainRunner.app/Contents/MacOS" src/RoadCaptain.App.Runner/RoadCaptain.App.Runner.csproj
-sed -e "s/##VERSION##/$VERSION/g" < src/RoadCaptain.App.Runner/Info.plist > "$PUBLISH_DIR/RoadCaptainRunner.app/Contents/Info.plist"
-if [ ! -d "$PUBLISH_DIR/RoadCaptainRunner.app/Contents/Resources" ]
-then
-	mkdir "$PUBLISH_DIR/RoadCaptainRunner.app/Contents/Resources"
-fi
-cp src/RoadCaptain.App.Shared/icon.icns "$PUBLISH_DIR/RoadCaptainRunner.app/Contents/Resources/icon.icns"
-chmod +x "$PUBLISH_DIR/RoadCaptainRunner.app/Contents/MacOS/RoadCaptain.App.Runner"
-
-APP_NAME="$PUBLISH_DIR/RoadCaptainRunner.app"
-ENTITLEMENTS="src/RoadCaptain.App.Runner/Runner.entitlements"
-SIGNING_IDENTITY="Developer ID Application: Codenizer BV (44HHP3V8VR)" # matches Keychain Access certificate name
-
-find "$APP_NAME/Contents/MacOS/"|while read fname; do
-    if [[ -f $fname ]]; then
-        echo "[INFO] Signing $fname"
-        codesign --force --timestamp --options=runtime --entitlements "$ENTITLEMENTS" --sign "$SIGNING_IDENTITY" "$fname"
-    fi
-done
-
-echo "[INFO] Signing app file"
-
-codesign --force --timestamp --options=runtime --entitlements "$ENTITLEMENTS" --sign "$SIGNING_IDENTITY" "$APP_NAME"
-
-ditto -c -k --sequesterRsrc --keepParent "$PUBLISH_DIR/RoadCaptainRunner.app" "$PUBLISH_DIR/../RoadCaptainRunner.zip"
-xcrun notarytool submit "$PUBLISH_DIR/../RoadCaptainRunner.zip" --wait --keychain-profile "AC_PASSWORD"
-xcrun stapler staple "$PUBLISH_DIR/RoadCaptainRunner.app"
-
+echo "[INFO] Creating disk image"
 ./packaging/create-dmg --volname "RoadCaptain" --volicon ./src/RoadCaptain.App.Shared/icon.icns --window-pos 200 120 --window-size 800 533 --icon-size 128 --icon "RoadCaptainRouteBuilder.app" 200 40 --icon "RoadCaptainRunner.app" 200 260 --app-drop-link 600 40 --background "./src/RoadCaptain.App.Shared/Assets/installer-background.jpg" --codesign A357F29F30B7179DCBA515D2A6ECE77620951CBD "/tmp/RoadCaptain.dmg" "/tmp/RoadCaptain"
+
+echo "[INFO] Notarizing disk image"
 
 xcrun notarytool submit /tmp/RoadCaptain.dmg --keychain-profile "AC_PASSWORD" --wait
 xcrun stapler staple /tmp/RoadCaptain.dmg
+
+echo "[INFO] Build complete"
