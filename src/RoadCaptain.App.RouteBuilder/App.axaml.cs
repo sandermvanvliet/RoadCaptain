@@ -1,4 +1,6 @@
 using System;
+using System.Diagnostics;
+using System.Linq;
 using Autofac;
 using Avalonia;
 using Avalonia.Controls;
@@ -7,6 +9,7 @@ using Avalonia.Markup.Xaml;
 using Avalonia.Threading;
 using Microsoft.Extensions.Configuration;
 using RoadCaptain.App.RouteBuilder.Views;
+using RoadCaptain.App.Shared.Dialogs;
 using Serilog.Core;
 
 namespace RoadCaptain.App.RouteBuilder
@@ -56,8 +59,40 @@ namespace RoadCaptain.App.RouteBuilder
                     _windowService.ShowMainWindow(ApplicationLifetime);
                 }
             }
-
+            
+#if MACOS
+            ReplaceAboutMenu();
+#endif
+            
             base.OnFrameworkInitializationCompleted();
+        }
+
+        private static void ReplaceAboutMenu()
+        {
+            // Avalonia does some work to set up a default menu on
+            // macOS with the normally expected menu items.
+            // Unfortunately it also adds a "About Avalonia" menu
+            // item which users of RoadCaptain won't expect.
+            // This method replaces that menu item with one that
+            // is relevant to RoadCaptain.
+            var menu = NativeMenu.GetMenu(Application.Current);
+            var about = menu.Items.OfType<NativeMenuItem>().SingleOrDefault(m => m.Header == "About Avalonia");
+            if (about != null)
+            {
+                menu.Items.Remove(about);
+                about = new NativeMenuItem("About RoadCaptain");
+                about.Click += async (sender, args) =>
+                {
+                    var dialog = new AboutRoadCaptainDialog();
+
+                    if (Application.Current is
+                        { ApplicationLifetime: IClassicDesktopStyleApplicationLifetime { MainWindow: { } mainWindow } })
+                    {
+                        await dialog.ShowDialog(mainWindow);
+                    }
+                };
+                menu.Items.Insert(0, about);
+            }
         }
 
         protected override void LogBindingError(AvaloniaProperty property, Exception e)

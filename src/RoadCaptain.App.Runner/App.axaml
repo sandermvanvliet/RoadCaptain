@@ -1,7 +1,8 @@
 <Application xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="using:RoadCaptain.App.Runner"
-             x:Class="RoadCaptain.App.Runner.App">
+             x:Class="RoadCaptain.App.Runner.App"
+             Name="RoadCaptain Runner">
     <Application.DataTemplates>
         <local:ViewLocator/>
     </Application.DataTemplates>
