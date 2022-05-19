@@ -1,0 +1,3 @@
+packaging/build-macos text eol=lf
+packaging/build-macos-app text eol=lf
+packaging/create-dmg text eol=lf
