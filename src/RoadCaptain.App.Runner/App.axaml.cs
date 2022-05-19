@@ -71,43 +71,8 @@ namespace RoadCaptain.App.Runner
                     _windowService.ShowMainWindow();
                 }
             }
-            
-#if MACOS
-            ReplaceAboutMenu();
-#endif
 
             base.OnFrameworkInitializationCompleted();
-        }
-
-        private static void ReplaceAboutMenu()
-        {
-            // Avalonia does some work to set up a default menu on
-            // macOS with the normally expected menu items.
-            // Unfortunately it also adds a "About Avalonia" menu
-            // item which users of RoadCaptain won't expect.
-            // This method replaces that menu item with one that
-            // is relevant to RoadCaptain.
-            var menu = NativeMenu.GetMenu(Application.Current);
-            var about = menu.Items.OfType<NativeMenuItem>().SingleOrDefault(m => m.Header == "About Avalonia");
-            if (about != null)
-            {
-                menu.Items.Remove(about);
-                about = new NativeMenuItem("About RoadCaptain");
-                about.Click += async (sender, args) =>
-                {
-                    var dialog = new AboutRoadCaptainDialog
-                    {
-                        WindowStartupLocation = WindowStartupLocation.CenterOwner
-                    };
-
-                    if (Application.Current is
-                        { ApplicationLifetime: IClassicDesktopStyleApplicationLifetime { MainWindow: { } mainWindow } })
-                    {
-                        await dialog.ShowDialog(mainWindow);
-                    }
-                };
-                menu.Items.Insert(0, about);
-            }
         }
 
         protected override void LogBindingError(AvaloniaProperty property, Exception e)
@@ -152,6 +117,20 @@ namespace RoadCaptain.App.Runner
 
             var processes = Process.GetProcesses();
             return processes.Count(p => p.ProcessName == processName) > 1;
+        }
+
+        private async void AboutRoadCaptainMenuItem_OnClick(object? sender, EventArgs e)
+        {
+            var dialog = new AboutRoadCaptainDialog
+            {
+                WindowStartupLocation = WindowStartupLocation.CenterOwner
+            };
+                    
+            if (Application.Current is
+                { ApplicationLifetime: IClassicDesktopStyleApplicationLifetime { MainWindow: { } mainWindow } })
+            {
+                await dialog.ShowDialog(mainWindow);
+            }
         }
     }
 }

@@ -1,9 +1,14 @@
 <Application xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="using:RoadCaptain.App.RouteBuilder"
-             x:Class="RoadCaptain.App.RouteBuilder.App"
-             Name="RoadCaptain Route Builder">
-    <Application.DataTemplates>
+             x:Class="RoadCaptain.App.RouteBuilder.App">
+	<Application.Name>RoadCaptain Route Builder</Application.Name>
+	<NativeMenu.Menu>
+		<NativeMenu>
+			<NativeMenuItem Header="About RoadCaptain" Click="AboutRoadCaptainMenuItem_OnClick" />
+		</NativeMenu>
+	</NativeMenu.Menu>
+	<Application.DataTemplates>
         <local:ViewLocator/>
     </Application.DataTemplates>
 
