@@ -179,7 +179,7 @@ namespace RoadCaptain.App.RouteBuilder.Controls
             }
 
             // Route markers
-            if (RoutePath.Points.Any())
+            if (Route != null && RoutePath.Points.Any())
             {
                 var startSegment = Route.Sequence.First();
                 var endSegment = Route.Sequence.Last();
