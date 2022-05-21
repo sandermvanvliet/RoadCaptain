@@ -26,7 +26,7 @@ namespace RoadCaptain.App.RouteBuilder
 
             builder
                 .RegisterAssemblyTypes(ThisAssembly)
-                .Where(type => type.BaseType == typeof(Window) && type.Namespace.EndsWith(".Views"))
+                .Where(type => type.BaseType == typeof(Window) && type.Namespace != null && type.Namespace.EndsWith(".Views"))
                 .UsingConstructor(new MostParametersConstructorSelector())
                 .AsSelf();
 
@@ -42,7 +42,7 @@ namespace RoadCaptain.App.RouteBuilder
 
             builder
                 .RegisterAssemblyTypes(ThisAssembly)
-                .Where(type => type.BaseType == typeof(ViewModelBase) && type.Namespace.EndsWith(".ViewModels"))
+                .Where(type => type.BaseType == typeof(ViewModelBase) && type.Namespace != null && type.Namespace.EndsWith(".ViewModels"))
                 .AsSelf();
         }
     }

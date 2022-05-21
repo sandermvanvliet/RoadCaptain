@@ -39,7 +39,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
         private List<Segment> _markers;
         private bool _showClimbs;
         private bool _showSprints;
-        private Segment _highlightedSegment;
+        private Segment? _highlightedSegment;
 
         public MainWindowViewModel(IRouteStore routeStore, ISegmentStore segmentStore, IVersionChecker versionChecker, IWindowService windowService, IWorldStore worldStore, IUserPreferences userPreferences)
         {
@@ -84,7 +84,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
                 .OnFailure(_ => Model.StatusBarError("Failed to clear route because: {0}", _.Message));
 
             SelectSegmentCommand = new RelayCommand(
-                    _ => SelectSegment((Segment)_),
+                    _ => SelectSegment(_ as Segment ?? throw new ArgumentNullException(nameof(RelayCommand.CommandParameter))),
                     _ => true)
                 .OnSuccess(_ => Model.StatusBarInfo("Added segment"))
                 .OnSuccessWithWarnings(_ => Model.StatusBarInfo("Added segment {0}", _.Message))
@@ -199,7 +199,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             {
                 var sport = Sports
                     .SingleOrDefault(s =>
-                        _userPreferences.DefaultSport.Equals(s.Sport.ToString(), StringComparison.InvariantCultureIgnoreCase));
+                        (_userPreferences.DefaultSport ?? "").Equals(s.Sport.ToString(), StringComparison.InvariantCultureIgnoreCase));
 
                 if (sport != null)
                 {
@@ -469,7 +469,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
 
         private bool IsValidSpawnPointProgression(out CommandResult commandResult, SegmentDirection segmentDirection)
         {
-            if (Route.Sequence.Count() == 1)
+            if (Route.World != null && Route.Sequence.Count() == 1)
             {
                 var startSegmentSequence = Route.Sequence.First();
                 if (!Route.World.SpawnPoints.Any(sp =>
@@ -484,7 +484,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
                 }
             }
 
-            commandResult = null;
+            commandResult = new CommandResult { Result = Result.NotExecuted };
 
             return true;
         }
@@ -500,7 +500,12 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
 
             SelectedSegment = null;
 
-            return CommandResult.SuccessWithWarning(lastSegment.SegmentName);
+            if (lastSegment != null)
+            {
+                return CommandResult.SuccessWithWarning(lastSegment.SegmentName);
+            }
+
+            return CommandResult.Success();
         }
 
         private static SegmentDirection GetDirectionOnNewSegment(Segment newSelectedSegment, Segment lastSegment)

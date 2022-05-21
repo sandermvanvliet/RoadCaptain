@@ -15,12 +15,12 @@ namespace RoadCaptain.App.Shared.Dialogs.ViewModels
 
         public UpdateAvailableViewModel(Release release)
         {
-            Version = release.Version.ToString(4);
-            DownloadLink = release.InstallerDownloadUri?.ToString();
-            ReleaseNotes = release.ReleaseNotes;
+            _version = release.Version.ToString(4);
+            _downloadLink = release.InstallerDownloadUri?.ToString() ?? "https://github.com/sandermvanvliet/RoadCaptain/";
+            _releaseNotes = release.ReleaseNotes;
 
             OpenLinkCommand = new RelayCommand(
-                _ => OpenLink(_ as string),
+                _ => OpenLink(_ as string ?? throw new ArgumentNullException(nameof(RelayCommand.CommandParameter))),
                 _ => true);
         }
 
@@ -61,7 +61,7 @@ namespace RoadCaptain.App.Shared.Dialogs.ViewModels
 
         private CommandResult OpenLink(string url)
         {
-            if (Uri.TryCreate(url, UriKind.Absolute, out var uri))
+            if (Uri.TryCreate(url, UriKind.Absolute, out _))
             {
                 // Code from Avalonia: AboutAvaloniaDialog.cs
                 using var process = Process.Start(new ProcessStartInfo

@@ -308,6 +308,12 @@ namespace RoadCaptain.App.RouteBuilder.Controls
 
         private void SelectSegment(Point scaledPoint)
         {
+            // Initialization apparently did not complete so we cannot map any point at all
+            if (_overallOffsets == null)
+            {
+                return;
+            }
+
             // Find SKPath that contains this coordinate (or close enough)
             var pathsInBounds = _segmentPathBounds
                 .Where(p => p.Value.Contains((float)scaledPoint.X, (float)scaledPoint.Y))
@@ -326,7 +332,7 @@ namespace RoadCaptain.App.RouteBuilder.Controls
             var scaledPointToPosition = TrackPoint.FromGameLocation(reverseScaled.Latitude, reverseScaled.Longitude, reverseScaled.Altitude);
             scaledPointToPosition = new TrackPoint(-scaledPointToPosition.Longitude, scaledPointToPosition.Latitude, scaledPointToPosition.Altitude);
 
-            Segment newSelectedSegment = null;
+            Segment? newSelectedSegment = null;
 
             foreach (var segment in boundedSegments)
             {
@@ -460,6 +466,12 @@ namespace RoadCaptain.App.RouteBuilder.Controls
 
         private void CreateMarkers()
         {
+            // Initialization apparently did not complete so we cannot map any point at all
+            if (_overallOffsets == null)
+            {
+                return;
+            }
+
             var markers = new Dictionary<string, Marker>();
 
             markers.Clear();
