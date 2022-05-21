@@ -18,7 +18,7 @@ namespace RoadCaptain.App.RouteBuilder
     public partial class App : Application
     {
         private readonly Logger _logger;
-        private readonly IWindowService _windowService;
+        private readonly IContainer _container;
 
         public App()
         {
@@ -35,11 +35,9 @@ namespace RoadCaptain.App.RouteBuilder
                 .AddJsonFile("autofac.app.routebuilder.development.json", true)
                 .Build();
 
-            var container = InversionOfControl
+            _container = InversionOfControl
                 .ConfigureContainer(configuration, _logger, Dispatcher.UIThread)
                 .Build();
-
-            _windowService = container.Resolve<IWindowService>();
         }
 
         public override void Initialize()
@@ -57,7 +55,9 @@ namespace RoadCaptain.App.RouteBuilder
                 }
                 else
                 {
-                    _windowService.ShowMainWindow(ApplicationLifetime);
+                    _container
+                        .Resolve<IWindowService>()
+                        .ShowMainWindow(ApplicationLifetime);
                 }
             }
             
