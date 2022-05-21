@@ -442,7 +442,9 @@ namespace RoadCaptain.App.RouteBuilder.Controls
                 })
                 .ToList();
 
-            _overallOffsets = Offsets.From(segmentsWithOffsets.Select(s => s.Offsets).ToList());
+            _overallOffsets = Offsets
+                .From(segmentsWithOffsets.Select(s => s.Offsets).ToList())
+                .Pad(15);
 
             foreach (var segment in segmentsWithOffsets)
             {

@@ -10,6 +10,8 @@ namespace RoadCaptain.App.RouteBuilder.Models
 {
     public class Offsets
     {
+        private readonly int _offset;
+
         public Offsets(float imageWidth, float imageHeight, List<TrackPoint> data)
         {
             ImageWidth = imageWidth;
@@ -22,8 +24,9 @@ namespace RoadCaptain.App.RouteBuilder.Models
             MaxY = (float)data.Max(p => p.Longitude);
         }
 
-        private Offsets(float minX, float maxX, float minY, float maxY, float imageWidth, float imageHeight)
+        private Offsets(float minX, float maxX, float minY, float maxY, float imageWidth, float imageHeight, int offset = 0)
         {
+            _offset = offset;
             ImageWidth = imageWidth;
             ImageHeight = imageHeight;
             MinX = minX;
@@ -62,8 +65,8 @@ namespace RoadCaptain.App.RouteBuilder.Models
         public PointF ScaleAndTranslate(TrackPoint point)
         {
             return new PointF(
-                (OffsetX + (float)point.Latitude) * ScaleFactor, 
-                (OffsetY + (float)point.Longitude) * ScaleFactor);
+                _offset + (OffsetX + (float)point.Latitude) * ScaleFactor, 
+                _offset + (OffsetY + (float)point.Longitude) * ScaleFactor);
         }
 
         public static Offsets From(List<Offsets> offsets)
@@ -79,9 +82,15 @@ namespace RoadCaptain.App.RouteBuilder.Models
         public TrackPoint ReverseScaleAndTranslate(double x, double y)
         {
             return new TrackPoint(
-                (x / ScaleFactor) - OffsetX,
-                (y / ScaleFactor) - OffsetY,
+                (x / ScaleFactor) - OffsetX - _offset,
+                (y / ScaleFactor) - OffsetY - _offset,
                 0);
+        }
+
+        public Offsets Pad(int offset)
+        {
+            var doubleOffset = 2 * offset;
+            return new Offsets(MinX, MaxX, MinY, MaxY, ImageWidth - doubleOffset, ImageHeight - doubleOffset, offset);
         }
     }
 }
