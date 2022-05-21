@@ -34,6 +34,9 @@ jobs:
 
     needs: create_release
 
+    env:
+      RID: win-x64
+
     steps:
     - uses: actions/checkout@v2
     - name: Setup .NET
@@ -41,22 +44,23 @@ jobs:
       with:
         dotnet-version: 6.0.x
     - name: Restore dependencies
-      run: dotnet restore
+      run: dotnet restore -r ${{ env.RID }}
     - name: Build
       run: dotnet build --no-restore -c Release .\RoadCaptain.sln
     - name: Test
-      run: dotnet test --no-build --verbosity normal -c Release -r win-x64
+      run: dotnet test --no-build --verbosity normal -c Release -r ${{ env.RID }}
     - name: Publish Runner
-      run: dotnet publish --no-self-contained -c Release -r win-x64 src\RoadCaptain.App.Runner\RoadCaptain.App.Runner.csproj
+      # Because of reasons we need to explicitly set RuntimeIdentifiers to only win-x64 because MSBuild sets it to osx-x64;win-x64
+      run: dotnet publish --no-self-contained -c Release -r ${{ env.RID }} -p:RuntimeIdentifiers=${{ env.RID }} src\RoadCaptain.App.Runner\RoadCaptain.App.Runner.csproj
     - name: Publish RouteBuilder
-      run: dotnet publish --no-self-contained -c Release -r win-x64 src\RoadCaptain.App.RouteBuilder\RoadCaptain.App.RouteBuilder.csproj
+      run: dotnet publish --no-self-contained -c Release -r ${{ env.RID }} -p:RuntimeIdentifiers=${{ env.RID }} src\RoadCaptain.App.RouteBuilder\RoadCaptain.App.RouteBuilder.csproj
     - name: Update Wix components file
-      run: dotnet run --project .\packaging\RoadCaptain.WixComponentFileGenerator\RoadCaptain.WixComponentFileGenerator.csproj src\RoadCaptain.App.Runner\bin\Release\net6.0-windows\win-x64\publish src\RoadCaptain.App.RouteBuilder\bin\Release\net6.0-windows\win-x64\publish .\packaging\RoadCaptain.Installer\Components.wxi
+      run: dotnet run --project .\packaging\RoadCaptain.WixComponentFileGenerator\RoadCaptain.WixComponentFileGenerator.csproj src\RoadCaptain.App.Runner\bin\Release\net6.0-windows\${{ env.RID }}\publish src\RoadCaptain.App.RouteBuilder\bin\Release\net6.0-windows\${{ env.RID }}\publish .\packaging\RoadCaptain.Installer\Components.wxi
     - name: Add msbuild to PATH
       uses: microsoft/setup-msbuild@v1.1
     - name: Build MSI
       # Note: The trailing slash at the end of RunnerTargetDir and RouteBuilderTargetDir is mandatory, otherwise building the MSI fails!
-      run: msbuild .\packaging\RoadCaptain.Installer\RoadCaptain.Installer.wixproj -property:Configuration=Release -property:RunnerTargetDir=D:\a\RoadCaptain\RoadCaptain\src\RoadCaptain.App.Runner\bin\Release\net6.0-windows\win-x64\publish\ -property:RouteBuilderTargetDir=D:\a\RoadCaptain\RoadCaptain\src\RoadCaptain.App.RouteBuilder\bin\Release\net6.0-windows\win-x64\publish\
+      run: msbuild .\packaging\RoadCaptain.Installer\RoadCaptain.Installer.wixproj -property:Configuration=Release -property:RunnerTargetDir=D:\a\RoadCaptain\RoadCaptain\src\RoadCaptain.App.Runner\bin\Release\net6.0-windows\${{ env.RID }}\publish\ -property:RouteBuilderTargetDir=D:\a\RoadCaptain\RoadCaptain\src\RoadCaptain.App.RouteBuilder\bin\Release\net6.0-windows\${{ env.RID }}\publish\
     - name: Upload Installer
       id: upload-release-asset 
       uses: actions/upload-release-asset@v1

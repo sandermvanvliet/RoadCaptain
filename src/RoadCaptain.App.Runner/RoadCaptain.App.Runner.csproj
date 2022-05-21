@@ -1,9 +1,20 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
+		<!--
+		Some special things requierd to make WebView2 work on Windows.
+		Because we're doing funky stuff by embedding a WinForms control
+		into Avalonia that requires us to set the RuntimeIdentifier but
+		also tell MSBuild to add the relevant WinForms references.
+		-->
+		<RuntimeIdentifier Condition="$([MSBuild]::IsOSPlatform('WINDOWS'))">win-x64</RuntimeIdentifier>
+		<!-- Need to specify both RuntimeIdentifier and RuntimeIdentifiers because of MSBuild weirdness -->
+		<RuntimeIdentifiers Condition="$([MSBuild]::IsOSPlatform('WINDOWS'))">win-x64</RuntimeIdentifiers>
+		<UseWindowsForms Condition="$([MSBuild]::IsOSPlatform('WINDOWS'))">true</UseWindowsForms>
+
 		<OutputType>WinExe</OutputType>
 		<OutputType Condition="'$(RuntimeIdentifier)'=='linux-x64' Or '$(RuntimeIdentifier)'=='osx-x64'">Exe</OutputType>
 		<TargetFramework Condition="'$(RuntimeIdentifier)'!='win-x64'">net6.0</TargetFramework>
-		<TargetFramework Condition="'$(RuntimeIdentifier)'=='win-x64'">net6.0-windows</TargetFramework>
+		<TargetFramework Condition="'$(RuntimeIdentifier)'=='win-x64' Or $([MSBuild]::IsOSPlatform('WINDOWS'))">net6.0-windows</TargetFramework>
 		<Nullable>enable</Nullable>
 		<!--Avalonia doesen't support TrimMode=link currently,but we are working on that https://github.com/AvaloniaUI/Avalonia/issues/6892 -->
 		<TrimMode>copyused</TrimMode>
@@ -18,6 +29,14 @@
 		<None Remove=".gitignore" />
 	</ItemGroup>
 	<ItemGroup>
+		<!--To deal with WebView2 on Windows we need to exclude the Avalonia webview control -->
+		<Compile Remove="Views\ZwiftLoginWindow.axaml.cs" Condition="$([MSBuild]::IsOSPlatform('WINDOWS'))" />
+		<AvaloniaXaml Remove="Views\ZwiftLoginWindow.axaml" Condition="$([MSBuild]::IsOSPlatform('WINDOWS'))" />
+		<!--And on non-Windows platforms we do the reverse -->
+		<Compile Remove="Views\ZwiftLoginWindowPlatformWin.axaml.cs" Condition="!$([MSBuild]::IsOSPlatform('WINDOWS'))" />
+		<AvaloniaXaml Remove="Views\ZwiftLoginWindowPlatformWin.axaml" Condition="!$([MSBuild]::IsOSPlatform('WINDOWS'))" />
+	</ItemGroup>
+	<ItemGroup>
 		<!--This helps with theme dll-s trimming.
 	If you will publish your application in self-contained mode with p:PublishTrimmed=true and it will use Fluent theme Default theme will be trimmed from the output and vice versa.
 	https://github.com/AvaloniaUI/Avalonia/issues/5593 -->
@@ -30,7 +49,8 @@
 		<!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
 		<PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="0.10.12" />
 		<PackageReference Include="Avalonia.ReactiveUI" Version="0.10.12" />
-		<PackageReference Include="WebViewControl-Avalonia" Version="2.91.23" />
+		<PackageReference Include="Microsoft.Web.WebView2" Version="1.0.1210.39" Condition="$([MSBuild]::IsOSPlatform('WINDOWS'))" /> <!--Only on Windows -->
+		<PackageReference Include="WebViewControl-Avalonia" Version="2.91.23" Condition="!$([MSBuild]::IsOSPlatform('WINDOWS'))" /> <!--_not_ on Windows-->
 		<PackageReference Include="XamlNameReferenceGenerator" Version="1.3.4" />
 		<PackageReference Include="Autofac" Version="6.3.0" />
 		<PackageReference Include="Autofac.Configuration" Version="6.0.0" />
