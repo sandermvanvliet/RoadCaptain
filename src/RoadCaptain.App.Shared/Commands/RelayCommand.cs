@@ -9,9 +9,9 @@ namespace RoadCaptain.App.Shared.Commands
     {
         private readonly Func<object?, bool>? _canExecute;
         private readonly Func<object?, CommandResult> _execute;
-        private Action<CommandResult>? _onFailure;
+        private Action<CommandResultWithMessage>? _onFailure;
         private Action<CommandResult>? _onSuccess;
-        private Action<CommandResult>? _onSuccessWithWarnings;
+        private Action<CommandResultWithMessage>? _onSuccessWithWarnings;
         private Action<CommandResult>? _onNotExecuted;
 
         public RelayCommand(Func<object?, CommandResult> execute, Func<object?, bool>? canExecute = null)
@@ -39,11 +39,25 @@ namespace RoadCaptain.App.Shared.Commands
             }
             else if (result.Result == Result.SuccessWithWarnings)
             {
-                _onSuccessWithWarnings?.Invoke(result);
+                if (result is CommandResultWithMessage resultWithMessage)
+                {
+                    _onSuccessWithWarnings?.Invoke(resultWithMessage);
+                }
+                else
+                {
+                    throw new ArgumentException("Expected a CommandResultWithMessage but did not receive one");
+                }
             }
             else if (result.Result == Result.Failure)
             {
-                _onFailure?.Invoke(result);
+                if (result is CommandResultWithMessage resultWithMessage)
+                {
+                    _onFailure?.Invoke(resultWithMessage);
+                }
+                else
+                {
+                    throw new ArgumentException("Expected a CommandResultWithMessage but did not receive one");
+                }
             }
             else if (result.Result == Result.NotExecuted)
             {
@@ -57,13 +71,13 @@ namespace RoadCaptain.App.Shared.Commands
             return this;
         }
 
-        public RelayCommand OnSuccessWithWarnings(Action<CommandResult> action)
+        public RelayCommand OnSuccessWithWarnings(Action<CommandResultWithMessage> action)
         {
             _onSuccessWithWarnings = action;
             return this;
         }
 
-        public RelayCommand OnFailure(Action<CommandResult> action)
+        public RelayCommand OnFailure(Action<CommandResultWithMessage> action)
         {
             _onFailure = action;
             return this;

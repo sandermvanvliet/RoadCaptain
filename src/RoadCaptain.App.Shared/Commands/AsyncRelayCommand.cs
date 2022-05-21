@@ -10,12 +10,12 @@ namespace RoadCaptain.App.Shared.Commands
     {
         private readonly Func<object?, bool>? _canExecute;
         private readonly Func<object?, Task<CommandResult>> _execute;
-        private Action<CommandResult>? _onFailure;
-        private Func<CommandResult, Task>? _onFailureAsync;
+        private Action<CommandResultWithMessage>? _onFailure;
+        private Func<CommandResultWithMessage, Task>? _onFailureAsync;
         private Action<CommandResult>? _onSuccess;
         private Func<CommandResult, Task>? _onSuccessAsync;
-        private Action<CommandResult>? _onSuccessWithWarnings;
-        private Func<CommandResult, Task>? _onSuccessWithWarningsAsync;
+        private Action<CommandResultWithMessage>? _onSuccessWithWarnings;
+        private Func<CommandResultWithMessage, Task>? _onSuccessWithWarningsAsync;
         private Action<CommandResult>? _onNotExecuted;
         private Func<CommandResult, Task>? _onNotExecutedAsync;
 
@@ -51,24 +51,38 @@ namespace RoadCaptain.App.Shared.Commands
             }
             else if (result.Result == Result.SuccessWithWarnings)
             {
-                if (_onSuccessWithWarnings != null)
+                if (result is CommandResultWithMessage resultWithMessage)
                 {
-                    _onSuccessWithWarnings(result);
+                    if (_onSuccessWithWarnings != null)
+                    {
+                        _onSuccessWithWarnings(resultWithMessage);
+                    }
+                    else if (_onSuccessWithWarningsAsync != null)
+                    {
+                        await _onSuccessWithWarningsAsync(resultWithMessage);
+                    }
                 }
-                else if (_onSuccessWithWarningsAsync != null)
+                else
                 {
-                    await _onSuccessWithWarningsAsync(result);
+                    throw new ArgumentException("Expected a CommandResultWithMessage but did not receive one");
                 }
             }
             else if (result.Result == Result.Failure)
             {
-                if (_onFailure != null)
+                if (result is CommandResultWithMessage resultWithMessage)
                 {
-                    _onFailure(result);
+                    if (_onFailure != null)
+                    {
+                        _onFailure(resultWithMessage);
+                    }
+                    else if (_onFailureAsync != null)
+                    {
+                        await _onFailureAsync(resultWithMessage);
+                    }
                 }
-                else if (_onFailureAsync != null)
+                else
                 {
-                    await _onFailureAsync(result);
+                    throw new ArgumentException("Expected a CommandResultWithMessage but did not receive one");
                 }
             }
             else if (result.Result == Result.NotExecuted)
@@ -96,25 +110,25 @@ namespace RoadCaptain.App.Shared.Commands
             return this;
         }
 
-        public AsyncRelayCommand OnSuccessWithWarnings(Func<CommandResult, Task> action)
+        public AsyncRelayCommand OnSuccessWithWarnings(Func<CommandResultWithMessage, Task> action)
         {
             _onSuccessWithWarningsAsync = action;
             return this;
         }
 
-        public AsyncRelayCommand OnSuccessWithWarnings(Action<CommandResult> action)
+        public AsyncRelayCommand OnSuccessWithWarnings(Action<CommandResultWithMessage> action)
         {
             _onSuccessWithWarnings = action;
             return this;
         }
 
-        public AsyncRelayCommand OnFailure(Func<CommandResult, Task> action)
+        public AsyncRelayCommand OnFailure(Func<CommandResultWithMessage, Task> action)
         {
             _onFailureAsync = action;
             return this;
         }
 
-        public AsyncRelayCommand OnFailure(Action<CommandResult> action)
+        public AsyncRelayCommand OnFailure(Action<CommandResultWithMessage> action)
         {
             _onFailure = action;
             return this;

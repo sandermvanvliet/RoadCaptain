@@ -3,21 +3,20 @@
     public class CommandResult
     {
         public Result Result { get; set; }
-        public string? Message { get; set; }
 
-        public static CommandResult Success(string? message = null)
+        public static CommandResult Success()
         {
-            return new() { Result = Result.Success, Message = message };
+            return new() { Result = Result.Success };
         }
 
-        public static CommandResult SuccessWithWarning(string message)
+        public static CommandResultWithMessage SuccessWithWarning(string message)
         {
-            return new() { Result = Result.SuccessWithWarnings, Message = message };
+            return new CommandResultWithMessage(Result.SuccessWithWarnings, message);
         }
 
-        public static CommandResult Failure(string message)
+        public static CommandResultWithMessage Failure(string message)
         {
-            return new CommandResult { Result = Result.Failure, Message = message };
+            return new CommandResultWithMessage(Result.Failure, message);
         }
 
         public static CommandResult Aborted()
