@@ -27,8 +27,8 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
         private Task? _simulationTask;
         private TrackPoint? _riderPosition;
         private SimulationState _simulationState = SimulationState.NotStarted;
-        private string _version;
-        private string _changelogUri;
+        private string? _version;
+        private string? _changelogUri;
         private bool _haveCheckedVersion;
         private readonly IVersionChecker _versionChecker;
         private readonly IWindowService _windowService;
@@ -43,7 +43,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
 
         public MainWindowViewModel(IRouteStore routeStore, ISegmentStore segmentStore, IVersionChecker versionChecker, IWindowService windowService, IWorldStore worldStore, IUserPreferences userPreferences)
         {
-            Segments = new List<Segment>();
+            _segments = new List<Segment>();
             _versionChecker = versionChecker;
             _windowService = windowService;
             _worldStore = worldStore;
@@ -52,8 +52,9 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             _userPreferences.Load();
 
             Model = new MainWindowModel();
-            Worlds = worldStore.LoadWorlds().Select(world => new WorldViewModel(world)).ToArray();
-            Sports = new[] { new SportViewModel(SportType.Cycling), new SportViewModel(SportType.Running) };
+            _worlds = worldStore.LoadWorlds().Select(world => new WorldViewModel(world)).ToArray();
+            _sports = new[] { new SportViewModel(SportType.Cycling), new SportViewModel(SportType.Running) };
+            _markers = new List<Segment>();
             Route = new RouteViewModel(routeStore, segmentStore);
 
             Route.PropertyChanged += (_, args) => HandleRoutePropertyChanged(segmentStore, args);
@@ -104,21 +105,21 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
                 })
                 .OnFailure(_ => Model.StatusBarWarning(_.Message));
 
-            SimulateCommand = new AsyncRelayCommand(
+            SimulateCommand = new RelayCommand(
                     _ => SimulateRoute(),
                     _ => Route.Sequence.Any())
                 .SubscribeTo(this, () => Route.Sequence);
 
             OpenLinkCommand = new RelayCommand(
-                _ => OpenLink(_ as string),
+                _ => OpenLink(_ as string ?? throw new ArgumentNullException(nameof(RelayCommand.CommandParameter))),
                 _ => !string.IsNullOrEmpty(_ as string));
 
-            SelectWorldCommand = new AsyncRelayCommand(
-                _ => SelectWorld(_ as WorldViewModel),
+            SelectWorldCommand = new RelayCommand(
+                _ => SelectWorld(_ as WorldViewModel ?? throw new ArgumentNullException(nameof(RelayCommand.CommandParameter))),
                 _ => (_ as WorldViewModel)?.CanSelect ?? false);
 
             SelectSportCommand = new AsyncRelayCommand(
-                _ => SelectSport(_ as SportViewModel),
+                _ => SelectSport(_ as SportViewModel ?? throw new ArgumentNullException(nameof(RelayCommand.CommandParameter))),
                 _ => _ is SportViewModel);
 
             ResetDefaultSportCommand = new RelayCommand(
@@ -288,7 +289,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
                     return;
                 }
 
-                _markers = value ?? new List<Segment>();
+                _markers = value;
 
                 this.RaisePropertyChanged(nameof(Markers));
             }
@@ -617,7 +618,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             }
         }
 
-        private async Task<CommandResult> SelectWorld(WorldViewModel world)
+        private CommandResult SelectWorld(WorldViewModel world)
         {
             Route.World = _worldStore.LoadWorldById(world.Id);
 
@@ -658,7 +659,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             return CommandResult.Success();
         }
 
-        private async Task<CommandResult> SimulateRoute()
+        private CommandResult SimulateRoute()
         {
             if (_simulationTask != null && SimulationState == SimulationState.Running)
             {
@@ -744,7 +745,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
 
         public string Version
         {
-            get => _version;
+            get => _version ?? "0.0.0.0";
             set
             {
                 if (value == _version) return;
@@ -754,7 +755,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             }
         }
 
-        public string ChangelogUri
+        public string? ChangelogUri
         {
             get => _changelogUri;
             set

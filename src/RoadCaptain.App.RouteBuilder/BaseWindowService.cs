@@ -43,7 +43,7 @@ namespace RoadCaptain.App.RouteBuilder
                 Title = "Open RoadCaptain route file"
             };
 
-            var selectedFiles = await dialog.ShowAsync(CurrentWindow);
+            var selectedFiles = await dialog.ShowAsync(CurrentWindow ?? throw new ArgumentNullException(nameof(CurrentWindow)));
 
             if (selectedFiles != null && selectedFiles.Any())
             {

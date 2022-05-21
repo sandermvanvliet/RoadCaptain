@@ -32,7 +32,7 @@ namespace RoadCaptain.App.RouteBuilder.Controls
         public static readonly DirectProperty<ZwiftMap, List<Segment>?> SegmentsProperty = AvaloniaProperty.RegisterDirect<ZwiftMap, List<Segment>?>(nameof(Segments), map => map.Segments, (map, value) => map.Segments = value);
         public static readonly DirectProperty<ZwiftMap, List<Segment>?> MarkersProperty = AvaloniaProperty.RegisterDirect<ZwiftMap, List<Segment>?>(nameof(Markers), map => map.Markers, (map, value) => map.Markers = value);
         public static readonly DirectProperty<ZwiftMap, RouteViewModel?> RouteProperty = AvaloniaProperty.RegisterDirect<ZwiftMap, RouteViewModel?>(nameof(Route), map => map.Route, (map, value) => map.Route = value);
-        public static readonly DirectProperty<ZwiftMap, ICommand> SelectSegmentCommandProperty = AvaloniaProperty.RegisterDirect<ZwiftMap, ICommand>(nameof(SelectSegmentCommand), map => map.SelectSegmentCommand, (map, value) => map.SelectSegmentCommand = value);
+        public static readonly DirectProperty<ZwiftMap, ICommand?> SelectSegmentCommandProperty = AvaloniaProperty.RegisterDirect<ZwiftMap, ICommand?>(nameof(SelectSegmentCommand), map => map.SelectSegmentCommand, (map, value) => map.SelectSegmentCommand = value);
 
         private Offsets? _overallOffsets;
         private readonly Dictionary<string, SKRect> _segmentPathBounds = new();
@@ -48,7 +48,7 @@ namespace RoadCaptain.App.RouteBuilder.Controls
 
             _renderOperation = new MapRenderOperation();
 
-            _closeTimer = new Timer(state => Dispatcher.UIThread.InvokeAsync(() => ToolTip.SetIsOpen(this, false)),
+            _closeTimer = new Timer(_ => Dispatcher.UIThread.InvokeAsync(() => ToolTip.SetIsOpen(this, false)),
                 null,
                 Timeout.InfiniteTimeSpan,
                 Timeout.InfiniteTimeSpan);
@@ -159,7 +159,7 @@ namespace RoadCaptain.App.RouteBuilder.Controls
             get => null;
             set
             {
-                if(value != null)
+                if(value != null && value.Index.HasValue)
                 {
                     _renderOperation.RiderPosition = _segmentPaths[value.Segment.Id].Points[value.Index.Value];
 
@@ -215,7 +215,7 @@ namespace RoadCaptain.App.RouteBuilder.Controls
             }
         }
 
-        public ICommand SelectSegmentCommand { get; set; }
+        public ICommand? SelectSegmentCommand { get; set; }
 
         protected override void OnPointerMoved(PointerEventArgs e)
         {
@@ -309,7 +309,7 @@ namespace RoadCaptain.App.RouteBuilder.Controls
         private void SelectSegment(Point scaledPoint)
         {
             // Initialization apparently did not complete so we cannot map any point at all
-            if (_overallOffsets == null)
+            if (_overallOffsets == null || Segments == null)
             {
                 return;
             }
