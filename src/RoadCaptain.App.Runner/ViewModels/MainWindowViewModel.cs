@@ -90,7 +90,7 @@ namespace RoadCaptain.App.Runner.ViewModels
                 _ => true);
 
             LogInCommand = new AsyncRelayCommand(
-                    _ => LogInToZwift(_ as Window),
+                    _ => LogInToZwift(_ as Window ?? throw new ArgumentNullException(nameof(AsyncRelayCommand.CommandParameter))),
                     _ => !LoggedInToZwift)
                 .SubscribeTo(this, () => LoggedInToZwift);
 
@@ -100,7 +100,7 @@ namespace RoadCaptain.App.Runner.ViewModels
                 .OnFailure(async result => await _windowService.ShowErrorDialog(result.Message));
 
             OpenLinkCommand = new RelayCommand(
-                _ => OpenLink(_ as string),
+                _ => OpenLink(_ as string ?? throw new ArgumentNullException(nameof(AsyncRelayCommand.CommandParameter))),
                 _ => !string.IsNullOrEmpty(_ as string));
 
             Version = GetType().Assembly.GetName().Version?.ToString(4) ?? "0.0.0.0";
@@ -234,7 +234,7 @@ namespace RoadCaptain.App.Runner.ViewModels
             }
         }
 
-        public string ChangelogUri
+        public string? ChangelogUri
         {
             get => _changelogUri;
             set
@@ -346,17 +346,23 @@ namespace RoadCaptain.App.Runner.ViewModels
             return CommandResult.Success();
         }
 
+#pragma warning disable CS1998
         private async Task<CommandResult> LaunchRouteBuilder()
+#pragma warning restore CS1998
         {
             var assemblyLocation = GetType().Assembly.Location;
             var installationDirectory = Path.GetDirectoryName(assemblyLocation);
-            var routeBuilderPath = Path.Combine(installationDirectory, "RoadCaptain.RouteBuilder.exe");
 
-            if (File.Exists(routeBuilderPath))
+            if (!string.IsNullOrEmpty(installationDirectory))
             {
-                Process.Start(routeBuilderPath);
+                var routeBuilderPath = Path.Combine(installationDirectory, "RoadCaptain.RouteBuilder.exe");
 
-                return CommandResult.Success();
+                if (File.Exists(routeBuilderPath))
+                {
+                    Process.Start(routeBuilderPath);
+
+                    return CommandResult.Success();
+                }
             }
 
             return CommandResult.Failure("Could not locate RoadCaptain Route Builder");
@@ -409,9 +415,9 @@ namespace RoadCaptain.App.Runner.ViewModels
             return CommandResult.Aborted();
         }
 
-        private IImage DownloadAvatarImage(string? uri)
+        private static IImage? DownloadAvatarImage(string? uri)
         {
-            if (uri.StartsWith("https://"))
+            if (uri != null && uri.StartsWith("https://"))
             {
                 using var client = new HttpClient();
                 try
@@ -428,7 +434,12 @@ namespace RoadCaptain.App.Runner.ViewModels
             
             var assets = AvaloniaLocator.Current.GetService<IAssetLoader>();
 
-            if (uri.StartsWith("avares://"))
+            if (assets == null)
+            {
+                return null;
+            }
+
+            if (uri != null && uri.StartsWith("avares://"))
             {
                 return new Bitmap(assets.Open(new Uri(uri)));
             }

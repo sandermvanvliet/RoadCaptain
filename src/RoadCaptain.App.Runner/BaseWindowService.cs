@@ -43,7 +43,7 @@ namespace RoadCaptain.App.Runner
                 Title = "Open RoadCaptain route file"
             };
 
-            var selectedFiles = await dialog.ShowAsync(CurrentWindow);
+            var selectedFiles = await dialog.ShowAsync(CurrentWindow ?? throw new ArgumentNullException(nameof(CurrentWindow)));
 
             if (selectedFiles != null && selectedFiles.Any())
             {
@@ -64,7 +64,7 @@ namespace RoadCaptain.App.Runner
 
         public virtual async Task ShowErrorDialog(string message)
         {
-            await ShowErrorDialog(message, CurrentWindow);
+            await ShowErrorDialog(message, CurrentWindow ?? throw new ArgumentNullException(nameof(CurrentWindow)));
         }
 
         public virtual async Task ShowErrorDialog(string message, Window owner)

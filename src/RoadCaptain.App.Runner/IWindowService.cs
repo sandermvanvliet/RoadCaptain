@@ -8,7 +8,7 @@ namespace RoadCaptain.App.Runner
 {
     public interface IWindowService
     {
-        Task<string?> ShowOpenFileDialog(string previousLocation);
+        Task<string?> ShowOpenFileDialog(string? previousLocation);
         void ShowInGameWindow(InGameNavigationWindowViewModel viewModel);
         Task<TokenResponse?> ShowLogInDialog(Window owner);
         Task ShowErrorDialog(string message, Window owner);

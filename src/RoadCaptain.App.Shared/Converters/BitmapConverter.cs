@@ -10,9 +10,7 @@ namespace RoadCaptain.App.Shared.Converters
 {
     public class BitmapConverter : IValueConverter
     {
-        public static BitmapConverter Instance = new();
-
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
         {
             if (value == null)
             {
@@ -30,11 +28,22 @@ namespace RoadCaptain.App.Shared.Converters
                 }
                 else
                 {
-                    var assemblyName = Assembly.GetEntryAssembly().GetName().Name;
+                    var entryAssembly = Assembly.GetEntryAssembly();
+                    if (entryAssembly == null)
+                    {
+                        return null;
+                    }
+
+                    var assemblyName = entryAssembly.GetName().Name;
                     uri = new Uri($"avares://{assemblyName}{rawUri}");
                 }
 
                 var assets = AvaloniaLocator.Current.GetService<IAssetLoader>();
+                if (assets == null)
+                {
+                    return null;
+                }
+
                 var asset = assets.Open(uri);
 
                 return new Bitmap(asset);
@@ -43,7 +52,7 @@ namespace RoadCaptain.App.Shared.Converters
             throw new NotSupportedException();
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
         {
             throw new NotSupportedException();
         }

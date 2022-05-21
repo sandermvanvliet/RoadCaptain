@@ -19,7 +19,7 @@ namespace RoadCaptain.App.Runner
             _dispatcher = dispatcher;
         }
 
-        public async Task<string?> ShowOpenFileDialog(string previousLocation)
+        public async Task<string?> ShowOpenFileDialog(string? previousLocation)
         {
             return await InvokeIfNeededAsync(() => _decorated.ShowOpenFileDialog(previousLocation));
         }
