@@ -11,6 +11,9 @@ jobs:
 
     runs-on: windows-2022
 
+    env:
+      RID: win-x64
+
     steps:
     - uses: actions/checkout@v2
     - name: Setup .NET
@@ -18,8 +21,6 @@ jobs:
       with:
         dotnet-version: 6.0.x
     - name: Restore dependencies
-      run: dotnet restore
-    - name: Build
-      run: dotnet build --no-restore
+      run: dotnet restore -r ${{ env.RID }}
     - name: Test
-      run: dotnet test --no-build --verbosity normal
+      run: dotnet test --verbosity normal -c Release -r ${{ env.RID }}

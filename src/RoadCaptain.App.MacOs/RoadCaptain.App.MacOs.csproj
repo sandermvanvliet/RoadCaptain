@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
-	  <RuntimeIdentifier>osx-x64</RuntimeIdentifier>
+	  <RuntimeIdentifiers>osx-x64;osx-arm64</RuntimeIdentifiers>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
@@ -13,6 +13,13 @@
 
 	<ItemGroup>
 		<PackageReference Include="Autofac" Version="6.3.0" />
+		<PackageReference Include="WebViewControl-Avalonia" Version="2.91.23" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Compile Update="Views\ZwiftLoginWindow.axaml.cs">
+	    <DependentUpon>%(Filename)</DependentUpon>
+	  </Compile>
 	</ItemGroup>
 
 </Project>

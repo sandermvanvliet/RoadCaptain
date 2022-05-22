@@ -27,4 +27,9 @@
 	<ItemGroup>
 	  <ProjectReference Include="..\RoadCaptain\RoadCaptain.csproj" />
 	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="Models\" />
+	  <Folder Include="Views\" />
+	</ItemGroup>
 </Project>

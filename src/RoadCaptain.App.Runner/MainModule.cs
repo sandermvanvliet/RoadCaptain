@@ -6,7 +6,6 @@ using Autofac;
 using Autofac.Core.Activators.Reflection;
 using Avalonia.Controls;
 using RoadCaptain.App.Runner.ViewModels;
-using RoadCaptain.App.Shared.UserPreferences;
 
 namespace RoadCaptain.App.Runner
 {
@@ -23,6 +22,12 @@ namespace RoadCaptain.App.Runner
             builder.RegisterType<WindowService>().As<IWindowService>().SingleInstance();
             builder.RegisterDecorator<DelegateDecorator, IWindowService>();
 
+            // Note: If you think "why not RuntimeInformation.IsOSPlatform()?" then
+            //       realize that the platform specific projects are only referenced
+            //       for a particular platform _at build time_ and not at runtime.
+            //       So if you would want to use a runtime check here that means
+            //       that for example the macOS project would need to be included
+            //       in the build for Windows and that defeats the purpose of all this.
 #if WIN
             builder.RegisterModule(new RoadCaptain.App.Windows.WindowsModule());
 #elif LINUX
@@ -30,7 +35,7 @@ namespace RoadCaptain.App.Runner
 #elif MACOS
             builder.RegisterModule(new RoadCaptain.App.MacOs.MacOsModule());
 #else
-            builder.RegisterType<DummyUserPreferences>().As<IUserPreferences>().SingleInstance();
+            builder.RegisterType<DummyUserPreferences>().As<RoadCaptain.App.Shared.UserPreferences.IUserPreferences>().SingleInstance();
 #endif
             
             
