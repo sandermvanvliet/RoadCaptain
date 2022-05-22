@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace RoadCaptain.App.Runner.Models
+namespace RoadCaptain.App.Shared.Models
 {
     public class UserProfile
     {

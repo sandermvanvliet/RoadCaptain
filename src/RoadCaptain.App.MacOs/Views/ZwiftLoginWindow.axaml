@@ -1,0 +1,16 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:webview="clr-namespace:WebViewControl;assembly=WebViewControl.Avalonia"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="600"
+        x:Class="RoadCaptain.App.MacOs.Views.ZwiftLoginWindow"
+        Title="Log in to Zwift" 
+        Height="800" 
+        Width="800"
+        SystemDecorations="Full"
+        Icon="avares://RoadCaptain.App.Shared/icon.png"
+        Activated="WindowBase_OnActivated"
+        WindowStartupLocation="CenterOwner">
+    <webview:WebView Name="ZwiftAuthView" Width="800" Height="800" Margin="0" />
+</Window>

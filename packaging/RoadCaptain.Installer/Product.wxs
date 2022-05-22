@@ -29,10 +29,8 @@
       <ComponentGroupRef Id="CommonComponents" />
       <ComponentGroupRef Id="RunnerComponents" />
       <ComponentGroupRef Id="RouteBuilderComponents" />
-      <ComponentGroupRef Id="swiftshaderComponents" />
       <ComponentGroupRef Id="RoutesComponents" />
-      <ComponentGroupRef Id="localesComponents" />
-      <ComponentGroupRef Id="CefGlueBrowserProcessComponents" />
+      <ComponentGroupRef Id="nativeComponents" />
       <ComponentRef Id="ApplicationShortcut" />
       <ComponentRef Id="DesktopShortcut" />
     </Feature>
@@ -53,9 +51,6 @@
               </Directory>
             </Directory>
             <Directory Id="Routes" Name="Routes" />
-            <Directory Id="CefGlueBrowserProcess" Name="CefGlueBrowserProcess" />
-            <Directory Id="locales" Name="locales" />
-            <Directory Id="swiftshader" Name="swiftshader" />
           </Directory>
         </Directory>
       </Directory>

@@ -1,7 +1,3 @@
-using System;
-using System.IO;
-using System.Linq;
-using System.Net.Http;
 using System.Reflection;
 using System.Text;
 using System.Text.Json;
@@ -9,13 +5,14 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 using Avalonia.Threading;
-using RoadCaptain.App.Runner.Models;
+using RoadCaptain.App.Shared.Models;
+using RoadCaptain.App.Shared.Views;
 using WebViewControl;
 using Xilium.CefGlue;
 
-namespace RoadCaptain.App.Runner.Views
+namespace RoadCaptain.App.MacOs.Views
 {
-    public partial class ZwiftLoginWindow : Window
+    public partial class ZwiftLoginWindow : ZwiftLoginWindowBase
     {
         private readonly FieldInfo _cefRequestField;
         private bool _isInitialActivation = true;
@@ -38,8 +35,6 @@ namespace RoadCaptain.App.Runner.Views
 
             _cefRequestField = fields.Single(f => f.FieldType == typeof(CefRequest));
         }
-
-        public TokenResponse TokenResponse { get; private set; }
 
         private void ZwiftAuthViewOnBeforeResourceLoad(ResourceHandler resourcehandler)
         {

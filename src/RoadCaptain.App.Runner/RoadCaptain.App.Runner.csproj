@@ -1,5 +1,18 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
+		<!--
+		Some special things requierd to make WebView2 work on Windows.
+		Because we're doing funky stuff by embedding a WinForms control
+		into Avalonia that requires us to set the RuntimeIdentifier but
+		also tell MSBuild to add the relevant WinForms references.
+		-->
+		<RuntimeIdentifier Condition="$([MSBuild]::IsOSPlatform('WINDOWS')) And '$(Configuration)'=='Debug'">win-x64</RuntimeIdentifier>
+		<!-- Need to specify both RuntimeIdentifier and RuntimeIdentifiers because of MSBuild weirdness -->
+		<RuntimeIdentifiers Condition="$([MSBuild]::IsOSPlatform('WINDOWS')) And '$(Configuration)'=='Debug'">win-x64</RuntimeIdentifiers>
+		<!-- On macOS always set this to osx-x64 in debug mode so that debugging from Rider works  -->
+		<RuntimeIdentifier Condition="$([MSBuild]::IsOSPlatform('OSX')) And '$(Configuration)'=='Debug'">osx-x64</RuntimeIdentifier>
+		<RuntimeIdentifiers Condition="$([MSBuild]::IsOSPlatform('OSX')) And '$(Configuration)'=='Debug'">osx-x64</RuntimeIdentifiers>
+
 		<OutputType>WinExe</OutputType>
 		<OutputType Condition="'$(RuntimeIdentifier)'=='linux-x64' Or '$(RuntimeIdentifier)'=='osx-x64'">Exe</OutputType>
 		<TargetFramework Condition="'$(RuntimeIdentifier)'!='win-x64'">net6.0</TargetFramework>
@@ -10,8 +23,12 @@
 		<BuiltInComInteropSupport>true</BuiltInComInteropSupport>
 		<DefineConstants Condition="'$(RuntimeIdentifier)'=='win-x64'">WIN</DefineConstants>
 		<DefineConstants Condition="'$(RuntimeIdentifier)'=='linux-x64'">LINUX</DefineConstants>
-		<DefineConstants Condition="'$(RuntimeIdentifier)'=='osx-x64' Or $([MSBuild]::IsOSPlatform('OSX'))">MACOS</DefineConstants>
-		<UseAppHost Condition="'$(RuntimeIdentifier)'=='osx-x64'">true</UseAppHost>
+		<DefineConstants Condition="'$(RuntimeIdentifier)'=='osx-x64'">MACOS</DefineConstants>
+		<DefineConstants Condition="'$(RuntimeIdentifier)'=='osx-arm64'">MACOS</DefineConstants>
+		<UseAppHost Condition="'$(RuntimeIdentifier)'!='win-x64'">true</UseAppHost>
+
+		<!-- Ignore translations -->
+		<SatelliteResourceLanguages>en</SatelliteResourceLanguages>
 	</PropertyGroup>
 	<ItemGroup>
 		<AvaloniaResource Include="Assets\**" />
@@ -30,7 +47,6 @@
 		<!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
 		<PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="0.10.12" />
 		<PackageReference Include="Avalonia.ReactiveUI" Version="0.10.12" />
-		<PackageReference Include="WebViewControl-Avalonia" Version="2.91.23" />
 		<PackageReference Include="XamlNameReferenceGenerator" Version="1.3.4" />
 		<PackageReference Include="Autofac" Version="6.3.0" />
 		<PackageReference Include="Autofac.Configuration" Version="6.0.0" />
@@ -55,7 +71,7 @@
 		<ProjectReference Include="..\RoadCaptain.App.Linux\RoadCaptain.App.Linux.csproj" Condition="'$(RuntimeIdentifier)'=='linux-x64'" />
 	</ItemGroup>
 	<ItemGroup>
-		<ProjectReference Include="..\RoadCaptain.App.MacOs\RoadCaptain.App.MacOs.csproj" Condition="'$(RuntimeIdentifier)'=='osx-x64' Or $([MSBuild]::IsOSPlatform('OSX'))" />
+		<ProjectReference Include="..\RoadCaptain.App.MacOs\RoadCaptain.App.MacOs.csproj" Condition="'$(RuntimeIdentifier)'=='osx-x64' Or '$(RuntimeIdentifier)'=='osx-arm64'" />
 	</ItemGroup>
 	<ItemGroup>
 		<None Update="appsettings.json" Condition="'$(Configuration)'=='Debug'">
