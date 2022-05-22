@@ -1,16 +1,15 @@
-using System;
-using System.IO;
+using System.Text.Json;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 using Microsoft.Web.WebView2.Core;
-using System.Text.Json;
 using RoadCaptain.App.Runner.Controls;
-using RoadCaptain.App.Runner.Models;
+using RoadCaptain.App.Shared.Models;
+using RoadCaptain.App.Shared.Views;
 
-namespace RoadCaptain.App.Runner.Views
+namespace RoadCaptain.App.Windows.Views
 {
-    public partial class ZwiftLoginWindowPlatformWin : Window
+    public partial class ZwiftLoginWindowPlatformWin : ZwiftLoginWindowBase
     {
         private readonly WebView _webView;
         private bool _isInitialActivation = true;
@@ -26,8 +25,6 @@ namespace RoadCaptain.App.Runner.Views
             _webView.CoreWebView2InitializationCompleted += ZwiftAuthView_OnCoreWebView2InitializationCompleted;
             _webView.NavigationStarting += ZwiftAuthView_OnNavigationStarting;
         }
-
-        public TokenResponse? TokenResponse { get; private set; }
 
         private void InitializeComponent()
         {

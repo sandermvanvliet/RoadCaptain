@@ -7,6 +7,8 @@ using RoadCaptain.App.Runner.ViewModels;
 using RoadCaptain.App.Runner.Views;
 using RoadCaptain.App.Shared.Dialogs;
 using RoadCaptain.App.Shared.Dialogs.ViewModels;
+using RoadCaptain.App.Shared.Models;
+using RoadCaptain.App.Shared.Views;
 
 namespace RoadCaptain.App.Runner
 {
@@ -60,11 +62,7 @@ namespace RoadCaptain.App.Runner
 
         public async Task<TokenResponse?> ShowLogInDialog(Window owner)
         {
-            #if WIN
-            var zwiftLoginWindow = Resolve<ZwiftLoginWindowPlatformWin>();
-            #else
-            var zwiftLoginWindow = Resolve<ZwiftLoginWindow>();
-            #endif
+            var zwiftLoginWindow = Resolve<ZwiftLoginWindowBase>();
 
             zwiftLoginWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
 

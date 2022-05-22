@@ -5,6 +5,7 @@
 		<RuntimeIdentifier>win-x64</RuntimeIdentifier>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
+		<UseWindowsForms>true</UseWindowsForms>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -13,6 +14,13 @@
 
 	<ItemGroup>
 		<PackageReference Include="Autofac" Version="6.3.0" />
+		<PackageReference Include="Microsoft.Web.WebView2" Version="1.0.1210.39" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Compile Update="Views\ZwiftLoginWindowPlatformWin.axaml.cs">
+	    <DependentUpon>%(Filename)</DependentUpon>
+	  </Compile>
 	</ItemGroup>
 
 </Project>

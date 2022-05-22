@@ -3,6 +3,7 @@ using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using RoadCaptain.App.Runner.Models;
 using RoadCaptain.App.Runner.ViewModels;
+using RoadCaptain.App.Shared.Models;
 
 namespace RoadCaptain.App.Runner
 {

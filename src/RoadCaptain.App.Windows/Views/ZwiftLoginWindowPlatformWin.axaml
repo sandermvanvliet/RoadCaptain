@@ -3,8 +3,8 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:controls="clr-namespace:RoadCaptain.App.Runner.Controls"
-        mc:Ignorable="d" Width="800" Height="450"
-        x:Class="RoadCaptain.App.Runner.Views.ZwiftLoginWindowPlatformWin"
+        mc:Ignorable="d" Width="800" Height="600"
+        x:Class="RoadCaptain.App.Windows.Views.ZwiftLoginWindowPlatformWin"
         Title="ZwiftLoginWindowPlatformWin"
         Activated="WindowBase_OnActivated">
 	<Grid>
