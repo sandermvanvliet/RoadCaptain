@@ -18,8 +18,8 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Compile Update="Views\ZwiftLoginWindowPlatformWin.axaml.cs">
-	    <DependentUpon>%(Filename)</DependentUpon>
+	  <Compile Update="Views\ZwiftLoginWindow.axaml.cs">
+	    <DependentUpon>ZwiftLoginWindow.axaml</DependentUpon>
 	  </Compile>
 	</ItemGroup>
 

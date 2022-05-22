@@ -11,7 +11,7 @@ namespace RoadCaptain.App.Windows
         protected override void Load(ContainerBuilder builder)
         {
             builder.RegisterType<WindowsUserPreferences>().As<IUserPreferences>().SingleInstance();
-            builder.RegisterType<ZwiftLoginWindowPlatformWin>().As<ZwiftLoginWindowBase>();
+            builder.RegisterType<ZwiftLoginWindow>().As<ZwiftLoginWindowBase>();
         }
     }
 }

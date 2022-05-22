@@ -9,12 +9,12 @@ using RoadCaptain.App.Shared.Views;
 
 namespace RoadCaptain.App.Windows.Views
 {
-    public partial class ZwiftLoginWindowPlatformWin : ZwiftLoginWindowBase
+    public partial class ZwiftLoginWindow : ZwiftLoginWindowBase
     {
         private readonly WebView _webView;
         private bool _isInitialActivation = true;
 
-        public ZwiftLoginWindowPlatformWin()
+        public ZwiftLoginWindow()
         {
             InitializeComponent();
 #if DEBUG
