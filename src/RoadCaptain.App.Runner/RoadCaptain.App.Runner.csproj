@@ -10,6 +10,7 @@
 		<!-- Need to specify both RuntimeIdentifier and RuntimeIdentifiers because of MSBuild weirdness -->
 		<RuntimeIdentifiers Condition="$([MSBuild]::IsOSPlatform('WINDOWS')) And '$(Configuration)'=='Debug'">win-x64</RuntimeIdentifiers>
 		<!-- On macOS always set this to osx-x64 in debug mode so that debugging from Rider works  -->
+		<RuntimeIdentifier Condition="$([MSBuild]::IsOSPlatform('OSX')) And '$(Configuration)'=='Debug'">osx-x64</RuntimeIdentifier>
 		<RuntimeIdentifiers Condition="$([MSBuild]::IsOSPlatform('OSX')) And '$(Configuration)'=='Debug'">osx-x64</RuntimeIdentifiers>
 
 		<OutputType>WinExe</OutputType>
