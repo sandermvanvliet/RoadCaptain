@@ -26,6 +26,9 @@
 		<DefineConstants Condition="'$(RuntimeIdentifier)'=='osx-x64'">MACOS</DefineConstants>
 		<DefineConstants Condition="'$(RuntimeIdentifier)'=='osx-arm64'">MACOS</DefineConstants>
 		<UseAppHost Condition="'$(RuntimeIdentifier)'!='win-x64'">true</UseAppHost>
+
+		<!-- Ignore translations -->
+		<SatelliteResourceLanguages>en</SatelliteResourceLanguages>
 	</PropertyGroup>
 	<ItemGroup>
 		<AvaloniaResource Include="Assets\**" />
