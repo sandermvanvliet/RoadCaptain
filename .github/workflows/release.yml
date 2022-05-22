@@ -49,10 +49,8 @@ jobs:
         dotnet-version: 6.0.x
     - name: Restore dependencies
       run: dotnet restore -r ${{ env.RID }}
-    - name: Build
-      run: dotnet build --no-restore -c Release .\RoadCaptain.sln
     - name: Test
-      run: dotnet test --no-build --verbosity normal -c Release -r ${{ env.RID }}
+      run: dotnet test --verbosity normal -c Release -r ${{ env.RID }}
     - name: Publish Runner
       # Because of reasons we need to explicitly set RuntimeIdentifiers to only win-x64 because MSBuild sets it to osx-x64;win-x64
       run: dotnet publish --self-contained -c Release -r ${{ env.RID }} -p:RuntimeIdentifiers=${{ env.RID }} src\RoadCaptain.App.Runner\RoadCaptain.App.Runner.csproj
