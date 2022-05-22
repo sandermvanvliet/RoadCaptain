@@ -11,6 +11,9 @@ jobs:
 
     runs-on: windows-2022
 
+    env:
+      RID: win-x64
+
     steps:
     - uses: actions/checkout@v2
     - name: Setup .NET
