@@ -35,10 +35,11 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.MainWindow
                 routeStore,
                 null);
             
+            // This is required so that we can call new Window() below.
             var avaloniaDependencyResolver = new AvaloniaLocator();
             var mock = new Mock<IWindowingPlatform>();
             mock.Setup(_ => _.CreateWindow()).Returns(new Mock<IWindowImpl>().Object);
-            avaloniaDependencyResolver.Bind<IWindowingPlatform>().ToConstant<IWindowingPlatform>(mock.Object);
+            avaloniaDependencyResolver.Bind<IWindowingPlatform>().ToConstant(mock.Object);
             AvaloniaLocator.Current = avaloniaDependencyResolver;
         }
 

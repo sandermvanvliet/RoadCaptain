@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using Autofac;
-using Autofac.Core;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Threading;
 using Microsoft.Extensions.Configuration;
@@ -12,7 +10,6 @@ using RoadCaptain.App.Shared;
 using RoadCaptain.GameStates;
 using RoadCaptain.Ports;
 using Serilog;
-using Serilog.Core;
 using Serilog.Sinks.InMemory;
 
 namespace RoadCaptain.App.Runner.Tests.Unit.Engine
@@ -21,7 +18,7 @@ namespace RoadCaptain.App.Runner.Tests.Unit.Engine
     {
         private readonly TaskWithCancellation _receiverTask;
         private readonly IGameStateReceiver _gameStateReceiver;
-        private readonly IDisposable _application;
+        private readonly ClassicDesktopStyleApplicationLifetime _lifetime;
 
         public EngineTest()
         {
@@ -60,6 +57,11 @@ namespace RoadCaptain.App.Runner.Tests.Unit.Engine
 
             Engine = container.Resolve<TestableEngine>();
             WindowService = container.Resolve<StubWindowService>();
+
+            _lifetime = new ClassicDesktopStyleApplicationLifetime();
+            WindowService.SetLifetime(_lifetime);
+
+            AvaloniaTestSupport.MockServices();
         }
 
         protected StubWindowService WindowService { get; }
@@ -84,8 +86,8 @@ namespace RoadCaptain.App.Runner.Tests.Unit.Engine
             {
                 // ignored
             }
-
-            _application?.Dispose();
+            
+            _lifetime?.Dispose();
         }
 
         protected void ReceiveGameState(GameState state)

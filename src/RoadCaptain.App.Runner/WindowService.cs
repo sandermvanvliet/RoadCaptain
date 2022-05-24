@@ -2,7 +2,6 @@
 using Autofac;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
-using RoadCaptain.App.Runner.Models;
 using RoadCaptain.App.Runner.ViewModels;
 using RoadCaptain.App.Runner.Views;
 using RoadCaptain.App.Shared.Dialogs;
@@ -60,7 +59,7 @@ namespace RoadCaptain.App.Runner
             SwapWindows(inGameWindow);
         }
 
-        public async Task<TokenResponse?> ShowLogInDialog(Window owner)
+        public virtual async Task<TokenResponse?> ShowLogInDialog(Window owner)
         {
             var zwiftLoginWindow = Resolve<ZwiftLoginWindowBase>();
 

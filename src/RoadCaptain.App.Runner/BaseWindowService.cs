@@ -23,7 +23,7 @@ namespace RoadCaptain.App.Runner
 
         protected Window? CurrentWindow { get; private set; }
 
-        public async Task<string?> ShowOpenFileDialog(string? previousLocation)
+        public virtual async Task<string?> ShowOpenFileDialog(string? previousLocation)
         {
             var initialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
 
