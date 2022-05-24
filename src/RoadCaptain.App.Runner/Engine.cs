@@ -64,7 +64,11 @@ namespace RoadCaptain.App.Runner
 
         protected void GameStateReceived(GameState gameState)
         {
-            _monitoringEvents.StateTransition(_previousGameState, gameState);
+            // Only log actual transitions
+            if (_previousGameState != null && _previousGameState.GetType() != gameState.GetType())
+            {
+                _monitoringEvents.StateTransition(_previousGameState, gameState);
+            }
 
             if (gameState is LoggedInState loggedInState)
             {
