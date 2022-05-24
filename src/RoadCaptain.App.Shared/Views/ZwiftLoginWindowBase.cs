@@ -5,6 +5,6 @@ namespace RoadCaptain.App.Shared.Views
 {
     public abstract class ZwiftLoginWindowBase : Window
     {
-        public TokenResponse? TokenResponse { get; protected set; }
+        public TokenResponse? TokenResponse { get; set; }
     }
 }

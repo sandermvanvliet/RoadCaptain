@@ -1,7 +1,8 @@
 using Autofac;
-using Autofac.Configuration;
 using Avalonia.Threading;
 using Microsoft.Extensions.Configuration;
+using RoadCaptain.Adapters;
+using RoadCaptain.App.Shared;
 using Serilog;
 
 namespace RoadCaptain.App.Runner
@@ -16,9 +17,10 @@ namespace RoadCaptain.App.Runner
             builder.Register<IConfiguration>(_ => configuration).SingleInstance();
 
             builder.RegisterType<Configuration>().AsSelf().SingleInstance();
-            
-            // Wire up registrations through the autofac.json file
-            builder.RegisterModule(new ConfigurationModule(configuration));
+
+            builder.RegisterModule<DomainModule>();
+            builder.RegisterModule<AdaptersModule>();
+            builder.RegisterModule<SharedModule>();
 
             builder.RegisterModule<MainModule>();
 
