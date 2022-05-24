@@ -1,4 +1,9 @@
-﻿using FluentAssertions;
+﻿using System.Collections.Generic;
+using Castle.Components.DictionaryAdapter;
+using FluentAssertions;
+using RoadCaptain.App.Runner.Models;
+using RoadCaptain.App.Runner.ViewModels;
+using RoadCaptain.App.Runner.Views;
 using RoadCaptain.GameStates;
 using Serilog.Events;
 using Serilog.Sinks.InMemory.Assertions;
@@ -51,6 +56,28 @@ namespace RoadCaptain.App.Runner.Tests.Unit.Engine
                 .Appearing()
                 .Once()
                 .WithLevel(LogEventLevel.Information);
+        }
+
+        [Fact]
+        public void GivenPreviousStateWasOnSegmentState_MainWindowIsShown()
+        {
+            ReceiveGameState(new OnSegmentState(1234, 12345, new TrackPoint(1,2,3), new Segment(new List<TrackPoint>())));
+
+            GivenConnectedToZwiftStateReceived();
+
+            WindowService.ShownWindows.Should().Contain(typeof(MainWindow));
+        }
+
+        [Fact]
+        public void GivenPreviousStateWasOnSegmentState_InGameWindowIsClosed()
+        {
+            WindowService.ShowInGameWindow(new InGameNavigationWindowViewModel(new InGameWindowModel(new List<Segment>()), new List<Segment>()));
+
+            ReceiveGameState(new OnSegmentState(1234, 12345, new TrackPoint(1,2,3), new Segment(new List<TrackPoint>())));
+
+            GivenConnectedToZwiftStateReceived();
+
+            WindowService.ClosedWindows.Should().Contain(typeof(InGameNavigationWindow));
         }
 
         private void GivenConnectedToZwiftStateReceived()

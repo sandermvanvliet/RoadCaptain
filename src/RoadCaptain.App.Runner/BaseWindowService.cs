@@ -109,7 +109,12 @@ namespace RoadCaptain.App.Runner
             var toClose = CurrentWindow;
 
             Show(window);
-            toClose?.Close();
+
+            if (toClose != null)
+            {
+                Close(toClose);
+            }
+
             CurrentWindow = window;
         }
 

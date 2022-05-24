@@ -102,6 +102,14 @@ namespace RoadCaptain.App.Runner
                     _windowService.ShowInGameWindow(CreateInGameViewModel(_loadedRoute));
                 }
             }
+            else if (gameState is ConnectedToZwiftState && _previousGameState is InGameState)
+            {
+                _monitoringEvents.Information("User left activity");
+
+                StartMessageHandler();
+
+                _windowService.ShowMainWindow();
+            }
             else if (gameState is ConnectedToZwiftState)
             {
                 _monitoringEvents.Information("Connected to Zwift");

@@ -47,5 +47,11 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels
             LogInDialogInvocations++;
             return LogInDialogResult;
         }
+
+        protected override void Close(Window window)
+        {
+            ClosedWindows.Add(window.GetType());
+            base.Close(window);
+        }
     }
 }
