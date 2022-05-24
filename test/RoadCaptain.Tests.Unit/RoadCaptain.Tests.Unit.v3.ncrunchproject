@@ -1,5 +1,7 @@
 ﻿<ProjectConfiguration>
   <Settings>
-    <CopyReferencedAssembliesToWorkspace>True</CopyReferencedAssembliesToWorkspace>
+    <CustomBuildProperties>
+      <Value>TargetFramework = net6.0-windows</Value>
+    </CustomBuildProperties>
   </Settings>
 </ProjectConfiguration>
