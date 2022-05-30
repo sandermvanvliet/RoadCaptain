@@ -147,6 +147,8 @@ jobs:
 
     needs: create_release
 
+    if: ${{ false }}  # disable until we resolve the webview packaging issue for arm64
+
     env:
       TEAM_ID: 44HHP3V8VR
       SIGNING_IDENTITY: "Developer ID Application: Codenizer BV (44HHP3V8VR)" # matches Keychain Access certificate name
