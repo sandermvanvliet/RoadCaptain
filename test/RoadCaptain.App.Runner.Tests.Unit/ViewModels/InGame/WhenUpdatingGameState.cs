@@ -240,13 +240,83 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.InGame
             _viewModel.Model.InstructionText.Should().Be("Please report a bug on Github");
         }
 
+        [Fact]
+        public void GivenOnRouteStateAndRouteLockIsLost_LostRouteLockIsTrue()
+        {
+            var plannedRoute = new PlannedRoute();
+            plannedRoute.RouteSegmentSequence.Add(new SegmentSequence { SegmentId = "seg-1", NextSegmentId = "seg-2"});
+            plannedRoute.RouteSegmentSequence.Add(new SegmentSequence { SegmentId = "seg-2", NextSegmentId = "seg-3"});
+            plannedRoute.RouteSegmentSequence.Add(new SegmentSequence { SegmentId = "seg-3", });
+            plannedRoute.EnteredSegment("seg-1");
+            plannedRoute.EnteredSegment("seg-2");
+            WhenUpdating(new OnRouteState(1, 2, new TrackPoint(1, 2, 3), new Segment(new List<TrackPoint>()) { Id = "seg-1"}, plannedRoute));
+
+            WhenUpdating(new OnSegmentState(1, 2, new TrackPoint(1, 2, 3), new Segment(new List<TrackPoint>()) { Id = "seg-2" }));
+
+            _viewModel.Model.LostRouteLock.Should().BeTrue();
+        }
+
+        [Fact]
+        public void GivenOnRouteStateAndRouteLockIsLost_InstructionIsMakeUTurn()
+        {
+            var plannedRoute = new PlannedRoute();
+            plannedRoute.RouteSegmentSequence.Add(new SegmentSequence { SegmentId = "seg-1", NextSegmentId = "seg-2"});
+            plannedRoute.RouteSegmentSequence.Add(new SegmentSequence { SegmentId = "seg-2", NextSegmentId = "seg-3"});
+            plannedRoute.RouteSegmentSequence.Add(new SegmentSequence { SegmentId = "seg-3", });
+            plannedRoute.EnteredSegment("seg-1");
+            plannedRoute.EnteredSegment("seg-2");
+            WhenUpdating(new OnRouteState(1, 2, new TrackPoint(1, 2, 3), new Segment(new List<TrackPoint>()) { Id = "seg-1"}, plannedRoute));
+
+            WhenUpdating(new OnSegmentState(1, 2, new TrackPoint(1, 2, 3), new Segment(new List<TrackPoint>()) { Id = "seg-2" }));
+            
+            _viewModel.Model.InstructionText.Should().Be("Try to make a u-turn and head to segment 'Segment 3'");
+        }
+
+        [Fact]
+        public void GivenRouteLockWasLostAndUserReturnsToRoute_LostRouteLockIsFalse()
+        {
+            var plannedRoute = new PlannedRoute();
+            plannedRoute.RouteSegmentSequence.Add(new SegmentSequence { SegmentId = "seg-1", NextSegmentId = "seg-2"});
+            plannedRoute.RouteSegmentSequence.Add(new SegmentSequence { SegmentId = "seg-2", NextSegmentId = "seg-3"});
+            plannedRoute.RouteSegmentSequence.Add(new SegmentSequence { SegmentId = "seg-3", });
+            plannedRoute.EnteredSegment("seg-1");
+            plannedRoute.EnteredSegment("seg-2");
+            WhenUpdating(new OnRouteState(1, 2, new TrackPoint(1, 2, 3), new Segment(new List<TrackPoint>()) { Id = "seg-1"}, plannedRoute));
+
+            WhenUpdating(new OnSegmentState(1, 2, new TrackPoint(1, 2, 3), new Segment(new List<TrackPoint>()) { Id = "seg-2" }));
+
+            WhenUpdating(new OnRouteState(1, 2, new TrackPoint(1, 2, 3), new Segment(new List<TrackPoint>()) { Id = "seg-2"}, plannedRoute));
+
+            _viewModel.Model.LostRouteLock.Should().BeFalse();
+        }
+
+        [Fact]
+        public void GivenRouteLockWasLostAndUserReturnsToRoute_InstructionTextIsCleared()
+        {
+            var plannedRoute = new PlannedRoute();
+            plannedRoute.RouteSegmentSequence.Add(new SegmentSequence { SegmentId = "seg-1", NextSegmentId = "seg-2"});
+            plannedRoute.RouteSegmentSequence.Add(new SegmentSequence { SegmentId = "seg-2", NextSegmentId = "seg-3"});
+            plannedRoute.RouteSegmentSequence.Add(new SegmentSequence { SegmentId = "seg-3", });
+            plannedRoute.EnteredSegment("seg-1");
+            plannedRoute.EnteredSegment("seg-2");
+            WhenUpdating(new OnRouteState(1, 2, new TrackPoint(1, 2, 3), new Segment(new List<TrackPoint>()) { Id = "seg-1"}, plannedRoute));
+
+            WhenUpdating(new OnSegmentState(1, 2, new TrackPoint(1, 2, 3), new Segment(new List<TrackPoint>()) { Id = "seg-2" }));
+
+            WhenUpdating(new OnRouteState(1, 2, new TrackPoint(1, 2, 3), new Segment(new List<TrackPoint>()) { Id = "seg-2"}, plannedRoute));
+
+            _viewModel.Model.InstructionText.Should().BeEmpty();
+        }
+
         private readonly InGameNavigationWindowViewModel _viewModel;
 
         public WhenUpdatingGameState()
         {
             var segments = new List<Segment>
             {
-                new(new List<TrackPoint> { new(1, 2, 3) }){ Id = "seg-1"}
+                new(new List<TrackPoint> { new(1, 2, 3) }){ Id = "seg-1", Name = "Segment 1"},
+                new(new List<TrackPoint> { new(1, 2, 3) }){ Id = "seg-2", Name = "Segment 2"},
+                new(new List<TrackPoint> { new(1, 2, 3) }){ Id = "seg-3", Name = "Segment 3"},
             };
 
             var inGameWindowModel = new InGameWindowModel(segments)
@@ -260,6 +330,16 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.InGame
                         {
                             Direction = SegmentDirection.AtoB,
                             SegmentId = "seg-1"
+                        },
+                        new SegmentSequence
+                        {
+                            Direction = SegmentDirection.AtoB,
+                            SegmentId = "seg-2"
+                        },
+                        new SegmentSequence
+                        {
+                            Direction = SegmentDirection.AtoB,
+                            SegmentId = "seg-3"
                         }
                     }
                 }

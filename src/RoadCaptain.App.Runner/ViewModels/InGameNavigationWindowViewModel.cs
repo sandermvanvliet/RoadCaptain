@@ -40,6 +40,21 @@ namespace RoadCaptain.App.Runner.ViewModels
 
             try
             {
+                if (_previousState != null && _previousState is OnRouteState previousRouteState && gameState is OnSegmentState and not OnRouteState)
+                {
+                    if (previousRouteState.Route.NextSegmentId != null)
+                    {
+                        var expectedSegment = GetSegmentById(previousRouteState.Route.NextSegmentId);
+                        Model.InstructionText = $"Try to make a u-turn and head to segment '{expectedSegment.Name}'";
+                    }
+                    else
+                    {
+                        Model.InstructionText = $"Try to make a u-turn to return to the route";
+                    }
+
+                    Model.LostRouteLock = true;
+                }
+
                 if (gameState is PositionedState positionedState and OnSegmentState)
                 {
                     if (_previousPosition != null)
@@ -77,6 +92,12 @@ namespace RoadCaptain.App.Runner.ViewModels
                     }
 
                     _previousRouteSequenceIndex = routeState.Route.SegmentSequenceIndex;
+
+                    if (Model.LostRouteLock)
+                    {
+                        Model.LostRouteLock = false;
+                        Model.InstructionText = string.Empty;
+                    }
                 }
 
                 if (gameState is CompletedRouteState)

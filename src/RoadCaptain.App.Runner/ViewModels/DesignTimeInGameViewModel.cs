@@ -11,6 +11,9 @@ namespace RoadCaptain.App.Runner.ViewModels
             : base(
                 new InGameWindowModel(DefaultSegments), DefaultSegments)
         {
+            Model.UserIsInGame = true;
+            Model.LostRouteLock = true;
+            Model.InstructionText = "Try to make a u-turn and head to segment 'Epic to Marina'";
         }
     }
 }

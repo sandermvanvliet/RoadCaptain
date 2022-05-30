@@ -22,6 +22,7 @@ namespace RoadCaptain.App.Runner.Models
         private bool _userIsInGame;
         private string _waitingReason = "Waiting for Zwift connection...";
         private string _instructionText;
+        private bool _lostRouteLock;
 
         public InGameWindowModel(List<Segment> segments)
         {
@@ -53,6 +54,18 @@ namespace RoadCaptain.App.Runner.Models
                 this.RaisePropertyChanged();
             }
         }
+
+        public bool LostRouteLock
+        {
+            get => _lostRouteLock;
+            set
+            {
+                if (value == _lostRouteLock) return;
+                _lostRouteLock = value;
+                this.RaisePropertyChanged();
+            }
+        }
+        
 
         public PlannedRoute Route
         {
