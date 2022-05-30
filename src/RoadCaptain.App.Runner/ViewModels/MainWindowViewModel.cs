@@ -13,6 +13,7 @@ using Avalonia.Media.Imaging;
 using Avalonia.Platform;
 using Microsoft.IdentityModel.JsonWebTokens;
 using ReactiveUI;
+using RoadCaptain.App.Runner.Models;
 using RoadCaptain.App.Shared.Commands;
 using RoadCaptain.App.Shared.UserPreferences;
 using RoadCaptain.Commands;
@@ -37,7 +38,7 @@ namespace RoadCaptain.App.Runner.ViewModels
         private readonly IRouteStore _routeStore;
         private string _version = "0.0.0.0";
         private string? _changelogUri;
-        private PlannedRoute? _route;
+        private RouteModel _route = new();
         private readonly IVersionChecker _versionChecker;
         private bool _haveCheckedVersion;
         private IImage? _zwiftAvatar;
@@ -71,12 +72,12 @@ namespace RoadCaptain.App.Runner.ViewModels
             if (!string.IsNullOrEmpty(configuration.Route))
             {
                 RoutePath = configuration.Route;
-                Route = _routeStore.LoadFrom(RoutePath);
+                Route = RouteModel.From(_routeStore.LoadFrom(RoutePath), new List<Segment>());
             }
             else if (!string.IsNullOrEmpty(userPreferences.Route))
             {
                 RoutePath = userPreferences.Route;
-                Route = _routeStore.LoadFrom(RoutePath);
+                Route = RouteModel.From(_routeStore.LoadFrom(RoutePath), new List<Segment>());
             }
 
             StartRouteCommand = new RelayCommand(
@@ -245,7 +246,7 @@ namespace RoadCaptain.App.Runner.ViewModels
             }
         }
 
-        public PlannedRoute? Route
+        public RouteModel Route
         {
             get => _route;
             set
@@ -339,8 +340,8 @@ namespace RoadCaptain.App.Runner.ViewModels
                 }
 
                 WindowTitle = $"RoadCaptain - {routeFileName}";
-                
-                Route = _routeStore.LoadFrom(RoutePath);
+
+                Route = RouteModel.From(_routeStore.LoadFrom(RoutePath), new List<Segment>());
             }
 
             return CommandResult.Success();
@@ -375,9 +376,9 @@ namespace RoadCaptain.App.Runner.ViewModels
             _userPreferences.Route = RoutePath;
             _userPreferences.Save();
 
-            if (Route != null)
+            if (Route?.PlannedRoute != null)
             {
-                _gameStateDispatcher.RouteSelected(Route);
+                _gameStateDispatcher.RouteSelected(Route.PlannedRoute);
             }
             else
             {

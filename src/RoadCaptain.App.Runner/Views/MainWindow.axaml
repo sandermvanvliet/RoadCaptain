@@ -12,7 +12,7 @@
         xmlns:converters="clr-namespace:RoadCaptain.App.Shared.Converters;assembly=RoadCaptain.App.Shared"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="RoadCaptain.App.Runner.Views.MainWindow"
-        Title="{Binding Path=WindowTitle}" 
+        Title="{Binding Path=WindowTitle}"
         Height="437" Width="632"
         CanResize="False"
         WindowState="Normal"
@@ -23,169 +23,186 @@
         PointerPressed="InputElement_OnPointerPressed"
         Activated="WindowBase_OnActivated"
         Icon="avares://RoadCaptain.App.Shared/icon.png">
-    <Window.Styles>
-        <Style Selector="Button">
-            <Setter Property="Background" Value="#FF6141" />
-            <Setter Property="Foreground" Value="White" />
-            <Setter Property="Height" Value="32" />
-            <Setter Property="FontSize" Value="20" />
-            <Setter Property="FontWeight" Value="Bold" />
-            <Setter Property="BorderThickness" Value="0" />
-            <Setter Property="VerticalAlignment" Value="Center" />
-            <Setter Property="Cursor" Value="Hand" />
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="Button">
-                        <Border Name="borderZero" Background="{TemplateBinding Background}" CornerRadius="8" Padding="4,0,4,0">
-                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" Content="{TemplateBinding Content}" />
-                        </Border>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-        <Style Selector="Button:disabled">
-            <Setter Property="Background" Value="LightGray"/>
-        </Style>
-        <Style Selector="Button.linkButton">
-            <Setter Property="Background" Value="White" />
-            <Setter Property="Foreground" Value="Blue" />
-            <Setter Property="BorderThickness" Value="0" />
-            <Setter Property="VerticalAlignment" Value="Center" />
-            <Setter Property="Cursor" Value="Hand" />
-            <Setter Property="Padding" Value="0" />
-            <Setter Property="FontSize" Value="14" />
-            <Setter Property="FontWeight" Value="Normal" />
-        </Style>
-    </Window.Styles>
-    <Window.Resources>
-        <converters:BooleanConverter x:Key="BooleanConverter" />
-        <converters:NullabilityConverter x:Key="NullabilityConverter" />
-    </Window.Resources>
-    <Border BorderBrush="DarkGray" BorderThickness="1" CornerRadius="8" Opacity="1" Background="White">
-        <Grid Margin="4">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="50" />
-                <!-- banner -->
-                <RowDefinition Height="*" />
-                <!-- main content-->
-                <RowDefinition Height="40" />
-                <!-- bottom button row -->
-            </Grid.RowDefinitions>
+	<Window.Styles>
+		<Style Selector="Button">
+			<Setter Property="Background" Value="#FF6141" />
+			<Setter Property="Foreground" Value="White" />
+			<Setter Property="Height" Value="32" />
+			<Setter Property="FontSize" Value="20" />
+			<Setter Property="FontWeight" Value="Bold" />
+			<Setter Property="BorderThickness" Value="0" />
+			<Setter Property="VerticalAlignment" Value="Center" />
+			<Setter Property="Cursor" Value="Hand" />
+			<Setter Property="Template">
+				<Setter.Value>
+					<ControlTemplate TargetType="Button">
+						<Border Name="borderZero" Background="{TemplateBinding Background}" CornerRadius="8" Padding="4,0,4,0">
+							<ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" Content="{TemplateBinding Content}" />
+						</Border>
+					</ControlTemplate>
+				</Setter.Value>
+			</Setter>
+		</Style>
+		<Style Selector="Button:disabled">
+			<Setter Property="Background" Value="LightGray"/>
+		</Style>
+		<Style Selector="Button.linkButton">
+			<Setter Property="Background" Value="White" />
+			<Setter Property="Foreground" Value="Blue" />
+			<Setter Property="BorderThickness" Value="0" />
+			<Setter Property="VerticalAlignment" Value="Center" />
+			<Setter Property="Cursor" Value="Hand" />
+			<Setter Property="Padding" Value="0" />
+			<Setter Property="FontSize" Value="14" />
+			<Setter Property="FontWeight" Value="Normal" />
+		</Style>
+		<Style Selector="TextBlock.routeDetails">
+			<Setter Property="TextTrimming" Value="CharacterEllipsis" />
+			<Setter Property="Padding" Value="4,0,0,0" />
+		</Style>
+	</Window.Styles>
+	<Window.Resources>
+		<converters:BooleanConverter x:Key="BooleanConverter" />
+		<converters:NullabilityConverter x:Key="NullabilityConverter" />
+	</Window.Resources>
+	<Border BorderBrush="DarkGray" BorderThickness="1" CornerRadius="8" Opacity="1" Background="White">
+		<Grid Margin="4">
+			<Grid.RowDefinitions>
+				<RowDefinition Height="50" />
+				<!-- banner -->
+				<RowDefinition Height="*" />
+				<!-- main content-->
+				<RowDefinition Height="40" />
+				<!-- bottom button row -->
+			</Grid.RowDefinitions>
 
-            <StackPanel Orientation="Horizontal" Grid.Row="0">
-                <Image Source="avares://RoadCaptain.App.Shared/icon.png" Height="22" VerticalAlignment="Center" Margin="4,4,4,0" />
-                <TextBlock Text="RoadCaptain" FontWeight="ExtraBold" FontSize="32" VerticalAlignment="Center" />
-            </StackPanel>
-            <Button Content="X" Background="Red" Foreground="White" Grid.Row="0" HorizontalAlignment="Right" Width="40" Height="20" Margin="0,-3,-3,0" VerticalAlignment="Top" 
+			<StackPanel Orientation="Horizontal" Grid.Row="0">
+				<Image Source="avares://RoadCaptain.App.Shared/icon.png" Height="22" VerticalAlignment="Center" Margin="4,4,4,0" />
+				<TextBlock Text="RoadCaptain" FontWeight="ExtraBold" FontSize="32" VerticalAlignment="Center" />
+			</StackPanel>
+			<Button Content="X" Background="Red" Foreground="White" Grid.Row="0" HorizontalAlignment="Right" Width="40" Height="20" Margin="0,-4,-4,0" VerticalAlignment="Top"
                 Click="CloseButton_Click" FontSize="14">
-                <Button.Styles>
-                    <Style Selector="Button">
-                        <Setter Property="Template">
-                            <Setter.Value>
-                                <ControlTemplate TargetType="Button">
-                                    <Border Name="borderZero" Background="{TemplateBinding Background}" CornerRadius="0,8,0,0">
-                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" Content="{TemplateBinding Content}" />
-                                    </Border>
-                                </ControlTemplate>
-                            </Setter.Value>
-                        </Setter>
-                    </Style>
-                </Button.Styles>
-            </Button>
+				<Button.Styles>
+					<Style Selector="Button">
+						<Setter Property="Template">
+							<Setter.Value>
+								<ControlTemplate TargetType="Button">
+									<Border Name="borderZero" Background="{TemplateBinding Background}" CornerRadius="0,8,0,0">
+										<ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" Content="{TemplateBinding Content}" />
+									</Border>
+								</ControlTemplate>
+							</Setter.Value>
+						</Setter>
+					</Style>
+				</Button.Styles>
+			</Button>
 
-            <Image Grid.Row="1" 
+			<Image Grid.Row="1"
                ZIndex="1"
                Source="avares://RoadCaptain.App.Runner/Assets/background.jpg"
                Stretch="UniformToFill"
-               StretchDirection="DownOnly"/>
+               StretchDirection="DownOnly"
+               Opacity="0.45"/>
 
-            <Grid Grid.Row="1" ZIndex="2" Margin="0,8,0,0">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="130" />
-                    <ColumnDefinition />
-                    <ColumnDefinition Width="76" />
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="38" />
-                    <RowDefinition Height="38" />
-                    <RowDefinition Height="38" />
-                    <RowDefinition Height="96" />
-                    <RowDefinition Height="60" />
-                </Grid.RowDefinitions>
+			<Grid Grid.Row="1" ZIndex="2" Margin="0,8,0,0">
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="130" />
+					<ColumnDefinition />
+					<ColumnDefinition Width="76" />
+				</Grid.ColumnDefinitions>
+				<Grid.RowDefinitions>
+					<RowDefinition Height="38" />
+					<RowDefinition Height="38" />
+					<RowDefinition Height="38" />
+					<RowDefinition Height="174" />
+					<RowDefinition Height="60" />
+				</Grid.RowDefinitions>
 
-                <!-- row 1 -->
-                <TextBlock Text="Zwift account:" HorizontalAlignment="Right" FontWeight="Bold" FontSize="16" Grid.Column="0" Grid.Row="0" VerticalAlignment="Center" Margin="0,2,0,0" />
-                <TextBlock Text="{Binding Path=ZwiftLoggedInText}" HorizontalAlignment="Left" FontSize="16" Grid.Column="1" Grid.Row="0" VerticalAlignment="Center"
+				<!-- row 1 -->
+				<TextBlock Text="Zwift account:" HorizontalAlignment="Right" FontWeight="Bold" FontSize="16" Grid.Column="0" Grid.Row="0" VerticalAlignment="Center" Margin="0,2,0,0" />
+				<TextBlock Text="{Binding Path=ZwiftLoggedInText}" HorizontalAlignment="Left" FontSize="16" Grid.Column="1" Grid.Row="0" VerticalAlignment="Center"
                            IsVisible="{Binding Path=LoggedInToZwift,Converter={StaticResource BooleanConverter},ConverterParameter=invert}" Margin="4,2,0,0"/>
-                <StackPanel Orientation="Horizontal"
+				<StackPanel Orientation="Horizontal"
                             Grid.Row="0"
                             Grid.Column="1"
                             IsVisible="{Binding Path=LoggedInToZwift}">
-                    <Border BorderBrush="DarkGray" BorderThickness="1" CornerRadius="0" Margin="4,0,0,0" Height="32" Width="32" Padding="0">
-                        <Image Source="{Binding Path=ZwiftAvatar}" Height="32" ClipToBounds="True" />
-                    </Border>
-                    <TextBlock Text="{Binding Path=ZwiftName}" FontSize="16" VerticalAlignment="Center" Margin="4,0,0,0" />
-                </StackPanel>
+					<Border BorderBrush="LightGray" BorderThickness="1" CornerRadius="0" Margin="4,0,0,0" Height="32" Width="32" Padding="0">
+						<Image Source="{Binding Path=ZwiftAvatar}" Height="32" ClipToBounds="True" />
+					</Border>
+					<TextBlock Text="{Binding Path=ZwiftName}" FontSize="16" VerticalAlignment="Center" Margin="4,0,0,0" />
+				</StackPanel>
 
-                <Button Content="Log in" HorizontalAlignment="Right" Grid.Column="2" Grid.Row="0" VerticalAlignment="Center" 
-                        Command="{Binding Path=LogInCommand}" 
+				<Button Content="Log in" HorizontalAlignment="Right" Grid.Column="2" Grid.Row="0" VerticalAlignment="Center"
+                        Command="{Binding Path=LogInCommand}"
                         CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}"
                         Margin="0,0,4,0" Width="72"
                         IsEnabled="{Binding Path=LoggedInToZwift,Converter={StaticResource BooleanConverter},ConverterParameter=invert}"/>
 
-                <!-- row 2 -->
-                <TextBlock Text="Rebel route:" HorizontalAlignment="Right" FontWeight="Bold" FontSize="16" Grid.Column="0" Grid.Row="1" VerticalAlignment="Center" Margin="0,2,0,0" />
-                <ComboBox Name="RebelRouteCombo" Grid.Row="1" Grid.Column="1" Margin="4,8,4,4" Items="{Binding Path=RebelRoutes}" Height="32" VerticalAlignment="Center" SelectionChanged="Selector_OnSelectionChanged" HorizontalAlignment="Stretch"/>
-                
-                <!-- row 3 -->
-                <TextBlock Text="Route from file:" HorizontalAlignment="Right" FontWeight="Bold" FontSize="16" Grid.Column="0" Grid.Row="2" VerticalAlignment="Center" Margin="0,2,0,0" />
-                <TextBox Text="{Binding Path=RoutePath}" Height="28" Grid.Column="1" Grid.Row="2" Margin="4,2,4,0" VerticalAlignment="Center" FontSize="16" Padding="4,0,0,0" />
-                <Button Content="Select" HorizontalAlignment="Right" Grid.Column="2" Grid.Row="2" Margin="0,2,4,0" VerticalAlignment="Center" Command="{Binding Path=LoadRouteCommand}" Width="72" />
+				<!-- row 2 -->
+				<TextBlock Text="Rebel route:" HorizontalAlignment="Right" FontWeight="Bold" FontSize="16" Grid.Column="0" Grid.Row="1" VerticalAlignment="Center" Margin="0,2,0,0" />
+				<ComboBox Name="RebelRouteCombo" Grid.Row="1" Grid.Column="1" Margin="4,8,4,4" Items="{Binding Path=RebelRoutes}" Height="32" VerticalAlignment="Center" SelectionChanged="Selector_OnSelectionChanged" HorizontalAlignment="Stretch"/>
 
-                <!-- row 4 -->
-                <Grid Grid.Row="3" Grid.Column="1" Margin="0,4,0,0" IsVisible="{Binding Path=Route,Converter={StaticResource NullabilityConverter}}">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="24" />
-                        <RowDefinition Height="24" />
-                        <RowDefinition Height="24" />
-                        <RowDefinition Height="24" />
-                    </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="80" />
-                        <ColumnDefinition Width="290" />
-                    </Grid.ColumnDefinitions>
-                    
-                    <TextBlock Grid.Column="0" HorizontalAlignment="Right" FontWeight="Bold" Text="Name:" />
-                    <TextBlock Grid.Column="0" Grid.Row="1" HorizontalAlignment="Right" FontWeight="Bold" Text="Sport:"/>
-                    <TextBlock Grid.Column="0" Grid.Row="2" HorizontalAlignment="Right" FontWeight="Bold" Text="Zwift world:"/>
-                    <TextBlock Grid.Column="0" Grid.Row="3" HorizontalAlignment="Right" FontWeight="Bold" Text="Zwift route:"/>
-                    
-                    <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding Path=Route.Name}" Margin="4,0,0,0"/>
-                    <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding Path=Route.Sport}" Margin="4,0,0,0" />
-                    <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding Path=Route.World.Name}" Margin="4,0,0,0" />
-                    <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding Path=Route.ZwiftRouteName}" Margin="4,0,0,0" />
-                </Grid>
-                <Button Content="Build route" HorizontalAlignment="Left" Grid.Column="2" Grid.Row="3" Margin="-50,4,0,0" VerticalAlignment="Top" Command="{Binding Path=BuildRouteCommand}" Width="122" />
-            </Grid>
-            <Grid Grid.Row="2">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition />
-                    <ColumnDefinition Width="96" />
-                </Grid.ColumnDefinitions>
-                <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center" IsEnabled="True">
-                    <TextBlock Text="Version:" VerticalAlignment="Center" />
-                    <TextBlock Text="{Binding Path=Version}" Margin="4,0,0,0" VerticalAlignment="Center" />
-                    <Button Content="Changelog (Github)" Margin="4,0,0,0" CommandParameter="{Binding Path=ChangelogUri}" Command="{Binding Path=OpenLinkCommand}" Classes="linkButton" />
-                </StackPanel>
-                <Button Grid.Column="1"
-                    Content="Let's Go!" HorizontalAlignment="Right" 
-                    Margin="2,4,4,2" Padding="0,0,4,0" 
+				<!-- row 3 -->
+				<TextBlock Text="Route from file:" HorizontalAlignment="Right" FontWeight="Bold" FontSize="16" Grid.Column="0" Grid.Row="2" VerticalAlignment="Center" Margin="0,2,0,0" />
+				<TextBox Text="{Binding Path=RoutePath}" Height="28" Grid.Column="1" Grid.Row="2" Margin="4,2,4,0" VerticalAlignment="Center" VerticalContentAlignment="Center" FontSize="14" Padding="4,0,0,0"
+                         HorizontalAlignment="Stretch"/>
+				<Button Content="Select" HorizontalAlignment="Right" Grid.Column="2" Grid.Row="2" Margin="0,2,4,0" VerticalAlignment="Center" Command="{Binding Path=LoadRouteCommand}" Width="72" />
+
+				<!-- row 4 -->
+				<Border Grid.Row="3" Grid.Column="1" Margin="4,4,4,0" Background="White" Opacity="0.75"
+                        BorderBrush="Black" BorderThickness="1" CornerRadius="3">
+					<Grid Margin="4" ClipToBounds="True">
+						<Grid.RowDefinitions>
+							<RowDefinition Height="24" />
+							<RowDefinition Height="24" />
+							<RowDefinition Height="24" />
+							<RowDefinition Height="24" />
+							<RowDefinition Height="24" />
+							<RowDefinition Height="24" />
+							<RowDefinition Height="24" />
+                        </Grid.RowDefinitions>
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="80" />
+							<ColumnDefinition Width="290" />
+						</Grid.ColumnDefinitions>
+
+						<TextBlock Grid.Column="0" HorizontalAlignment="Right" FontWeight="Bold" Text="Name:" />
+						<TextBlock Grid.Column="0" Grid.Row="1" HorizontalAlignment="Right" FontWeight="Bold" Text="Sport:"/>
+						<TextBlock Grid.Column="0" Grid.Row="2" HorizontalAlignment="Right" FontWeight="Bold" Text="Zwift world:"/>
+						<TextBlock Grid.Column="0" Grid.Row="3" HorizontalAlignment="Right" FontWeight="Bold" Text="Zwift route:"/>
+						<TextBlock Grid.Column="0" Grid.Row="4" HorizontalAlignment="Right" FontWeight="Bold" Text="Distance:"/>
+						<TextBlock Grid.Column="0" Grid.Row="5" HorizontalAlignment="Right" FontWeight="Bold" Text="Ascent:"/>
+						<TextBlock Grid.Column="0" Grid.Row="6" HorizontalAlignment="Right" FontWeight="Bold" Text="Descent:"/>
+
+						<TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding Path=Route.Name}" Classes="routeDetails"/>
+						<TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding Path=Route.Sport}"  Classes="routeDetails" />
+						<TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding Path=Route.World.Name}" Classes="routeDetails" />
+						<TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding Path=Route.ZwiftRouteName}" Classes="routeDetails" />
+						<TextBlock Grid.Row="4" Grid.Column="1" Text="{Binding Path=Route.TotalDistance}" Classes="routeDetails" />
+						<TextBlock Grid.Row="5" Grid.Column="1" Text="{Binding Path=Route.TotalAscent}" Classes="routeDetails" />
+						<TextBlock Grid.Row="6" Grid.Column="1" Text="{Binding Path=Route.TotalDescent}" Classes="routeDetails" />
+					</Grid>
+				</Border>
+			</Grid>
+			<Grid Grid.Row="2">
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition />
+					<ColumnDefinition Width="96" />
+				</Grid.ColumnDefinitions>
+				<StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center" IsEnabled="True">
+					<TextBlock Text="Version:" VerticalAlignment="Center" />
+					<TextBlock Text="{Binding Path=Version}" Margin="4,0,0,0" VerticalAlignment="Center" />
+					<Button Content="Changelog (Github)" Margin="4,0,0,0" CommandParameter="{Binding Path=ChangelogUri}" Command="{Binding Path=OpenLinkCommand}" Classes="linkButton" />
+				</StackPanel>
+				<Button Grid.Column="1"
+                    Content="Let's Go!" HorizontalAlignment="Right"
+                    Margin="2,4,4,2" Padding="0,0,4,0"
                     Width="100"
-                    VerticalAlignment="Center" 
-                    Command="{Binding Path=StartRouteCommand}" 
+                    VerticalAlignment="Center"
+                    Command="{Binding Path=StartRouteCommand}"
                     CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}"
                     IsEnabled="{Binding Path=CanStartRoute}" />
-            </Grid>
-        </Grid>
-    </Border>
+			</Grid>
+		</Grid>
+	</Border>
 </Window>

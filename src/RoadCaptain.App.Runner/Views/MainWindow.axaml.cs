@@ -3,6 +3,7 @@ using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Threading;
+using RoadCaptain.App.Runner.Models;
 using RoadCaptain.App.Runner.ViewModels;
 using RoadCaptain.Ports;
 
@@ -11,7 +12,8 @@ namespace RoadCaptain.App.Runner.Views
     public partial class MainWindow : Window
     {
         private readonly MainWindowViewModel _viewModel;
-        
+        private readonly ISegmentStore _segmentStore;
+
         // ReSharper disable once UnusedMember.Global because this constructor only exists for the Avalonia designer
 #pragma warning disable CS8618
         public MainWindow()
@@ -20,9 +22,10 @@ namespace RoadCaptain.App.Runner.Views
             InitializeComponent();
         }
 
-        public MainWindow(MainWindowViewModel viewModel, IGameStateReceiver gameStateReceiver)
+        public MainWindow(MainWindowViewModel viewModel, IGameStateReceiver gameStateReceiver, ISegmentStore segmentStore)
         {
             _viewModel = viewModel;
+            _segmentStore = segmentStore;
             _viewModel.PropertyChanged += (sender, args) =>
             {
                 if (args.PropertyName == nameof(_viewModel.RoutePath) && !string.IsNullOrEmpty(_viewModel.RoutePath))
@@ -31,7 +34,7 @@ namespace RoadCaptain.App.Runner.Views
                 }
             };
 
-            gameStateReceiver.Register(route => viewModel.Route = route, null, viewModel.UpdateGameState);
+            gameStateReceiver.Register(route => viewModel.Route = RouteModel.From(route, _segmentStore.LoadSegments(route.World, route.Sport)), null, viewModel.UpdateGameState);
 
             DataContext = viewModel;
 
@@ -50,7 +53,15 @@ namespace RoadCaptain.App.Runner.Views
             if (comboBox?.SelectedItem != null)
             {
                 _viewModel.RoutePath = null;
-                _viewModel.Route = comboBox.SelectedItem as PlannedRoute;
+
+                if (comboBox.SelectedItem is PlannedRoute selectedRoute)
+                {
+                    _viewModel.Route = RouteModel.From(selectedRoute, _segmentStore.LoadSegments(selectedRoute.World, selectedRoute.Sport));
+                }
+                else
+                {
+                    _viewModel.Route = new RouteModel();
+                }
             }
         }
 
