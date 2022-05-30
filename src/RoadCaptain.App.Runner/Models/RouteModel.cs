@@ -51,5 +51,24 @@ namespace RoadCaptain.App.Runner.Models
         public string TotalDistance { get; private set; }
         public string TotalAscent { get; private set; }
         public string TotalDescent { get; private set; }
+
+        public bool IsLoop
+        {
+            get
+            {
+                if (PlannedRoute == null)
+                {
+                    return false;
+                }
+
+                if (!PlannedRoute.RouteSegmentSequence.Any())
+                {
+                    return false;
+                }
+
+                return PlannedRoute.RouteSegmentSequence.First().SegmentId ==
+                       PlannedRoute.RouteSegmentSequence.Last().SegmentId;
+            }
+        }
     }
 }

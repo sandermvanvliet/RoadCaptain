@@ -42,6 +42,8 @@ namespace RoadCaptain.App.Runner.ViewModels
         private readonly IVersionChecker _versionChecker;
         private bool _haveCheckedVersion;
         private IImage? _zwiftAvatar;
+        private bool _endActivityAtEndOfRoute;
+        private bool _loopRouteAtEndOfRoute;
 
         public MainWindowViewModel(Configuration configuration,
             IUserPreferences userPreferences,
@@ -255,6 +257,30 @@ namespace RoadCaptain.App.Runner.ViewModels
                 _route = value;
                 this.RaisePropertyChanged();
                 this.RaisePropertyChanged(nameof(CanStartRoute));
+            }
+        }
+
+        public bool EndActivityAtEndOfRoute
+        {
+            get => _endActivityAtEndOfRoute;
+            set
+            {
+                if (value == _endActivityAtEndOfRoute) return;
+                _endActivityAtEndOfRoute = value;
+                this.RaisePropertyChanged();
+            }
+        }
+
+        public bool LoopRouteAtEndOfRoute
+        {
+            get => _loopRouteAtEndOfRoute;
+            set
+            {
+                if (value == _loopRouteAtEndOfRoute) return;
+                _loopRouteAtEndOfRoute = value;
+                // When doing a loop we can't automatically end the activity...
+                EndActivityAtEndOfRoute = false;
+                this.RaisePropertyChanged();
             }
         }
 

@@ -10,17 +10,17 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:converters="clr-namespace:RoadCaptain.App.Shared.Converters;assembly=RoadCaptain.App.Shared"
-        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        mc:Ignorable="d"
         x:Class="RoadCaptain.App.Runner.Views.MainWindow"
         Title="{Binding Path=WindowTitle}"
-        Height="437" Width="632"
+        Height="470" Width="632"
         CanResize="False"
         WindowState="Normal"
         SystemDecorations="None"
         WindowStartupLocation="CenterScreen"
         Background="Transparent"
         TransparencyLevelHint="Transparent"
-        Activated="WindowBase_OnActivated" 
+        Activated="WindowBase_OnActivated"
         PointerPressed="InputElement_OnPointerPressed"
         Icon="avares://RoadCaptain.App.Shared/icon.png">
 	<Window.Styles>
@@ -115,7 +115,8 @@
 					<RowDefinition Height="38" />
 					<RowDefinition Height="38" />
 					<RowDefinition Height="174" />
-					<RowDefinition Height="60" />
+					<RowDefinition Height="32" />
+					<RowDefinition Height="32" />
 				</Grid.RowDefinitions>
 
 				<!-- row 1 -->
@@ -161,7 +162,7 @@
 							<RowDefinition Height="24" />
 							<RowDefinition Height="24" />
 							<RowDefinition Height="24" />
-                        </Grid.RowDefinitions>
+						</Grid.RowDefinitions>
 						<Grid.ColumnDefinitions>
 							<ColumnDefinition Width="80" />
 							<ColumnDefinition Width="290" />
@@ -184,6 +185,18 @@
 						<TextBlock Grid.Row="6" Grid.Column="1" Text="{Binding Path=Route.TotalDescent}" Classes="routeDetails" />
 					</Grid>
 				</Border>
+
+				<!-- row 5 -->
+				<TextBlock Text="Route options:" Grid.Row="4" Grid.Column="0" HorizontalAlignment="Right" FontWeight="Bold" FontSize="16"
+                           VerticalAlignment="Center" Margin="0,2,0,0" />
+				<CheckBox Content="End Zwift activity at end of route" Margin="4,0,0,0"
+                          Grid.Row="4" Grid.Column="1"
+                          IsChecked="{Binding Path=EndActivityAtEndOfRoute}"
+                          IsEnabled="{Binding Path=LoopRouteAtEndOfRoute,Converter={StaticResource BooleanConverter},ConverterParameter=invert}"/>
+				<CheckBox Content="Start another loop at end of route" Margin="4,0,0,0"
+						  Grid.Row="5" Grid.Column="1"
+                          IsChecked="{Binding Path=LoopRouteAtEndOfRoute}"
+                          IsEnabled="{Binding Path=Route.IsLoop,FallbackValue=False}"/>
 			</Grid>
 			<Grid Grid.Row="2">
 				<Grid.ColumnDefinitions>
