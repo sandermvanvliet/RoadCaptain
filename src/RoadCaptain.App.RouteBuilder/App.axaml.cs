@@ -1,7 +1,4 @@
 using System;
-using System.Diagnostics;
-using System.Linq;
-using System.Reflection;
 using Autofac;
 using Avalonia;
 using Avalonia.Controls;
@@ -11,6 +8,7 @@ using Avalonia.Threading;
 using Microsoft.Extensions.Configuration;
 using RoadCaptain.App.RouteBuilder.Views;
 using RoadCaptain.App.Shared.Dialogs;
+using Serilog;
 using Serilog.Core;
 
 namespace RoadCaptain.App.RouteBuilder
@@ -22,7 +20,9 @@ namespace RoadCaptain.App.RouteBuilder
 
         public App()
         {
-            _logger = Program.Logger;
+            // When the Avalonia designer is used the Program class isn't called and the logger is null.
+            // To make sure nothing else blows up we need to initialize it with a default logger.
+            _logger = Program.Logger ?? new LoggerConfiguration().WriteTo.Debug().CreateLogger();
             
             AppDomain.CurrentDomain.UnhandledException += (sender, args) =>
             {

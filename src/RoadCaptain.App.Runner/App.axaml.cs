@@ -14,6 +14,7 @@ using Avalonia.Threading;
 using Microsoft.Extensions.Configuration;
 using RoadCaptain.App.Runner.Views;
 using RoadCaptain.App.Shared.Dialogs;
+using Serilog;
 using Serilog.Core;
 
 namespace RoadCaptain.App.Runner
@@ -27,7 +28,9 @@ namespace RoadCaptain.App.Runner
 
         public App()
         {
-            _logger = Program.Logger;
+            // When the Avalonia designer is used the Program class isn't called and the logger is null.
+            // To make sure nothing else blows up we need to initialize it with a default logger.
+            _logger = Program.Logger ?? new LoggerConfiguration().WriteTo.Debug().CreateLogger();
 
             AppDomain.CurrentDomain.UnhandledException += (sender, args) =>
             {
@@ -36,8 +39,6 @@ namespace RoadCaptain.App.Runner
 
             var configuration = new ConfigurationBuilder()
                 .AddJsonFile("appsettings.json", true)
-                .AddJsonFile("autofac.app.runner.json")
-                .AddJsonFile("autofac.app.runner.development.json", true)
                 .Build();
 
             var container = InversionOfControl
