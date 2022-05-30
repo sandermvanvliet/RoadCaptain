@@ -7,6 +7,7 @@ using RoadCaptain.App.Runner.ViewModels;
 using RoadCaptain.App.Shared.UserPreferences;
 using RoadCaptain.GameStates;
 using RoadCaptain.Ports;
+using Serilog;
 using Point = System.Drawing.Point;
 
 namespace RoadCaptain.App.Runner.Views
@@ -17,8 +18,12 @@ namespace RoadCaptain.App.Runner.Views
         private readonly IUserPreferences _userPreferences;
         private InGameNavigationWindowViewModel _viewModel;
 
+        // ReSharper disable once UnusedMember.Global this is only used for the Avalonia UI designer
         public InGameNavigationWindow()
         {
+            _userPreferences = new DummyUserPreferences();
+            _monitoringEvents = new MonitoringEventsWithSerilog(new LoggerConfiguration().WriteTo.Debug().CreateLogger());
+
             InitializeComponent();
         }
         

@@ -3,9 +3,10 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:converters="clr-namespace:RoadCaptain.App.Shared.Converters;assembly=RoadCaptain.App.Shared"
-        mc:Ignorable="d" 
+        xmlns:viewModels="using:RoadCaptain.App.Runner.ViewModels"
+        mc:Ignorable="d"
         x:Class="RoadCaptain.App.Runner.Views.InGameNavigationWindow"
-        Title="{Binding Path=Model.WindowTitle}" 
+        Title="{Binding Path=Model.WindowTitle}"
         Height="234" Width="400"
         PointerPressed="InputElement_OnPointerPressed"
         SystemDecorations="None"
@@ -15,259 +16,225 @@
         PositionChanged="WindowBase_OnPositionChanged"
         Activated="InGameNavigationWindow_OnActivated"
         Icon="avares://RoadCaptain.App.Shared/icon.png">
+	<Design.DataContext><viewModels:DesignTimeInGameViewModel /></Design.DataContext>
     <Window.Resources>
-        <converters:NullabilityConverter x:Key="NullabilityConverter" />
-        <converters:BooleanConverter x:Key="BooleanConverter" />
-        <SolidColorBrush x:Key="ProgressBar.Progress" Color="#FF06B025"/>
-        <SolidColorBrush x:Key="ProgressBar.Background" Color="#FFE6E6E6"/>
-        <SolidColorBrush x:Key="ProgressBar.Border" Color="#FFBCBCBC"/>
-        </Window.Resources>
-    <Window.Styles>
-        <Style Selector="ProgressBar">
-            <Setter Property="Foreground" Value="{StaticResource ProgressBar.Progress}"/>
-            <Setter Property="Background" Value="{StaticResource ProgressBar.Background}"/>
-            <Setter Property="BorderBrush" Value="{StaticResource ProgressBar.Border}"/>
-            <Setter Property="BorderThickness" Value="1"/>
-            <!--<Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type ProgressBar}">
-                        <Grid x:Name="TemplateRoot">
-                            <Border Background="{TemplateBinding Background}" BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="{TemplateBinding BorderBrush}" CornerRadius="5" />
-                            <Rectangle x:Name="PART_Track"/>
-                            <Grid x:Name="PART_Indicator" ClipToBounds="true" HorizontalAlignment="Left">
-                                <Rectangle x:Name="Indicator" Fill="{TemplateBinding Foreground}" RadiusX="5" RadiusY="5"/>
-                                <Rectangle x:Name="Animation" Fill="{TemplateBinding Foreground}" RenderTransformOrigin="0.5,0.5" RadiusX="5" RadiusY="5">
-                                    <Rectangle.RenderTransform>
-                                        <TransformGroup>
-                                            <ScaleTransform/>
-                                            <SkewTransform/>
-                                            <RotateTransform/>
-                                            <TranslateTransform/>
-                                        </TransformGroup>
-                                    </Rectangle.RenderTransform>
-                                </Rectangle>
-                            </Grid>
-                        </Grid>
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="Orientation" Value="Vertical">
-                                <Setter Property="LayoutTransform" TargetName="TemplateRoot">
-                                    <Setter.Value>
-                                        <RotateTransform Angle="-90"/>
-                                    </Setter.Value>
-                                </Setter>
-                            </Trigger>
-                            <Trigger Property="IsIndeterminate" Value="true">
-                                <Setter Property="Visibility" TargetName="Indicator" Value="Collapsed"/>
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>-->
-        </Style>
-    </Window.Styles>
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="90" />
-            <RowDefinition Height="70" />
-            <RowDefinition Height="52" />
-            <RowDefinition Height="22" />
-        </Grid.RowDefinitions>
+		<converters:NullabilityConverter x:Key="NullabilityConverter" />
+		<converters:BooleanConverter x:Key="BooleanConverter" />
+		<SolidColorBrush x:Key="ProgressBar.Progress" Color="#FF06B025"/>
+		<SolidColorBrush x:Key="ProgressBar.Background" Color="#FFE6E6E6"/>
+		<SolidColorBrush x:Key="ProgressBar.Border" Color="#FFBCBCBC"/>
+	</Window.Resources>
+	<Window.Styles>
+		<Style Selector="ProgressBar">
+			<Setter Property="Foreground" Value="{StaticResource ProgressBar.Progress}"/>
+			<Setter Property="Background" Value="{StaticResource ProgressBar.Background}"/>
+			<Setter Property="BorderBrush" Value="{StaticResource ProgressBar.Border}"/>
+			<Setter Property="BorderThickness" Value="1"/>
+		</Style>
+	</Window.Styles>
+	<Grid>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="90" />
+			<RowDefinition Height="70" />
+			<RowDefinition Height="52" />
+			<RowDefinition Height="22" />
+		</Grid.RowDefinitions>
 
-        <Border Grid.Row="0" Grid.RowSpan="4"
+		<Border Grid.Row="0" Grid.RowSpan="4"
                 CornerRadius="20"
                 Background="#1192CC" BorderBrush="#cccccc"
                 ZIndex="2"
                 IsVisible="{Binding Path=Model.UserIsInGame,Converter={StaticResource BooleanConverter},ConverterParameter=invert}"
                 Padding="20">
-            <StackPanel Orientation="Vertical">
-                <TextBlock Text="{Binding Path=Model.WaitingReason}" 
-                       Foreground="White" 
+			<StackPanel Orientation="Vertical">
+				<TextBlock Text="{Binding Path=Model.WaitingReason}"
+                       Foreground="White"
                        FontWeight="ExtraBold"
                        FontSize="32"
                        TextWrapping="Wrap" />
-                <TextBlock Text="{Binding Path=Model.InstructionText}"
+				<TextBlock Text="{Binding Path=Model.InstructionText}"
                        Foreground="White" FontWeight="Bold" FontSize="22" TextWrapping="Wrap"
                        Margin="0,12,0,0" />
-                <TextBlock Text="{Binding Path=Model.Route.ZwiftRouteName}"
+				<TextBlock Text="{Binding Path=Model.Route.ZwiftRouteName}"
                            Foreground="White" FontWeight="Bold" FontSize="22" TextWrapping="Wrap"
                            Margin="0,8,0,0"/>
-            </StackPanel>
-        </Border>
+			</StackPanel>
+		</Border>
 
-        <Border 
+		<Border
                 Grid.Row="0"
                 CornerRadius="20,20,0,0" Background="#1192CC" BorderBrush="#cccccc"
                             HorizontalAlignment="Stretch" Padding="8,4,0,0"
             ZIndex="1">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition />
-                    <ColumnDefinition Width="130" />
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="60" />
-                    <RowDefinition Height="20" />
-                </Grid.RowDefinitions>
+			<Grid>
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition />
+					<ColumnDefinition Width="130" />
+				</Grid.ColumnDefinitions>
+				<Grid.RowDefinitions>
+					<RowDefinition Height="60" />
+					<RowDefinition Height="20" />
+				</Grid.RowDefinitions>
 
-                <StackPanel Orientation="Horizontal" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="0,0,0,0" Grid.Column="0">
-                    <TextBlock Text="{Binding Path=Model.ElapsedDistance,StringFormat=\{0:0.0\}}" FontSize="54" Foreground="White" FontWeight="ExtraBold" VerticalAlignment="Bottom"/>
-                    <TextBlock Text="/" FontSize="26" Foreground="Black" FontWeight="ExtraBold" VerticalAlignment="Bottom" Padding="2,0,0,9" />
-                    <TextBlock Text="{Binding Path=Model.TotalDistance,StringFormat=\{0:0.0\}}" FontSize="26" Foreground="Black" FontWeight="ExtraBold" VerticalAlignment="Bottom" Padding="0,0,0,6"/>
-                    <TextBlock Text="km" FontSize="16" Foreground="Black" FontWeight="ExtraBold" VerticalAlignment="Bottom" Padding="2,0,0,8"/>
-                </StackPanel>
+				<StackPanel Orientation="Horizontal" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="0,0,0,0" Grid.Column="0">
+					<TextBlock Text="{Binding Path=Model.ElapsedDistance,StringFormat=\{0:0.0\}}" FontSize="54" Foreground="White" FontWeight="ExtraBold" VerticalAlignment="Bottom"/>
+					<TextBlock Text="/" FontSize="26" Foreground="Black" FontWeight="ExtraBold" VerticalAlignment="Bottom" Padding="2,0,0,9" />
+					<TextBlock Text="{Binding Path=Model.TotalDistance,StringFormat=\{0:0.0\}}" FontSize="26" Foreground="Black" FontWeight="ExtraBold" VerticalAlignment="Bottom" Padding="0,0,0,6"/>
+					<TextBlock Text="km" FontSize="16" Foreground="Black" FontWeight="ExtraBold" VerticalAlignment="Bottom" Padding="2,0,0,8"/>
+				</StackPanel>
 
-                <StackPanel Grid.Column="1" Grid.Row="0" Orientation="Vertical" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,0,0,0">
-                    <StackPanel Orientation="Horizontal" Height="24">
-                        <TextBlock Text="⬈" FontSize="20" Margin="0,-4,0,0" Padding="0" FontWeight="ExtraBold"/>
-                        <TextBlock Text="{Binding Path=Model.ElapsedAscent,StringFormat=\{0:0.0\}}" Foreground="Black" FontSize="22" FontWeight="ExtraBold" VerticalAlignment="Bottom" />
-                        <TextBlock Text="/" FontSize="14" Foreground="Black" FontWeight="ExtraBold" VerticalAlignment="Bottom" Padding="0,0,0,3" />
-                        <TextBlock Text="{Binding Path=Model.TotalAscent,StringFormat=\{0:0.0\}}" FontSize="14" FontWeight="ExtraBold" VerticalAlignment="Bottom" Padding="0,0,0,1.5" Foreground="Black" />
-                        <TextBlock Text="m" FontSize="14" FontWeight="ExtraBold" VerticalAlignment="Bottom" Padding="0,0,0,1.5" Foreground="Black"/>
-                    </StackPanel>
+				<StackPanel Grid.Column="1" Grid.Row="0" Orientation="Vertical" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,0,0,0">
+					<StackPanel Orientation="Horizontal" Height="24">
+						<TextBlock Text="⬈" FontSize="20" Margin="0,-4,0,0" Padding="0" FontWeight="ExtraBold"/>
+						<TextBlock Text="{Binding Path=Model.ElapsedAscent,StringFormat=\{0:0.0\}}" Foreground="Black" FontSize="22" FontWeight="ExtraBold" VerticalAlignment="Bottom" />
+						<TextBlock Text="/" FontSize="14" Foreground="Black" FontWeight="ExtraBold" VerticalAlignment="Bottom" Padding="0,0,0,3" />
+						<TextBlock Text="{Binding Path=Model.TotalAscent,StringFormat=\{0:0.0\}}" FontSize="14" FontWeight="ExtraBold" VerticalAlignment="Bottom" Padding="0,0,0,1.5" Foreground="Black" />
+						<TextBlock Text="m" FontSize="14" FontWeight="ExtraBold" VerticalAlignment="Bottom" Padding="0,0,0,1.5" Foreground="Black"/>
+					</StackPanel>
 
-                    <StackPanel Orientation="Horizontal" Height="24">
-                        <TextBlock Text="⬊" FontSize="20" Margin="0,-4,0,0" Padding="0" FontWeight="ExtraBold" />
-                        <TextBlock Text="{Binding Path=Model.ElapsedDescent,StringFormat=\{0:0.0\}}" Foreground="Black" FontSize="22" FontWeight="ExtraBold" VerticalAlignment="Bottom" />
-                        <TextBlock Text="/" FontSize="14" Foreground="Black" FontWeight="ExtraBold" VerticalAlignment="Bottom" Padding="0,0,0,4" />
-                        <TextBlock Text="{Binding Path=Model.TotalDescent,StringFormat=\{0:0.0\}}" FontSize="14" FontWeight="ExtraBold" VerticalAlignment="Bottom" Padding="0,0,0,2.5" Foreground="Black" />
-                        <TextBlock Text="m" FontSize="14" FontWeight="ExtraBold" VerticalAlignment="Bottom" Padding="0,0,0,2.5" Foreground="Black"/>
-                    </StackPanel>
-                </StackPanel>
+					<StackPanel Orientation="Horizontal" Height="24">
+						<TextBlock Text="⬊" FontSize="20" Margin="0,-4,0,0" Padding="0" FontWeight="ExtraBold" />
+						<TextBlock Text="{Binding Path=Model.ElapsedDescent,StringFormat=\{0:0.0\}}" Foreground="Black" FontSize="22" FontWeight="ExtraBold" VerticalAlignment="Bottom" />
+						<TextBlock Text="/" FontSize="14" Foreground="Black" FontWeight="ExtraBold" VerticalAlignment="Bottom" Padding="0,0,0,4" />
+						<TextBlock Text="{Binding Path=Model.TotalDescent,StringFormat=\{0:0.0\}}" FontSize="14" FontWeight="ExtraBold" VerticalAlignment="Bottom" Padding="0,0,0,2.5" Foreground="Black" />
+						<TextBlock Text="m" FontSize="14" FontWeight="ExtraBold" VerticalAlignment="Bottom" Padding="0,0,0,2.5" Foreground="Black"/>
+					</StackPanel>
+				</StackPanel>
 
-                <ProgressBar Margin="0,0,10,0" 
-                             HorizontalAlignment="Stretch" 
-                             Height="18" 
-                             Background="#C0C0C0" Foreground="#FF6141" 
-                             Value="{Binding Path=Model.CurrentSegment.SequenceNumber,FallbackValue=0, TargetNullValue=0,Mode=OneWay}" 
-                             Minimum="0" 
-                             Maximum="{Binding Path=Model.Route.RouteSegmentSequence.Count,FallbackValue=0, TargetNullValue=0,Mode=OneWay}" 
+				<ProgressBar Margin="0,0,10,0"
+                             HorizontalAlignment="Stretch"
+                             Height="18"
+                             Background="#C0C0C0" Foreground="#FF6141"
+                             Value="{Binding Path=Model.CurrentSegment.SequenceNumber,FallbackValue=0, TargetNullValue=0,Mode=OneWay}"
+                             Minimum="0"
+                             Maximum="{Binding Path=Model.Route.RouteSegmentSequence.Count,FallbackValue=0, TargetNullValue=0,Mode=OneWay}"
                              Grid.Row="1"
                              Grid.Column="0"
                              Grid.ColumnSpan="2"/>
-            </Grid>
-        </Border>
+			</Grid>
+		</Border>
 
-        <Grid
+		<Grid
               Grid.Row="1"
               DataContext="{Binding Path=Model.CurrentSegment}"
               Background="White">
-            <Grid.Styles>
-                <Style Selector="TextBlock">
-                    <Setter Property="Foreground" Value="Black" />
-                    <Setter Property="FontWeight" Value="Bold" />
-                    <Setter Property="FontSize" Value="18" />
-                </Style>
-            </Grid.Styles>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="24" />
-                <RowDefinition Height="24" />
-                <RowDefinition Height="18" />
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="24" />
-                <ColumnDefinition />
-            </Grid.ColumnDefinitions>
+			<Grid.Styles>
+				<Style Selector="TextBlock">
+					<Setter Property="Foreground" Value="Black" />
+					<Setter Property="FontWeight" Value="Bold" />
+					<Setter Property="FontSize" Value="18" />
+				</Style>
+			</Grid.Styles>
+			<Grid.RowDefinitions>
+				<RowDefinition Height="24" />
+				<RowDefinition Height="24" />
+				<RowDefinition Height="18" />
+			</Grid.RowDefinitions>
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="24" />
+				<ColumnDefinition />
+			</Grid.ColumnDefinitions>
 
-            <TextBlock Margin="2,0,0,0" Grid.Column="0" Grid.Row="0" Text="{Binding Path=SequenceNumber}" HorizontalAlignment="Center" />
-            <TextBlock Grid.Column="0" Grid.Row="1" Text="{Binding Path=TurnGlyph}"  FontSize="16" Foreground="#1192CC" Padding="0" Margin="0,-4,0,0" FontWeight="ExtraBold" HorizontalAlignment="Center" VerticalAlignment="Center" />
+			<TextBlock Margin="2,0,0,0" Grid.Column="0" Grid.Row="0" Text="{Binding Path=SequenceNumber}" HorizontalAlignment="Center" />
+			<TextBlock Grid.Column="0" Grid.Row="1" Text="{Binding Path=TurnGlyph}"  FontSize="16" Foreground="#1192CC" Padding="0" Margin="0,-4,0,0" FontWeight="ExtraBold" HorizontalAlignment="Center" VerticalAlignment="Center" />
 
-            <TextBlock Grid.Column="1" Grid.Row="0" Text="{Binding Path=SegmentName}" ToolTip.Tip="{Binding Path=SegmentName}" Margin="4,0,0,0" />
+			<TextBlock Grid.Column="1" Grid.Row="0" Text="{Binding Path=SegmentName}" ToolTip.Tip="{Binding Path=SegmentName}" Margin="4,0,0,0" />
 
-            <StackPanel Grid.Column="1" Grid.Row="1" Orientation="Horizontal" Margin="4,0,0,0">
-                <StackPanel Orientation="Horizontal" Height="18">
-                    <TextBlock Text="{Binding Path=Distance,StringFormat=\{0:0.0\}}" FontSize="16" FontWeight="Bold" VerticalAlignment="Bottom" />
-                    <TextBlock Text="km" FontSize="10" FontWeight="Bold" VerticalAlignment="Bottom" Padding="0,0,0,1.5"/>
+			<StackPanel Grid.Column="1" Grid.Row="1" Orientation="Horizontal" Margin="4,0,0,0">
+				<StackPanel Orientation="Horizontal" Height="18">
+					<TextBlock Text="{Binding Path=Distance,StringFormat=\{0:0.0\}}" FontSize="16" FontWeight="Bold" VerticalAlignment="Bottom" />
+					<TextBlock Text="km" FontSize="10" FontWeight="Bold" VerticalAlignment="Bottom" Padding="0,0,0,1.5"/>
 
-                    <TextBlock Text="⬈" FontSize="15" Margin="0,-2,0,0" Padding="0" FontWeight="ExtraBold" />
-                    <TextBlock Text="{Binding Path=Ascent,StringFormat=\{0:0.0\}}" FontSize="16" FontWeight="Bold" VerticalAlignment="Bottom" />
-                    <TextBlock Text="m" FontSize="10" FontWeight="Bold" VerticalAlignment="Bottom" Padding="0,0,0,1.5"/>
+					<TextBlock Text="⬈" FontSize="15" Margin="0,-2,0,0" Padding="0" FontWeight="ExtraBold" />
+					<TextBlock Text="{Binding Path=Ascent,StringFormat=\{0:0.0\}}" FontSize="16" FontWeight="Bold" VerticalAlignment="Bottom" />
+					<TextBlock Text="m" FontSize="10" FontWeight="Bold" VerticalAlignment="Bottom" Padding="0,0,0,1.5"/>
 
-                    <TextBlock Text="⬊" FontSize="15" Margin="0,-2,0,0" Padding="0" FontWeight="ExtraBold" />
-                    <TextBlock Text="{Binding Path=Descent,StringFormat=\{0:0.0\}}" FontSize="16" FontWeight="Bold" VerticalAlignment="Bottom" />
-                    <TextBlock Text="m" FontSize="10" FontWeight="Bold" VerticalAlignment="Bottom" Padding="0,0,0,1.5"/>
-                </StackPanel>
-            </StackPanel>
+					<TextBlock Text="⬊" FontSize="15" Margin="0,-2,0,0" Padding="0" FontWeight="ExtraBold" />
+					<TextBlock Text="{Binding Path=Descent,StringFormat=\{0:0.0\}}" FontSize="16" FontWeight="Bold" VerticalAlignment="Bottom" />
+					<TextBlock Text="m" FontSize="10" FontWeight="Bold" VerticalAlignment="Bottom" Padding="0,0,0,1.5"/>
+				</StackPanel>
+			</StackPanel>
 
-            <ProgressBar Grid.Row="2" Grid.Column="1"
-                         Margin="4,0,10,0" 
-                         HorizontalAlignment="Stretch" 
-                         Height="18" 
+			<ProgressBar Grid.Row="2" Grid.Column="1"
+                         Margin="4,0,10,0"
+                         HorizontalAlignment="Stretch"
+                         Height="18"
                          Background="#C0C0C0" Foreground="#1391CC"
-                         Value="{Binding Path=DistanceOnSegment,FallbackValue=0, TargetNullValue=0,Mode=OneWay}" 
-                         Minimum="0" 
+                         Value="{Binding Path=DistanceOnSegment,FallbackValue=0, TargetNullValue=0,Mode=OneWay}"
+                         Minimum="0"
                          Maximum="{Binding Path=Distance,FallbackValue=0, TargetNullValue=0,Mode=OneWay}"
                          />
-        </Grid>
+		</Grid>
 
-        <Grid Name="Placeholder"
+		<Grid Name="Placeholder"
               IsVisible="{Binding Path=Model.NextSegment,Converter={StaticResource NullabilityConverter},ConverterParameter=invert}"
               Grid.Row="2"
               Background="White">
-            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Orientation="Horizontal"
+			<StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Orientation="Horizontal"
                         IsVisible="{Binding Path=HasRouteFinished}"
                         Name="FinishFlag">
-                <TextBlock Text="🏁" FontSize="32"/>
-                <TextBlock Text="Finished!" FontSize="32"/>
-            </StackPanel>
-        </Grid>
-        <Grid
+				<TextBlock Text="🏁" FontSize="32"/>
+				<TextBlock Text="Finished!" FontSize="32"/>
+			</StackPanel>
+		</Grid>
+		<Grid
               Grid.Row="2"
               DataContext="{Binding Path=Model.NextSegment}"
               Background="White"
               IsVisible="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}, AncestorLevel=1}, Path=DataContext.Model.NextSegment,Converter={StaticResource NullabilityConverter}}"
               Name="SecondRow">
-            <Grid.Styles>
-                <Style Selector="TextBlock">
-                    <Setter Property="Foreground" Value="Black" />
-                    <Setter Property="FontWeight" Value="Bold" />
-                    <Setter Property="FontSize" Value="18" />
-                </Style>
-            </Grid.Styles>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="24" />
-                <RowDefinition Height="24" />
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="24" />
-                <ColumnDefinition />
-            </Grid.ColumnDefinitions>
+			<Grid.Styles>
+				<Style Selector="TextBlock">
+					<Setter Property="Foreground" Value="Black" />
+					<Setter Property="FontWeight" Value="Bold" />
+					<Setter Property="FontSize" Value="18" />
+				</Style>
+			</Grid.Styles>
+			<Grid.RowDefinitions>
+				<RowDefinition Height="24" />
+				<RowDefinition Height="24" />
+			</Grid.RowDefinitions>
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="24" />
+				<ColumnDefinition />
+			</Grid.ColumnDefinitions>
 
-            <TextBlock Grid.Column="0" Grid.Row="0" Margin="2,0,0,0" Text="{Binding Path=SequenceNumber}" HorizontalAlignment="Center" />
-            <TextBlock Grid.Column="0" Grid.Row="1" Text="{Binding Path=TurnGlyph}"  FontSize="16" Foreground="#1192CC" Padding="0" Margin="0,-4,0,0" FontWeight="ExtraBold" HorizontalAlignment="Center" VerticalAlignment="Center" />
+			<TextBlock Grid.Column="0" Grid.Row="0" Margin="2,0,0,0" Text="{Binding Path=SequenceNumber}" HorizontalAlignment="Center" />
+			<TextBlock Grid.Column="0" Grid.Row="1" Text="{Binding Path=TurnGlyph}"  FontSize="16" Foreground="#1192CC" Padding="0" Margin="0,-4,0,0" FontWeight="ExtraBold" HorizontalAlignment="Center" VerticalAlignment="Center" />
 
-            <TextBlock Grid.Column="1" Grid.Row="0" Text="{Binding Path=SegmentName}" ToolTip.Tip="{Binding Path=SegmentName}" Margin="4,0,0,0" />
+			<TextBlock Grid.Column="1" Grid.Row="0" Text="{Binding Path=SegmentName}" ToolTip.Tip="{Binding Path=SegmentName}" Margin="4,0,0,0" />
 
-            <StackPanel Grid.Column="1" Grid.Row="1" Orientation="Horizontal" Margin="4,0,0,0">
-                <StackPanel Orientation="Horizontal" Height="18">
-                    <TextBlock Text="{Binding Path=Distance,StringFormat=\{0:0.0\}}" FontSize="16" FontWeight="Bold" VerticalAlignment="Bottom" />
-                    <TextBlock Text="km" FontSize="10" FontWeight="Bold" VerticalAlignment="Bottom" Padding="0,0,0,1.5"/>
+			<StackPanel Grid.Column="1" Grid.Row="1" Orientation="Horizontal" Margin="4,0,0,0">
+				<StackPanel Orientation="Horizontal" Height="18">
+					<TextBlock Text="{Binding Path=Distance,StringFormat=\{0:0.0\}}" FontSize="16" FontWeight="Bold" VerticalAlignment="Bottom" />
+					<TextBlock Text="km" FontSize="10" FontWeight="Bold" VerticalAlignment="Bottom" Padding="0,0,0,1.5"/>
 
-                    <TextBlock Text="⬈" FontSize="15" Margin="0,-2,0,0" Padding="0" FontWeight="ExtraBold" />
-                    <TextBlock Text="{Binding Path=Ascent,StringFormat=\{0:0.0\}}" FontSize="16" FontWeight="Bold" VerticalAlignment="Bottom" />
-                    <TextBlock Text="m" FontSize="10" FontWeight="Bold" VerticalAlignment="Bottom" Padding="0,0,0,1.5"/>
+					<TextBlock Text="⬈" FontSize="15" Margin="0,-2,0,0" Padding="0" FontWeight="ExtraBold" />
+					<TextBlock Text="{Binding Path=Ascent,StringFormat=\{0:0.0\}}" FontSize="16" FontWeight="Bold" VerticalAlignment="Bottom" />
+					<TextBlock Text="m" FontSize="10" FontWeight="Bold" VerticalAlignment="Bottom" Padding="0,0,0,1.5"/>
 
-                    <TextBlock Text="⬊" FontSize="15" Margin="0,-2,0,0" Padding="0" FontWeight="ExtraBold" />
-                    <TextBlock Text="{Binding Path=Descent,StringFormat=\{0:0.0\}}" FontSize="16" FontWeight="Bold" VerticalAlignment="Bottom" />
-                    <TextBlock Text="m" FontSize="10" FontWeight="Bold" VerticalAlignment="Bottom" Padding="0,0,0,1.5"/>
-                </StackPanel>
-            </StackPanel>
-        </Grid>
+					<TextBlock Text="⬊" FontSize="15" Margin="0,-2,0,0" Padding="0" FontWeight="ExtraBold" />
+					<TextBlock Text="{Binding Path=Descent,StringFormat=\{0:0.0\}}" FontSize="16" FontWeight="Bold" VerticalAlignment="Bottom" />
+					<TextBlock Text="m" FontSize="10" FontWeight="Bold" VerticalAlignment="Bottom" Padding="0,0,0,1.5"/>
+				</StackPanel>
+			</StackPanel>
+		</Grid>
 
-        <Border Grid.Row="3" CornerRadius="0,0,20,20" Background="#666666">
-            <StackPanel Orientation="Horizontal" VerticalAlignment="Stretch">
-                <StackPanel.Styles>
-                    <Style Selector="TextBlock">
-                        <Setter Property="Foreground" Value="White" />
-                        <Setter Property="FontWeight" Value="Bold" />
-                        <Setter Property="Margin" Value="4,0,0,0" />
-                        <Setter Property="VerticalAlignment" Value="Center" />
-                    </Style>
-                </StackPanel.Styles>
-                <TextBlock Text="Segment" Margin="15,0,0,0" />
-                <TextBlock Text="{Binding Path=Model.CurrentSegment.SequenceNumber,FallbackValue=0, TargetNullValue=0}" />
-                <TextBlock Text="of"  />
-                <TextBlock Text="{Binding Path=Model.Route.RouteSegmentSequence.Count,FallbackValue=0, TargetNullValue=0}" />
-            </StackPanel>
-        </Border>
-    </Grid>
+		<Border Grid.Row="3" CornerRadius="0,0,20,20" Background="#666666">
+			<StackPanel Orientation="Horizontal" VerticalAlignment="Stretch">
+				<StackPanel.Styles>
+					<Style Selector="TextBlock">
+						<Setter Property="Foreground" Value="White" />
+						<Setter Property="FontWeight" Value="Bold" />
+						<Setter Property="Margin" Value="4,0,0,0" />
+						<Setter Property="VerticalAlignment" Value="Center" />
+					</Style>
+				</StackPanel.Styles>
+				<TextBlock Text="Segment" Margin="15,0,0,0" />
+				<TextBlock Text="{Binding Path=Model.CurrentSegment.SequenceNumber,FallbackValue=0, TargetNullValue=0}" />
+				<TextBlock Text="of"  />
+				<TextBlock Text="{Binding Path=Model.Route.RouteSegmentSequence.Count,FallbackValue=0, TargetNullValue=0}" />
+			</StackPanel>
+		</Border>
+	</Grid>
 </Window>
