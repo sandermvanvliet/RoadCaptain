@@ -31,8 +31,6 @@ namespace RoadCaptain.App.RouteBuilder
             
             var configuration = new ConfigurationBuilder()
                 .AddJsonFile("appsettings.json", true)
-                .AddJsonFile("autofac.app.routebuilder.json")
-                .AddJsonFile("autofac.app.routebuilder.development.json", true)
                 .Build();
 
             _container = InversionOfControl
