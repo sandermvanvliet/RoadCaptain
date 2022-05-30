@@ -72,10 +72,20 @@ namespace RoadCaptain.App.Runner.Views
 
         private void InputElement_OnPointerPressed(object? sender, PointerPressedEventArgs e)
         {
-            if (e.GetCurrentPoint(this).Properties.IsLeftButtonPressed)
+            var currentPoint = e.GetCurrentPoint(this);
+
+            if (currentPoint.Properties.IsLeftButtonPressed)
             {
                 BeginMoveDrag(e);
             }
+        }
+
+        private void RebelRouteCombo_OnPointerPressed(object? sender, PointerPressedEventArgs e)
+        {
+            // This prevents the situation where the PointerPressed event bubbles
+            // up to the window and initiates the window drag operation.
+            // It fixes a bug where the combo box can't be opened.
+            e.Handled = true;
         }
     }
 }

@@ -20,8 +20,8 @@
         WindowStartupLocation="CenterScreen"
         Background="Transparent"
         TransparencyLevelHint="Transparent"
+        Activated="WindowBase_OnActivated" 
         PointerPressed="InputElement_OnPointerPressed"
-        Activated="WindowBase_OnActivated"
         Icon="avares://RoadCaptain.App.Shared/icon.png">
 	<Window.Styles>
 		<Style Selector="Button">
@@ -77,7 +77,7 @@
 			</Grid.RowDefinitions>
 
 			<StackPanel Orientation="Horizontal" Grid.Row="0">
-				<Image Source="avares://RoadCaptain.App.Shared/icon.png" Height="22" VerticalAlignment="Center" Margin="4,4,4,0" />
+				<Image Source="avares://RoadCaptain.App.Shared/icon.png" Height="32" VerticalAlignment="Center" Margin="4,4,4,0" />
 				<TextBlock Text="RoadCaptain" FontWeight="ExtraBold" FontSize="32" VerticalAlignment="Center" />
 			</StackPanel>
 			<Button Content="X" Background="Red" Foreground="White" Grid.Row="0" HorizontalAlignment="Right" Width="40" Height="20" Margin="0,-4,-4,0" VerticalAlignment="Top"
@@ -140,7 +140,8 @@
 
 				<!-- row 2 -->
 				<TextBlock Text="Rebel route:" HorizontalAlignment="Right" FontWeight="Bold" FontSize="16" Grid.Column="0" Grid.Row="1" VerticalAlignment="Center" Margin="0,2,0,0" />
-				<ComboBox Name="RebelRouteCombo" Grid.Row="1" Grid.Column="1" Margin="4,8,4,4" Items="{Binding Path=RebelRoutes}" Height="32" VerticalAlignment="Center" SelectionChanged="Selector_OnSelectionChanged" HorizontalAlignment="Stretch"/>
+				<ComboBox Name="RebelRouteCombo" Grid.Row="1" Grid.Column="1" Margin="4,8,4,4" Items="{Binding Path=RebelRoutes}" Height="32" VerticalAlignment="Center" SelectionChanged="Selector_OnSelectionChanged" HorizontalAlignment="Stretch"
+                          PointerPressed="RebelRouteCombo_OnPointerPressed"/>
 
 				<!-- row 3 -->
 				<TextBlock Text="Route from file:" HorizontalAlignment="Right" FontWeight="Bold" FontSize="16" Grid.Column="0" Grid.Row="2" VerticalAlignment="Center" Margin="0,2,0,0" />
