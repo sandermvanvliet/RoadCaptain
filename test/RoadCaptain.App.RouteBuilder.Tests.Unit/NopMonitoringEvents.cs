@@ -4,7 +4,7 @@
 
 using System;
 
-namespace RoadCaptain.Runner.Tests.Unit
+namespace RoadCaptain.App.RouteBuilder.Tests.Unit
 {
     public class NopMonitoringEvents : MonitoringEvents
     {

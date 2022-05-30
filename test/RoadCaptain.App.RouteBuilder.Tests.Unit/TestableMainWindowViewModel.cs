@@ -1,14 +1,15 @@
 ﻿using System.Diagnostics;
+using RoadCaptain.App.RouteBuilder.ViewModels;
+using RoadCaptain.App.Shared.Commands;
+using RoadCaptain.App.Shared.UserPreferences;
 using RoadCaptain.Ports;
-using RoadCaptain.RouteBuilder.ViewModels;
-using RoadCaptain.UserInterface.Shared.Commands;
 
-namespace RoadCaptain.RouteBuilder.Tests.Unit
+namespace RoadCaptain.App.RouteBuilder.Tests.Unit
 {
     public class TestableMainWindowViewModel : MainWindowViewModel
     {
         public TestableMainWindowViewModel(IRouteStore routeStore, ISegmentStore segmentStore, IVersionChecker versionChecker,
-            IWindowService windowService, IWorldStore worldStore, UserPreferences userPreferences)
+            IWindowService windowService, IWorldStore worldStore, IUserPreferences userPreferences)
             : base(routeStore, segmentStore, versionChecker, windowService, worldStore, userPreferences)
         {
         }
@@ -16,7 +17,7 @@ namespace RoadCaptain.RouteBuilder.Tests.Unit
         [DebuggerStepThrough]
         public CommandResult CallAddSegmentToRoute(Segment segment)
         {
-            return AddSegmentToRoute(segment);
+            return SelectSegment(segment);
         }
     }
 }

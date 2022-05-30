@@ -1,47 +1,13 @@
-﻿using System.Windows;
+﻿using Autofac;
+using JetBrains.Annotations;
 
-namespace RoadCaptain.RouteBuilder.Tests.Unit
+namespace RoadCaptain.App.RouteBuilder.Tests.Unit
 {
-    public class StubWindowService : IWindowService
+    public class StubWindowService : WindowService
     {
-        public string ShowOpenFileDialog(string previousLocation)
+        public StubWindowService([NotNull] IComponentContext componentContext,
+            [NotNull] MonitoringEvents monitoringEvents) : base(componentContext, monitoringEvents)
         {
-            throw new System.NotImplementedException();
-        }
-
-        public void ShowErrorDialog(string message, Window owner = null)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public void ShowMainWindow()
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public void ShowNewVersionDialog(Release release)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public string ShowSaveFileDialog(string previousLocation)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public bool ShowDefaultSportSelectionDialog(SportType sport)
-        {
-            return false;
-        }
-
-        public MessageBoxResult ShowSaveRouteDialog()
-        {
-            return MessageBoxResult.Cancel;
-        }
-
-        public MessageBoxResult ShowClearRouteDialog()
-        {
-            return MessageBoxResult.Cancel;
         }
     }
 }

@@ -2,12 +2,11 @@
 using System.Linq;
 using FluentAssertions;
 using RoadCaptain.Adapters;
-using RoadCaptain.RouteBuilder.ViewModels;
-using RoadCaptain.UserInterface.Shared.Commands;
-using SkiaSharp;
+using RoadCaptain.App.RouteBuilder.ViewModels;
+using RoadCaptain.App.Shared.Commands;
 using Xunit;
 
-namespace RoadCaptain.RouteBuilder.Tests.Unit
+namespace RoadCaptain.App.RouteBuilder.Tests.Unit
 {
     public class WhenPlanningRoute
     {
@@ -26,16 +25,15 @@ namespace RoadCaptain.RouteBuilder.Tests.Unit
                 new RouteStoreToDisk(_segmentStore, _worldStore),
                 _segmentStore,
                 null,
-                new StubWindowService(),
+                new StubWindowService(null, new NopMonitoringEvents()),
                 _worldStore,
-                new UserPreferences());
+                new TestUserPreferences());
         }
 
         private void GivenWorldAndSport(string worldId, SportType sportType)
         {
             _viewModel.SelectWorldCommand.Execute(new WorldViewModel(_worldStore.LoadWorldById(worldId)));
             _viewModel.SelectSportCommand.Execute(new SportViewModel(sportType));
-            _viewModel.CreatePathsForSegments(800, 600);
             _segments = _segmentStore.LoadSegments(_viewModel.Route.World, _viewModel.Route.Sport);
         }
 
@@ -69,6 +67,9 @@ namespace RoadCaptain.RouteBuilder.Tests.Unit
                 .Be(Result.Failure);
 
             result
+                .Should()
+                .BeOfType<CommandResultWithMessage>()
+                .Which
                 .Message
                 .Should()
                 .Be("Spawn point does not support the direction of the selected segment");
@@ -88,6 +89,9 @@ namespace RoadCaptain.RouteBuilder.Tests.Unit
                 .Be(Result.Failure);
 
             result
+                .Should()
+                .BeOfType<CommandResultWithMessage>()
+                .Which
                 .Message
                 .Should()
                 .Be("Spawn point does not support the direction of the selected segment");
@@ -107,6 +111,9 @@ namespace RoadCaptain.RouteBuilder.Tests.Unit
                 .Be(Result.SuccessWithWarnings);
 
             result
+                .Should()
+                .BeOfType<CommandResultWithMessage>()
+                .Which
                 .Message
                 .Should()
                 .Be("Volcano circuit 3");
@@ -126,28 +133,12 @@ namespace RoadCaptain.RouteBuilder.Tests.Unit
                 .Be(Result.SuccessWithWarnings);
 
             result
+                .Should()
+                .BeOfType<CommandResultWithMessage>()
+                .Which
                 .Message
                 .Should()
                 .Be("Volcano circuit 1");
-        }
-
-        // 1: watopia-bambino-fondo-001-after-after-after-after-after-before
-        // 2: watopia-bambino-fondo-001-after-after-after-after-before-after
-        [Fact]
-        public void GivenAtoBSegmentAndRouteStartsInBtoADirection_RoutePathIsGeneratedCorrectly()
-        {
-            GivenWorldAndSport("watopia", SportType.Cycling);
-
-            _viewModel.CallAddSegmentToRoute(GetSegmentById("watopia-bambino-fondo-001-after-after-after-after-after-before"));
-            _viewModel.CallAddSegmentToRoute(GetSegmentById("watopia-bambino-fondo-001-after-after-after-after-before-after"));
-
-            // This is a bit convoluted but given that we know that:
-            // 1: Segment watopia-bambino-fondo-001-after-after-after-after-after-before is AtoB
-            // 2: The route segments have directions BtoA -> BtoA
-            // 3: Therefore the first part of the route is the 'B' part of the first segment
-            var expectedFirstPoint = _viewModel.SegmentPaths[_viewModel.Route.Sequence.First().SegmentId].Points.Last();
-
-            _viewModel.RoutePath.Points.First().Should().Be(expectedFirstPoint);
         }
 
         [Fact]
