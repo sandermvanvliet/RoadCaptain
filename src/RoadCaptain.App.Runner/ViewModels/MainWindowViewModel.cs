@@ -12,9 +12,11 @@ using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
 using Microsoft.IdentityModel.JsonWebTokens;
+using Newtonsoft.Json;
 using ReactiveUI;
 using RoadCaptain.App.Runner.Models;
 using RoadCaptain.App.Shared.Commands;
+using RoadCaptain.App.Shared.Models;
 using RoadCaptain.App.Shared.UserPreferences;
 using RoadCaptain.GameStates;
 using RoadCaptain.Ports;
@@ -48,7 +50,7 @@ namespace RoadCaptain.App.Runner.ViewModels
             IWindowService windowService,
             IGameStateDispatcher gameStateDispatcher,
             IRouteStore routeStore,
-            IVersionChecker versionChecker, 
+            IVersionChecker versionChecker,
             ISegmentStore segmentStore)
         {
             _configuration = configuration;
@@ -431,7 +433,7 @@ namespace RoadCaptain.App.Runner.ViewModels
                 var plannedRoute = _routeStore.LoadFrom(RoutePath);
                 Route = RouteModel.From(plannedRoute, _segmentStore.LoadSegments(plannedRoute.World, plannedRoute.Sport));
             }
-            
+
             _gameStateDispatcher.RouteSelected(Route.PlannedRoute);
 
             _gameStateDispatcher.Dispatch(new WaitingForConnectionState());
@@ -441,7 +443,24 @@ namespace RoadCaptain.App.Runner.ViewModels
 
         private async Task<CommandResult> LogInToZwift(Window window)
         {
-            var tokenResponse = await _windowService.ShowLogInDialog(window);
+            TokenResponse? tokenResponse = null;
+
+#if DEBUG
+            // This is for testing only to prevent me having to log in all the time.
+            if (File.Exists("devtokens.json"))
+            {
+                tokenResponse = JsonConvert.DeserializeObject<TokenResponse>(await File.ReadAllTextAsync("devtokens.json"));
+
+                if (tokenResponse?.AccessToken != null && new JsonWebToken(tokenResponse.AccessToken).ValidTo < DateTime.Now)
+                {
+                    // When the token expires, break here and use postman to refresh the token manually
+                    Debugger.Break();
+                    tokenResponse = null;
+                }
+            }
+#endif
+            
+            tokenResponse ??= await _windowService.ShowLogInDialog(window);
 
             if (tokenResponse != null &&
                 !string.IsNullOrEmpty(tokenResponse.AccessToken))
@@ -454,6 +473,15 @@ namespace RoadCaptain.App.Runner.ViewModels
                     ZwiftAvatarUri = tokenResponse.UserProfile.Avatar;
                     ZwiftAvatar = DownloadAvatarImage(ZwiftAvatarUri);
                 }
+
+#if DEBUG
+                // This is for testing only to prevent me having to log in all the time.
+                if (tokenResponse.UserProfile.FirstName + " " + tokenResponse.UserProfile.LastName ==
+                    "Sander van Vliet [RoadCaptain]")
+                {
+                    await File.WriteAllTextAsync("devtokens.json", JsonConvert.SerializeObject(tokenResponse));
+                }
+#endif
 
                 LoggedInToZwift = true;
 
@@ -476,12 +504,12 @@ namespace RoadCaptain.App.Runner.ViewModels
 
                     return new Bitmap(new MemoryStream(imageBytes));
                 }
-                catch 
+                catch
                 {
                     // Nop
                 }
             }
-            
+
             var assets = AvaloniaLocator.Current.GetService<IAssetLoader>();
 
             if (assets == null)
