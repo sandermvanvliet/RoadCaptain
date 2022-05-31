@@ -162,8 +162,11 @@ namespace RoadCaptain.App.Runner
             };
 
             var viewModel = new InGameNavigationWindowViewModel(inGameWindowModel, segments);
-            
-            viewModel.UpdateGameState(_previousGameState);
+
+            if (_previousGameState != null)
+            {
+                viewModel.UpdateGameState(_previousGameState);
+            }
 
             return viewModel;
         }
@@ -190,7 +193,9 @@ namespace RoadCaptain.App.Runner
 
             _monitoringEvents.Information("Starting connection initiator");
 
+#pragma warning disable CS8602 // This method is always called after StartZwiftConnectionListener()
             _initiatorTask = _listenerTask.StartLinkedTask(
+#pragma warning restore CS8602
                 token => _connectUseCase
                     .ExecuteAsync(
                         new ConnectCommand { AccessToken = accessToken },
@@ -223,7 +228,7 @@ namespace RoadCaptain.App.Runner
             _navigationTask = TaskWithCancellation.Start(token => _navigationUseCase.Execute(token));
         }
 
-        private void CancelAndCleanUp(Expression<Func<TaskWithCancellation>> func)
+        private void CancelAndCleanUp(Expression<Func<TaskWithCancellation?>> func)
         {
             if (func.Body is MemberExpression { Member: FieldInfo fieldInfo })
             {

@@ -5,7 +5,7 @@ namespace RoadCaptain.App.Shared
 {
     public static class TaskExtensions
     {
-        public static void SafeWaitForCancellation(this Task task)
+        public static void SafeWaitForCancellation(this Task? task)
         {
             if (task == null)
             {
@@ -22,7 +22,7 @@ namespace RoadCaptain.App.Shared
             }
         }
 
-        public static bool IsRunning(this TaskWithCancellation task)
+        public static bool IsRunning(this TaskWithCancellation? task)
         {
             return task?.Task is
             {
