@@ -8,7 +8,6 @@ using RoadCaptain.Adapters;
 using RoadCaptain.App.Runner.ViewModels;
 using RoadCaptain.App.Shared.UserPreferences;
 using RoadCaptain.GameStates;
-using RoadCaptain.UseCases;
 using Xunit;
 
 namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.MainWindow
@@ -158,9 +157,9 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.MainWindow
                 appSettings ?? new DummyUserPreferences(),
                 new WindowService(null, new NopMonitoringEvents()),
                 _gameStateDispatcher,
-                new LoadRouteUseCase(_gameStateDispatcher, routeStore),
                 routeStore,
-                null);
+                null,
+                new SegmentStore());
         }
 
         private GameState GetFirstDispatchedGameState()

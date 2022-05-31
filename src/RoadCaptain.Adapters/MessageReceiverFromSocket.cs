@@ -311,6 +311,35 @@ namespace RoadCaptain.Adapters
             SendMessageBytes(message.ToByteArray());
         }
 
+        public void EndActivity(ulong sequenceNumber, string activityName, uint riderId)
+        {
+            var message = new ZwiftCompanionToAppRiderMessage
+            {
+                MyId = riderId,
+                Details = new ZwiftCompanionToAppRiderMessage.Types.RiderMessage
+                {
+                    Tag1 = _commandCounter++, // This is a sequence of the number of commands we've sent to the game
+                    Type = 29, // Tag2
+                    Tag3 = 0,
+                    Tag5 = 0,
+                    Tag7 = 0,
+                    Data = new ZwiftCompanionToAppRiderMessage.Types.RiderMessage.Types.RiderMessageData
+                    {
+                        Tag1 = 15,
+                        SubData = new ZwiftCompanionToAppRiderMessage.Types.RiderMessage.Types.RiderMessageData.Types.RiderMessageSubData
+                        {
+                            Tag1 = 3,
+                            WorldName = activityName,
+                            Tag4 = 0
+                        }
+                    }
+                },
+                Sequence = (uint)sequenceNumber // This value is provided via the SomethingEmpty synchronisation command
+            };
+
+            SendMessageBytes(message.ToByteArray());
+        }
+
         private static CommandType GetCommandTypeForTurnDirection(TurnDirection direction)
         {
             switch (direction)

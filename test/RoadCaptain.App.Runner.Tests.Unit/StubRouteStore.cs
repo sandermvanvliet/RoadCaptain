@@ -9,7 +9,11 @@ namespace RoadCaptain.App.Runner.Tests.Unit
         {
             if (path == "someroute.json")
             {
-                return new PlannedRoute();
+                return new PlannedRoute
+                {
+                    World = new World { Id = "watopia"},
+                    Sport = SportType.Cycling
+                };
             }
 
             return null;

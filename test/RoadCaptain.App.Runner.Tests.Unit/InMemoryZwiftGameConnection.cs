@@ -1,11 +1,7 @@
-// Copyright (c) 2022 Sander van Vliet
-// Licensed under Artistic License 2.0
-// See LICENSE or https://choosealicense.com/licenses/artistic-2.0/
-
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using RoadCaptain.Ports;
 
-namespace RoadCaptain.Tests.Unit
+namespace RoadCaptain.App.Runner.Tests.Unit
 {
     internal class InMemoryZwiftGameConnection : IZwiftGameConnection
     {
@@ -20,7 +16,7 @@ namespace RoadCaptain.Tests.Unit
 
         public void EndActivity(ulong sequenceNumber, string activityName, uint riderId)
         {
-            SentCommands.Add("ENDACTIVITY");
+            SentCommands.Add($"ENDACTIVITY;{activityName}");
         }
 
         public List<string> SentCommands { get; } = new();

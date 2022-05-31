@@ -9,10 +9,10 @@ namespace RoadCaptain.App.Runner.Tests.Unit.Engine
         public TestableEngine(MonitoringEvents monitoringEvents, LoadRouteUseCase loadRouteUseCase,
             Configuration configuration, IWindowService windowService, DecodeIncomingMessagesUseCase listenerUseCase,
             ConnectToZwiftUseCase connectUseCase, HandleZwiftMessagesUseCase handleMessageUseCase,
-            NavigationUseCase navigationUseCase, IGameStateReceiver gameStateReceiver, ISegmentStore segmentStore) :
+            NavigationUseCase navigationUseCase, IGameStateReceiver gameStateReceiver, ISegmentStore segmentStore, IZwiftGameConnection zwiftGameConnection) :
             base(monitoringEvents,
                 loadRouteUseCase, configuration, windowService, listenerUseCase, connectUseCase, handleMessageUseCase,
-                navigationUseCase, gameStateReceiver, segmentStore)
+                navigationUseCase, gameStateReceiver, segmentStore, zwiftGameConnection)
         {
         }
 

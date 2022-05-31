@@ -32,6 +32,8 @@ namespace RoadCaptain.App.Runner
         private TaskWithCancellation? _navigationTask;
 
         private GameState? _previousGameState;
+        private readonly IZwiftGameConnection _zwiftGameConnection;
+        private ulong _lastSequenceNumber;
 
         public Engine(
             MonitoringEvents monitoringEvents,
@@ -43,7 +45,8 @@ namespace RoadCaptain.App.Runner
             HandleZwiftMessagesUseCase handleMessageUseCase,
             NavigationUseCase navigationUseCase,
             IGameStateReceiver gameStateReceiver, 
-            ISegmentStore segmentStore)
+            ISegmentStore segmentStore, 
+            IZwiftGameConnection zwiftGameConnection)
         {
             _monitoringEvents = monitoringEvents;
             _loadRouteUseCase = loadRouteUseCase;
@@ -55,10 +58,11 @@ namespace RoadCaptain.App.Runner
             _navigationUseCase = navigationUseCase;
             _gameStateReceiver = gameStateReceiver;
             _segmentStore = segmentStore;
+            _zwiftGameConnection = zwiftGameConnection;
 
             _gameStateReceiver.Register(
                 route => _loadedRoute = route,
-                null,
+                sequenceNumber => _lastSequenceNumber = sequenceNumber,
                 GameStateReceived);
         }
 
@@ -142,6 +146,11 @@ namespace RoadCaptain.App.Runner
 
                 // Start navigation if it is not running
                 StartNavigation();
+            }
+
+            if (gameState is CompletedRouteState completed)
+            {
+                _zwiftGameConnection.EndActivity(_lastSequenceNumber, "RoadCaptain: " + completed.Route.Name, completed.RiderId);
             }
 
             if (gameState is ErrorState errorState)

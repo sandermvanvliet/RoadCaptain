@@ -4,7 +4,6 @@ using FluentAssertions;
 using RoadCaptain.Adapters;
 using RoadCaptain.App.Runner.ViewModels;
 using RoadCaptain.GameStates;
-using RoadCaptain.UseCases;
 using Xunit;
 
 namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.MainWindow
@@ -22,9 +21,9 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.MainWindow
                 new DummyUserPreferences(),
                 new WindowService(null, new NopMonitoringEvents()),
                 _gameStateDispatcher,
-                new LoadRouteUseCase(_gameStateDispatcher, routeStore),
                 routeStore,
-                null);
+                null, 
+                new SegmentStore());
         }
 
         [Fact]

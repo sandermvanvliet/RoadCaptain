@@ -19,6 +19,7 @@ namespace RoadCaptain.App.Runner.Tests.Unit.Engine
         private readonly TaskWithCancellation _receiverTask;
         private readonly IGameStateReceiver _gameStateReceiver;
         private readonly ClassicDesktopStyleApplicationLifetime _lifetime;
+        private readonly InMemoryZwiftGameConnection _zwiftGameConnection;
 
         public EngineTest()
         {
@@ -55,6 +56,8 @@ namespace RoadCaptain.App.Runner.Tests.Unit.Engine
 
             _receiverTask = TaskWithCancellation.Start(token => _gameStateReceiver.Start(token));
 
+            _zwiftGameConnection = container.Resolve<IZwiftGameConnection>() as InMemoryZwiftGameConnection;
+
             Engine = container.Resolve<TestableEngine>();
             WindowService = container.Resolve<StubWindowService>();
 
@@ -73,6 +76,7 @@ namespace RoadCaptain.App.Runner.Tests.Unit.Engine
         protected TestableEngine Engine { get; }
 
         protected InMemorySink InMemorySink { get; }
+        protected List<string> SentCommands => _zwiftGameConnection.SentCommands;
 
         public void Dispose()
         {

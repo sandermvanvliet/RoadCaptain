@@ -9,7 +9,6 @@ using RoadCaptain.Adapters;
 using RoadCaptain.App.Runner.ViewModels;
 using RoadCaptain.App.Shared.Models;
 using RoadCaptain.GameStates;
-using RoadCaptain.UseCases;
 using Xunit;
 using TokenResponse = RoadCaptain.App.Shared.Models.TokenResponse;
 
@@ -31,9 +30,9 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.MainWindow
                 new DummyUserPreferences(),
                 _windowService,
                 _gameStateDispatcher,
-                new LoadRouteUseCase(_gameStateDispatcher, routeStore),
                 routeStore,
-                null);
+                null, 
+                new SegmentStore());
             
             // This is required so that we can call new Window() below.
             var avaloniaDependencyResolver = new AvaloniaLocator();

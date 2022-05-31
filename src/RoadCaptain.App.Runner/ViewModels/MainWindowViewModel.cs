@@ -16,10 +16,8 @@ using ReactiveUI;
 using RoadCaptain.App.Runner.Models;
 using RoadCaptain.App.Shared.Commands;
 using RoadCaptain.App.Shared.UserPreferences;
-using RoadCaptain.Commands;
 using RoadCaptain.GameStates;
 using RoadCaptain.Ports;
-using RoadCaptain.UseCases;
 
 namespace RoadCaptain.App.Runner.ViewModels
 {
@@ -34,12 +32,12 @@ namespace RoadCaptain.App.Runner.ViewModels
         private string _windowTitle = "RoadCaptain";
         private string? _zwiftAvatarUri = "avares://RoadCaptain.App.Shared/Assets/profile-default.png";
         private string? _zwiftName;
-        private readonly LoadRouteUseCase _loadRouteUseCase;
         private readonly IRouteStore _routeStore;
         private string _version = "0.0.0.0";
         private string? _changelogUri;
         private RouteModel _route = new();
         private readonly IVersionChecker _versionChecker;
+        private readonly ISegmentStore _segmentStore;
         private bool _haveCheckedVersion;
         private IImage? _zwiftAvatar;
         private bool _endActivityAtEndOfRoute;
@@ -49,17 +47,17 @@ namespace RoadCaptain.App.Runner.ViewModels
             IUserPreferences userPreferences,
             IWindowService windowService,
             IGameStateDispatcher gameStateDispatcher,
-            LoadRouteUseCase loadRouteUseCase,
-            IRouteStore routeStore, 
-            IVersionChecker versionChecker)
+            IRouteStore routeStore,
+            IVersionChecker versionChecker, 
+            ISegmentStore segmentStore)
         {
             _configuration = configuration;
             _userPreferences = userPreferences;
             _windowService = windowService;
             _gameStateDispatcher = gameStateDispatcher;
-            _loadRouteUseCase = loadRouteUseCase;
             _routeStore = routeStore;
             _versionChecker = versionChecker;
+            _segmentStore = segmentStore;
 
             if (IsValidToken(configuration.AccessToken))
             {
@@ -74,12 +72,28 @@ namespace RoadCaptain.App.Runner.ViewModels
             if (!string.IsNullOrEmpty(configuration.Route))
             {
                 RoutePath = configuration.Route;
-                Route = RouteModel.From(_routeStore.LoadFrom(RoutePath), new List<Segment>());
+                var plannedRoute = _routeStore.LoadFrom(RoutePath);
+                if (plannedRoute != null)
+                {
+                    Route = RouteModel.From(plannedRoute, _segmentStore.LoadSegments(plannedRoute.World, plannedRoute.Sport));
+                }
+                else
+                {
+                    Route = new RouteModel();
+                }
             }
             else if (!string.IsNullOrEmpty(userPreferences.Route))
             {
                 RoutePath = userPreferences.Route;
-                Route = RouteModel.From(_routeStore.LoadFrom(RoutePath), new List<Segment>());
+                var plannedRoute = _routeStore.LoadFrom(RoutePath);
+                if (plannedRoute != null)
+                {
+                    Route = RouteModel.From(plannedRoute, _segmentStore.LoadSegments(plannedRoute.World, plannedRoute.Sport));
+                }
+                else
+                {
+                    Route = new RouteModel();
+                }
             }
 
             StartRouteCommand = new RelayCommand(
@@ -367,7 +381,15 @@ namespace RoadCaptain.App.Runner.ViewModels
 
                 WindowTitle = $"RoadCaptain - {routeFileName}";
 
-                Route = RouteModel.From(_routeStore.LoadFrom(RoutePath), new List<Segment>());
+                var plannedRoute = _routeStore.LoadFrom(RoutePath);
+                if (plannedRoute != null)
+                {
+                    Route = RouteModel.From(plannedRoute, _segmentStore.LoadSegments(plannedRoute.World, plannedRoute.Sport));
+                }
+                else
+                {
+                    Route = new RouteModel();
+                }
             }
 
             return CommandResult.Success();
@@ -402,14 +424,13 @@ namespace RoadCaptain.App.Runner.ViewModels
             _userPreferences.Route = RoutePath;
             _userPreferences.Save();
 
-            if (Route?.PlannedRoute != null)
+            if (Route.PlannedRoute == null)
             {
-                _gameStateDispatcher.RouteSelected(Route.PlannedRoute);
+                var plannedRoute = _routeStore.LoadFrom(RoutePath);
+                Route = RouteModel.From(plannedRoute, _segmentStore.LoadSegments(plannedRoute.World, plannedRoute.Sport));
             }
-            else
-            {
-                _loadRouteUseCase.Execute(new LoadRouteCommand { Path = RoutePath });
-            }
+            
+            _gameStateDispatcher.RouteSelected(Route.PlannedRoute);
 
             _gameStateDispatcher.Dispatch(new WaitingForConnectionState());
 
