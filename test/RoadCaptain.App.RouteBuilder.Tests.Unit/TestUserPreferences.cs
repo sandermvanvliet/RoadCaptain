@@ -9,6 +9,9 @@ namespace RoadCaptain.App.RouteBuilder.Tests.Unit
         public string? LastUsedFolder { get; set; }
         public string? Route { get; set; }
         public Point? InGameWindowLocation { get; set; }
+        public bool EndActivityAtEndOfRoute { get; set; }
+        public bool LoopRouteAtEndOfRoute { get; set; }
+
         public void Load()
         {
         }

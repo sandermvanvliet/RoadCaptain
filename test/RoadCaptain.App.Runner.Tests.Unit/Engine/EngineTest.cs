@@ -7,6 +7,7 @@ using Avalonia.Threading;
 using Microsoft.Extensions.Configuration;
 using RoadCaptain.App.Runner.Tests.Unit.ViewModels;
 using RoadCaptain.App.Shared;
+using RoadCaptain.App.Shared.UserPreferences;
 using RoadCaptain.GameStates;
 using RoadCaptain.Ports;
 using Serilog;
@@ -20,6 +21,7 @@ namespace RoadCaptain.App.Runner.Tests.Unit.Engine
         private readonly IGameStateReceiver _gameStateReceiver;
         private readonly ClassicDesktopStyleApplicationLifetime _lifetime;
         private readonly InMemoryZwiftGameConnection _zwiftGameConnection;
+        protected IUserPreferences UserPreferences;
 
         public EngineTest()
         {
@@ -43,6 +45,8 @@ namespace RoadCaptain.App.Runner.Tests.Unit.Engine
             var container = containerBuilder.Build();
             
             container.Resolve<Configuration>().Route = "someroute.json";
+            
+            UserPreferences = container.Resolve<IUserPreferences>();
 
             _gameStateReceiver = container.Resolve<IGameStateReceiver>();
             _gameStateReceiver

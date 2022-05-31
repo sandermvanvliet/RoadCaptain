@@ -4,6 +4,7 @@ using System.Reflection;
 using RoadCaptain.App.Runner.Models;
 using RoadCaptain.App.Runner.ViewModels;
 using RoadCaptain.App.Shared;
+using RoadCaptain.App.Shared.UserPreferences;
 using RoadCaptain.Commands;
 using RoadCaptain.GameStates;
 using RoadCaptain.Ports;
@@ -34,6 +35,7 @@ namespace RoadCaptain.App.Runner
         private GameState? _previousGameState;
         private readonly IZwiftGameConnection _zwiftGameConnection;
         private ulong _lastSequenceNumber;
+        private readonly IUserPreferences _userPreferences;
 
         public Engine(
             MonitoringEvents monitoringEvents,
@@ -46,7 +48,7 @@ namespace RoadCaptain.App.Runner
             NavigationUseCase navigationUseCase,
             IGameStateReceiver gameStateReceiver, 
             ISegmentStore segmentStore, 
-            IZwiftGameConnection zwiftGameConnection)
+            IZwiftGameConnection zwiftGameConnection, IUserPreferences userPreferences)
         {
             _monitoringEvents = monitoringEvents;
             _loadRouteUseCase = loadRouteUseCase;
@@ -59,6 +61,7 @@ namespace RoadCaptain.App.Runner
             _gameStateReceiver = gameStateReceiver;
             _segmentStore = segmentStore;
             _zwiftGameConnection = zwiftGameConnection;
+            _userPreferences = userPreferences;
 
             _gameStateReceiver.Register(
                 route => _loadedRoute = route,
@@ -148,7 +151,7 @@ namespace RoadCaptain.App.Runner
                 StartNavigation();
             }
 
-            if (gameState is CompletedRouteState completed)
+            if (gameState is CompletedRouteState completed && _userPreferences.EndActivityAtEndOfRoute)
             {
                 _zwiftGameConnection.EndActivity(_lastSequenceNumber, "RoadCaptain: " + completed.Route.Name, completed.RiderId);
             }

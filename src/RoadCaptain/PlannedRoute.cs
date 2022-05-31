@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Newtonsoft.Json;
 
 namespace RoadCaptain
@@ -21,6 +22,9 @@ namespace RoadCaptain
         public string NextSegmentId => HasStarted ? RouteSegmentSequence[SegmentSequenceIndex].NextSegmentId : null;
         public TurnDirection TurnToNextSegment => HasStarted ? RouteSegmentSequence[SegmentSequenceIndex].TurnToNextSegment : TurnDirection.None;
         public string CurrentSegmentId => HasStarted ? RouteSegmentSequence[SegmentSequenceIndex].SegmentId : null;
+        public bool IsLoop =>
+            RouteSegmentSequence.Count > 1 &&
+            RouteSegmentSequence.First().SegmentId == RouteSegmentSequence.Last().SegmentId;
 
         public List<SegmentSequence> RouteSegmentSequence { get; } = new();
 

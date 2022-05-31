@@ -7,13 +7,27 @@ namespace RoadCaptain.App.Runner.Tests.Unit.Engine
     public class WhenCompletedRouteStateIsReceived : EngineTest
     {
         [Fact]
-        public void GivenRouteCompletes_EndActivityCommandIsSent()
+        public void GivenRouteCompletesAndUserPreferenceIsToEndActivity_EndActivityCommandIsSent()
         {
+            UserPreferences.EndActivityAtEndOfRoute = true;
+
             GivenCompletedRouteStateReceived();
 
             SentCommands
                 .Should()
                 .Contain($"ENDACTIVITY;RoadCaptain: {_route.Name}");
+        }
+
+        [Fact]
+        public void GivenRouteCompletesAndUserPreferenceIsToContinueActivity_EndActivityCommandIsNotSent()
+        {
+            UserPreferences.EndActivityAtEndOfRoute = false;
+
+            GivenCompletedRouteStateReceived();
+
+            SentCommands
+                .Should()
+                .NotContain($"ENDACTIVITY;RoadCaptain: {_route.Name}");
         }
 
         private readonly PlannedRoute _route = new PlannedRoute { Name = "Test Route" };

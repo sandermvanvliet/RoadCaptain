@@ -281,6 +281,7 @@ namespace RoadCaptain.App.Runner.ViewModels
             {
                 if (value == _endActivityAtEndOfRoute) return;
                 _endActivityAtEndOfRoute = value;
+                _userPreferences.EndActivityAtEndOfRoute = value;
                 this.RaisePropertyChanged();
             }
         }
@@ -294,6 +295,7 @@ namespace RoadCaptain.App.Runner.ViewModels
                 _loopRouteAtEndOfRoute = value;
                 // When doing a loop we can't automatically end the activity...
                 EndActivityAtEndOfRoute = false;
+                _userPreferences.LoopRouteAtEndOfRoute = value;
                 this.RaisePropertyChanged();
             }
         }

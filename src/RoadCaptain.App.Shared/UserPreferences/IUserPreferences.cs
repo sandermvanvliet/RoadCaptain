@@ -14,7 +14,8 @@ namespace RoadCaptain.App.Shared.UserPreferences
         public string? LastUsedFolder { get; set; }
         public string? Route { get; set; }
         Point? InGameWindowLocation { get; set; }
-
+        public bool EndActivityAtEndOfRoute { get; set; }
+        public bool LoopRouteAtEndOfRoute { get; set; }
         public void Load();
         public void Save();
     }
@@ -31,7 +32,11 @@ namespace RoadCaptain.App.Shared.UserPreferences
         public string? LastUsedFolder { get; set; }
         public string? Route { get; set; }
         public Point? InGameWindowLocation { get; set; }
-        
+        // This preference is transient and will not be stored
+        public bool EndActivityAtEndOfRoute { get; set; }
+        // This preference is transient and will not be stored
+        public bool LoopRouteAtEndOfRoute { get; set; }
+
         public void Load()
         {
             var preferencesPath = GetPreferencesPath();
