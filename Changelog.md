@@ -1,5 +1,41 @@
 ﻿# Changelog
 
+## 0.6.3.1
+
+I'm super happy to annouce that with version 0.6.3.1 RoadCaptain is now supported on macOS! 🎉🎉🎉
+
+Over the last month and a bit the applications (RouteBuilder and Runner) have been ported to the [Avalonia UI](https://avaloniaui.net/) framework which makes it possible to support multiple platforms with a single codebase.
+That also paves the way for a Linux version in the future.
+
+For now the macOS build is based on the pre-M1 architecture which means that RoadCaptain will run using Rosetta and not yet natively on ARM devices. This has to do with the webview component that is used to log in to Zwift, there are still some issues with packaging that need to be resolved before that becomes available.
+
+Another big change is that it is no longer required to install the .Net Core runtime. Both the Windows and macOS builds are now stand alone applications which means that installation is much simpler now.
+
+**Known issues:**
+
+A number of routing issues were found (see [#84](https://github.com/sandermvanvliet/RoadCaptain/issues/84), [#82](https://github.com/sandermvanvliet/RoadCaptain/issues/82), [#77](https://github.com/sandermvanvliet/RoadCaptain/issues/77), [#75](https://github.com/sandermvanvliet/RoadCaptain/issues/75), [#73](https://github.com/sandermvanvliet/RoadCaptain/issues/73) and [#72](https://github.com/sandermvanvliet/RoadCaptain/issues/72)). These are still under investigation and should be addressed in the next build.
+
+### Route Builder
+
+- Buttons no longer drop off the screen when resizing the window. [#55](https://github.com/sandermvanvliet/RoadCaptain/issues/55)
+- Tooltips are now visible on buttons. [#40](https://github.com/sandermvanvliet/RoadCaptain/issues/40)
+- When saving a route and the first and last segments are connected, Route Builder will ask you whether to make the route a loop. [#59](https://github.com/sandermvanvliet/RoadCaptain/issues/)
+- The map now no longer drops off the side of the screen. [#55](https://github.com/sandermvanvliet/RoadCaptain/issues/55)
+- The map looks a bit nicer now, anti-aliasing improves the smoothness of the segments.
+- Tooltips are now shown on KOMs and Sprints so that you can see which ones they are.
+
+### Runner
+
+- **[PREVIEW]** Automatically end the Zwift activity after completing the route [#58](https://github.com/sandermvanvliet/RoadCaptain/issues/58)
+- **[PREVIEW]** Start another loop of the route if the route is a loop [#59](https://github.com/sandermvanvliet/RoadCaptain/issues/59). When you select this option, the "end activity" option is automatically disabled.
+- User preferences have been simplified, on Windows there is only 1 directory left instead of 2. [#74](https://github.com/sandermvanvliet/RoadCaptain/issues/74)
+- When you end the activity in Zwift, the Runner will automatically return to the start screen. [#67](https://github.com/sandermvanvliet/RoadCaptain/issues/67)
+- Show a message when route lock is lost, now you'll see when RoadCaptain loses track in-game. [#66](https://github.com/sandermvanvliet/RoadCaptain/issues/66)
+- The new version popup now shows properly formatted content instead of raw Markdown. [#61](https://github.com/sandermvanvliet/RoadCaptain/issues/61)
+- When selecting a route the details now also show distance, ascent and descent. [#51](https://github.com/sandermvanvliet/RoadCaptain/issues/51)
+- A message box is shown when another instance of RoadCaptain Runner is already running.
+
+The **[PREVIEW]** items should work but may have some quirks. Any feedback is more than welcome!
 ## 0.6.2.1
 
 **Breaking change:**
