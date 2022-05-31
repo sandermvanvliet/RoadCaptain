@@ -216,6 +216,8 @@ message ZwiftCompanionToAppRiderMessage
                 string world_name = 3;
                 uint32 tag4 = 4;
             }
+
+            optional RiderMessageSubData sub_data = 16;
         }
 
         optional RiderMessageData data = 21;
