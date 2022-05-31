@@ -47,7 +47,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             _versionChecker = versionChecker;
             _windowService = windowService;
             _worldStore = worldStore;
-            
+
             _userPreferences = userPreferences;
             _userPreferences.Load();
 
@@ -154,7 +154,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             Route.Reset();
 
             SelectedSegment = null;
-            
+
             SimulationState = SimulationState.NotStarted;
 
             Segments = new List<Segment>();
@@ -537,7 +537,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             var commandResult = Route.Clear();
 
             SelectedSegment = null;
-            
+
             SimulationState = SimulationState.NotStarted;
 
             return commandResult;
@@ -550,6 +550,70 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             if (string.IsNullOrEmpty(routeOutputFilePath))
             {
                 return CommandResult.Success();
+            }
+
+            var firstInSequence = Route.Sequence.First();
+            var lastInSequence = Route.Sequence.Last();
+
+            if (lastInSequence.Model.NextSegmentId == null)
+            {
+                // Check if firstInSequence and lastInSequence share a connection
+                var lastSegment = _segments.Single(s => s.Id == lastInSequence.SegmentId);
+                var firstSegment = _segments.Single(s => s.Id == firstInSequence.SegmentId);
+
+                if (lastInSequence.Direction == SegmentDirection.AtoB)
+                {
+                    if (lastSegment.NextSegmentsNodeB.Any(t => t.SegmentId == firstInSequence.SegmentId))
+                    {
+                        if (firstInSequence.Direction == SegmentDirection.AtoB)
+                        {
+                            if (firstSegment.NextSegmentsNodeA.Any(t => t.SegmentId == lastInSequence.SegmentId))
+                            {
+                                if (await _windowService.ShowRouteLoopDialog())
+                                {
+                                    lastInSequence.SetTurn(TurnDirection.None, firstInSequence.SegmentId, lastInSequence.Direction);
+                                }
+                            }
+                        }
+                        else if (firstInSequence.Direction == SegmentDirection.BtoA)
+                        {
+                            if (firstSegment.NextSegmentsNodeB.Any(t => t.SegmentId == lastInSequence.SegmentId))
+                            {
+                                if (await _windowService.ShowRouteLoopDialog())
+                                {
+                                    lastInSequence.SetTurn(TurnDirection.None, firstInSequence.SegmentId, lastInSequence.Direction);
+                                }
+                            }
+                        }
+                    }
+                }
+
+                if (lastInSequence.Direction == SegmentDirection.BtoA)
+                {
+                    if (lastSegment.NextSegmentsNodeA.Any(t => t.SegmentId == firstInSequence.SegmentId))
+                    {
+                        if (firstInSequence.Direction == SegmentDirection.AtoB)
+                        {
+                            if (firstSegment.NextSegmentsNodeA.Any(t => t.SegmentId == lastInSequence.SegmentId))
+                            {
+                                if (await _windowService.ShowRouteLoopDialog())
+                                {
+                                    lastInSequence.SetTurn(TurnDirection.None, firstInSequence.SegmentId, lastInSequence.Direction);
+                                }
+                            }
+                        }
+                        else if (firstInSequence.Direction == SegmentDirection.BtoA)
+                        {
+                            if (firstSegment.NextSegmentsNodeB.Any(t => t.SegmentId == lastInSequence.SegmentId))
+                            {
+                                if (await _windowService.ShowRouteLoopDialog())
+                                {
+                                    lastInSequence.SetTurn(TurnDirection.None, firstInSequence.SegmentId, lastInSequence.Direction);
+                                }
+                            }
+                        }
+                    }
+                }
             }
 
             Route.OutputFilePath = routeOutputFilePath;
@@ -666,7 +730,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
                 SimulationState = SimulationState.Completed;
                 return CommandResult.Success();
             }
-            
+
             _simulationTask = Task.Factory.StartNew(() =>
             {
                 SimulationState = SimulationState.Running;

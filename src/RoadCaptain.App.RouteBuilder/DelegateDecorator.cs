@@ -58,6 +58,11 @@ namespace RoadCaptain.App.RouteBuilder
             return await InvokeIfNeededAsync(() => _decorated.ShowClearRouteDialog());
         }
 
+        public async Task<bool> ShowRouteLoopDialog()
+        {
+            return await InvokeIfNeededAsync(() => _decorated.ShowRouteLoopDialog());
+        }
+
         private async Task<TResult> InvokeIfNeededAsync<TResult>(Func<Task<TResult>> action)
         {
             if (!_dispatcher.CheckAccess())

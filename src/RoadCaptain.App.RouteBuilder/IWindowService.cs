@@ -15,5 +15,6 @@ namespace RoadCaptain.App.RouteBuilder
         Task<bool> ShowDefaultSportSelectionDialog(SportType sport);
         Task<MessageBoxResult> ShowSaveRouteDialog();
         Task<MessageBoxResult> ShowClearRouteDialog();
+        Task<bool> ShowRouteLoopDialog();
     }
 }

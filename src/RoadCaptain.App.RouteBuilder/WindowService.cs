@@ -72,6 +72,18 @@ namespace RoadCaptain.App.RouteBuilder
                     MessageBoxIcon.Question);
         }
 
+        public async Task<bool> ShowRouteLoopDialog()
+        {
+            var result = await MessageBox.ShowAsync(
+                "The route ends on a connection to the first segment, do you want to make it a loop?",
+                "Create route loop",
+                MessageBoxButton.YesNo,
+                CurrentWindow,
+                MessageBoxIcon.Question);
+
+            return result == MessageBoxResult.Yes;
+        }
+
         public void ShowMainWindow(IApplicationLifetime applicationLifetime)
         {
             var desktopMainWindow = Resolve<MainWindow>();
