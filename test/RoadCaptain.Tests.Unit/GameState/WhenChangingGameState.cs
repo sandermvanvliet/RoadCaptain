@@ -435,7 +435,7 @@ namespace RoadCaptain.Tests.Unit.GameState
                 .Should()
                 .Be(RoutePosition3Point2);
         }
-        
+
         [Fact]
         public void GivenCompletedRouteStateAndExitingLastSegmentOfRoute_ResultingStateIsRouteCompletedState()
         {
@@ -453,6 +453,29 @@ namespace RoadCaptain.Tests.Unit.GameState
                 .CurrentPosition
                 .Should()
                 .Be(Position4);
+        }
+
+        [Fact]
+        public void GivenCompletedRouteAndRouteIsLoopAndRouteHasBeenReset_ResultingStateIsOnRouteState()
+        {
+            _route.EnteredSegment("route-segment-1");
+            _route.EnteredSegment("route-segment-2");
+            _route.EnteredSegment("route-segment-3");
+
+            GameStates.GameState state = new CompletedRouteState(RiderId, ActivityId, RoutePosition3, _route);
+            
+            // This is called by the Runner engine
+            _route.Reset();
+            
+            var result = state.UpdatePosition(RoutePosition1, _segments, _route);
+
+            result
+                .Should()
+                .BeOfType<OnRouteState>()
+                .Which
+                .CurrentPosition
+                .Should()
+                .Be(RoutePosition1);
         }
 
         private Segment SegmentById(string id)
@@ -528,7 +551,7 @@ namespace RoadCaptain.Tests.Unit.GameState
                 Position4
             })
             {
-                Id="segment-4",
+                Id = "segment-4",
                 NextSegmentsNodeA =
                 {
                     new Turn(TurnDirection.GoStraight, "route-segment-3")
@@ -562,7 +585,7 @@ namespace RoadCaptain.Tests.Unit.GameState
             {
                 new SegmentSequence { SegmentId = "route-segment-1", NextSegmentId = "route-segment-2", TurnToNextSegment = TurnDirection.Left, Direction = SegmentDirection.AtoB},
                 new SegmentSequence { SegmentId = "route-segment-2", NextSegmentId = "route-segment-3", TurnToNextSegment = TurnDirection.Right, Direction = SegmentDirection.AtoB },
-                new SegmentSequence { SegmentId = "route-segment-3", Direction = SegmentDirection.AtoB },
+                new SegmentSequence { SegmentId = "route-segment-3", NextSegmentId = "route-segment-1", TurnToNextSegment = TurnDirection.GoStraight, Direction = SegmentDirection.AtoB },
             }
         };
     }

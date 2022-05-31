@@ -24,7 +24,7 @@ namespace RoadCaptain
         public string CurrentSegmentId => HasStarted ? RouteSegmentSequence[SegmentSequenceIndex].SegmentId : null;
         public bool IsLoop =>
             RouteSegmentSequence.Count > 1 &&
-            RouteSegmentSequence.First().SegmentId == RouteSegmentSequence.Last().SegmentId;
+            RouteSegmentSequence.Last().NextSegmentId == RouteSegmentSequence.First().SegmentId;
 
         public List<SegmentSequence> RouteSegmentSequence { get; } = new();
 

@@ -151,9 +151,16 @@ namespace RoadCaptain.App.Runner
                 StartNavigation();
             }
 
-            if (gameState is CompletedRouteState completed && _userPreferences.EndActivityAtEndOfRoute)
+            if (gameState is CompletedRouteState completed)
             {
-                _zwiftGameConnection.EndActivity(_lastSequenceNumber, "RoadCaptain: " + completed.Route.Name, completed.RiderId);
+                if (_userPreferences.EndActivityAtEndOfRoute)
+                {
+                    _zwiftGameConnection.EndActivity(_lastSequenceNumber, "RoadCaptain: " + completed.Route.Name, completed.RiderId);
+                }
+                else if (completed.Route.IsLoop && _userPreferences.LoopRouteAtEndOfRoute)
+                {
+                    completed.Route.Reset();
+                }
             }
 
             if (gameState is ErrorState errorState)
