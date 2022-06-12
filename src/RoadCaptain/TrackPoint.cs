@@ -153,35 +153,30 @@ namespace RoadCaptain
             return HashCode.Combine(Latitude, Longitude, Altitude, Segment);
         }
 
-        private static readonly Dictionary<ZwiftWorldId, double[]> MetersBetweenDegrees =
+        private static readonly Dictionary<ZwiftWorldId, ZwiftWorldConstants> ZwiftWorlds =
             new()
             {
-                { ZwiftWorldId.Watopia, new[] {110614.71d, 109287.52d }}
+                { ZwiftWorldId.Watopia, new ZwiftWorldConstants(110614.71d, 109287.52d, -128809767.893784d, 1824587167.6433601d)}
             };
 
         public static TrackPoint LatLongToGame(double latitude, double longitude, double altitude, ZwiftWorldId worldId)
         {
-            double metersBetweenLatitudeDegree;
-            double metersBetweenLongitudeDegree;
+            ZwiftWorldConstants worldConstants;
 
             switch (worldId)
             {
                 case ZwiftWorldId.Watopia:
-                    metersBetweenLatitudeDegree = MetersBetweenDegrees[worldId][0];
-                    metersBetweenLongitudeDegree = MetersBetweenDegrees[worldId][1];
+                    worldConstants = ZwiftWorlds[worldId];
                     break;
                 default:
                     return TrackPoint.Unknown;
             }
 
-            const double watopiaCenterLatitudeAsCentimetersFromOrigin = -128809767.893784d;
-            const double watopiaCenterLongitudeAsCentimetersFromOrigin = 1824587167.6433601d;
+            var latitudeAsCentimetersFromOrigin = (latitude * worldConstants.MetersBetweenLatitudeDegree * 100);
+            var latitudeOffsetCentimeters = latitudeAsCentimetersFromOrigin - worldConstants.CenterLatitudeFromOrigin;
 
-            var latitudeAsCentimetersFromOrigin = (latitude * metersBetweenLatitudeDegree * 100);
-            var latitudeOffsetCentimeters = latitudeAsCentimetersFromOrigin - watopiaCenterLatitudeAsCentimetersFromOrigin;
-
-            var longitudeAsCentimetersFromOrigin = longitude * metersBetweenLongitudeDegree * 100;
-            var longitudeOffsetCentimeters = longitudeAsCentimetersFromOrigin - watopiaCenterLongitudeAsCentimetersFromOrigin;
+            var longitudeAsCentimetersFromOrigin = longitude * worldConstants.MetersBetweenLongitudeDegree * 100;
+            var longitudeOffsetCentimeters = longitudeAsCentimetersFromOrigin - worldConstants.CenterLongitudeFromOrigin;
 
             return new TrackPoint(latitudeOffsetCentimeters, longitudeOffsetCentimeters, altitude);
         }
@@ -189,27 +184,22 @@ namespace RoadCaptain
         public static TrackPoint FromGameLocation(double latitudeOffsetCentimeters, double longitudeOffsetCentimeters,
             double altitude, ZwiftWorldId worldId)
         {
-            double metersBetweenLatitudeDegree;
-            double metersBetweenLongitudeDegree;
+            ZwiftWorldConstants worldConstants;
 
             switch (worldId)
             {
                 case ZwiftWorldId.Watopia:
-                    metersBetweenLatitudeDegree = MetersBetweenDegrees[worldId][0];
-                    metersBetweenLongitudeDegree = MetersBetweenDegrees[worldId][1];
+                    worldConstants = ZwiftWorlds[worldId];
                     break;
                 default:
                     return TrackPoint.Unknown;
             }
 
-            const double watopiaCenterLatitudeAsCentimetersFromOrigin = -128809767.893784d;
-            const double watopiaCenterLongitudeAsCentimetersFromOrigin = 1824587167.6433601d;
+            var latitudeAsCentimetersFromOrigin = latitudeOffsetCentimeters + worldConstants.CenterLatitudeFromOrigin;
+            var latitude = latitudeAsCentimetersFromOrigin / worldConstants.MetersBetweenLatitudeDegree / 100;
 
-            var latitudeAsCentimetersFromOrigin = latitudeOffsetCentimeters + watopiaCenterLatitudeAsCentimetersFromOrigin;
-            var latitude = latitudeAsCentimetersFromOrigin / metersBetweenLatitudeDegree / 100;
-
-            var longitudeAsCentimetersFromOrigin = longitudeOffsetCentimeters + watopiaCenterLongitudeAsCentimetersFromOrigin;
-            var longitude = longitudeAsCentimetersFromOrigin / metersBetweenLongitudeDegree / 100;
+            var longitudeAsCentimetersFromOrigin = longitudeOffsetCentimeters + worldConstants.CenterLongitudeFromOrigin;
+            var longitude = longitudeAsCentimetersFromOrigin / worldConstants.MetersBetweenLongitudeDegree / 100;
 
             return new TrackPoint(latitude, longitude, altitude);
         }
