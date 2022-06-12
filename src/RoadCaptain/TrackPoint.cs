@@ -156,7 +156,17 @@ namespace RoadCaptain
         private static readonly Dictionary<ZwiftWorldId, ZwiftWorldConstants> ZwiftWorlds =
             new()
             {
-                { ZwiftWorldId.Watopia, new ZwiftWorldConstants(110614.71d, 109287.52d, -128809767.893784d, 1824587167.6433601d)}
+                { ZwiftWorldId.Watopia, new ZwiftWorldConstants(110614.71d, 109287.52d, -128809767.893784d, 1824587167.6433601d)},
+                { ZwiftWorldId.Richmond, new ZwiftWorldConstants(110987.82d, 88374.68d, -128809767.893784d, 1824587167.6433601d)},
+                { ZwiftWorldId.London, new ZwiftWorldConstants(111258.3d, 69400.28d, -128809767.893784d, 1824587167.6433601d)},
+                { ZwiftWorldId.NewYork, new ZwiftWorldConstants(110850.0d, 84471.0d, -128809767.893784d, 1824587167.6433601d)},
+                { ZwiftWorldId.Innsbruck, new ZwiftWorldConstants(111230.0d, 75027.0d, -128809767.893784d, 1824587167.6433601d)},
+                { ZwiftWorldId.Bologna, new ZwiftWorldConstants(111230.0d, 79341.0d, -128809767.893784d, 1824587167.6433601d)},
+                { ZwiftWorldId.Yorkshire, new ZwiftWorldConstants(111230.0d, 65393.0d, -128809767.893784d, 1824587167.6433601d)},
+                { ZwiftWorldId.CritCity, new ZwiftWorldConstants(110614.71d, 109287.52d, -128809767.893784d, 1824587167.6433601d)},
+                { ZwiftWorldId.MakuriIslands, new ZwiftWorldConstants(110614.71d, 109287.52d, -128809767.893784d, 1824587167.6433601d)},
+                { ZwiftWorldId.France, new ZwiftWorldConstants(110726.0d, 103481.0d, -128809767.893784d, 1824587167.6433601d)},
+                { ZwiftWorldId.Paris, new ZwiftWorldConstants(111230.0d, 73167.0, -128809767.893784d, 1824587167.6433601d)},
             };
 
         public static TrackPoint LatLongToGame(double latitude, double longitude, double altitude, ZwiftWorldId worldId)
