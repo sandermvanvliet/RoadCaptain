@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using Castle.Components.DictionaryAdapter;
 using FluentAssertions;
 using RoadCaptain.App.Runner.Models;
 using RoadCaptain.App.Runner.ViewModels;

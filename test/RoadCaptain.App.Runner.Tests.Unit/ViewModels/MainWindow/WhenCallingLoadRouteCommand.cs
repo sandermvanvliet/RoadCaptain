@@ -12,7 +12,7 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.MainWindow
 
         public WhenCallingLoadRouteCommand()
         {
-            _windowService = new StubWindowService(null, null);
+            _windowService = new StubWindowService();
 
             var gameStateDispatcher = new InMemoryGameStateDispatcher(new NopMonitoringEvents());
 

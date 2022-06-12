@@ -8,7 +8,7 @@ namespace RoadCaptain.App.Runner.Tests.Unit.Engine
 {
     public class WhenInvalidCredentialsStateIsReceived : EngineTest
     {
-        [StaFact]
+        [Fact]
         public void NavigationTaskIsCleanedUp()
         {
             GivenTaskIsRunning("_navigationTask");
@@ -20,7 +20,7 @@ namespace RoadCaptain.App.Runner.Tests.Unit.Engine
                 .BeNull();
         }
 
-        [StaFact]
+        [Fact]
         public void ListenerTaskIsCleanedUp()
         {
             GivenTaskIsRunning("_listenerTask");
@@ -32,7 +32,7 @@ namespace RoadCaptain.App.Runner.Tests.Unit.Engine
                 .BeNull();
         }
 
-        [StaFact]
+        [Fact]
         public void InitiatorTaskIsCleanedUp()
         {
             GivenTaskIsRunning("_initiatorTask");
@@ -44,7 +44,7 @@ namespace RoadCaptain.App.Runner.Tests.Unit.Engine
                 .BeNull();
         }
 
-        [StaFact]
+        [Fact]
         public void MessageHandlingTaskIsCleanedUp()
         {
             GivenTaskIsRunning("_messageHandlingTask");
@@ -56,7 +56,7 @@ namespace RoadCaptain.App.Runner.Tests.Unit.Engine
                 .BeNull();
         }
 
-        [StaFact]
+        [Fact]
         public void ErrorDialogIsShown()
         {
             GivenInvalidCredentialsStateIsReceived();
@@ -67,7 +67,7 @@ namespace RoadCaptain.App.Runner.Tests.Unit.Engine
                 .Be(1);
         }
 
-        [StaFact]
+        [Fact]
         public void MainWindowIsShown()
         {
             GivenInvalidCredentialsStateIsReceived();

@@ -22,7 +22,7 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.MainWindow
 
         public WhenCallingLogInCommand()
         {
-            _windowService = new StubWindowService(null, null);
+            _windowService = new StubWindowService();
             _gameStateDispatcher = new InMemoryGameStateDispatcher(new NopMonitoringEvents());
 
             StubRouteStore routeStore = new StubRouteStore();
@@ -42,7 +42,7 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.MainWindow
             AvaloniaLocator.Current = avaloniaDependencyResolver;
         }
 
-        [StaFact]
+        [Fact]
         public void LogInDialogIsOpened()
         {
             LogIn();
@@ -53,7 +53,7 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.MainWindow
                 .Be(1);
         }
 
-        [StaFact]
+        [Fact]
         public void GivenLogInDialogIsCanceled_ZwiftAccessTokenRetainsOriginalValue()
         {
             _windowService.LogInDialogResult = null;
@@ -66,7 +66,7 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.MainWindow
                 .BeNull();
         }
 
-        [StaFact]
+        [Fact]
         public void GivenUserLogsInButTokenIsEmpty_ZwiftAccessTokenRetainsOriginalValue()
         {
             _windowService.LogInDialogResult = new TokenResponse();
@@ -79,10 +79,10 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.MainWindow
                 .BeNull();
         }
 
-        [StaFact]
+        [Fact]
         public void GivenUserLoggedIn_ZwiftAccessTokenIsSet()
         {
-            _windowService.LogInDialogResult = new TokenResponse { AccessToken = "some token" };
+            _windowService.LogInDialogResult = new TokenResponse { AccessToken = "some token", UserProfile = new UserProfile() };
 
             LogIn();
 
@@ -92,7 +92,7 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.MainWindow
                 .Be("some token");
         }
 
-        [StaFact]
+        [Fact]
         public void GivenUserLoggedIn_ZwiftNameIsSet()
         {
             _windowService.LogInDialogResult = new TokenResponse
@@ -114,7 +114,7 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.MainWindow
                 .Be("some name");
         }
 
-        [StaFact]
+        [Fact]
         public void GivenUserLoggedIn_ZwiftAvatarIsSet()
         {
             _windowService.LogInDialogResult = new TokenResponse
@@ -136,7 +136,7 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.MainWindow
                 .Be("someavatar");
         }
 
-        [StaFact]
+        [Fact]
         public void GivenUserLoggedIn_LoggedInToZwiftIsSet()
         {
             _windowService.LogInDialogResult = new TokenResponse
@@ -158,7 +158,7 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.MainWindow
                 .BeTrue();
         }
 
-        [StaFact]
+        [Fact]
         public void GivenUserLoggedIn_LoggedInStateIsDispatched()
         {
             _windowService.LogInDialogResult = new TokenResponse

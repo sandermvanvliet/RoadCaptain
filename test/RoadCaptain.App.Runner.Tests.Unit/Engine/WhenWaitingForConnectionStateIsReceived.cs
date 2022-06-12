@@ -9,7 +9,7 @@ namespace RoadCaptain.App.Runner.Tests.Unit.Engine
 {
     public class WhenWaitingForConnectionStateIsReceived : EngineTest
     {
-        [StaFact]
+        [Fact]
         public void MessageIsLogged()
         {
             GivenConnectedToZwiftStateReceived();
@@ -23,7 +23,7 @@ namespace RoadCaptain.App.Runner.Tests.Unit.Engine
         }
 
         // TODO: Re-enable this test
-        //[StaFact]
+        //[Fact]
         public void GivenRouteIsLoadedAndMainWindowIsActive_MainWindowIsClosed()
         {
             GivenLoadedRoute();
@@ -39,7 +39,7 @@ namespace RoadCaptain.App.Runner.Tests.Unit.Engine
                 .HaveCount(1);
         }
 
-        [StaFact]
+        [Fact]
         public void GivenNoWindowIsActive_CloseIsNotCalled()
         {
             GivenConnectedToZwiftStateReceived();
@@ -50,7 +50,7 @@ namespace RoadCaptain.App.Runner.Tests.Unit.Engine
                 .BeEmpty();
         }
 
-        [StaFact]
+        [Fact]
         public void GivenRouteIsLoaded_InGameWindowIsShown()
         {
             GivenLoadedRoute();
@@ -64,11 +64,9 @@ namespace RoadCaptain.App.Runner.Tests.Unit.Engine
                 .Contain(typeof(InGameNavigationWindow));
         }
 
-        [StaFact]
+        [Fact]
         public void GivenNoRouteIsLoaded_InGameWindowIsNotShown()
         {
-            //WindowService.ShowMainWindow();
-
             GivenConnectedToZwiftStateReceived();
 
             WindowService

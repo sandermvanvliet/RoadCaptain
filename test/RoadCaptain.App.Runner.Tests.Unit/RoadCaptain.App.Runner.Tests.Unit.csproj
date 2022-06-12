@@ -2,6 +2,7 @@
 
 	<PropertyGroup>
 		<TargetFramework>net6.0-windows</TargetFramework>
+		<RuntimeIdentifier Condition="$([MSBuild]::IsOSPlatform('WINDOWS')) And '$(Configuration)'=='Debug'">win-x64</RuntimeIdentifier>
 
 		<IsPackable>false</IsPackable>
 		<Version Condition="'$(Version)' == ''">0.1.0.0</Version>
@@ -24,19 +25,12 @@
 			<PrivateAssets>all</PrivateAssets>
 		</PackageReference>
 		<PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.16.0" />
-		<PackageReference Include="Xunit.StaFact" Version="1.1.11" />
 	</ItemGroup>
 
 	<ItemGroup>
 		<ProjectReference Include="..\..\src\RoadCaptain.Adapters\RoadCaptain.Adapters.csproj" />
 		<ProjectReference Include="..\..\src\RoadCaptain.App.Runner\RoadCaptain.App.Runner.csproj" />
 		<ProjectReference Include="..\..\src\RoadCaptain\RoadCaptain.csproj" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <None Update="xunit.runner.json">
-	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	  </None>
 	</ItemGroup>
 
 </Project>

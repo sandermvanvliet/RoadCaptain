@@ -19,7 +19,7 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.MainWindow
             var routeStore = new StubRouteStore();
             _viewModel = new MainWindowViewModel(new Configuration(null), 
                 new DummyUserPreferences(),
-                new WindowService(null, new NopMonitoringEvents()),
+                new StubWindowService(),
                 _gameStateDispatcher,
                 routeStore,
                 null, 

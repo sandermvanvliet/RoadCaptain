@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Configuration;
 using System.Threading;
 using FluentAssertions;
 using Microsoft.IdentityModel.JsonWebTokens;
@@ -155,7 +154,7 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.MainWindow
             var routeStore = new StubRouteStore();
             return new MainWindowViewModel(configuration, 
                 appSettings ?? new DummyUserPreferences(),
-                new WindowService(null, new NopMonitoringEvents()),
+                new StubWindowService(),
                 _gameStateDispatcher,
                 routeStore,
                 null,

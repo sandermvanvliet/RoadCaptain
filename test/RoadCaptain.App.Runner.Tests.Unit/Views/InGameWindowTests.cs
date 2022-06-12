@@ -19,7 +19,7 @@ namespace RoadCaptain.App.Runner.Tests.Unit.Views
 {
     public class InGameWindowTests
     {
-        //[StaFact]
+        //[Fact]
         public void GivenRouteInLastSegment_SecondSegmentRowIsNotVisible()
         {
             var segments = new List<Segment>
@@ -74,7 +74,7 @@ namespace RoadCaptain.App.Runner.Tests.Unit.Views
                 .BeFalse();
         }
 
-        //[StaFact]
+        //[Fact]
         public void GivenRouteInLastSegment_PlaceholderIsVisible()
         {
             var segment = new Segment(new List<TrackPoint>
@@ -141,7 +141,7 @@ namespace RoadCaptain.App.Runner.Tests.Unit.Views
                 .BeTrue();
         }
 
-        //[StaFact]
+        //[Fact]
         public void GivenRouteHasCompleted_FinishFlagIsVisible()
         {
             var segment = new Segment(new List<TrackPoint>
@@ -211,7 +211,7 @@ namespace RoadCaptain.App.Runner.Tests.Unit.Views
                 .BeTrue();
         }
 
-        //[StaFact]
+        //[Fact]
         public void GivenRouteInLastSegmentButNotYetCompleted_FinishFlagIsNotVisible()
         {
             var segment = new Segment(new List<TrackPoint>

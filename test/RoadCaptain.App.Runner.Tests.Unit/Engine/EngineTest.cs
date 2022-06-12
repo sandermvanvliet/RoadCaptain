@@ -64,11 +64,6 @@ namespace RoadCaptain.App.Runner.Tests.Unit.Engine
 
             Engine = container.Resolve<TestableEngine>();
             WindowService = container.Resolve<StubWindowService>();
-
-            _lifetime = new ClassicDesktopStyleApplicationLifetime();
-            WindowService.SetLifetime(_lifetime);
-
-            AvaloniaTestSupport.MockServices();
         }
 
         protected StubWindowService WindowService { get; }
