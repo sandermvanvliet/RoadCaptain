@@ -213,7 +213,7 @@ namespace RoadCaptain.App.RouteBuilder.Controls
             {
                 _route = value;
                 _renderOperation.Route = value;
-
+                
                 CreateRoutePath();
 
                 InvalidateVisual();
@@ -334,7 +334,7 @@ namespace RoadCaptain.App.RouteBuilder.Controls
             var boundedSegments = pathsInBounds.Select(kv => Segments.Single(s => s.Id == kv.Key)).ToList();
 
             var reverseScaled = _overallOffsets.ReverseScaleAndTranslate(scaledPoint.X, scaledPoint.Y);
-            var scaledPointToPosition = TrackPoint.FromGameLocation(reverseScaled.Latitude, reverseScaled.Longitude, reverseScaled.Altitude, ZwiftWorldId.Watopia);
+            var scaledPointToPosition = TrackPoint.FromGameLocation(reverseScaled.Latitude, reverseScaled.Longitude, reverseScaled.Altitude, _route?.World?.ZwiftId ?? ZwiftWorldId.Unknown);
             scaledPointToPosition = new TrackPoint(-scaledPointToPosition.Longitude, scaledPointToPosition.Latitude, scaledPointToPosition.Altitude);
 
             Segment? newSelectedSegment = null;
