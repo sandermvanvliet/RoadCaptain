@@ -173,6 +173,9 @@ namespace RoadCaptain
                 case ZwiftWorldId.Watopia:
                     worldConstants = Watopia;
                     break;
+                case ZwiftWorldId.MakuriIslands:
+                    worldConstants = MakuriIslands;
+                    break;
                 default:
                     return TrackPoint.Unknown;
             }
@@ -195,6 +198,9 @@ namespace RoadCaptain
             {
                 case ZwiftWorldId.Watopia:
                     worldConstants = Watopia;
+                    break;
+                case ZwiftWorldId.MakuriIslands:
+                    worldConstants = MakuriIslands;
                     break;
                 default:
                     return TrackPoint.Unknown;
