@@ -15,8 +15,8 @@ namespace RoadCaptain
         {
             MetersBetweenLatitudeDegree = metersBetweenLatitudeDegree;
             MetersBetweenLongitudeDegree = metersBetweenLongitudeDegree;
-            CenterLatitudeFromOrigin = centerLatitudeFromOrigin;
-            CenterLongitudeFromOrigin = centerLongitudeFromOrigin;
+            CenterLatitudeFromOrigin = centerLatitudeFromOrigin * metersBetweenLatitudeDegree * 100;
+            CenterLongitudeFromOrigin = centerLongitudeFromOrigin * metersBetweenLongitudeDegree * 100;
         }
     }
 }

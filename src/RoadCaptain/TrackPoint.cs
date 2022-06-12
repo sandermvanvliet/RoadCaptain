@@ -153,20 +153,20 @@ namespace RoadCaptain
             return HashCode.Combine(Latitude, Longitude, Altitude, Segment);
         }
 
-        private static readonly Dictionary<ZwiftWorldId, ZwiftWorldConstants> ZwiftWorlds =
+        internal static readonly Dictionary<ZwiftWorldId, ZwiftWorldConstants> ZwiftWorlds =
             new()
             {
-                { ZwiftWorldId.Watopia, new ZwiftWorldConstants(110614.71d, 109287.52d, -11.644904f, 166.95293)},
-                { ZwiftWorldId.Richmond, new ZwiftWorldConstants(110987.82d, 88374.68d, 37.543f, -77.4374f)},
-                { ZwiftWorldId.London, new ZwiftWorldConstants(111258.3d, 69400.28d, 51.501705f, -0.16794094f)},
-                { ZwiftWorldId.NewYork, new ZwiftWorldConstants(110850.0d, 84471.0d, 40.76723f, -73.97667f)},
-                { ZwiftWorldId.Innsbruck, new ZwiftWorldConstants(111230.0d, 75027.0d, 47.2728f, 11.39574f)},
-                { ZwiftWorldId.Bologna, new ZwiftWorldConstants(111230.0d, 79341.0d, 44.49477f, 11.34324f)},
-                { ZwiftWorldId.Yorkshire, new ZwiftWorldConstants(111230.0d, 65393.0d, 53.991127f, -1.541751f)},
-                { ZwiftWorldId.CritCity, new ZwiftWorldConstants(110614.71d, 109287.52d, -10.3844f, 165.8011f)},
-                { ZwiftWorldId.MakuriIslands, new ZwiftWorldConstants(110614.71d, 109287.52d, -10.749806f, 165.83644f)},
-                { ZwiftWorldId.France, new ZwiftWorldConstants(110726.0d, 103481.0d, -21.695074f, 166.19745f)},
-                { ZwiftWorldId.Paris, new ZwiftWorldConstants(111230.0d, 73167.0, 48.86763f, 2.31413f)},
+                { ZwiftWorldId.Watopia, new ZwiftWorldConstants(110614.71d, 109287.52d, -11.644904f, 166.95293) },
+                { ZwiftWorldId.Richmond, new ZwiftWorldConstants(110987.82d, 88374.68d, 37.543f, -77.4374f) },
+                { ZwiftWorldId.London, new ZwiftWorldConstants(111258.3d, 69400.28d, 51.501705f, -0.16794094f) },
+                { ZwiftWorldId.NewYork, new ZwiftWorldConstants(110850.0d, 84471.0d, 40.76723f, -73.97667f) },
+                { ZwiftWorldId.Innsbruck, new ZwiftWorldConstants(111230.0d, 75027.0d, 47.2728f, 11.39574f) },
+                { ZwiftWorldId.Bologna, new ZwiftWorldConstants(111230.0d, 79341.0d, 44.49477f, 11.34324f) },
+                { ZwiftWorldId.Yorkshire, new ZwiftWorldConstants(111230.0d, 65393.0d, 53.991127f, -1.541751f) },
+                { ZwiftWorldId.CritCity, new ZwiftWorldConstants(110614.71d, 109287.52d, -10.3844f, 165.8011f) },
+                { ZwiftWorldId.MakuriIslands, new ZwiftWorldConstants(110614.71d, 109287.52d, -10.749806f, 165.83644f) },
+                { ZwiftWorldId.France, new ZwiftWorldConstants(110726.0d, 103481.0d, -21.695074f, 166.19745f) },
+                { ZwiftWorldId.Paris, new ZwiftWorldConstants(111230.0d, 73167.0, 48.86763f, 2.31413f) },
             };
 
         public static TrackPoint LatLongToGame(double latitude, double longitude, double altitude, ZwiftWorldId worldId)
@@ -183,12 +183,10 @@ namespace RoadCaptain
             }
 
             var latitudeAsCentimetersFromOrigin = (latitude * worldConstants.MetersBetweenLatitudeDegree * 100);
-            var f5 = worldConstants.CenterLatitudeFromOrigin * worldConstants.MetersBetweenLatitudeDegree * 100;
-            var latitudeOffsetCentimeters = latitudeAsCentimetersFromOrigin - f5;
+            var latitudeOffsetCentimeters = latitudeAsCentimetersFromOrigin - worldConstants.CenterLatitudeFromOrigin;
 
             var longitudeAsCentimetersFromOrigin = longitude * worldConstants.MetersBetweenLongitudeDegree * 100;
-            var f6 = worldConstants.CenterLongitudeFromOrigin * worldConstants.MetersBetweenLongitudeDegree * 100;
-            var longitudeOffsetCentimeters = longitudeAsCentimetersFromOrigin - f6;
+            var longitudeOffsetCentimeters = longitudeAsCentimetersFromOrigin - worldConstants.CenterLongitudeFromOrigin;
 
             return new TrackPoint(latitudeOffsetCentimeters, longitudeOffsetCentimeters, altitude);
         }
@@ -207,12 +205,10 @@ namespace RoadCaptain
                     return TrackPoint.Unknown;
             }
 
-            var f5 = worldConstants.CenterLatitudeFromOrigin * worldConstants.MetersBetweenLatitudeDegree * 100;
-            var latitudeAsCentimetersFromOrigin = latitudeOffsetCentimeters + f5;
+            var latitudeAsCentimetersFromOrigin = latitudeOffsetCentimeters + worldConstants.CenterLatitudeFromOrigin;
             var latitude = latitudeAsCentimetersFromOrigin / worldConstants.MetersBetweenLatitudeDegree / 100;
 
-            var f6 = worldConstants.CenterLongitudeFromOrigin * worldConstants.MetersBetweenLongitudeDegree * 100;
-            var longitudeAsCentimetersFromOrigin = longitudeOffsetCentimeters + f6;
+            var longitudeAsCentimetersFromOrigin = longitudeOffsetCentimeters + worldConstants.CenterLongitudeFromOrigin;
             var longitude = longitudeAsCentimetersFromOrigin / worldConstants.MetersBetweenLongitudeDegree / 100;
 
             return new TrackPoint(latitude, longitude, altitude);
