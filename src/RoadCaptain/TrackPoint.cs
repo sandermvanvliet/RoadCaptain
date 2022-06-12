@@ -3,6 +3,7 @@
 // See LICENSE or https://choosealicense.com/licenses/artistic-2.0/
 
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Runtime.CompilerServices;
 using Newtonsoft.Json;
@@ -153,6 +154,22 @@ namespace RoadCaptain
             return HashCode.Combine(Latitude, Longitude, Altitude, Segment);
         }
 
+        internal static readonly Dictionary<ZwiftWorldId, ZwiftWorldConstants> ZwiftWorlds =
+            new()
+            {
+                { ZwiftWorldId.Watopia, new ZwiftWorldConstants(110614.71d, 109287.52d, -11.644904f, 166.95293) },
+                { ZwiftWorldId.Richmond, new ZwiftWorldConstants(110987.82d, 88374.68d, 37.543f, -77.4374f) },
+                { ZwiftWorldId.London, new ZwiftWorldConstants(111258.3d, 69400.28d, 51.501705f, -0.16794094f) },
+                { ZwiftWorldId.NewYork, new ZwiftWorldConstants(110850.0d, 84471.0d, 40.76723f, -73.97667f) },
+                { ZwiftWorldId.Innsbruck, new ZwiftWorldConstants(111230.0d, 75027.0d, 47.2728f, 11.39574f) },
+                { ZwiftWorldId.Bologna, new ZwiftWorldConstants(111230.0d, 79341.0d, 44.49477f, 11.34324f) },
+                { ZwiftWorldId.Yorkshire, new ZwiftWorldConstants(111230.0d, 65393.0d, 53.991127f, -1.541751f) },
+                { ZwiftWorldId.CritCity, new ZwiftWorldConstants(110614.71d, 109287.52d, -10.3844f, 165.8011f) },
+                { ZwiftWorldId.MakuriIslands, new ZwiftWorldConstants(110614.71d, 109287.52d, -10.749806f, 165.83644f) },
+                { ZwiftWorldId.France, new ZwiftWorldConstants(110726.0d, 103481.0d, -21.695074f, 166.19745f) },
+                { ZwiftWorldId.Paris, new ZwiftWorldConstants(111230.0d, 73167.0, 48.86763f, 2.31413f) },
+            };
+
         private static readonly ZwiftWorldConstants Watopia = new ZwiftWorldConstants(110614.71d, 109287.52d, -11.644904f, 166.95293);
         private static readonly ZwiftWorldConstants Richmond = new ZwiftWorldConstants(110987.82d, 88374.68d, 37.543f, -77.4374f);
         private static readonly ZwiftWorldConstants London = new ZwiftWorldConstants(111258.3d, 69400.28d, 51.501705f, -0.16794094f);
@@ -202,6 +219,111 @@ namespace RoadCaptain
                     break;
                 case ZwiftWorldId.MakuriIslands:
                     worldConstants = MakuriIslands;
+                    break;
+                default:
+                    return TrackPoint.Unknown;
+            }
+
+            var latitudeAsCentimetersFromOrigin = latitudeOffsetCentimeters + worldConstants.CenterLatitudeFromOrigin;
+            var latitude = latitudeAsCentimetersFromOrigin / worldConstants.MetersBetweenLatitudeDegree / 100;
+
+            var longitudeAsCentimetersFromOrigin = longitudeOffsetCentimeters + worldConstants.CenterLongitudeFromOrigin;
+            var longitude = longitudeAsCentimetersFromOrigin / worldConstants.MetersBetweenLongitudeDegree / 100;
+
+            return new TrackPoint(latitude, longitude, altitude);
+        }
+
+        public static TrackPoint FromGameLocationUnroll(double latitudeOffsetCentimeters, double longitudeOffsetCentimeters,
+            double altitude, ZwiftWorldId worldId)
+        {
+            if (worldId == ZwiftWorldId.Watopia)
+            {
+                var latitudeAsCentimetersFromOrigin = latitudeOffsetCentimeters + Watopia.CenterLatitudeFromOrigin;
+                var latitude = latitudeAsCentimetersFromOrigin / Watopia.MetersBetweenLatitudeDegree / 100;
+
+                var longitudeAsCentimetersFromOrigin = longitudeOffsetCentimeters + Watopia.CenterLongitudeFromOrigin;
+                var longitude = longitudeAsCentimetersFromOrigin / Watopia.MetersBetweenLongitudeDegree / 100;
+
+                return new TrackPoint(latitude, longitude, altitude);
+            }
+
+            return TrackPoint.Unknown;
+        }
+
+        public static TrackPoint FromGameLocationUnrollMul(double latitudeOffsetCentimeters, double longitudeOffsetCentimeters,
+            double altitude, ZwiftWorldId worldId)
+        {
+            if (worldId == ZwiftWorldId.Watopia)
+            {
+                var latitudeAsCentimetersFromOrigin = latitudeOffsetCentimeters + Watopia.CenterLatitudeFromOrigin;
+                var latitude = latitudeAsCentimetersFromOrigin / Watopia.MetersBetweenLatitudeDegreeDiv100;
+
+                var longitudeAsCentimetersFromOrigin = longitudeOffsetCentimeters + Watopia.CenterLongitudeFromOrigin;
+                var longitude = longitudeAsCentimetersFromOrigin / Watopia.MetersBetweenLongitudeDegreeDiv100;
+
+                return new TrackPoint(latitude, longitude, altitude);
+            }
+
+            return TrackPoint.Unknown;
+        }
+
+        public static TrackPoint FromGameLocationUnrollNoDivision(double latitudeOffsetCentimeters, double longitudeOffsetCentimeters,
+            double altitude, ZwiftWorldId worldId)
+        {
+            if (worldId == ZwiftWorldId.Watopia)
+            {
+                var latitudeAsCentimetersFromOrigin = latitudeOffsetCentimeters + Watopia.CenterLatitudeFromOrigin;
+                var latitude = latitudeAsCentimetersFromOrigin * Watopia.MetersBetweenLatitudeDegreeMul * 0.01;
+
+                var longitudeAsCentimetersFromOrigin = longitudeOffsetCentimeters + Watopia.CenterLongitudeFromOrigin;
+                var longitude = longitudeAsCentimetersFromOrigin * Watopia.MetersBetweenLongitudeDegreeMul * 0.01;
+
+                return new TrackPoint(latitude, longitude, altitude);
+            }
+
+            if (worldId == ZwiftWorldId.MakuriIslands)
+            {
+                var latitudeAsCentimetersFromOrigin = latitudeOffsetCentimeters + MakuriIslands.CenterLatitudeFromOrigin;
+                var latitude = latitudeAsCentimetersFromOrigin * MakuriIslands.MetersBetweenLatitudeDegreeMul * 0.01;
+
+                var longitudeAsCentimetersFromOrigin = longitudeOffsetCentimeters + MakuriIslands.CenterLongitudeFromOrigin;
+                var longitude = longitudeAsCentimetersFromOrigin * MakuriIslands.MetersBetweenLongitudeDegreeMul * 0.01;
+
+                return new TrackPoint(latitude, longitude, altitude);
+            }
+
+            return TrackPoint.Unknown;
+        }
+
+        public static TrackPoint FromGameLocationInlined(double latitudeOffsetCentimeters, double longitudeOffsetCentimeters,
+            double altitude, ZwiftWorldId worldId)
+        {
+            if (worldId == ZwiftWorldId.Watopia)
+            {
+                var latitudeAsCentimetersFromOrigin = latitudeOffsetCentimeters + -128809769.40541935;
+                var latitude = latitudeAsCentimetersFromOrigin * 9.0403889319964755E-06 * 0.01;
+
+                var longitudeAsCentimetersFromOrigin = longitudeOffsetCentimeters + 1824587167.6433601;
+                var longitude = longitudeAsCentimetersFromOrigin * 9.15017561017031E-06 * 0.01;
+
+                return new TrackPoint(latitude, longitude, altitude);
+            }
+
+            return TrackPoint.Unknown;
+        }
+
+        public static TrackPoint FromGameLocationBaseline(double latitudeOffsetCentimeters, double longitudeOffsetCentimeters,
+            double altitude, ZwiftWorldId worldId)
+        {
+            ZwiftWorldConstants worldConstants;
+            
+            switch (worldId)
+            {
+                case ZwiftWorldId.Watopia:
+                    worldConstants = ZwiftWorlds[worldId];
+                    break;
+                case ZwiftWorldId.MakuriIslands:
+                    worldConstants = ZwiftWorlds[worldId];
                     break;
                 default:
                     return TrackPoint.Unknown;

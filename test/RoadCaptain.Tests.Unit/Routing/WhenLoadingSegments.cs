@@ -38,6 +38,21 @@ namespace RoadCaptain.Tests.Unit.Routing
         }
 
         [Fact]
+        public void ConvertGameToLatLonNoDivision()
+        {
+            var gameLat = 93536.016d;
+            var gameLon = 212496.77d;
+            var gamePoint = new TrackPoint(gameLat, gameLon, 0);
+
+            var reverted = TrackPoint.FromGameLocationInlined(gamePoint.Latitude, gamePoint.Longitude, gamePoint.Altitude, ZwiftWorldId.Watopia);
+
+            reverted
+                .CoordinatesDecimal
+                .Should()
+                .Be("S11.63645° E166.97237°");
+        }
+
+        [Fact]
         public void BoundingBoxesCalculated()
         {
             var segmentStore = new SegmentStore();

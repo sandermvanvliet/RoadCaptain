@@ -3,6 +3,7 @@
 // See LICENSE or https://choosealicense.com/licenses/artistic-2.0/
 
 using System.Collections.Generic;
+using System.Diagnostics;
 using FluentAssertions;
 using RoadCaptain.App.RouteBuilder.Models;
 using Xunit;
@@ -37,6 +38,19 @@ namespace RoadCaptain.Tests.Unit
                 .Longitude
                 .Should()
                 .Be(input.Longitude);
+        }
+
+        [Fact]
+        public void Foo()
+        {
+            var x = new ZwiftWorldConstants(110614.71d, 109287.52d, -11.644904f, 166.95293);
+
+            Debug.WriteLine($"Center lat: {x.CenterLatitudeFromOrigin}");
+            Debug.WriteLine($"Center lat: {x.CenterLatitudeFromOrigin}");
+            Debug.WriteLine($"meters lat: {x.MetersBetweenLatitudeDegreeMul}");
+            Debug.WriteLine($"meters lon: {x.MetersBetweenLongitudeDegreeMul}");
+
+            Debugger.Break();
         }
     }
 }
