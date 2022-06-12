@@ -9,6 +9,7 @@ using Newtonsoft.Json;
 
 namespace RoadCaptain
 {
+    // TODO: Investigate converting to struct
     public class TrackPoint : IEquatable<TrackPoint>
     {
         private const double CoordinateEqualityTolerance = 0.0001d;
