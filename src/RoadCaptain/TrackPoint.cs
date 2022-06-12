@@ -3,6 +3,7 @@
 // See LICENSE or https://choosealicense.com/licenses/artistic-2.0/
 
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Runtime.CompilerServices;
 using Newtonsoft.Json;
@@ -152,10 +153,26 @@ namespace RoadCaptain
             return HashCode.Combine(Latitude, Longitude, Altitude, Segment);
         }
 
+        private static readonly Dictionary<ZwiftWorldId, double[]> MetersBetweenDegrees =
+            new()
+            {
+                { ZwiftWorldId.Watopia, new[] {110614.71d, 109287.52d }}
+            };
+
         public static TrackPoint LatLongToGame(double latitude, double longitude, double altitude, ZwiftWorldId worldId)
         {
-            const double metersBetweenLatitudeDegree = 110614.71d;
-            const double metersBetweenLongitudeDegree = 109287.52d;
+            double metersBetweenLatitudeDegree;
+            double metersBetweenLongitudeDegree;
+
+            switch (worldId)
+            {
+                case ZwiftWorldId.Watopia:
+                    metersBetweenLatitudeDegree = MetersBetweenDegrees[worldId][0];
+                    metersBetweenLongitudeDegree = MetersBetweenDegrees[worldId][1];
+                    break;
+                default:
+                    return TrackPoint.Unknown;
+            }
 
             const double watopiaCenterLatitudeAsCentimetersFromOrigin = -128809767.893784d;
             const double watopiaCenterLongitudeAsCentimetersFromOrigin = 1824587167.6433601d;
@@ -172,8 +189,18 @@ namespace RoadCaptain
         public static TrackPoint FromGameLocation(double latitudeOffsetCentimeters, double longitudeOffsetCentimeters,
             double altitude, ZwiftWorldId worldId)
         {
-            const double metersBetweenLatitudeDegree = 110614.71d;
-            const double metersBetweenLongitudeDegree = 109287.52d;
+            double metersBetweenLatitudeDegree;
+            double metersBetweenLongitudeDegree;
+
+            switch (worldId)
+            {
+                case ZwiftWorldId.Watopia:
+                    metersBetweenLatitudeDegree = MetersBetweenDegrees[worldId][0];
+                    metersBetweenLongitudeDegree = MetersBetweenDegrees[worldId][1];
+                    break;
+                default:
+                    return TrackPoint.Unknown;
+            }
 
             const double watopiaCenterLatitudeAsCentimetersFromOrigin = -128809767.893784d;
             const double watopiaCenterLongitudeAsCentimetersFromOrigin = 1824587167.6433601d;
@@ -197,5 +224,7 @@ namespace RoadCaptain
             // we're not close.
             return Math.Abs(longitude - position.Longitude) < 0.00013;
         }
+
+        public static TrackPoint Unknown => new TrackPoint(Double.NaN, Double.NaN, Double.NaN);
     }
 }
