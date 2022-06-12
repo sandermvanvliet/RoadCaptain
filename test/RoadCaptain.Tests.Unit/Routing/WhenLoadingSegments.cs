@@ -13,8 +13,8 @@ namespace RoadCaptain.Tests.Unit.Routing
         {
             var trackPoint = new TrackPoint(-11.640437d, 166.946204d, 13.2d);
 
-            var gamePoint = TrackPoint.LatLongToGame(trackPoint.Latitude, trackPoint.Longitude, trackPoint.Altitude);
-            var reverted = TrackPoint.FromGameLocation(gamePoint.Latitude, gamePoint.Longitude, gamePoint.Altitude);
+            var gamePoint = TrackPoint.LatLongToGame(trackPoint.Latitude, trackPoint.Longitude, trackPoint.Altitude, ZwiftWorldId.Watopia);
+            var reverted = TrackPoint.FromGameLocation(gamePoint.Latitude, gamePoint.Longitude, gamePoint.Altitude, ZwiftWorldId.Watopia);
 
             reverted
                 .Equals(trackPoint)
@@ -29,7 +29,7 @@ namespace RoadCaptain.Tests.Unit.Routing
             var gameLon = 212496.77d;
             var gamePoint = new TrackPoint(gameLat, gameLon, 0);
 
-            var reverted = TrackPoint.FromGameLocation(gamePoint.Latitude, gamePoint.Longitude, gamePoint.Altitude);
+            var reverted = TrackPoint.FromGameLocation(gamePoint.Latitude, gamePoint.Longitude, gamePoint.Altitude, ZwiftWorldId.Watopia);
 
             reverted
                 .CoordinatesDecimal

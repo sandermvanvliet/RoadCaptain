@@ -334,7 +334,7 @@ namespace RoadCaptain.App.RouteBuilder.Controls
             var boundedSegments = pathsInBounds.Select(kv => Segments.Single(s => s.Id == kv.Key)).ToList();
 
             var reverseScaled = _overallOffsets.ReverseScaleAndTranslate(scaledPoint.X, scaledPoint.Y);
-            var scaledPointToPosition = TrackPoint.FromGameLocation(reverseScaled.Latitude, reverseScaled.Longitude, reverseScaled.Altitude);
+            var scaledPointToPosition = TrackPoint.FromGameLocation(reverseScaled.Latitude, reverseScaled.Longitude, reverseScaled.Altitude, ZwiftWorldId.Watopia);
             scaledPointToPosition = new TrackPoint(-scaledPointToPosition.Longitude, scaledPointToPosition.Latitude, scaledPointToPosition.Altitude);
 
             Segment? newSelectedSegment = null;
@@ -443,7 +443,7 @@ namespace RoadCaptain.App.RouteBuilder.Controls
                 {
                     Segment = seg,
                     GameCoordinates = seg.Points.Select(point =>
-                        TrackPoint.LatLongToGame(point.Longitude, -point.Latitude, point.Altitude)).ToList()
+                        TrackPoint.LatLongToGame(point.Longitude, -point.Latitude, point.Altitude, ZwiftWorldId.Watopia)).ToList()
                 })
                 .Select(x => new
                 {
@@ -490,7 +490,7 @@ namespace RoadCaptain.App.RouteBuilder.Controls
             {
                 var gameCoordinates = segment
                     .Points
-                    .Select(point => TrackPoint.LatLongToGame(point.Longitude, -point.Latitude, point.Altitude))
+                    .Select(point => TrackPoint.LatLongToGame(point.Longitude, -point.Latitude, point.Altitude, ZwiftWorldId.Watopia))
                     .ToList();
 
                 var startPoint = _overallOffsets.ScaleAndTranslate(gameCoordinates.First());

@@ -90,7 +90,7 @@ namespace RoadCaptain.UseCases
                     _monitoringEvents.RiderPositionReceived(riderPosition.Latitude, riderPosition.Longitude, riderPosition.Altitude);
 
                     // Convert from Zwift game coordinates to a lat/lon coordinate
-                    var position = TrackPoint.FromGameLocation(riderPosition.Latitude, riderPosition.Longitude, riderPosition.Altitude);
+                    var position = TrackPoint.FromGameLocation(riderPosition.Latitude, riderPosition.Longitude, riderPosition.Altitude, ZwiftWorldId.Watopia);
 
                     // As long as there is no route loaded we cannot change the
                     // the state.

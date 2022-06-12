@@ -152,7 +152,7 @@ namespace RoadCaptain
             return HashCode.Combine(Latitude, Longitude, Altitude, Segment);
         }
 
-        public static TrackPoint LatLongToGame(double latitude, double longitude, double altitude)
+        public static TrackPoint LatLongToGame(double latitude, double longitude, double altitude, ZwiftWorldId worldId)
         {
             const double metersBetweenLatitudeDegree = 110614.71d;
             const double metersBetweenLongitudeDegree = 109287.52d;
@@ -169,7 +169,8 @@ namespace RoadCaptain
             return new TrackPoint(latitudeOffsetCentimeters, longitudeOffsetCentimeters, altitude);
         }
 
-        public static TrackPoint FromGameLocation(double latitudeOffsetCentimeters, double longitudeOffsetCentimeters, double altitude)
+        public static TrackPoint FromGameLocation(double latitudeOffsetCentimeters, double longitudeOffsetCentimeters,
+            double altitude, ZwiftWorldId worldId)
         {
             const double metersBetweenLatitudeDegree = 110614.71d;
             const double metersBetweenLongitudeDegree = 109287.52d;
