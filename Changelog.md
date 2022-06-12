@@ -1,5 +1,9 @@
 ﻿# Changelog
 
+## 0.6.4.0
+
+
+
 ## 0.6.3.1
 
 I'm super happy to annouce that with version 0.6.3.1 RoadCaptain is now supported on macOS! 🎉🎉🎉
