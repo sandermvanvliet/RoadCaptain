@@ -2,7 +2,9 @@
 
 ## 0.6.4.0
 
+### Runner
 
+- Performance optimisation of game coordinate conversion. This is now roughly twice as fast which means that determining your position in-game happens much faster now and that means RoadCaptain can make routing decisions quicker!
 
 ## 0.6.3.1
 
