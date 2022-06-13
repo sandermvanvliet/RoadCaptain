@@ -8,8 +8,6 @@ namespace RoadCaptain
     {
         public readonly double MetersBetweenLatitudeDegree;
         public readonly double MetersBetweenLongitudeDegree;
-        public readonly double MetersBetweenLatitudeDegreeDiv100;
-        public readonly double MetersBetweenLongitudeDegreeDiv100;
         public readonly double MetersBetweenLatitudeDegreeMul;
         public readonly double MetersBetweenLongitudeDegreeMul;
         public readonly double CenterLatitudeFromOrigin;
@@ -19,8 +17,6 @@ namespace RoadCaptain
         {
             MetersBetweenLatitudeDegree = metersBetweenLatitudeDegree;
             MetersBetweenLongitudeDegree = metersBetweenLongitudeDegree;
-            MetersBetweenLatitudeDegreeDiv100 = metersBetweenLatitudeDegree / 100;
-            MetersBetweenLongitudeDegreeDiv100 = metersBetweenLongitudeDegree / 100;
             MetersBetweenLatitudeDegreeMul = 1 / metersBetweenLatitudeDegree;
             MetersBetweenLongitudeDegreeMul = 1 / metersBetweenLongitudeDegree;
             CenterLatitudeFromOrigin = centerLatitudeFromOrigin * metersBetweenLatitudeDegree * 100;
