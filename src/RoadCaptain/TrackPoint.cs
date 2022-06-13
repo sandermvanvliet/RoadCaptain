@@ -154,38 +154,38 @@ namespace RoadCaptain
             return HashCode.Combine(Latitude, Longitude, Altitude, Segment);
         }
 
+        private static readonly ZwiftWorldConstants Watopia = new(110614.71d, 109287.52d, -11.644904f, 166.95293);
+        private static readonly ZwiftWorldConstants Richmond = new(110987.82d, 88374.68d, 37.543f, -77.4374f);
+        private static readonly ZwiftWorldConstants London = new(111258.3d, 69400.28d, 51.501705f, -0.16794094f);
+        private static readonly ZwiftWorldConstants NewYork = new(110850.0d, 84471.0d, 40.76723f, -73.97667f);
+        private static readonly ZwiftWorldConstants Innsbruck = new(111230.0d, 75027.0d, 47.2728f, 11.39574f);
+        private static readonly ZwiftWorldConstants Bologna = new(111230.0d, 79341.0d, 44.49477f, 11.34324f);
+        private static readonly ZwiftWorldConstants Yorkshire = new(111230.0d, 65393.0d, 53.991127f, -1.541751f);
+        private static readonly ZwiftWorldConstants CritCity = new(110614.71d, 109287.52d, -10.3844f, 165.8011f);
+        private static readonly ZwiftWorldConstants MakuriIslands = new(110614.71d, 109287.52d, -10.749806f, 165.83644f);
+        private static readonly ZwiftWorldConstants France = new(110726.0d, 103481.0d, -21.695074f, 166.19745f);
+        private static readonly ZwiftWorldConstants Paris = new(111230.0d, 73167.0, 48.86763f, 2.31413f);
+
         internal static readonly Dictionary<ZwiftWorldId, ZwiftWorldConstants> ZwiftWorlds =
             new()
             {
-                { ZwiftWorldId.Watopia, new ZwiftWorldConstants(110614.71d, 109287.52d, -11.644904f, 166.95293) },
-                { ZwiftWorldId.Richmond, new ZwiftWorldConstants(110987.82d, 88374.68d, 37.543f, -77.4374f) },
-                { ZwiftWorldId.London, new ZwiftWorldConstants(111258.3d, 69400.28d, 51.501705f, -0.16794094f) },
-                { ZwiftWorldId.NewYork, new ZwiftWorldConstants(110850.0d, 84471.0d, 40.76723f, -73.97667f) },
-                { ZwiftWorldId.Innsbruck, new ZwiftWorldConstants(111230.0d, 75027.0d, 47.2728f, 11.39574f) },
-                { ZwiftWorldId.Bologna, new ZwiftWorldConstants(111230.0d, 79341.0d, 44.49477f, 11.34324f) },
-                { ZwiftWorldId.Yorkshire, new ZwiftWorldConstants(111230.0d, 65393.0d, 53.991127f, -1.541751f) },
-                { ZwiftWorldId.CritCity, new ZwiftWorldConstants(110614.71d, 109287.52d, -10.3844f, 165.8011f) },
-                { ZwiftWorldId.MakuriIslands, new ZwiftWorldConstants(110614.71d, 109287.52d, -10.749806f, 165.83644f) },
-                { ZwiftWorldId.France, new ZwiftWorldConstants(110726.0d, 103481.0d, -21.695074f, 166.19745f) },
-                { ZwiftWorldId.Paris, new ZwiftWorldConstants(111230.0d, 73167.0, 48.86763f, 2.31413f) },
+                { ZwiftWorldId.Watopia, Watopia },
+                { ZwiftWorldId.Richmond, Richmond },
+                { ZwiftWorldId.London, London },
+                { ZwiftWorldId.NewYork, NewYork },
+                { ZwiftWorldId.Innsbruck, Innsbruck },
+                { ZwiftWorldId.Bologna, Bologna },
+                { ZwiftWorldId.Yorkshire, Yorkshire },
+                { ZwiftWorldId.CritCity, CritCity },
+                { ZwiftWorldId.MakuriIslands, MakuriIslands },
+                { ZwiftWorldId.France, France },
+                { ZwiftWorldId.Paris, Paris },
             };
-
-        private static readonly ZwiftWorldConstants Watopia = new ZwiftWorldConstants(110614.71d, 109287.52d, -11.644904f, 166.95293);
-        private static readonly ZwiftWorldConstants Richmond = new ZwiftWorldConstants(110987.82d, 88374.68d, 37.543f, -77.4374f);
-        private static readonly ZwiftWorldConstants London = new ZwiftWorldConstants(111258.3d, 69400.28d, 51.501705f, -0.16794094f);
-        private static readonly ZwiftWorldConstants NewYork = new ZwiftWorldConstants(110850.0d, 84471.0d, 40.76723f, -73.97667f);
-        private static readonly ZwiftWorldConstants Innsbruck = new ZwiftWorldConstants(111230.0d, 75027.0d, 47.2728f, 11.39574f);
-        private static readonly ZwiftWorldConstants Bologna = new ZwiftWorldConstants(111230.0d, 79341.0d, 44.49477f, 11.34324f);
-        private static readonly ZwiftWorldConstants Yorkshire = new ZwiftWorldConstants(111230.0d, 65393.0d, 53.991127f, -1.541751f);
-        private static readonly ZwiftWorldConstants CritCity = new ZwiftWorldConstants(110614.71d, 109287.52d, -10.3844f, 165.8011f);
-        private static readonly ZwiftWorldConstants MakuriIslands = new ZwiftWorldConstants(110614.71d, 109287.52d, -10.749806f, 165.83644f);
-        private static readonly ZwiftWorldConstants France = new ZwiftWorldConstants(110726.0d, 103481.0d, -21.695074f, 166.19745f);
-        private static readonly ZwiftWorldConstants Paris = new ZwiftWorldConstants(111230.0d, 73167.0, 48.86763f, 2.31413f);
 
         public static TrackPoint LatLongToGame(double latitude, double longitude, double altitude, ZwiftWorldId worldId)
         {
             ZwiftWorldConstants worldConstants;
-            
+
             switch (worldId)
             {
                 case ZwiftWorldId.Watopia:
@@ -193,6 +193,33 @@ namespace RoadCaptain
                     break;
                 case ZwiftWorldId.MakuriIslands:
                     worldConstants = MakuriIslands;
+                    break;
+                case ZwiftWorldId.Richmond:
+                    worldConstants = Richmond;
+                    break;
+                case ZwiftWorldId.London:
+                    worldConstants = London;
+                    break;
+                case ZwiftWorldId.NewYork:
+                    worldConstants = NewYork;
+                    break;
+                case ZwiftWorldId.Innsbruck:
+                    worldConstants = Innsbruck;
+                    break;
+                case ZwiftWorldId.Bologna:
+                    worldConstants = Bologna;
+                    break;
+                case ZwiftWorldId.Yorkshire:
+                    worldConstants = Yorkshire;
+                    break;
+                case ZwiftWorldId.CritCity:
+                    worldConstants = CritCity;
+                    break;
+                case ZwiftWorldId.France:
+                    worldConstants = France;
+                    break;
+                case ZwiftWorldId.Paris:
+                    worldConstants = Paris;
                     break;
                 default:
                     return TrackPoint.Unknown;
@@ -210,98 +237,11 @@ namespace RoadCaptain
         public static TrackPoint FromGameLocation(double latitudeOffsetCentimeters, double longitudeOffsetCentimeters,
             double altitude, ZwiftWorldId worldId)
         {
-            ZwiftWorldConstants worldConstants;
-            
-            switch (worldId)
-            {
-                case ZwiftWorldId.Watopia:
-                    worldConstants = Watopia;
-                    break;
-                case ZwiftWorldId.MakuriIslands:
-                    worldConstants = MakuriIslands;
-                    break;
-                default:
-                    return TrackPoint.Unknown;
-            }
 
-            var latitudeAsCentimetersFromOrigin = latitudeOffsetCentimeters + worldConstants.CenterLatitudeFromOrigin;
-            var latitude = latitudeAsCentimetersFromOrigin / worldConstants.MetersBetweenLatitudeDegree / 100;
-
-            var longitudeAsCentimetersFromOrigin = longitudeOffsetCentimeters + worldConstants.CenterLongitudeFromOrigin;
-            var longitude = longitudeAsCentimetersFromOrigin / worldConstants.MetersBetweenLongitudeDegree / 100;
-
-            return new TrackPoint(latitude, longitude, altitude);
-        }
-
-        public static TrackPoint FromGameLocationUnroll(double latitudeOffsetCentimeters, double longitudeOffsetCentimeters,
-            double altitude, ZwiftWorldId worldId)
-        {
-            if (worldId == ZwiftWorldId.Watopia)
-            {
-                var latitudeAsCentimetersFromOrigin = latitudeOffsetCentimeters + Watopia.CenterLatitudeFromOrigin;
-                var latitude = latitudeAsCentimetersFromOrigin / Watopia.MetersBetweenLatitudeDegree / 100;
-
-                var longitudeAsCentimetersFromOrigin = longitudeOffsetCentimeters + Watopia.CenterLongitudeFromOrigin;
-                var longitude = longitudeAsCentimetersFromOrigin / Watopia.MetersBetweenLongitudeDegree / 100;
-
-                return new TrackPoint(latitude, longitude, altitude);
-            }
-
-            return TrackPoint.Unknown;
-        }
-
-        public static TrackPoint FromGameLocationUnrollMul(double latitudeOffsetCentimeters, double longitudeOffsetCentimeters,
-            double altitude, ZwiftWorldId worldId)
-        {
-            if (worldId == ZwiftWorldId.Watopia)
-            {
-                var latitudeAsCentimetersFromOrigin = latitudeOffsetCentimeters + Watopia.CenterLatitudeFromOrigin;
-                var latitude = latitudeAsCentimetersFromOrigin / Watopia.MetersBetweenLatitudeDegreeDiv100;
-
-                var longitudeAsCentimetersFromOrigin = longitudeOffsetCentimeters + Watopia.CenterLongitudeFromOrigin;
-                var longitude = longitudeAsCentimetersFromOrigin / Watopia.MetersBetweenLongitudeDegreeDiv100;
-
-                return new TrackPoint(latitude, longitude, altitude);
-            }
-
-            return TrackPoint.Unknown;
-        }
-
-        public static TrackPoint FromGameLocationUnrollNoDivision(double latitudeOffsetCentimeters, double longitudeOffsetCentimeters,
-            double altitude, ZwiftWorldId worldId)
-        {
-            if (worldId == ZwiftWorldId.Watopia)
-            {
-                var latitudeAsCentimetersFromOrigin = latitudeOffsetCentimeters + Watopia.CenterLatitudeFromOrigin;
-                var latitude = latitudeAsCentimetersFromOrigin * Watopia.MetersBetweenLatitudeDegreeMul * 0.01;
-
-                var longitudeAsCentimetersFromOrigin = longitudeOffsetCentimeters + Watopia.CenterLongitudeFromOrigin;
-                var longitude = longitudeAsCentimetersFromOrigin * Watopia.MetersBetweenLongitudeDegreeMul * 0.01;
-
-                return new TrackPoint(latitude, longitude, altitude);
-            }
-
-            if (worldId == ZwiftWorldId.MakuriIslands)
-            {
-                var latitudeAsCentimetersFromOrigin = latitudeOffsetCentimeters + MakuriIslands.CenterLatitudeFromOrigin;
-                var latitude = latitudeAsCentimetersFromOrigin * MakuriIslands.MetersBetweenLatitudeDegreeMul * 0.01;
-
-                var longitudeAsCentimetersFromOrigin = longitudeOffsetCentimeters + MakuriIslands.CenterLongitudeFromOrigin;
-                var longitude = longitudeAsCentimetersFromOrigin * MakuriIslands.MetersBetweenLongitudeDegreeMul * 0.01;
-
-                return new TrackPoint(latitude, longitude, altitude);
-            }
-
-            return TrackPoint.Unknown;
-        }
-
-        public static TrackPoint FromGameLocationInlined(double latitudeOffsetCentimeters, double longitudeOffsetCentimeters,
-            double altitude, ZwiftWorldId worldId)
-        {
             if (worldId == ZwiftWorldId.Watopia)
             {
                 var latitudeAsCentimetersFromOrigin = latitudeOffsetCentimeters + -128809769.40541935;
-                var latitude = latitudeAsCentimetersFromOrigin * 9.0403889319964755E-06 * 0.01;
+                var latitude = latitudeAsCentimetersFromOrigin * 9.040388931996475E-06 * 0.01;
 
                 var longitudeAsCentimetersFromOrigin = longitudeOffsetCentimeters + 1824587167.6433601;
                 var longitude = longitudeAsCentimetersFromOrigin * 9.15017561017031E-06 * 0.01;
@@ -309,33 +249,117 @@ namespace RoadCaptain
                 return new TrackPoint(latitude, longitude, altitude);
             }
 
-            return TrackPoint.Unknown;
-        }
-
-        public static TrackPoint FromGameLocationBaseline(double latitudeOffsetCentimeters, double longitudeOffsetCentimeters,
-            double altitude, ZwiftWorldId worldId)
-        {
-            ZwiftWorldConstants worldConstants;
-            
-            switch (worldId)
+            if (worldId == ZwiftWorldId.Richmond)
             {
-                case ZwiftWorldId.Watopia:
-                    worldConstants = ZwiftWorlds[worldId];
-                    break;
-                case ZwiftWorldId.MakuriIslands:
-                    worldConstants = ZwiftWorlds[worldId];
-                    break;
-                default:
-                    return TrackPoint.Unknown;
+                var latitudeAsCentimetersFromOrigin = latitudeOffsetCentimeters + 416681564.4970093;
+                var latitude = latitudeAsCentimetersFromOrigin * 9.0099976736186E-06 * 0.01;
+
+                var longitudeAsCentimetersFromOrigin = longitudeOffsetCentimeters + -684350551.7311095;
+                var longitude = longitudeAsCentimetersFromOrigin * 1.1315458228533332E-05 * 0.01;
+
+                return new TrackPoint(latitude, longitude, altitude);
             }
 
-            var latitudeAsCentimetersFromOrigin = latitudeOffsetCentimeters + worldConstants.CenterLatitudeFromOrigin;
-            var latitude = latitudeAsCentimetersFromOrigin / worldConstants.MetersBetweenLatitudeDegree / 100;
+            if (worldId == ZwiftWorldId.London)
+            {
+                var latitudeAsCentimetersFromOrigin = latitudeOffsetCentimeters + 572999216.4279556;
+                var latitude = latitudeAsCentimetersFromOrigin * 8.988093472576876E-06 * 0.01;
 
-            var longitudeAsCentimetersFromOrigin = longitudeOffsetCentimeters + worldConstants.CenterLongitudeFromOrigin;
-            var longitude = longitudeAsCentimetersFromOrigin / worldConstants.MetersBetweenLongitudeDegree / 100;
+                var longitudeAsCentimetersFromOrigin = longitudeOffsetCentimeters + -1165514.8567129374;
+                var longitude = longitudeAsCentimetersFromOrigin * 1.4409163767062611E-05 * 0.01;
 
-            return new TrackPoint(latitude, longitude, altitude);
+                return new TrackPoint(latitude, longitude, altitude);
+            }
+
+            if (worldId == ZwiftWorldId.NewYork)
+            {
+                var latitudeAsCentimetersFromOrigin = latitudeOffsetCentimeters + 451904755.49697876;
+                var latitude = latitudeAsCentimetersFromOrigin * 9.021199819576003E-06 * 0.01;
+
+                var longitudeAsCentimetersFromOrigin = longitudeOffsetCentimeters + -624888323.3413696;
+                var longitude = longitudeAsCentimetersFromOrigin * 1.1838382403428395E-05 * 0.01;
+
+                return new TrackPoint(latitude, longitude, altitude);
+            }
+
+            if (worldId == ZwiftWorldId.Innsbruck)
+            {
+                var latitudeAsCentimetersFromOrigin = latitudeOffsetCentimeters + 525815359.3559265;
+                var latitude = latitudeAsCentimetersFromOrigin * 8.990380293086398E-06 * 0.01;
+
+                var longitudeAsCentimetersFromOrigin = longitudeOffsetCentimeters + 85498815.16199112;
+                var longitude = longitudeAsCentimetersFromOrigin * 1.3328535060711476E-05 * 0.01;
+
+                return new TrackPoint(latitude, longitude, altitude);
+            }
+
+            if (worldId == ZwiftWorldId.Bologna)
+            {
+                var latitudeAsCentimetersFromOrigin = latitudeOffsetCentimeters + 494915327.2666931;
+                var latitude = latitudeAsCentimetersFromOrigin * 8.990380293086398E-06 * 0.01;
+
+                var longitudeAsCentimetersFromOrigin = longitudeOffsetCentimeters + 89998398.77214432;
+                var longitude = longitudeAsCentimetersFromOrigin * 1.2603824000201662E-05 * 0.01;
+
+                return new TrackPoint(latitude, longitude, altitude);
+            }
+
+            if (worldId == ZwiftWorldId.Yorkshire)
+            {
+                var latitudeAsCentimetersFromOrigin = latitudeOffsetCentimeters + 600543305.7785034;
+                var latitude = latitudeAsCentimetersFromOrigin * 8.990380293086398E-06 * 0.01;
+
+                var longitudeAsCentimetersFromOrigin = longitudeOffsetCentimeters + -10081972.491562366;
+                var longitude = longitudeAsCentimetersFromOrigin * 1.529215665285275E-05 * 0.01;
+
+                return new TrackPoint(latitude, longitude, altitude);
+            }
+
+            if (worldId == ZwiftWorldId.CritCity)
+            {
+                var latitudeAsCentimetersFromOrigin = latitudeOffsetCentimeters + -114866743.52011015;
+                var latitude = latitudeAsCentimetersFromOrigin * 9.040388931996475E-06 * 0.01;
+
+                var longitudeAsCentimetersFromOrigin = longitudeOffsetCentimeters + 1811999121.6374512;
+                var longitude = longitudeAsCentimetersFromOrigin * 9.15017561017031E-06 * 0.01;
+
+                return new TrackPoint(latitude, longitude, altitude);
+            }
+
+            if (worldId == ZwiftWorldId.MakuriIslands)
+            {
+                var latitudeAsCentimetersFromOrigin = latitudeOffsetCentimeters + -118908671.79471876;
+                var latitude = latitudeAsCentimetersFromOrigin * 9.040388931996475E-06 * 0.01;
+
+                var longitudeAsCentimetersFromOrigin = longitudeOffsetCentimeters + 1812385336.6892092;
+                var longitude = longitudeAsCentimetersFromOrigin * 9.15017561017031E-06 * 0.01;
+
+                return new TrackPoint(latitude, longitude, altitude);
+            }
+
+            if (worldId == ZwiftWorldId.France)
+            {
+                var latitudeAsCentimetersFromOrigin = latitudeOffsetCentimeters + -240220877.27394104;
+                var latitude = latitudeAsCentimetersFromOrigin * 9.031302494445749E-06 * 0.01;
+
+                var longitudeAsCentimetersFromOrigin = longitudeOffsetCentimeters + 1719827819.2077637;
+                var longitude = longitudeAsCentimetersFromOrigin * 9.663609744784066E-06 * 0.01;
+
+                return new TrackPoint(latitude, longitude, altitude);
+            }
+
+            if (worldId == ZwiftWorldId.Paris)
+            {
+                var latitudeAsCentimetersFromOrigin = latitudeOffsetCentimeters + 543554648.5443115;
+                var latitude = latitudeAsCentimetersFromOrigin * 8.990380293086398E-06 * 0.01;
+
+                var longitudeAsCentimetersFromOrigin = longitudeOffsetCentimeters + 16931795.4672575;
+                var longitude = longitudeAsCentimetersFromOrigin * 1.366736370221548E-05 * 0.01;
+
+                return new TrackPoint(latitude, longitude, altitude);
+            }
+
+            return TrackPoint.Unknown;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -349,6 +373,6 @@ namespace RoadCaptain
             return Math.Abs(longitude - position.Longitude) < 0.00013;
         }
 
-        public static TrackPoint Unknown => new TrackPoint(Double.NaN, Double.NaN, Double.NaN);
+        public static TrackPoint Unknown => new(Double.NaN, Double.NaN, Double.NaN);
     }
 }

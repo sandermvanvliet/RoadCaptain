@@ -21,37 +21,39 @@ namespace RoadCaptain.Tests.Benchmark
         [Benchmark(Baseline = true)]
         public TrackPoint Baseline()
         {
-            return TrackPoint.FromGameLocationBaseline(12, 13, 14, ZwiftWorldId.Watopia);
-        }
-
-        //[Benchmark(Baseline = false)]
-        //public TrackPoint FastSwitch()
-        //{
-        //    return TrackPoint.FromGameLocation(12, 13, 14, ZwiftWorldId.Watopia);
-        //}
-
-        [Benchmark(Baseline = false)]
-        public TrackPoint Unrolled()
-        {
-            return TrackPoint.FromGameLocationUnroll(12, 13, 14, ZwiftWorldId.Watopia);
-        }
-
-        //[Benchmark(Baseline = false)]
-        //public TrackPoint UnrolledPreMul()
-        //{
-        //    return TrackPoint.FromGameLocationUnrollMul(12, 13, 14, ZwiftWorldId.Watopia);
-        //}
-
-        [Benchmark(Baseline = false)]
-        public TrackPoint UnrolledNoDivision()
-        {
-            return TrackPoint.FromGameLocationUnrollNoDivision(12, 13, 14, ZwiftWorldId.Watopia);
+            return FromGameLocationBaseline(12, 13, 14, ZwiftWorldId.Watopia);
         }
 
         [Benchmark(Baseline = false)]
         public TrackPoint Inlined()
         {
-            return TrackPoint.FromGameLocationInlined(12, 13, 14, ZwiftWorldId.Watopia);
+            return TrackPoint.FromGameLocation(12, 13, 14, ZwiftWorldId.Watopia);
+        }
+
+        public static TrackPoint FromGameLocationBaseline(double latitudeOffsetCentimeters, double longitudeOffsetCentimeters,
+            double altitude, ZwiftWorldId worldId)
+        {
+            ZwiftWorldConstants worldConstants;
+            
+            switch (worldId)
+            {
+                case ZwiftWorldId.Watopia:
+                    worldConstants = TrackPoint.ZwiftWorlds[worldId];
+                    break;
+                case ZwiftWorldId.MakuriIslands:
+                    worldConstants = TrackPoint.ZwiftWorlds[worldId];
+                    break;
+                default:
+                    return TrackPoint.Unknown;
+            }
+
+            var latitudeAsCentimetersFromOrigin = latitudeOffsetCentimeters + worldConstants.CenterLatitudeFromOrigin;
+            var latitude = latitudeAsCentimetersFromOrigin / worldConstants.MetersBetweenLatitudeDegree / 100;
+
+            var longitudeAsCentimetersFromOrigin = longitudeOffsetCentimeters + worldConstants.CenterLongitudeFromOrigin;
+            var longitude = longitudeAsCentimetersFromOrigin / worldConstants.MetersBetweenLongitudeDegree / 100;
+
+            return new TrackPoint(latitude, longitude, altitude);
         }
     }
 }
