@@ -6,6 +6,10 @@
 
 - Performance optimisation of game coordinate conversion. This is now roughly twice as fast which means that determining your position in-game happens much faster now and that means RoadCaptain can make routing decisions quicker!
 
+### Route Builder
+
+- Fix an issue where an exception would occur when you load a route from the main screen of RouteBuilder. In this situation the segments aren't loaded yet which caused a crash to happen. (see [#87](https://github.com/sandermvanvliet/RoadCaptain/issues/87))
+
 ## 0.6.3.1
 
 I'm super happy to annouce that with version 0.6.3.1 RoadCaptain is now supported on macOS! 🎉🎉🎉

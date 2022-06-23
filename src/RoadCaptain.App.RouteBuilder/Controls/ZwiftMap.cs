@@ -544,17 +544,23 @@ namespace RoadCaptain.App.RouteBuilder.Controls
                 return;
             }
 
-            // RoutePath needs to be set to the total route we just loaded
-            foreach (var segment in Route.Sequence)
+            // There are situations where there is a route but no
+            // available segments. For example when no world is selected
+            // but a route file has (just) been loaded.
+            if (_segmentPaths.Any())
             {
-                var points = _segmentPaths[segment.SegmentId].Points;
-
-                if (segment.Direction == SegmentDirection.BtoA)
+                // RoutePath needs to be set to the total route we just loaded
+                foreach (var segment in Route.Sequence)
                 {
-                    points = points.Reverse().ToArray();
-                }
+                    var points = _segmentPaths[segment.SegmentId].Points;
 
-                routePath.AddPoly(points, false);
+                    if (segment.Direction == SegmentDirection.BtoA)
+                    {
+                        points = points.Reverse().ToArray();
+                    }
+
+                    routePath.AddPoly(points, false);
+                }
             }
 
             _renderOperation.RoutePath = routePath;
