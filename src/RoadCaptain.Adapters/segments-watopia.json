@@ -1695,47 +1695,6 @@
     "nextSegmentsNodeB": [],
     "points": [
       {
-        "latitude": -11.64374,
-        "longitude": 166.93605,
-        "altitude": 8.8,
-        "index": 0,
-        "distanceOnSegment": 0.0,
-        "distanceFromLast": 0.0,
-        "coordinatesDecimal": "S11.64374° E166.93605°"
-      },
-      {
-        "latitude": -11.64387,
-        "longitude": 166.9361,
-        "altitude": 9.2,
-        "index": 1,
-        "distanceOnSegment": 15.3007947160224,
-        "distanceFromLast": 15.3007947160224,
-        "coordinatesDecimal": "S11.64387° E166.93610°"
-      },
-      {
-        "latitude": -11.64401,
-        "longitude": 166.93616,
-        "altitude": 9.2,
-        "index": 2,
-        "distanceOnSegment": 31.7970013725063,
-        "distanceFromLast": 16.4962066564839,
-        "coordinatesDecimal": "S11.64401° E166.93616°"
-      }
-    ],
-    "id": "watopia-four-horsemen-001",
-    "boundingBox": {},
-    "sport": "Both",
-    "name": "four-horsemen-001",
-    "noSelectReason": null,
-    "distance": 31.7970013725063,
-    "ascent": 0.3999999999999986,
-    "descent": 0.0
-  },
-  {
-    "nextSegmentsNodeA": [],
-    "nextSegmentsNodeB": [],
-    "points": [
-      {
         "latitude": -11.68626,
         "longitude": 166.92553,
         "altitude": 8.2,
