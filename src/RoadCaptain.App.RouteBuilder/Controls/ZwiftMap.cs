@@ -89,8 +89,6 @@ namespace RoadCaptain.App.RouteBuilder.Controls
             base.OnPropertyChanged(change);
         }
 
-        public Size CanvasSize => new((float)Bounds.Width, (float)Bounds.Height);
-
         public Segment? HighlightedSegment
         {
             get
