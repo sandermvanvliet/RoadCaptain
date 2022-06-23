@@ -8,7 +8,14 @@
 
 ### Route Builder
 
-- Fix an issue where an exception would occur when you load a route from the main screen of RouteBuilder. In this situation the segments aren't loaded yet which caused a crash to happen. (see [#87](https://github.com/sandermvanvliet/RoadCaptain/issues/87))
+- Fix an issue where an exception would occur when you load a route from the main screen of RouteBuilder. In this situation the segments aren't loaded yet which caused a crash to happen [#87](https://github.com/sandermvanvliet/RoadCaptain/issues/87)
+- Clear highlighted segment when clearing the route [#88](https://github.com/sandermvanvliet/RoadCaptain/issues/88)
+- Fix issue where updating the command executable flag would fail because it is not on the UI thread
+
+### Routing
+
+- Fix turn from Sequoia to Epic onto Ocean Boulevard 2 [#85](https://github.com/sandermvanvliet/RoadCaptain/issues/85)
+- Fix turn from Ocean Boulevard 1 to Zwift KOM / Beach Road [#85](https://github.com/sandermvanvliet/RoadCaptain/issues/85)
 
 ## 0.6.3.1
 
