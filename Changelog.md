@@ -6,6 +6,8 @@
 
 - Performance optimisation of game coordinate conversion. This is now roughly twice as fast which means that determining your position in-game happens much faster now and that means RoadCaptain can make routing decisions quicker!
 - Fixed an issue where you had to log in again after exiting a Zwift activity
+- Improved the positioning algorithm which fixes an issue where RoadCaptain would jump between segments in the Volcano causing the route to be lost [#77](https://github.com/sandermvanvliet/RoadCaptain/issues/77)
+- Fixed an issue where the route lock would be lost when entering the last segment of a route
 
 ### Route Builder
 
@@ -17,6 +19,7 @@
 
 - Fix turn from Sequoia to Epic onto Ocean Boulevard 2 [#85](https://github.com/sandermvanvliet/RoadCaptain/issues/85)
 - Fix turn from Ocean Boulevard 1 to Zwift KOM / Beach Road [#85](https://github.com/sandermvanvliet/RoadCaptain/issues/85)
+- Removed the `watopia-four-horsemen-001 segment` segment because it's not used
 
 ## 0.6.3.1
 
