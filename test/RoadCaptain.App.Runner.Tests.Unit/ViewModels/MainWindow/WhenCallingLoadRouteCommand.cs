@@ -17,13 +17,15 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.MainWindow
             var gameStateDispatcher = new InMemoryGameStateDispatcher(new NopMonitoringEvents());
 
             var routeStore = new StubRouteStore();
-            _viewModel = new MainWindowViewModel(new Configuration(null),
+            _viewModel = new MainWindowViewModel(
+                new Configuration(null),
                 new DummyUserPreferences(),
                 _windowService,
                 null,
                 routeStore,
-                null, 
-                new SegmentStore());
+                null,
+                new SegmentStore(),
+                new NoZwiftCredentialCache());
         }
 
         [Fact]

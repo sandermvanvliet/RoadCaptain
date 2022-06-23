@@ -67,6 +67,7 @@ namespace RoadCaptain.App.Runner.Views
 
         private void WindowBase_OnActivated(object? sender, EventArgs e)
         {
+            Dispatcher.UIThread.InvokeAsync(() => _viewModel.Initialize());
             Dispatcher.UIThread.InvokeAsync(() => _viewModel.CheckForNewVersion());
         }
 

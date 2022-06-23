@@ -12,11 +12,9 @@ using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
 using Microsoft.IdentityModel.JsonWebTokens;
-using Newtonsoft.Json;
 using ReactiveUI;
 using RoadCaptain.App.Runner.Models;
 using RoadCaptain.App.Shared.Commands;
-using RoadCaptain.App.Shared.Models;
 using RoadCaptain.App.Shared.UserPreferences;
 using RoadCaptain.GameStates;
 using RoadCaptain.Ports;
@@ -44,7 +42,7 @@ namespace RoadCaptain.App.Runner.ViewModels
         private IImage? _zwiftAvatar;
         private bool _endActivityAtEndOfRoute;
         private bool _loopRouteAtEndOfRoute;
-        private IZwift _zwift;
+        private readonly IZwiftCredentialCache _credentialCache;
 
         public MainWindowViewModel(Configuration configuration,
             IUserPreferences userPreferences,
@@ -52,7 +50,8 @@ namespace RoadCaptain.App.Runner.ViewModels
             IGameStateDispatcher gameStateDispatcher,
             IRouteStore routeStore,
             IVersionChecker versionChecker,
-            ISegmentStore segmentStore)
+            ISegmentStore segmentStore, 
+            IZwiftCredentialCache credentialCache)
         {
             _configuration = configuration;
             _userPreferences = userPreferences;
@@ -61,16 +60,7 @@ namespace RoadCaptain.App.Runner.ViewModels
             _routeStore = routeStore;
             _versionChecker = versionChecker;
             _segmentStore = segmentStore;
-
-            if (IsValidToken(configuration.AccessToken))
-            {
-                ZwiftAccessToken = configuration.AccessToken;
-                ZwiftAvatarUri = "avares://RoadCaptain.App.Shared/Assets/profile-default.png";
-                ZwiftAvatar = DownloadAvatarImage(ZwiftAvatarUri);
-                ZwiftName = "(stored token)";
-                LoggedInToZwift = true;
-                _gameStateDispatcher.Dispatch(new LoggedInState(ZwiftAccessToken));
-            }
+            _credentialCache = credentialCache;
 
             if (!string.IsNullOrEmpty(configuration.Route))
             {
@@ -139,7 +129,7 @@ namespace RoadCaptain.App.Runner.ViewModels
         }
 
         public bool CanStartRoute =>
-            Route != null &&
+            Route.PlannedRoute != null &&
             LoggedInToZwift;
 
         public string? RoutePath
@@ -444,41 +434,15 @@ namespace RoadCaptain.App.Runner.ViewModels
 
         private async Task<CommandResult> LogInToZwift(Window window)
         {
-            TokenResponse? tokenResponse = null;
-
-#if DEBUG
-            // This is for testing only to prevent me having to log in all the time.
-            if (File.Exists("devtokens.json"))
-            {
-                tokenResponse = JsonConvert.DeserializeObject<TokenResponse>(await File.ReadAllTextAsync("devtokens.json"));
-
-                if (tokenResponse?.AccessToken != null && new JsonWebToken(tokenResponse.AccessToken).ValidTo < DateTime.Now)
-                {
-                    // When the token expires, break here and use postman to refresh the token manually
-                    var oauthToken = await _zwift.RefreshTokenAsync(tokenResponse.RefreshToken);
-
-                    if (oauthToken != null)
-                    {
-                        tokenResponse.AccessToken = oauthToken.AccessToken;
-                        tokenResponse.RefreshToken = oauthToken.RefreshToken;
-                        tokenResponse.ExpiresIn = (int)oauthToken.ExpiresOn.Subtract(DateTime.UtcNow).TotalSeconds;
-
-                        await File.WriteAllTextAsync("devtokens.json", JsonConvert.SerializeObject(tokenResponse, Formatting.Indented));
-                    }
-                    else
-                    {
-                        tokenResponse = null;
-                    }
-                }
-            }
-#endif
+            var tokenResponse = await _credentialCache.LoadAsync();
             
             tokenResponse ??= await _windowService.ShowLogInDialog(window);
 
             if (tokenResponse != null &&
                 !string.IsNullOrEmpty(tokenResponse.AccessToken))
-            {
+            {   
                 ZwiftAccessToken = tokenResponse.AccessToken;
+                
                 if (tokenResponse.UserProfile != null)
                 {
                     ZwiftName =
@@ -486,15 +450,11 @@ namespace RoadCaptain.App.Runner.ViewModels
                     ZwiftAvatarUri = tokenResponse.UserProfile.Avatar;
                     ZwiftAvatar = DownloadAvatarImage(ZwiftAvatarUri);
                 }
-
-#if DEBUG
-                // This is for testing only to prevent me having to log in all the time.
-                if (tokenResponse.UserProfile.FirstName + " " + tokenResponse.UserProfile.LastName ==
-                    "Sander van Vliet [RoadCaptain]")
-                {
-                    await File.WriteAllTextAsync("devtokens.json", JsonConvert.SerializeObject(tokenResponse));
-                }
-#endif
+                
+                // Keep this in memory so that when the app navigates
+                // from the in-game window to the main window the user
+                // remains logged in.
+                await _credentialCache.StoreAsync(tokenResponse);
 
                 LoggedInToZwift = true;
 
@@ -554,6 +514,22 @@ namespace RoadCaptain.App.Runner.ViewModels
 
             return CommandResult.Success();
 
+        }
+
+        public async Task Initialize()
+        {
+            var credentials = await _credentialCache.LoadAsync();
+
+            if (credentials != null && IsValidToken(credentials.AccessToken))
+            {
+                ZwiftAccessToken = credentials.AccessToken;
+                ZwiftAvatarUri = string.IsNullOrEmpty(credentials.UserProfile?.Avatar) ? "avares://RoadCaptain.App.Shared/Assets/profile-default.png" : credentials.UserProfile.Avatar;
+                ZwiftAvatar = DownloadAvatarImage(ZwiftAvatarUri);
+                ZwiftName = string.IsNullOrEmpty(credentials.UserProfile?.FirstName) ? "(stored token)" : credentials.UserProfile.FirstName + " " + credentials.UserProfile.LastName;
+                LoggedInToZwift = true;
+                _gameStateDispatcher.Dispatch(new LoggedInState(ZwiftAccessToken));
+            }
+            
         }
     }
 }

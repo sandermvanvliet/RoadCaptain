@@ -5,6 +5,7 @@
 ### Runner
 
 - Performance optimisation of game coordinate conversion. This is now roughly twice as fast which means that determining your position in-game happens much faster now and that means RoadCaptain can make routing decisions quicker!
+- Fixed an issue where you had to log in again after exiting a Zwift activity
 
 ### Route Builder
 

@@ -23,7 +23,8 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.MainWindow
                 _gameStateDispatcher,
                 routeStore,
                 null, 
-                new SegmentStore());
+                new SegmentStore(),
+                new NoZwiftCredentialCache());
         }
 
         [Fact]

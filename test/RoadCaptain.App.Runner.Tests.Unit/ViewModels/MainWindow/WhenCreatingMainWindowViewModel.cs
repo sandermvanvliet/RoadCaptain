@@ -1,23 +1,29 @@
 ﻿using System;
+using System.Net.Http;
 using System.Threading;
+using Codenizer.HttpClient.Testable;
 using FluentAssertions;
 using Microsoft.IdentityModel.JsonWebTokens;
 using Newtonsoft.Json;
 using RoadCaptain.Adapters;
 using RoadCaptain.App.Runner.ViewModels;
+using RoadCaptain.App.Shared.Models;
 using RoadCaptain.App.Shared.UserPreferences;
 using RoadCaptain.GameStates;
 using Xunit;
+using TokenResponse = RoadCaptain.App.Shared.Models.TokenResponse;
 
 namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.MainWindow
 {
     public class WhenCreatingMainWindowViewModel
     {
-        private static InMemoryGameStateDispatcher _gameStateDispatcher;
+        private readonly InMemoryGameStateDispatcher _gameStateDispatcher;
+        private readonly IZwiftCredentialCache _credentialCache;
 
         public WhenCreatingMainWindowViewModel()
         {
             _gameStateDispatcher = new InMemoryGameStateDispatcher(new NopMonitoringEvents());
+            _credentialCache = new ZwiftCredentialCache(new Zwift(new HttpClient(new TestableMessageHandler())));
         }
 
         [Fact]
@@ -63,26 +69,9 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.MainWindow
         }
 
         [Fact]
-        public void GivenConfigurationContainsAccessToken_ZwiftAccessTokenIsSet()
+        public void GivenNoCachedCredentials_ZwiftAvatarUriIsSetToDefaultImage()
         {
-            var configuration = new Configuration(null)
-            {
-                AccessToken = ValidToken()
-            };
-            
-            CreateViewModel(configuration)
-                .ZwiftAccessToken
-                .Should()
-                .Be(configuration.AccessToken);
-        }
-
-        [Fact]
-        public void GivenConfigurationContainsAccessToken_ZwiftAvatarUriIsSetToDefaultImage()
-        {
-            var configuration = new Configuration(null)
-            {
-                AccessToken = ValidToken()
-            };
+            var configuration = new Configuration(null);
             
             CreateViewModel(configuration)
                 .ZwiftAvatarUri
@@ -91,26 +80,24 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.MainWindow
         }
 
         [Fact]
-        public void GivenConfigurationContainsAccessToken_ZwiftNameIsSetToStoredToken()
+        public void GivenCachedCredentials_ZwiftNameIsSetToStoredToken()
         {
-            var configuration = new Configuration(null)
-            {
-                AccessToken = ValidToken()
-            };
-            
+            var configuration = new Configuration(null);
+            GivenCachedCredentials();
+
             CreateViewModel(configuration)
                 .ZwiftName
                 .Should()
-                .Be("(stored token)");
+                .Be("first last");
         }
 
         [Fact]
-        public void GivenConfigurationContainsAccessToken_LoggedInToZwiftIsTrue()
+        public void GivenCachedCredentials_LoggedInToZwiftIsTrue()
         {
             var configuration = new Configuration(null)
             {
-                AccessToken = ValidToken()
             };
+            GivenCachedCredentials();
             
             CreateViewModel(configuration)
                 .LoggedInToZwift
@@ -119,13 +106,13 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.MainWindow
         }
 
         [Fact]
-        public void GivenConfigurationContainsRoutePathAndAccessToken_CanStartRouteIsTrue()
+        public void GivenCachedCredentialsAndRouteSetInConfiguration_CanStartRouteIsTrue()
         {
             var configuration = new Configuration(null)
             {
-                AccessToken = ValidToken(),
                 Route = "someroute.json"
             };
+            GivenCachedCredentials();
             
             CreateViewModel(configuration)
                 .CanStartRoute
@@ -134,12 +121,10 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.MainWindow
         }
 
         [Fact]
-        public void GivenConfigurationContainsAccessToken_LoggedInStateIsDispatched()
+        public void GivenCachedCredentials_LoggedInStateIsDispatched()
         {
-            var configuration = new Configuration(null)
-            {
-                AccessToken = ValidToken()
-            };
+            var configuration = new Configuration(null);
+            GivenCachedCredentials();
 
             CreateViewModel(configuration);
 
@@ -148,17 +133,31 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.MainWindow
                 .BeOfType<LoggedInState>();
         }
 
-        private static MainWindowViewModel CreateViewModel(Configuration configuration, IUserPreferences appSettings = null)
+        private void GivenCachedCredentials()
         {
-            
+            _credentialCache.StoreAsync(new TokenResponse
+            {
+                AccessToken = ValidToken(),
+                UserProfile = new UserProfile { FirstName = "first", LastName = "last", Avatar = "avatar.png" }
+            });
+        }
+
+        private MainWindowViewModel CreateViewModel(Configuration configuration, IUserPreferences appSettings = null)
+        {
             var routeStore = new StubRouteStore();
-            return new MainWindowViewModel(configuration, 
+
+            var mainWindowViewModel = new MainWindowViewModel(configuration, 
                 appSettings ?? new DummyUserPreferences(),
                 new StubWindowService(),
                 _gameStateDispatcher,
                 routeStore,
                 null,
-                new SegmentStore());
+                new SegmentStore(),
+                _credentialCache);
+
+            mainWindowViewModel.Initialize().GetAwaiter().GetResult();
+            
+            return mainWindowViewModel;
         }
 
         private GameState GetFirstDispatchedGameState()

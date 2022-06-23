@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Net.Http;
 using System.Threading;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Platform;
+using Codenizer.HttpClient.Testable;
 using FluentAssertions;
 using Moq;
 using RoadCaptain.Adapters;
@@ -19,11 +21,13 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.MainWindow
         private readonly MainWindowViewModel _viewModel;
         private readonly StubWindowService _windowService;
         private readonly InMemoryGameStateDispatcher _gameStateDispatcher;
+        private readonly ZwiftCredentialCache _credentialCache;
 
         public WhenCallingLogInCommand()
         {
             _windowService = new StubWindowService();
             _gameStateDispatcher = new InMemoryGameStateDispatcher(new NopMonitoringEvents());
+            _credentialCache = new ZwiftCredentialCache(new Zwift(new HttpClient(new TestableMessageHandler())));
 
             StubRouteStore routeStore = new StubRouteStore();
             _viewModel = new MainWindowViewModel(new Configuration(null),
@@ -32,7 +36,8 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.MainWindow
                 _gameStateDispatcher,
                 routeStore,
                 null, 
-                new SegmentStore());
+                new SegmentStore(),
+                _credentialCache);
             
             // This is required so that we can call new Window() below.
             var avaloniaDependencyResolver = new AvaloniaLocator();
@@ -179,6 +184,30 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.MainWindow
             lastState
                 .Should()
                 .BeOfType<LoggedInState>();
+        }
+
+        [Fact]
+        public void GivenUserLoggedIn_CredentialsAreCached()
+        {
+            _windowService.LogInDialogResult = new TokenResponse
+            {
+                AccessToken = "some token",
+                UserProfile = new UserProfile
+                {
+                    FirstName = "some",
+                    LastName = "name",
+                    Avatar = "someavatar"
+                }
+            };
+
+            LogIn();
+
+            _credentialCache
+                .LoadAsync()
+                .GetAwaiter()
+                .GetResult()
+                .Should()
+                .NotBeNull();
         }
 
         private GameState GetFirstDispatchedGameState()
