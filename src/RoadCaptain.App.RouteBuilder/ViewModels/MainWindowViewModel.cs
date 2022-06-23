@@ -537,6 +537,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             var commandResult = Route.Clear();
 
             SelectedSegment = null;
+            HighlightedSegment = null;
 
             SimulationState = SimulationState.NotStarted;
 
