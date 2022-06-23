@@ -25,7 +25,7 @@ namespace RoadCaptain.GameStates
             //       loop in GetClosestMatchingSegment handles that
             //       for us.
             var matchingSegments = segments.Where(s => s.Contains(position));
-
+            
             var (segment, closestOnSegment) = GetClosestMatchingSegment(matchingSegments, position);
 
             if (segment == null)

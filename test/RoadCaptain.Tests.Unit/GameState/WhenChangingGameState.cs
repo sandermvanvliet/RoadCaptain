@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
+using RoadCaptain.Adapters;
 using RoadCaptain.GameStates;
 using Xunit;
 
@@ -476,6 +477,51 @@ namespace RoadCaptain.Tests.Unit.GameState
                 .CurrentPosition
                 .Should()
                 .Be(RoutePosition1);
+        }
+
+        [Fact]
+        public void OverlappingSegmentMatch()
+        {
+            // This test verifies that segments that cross each other
+            // don't cause the state to jump back and forth between
+            // those two segments.
+            // This is an issue mostly in the Volcano on Watopia.
+            var fileRoot = @"c:\git\RoadCaptain\src\RoadCaptain.Adapters";
+            var segmentStore = new SegmentStore(fileRoot);
+            var segments = segmentStore.LoadSegments(new World() { Id = "watopia", ZwiftId = ZwiftWorldId.Watopia }, SportType.Cycling);
+            var routeStore = new RouteStoreToDisk(segmentStore, new WorldStoreToDisk(fileRoot));
+            var plannedRoute = routeStore.LoadFrom(@"C:\git\temp\zwift\RoadCaptain-troubleshoot\77-volcano-climb\DragonVsTitan.json.json");
+            plannedRoute.EnteredSegment("watopia-bambino-fondo-001-after-after-after-after-after-before");
+            plannedRoute.EnteredSegment("watopia-beach-island-loop-001");
+            plannedRoute.EnteredSegment("watopia-bambino-fondo-004-after-before");
+
+            var currentPosition = TrackPoint.FromGameLocation(46926.22000000, -145711.70000000, 10927.59000000, ZwiftWorldId.Watopia);
+            
+            var segment = segments.Single(s => s.Id == "watopia-bambino-fondo-004-after-before");
+            currentPosition = segment
+                .Points
+                .Where(p => TrackPoint.IsCloseToQuick(p.Longitude, currentPosition))
+                .Select(p => new { Point = p, Distance = p.DistanceTo(currentPosition)})                         
+                .OrderBy(d => d.Distance)
+                .First()
+                .Point;
+
+            var state = new OnSegmentState(1234, 5678,
+                currentPosition,
+                segment);
+
+            var newPoint = TrackPoint.FromGameLocation(46673.94000000, -145711.80000000, 10926.55000000, ZwiftWorldId.Watopia);
+            
+            var result = state.UpdatePosition(newPoint, segments, plannedRoute);
+
+            result
+                .Should()
+                .BeOfType<OnRouteState>()
+                .Which
+                .CurrentSegment
+                .Id
+                .Should()
+                .Be("watopia-bambino-fondo-004-after-before");
         }
 
         private Segment SegmentById(string id)
