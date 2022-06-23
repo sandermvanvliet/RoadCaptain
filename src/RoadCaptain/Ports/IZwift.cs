@@ -8,5 +8,6 @@ namespace RoadCaptain.Ports
         Task<Uri> RetrieveRelayUrl(string accessToken);
         Task InitiateRelayAsync(string accessToken, Uri uri, string ipAddress);
         Task<ZwiftProfile> GetProfileAsync(string accessToken);
+        Task<OAuthToken> RefreshTokenAsync(string refreshToken);
     }
 }

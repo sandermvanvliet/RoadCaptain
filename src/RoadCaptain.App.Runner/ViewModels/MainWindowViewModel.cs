@@ -44,6 +44,7 @@ namespace RoadCaptain.App.Runner.ViewModels
         private IImage? _zwiftAvatar;
         private bool _endActivityAtEndOfRoute;
         private bool _loopRouteAtEndOfRoute;
+        private IZwift _zwift;
 
         public MainWindowViewModel(Configuration configuration,
             IUserPreferences userPreferences,
@@ -454,8 +455,20 @@ namespace RoadCaptain.App.Runner.ViewModels
                 if (tokenResponse?.AccessToken != null && new JsonWebToken(tokenResponse.AccessToken).ValidTo < DateTime.Now)
                 {
                     // When the token expires, break here and use postman to refresh the token manually
-                    Debugger.Break();
-                    tokenResponse = null;
+                    var oauthToken = await _zwift.RefreshTokenAsync(tokenResponse.RefreshToken);
+
+                    if (oauthToken != null)
+                    {
+                        tokenResponse.AccessToken = oauthToken.AccessToken;
+                        tokenResponse.RefreshToken = oauthToken.RefreshToken;
+                        tokenResponse.ExpiresIn = (int)oauthToken.ExpiresOn.Subtract(DateTime.UtcNow).TotalSeconds;
+
+                        await File.WriteAllTextAsync("devtokens.json", JsonConvert.SerializeObject(tokenResponse, Formatting.Indented));
+                    }
+                    else
+                    {
+                        tokenResponse = null;
+                    }
                 }
             }
 #endif

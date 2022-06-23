@@ -2,6 +2,7 @@
 // Licensed under Artistic License 2.0
 // See LICENSE or https://choosealicense.com/licenses/artistic-2.0/
 
+using System;
 using Newtonsoft.Json;
 
 namespace RoadCaptain.Adapters
@@ -16,5 +17,16 @@ namespace RoadCaptain.Adapters
         public int ExpiresIn { get; set; }
         [JsonProperty("refresh_expires_in")]
         public int RefreshExpiresIn { get; set; }
+
+        public OAuthToken ToDomain()
+        {
+            return new OAuthToken
+            {
+                AccessToken = AccessToken,
+                RefreshToken = RefreshToken,
+                ExpiresOn = DateTime.UtcNow.AddSeconds(ExpiresIn),
+                RefreshTokenExpiresOn = DateTime.UtcNow.AddSeconds(RefreshExpiresIn)
+            };
+        }
     }
 }

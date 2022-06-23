@@ -3,6 +3,7 @@
 // See LICENSE or https://choosealicense.com/licenses/artistic-2.0/
 
 using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
@@ -77,6 +78,31 @@ namespace RoadCaptain.Adapters
             var profile = JsonConvert.DeserializeObject<ZwiftProfileResponse>(serializedContent);
 
             return profile.ToDomain();
+        }
+
+        public async Task<OAuthToken> RefreshTokenAsync(string refreshToken)
+        {
+            var request = new HttpRequestMessage(HttpMethod.Post, "https://secure.zwift.com/auth/realms/zwift/protocol/openid-connect/token");
+
+            request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            
+            request.Content = new FormUrlEncodedContent(new []
+            {
+                new KeyValuePair<string, string>("grant_type", "refresh_token"),
+                new KeyValuePair<string, string>("client_id", "zwift-public"),
+                new KeyValuePair<string, string>("refresh_token", refreshToken),
+            });
+
+            var response = await _httpClient.SendAsync(request);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new Exception("Failed to refresh token: " + response.StatusCode);
+            }
+
+            var serializedContent = await response.Content.ReadAsStringAsync();
+
+            return JsonConvert.DeserializeObject<TokenResponse>(serializedContent)?.ToDomain();
         }
     }
 }
