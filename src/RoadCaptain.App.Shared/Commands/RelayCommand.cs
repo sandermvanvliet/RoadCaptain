@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Linq.Expressions;
 using System.Windows.Input;
+using Avalonia.Threading;
 
 namespace RoadCaptain.App.Shared.Commands
 {
@@ -133,7 +134,19 @@ namespace RoadCaptain.App.Shared.Commands
         {
             var eventHandler = CanExecuteChanged;
 
-            eventHandler?.Invoke(this, EventArgs.Empty);
+            if (eventHandler == null)
+            {
+                return;
+            }
+
+            if (!Dispatcher.UIThread.CheckAccess())
+            {
+                Dispatcher.UIThread.InvokeAsync(() => eventHandler.Invoke(this, EventArgs.Empty));
+            }
+            else
+            {
+                eventHandler.Invoke(this, EventArgs.Empty);
+            }
         }
     }
 }
