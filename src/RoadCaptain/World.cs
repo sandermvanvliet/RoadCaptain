@@ -1,4 +1,10 @@
-﻿namespace RoadCaptain
+﻿// Copyright (c) 2022 Sander van Vliet
+// Licensed under Artistic License 2.0
+// See LICENSE or https://choosealicense.com/licenses/artistic-2.0/
+
+using System.Drawing;
+
+namespace RoadCaptain
 {
     public class World
     {
@@ -8,13 +14,24 @@
         public SpawnPoint[] SpawnPoints { get; set; }
         public WorldStatus Status { get; set; }
         public ZwiftWorldId ZwiftId { get; set; } = ZwiftWorldId.Unknown;
+        /// <summary>
+        /// The latitude/longitude of the most left point in this world which corresponds to the <see cref="MapMostLeft"/> x, y position on the map image
+        /// </summary>
+        public TrackPoint? WorldMostLeft { get; set; }
+        /// <summary>
+        /// The latitude/longitude of the most right point in this world which corresponds to the <see cref="MapMostRight"/> x, y position on the map image
+        /// </summary>
+        public TrackPoint? WorldMostRight { get; set; }
+        public PointF? MapMostLeft { get; set; }
+        public PointF? MapMostRight { get; set; }
     }
 
     public enum WorldStatus
     {
         Unknown,
         Available,
-        Unavailable
+        Unavailable,
+        Beta
     }
 
     public enum ZwiftWorldId

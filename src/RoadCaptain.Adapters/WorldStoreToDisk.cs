@@ -1,8 +1,13 @@
-﻿using System;
+﻿// Copyright (c) 2022 Sander van Vliet
+// Licensed under Artistic License 2.0
+// See LICENSE or https://choosealicense.com/licenses/artistic-2.0/
+
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
 using RoadCaptain.Ports;
 
@@ -17,8 +22,10 @@ namespace RoadCaptain.Adapters
             ContractResolver = new CamelCasePropertyNamesContractResolver(),
             Converters = new List<JsonConverter>
             {
-                new SegmentDirectionConverter()
-            }
+                new SegmentDirectionConverter(),
+                new StringEnumConverter()
+            },
+            NullValueHandling = NullValueHandling.Ignore
         };
 
         public WorldStoreToDisk() : this(Environment.CurrentDirectory)

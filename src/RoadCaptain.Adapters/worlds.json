@@ -8,101 +8,127 @@
         "segmentId": "watopia-bambino-fondo-001-after-after-after-after-after-before",
         "zwiftRouteName": "Big Loop",
         "direction": "AtoB",
-        "sport": "both"
+        "sport": "Both"
       },
       {
         "segmentId": "watopia-bambino-fondo-001-after-after-after-after-after-before",
         "zwiftRouteName": "Beach Island Loop",
         "direction": "BtoA",
-        "sport": "both"
+        "sport": "Both"
       },
       {
         "segmentId": "watopia-bambino-fondo-001-after-after-after-after-after-after",
         "zwiftRouteName": "Mountain Route",
         "direction": "AtoB",
-        "sport": "both"
+        "sport": "Both"
       },
       {
         "segmentId": "watopia-bambino-fondo-001-after-after-after-after-after-after",
         "zwiftRouteName": "Big Loop Reverse",
         "direction": "BtoA",
-        "sport": "both"
+        "sport": "Both"
       },
       {
         "segmentId": "watopia-big-foot-hills-004-before",
         "zwiftRouteName": "Muir and the mountain",
         "direction": "BtoA",
-        "sport": "both"
+        "sport": "Both"
       },
       {
         "segmentId": "watopia-big-foot-hills-004-before",
         "zwiftRouteName": "Big Foot Hills",
         "direction": "AtoB",
-        "sport": "both"
+        "sport": "Both"
       },
       {
         "segmentId": "watopia-bambino-fondo-003-before-after",
         "zwiftRouteName": "Jungle Circuit",
         "direction": "AtoB",
-        "sport": "both"
+        "sport": "Both"
       },
       {
         "segmentId": "watopia-beach-island-loop-001",
         "zwiftRouteName": "Volcano Circuit",
         "direction": "AtoB",
-        "sport": "both"
+        "sport": "Both"
       },
       {
         "segmentId": "watopia-bambino-fondo-004-before-before",
         "zwiftRouteName": "The Mega Pretzel",
         "direction": "BtoA",
-        "sport": "both"
+        "sport": "Both"
       },
       {
         "segmentId": "watopia-big-foot-hills-004-after-after",
         "zwiftRouteName": "Triple Flat Loops",
         "direction": "AtoB",
-        "sport": "both"
+        "sport": "Both"
       },
       {
         "segmentId": "watopia-bambino-fondo-004-before-after",
         "zwiftRouteName": "Tour of Fire and Ice",
         "direction": "BtoA",
-        "sport": "both" 
+        "sport": "Both"
       },
       {
         "segmentId": "watopia-5k-loop-001-before-before",
         "zwiftRouteName": "5k Loop",
         "direction": "AtoB",
-        "sport": "running"
+        "sport": "Running"
       },
       {
         "segmentId": "watopia-5k-loop-001-before-before",
         "zwiftRouteName": "Chili Pepper Reverse",
         "direction": "BtoA",
-        "sport": "running"
+        "sport": "Running"
       },
       {
         "segmentId": "watopia-5k-loop-001-after-after-after",
         "zwiftRouteName": "11.1 Ocean Boulevard",
         "direction": "BtoA",
-        "sport": "running"
+        "sport": "Running"
       },
       {
         "segmentId": "watopia-may-field-001",
         "zwiftRouteName": "May Field",
         "direction": "AtoB",
-        "sport": "running"
+        "sport": "Running"
       },
       {
         "segmentId": "watopia-5k-loop-001-after-after-before-after",
         "zwiftRouteName": "Run Path Reverse",
         "direction": "BtoA",
-        "sport": "running"
+        "sport": "Running"
       }
     ],
-    "status": "available",
-    "zwiftId": 1 
+    "status": "Available",
+    "zwiftId": "Watopia",
+    "worldMostLeft": {
+      "latitude": -11.68401,
+      "longitude": 166.89304,
+      "altitude": 0.0,
+      "distanceOnSegment": 0.0,
+      "distanceFromLast": 0.0,
+      "coordinatesDecimal": "S11.68401° E166.89304°"
+    },
+    "worldMostRight": {
+      "latitude": -11.64594,
+      "longitude": 167.00275,
+      "altitude": 0.0,
+      "distanceOnSegment": 0.0,
+      "distanceFromLast": 0.0,
+      "coordinatesDecimal": "S11.64594° E167.00275°"
+    },
+    "mapMostLeft": {
+      "isEmpty": false,
+      "x": 822.0,
+      "y": 3105.0
+    },
+    "mapMostRight": {
+      "isEmpty": false,
+      "x": 6618.0,
+      "y": 1067.0
+    }
   },
   {
     "id": "makuri_islands",
@@ -113,132 +139,212 @@
         "segmentId": "makuri-islands-temples-and-towers-001-before-before",
         "zwiftRouteName": "Castle to Castle",
         "direction": "AtoB",
-        "sport": "both"
+        "sport": "Both"
       },
       {
         "segmentId": "makuri-islands-chain-chomper-001-before-before",
         "zwiftRouteName": "Chain Chomper",
         "direction": "AtoB",
-        "sport": "both"
+        "sport": "Both"
       },
       {
         "segmentId": "makuri-islands-neokyo-all-nighter-001-after-after-after",
         "zwiftRouteName": "Chasing the Sun",
         "direction": "BtoA",
-        "sport": "both"
+        "sport": "Both"
       },
       {
         "segmentId": "makuri-islands-neokyo-all-nighter-001-after-after-after",
         "zwiftRouteName": "Twilight Harbor",
         "direction": "AtoB",
-        "sport": "both"
+        "sport": "Both"
       },
       {
         "segmentId": "makuri-islands-countryside-tour-001-before-before",
         "zwiftRouteName": "Countryside Tour",
         "direction": "AtoB",
-        "sport": "both"
+        "sport": "Both"
       },
       {
         "segmentId": "makuri-islands-chain-chomper-002-after-after-after-before",
         "zwiftRouteName": "Kappa Quest Reverse",
         "direction": "AtoB",
-        "sport": "both"
+        "sport": "Both"
       },
       {
         "segmentId": "makuri-islands-chain-chomper-002-after-after-after-before",
         "zwiftRouteName": "Sea to Tree",
         "direction": "BtoA",
-        "sport": "both"
+        "sport": "Both"
       },
       {
         "segmentId": "makuri-islands-chain-chomper-002-after-after-after-before",
         "zwiftRouteName": "Kappa Quest Reverse",
         "direction": "AtoB",
-        "sport": "both"
+        "sport": "Both"
       },
       {
         "segmentId": "makuri-islands-chain-chomper-002-after-after-after-before",
         "zwiftRouteName": "Kappa Quest",
         "direction": "BtoA",
-        "sport": "both"
+        "sport": "Both"
       },
       {
         "segmentId": "makuri-islands-neokyo-all-nighter-001-before-before-before-before",
         "zwiftRouteName": "Neon Flats",
         "direction": "AtoB",
-        "sport": "both"
+        "sport": "Both"
       },
       {
         "segmentId": "makuri-islands-neokyo-all-nighter-007",
         "zwiftRouteName": "Railways and Rooftops",
         "direction": "BtoA",
-        "sport": "both"
+        "sport": "Both"
       },
       {
         "segmentId": "makuri-islands-neokyo-all-nighter-001-before-before-before-after",
         "zwiftRouteName": "Temples and Towers",
         "direction": "AtoB",
-        "sport": "both"
+        "sport": "Both"
       }
     ],
-    "status": "unavailable",
-    "zwiftId": 9 
+    "status": "Unavailable",
+    "zwiftId": "MakuriIslands",
+    "mapMostLeft": {
+      "isEmpty": true,
+      "x": 0.0,
+      "y": 0.0
+    },
+    "mapMostRight": {
+      "isEmpty": true,
+      "x": 0.0,
+      "y": 0.0
+    }
   },
   {
     "id": "richmond",
     "name": "Richmond",
     "description": "",
     "spawnPoints": [],
-    "status": "unavailable",
-    "zwiftId": 2 
+    "status": "Unavailable",
+    "zwiftId": "Richmond",
+    "mapMostLeft": {
+      "isEmpty": true,
+      "x": 0.0,
+      "y": 0.0
+    },
+    "mapMostRight": {
+      "isEmpty": true,
+      "x": 0.0,
+      "y": 0.0
+    }
   },
   {
     "id": "london",
     "name": "London",
     "description": "",
     "spawnPoints": [],
-    "status": "unavailable",
-    "zwiftId":  3 
+    "status": "Unavailable",
+    "zwiftId": "London",
+    "mapMostLeft": {
+      "isEmpty": true,
+      "x": 0.0,
+      "y": 0.0
+    },
+    "mapMostRight": {
+      "isEmpty": true,
+      "x": 0.0,
+      "y": 0.0
+    }
   },
   {
     "id": "new_york",
     "name": "New York",
     "description": "",
     "spawnPoints": [],
-    "status": "unavailable",
-    "zwiftId": 4 
+    "status": "Unavailable",
+    "zwiftId": "NewYork",
+    "mapMostLeft": {
+      "isEmpty": true,
+      "x": 0.0,
+      "y": 0.0
+    },
+    "mapMostRight": {
+      "isEmpty": true,
+      "x": 0.0,
+      "y": 0.0
+    }
   },
   {
     "id": "innsbruck",
     "name": "Innsbruck",
     "description": "",
     "spawnPoints": [],
-    "status": "unavailable",
-    "zwiftId": 5 
+    "status": "Unavailable",
+    "zwiftId": "Innsbruck",
+    "mapMostLeft": {
+      "isEmpty": true,
+      "x": 0.0,
+      "y": 0.0
+    },
+    "mapMostRight": {
+      "isEmpty": true,
+      "x": 0.0,
+      "y": 0.0
+    }
   },
   {
     "id": "yorkshire",
     "name": "Yorkshire",
     "description": "",
     "spawnPoints": [],
-    "status": "unavailable",
-    "zwiftId": 7 
+    "status": "Unavailable",
+    "zwiftId": "Yorkshire",
+    "mapMostLeft": {
+      "isEmpty": true,
+      "x": 0.0,
+      "y": 0.0
+    },
+    "mapMostRight": {
+      "isEmpty": true,
+      "x": 0.0,
+      "y": 0.0
+    }
   },
   {
     "id": "france",
     "name": "France",
     "description": "",
     "spawnPoints": [],
-    "status": "unavailable",
-    "zwiftId": 10 
+    "status": "Unavailable",
+    "zwiftId": "France",
+    "mapMostLeft": {
+      "isEmpty": true,
+      "x": 0.0,
+      "y": 0.0
+    },
+    "mapMostRight": {
+      "isEmpty": true,
+      "x": 0.0,
+      "y": 0.0
+    }
   },
   {
     "id": "paris",
     "name": "Paris",
     "description": "",
     "spawnPoints": [],
-    "status": "unavailable",
-    "zwiftId":  11 
+    "status": "Unavailable",
+    "zwiftId": "Paris",
+    "mapMostLeft": {
+      "isEmpty": true,
+      "x": 0.0,
+      "y": 0.0
+    },
+    "mapMostRight": {
+      "isEmpty": true,
+      "x": 0.0,
+      "y": 0.0
+    }
   }
 ]

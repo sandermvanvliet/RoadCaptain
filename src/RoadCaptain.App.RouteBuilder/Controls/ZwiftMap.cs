@@ -1,5 +1,10 @@
-﻿using System;
+﻿// Copyright (c) 2022 Sander van Vliet
+// Licensed under Artistic License 2.0
+// See LICENSE or https://choosealicense.com/licenses/artistic-2.0/
+
+using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Threading;
 using System.Windows.Input;
@@ -11,6 +16,8 @@ using Avalonia.Threading;
 using RoadCaptain.App.RouteBuilder.Models;
 using RoadCaptain.App.RouteBuilder.ViewModels;
 using SkiaSharp;
+using Point = Avalonia.Point;
+using Size = Avalonia.Size;
 
 namespace RoadCaptain.App.RouteBuilder.Controls
 {
@@ -466,19 +473,44 @@ namespace RoadCaptain.App.RouteBuilder.Controls
 
             _renderOperation.SegmentPaths = _segmentPaths;
 
-            var mostLeft = TrackPoint.LatLongToGame(166.89304, 11.68401, 0, ZwiftWorldId.Watopia);
-            var mostRight = TrackPoint.LatLongToGame(167.00275, 11.64594, 0, ZwiftWorldId.Watopia);
+            if (Route?.World != null)
+            {
+                CalculateZwiftMapScaleAndTransform(Route.World, _overallOffsets);
+            }
+        }
 
-            var mostLeftScaled = _overallOffsets.ScaleAndTranslate(mostLeft);
-            var mostRightScaled = _overallOffsets.ScaleAndTranslate(mostRight);
+        private void CalculateZwiftMapScaleAndTransform(World world, Offsets overallOffsets)
+        {
+            if (world.WorldMostLeft == null ||
+                world.WorldMostRight == null ||
+                !world.MapMostLeft.HasValue ||
+                !world.MapMostRight.HasValue)
+            {
+                return;
+            }
+
+            var mostLeft = TrackPoint.LatLongToGame(world.WorldMostLeft.Longitude, -world.WorldMostLeft.Latitude, 0, world.ZwiftId);
+            var mostRight = TrackPoint.LatLongToGame(world.WorldMostRight.Longitude, -world.WorldMostRight.Latitude, 0, world.ZwiftId);
+
+            var mostLeftScaled = overallOffsets.ScaleAndTranslate(mostLeft);
+            var mostRightScaled = overallOffsets.ScaleAndTranslate(mostRight);
             var deltaX = Math.Abs(mostRightScaled.X - mostLeftScaled.X);
             var deltaY = Math.Abs(mostRightScaled.Y - mostLeftScaled.Y);
-            var watopiaDeltaX = 5796;
-            var watopiaDeltaY = 2038;
-            var scaleX = deltaX / watopiaDeltaX;
-            var scaleY = deltaY / watopiaDeltaY;
+
+            var mapDeltaX = Math.Abs(world.MapMostRight.Value.X - world.MapMostLeft.Value.X);
+            var mapDeltaY = Math.Abs(world.MapMostRight.Value.Y - world.MapMostLeft.Value.Y);
+
+            var scaleX = deltaX / mapDeltaX;
+            var scaleY = deltaY / mapDeltaY;
+
+            var mostLeftMapScaled = new PointF(world.MapMostLeft.Value.X * scaleX, world.MapMostLeft.Value.Y * scaleY);
+
+            var offset = new PointF(mostLeftMapScaled.X - mostLeftScaled.X, mostLeftMapScaled.Y - mostLeftScaled.Y);
+
             _renderOperation.ZwiftMapScaleX = scaleX;
             _renderOperation.ZwiftMapScaleY = scaleY;
+            _renderOperation.ZwiftMapTranslateX = -offset.X / scaleX;
+            _renderOperation.ZwiftMapTranslateY = -offset.Y / scaleY;
         }
 
         private void CreateMarkers()

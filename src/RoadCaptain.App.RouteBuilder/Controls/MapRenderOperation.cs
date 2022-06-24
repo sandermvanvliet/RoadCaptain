@@ -1,4 +1,8 @@
-﻿using System;
+﻿// Copyright (c) 2022 Sander van Vliet
+// Licensed under Artistic License 2.0
+// See LICENSE or https://choosealicense.com/licenses/artistic-2.0/
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Avalonia;
@@ -22,8 +26,6 @@ namespace RoadCaptain.App.RouteBuilder.Controls
         private SKBitmap? _bitmap;
         private Rect _bounds;
         private SKImage? _worldImage;
-        private int _worldImageWidthOffset = 2000;
-        private int _worldImageHeightOffset = 500;
         public SKMatrix LogicalMatrix { get; private set; }
         public string? HighlightedSegmentId { get; set; }
         public string? SelectedSegmentId { get; set; }
@@ -55,6 +57,8 @@ namespace RoadCaptain.App.RouteBuilder.Controls
 
         public float ZwiftMapScaleX { get; set; }
         public float ZwiftMapScaleY { get; set; }
+        public float ZwiftMapTranslateX { get; set; }
+        public float ZwiftMapTranslateY { get; set; }
 
 
         public bool HitTest(Point p)
@@ -236,8 +240,8 @@ namespace RoadCaptain.App.RouteBuilder.Controls
             {
                 canvas.Save();
                 canvas.Scale(ZwiftMapScaleX, ZwiftMapScaleY, 0, 0);
-                canvas.Translate(-490, -420);
-                canvas.DrawImage(_worldImage, 0, 0);
+                canvas.Translate(ZwiftMapTranslateX, ZwiftMapTranslateY);
+                canvas.DrawImage(_worldImage, 0,0);
                 canvas.Restore();
             }
         }
