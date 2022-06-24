@@ -26,12 +26,6 @@ namespace RoadCaptain.App.Runner.Views
             _monitoringEvents = new MonitoringEventsWithSerilog(new LoggerConfiguration().WriteTo.Debug().CreateLogger());
 
             InitializeComponent();
-            
-            var modifier = RuntimeInformation.IsOSPlatform(OSPlatform.OSX)
-                ? KeyModifiers.Meta
-                : KeyModifiers.Control;
-
-            KeyBindings.Add(new KeyBinding { Command = _viewModel.EndActivityCommand, Gesture = new KeyGesture(Key.X, modifier)});
         }
         
         public InGameNavigationWindow(IGameStateReceiver gameStateReceiver, 
@@ -64,6 +58,12 @@ namespace RoadCaptain.App.Runner.Views
         private void InGameNavigationWindow_OnActivated(object? sender, EventArgs e)
         {
             _viewModel = DataContext as InGameNavigationWindowViewModel;
+            
+            var modifier = RuntimeInformation.IsOSPlatform(OSPlatform.OSX)
+                ? KeyModifiers.Meta
+                : KeyModifiers.Control;
+
+            KeyBindings.Add(new KeyBinding { Command = _viewModel.EndActivityCommand, Gesture = new KeyGesture(Key.X, modifier)});
         }
 
         private void WindowBase_OnPositionChanged(object? sender, PixelPointEventArgs e)
