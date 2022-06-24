@@ -14,6 +14,7 @@
 - Fix an issue where an exception would occur when you load a route from the main screen of RouteBuilder. In this situation the segments aren't loaded yet which caused a crash to happen [#87](https://github.com/sandermvanvliet/RoadCaptain/issues/87)
 - Clear highlighted segment when clearing the route [#88](https://github.com/sandermvanvliet/RoadCaptain/issues/88)
 - Fix issue where updating the command executable flag would fail because it is not on the UI thread
+- RouteBuilder now displays the official Zwift map 🎉 This makes it a lot easier to orient yourself when building a route [#90](https://github.com/sandermvanvliet/RoadCaptain/issues/90) and [#31](https://github.com/sandermvanvliet/RoadCaptain/issues/31)
 
 ### Routing
 
