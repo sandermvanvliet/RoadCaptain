@@ -319,7 +319,7 @@ namespace RoadCaptain.Adapters
                 Details = new ZwiftCompanionToAppRiderMessage.Types.RiderMessage
                 {
                     Tag1 = _commandCounter++, // This is a sequence of the number of commands we've sent to the game
-                    Type = 29, // Tag2
+                    Type = 14, // Tag2
                     Tag3 = 0,
                     Tag5 = 0,
                     Tag7 = 0,
