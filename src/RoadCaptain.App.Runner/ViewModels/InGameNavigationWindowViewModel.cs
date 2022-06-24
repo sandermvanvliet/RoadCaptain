@@ -219,7 +219,7 @@ namespace RoadCaptain.App.Runner.ViewModels
 
         private async Task<CommandResult> EndActivity()
         {
-            _gameConnection.EndActivity(LastSequenceNumber, Model.Route.Name, _previousState?.RiderId ?? 0);
+            _gameConnection.EndActivity(LastSequenceNumber, "RoadCaptain: " + Model.Route.Name, _previousState?.RiderId ?? 0);
 
             return CommandResult.Success();
         }
