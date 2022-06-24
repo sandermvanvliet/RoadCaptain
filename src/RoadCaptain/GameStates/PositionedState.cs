@@ -51,11 +51,6 @@ namespace RoadCaptain.GameStates
                 return new OnRouteState(RiderId, ActivityId, closestOnSegment, segment, plannedRoute);
             }
 
-            if (plannedRoute.HasCompleted && plannedRoute.CurrentSegmentId == segment.Id)
-            {
-                return new OnRouteState(RiderId, ActivityId, closestOnSegment, segment, plannedRoute);
-            }
-
             return new OnSegmentState(RiderId, ActivityId, closestOnSegment, segment);
         }
 
@@ -80,15 +75,10 @@ namespace RoadCaptain.GameStates
                 // segment.
                 var closestOnSegment = segment
                     .Points
-                    .Where(p => TrackPoint.IsCloseToQuick(p.Longitude, position) && Math.Abs(p.Altitude - currentPosition.Altitude) < 2)
+                    .Where(p => TrackPoint.IsCloseToQuick(p.Longitude, position))
                     .Select(p => new { Point = p, Distance = p.DistanceTo(position)})
                     .OrderBy(d => d.Distance)
-                    .FirstOrDefault();
-
-                if (closestOnSegment == null)
-                {
-                    continue;
-                }
+                    .First();
 
                 if (closestPoint == null)
                 {
@@ -96,7 +86,7 @@ namespace RoadCaptain.GameStates
                     distanceToClosestPoint = closestOnSegment.Distance;
                     closestSegment = segment;
                 }
-                else if (closestOnSegment.Distance < distanceToClosestPoint)
+                else if (closestOnSegment.Distance < distanceToClosestPoint && Math.Abs(closestOnSegment.Point.Altitude - currentPosition.Altitude) < 2)
                 {
                     closestPoint = closestOnSegment.Point;
                     distanceToClosestPoint = closestOnSegment.Distance;

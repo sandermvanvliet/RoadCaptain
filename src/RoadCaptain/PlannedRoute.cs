@@ -16,6 +16,7 @@ namespace RoadCaptain
         public string Name { get; set; }
         public string ZwiftRouteName { get; set; }
         public bool HasCompleted { get; private set; }
+        public bool HasLostLock { get; private set; }
         public bool HasStarted { get; private set; }
         public int SegmentSequenceIndex { get; private set; }
         public string StartingSegmentId => RouteSegmentSequence[SegmentSequenceIndex].SegmentId;
@@ -47,6 +48,7 @@ namespace RoadCaptain
         }
 
         public SportType Sport { get; set; } = SportType.Unknown;
+        public bool IsOnLastSegment => SegmentSequenceIndex == RouteSegmentSequence.Count - 1;
 
         public RouteMoveResult EnteredSegment(string segmentId)
         {
@@ -58,6 +60,7 @@ namespace RoadCaptain
             if (CurrentSegmentId == null && segmentId == StartingSegmentId)
             {
                 HasStarted = true;
+                HasLostLock = false;
 
                 return RouteMoveResult.StartedRoute;
             }
@@ -65,17 +68,18 @@ namespace RoadCaptain
             if (CurrentSegmentId != null && NextSegmentId == segmentId)
             {
                 SegmentSequenceIndex++;
+                HasLostLock = false;
 
-                // Use the segment index instead of comparing the segment
-                // id with the id of the last segment because we may pass
-                // the same segment multiple times in the course of this
-                // route.
-                if (SegmentSequenceIndex == RouteSegmentSequence.Count - 1)
-                {
-                    HasCompleted = true;
+                //// Use the segment index instead of comparing the segment
+                //// id with the id of the last segment because we may pass
+                //// the same segment multiple times in the course of this
+                //// route.
+                //if (SegmentSequenceIndex == RouteSegmentSequence.Count - 1)
+                //{
+                //    HasCompleted = true;
 
-                    return RouteMoveResult.CompletedRoute;
-                }
+                //    return RouteMoveResult.CompletedRoute;
+                //}
 
                 return RouteMoveResult.EnteredNextSegment;
             }
@@ -88,12 +92,24 @@ namespace RoadCaptain
         {
             HasStarted = false;
             HasCompleted = false;
+            HasLostLock = false;
             SegmentSequenceIndex = 0;
         }
 
         public override string ToString()
         {
             return Name;
+        }
+
+        public void Complete()
+        {
+            HasCompleted = true;
+            HasLostLock = false;
+        }
+
+        public void LostLock()
+        {
+            HasLostLock = true;
         }
     }
 

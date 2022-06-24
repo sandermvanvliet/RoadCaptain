@@ -159,6 +159,7 @@ namespace RoadCaptain.Tests.Unit
             plannedRoute.EnteredSegment("seg-5");
             plannedRoute.EnteredSegment("seg-6");
             plannedRoute.EnteredSegment("seg-7");
+            plannedRoute.Complete();
 
             Action act = () => plannedRoute.EnteredSegment("seg-5");
 

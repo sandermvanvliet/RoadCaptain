@@ -381,13 +381,13 @@ namespace RoadCaptain.Tests.Unit.GameState
         }
 
         [Fact]
-        public void GivenOnSegmentStateAndReEnteringLastSegmentOfRoute_ResultingStateIsOnSegmentState()
+        public void GivenOnSegmentStateAndReEnteringLastSegmentOfRoute_ResultingStateIsOnSegmentStateBecauseRouteLockWasLost()
         {
             _route.EnteredSegment("route-segment-1");
             _route.EnteredSegment("route-segment-2");
             _route.EnteredSegment("route-segment-3");
             GameStates.GameState state = new OnRouteState(RiderId, ActivityId, RoutePosition3, SegmentById("route-segment-3"), _route);
-            state = state.UpdatePosition(PositionOnSegment, _segments, _route);
+            state = state.UpdatePosition(PositionOnSegment, _segments, _route); // Results in an OnSegmentState on segment-1 and causes the HasLostLock to be set on PlannedRoute
 
             var result = state.UpdatePosition(RoutePosition3, _segments, _route);
 
@@ -459,16 +459,25 @@ namespace RoadCaptain.Tests.Unit.GameState
         [Fact]
         public void GivenCompletedRouteAndRouteIsLoopAndRouteHasBeenReset_ResultingStateIsOnRouteState()
         {
-            _route.EnteredSegment("route-segment-1");
-            _route.EnteredSegment("route-segment-2");
-            _route.EnteredSegment("route-segment-3");
+            var loopRoute = new PlannedRoute
+            {
+                RouteSegmentSequence =
+                {
+                    new SegmentSequence { SegmentId = "route-segment-1", NextSegmentId = "route-segment-2", TurnToNextSegment = TurnDirection.Left, Direction = SegmentDirection.AtoB},
+                    new SegmentSequence { SegmentId = "route-segment-2", NextSegmentId = "route-segment-3", TurnToNextSegment = TurnDirection.Right, Direction = SegmentDirection.AtoB },
+                    new SegmentSequence { SegmentId = "route-segment-3", NextSegmentId = "route-segment-1", TurnToNextSegment = TurnDirection.GoStraight, Direction = SegmentDirection.AtoB },
+                }
+            };
+            loopRoute.EnteredSegment("route-segment-1");
+            loopRoute.EnteredSegment("route-segment-2");
+            loopRoute.EnteredSegment("route-segment-3");
 
-            GameStates.GameState state = new CompletedRouteState(RiderId, ActivityId, RoutePosition3, _route);
+            GameStates.GameState state = new CompletedRouteState(RiderId, ActivityId, RoutePosition3, loopRoute);
             
             // This is called by the Runner engine
-            _route.Reset();
+            loopRoute.Reset();
             
-            var result = state.UpdatePosition(RoutePosition1, _segments, _route);
+            var result = state.UpdatePosition(RoutePosition1, _segments, loopRoute);
 
             result
                 .Should()
@@ -631,7 +640,7 @@ namespace RoadCaptain.Tests.Unit.GameState
             {
                 new SegmentSequence { SegmentId = "route-segment-1", NextSegmentId = "route-segment-2", TurnToNextSegment = TurnDirection.Left, Direction = SegmentDirection.AtoB},
                 new SegmentSequence { SegmentId = "route-segment-2", NextSegmentId = "route-segment-3", TurnToNextSegment = TurnDirection.Right, Direction = SegmentDirection.AtoB },
-                new SegmentSequence { SegmentId = "route-segment-3", NextSegmentId = "route-segment-1", TurnToNextSegment = TurnDirection.GoStraight, Direction = SegmentDirection.AtoB },
+                new SegmentSequence { SegmentId = "route-segment-3", Direction = SegmentDirection.AtoB },
             }
         };
     }

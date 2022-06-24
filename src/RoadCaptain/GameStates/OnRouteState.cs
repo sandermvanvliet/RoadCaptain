@@ -40,7 +40,7 @@ namespace RoadCaptain.GameStates
 
             if (result is OnSegmentState segmentState)
             {
-                if (plannedRoute.HasCompleted)
+                if (plannedRoute.IsOnLastSegment)
                 {
                     if (plannedRoute.CurrentSegmentId != segmentState.CurrentSegment.Id)
                     {
@@ -56,6 +56,7 @@ namespace RoadCaptain.GameStates
                                     plannedRoute);
                             }
 
+                            plannedRoute.LostLock();
                             return segmentState;
                         }
 

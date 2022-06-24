@@ -8,6 +8,7 @@ namespace RoadCaptain.GameStates
             PlannedRoute plannedRoute) : base(riderId, activityId, currentPosition)
         {
             Route = plannedRoute;
+            Route.Complete();
         }
 
         [JsonProperty]
