@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.InteropServices;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
@@ -25,6 +26,12 @@ namespace RoadCaptain.App.Runner.Views
             _monitoringEvents = new MonitoringEventsWithSerilog(new LoggerConfiguration().WriteTo.Debug().CreateLogger());
 
             InitializeComponent();
+            
+            var modifier = RuntimeInformation.IsOSPlatform(OSPlatform.OSX)
+                ? KeyModifiers.Meta
+                : KeyModifiers.Control;
+
+            KeyBindings.Add(new KeyBinding { Command = _viewModel.EndActivityCommand, Gesture = new KeyGesture(Key.X, modifier)});
         }
         
         public InGameNavigationWindow(IGameStateReceiver gameStateReceiver, 
@@ -37,7 +44,7 @@ namespace RoadCaptain.App.Runner.Views
 
             gameStateReceiver.Register(
                 null,
-                null,
+                sequenceNumber => _viewModel.LastSequenceNumber = sequenceNumber,
                 GameStateReceived);
         }
 

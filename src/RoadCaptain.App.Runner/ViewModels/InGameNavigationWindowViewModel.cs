@@ -1,9 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+using System.Windows.Input;
 using ReactiveUI;
 using RoadCaptain.App.Runner.Models;
+using RoadCaptain.App.Shared.Commands;
 using RoadCaptain.GameStates;
+using RoadCaptain.Ports;
 
 namespace RoadCaptain.App.Runner.ViewModels
 {
@@ -14,8 +18,9 @@ namespace RoadCaptain.App.Runner.ViewModels
         private readonly List<Segment> _segments;
         private TrackPoint? _previousPosition;
         private bool _hasRouteFinished;
+        private IZwiftGameConnection _gameConnection;
 
-        public InGameNavigationWindowViewModel(InGameWindowModel inGameWindowModel, List<Segment> segments)
+        public InGameNavigationWindowViewModel(InGameWindowModel inGameWindowModel, List<Segment> segments, IZwiftGameConnection gameConnection)
         {
             Model = inGameWindowModel;
             Model.PropertyChanged += (_, args) =>
@@ -30,9 +35,15 @@ namespace RoadCaptain.App.Runner.ViewModels
             };
 
             _segments = segments;
+            _gameConnection = gameConnection;
+
+            EndActivityCommand = new AsyncRelayCommand(
+                param => EndActivity(),
+                _ => _previousState != null && _previousState is InGameState);
         }
-        
+
         public InGameWindowModel Model { get; }
+        public ICommand EndActivityCommand { get; }
 
         public void UpdateGameState(GameState gameState)
         {
@@ -122,6 +133,8 @@ namespace RoadCaptain.App.Runner.ViewModels
             }
         }
 
+        public ulong LastSequenceNumber { get; set; }
+
         private void UpdateUserInGameStatus(GameState gameState)
         {
             if (gameState is InGameState && _previousState is not InGameState)
@@ -202,6 +215,13 @@ namespace RoadCaptain.App.Runner.ViewModels
             }
 
             return segment;
+        }
+
+        private async Task<CommandResult> EndActivity()
+        {
+            _gameConnection.EndActivity(LastSequenceNumber, Model.Route.Name, _previousState?.RiderId ?? 0);
+
+            return CommandResult.Success();
         }
     }
 }

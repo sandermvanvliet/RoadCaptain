@@ -29,7 +29,7 @@ namespace RoadCaptain.Adapters
         {
             _monitoringEvents = monitoringEvents;
             _gameStateDispatcher = gameStateDispatcher;
-
+            
             _socket = CreateListeningSocket();
         }
 

@@ -180,7 +180,7 @@ namespace RoadCaptain.App.Runner
                 Route = plannedRoute
             };
 
-            var viewModel = new InGameNavigationWindowViewModel(inGameWindowModel, segments);
+            var viewModel = new InGameNavigationWindowViewModel(inGameWindowModel, segments, _zwiftGameConnection);
 
             if (_previousGameState != null)
             {

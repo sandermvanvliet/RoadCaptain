@@ -227,7 +227,7 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.InGame
                 Route = _route
             };
 
-            _viewModel = new InGameNavigationWindowViewModel(inGameWindowModel, segments);
+            _viewModel = new InGameNavigationWindowViewModel(inGameWindowModel, segments, null);
         }
 
         private void WhenUpdating(GameState gameState)

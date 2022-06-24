@@ -9,7 +9,7 @@ namespace RoadCaptain.App.Runner.ViewModels
 
         public DesignTimeInGameViewModel() 
             : base(
-                new InGameWindowModel(DefaultSegments), DefaultSegments)
+                new InGameWindowModel(DefaultSegments), DefaultSegments, null)
         {
             Model.UserIsInGame = true;
             Model.LostRouteLock = true;

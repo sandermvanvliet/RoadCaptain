@@ -44,7 +44,7 @@ namespace RoadCaptain.App.Runner.Tests.Unit.Views
                 Route = route
             };
 
-            var viewModel = new InGameNavigationWindowViewModel(model, segments);
+            var viewModel = new InGameNavigationWindowViewModel(model, segments, null);
             var monitoringEvents = new NopMonitoringEvents();
             var window =
                 new InGameNavigationWindow(new InMemoryGameStateDispatcher(monitoringEvents), monitoringEvents, new DummyUserPreferences())
@@ -105,7 +105,7 @@ namespace RoadCaptain.App.Runner.Tests.Unit.Views
                 Route = route
             };
 
-            var viewModel = new InGameNavigationWindowViewModel(model, segments);
+            var viewModel = new InGameNavigationWindowViewModel(model, segments, null);
             var monitoringEvents = new NopMonitoringEvents();
             var window =
                 new InGameNavigationWindow(new InMemoryGameStateDispatcher(monitoringEvents), monitoringEvents, new DummyUserPreferences())
@@ -172,7 +172,7 @@ namespace RoadCaptain.App.Runner.Tests.Unit.Views
                 Route = route
             };
 
-            var viewModel = new InGameNavigationWindowViewModel(model, segments);
+            var viewModel = new InGameNavigationWindowViewModel(model, segments, null);
             var monitoringEvents = new NopMonitoringEvents();
             var window =
                 new InGameNavigationWindow(new InMemoryGameStateDispatcher(monitoringEvents), monitoringEvents, new DummyUserPreferences())
@@ -242,7 +242,7 @@ namespace RoadCaptain.App.Runner.Tests.Unit.Views
                 Route = route
             };
 
-            var viewModel = new InGameNavigationWindowViewModel(model, segments);
+            var viewModel = new InGameNavigationWindowViewModel(model, segments, null);
             var monitoringEvents = new NopMonitoringEvents();
             var window =
                 new InGameNavigationWindow(new InMemoryGameStateDispatcher(monitoringEvents), monitoringEvents, new DummyUserPreferences())
