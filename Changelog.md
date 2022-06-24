@@ -8,6 +8,8 @@
 - Fixed an issue where you had to log in again after exiting a Zwift activity
 - Improved the positioning algorithm which fixes an issue where RoadCaptain would jump between segments in the Volcano causing the route to be lost [#77](https://github.com/sandermvanvliet/RoadCaptain/issues/77)
 - Fixed an issue where the route lock would be lost when entering the last segment of a route
+- Added a shortcut key <kbd>Ctrl</kbd>+<kbd>X</kbd> (Windows) <kbd>Cmd</kbd>+<kbd>X</kbd> (macOS) on the in-game window that ends the activity and returns you to the main screen
+- Fixed an issue where the wrong command type was sent to Zwift when ending an activity
 
 ### Route Builder
 
