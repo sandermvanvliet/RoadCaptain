@@ -21,6 +21,9 @@ namespace RoadCaptain.App.RouteBuilder.Controls
         private static readonly SKColor CanvasBackgroundColor = SKColor.Parse("#FFFFFF");
         private SKBitmap? _bitmap;
         private Rect _bounds;
+        private SKImage? _worldImage;
+        private int _worldImageWidthOffset = 2000;
+        private int _worldImageHeightOffset = 500;
         public SKMatrix LogicalMatrix { get; private set; }
         public string? HighlightedSegmentId { get; set; }
         public string? SelectedSegmentId { get; set; }
@@ -33,7 +36,6 @@ namespace RoadCaptain.App.RouteBuilder.Controls
         public Dictionary<string, SKPath> SegmentPaths { get; set; } = new();
         public Dictionary<string, Marker> Markers { get; set; } = new();
         public SKPath RoutePath { get; set; } = new();
-
         public RouteViewModel? Route { get; set; }
 
         public void Dispose()
@@ -50,6 +52,9 @@ namespace RoadCaptain.App.RouteBuilder.Controls
                 InitializeBitmap();
             }
         }
+
+        public float ZwiftMapScaleX { get; set; }
+        public float ZwiftMapScaleY { get; set; }
 
 
         public bool HitTest(Point p)
@@ -90,6 +95,11 @@ namespace RoadCaptain.App.RouteBuilder.Controls
             canvas.Clear(CanvasBackgroundColor);
 
             ScaleAndTranslate(canvas);
+
+            if (Route?.World != null)
+            {
+                RenderZwiftMap(canvas, Route.World);
+            }
 
             // Lowest layer are the segments
             foreach (var (segmentId, skiaPath) in SegmentPaths)
@@ -207,6 +217,29 @@ namespace RoadCaptain.App.RouteBuilder.Controls
             }
 
             canvas.Flush();
+        }
+
+        private void RenderZwiftMap(SKCanvas canvas, World world)
+        {
+            if (_worldImage == null)
+            {
+                var assets = AvaloniaLocator.Current.GetService<IAssetLoader>();
+
+                if (assets != null)
+                {
+                    var stream = assets.Open(new Uri($"avares://RoadCaptain.App.RouteBuilder/Assets/map-{world.Id}.png"));
+                    _worldImage = SKImage.FromEncodedData(stream);
+                }
+            }
+
+            if (_worldImage != null)
+            {
+                canvas.Save();
+                canvas.Scale(ZwiftMapScaleX, ZwiftMapScaleY, 0, 0);
+                canvas.Translate(-490, -420);
+                canvas.DrawImage(_worldImage, 0, 0);
+                canvas.Restore();
+            }
         }
 
         private void ScaleAndTranslate(SKCanvas canvas)

@@ -211,7 +211,7 @@ namespace RoadCaptain.App.RouteBuilder.Controls
             {
                 _route = value;
                 _renderOperation.Route = value;
-                
+
                 CreateRoutePath();
 
                 InvalidateVisual();
@@ -454,7 +454,7 @@ namespace RoadCaptain.App.RouteBuilder.Controls
             _overallOffsets = Offsets
                 .From(segmentsWithOffsets.Select(s => s.Offsets).ToList())
                 .Pad(15);
-
+            
             foreach (var segment in segmentsWithOffsets)
             {
                 var skiaPathFromSegment = SkiaPathFromSegment(_overallOffsets, segment.GameCoordinates);
@@ -465,6 +465,20 @@ namespace RoadCaptain.App.RouteBuilder.Controls
             }
 
             _renderOperation.SegmentPaths = _segmentPaths;
+
+            var mostLeft = TrackPoint.LatLongToGame(166.89304, 11.68401, 0, ZwiftWorldId.Watopia);
+            var mostRight = TrackPoint.LatLongToGame(167.00275, 11.64594, 0, ZwiftWorldId.Watopia);
+
+            var mostLeftScaled = _overallOffsets.ScaleAndTranslate(mostLeft);
+            var mostRightScaled = _overallOffsets.ScaleAndTranslate(mostRight);
+            var deltaX = Math.Abs(mostRightScaled.X - mostLeftScaled.X);
+            var deltaY = Math.Abs(mostRightScaled.Y - mostLeftScaled.Y);
+            var watopiaDeltaX = 5796;
+            var watopiaDeltaY = 2038;
+            var scaleX = deltaX / watopiaDeltaX;
+            var scaleY = deltaY / watopiaDeltaY;
+            _renderOperation.ZwiftMapScaleX = scaleX;
+            _renderOperation.ZwiftMapScaleY = scaleY;
         }
 
         private void CreateMarkers()
