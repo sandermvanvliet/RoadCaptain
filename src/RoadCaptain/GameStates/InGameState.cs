@@ -33,6 +33,10 @@ namespace RoadCaptain.GameStates
                 return new PositionedState(RiderId, ActivityId, position);
             }
 
+            // This is to ensure that we have the segment of the position
+            // for future reference.
+            closestOnSegment.Segment = segment;
+
             if (!plannedRoute.HasStarted && plannedRoute.StartingSegmentId == segment.Id)
             {
                 plannedRoute.EnteredSegment(segment.Id);
@@ -72,7 +76,7 @@ namespace RoadCaptain.GameStates
             return this;
         }
 
-        private static (Segment,TrackPoint) GetClosestMatchingSegment(IEnumerable<Segment> segments, TrackPoint position)
+        protected virtual (Segment,TrackPoint) GetClosestMatchingSegment(IEnumerable<Segment> segments, TrackPoint position)
         {
             // For each segment find the closest track point in that segment
             // in relation to the current position

@@ -16,46 +16,7 @@ namespace RoadCaptain.GameStates
             CurrentPosition = currentPosition;
         }
 
-        public override GameState UpdatePosition(TrackPoint position, List<Segment> segments, PlannedRoute plannedRoute)
-        {
-            // Note: We're using an IEnumerable<T> here to prevent
-            //       unnecessary ToList() calls because the foreach
-            //       loop in GetClosestMatchingSegment handles that
-            //       for us.
-            var matchingSegments = segments.Where(s => s.Contains(position));
-            
-            var (segment, closestOnSegment) = GetClosestMatchingSegment(matchingSegments, position, CurrentPosition);
-            
-            if (segment == null)
-            {
-                return new PositionedState(RiderId, ActivityId, position);
-            }
-
-            // This is to ensure that we have the segment of the position
-            // for future reference.
-            closestOnSegment.Segment = segment;
-
-            if (!plannedRoute.HasStarted && plannedRoute.StartingSegmentId == segment.Id)
-            {
-                plannedRoute.EnteredSegment(segment.Id);
-                return new OnRouteState(RiderId, ActivityId, closestOnSegment, segment, plannedRoute);
-            }
-
-            if (plannedRoute.HasStarted && !plannedRoute.HasCompleted && plannedRoute.CurrentSegmentId == segment.Id)
-            {
-                return new OnRouteState(RiderId, ActivityId, closestOnSegment, segment, plannedRoute);
-            }
-            
-            if (plannedRoute.HasStarted && plannedRoute.NextSegmentId == segment.Id)
-            {
-                return new OnRouteState(RiderId, ActivityId, closestOnSegment, segment, plannedRoute);
-            }
-
-            return new OnSegmentState(RiderId, ActivityId, closestOnSegment, segment);
-        }
-
-        private static (Segment, TrackPoint) GetClosestMatchingSegment(IEnumerable<Segment> segments,
-            TrackPoint position, TrackPoint currentPosition)
+        protected override (Segment, TrackPoint) GetClosestMatchingSegment(IEnumerable<Segment> segments, TrackPoint position)
         {
             // For each segment find the closest track point in that segment
             // in relation to the current position
@@ -76,7 +37,7 @@ namespace RoadCaptain.GameStates
                 var closestOnSegment = segment
                     .Points
                     .Where(p => TrackPoint.IsCloseToQuick(p.Longitude, position))
-                    .Select(p => new { Point = p, Distance = p.DistanceTo(position)})
+                    .Select(p => new { Point = p, Distance = p.DistanceTo(position)})                         
                     .OrderBy(d => d.Distance)
                     .First();
 
@@ -86,7 +47,12 @@ namespace RoadCaptain.GameStates
                     distanceToClosestPoint = closestOnSegment.Distance;
                     closestSegment = segment;
                 }
-                else if (closestOnSegment.Distance < distanceToClosestPoint && Math.Abs(closestOnSegment.Point.Altitude - currentPosition.Altitude) < 2)
+                // This method is called from PositionedState where there _is_ a current position
+                // to check the altitude against for segment overlaps. Because InGameState doesn't
+                // have a position at all we have the null check here to deal with that situation
+                // as I really don't want to duplicate this code.
+                else if (closestOnSegment.Distance < distanceToClosestPoint &&
+                         Math.Abs(closestOnSegment.Point.Altitude - CurrentPosition.Altitude) < 2)
                 {
                     closestPoint = closestOnSegment.Point;
                     distanceToClosestPoint = closestOnSegment.Distance;
