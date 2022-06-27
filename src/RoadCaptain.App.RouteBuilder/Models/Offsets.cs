@@ -82,8 +82,8 @@ namespace RoadCaptain.App.RouteBuilder.Models
         public TrackPoint ReverseScaleAndTranslate(double x, double y)
         {
             return new TrackPoint(
-                (x / ScaleFactor) - OffsetX - _offset,
-                (y / ScaleFactor) - OffsetY - _offset,
+                (x - _offset) / ScaleFactor - OffsetX,
+                (y - _offset) / ScaleFactor - OffsetY,
                 0);
         }
 

@@ -17,6 +17,7 @@
 - Clear highlighted segment when clearing the route [#88](https://github.com/sandermvanvliet/RoadCaptain/issues/88)
 - Fix issue where updating the command executable flag would fail because it is not on the UI thread
 - RouteBuilder now displays the official Zwift map 🎉 This makes it a lot easier to orient yourself when building a route [#90](https://github.com/sandermvanvliet/RoadCaptain/issues/90) and [#31](https://github.com/sandermvanvliet/RoadCaptain/issues/31)
+- Fixed an issue with coordiante conversion which caused the wrong segment to be selected when two are close together
 
 ### Routing
 
