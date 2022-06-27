@@ -7,6 +7,14 @@ namespace RoadCaptain.GameStates
 {
     public class OnRouteState : OnSegmentState
     {
+        private List<string> _threeWayJunctionSegmentOverrides = new()
+        {
+            "watopia-bambino-fondo-003-before-before",
+            "watopia-bambino-fondo-003-before-after",
+            "watopia-ocean-lava-cliffside-loop-001",
+            "watopia-big-loop-rev-001-before-after"
+        };
+
         public OnRouteState(uint riderId, ulong activityId, TrackPoint currentPosition, Segment segment,
             PlannedRoute plannedRoute)
             : base(riderId, activityId, currentPosition, segment)
@@ -145,14 +153,23 @@ namespace RoadCaptain.GameStates
                     return new UpcomingTurnState(RiderId, ActivityId, CurrentPosition, CurrentSegment, Route, Direction, x);
                 }
 
-                // For three-way junctions we only get left/right and the segment has left/right/go-straight
+                // Three-way junctions are somehow screwed because we only get 2 turn
+                // commands and it's never the same ones...
+                // To work around that we check if the upcoming turns on this segment
+                // have three other segments and then return the UpcomingTurnState with
+                // hardcoded turn directions (because all of them apply...)
                 if (x.Count == 2 && 
-                    x.Contains(TurnDirection.Left) && 
-                    x.Contains(TurnDirection.Right) && 
-                    CurrentSegment.NextSegments(Direction).Count == 3)
+                    CurrentSegment.NextSegments(Direction).Count == 3 &&
+                    _threeWayJunctionSegmentOverrides.Contains(CurrentSegment.Id))
                 {
                     // We've got all the turn commands for this segment
-                    return new UpcomingTurnState(RiderId, ActivityId, CurrentPosition, CurrentSegment, Route, Direction, x);
+                    return new UpcomingTurnState(RiderId, ActivityId, CurrentPosition, CurrentSegment, Route, Direction, 
+                        new List<TurnDirection>
+                        {
+                            TurnDirection.Left,
+                            TurnDirection.GoStraight,
+                            TurnDirection.Right
+                        });
                 }
 
                 // Add the new list of turn directions to

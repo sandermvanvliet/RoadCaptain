@@ -21,9 +21,10 @@
 
 ### Routing
 
-- Fix turn from Sequoia to Epic onto Ocean Boulevard 2 [#85](https://github.com/sandermvanvliet/RoadCaptain/issues/85)
-- Fix turn from Ocean Boulevard 1 to Zwift KOM / Beach Road [#85](https://github.com/sandermvanvliet/RoadCaptain/issues/85)
-- Removed the `watopia-four-horsemen-001 segment` segment because it's not used
+- [Watopia] Fix turn from Sequoia to Epic onto Ocean Boulevard 2 [#85](https://github.com/sandermvanvliet/RoadCaptain/issues/85)
+- [Watopia] Fix turn from Ocean Boulevard 1 to Zwift KOM / Beach Road [#85](https://github.com/sandermvanvliet/RoadCaptain/issues/85)
+- [Watopia] Removed the `watopia-four-horsemen-001 segment` segment because it's not used
+- [Watopia] Improve handling of the 3-way junction at the start of Epic KOM [#73](https://github.com/sandermvanvliet/RoadCaptain/issues/73) and [#75](https://github.com/sandermvanvliet/RoadCaptain/issues/75)
 
 ## 0.6.3.1
 

@@ -39,7 +39,7 @@ namespace RoadCaptain.App.Runner.ViewModels
 
             EndActivityCommand = new AsyncRelayCommand(
                 param => EndActivity(),
-                _ => _previousState != null && _previousState is InGameState);
+                _ => true);
         }
 
         public InGameWindowModel Model { get; }
