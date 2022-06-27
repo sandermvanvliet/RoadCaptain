@@ -17,7 +17,7 @@ namespace RoadCaptain.App.Runner.Views
     {
         private readonly MonitoringEvents _monitoringEvents;
         private readonly IUserPreferences _userPreferences;
-        private InGameNavigationWindowViewModel _viewModel;
+        private InGameNavigationWindowViewModel? _viewModel;
 
         // ReSharper disable once UnusedMember.Global this is only used for the Avalonia UI designer
         public InGameNavigationWindow()
@@ -57,7 +57,7 @@ namespace RoadCaptain.App.Runner.Views
 
         private void InGameNavigationWindow_OnActivated(object? sender, EventArgs e)
         {
-            _viewModel = DataContext as InGameNavigationWindowViewModel;
+            _viewModel = DataContext as InGameNavigationWindowViewModel ?? throw new Exception("");
             
             var modifier = RuntimeInformation.IsOSPlatform(OSPlatform.OSX)
                 ? KeyModifiers.Meta
