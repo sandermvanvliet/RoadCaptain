@@ -26,6 +26,7 @@
 - [Watopia] Removed the `watopia-four-horsemen-001 segment` segment because it's not used
 - [Watopia] Removed the `watopia-beach-island-loop-003` segment because it's not used
 - [Watopia] Improve handling of the 3-way junction at the start of Epic KOM [#73](https://github.com/sandermvanvliet/RoadCaptain/issues/73) and [#75](https://github.com/sandermvanvliet/RoadCaptain/issues/75)
+- [Watopia] Fix turn from Italian Villas Loop 1 to Italian Villas Loop 4 [#84](https://github.com/sandermvanvliet/RoadCaptain/issues/84)
 
 ## 0.6.3.1
 

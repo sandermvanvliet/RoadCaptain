@@ -39,10 +39,10 @@ namespace RoadCaptain
         public static void RiderPositionReceived(this MonitoringEvents monitoringEvents, float latitude,
             float longitude, float altitude)
         {
-            monitoringEvents.Debug("Received rider position {Latitude} {Longitude} {Altitude}",
-                latitude.ToString("0.00000000", CultureInfo.InvariantCulture),
-                longitude.ToString("0.00000000", CultureInfo.InvariantCulture),
-                altitude.ToString("0.00000000", CultureInfo.InvariantCulture));
+            //monitoringEvents.Debug("Received rider position {Latitude} {Longitude} {Altitude}",
+            //    latitude.ToString("0.00000000", CultureInfo.InvariantCulture),
+            //    longitude.ToString("0.00000000", CultureInfo.InvariantCulture),
+            //    altitude.ToString("0.00000000", CultureInfo.InvariantCulture));
         }
 
         public static void AvailableTurns(this MonitoringEvents monitoringEvents, List<TurnDirection> turns)
