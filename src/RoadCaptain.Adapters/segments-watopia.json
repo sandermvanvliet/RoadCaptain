@@ -1031,56 +1031,6 @@
     "nextSegmentsNodeB": [],
     "points": [
       {
-        "latitude": -11.6511,
-        "longitude": 166.94862,
-        "altitude": 10.8,
-        "index": 0,
-        "distanceOnSegment": 0.0,
-        "distanceFromLast": 0.0,
-        "coordinatesDecimal": "S11.65110° E166.94862°"
-      },
-      {
-        "latitude": -11.651,
-        "longitude": 166.9486,
-        "altitude": 10.8,
-        "index": 1,
-        "distanceOnSegment": 11.70099332475,
-        "distanceFromLast": 11.70099332475,
-        "coordinatesDecimal": "S11.65100° E166.94860°"
-      },
-      {
-        "latitude": -11.65089,
-        "longitude": 166.9486,
-        "altitude": 10.8,
-        "index": 2,
-        "distanceOnSegment": 23.8212403288246,
-        "distanceFromLast": 12.1202470040746,
-        "coordinatesDecimal": "S11.65089° E166.94860°"
-      },
-      {
-        "latitude": -11.65078,
-        "longitude": 166.94863,
-        "altitude": 10.8,
-        "index": 3,
-        "distanceOnSegment": 36.0057075490998,
-        "distanceFromLast": 12.1844672202752,
-        "coordinatesDecimal": "S11.65078° E166.94863°"
-      }
-    ],
-    "id": "watopia-beach-island-loop-003",
-    "boundingBox": {},
-    "sport": "Both",
-    "name": "beach-island-loop-003",
-    "noSelectReason": null,
-    "distance": 36.0057075490998,
-    "ascent": 0.0,
-    "descent": 0.0
-  },
-  {
-    "nextSegmentsNodeA": [],
-    "nextSegmentsNodeB": [],
-    "points": [
-      {
         "latitude": -11.64696,
         "longitude": 166.94916,
         "altitude": 10.4,
