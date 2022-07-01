@@ -471,7 +471,7 @@ namespace RoadCaptain.Tests.Unit.GameState
             plannedRoute.EnteredSegment("watopia-beach-island-loop-001");
             plannedRoute.EnteredSegment("watopia-bambino-fondo-004-after-before");
 
-            var currentPosition = TrackPoint.FromGameLocation(46926.22000000, -145711.70000000, 10927.59000000, ZwiftWorldId.Watopia);
+            var currentPosition = new GameCoordinate(46926.22000000, -145711.70000000, 10927.59000000, ZwiftWorldId.Watopia).ToTrackPoint();
             
             var segment = segments.Single(s => s.Id == "watopia-bambino-fondo-004-after-before");
             currentPosition = segment
@@ -486,7 +486,7 @@ namespace RoadCaptain.Tests.Unit.GameState
                 currentPosition,
                 segment);
 
-            var newPoint = TrackPoint.FromGameLocation(46673.94000000, -145711.80000000, 10926.55000000, ZwiftWorldId.Watopia);
+            var newPoint = new GameCoordinate(46673.94000000, -145711.80000000, 10926.55000000, ZwiftWorldId.Watopia).ToTrackPoint();
             
             var result = state.UpdatePosition(newPoint, segments, plannedRoute);
 

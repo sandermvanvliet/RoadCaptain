@@ -39,11 +39,12 @@ namespace RoadCaptain.Tests.Unit
 
             var outputGame = offsets.ReverseScaleAndTranslate(scaledPoint.X, scaledPoint.Y);
 
-            var output = TrackPoint.FromGameLocation(
-                outputGame.X,
-                outputGame.Y, 
-                outputGame.Altitude,
-                ZwiftWorldId.Watopia);
+            var output = new GameCoordinate(
+                    outputGame.X,
+                    outputGame.Y,
+                    outputGame.Altitude,
+                    ZwiftWorldId.Watopia)
+                .ToTrackPoint();
 
             output = new TrackPoint(-output.Longitude, output.Latitude, output.Altitude);
 
@@ -86,11 +87,12 @@ namespace RoadCaptain.Tests.Unit
 
             var outputGame = offsets.ReverseScaleAndTranslate(scaledPoint.X, scaledPoint.Y);
 
-            var output = TrackPoint.FromGameLocation(
-                outputGame.X,
-                outputGame.Y, 
-                outputGame.Altitude,
-                ZwiftWorldId.Watopia);
+            var output = new GameCoordinate(
+                    outputGame.X,
+                    outputGame.Y,
+                    outputGame.Altitude,
+                    ZwiftWorldId.Watopia)
+                .ToTrackPoint();
 
             output = new TrackPoint(-output.Longitude, output.Latitude, output.Altitude);
 

@@ -27,7 +27,7 @@ namespace RoadCaptain.Tests.Benchmark
         [Benchmark(Baseline = false)]
         public TrackPoint Inlined()
         {
-            return TrackPoint.FromGameLocation(12, 13, 14, ZwiftWorldId.Watopia);
+            return new GameCoordinate(12, 13, 14, ZwiftWorldId.Watopia).ToTrackPoint();
         }
 
         public static TrackPoint FromGameLocationBaseline(double latitudeOffsetCentimeters, double longitudeOffsetCentimeters,

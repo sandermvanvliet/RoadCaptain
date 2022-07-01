@@ -237,12 +237,6 @@ namespace RoadCaptain
             return new GameCoordinate(latitudeOffsetCentimeters, longitudeOffsetCentimeters, Altitude, worldId);
         }
 
-        public static TrackPoint FromGameLocation(double latitudeOffsetCentimeters, double longitudeOffsetCentimeters,
-            double altitude, ZwiftWorldId worldId)
-        {
-            return new GameCoordinate(latitudeOffsetCentimeters, longitudeOffsetCentimeters, altitude, worldId).ToTrackPoint();
-        }
-
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsCloseToQuick(double longitude, TrackPoint position)
         {
