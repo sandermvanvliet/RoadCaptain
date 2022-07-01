@@ -491,7 +491,7 @@ namespace RoadCaptain.App.RouteBuilder.Controls
                 return;
             }
             
-            var mostLeft = world.WorldMostLeft.ToGameCoordinate();;
+            var mostLeft = world.WorldMostLeft.ToGameCoordinate();
             var mostRight = world.WorldMostRight.ToGameCoordinate();
 
             var mostLeftScaled = overallOffsets.ScaleAndTranslate(mostLeft);
