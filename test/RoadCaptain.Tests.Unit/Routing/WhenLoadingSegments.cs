@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using FluentAssertions;
 using FluentAssertions.Execution;
+using Newtonsoft.Json;
 using RoadCaptain.Adapters;
 using Xunit;
 
@@ -26,6 +27,22 @@ namespace RoadCaptain.Tests.Unit.Routing
                 .Equals(trackPoint)
                 .Should()
                 .BeTrue();
+        }
+
+        [Fact]
+        public void GameToLatLonRepro()
+        {
+            var actualGame =
+                JsonConvert.DeserializeObject<GameCoordinate>(
+                    @"{""Latitude"":82723.9,""Longitude"":13806.059,""Altitude"":9365.3,""WorldId"":1}");
+
+            var result = actualGame.ToTrackPoint();
+
+            var expected = new TrackPoint(-11.64490d, 166.95293d, 9365.3, ZwiftWorldId.Watopia);
+
+            result
+                .Should()
+                .Be(expected);
         }
 
         [Fact]
