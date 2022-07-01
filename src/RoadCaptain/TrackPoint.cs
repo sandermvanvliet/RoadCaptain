@@ -32,9 +32,11 @@ namespace RoadCaptain
         public int? Index { get; set; }
         public double DistanceOnSegment { get; set; }
         public double DistanceFromLast { get; set; }
+        
         [JsonIgnore]
         public Segment Segment { get; set; }
-
+        
+        [JsonIgnore]
         // ReSharper disable once UnusedMember.Global because this is only used to look up a point using Garmin BaseCamp
         public string CoordinatesDecimal =>
             $"S{(Latitude * -1).ToString("0.00000", CultureInfo.InvariantCulture)}° E{Longitude.ToString("0.00000", CultureInfo.InvariantCulture)}°";
