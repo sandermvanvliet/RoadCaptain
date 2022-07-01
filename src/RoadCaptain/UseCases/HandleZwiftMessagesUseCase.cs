@@ -94,7 +94,7 @@ namespace RoadCaptain.UseCases
                     var worldId = _route?.World.ZwiftId ?? ZwiftWorldId.Unknown;
 
                     // Convert from Zwift game coordinates to a lat/lon coordinate
-                    var position = TrackPoint.FromGameLocation(riderPosition.Latitude, riderPosition.Longitude, riderPosition.Altitude, worldId);
+                    var position = new GameCoordinate(riderPosition.Latitude, riderPosition.Longitude, riderPosition.Altitude, worldId).ToTrackPoint();
 
                     // As long as there is no route loaded we cannot change the
                     // the state.
