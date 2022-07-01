@@ -29,12 +29,7 @@ namespace RoadCaptain.Tests.Unit
                     .ToList(),
                 ZwiftWorldId.Watopia);
 
-            var inputGame = new TrackPoint(
-                    input.Longitude, 
-                    -input.Latitude, 
-                    input.Altitude,
-                    ZwiftWorldId.Watopia)
-                .ToGameCoordinate();
+            var inputGame = input.ToGameCoordinate();
 
             var scaledPoint = offsets.ScaleAndTranslate(inputGame);
 
@@ -46,8 +41,6 @@ namespace RoadCaptain.Tests.Unit
                     outputGame.Altitude,
                     ZwiftWorldId.Watopia)
                 .ToTrackPoint();
-
-            output = new TrackPoint(-output.Longitude, output.Latitude, output.Altitude);
 
             output
                 .Latitude
@@ -78,12 +71,7 @@ namespace RoadCaptain.Tests.Unit
                     ZwiftWorldId.Watopia)
                 .Pad(15);
 
-            var inputGame = new TrackPoint(
-                    input.Longitude, 
-                    -input.Latitude, 
-                    input.Altitude,
-                    ZwiftWorldId.Watopia)
-                .ToGameCoordinate();
+            var inputGame = input.ToGameCoordinate();
 
             var scaledPoint = offsets.ScaleAndTranslate(inputGame);
 
@@ -96,7 +84,7 @@ namespace RoadCaptain.Tests.Unit
                     ZwiftWorldId.Watopia)
                 .ToTrackPoint();
 
-            output = new TrackPoint(-output.Longitude, output.Latitude, output.Altitude);
+            //output = new TrackPoint(-output.Longitude, output.Latitude, output.Altitude);
 
             output
                 .Latitude

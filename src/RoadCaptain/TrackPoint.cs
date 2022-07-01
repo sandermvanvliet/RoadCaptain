@@ -230,10 +230,13 @@ namespace RoadCaptain
                     return GameCoordinate.Unknown;
             }
 
-            var latitudeAsCentimetersFromOrigin = (Latitude * worldConstants.MetersBetweenLatitudeDegree * 100);
+            // NOTE: The coordinates in Zwift itself are flipped which
+            //       is why you see longitude used to calculate latitude
+            //       and negative latitude to calculate longitude.
+            var latitudeAsCentimetersFromOrigin = (Longitude * worldConstants.MetersBetweenLatitudeDegree * 100);
             var latitudeOffsetCentimeters = latitudeAsCentimetersFromOrigin - worldConstants.CenterLatitudeFromOrigin;
 
-            var longitudeAsCentimetersFromOrigin = Longitude * worldConstants.MetersBetweenLongitudeDegree * 100;
+            var longitudeAsCentimetersFromOrigin = -Latitude * worldConstants.MetersBetweenLongitudeDegree * 100;
             var longitudeOffsetCentimeters = longitudeAsCentimetersFromOrigin - worldConstants.CenterLongitudeFromOrigin;
 
             return new GameCoordinate(latitudeOffsetCentimeters, longitudeOffsetCentimeters, Altitude, worldId);

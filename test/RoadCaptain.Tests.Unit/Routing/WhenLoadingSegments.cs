@@ -11,11 +11,17 @@ namespace RoadCaptain.Tests.Unit.Routing
         [Fact]
         public void ConvertLatLonToGameAndBack()
         {
-            var trackPoint = new TrackPoint(-11.640437d, 166.946204d, 13.2d);
+            var trackPoint = new TrackPoint(-11.640437d, 166.946204d, 13.2d, ZwiftWorldId.Watopia);
 
-            var gamePoint = new TrackPoint(trackPoint.Latitude, trackPoint.Longitude, trackPoint.Altitude, ZwiftWorldId.Watopia).ToGameCoordinate();
-            var reverted = new GameCoordinate(gamePoint.X, gamePoint.Y, gamePoint.Altitude, ZwiftWorldId.Watopia).ToTrackPoint();
+            var gamePoint = trackPoint.ToGameCoordinate();
+            var reverted = gamePoint.ToTrackPoint();
 
+            // This is to ensure the conversion actually worked
+            reverted
+                .Should()
+                .Be(trackPoint);
+
+            // This is the actual test that verifies that the custom Equals method works as expected
             reverted
                 .Equals(trackPoint)
                 .Should()
