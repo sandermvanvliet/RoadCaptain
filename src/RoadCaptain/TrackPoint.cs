@@ -13,12 +13,21 @@ namespace RoadCaptain
     // TODO: Investigate converting to struct
     public class TrackPoint : IEquatable<TrackPoint>
     {
+        private readonly ZwiftWorldId _worldId;
         private const double CoordinateEqualityTolerance = 0.0001d;
         private const double PiRad = Math.PI / 180d;
         private const double RadToDegree = 180 / Math.PI;
 
         public TrackPoint(double latitude, double longitude, double altitude)
         {
+            Latitude = Math.Round(latitude, 5);
+            Longitude = Math.Round(longitude, 5);
+            Altitude = altitude;
+        }
+
+        public TrackPoint(double latitude, double longitude, double altitude, ZwiftWorldId worldId)
+        {
+            _worldId = worldId;
             Latitude = Math.Round(latitude, 5);
             Longitude = Math.Round(longitude, 5);
             Altitude = altitude;
