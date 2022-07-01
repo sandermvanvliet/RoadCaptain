@@ -28,6 +28,11 @@
 - [Watopia] Improve handling of the 3-way junction at the start of Epic KOM [#73](https://github.com/sandermvanvliet/RoadCaptain/issues/73) and [#75](https://github.com/sandermvanvliet/RoadCaptain/issues/75)
 - [Watopia] Fix turn from Italian Villas Loop 1 to Italian Villas Loop 4 [#84](https://github.com/sandermvanvliet/RoadCaptain/issues/84)
 
+### Behind the scenes
+
+- Removed the `HasLostLock` property and introduced the `LostRouteLockState`
+- Ignore most of the properties of `PlannedRoute` when persisting it as they're only relevant in-game and don't need to be persisted.
+
 ## 0.6.3.1
 
 I'm super happy to annouce that with version 0.6.3.1 RoadCaptain is now supported on macOS! 🎉🎉🎉
