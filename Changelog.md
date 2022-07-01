@@ -32,6 +32,7 @@
 
 - Removed the `HasLostLock` property and introduced the `LostRouteLockState`
 - Ignore most of the properties of `PlannedRoute` when persisting it as they're only relevant in-game and don't need to be persisted.
+- Saved routes will contain the version of RoadCaptain they are created with, this is for future use to handle changes to segments/turns
 
 ## 0.6.3.1
 

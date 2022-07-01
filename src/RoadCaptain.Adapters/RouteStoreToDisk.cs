@@ -46,7 +46,7 @@ namespace RoadCaptain.Adapters
             var serialized = File.ReadAllText(path);
             var parsed = JObject.Parse(serialized);
 
-            PlannedRoute plannedRoute = null;
+            PlannedRoute plannedRoute;
 
             if (parsed.ContainsKey("version"))
             {
@@ -69,6 +69,28 @@ namespace RoadCaptain.Adapters
 
                     // ReSharper disable once PossibleNullReferenceException
                     plannedRoute = deserialized.Route;
+                }
+                else if (schemaVersion == PersistedRouteVersion2.Version)
+                {
+                    var deserialized = JsonConvert.DeserializeObject<PersistedRouteVersion2>(
+                        serialized,
+                        RouteSerializationSettings);
+
+                    deserialized.Route.World = _worldStore.LoadWorldById(deserialized.Route.WorldId);
+                    
+                    // For routes that were created before sport was known
+                    // set it to Cycling because we only supported bike rides.
+                    if (deserialized.Route.Sport == SportType.Unknown)
+                    {
+                        deserialized.Route.Sport = SportType.Cycling;
+                    }
+
+                    // ReSharper disable once PossibleNullReferenceException
+                    plannedRoute = deserialized.Route;
+                }
+                else
+                {
+                    throw new Exception("Don't understand route version") { Data = { { "Version", schemaVersion } } };
                 }
             }
             else
@@ -112,8 +134,9 @@ namespace RoadCaptain.Adapters
 
         private static string SerializeAsJson(PlannedRoute route)
         {
-            var versionedRoute = new PersistedRouteVersion1
+            var versionedRoute = new PersistedRouteVersion2
             {
+                RoadCaptainVersion = Assembly.GetExecutingAssembly().GetName().Version?.ToString(4) ?? throw new Exception("Unable to determine RoadCaptain version"),
                 Route = route
             };
 
