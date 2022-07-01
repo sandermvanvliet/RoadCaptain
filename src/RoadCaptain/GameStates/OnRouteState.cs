@@ -57,8 +57,7 @@ namespace RoadCaptain.GameStates
                             }
                             
                             // TODO reproduce this with the ItalianVillasRepro route
-                            plannedRoute.LostLock();
-                            return segmentState;
+                            return new LostRouteLockState(RiderId, ActivityId ,segmentState.CurrentPosition, segmentState.CurrentSegment, segmentState.Direction, plannedRoute);
                         }
 
                         if (lastOfRoute.Direction == SegmentDirection.BtoA)
@@ -71,8 +70,7 @@ namespace RoadCaptain.GameStates
                                     plannedRoute);
                             }
                             
-                            plannedRoute.LostLock();
-                            return segmentState;
+                            return new LostRouteLockState(RiderId, ActivityId ,segmentState.CurrentPosition, segmentState.CurrentSegment, segmentState.Direction, plannedRoute);
                         }
                     }
 

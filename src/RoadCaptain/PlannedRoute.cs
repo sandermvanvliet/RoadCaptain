@@ -16,7 +16,6 @@ namespace RoadCaptain
         public string Name { get; set; }
         public string ZwiftRouteName { get; set; }
         public bool HasCompleted { get; private set; }
-        public bool HasLostLock { get; private set; }
         public bool HasStarted { get; private set; }
         public int SegmentSequenceIndex { get; private set; }
         public string StartingSegmentId => RouteSegmentSequence[SegmentSequenceIndex].SegmentId;
@@ -60,7 +59,6 @@ namespace RoadCaptain
             if (CurrentSegmentId == null && segmentId == StartingSegmentId)
             {
                 HasStarted = true;
-                HasLostLock = false;
 
                 return RouteMoveResult.StartedRoute;
             }
@@ -68,7 +66,6 @@ namespace RoadCaptain
             if (CurrentSegmentId != null && NextSegmentId == segmentId)
             {
                 SegmentSequenceIndex++;
-                HasLostLock = false;
 
                 //// Use the segment index instead of comparing the segment
                 //// id with the id of the last segment because we may pass
@@ -92,7 +89,6 @@ namespace RoadCaptain
         {
             HasStarted = false;
             HasCompleted = false;
-            HasLostLock = false;
             SegmentSequenceIndex = 0;
         }
 
@@ -104,12 +100,6 @@ namespace RoadCaptain
         public void Complete()
         {
             HasCompleted = true;
-            HasLostLock = false;
-        }
-
-        public void LostLock()
-        {
-            HasLostLock = true;
         }
     }
 

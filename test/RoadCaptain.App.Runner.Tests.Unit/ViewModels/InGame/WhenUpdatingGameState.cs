@@ -250,8 +250,8 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.InGame
             plannedRoute.EnteredSegment("seg-1");
             plannedRoute.EnteredSegment("seg-2");
             WhenUpdating(new OnRouteState(1, 2, new TrackPoint(1, 2, 3), new Segment(new List<TrackPoint>()) { Id = "seg-1"}, plannedRoute));
-
-            WhenUpdating(new OnSegmentState(1, 2, new TrackPoint(1, 2, 3), new Segment(new List<TrackPoint>()) { Id = "seg-2" }));
+            
+            WhenUpdating(new LostRouteLockState(1, 2, new TrackPoint(1, 2, 3), new Segment(new List<TrackPoint>()) { Id = "seg-2" }, SegmentDirection.AtoB, plannedRoute));
 
             _viewModel.Model.LostRouteLock.Should().BeTrue();
         }
@@ -267,7 +267,7 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.InGame
             plannedRoute.EnteredSegment("seg-2");
             WhenUpdating(new OnRouteState(1, 2, new TrackPoint(1, 2, 3), new Segment(new List<TrackPoint>()) { Id = "seg-1"}, plannedRoute));
 
-            WhenUpdating(new OnSegmentState(1, 2, new TrackPoint(1, 2, 3), new Segment(new List<TrackPoint>()) { Id = "seg-2" }));
+            WhenUpdating(new LostRouteLockState(1, 2, new TrackPoint(1, 2, 3), new Segment(new List<TrackPoint>()) { Id = "seg-2" }, SegmentDirection.AtoB, plannedRoute));
             
             _viewModel.Model.InstructionText.Should().Be("Try to make a u-turn and head to segment 'Segment 3'");
         }
@@ -282,8 +282,8 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.InGame
             plannedRoute.EnteredSegment("seg-1");
             plannedRoute.EnteredSegment("seg-2");
             WhenUpdating(new OnRouteState(1, 2, new TrackPoint(1, 2, 3), new Segment(new List<TrackPoint>()) { Id = "seg-1"}, plannedRoute));
-
-            WhenUpdating(new OnSegmentState(1, 2, new TrackPoint(1, 2, 3), new Segment(new List<TrackPoint>()) { Id = "seg-2" }));
+            
+            WhenUpdating(new LostRouteLockState(1, 2, new TrackPoint(1, 2, 3), new Segment(new List<TrackPoint>()) { Id = "seg-2" }, SegmentDirection.AtoB, plannedRoute));
 
             WhenUpdating(new OnRouteState(1, 2, new TrackPoint(1, 2, 3), new Segment(new List<TrackPoint>()) { Id = "seg-2"}, plannedRoute));
 

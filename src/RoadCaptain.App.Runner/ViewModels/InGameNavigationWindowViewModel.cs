@@ -51,7 +51,7 @@ namespace RoadCaptain.App.Runner.ViewModels
 
             try
             {
-                if (_previousState != null && _previousState is OnRouteState previousRouteState && gameState is OnSegmentState and not OnRouteState)
+                if (_previousState is OnRouteState previousRouteState && gameState is LostRouteLockState)
                 {
                     if (previousRouteState.Route.NextSegmentId != null)
                     {

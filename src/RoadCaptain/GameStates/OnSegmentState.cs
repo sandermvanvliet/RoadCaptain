@@ -33,11 +33,6 @@ namespace RoadCaptain.GameStates
                 UpdateDirection(segmentState);
             }
 
-            if (result is OnRouteState && plannedRoute.HasLostLock)
-            {
-                return new OnSegmentState(RiderId, ActivityId, position, CurrentSegment, Direction);
-            }
-
             return result;
         }
 

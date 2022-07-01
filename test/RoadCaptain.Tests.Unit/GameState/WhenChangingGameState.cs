@@ -328,7 +328,7 @@ namespace RoadCaptain.Tests.Unit.GameState
         }
 
         [Fact]
-        public void GivenOnRouteStateAndOnLastSegmentOfRoute_EnteringNewSegmentNotAdjacentToLastSegment_ResultingStateIsOnSegmentState()
+        public void GivenOnRouteStateAndOnLastSegmentOfRoute_EnteringNewSegmentNotAdjacentToLastSegment_ResultingStateIsLostRouteLockState()
         {
             _route.EnteredSegment("route-segment-1");
             _route.EnteredSegment("route-segment-2");
@@ -339,7 +339,7 @@ namespace RoadCaptain.Tests.Unit.GameState
 
             result
                 .Should()
-                .BeOfType<OnSegmentState>()
+                .BeOfType<LostRouteLockState>()
                 .Which
                 .CurrentPosition
                 .Should()
@@ -347,19 +347,19 @@ namespace RoadCaptain.Tests.Unit.GameState
         }
 
         [Fact]
-        public void GivenOnSegmentStateAndReEnteringLastSegmentOfRoute_ResultingStateIsOnSegmentStateBecauseRouteLockWasLost()
+        public void GivenOnSegmentStateAndReEnteringLastSegmentOfRoute_ResultingStateIsOnRouteState()
         {
             _route.EnteredSegment("route-segment-1");
             _route.EnteredSegment("route-segment-2");
             _route.EnteredSegment("route-segment-3");
             GameStates.GameState state = new OnRouteState(RiderId, ActivityId, RoutePosition3, SegmentById("route-segment-3"), _route);
-            state = state.UpdatePosition(PositionOnSegment, _segments, _route); // Results in an OnSegmentState on segment-1 and causes the HasLostLock to be set on PlannedRoute
+            state = state.UpdatePosition(PositionOnSegment, _segments, _route); // Results in an LostRouteLockState on segment-1
 
             var result = state.UpdatePosition(RoutePosition3, _segments, _route);
 
             result
                 .Should()
-                .BeOfType<OnSegmentState>()
+                .BeOfType<OnRouteState>()
                 .Which
                 .CurrentPosition
                 .Should()
