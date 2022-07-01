@@ -450,8 +450,7 @@ namespace RoadCaptain.App.RouteBuilder.Controls
                 .Select(seg => new
                 {
                     Segment = seg,
-                    GameCoordinates = seg.Points.Select(point =>
-                        TrackPoint.ToGameCoordinate(point.Longitude, -point.Latitude, point.Altitude, _route.World.ZwiftId)).ToList()
+                    GameCoordinates = seg.Points.Select(point => point.ToGameCoordinate()).ToList()
                 })
                 .Select(x => new
                 {
@@ -491,9 +490,9 @@ namespace RoadCaptain.App.RouteBuilder.Controls
             {
                 return;
             }
-
-            var mostLeft = TrackPoint.ToGameCoordinate(world.WorldMostLeft.Longitude, -world.WorldMostLeft.Latitude, 0, world.ZwiftId);
-            var mostRight = TrackPoint.ToGameCoordinate(world.WorldMostRight.Longitude, -world.WorldMostRight.Latitude, 0, world.ZwiftId);
+            
+            var mostLeft = world.WorldMostLeft.ToGameCoordinate();;
+            var mostRight = world.WorldMostRight.ToGameCoordinate();
 
             var mostLeftScaled = overallOffsets.ScaleAndTranslate(mostLeft);
             var mostRightScaled = overallOffsets.ScaleAndTranslate(mostRight);
@@ -537,7 +536,7 @@ namespace RoadCaptain.App.RouteBuilder.Controls
             {
                 var gameCoordinates = segment
                     .Points
-                    .Select(point => TrackPoint.ToGameCoordinate(point.Longitude, -point.Latitude, point.Altitude, _route.World.ZwiftId))
+                    .Select(point => point.ToGameCoordinate())
                     .ToList();
 
                 var startPoint = _overallOffsets.ScaleAndTranslate(gameCoordinates.First());

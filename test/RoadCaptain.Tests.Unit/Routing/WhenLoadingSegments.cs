@@ -13,7 +13,7 @@ namespace RoadCaptain.Tests.Unit.Routing
         {
             var trackPoint = new TrackPoint(-11.640437d, 166.946204d, 13.2d);
 
-            var gamePoint = TrackPoint.ToGameCoordinate(trackPoint.Latitude, trackPoint.Longitude, trackPoint.Altitude, ZwiftWorldId.Watopia);
+            var gamePoint = new TrackPoint(trackPoint.Latitude, trackPoint.Longitude, trackPoint.Altitude, ZwiftWorldId.Watopia).ToGameCoordinate();
             var reverted = TrackPoint.FromGameLocation(gamePoint.X, gamePoint.Y, gamePoint.Altitude, ZwiftWorldId.Watopia);
 
             reverted

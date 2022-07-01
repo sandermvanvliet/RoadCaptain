@@ -22,16 +22,18 @@ namespace RoadCaptain.Tests.Unit
                 400,
                 new List<TrackPoint>
                     {
-                        new TrackPoint(1, 1, 0),
-                        new TrackPoint(5, 5, 0)
+                        new TrackPoint(1, 1, 0, ZwiftWorldId.Watopia),
+                        new TrackPoint(5, 5, 0, ZwiftWorldId.Watopia)
                     }
-                    .Select(point =>
-                        TrackPoint.ToGameCoordinate(point.Longitude, -point.Latitude, point.Altitude,
-                            ZwiftWorldId.Watopia))
+                    .Select(point => point.ToGameCoordinate())
                     .ToList());
 
-            var inputGame = TrackPoint.ToGameCoordinate(input.Longitude, -input.Latitude, input.Altitude,
-                ZwiftWorldId.Watopia);
+            var inputGame = new TrackPoint(
+                    input.Longitude, 
+                    -input.Latitude, 
+                    input.Altitude,
+                    ZwiftWorldId.Watopia)
+                .ToGameCoordinate();
 
             var scaledPoint = offsets.ScaleAndTranslate(inputGame);
 
@@ -69,13 +71,16 @@ namespace RoadCaptain.Tests.Unit
                             new TrackPoint(1, 1, 0),
                             new TrackPoint(5, 5, 0)
                         }
-                        .Select(point => TrackPoint.ToGameCoordinate(point.Longitude, -point.Latitude, point.Altitude,
-                            ZwiftWorldId.Watopia))
+                        .Select(point => point.ToGameCoordinate())
                         .ToList())
                 .Pad(15);
 
-            var inputGame = TrackPoint.ToGameCoordinate(input.Longitude, -input.Latitude, input.Altitude,
-                ZwiftWorldId.Watopia);
+            var inputGame = new TrackPoint(
+                    input.Longitude, 
+                    -input.Latitude, 
+                    input.Altitude,
+                    ZwiftWorldId.Watopia)
+                .ToGameCoordinate();
 
             var scaledPoint = offsets.ScaleAndTranslate(inputGame);
 

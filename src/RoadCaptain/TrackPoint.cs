@@ -184,8 +184,9 @@ namespace RoadCaptain
                 { ZwiftWorldId.Paris, Paris },
             };
 
-        public static GameCoordinate ToGameCoordinate(double latitude, double longitude, double altitude, ZwiftWorldId worldId)
+        public GameCoordinate ToGameCoordinate()
         {
+            var worldId = _worldId.GetValueOrDefault(ZwiftWorldId.Watopia);
             ZwiftWorldConstants worldConstants;
 
             switch (worldId)
@@ -227,13 +228,13 @@ namespace RoadCaptain
                     return GameCoordinate.Unknown;
             }
 
-            var latitudeAsCentimetersFromOrigin = (latitude * worldConstants.MetersBetweenLatitudeDegree * 100);
+            var latitudeAsCentimetersFromOrigin = (Latitude * worldConstants.MetersBetweenLatitudeDegree * 100);
             var latitudeOffsetCentimeters = latitudeAsCentimetersFromOrigin - worldConstants.CenterLatitudeFromOrigin;
 
-            var longitudeAsCentimetersFromOrigin = longitude * worldConstants.MetersBetweenLongitudeDegree * 100;
+            var longitudeAsCentimetersFromOrigin = Longitude * worldConstants.MetersBetweenLongitudeDegree * 100;
             var longitudeOffsetCentimeters = longitudeAsCentimetersFromOrigin - worldConstants.CenterLongitudeFromOrigin;
 
-            return new GameCoordinate(latitudeOffsetCentimeters, longitudeOffsetCentimeters, altitude, worldId);
+            return new GameCoordinate(latitudeOffsetCentimeters, longitudeOffsetCentimeters, Altitude, worldId);
         }
 
         public static TrackPoint FromGameLocation(double latitudeOffsetCentimeters, double longitudeOffsetCentimeters,
