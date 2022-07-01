@@ -184,7 +184,7 @@ namespace RoadCaptain
                 { ZwiftWorldId.Paris, Paris },
             };
 
-        public static GameCoordinate LatLongToGame(double latitude, double longitude, double altitude, ZwiftWorldId worldId)
+        public static GameCoordinate ToGameCoordinate(double latitude, double longitude, double altitude, ZwiftWorldId worldId)
         {
             ZwiftWorldConstants worldConstants;
 
