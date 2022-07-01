@@ -154,6 +154,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             Route.Reset();
 
             SelectedSegment = null;
+            HighlightedSegment = null;
 
             SimulationState = SimulationState.NotStarted;
 
