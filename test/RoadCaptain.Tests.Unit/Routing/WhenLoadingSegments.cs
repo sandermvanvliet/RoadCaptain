@@ -31,14 +31,25 @@ namespace RoadCaptain.Tests.Unit.Routing
         [Fact]
         public void ConvertGameToLatLon()
         {
-            var gamePoint = new GameCoordinate(93536.016d, 212496.77d, 0, ZwiftWorldId.Watopia);
+            var gamePoint = new GameCoordinate(1975769797.96169d, -1697415291.43296, 0, ZwiftWorldId.Watopia);
 
-            var reverted = gamePoint.ToTrackPoint();
+            var expected = new TrackPoint(-11.63645, 166.97237, 0, ZwiftWorldId.Watopia);
 
-            reverted
-                .CoordinatesDecimal
+            gamePoint.ToTrackPoint()
                 .Should()
-                .Be("S11.63645° E166.97237°");
+                .Be(expected);
+        }
+
+        [Fact]
+        public void ConvertLatLonToGame()
+        {
+            var input = new TrackPoint(-11.63645, 166.97237, 0, ZwiftWorldId.Watopia);
+
+            var expected = new GameCoordinate(1975769797.96169d, -1697415291.43296, 0, ZwiftWorldId.Watopia);
+            
+            input.ToGameCoordinate()
+                .Should()
+                .Be(expected);
         }
 
         [Fact]
