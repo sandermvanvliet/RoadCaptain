@@ -7,14 +7,6 @@ namespace RoadCaptain.GameStates
 {
     public class OnRouteState : OnSegmentState
     {
-        private List<string> _threeWayJunctionSegmentOverrides = new()
-        {
-            "watopia-bambino-fondo-003-before-before",
-            "watopia-bambino-fondo-003-before-after",
-            "watopia-ocean-lava-cliffside-loop-001",
-            "watopia-big-loop-rev-001-before-after"
-        };
-
         public OnRouteState(uint riderId, ulong activityId, TrackPoint currentPosition, Segment segment,
             PlannedRoute plannedRoute)
             : base(riderId, activityId, currentPosition, segment)
@@ -161,8 +153,7 @@ namespace RoadCaptain.GameStates
                 // have three other segments and then return the UpcomingTurnState with
                 // hardcoded turn directions (because all of them apply...)
                 if (x.Count == 2 && 
-                    CurrentSegment.NextSegments(Direction).Count == 3 &&
-                    _threeWayJunctionSegmentOverrides.Contains(CurrentSegment.Id))
+                    CurrentSegment.NextSegments(Direction).Count == 3)
                 {
                     // We've got all the turn commands for this segment
                     return new UpcomingTurnState(RiderId, ActivityId, CurrentPosition, CurrentSegment, Route, Direction, 
