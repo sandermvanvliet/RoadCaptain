@@ -38,9 +38,9 @@ namespace RoadCaptain.App.RouteBuilder
             await InvokeIfNeededAsync(() => _decorated.ShowNewVersionDialog(release));
         }
 
-        public async Task<string?> ShowSaveFileDialog(string? previousLocation)
+        public async Task<string?> ShowSaveFileDialog(string? previousLocation, string? suggestedFileName = null)
         {
-            return await InvokeIfNeededAsync(() => _decorated.ShowSaveFileDialog(previousLocation));
+            return await InvokeIfNeededAsync(() => _decorated.ShowSaveFileDialog(previousLocation, suggestedFileName));
         }
 
         public async Task<bool> ShowDefaultSportSelectionDialog(SportType sport)

@@ -17,7 +17,7 @@ namespace RoadCaptain.App.RouteBuilder
         {
         }
 
-        public async Task<string?> ShowSaveFileDialog(string? previousLocation)
+        public async Task<string?> ShowSaveFileDialog(string? previousLocation, string? suggestedFileName = null)
         {
             var initialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
 
@@ -36,6 +36,7 @@ namespace RoadCaptain.App.RouteBuilder
                     new() { Extensions = new List<string>{"gpx"}, Name = "GPS Exchange Format (.gpx)"}
                 },
                 Title = "Save RoadCaptain route file",
+                InitialFileName = suggestedFileName
             };
 
             return await dialog.ShowAsync(CurrentWindow);

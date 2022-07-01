@@ -546,7 +546,9 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
 
         private async Task<CommandResult> SaveRoute()
         {
-            var routeOutputFilePath = await _windowService.ShowSaveFileDialog(_userPreferences.LastUsedFolder);
+            var suggestedFileName = string.IsNullOrWhiteSpace(Route.Name) ? null : Route.Name;
+
+            var routeOutputFilePath = await _windowService.ShowSaveFileDialog(_userPreferences.LastUsedFolder, suggestedFileName);
 
             if (string.IsNullOrEmpty(routeOutputFilePath))
             {
