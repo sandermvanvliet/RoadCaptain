@@ -456,7 +456,7 @@ namespace RoadCaptain.App.RouteBuilder.Controls
                 {
                     x.Segment,
                     x.GameCoordinates,
-                    Offsets = new Offsets((float)size.Width, (float)size.Height, x.GameCoordinates)
+                    Offsets = new Offsets((float)size.Width, (float)size.Height, x.GameCoordinates, Route?.World?.ZwiftId ?? ZwiftWorldId.Unknown)
                 })
                 .ToList();
 

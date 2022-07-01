@@ -26,7 +26,8 @@ namespace RoadCaptain.Tests.Unit
                         new TrackPoint(5, 5, 0, ZwiftWorldId.Watopia)
                     }
                     .Select(point => point.ToGameCoordinate())
-                    .ToList());
+                    .ToList(),
+                ZwiftWorldId.Watopia);
 
             var inputGame = new TrackPoint(
                     input.Longitude, 
@@ -73,7 +74,8 @@ namespace RoadCaptain.Tests.Unit
                             new TrackPoint(5, 5, 0)
                         }
                         .Select(point => point.ToGameCoordinate())
-                        .ToList())
+                        .ToList(),
+                    ZwiftWorldId.Watopia)
                 .Pad(15);
 
             var inputGame = new TrackPoint(

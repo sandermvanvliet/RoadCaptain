@@ -2,18 +2,29 @@
 // Licensed under Artistic License 2.0
 // See LICENSE or https://choosealicense.com/licenses/artistic-2.0/
 
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 
 namespace RoadCaptain.App.RouteBuilder.Models
 {
+    /// <summary>
+    /// Calculate the offsets for segments of a world for use in coordinate conversions to the Zwift map
+    /// </summary>
     public class Offsets
     {
+        private readonly ZwiftWorldId _worldId;
         private readonly int _offset;
 
-        public Offsets(float imageWidth, float imageHeight, List<GameCoordinate> data)
+        public Offsets(float imageWidth, float imageHeight, List<GameCoordinate> data, ZwiftWorldId worldId)
         {
+            if (worldId == ZwiftWorldId.Unknown)
+            {
+                throw new ArgumentException("Can't calculate offsets for unknown world", nameof(worldId));
+            }
+
+            _worldId = worldId;
             ImageWidth = imageWidth;
             ImageHeight = imageHeight;
 
@@ -24,8 +35,14 @@ namespace RoadCaptain.App.RouteBuilder.Models
             MaxY = (float)data.Max(p => p.Y);
         }
 
-        private Offsets(float minX, float maxX, float minY, float maxY, float imageWidth, float imageHeight, int offset = 0)
+        private Offsets(float minX, float maxX, float minY, float maxY, float imageWidth, float imageHeight, ZwiftWorldId worldId, int offset = 0)
         {
+            if (worldId == ZwiftWorldId.Unknown)
+            {
+                throw new ArgumentException("Can't calculate offsets for unknown world", nameof(worldId));
+            }
+
+            _worldId = worldId;
             _offset = offset;
             ImageWidth = imageWidth;
             ImageHeight = imageHeight;
@@ -76,7 +93,9 @@ namespace RoadCaptain.App.RouteBuilder.Models
             var minY = offsets.Min(o => o.MinY);
             var maxY = offsets.Max(o => o.MaxY);
 
-            return new Offsets(minX, maxX, minY, maxY, offsets.First().ImageWidth, offsets.First().ImageHeight);
+            var worldId = offsets.First()._worldId;
+
+            return new Offsets(minX, maxX, minY, maxY, offsets.First().ImageWidth, offsets.First().ImageHeight, worldId);
         }
 
         public GameCoordinate ReverseScaleAndTranslate(double x, double y)
@@ -85,13 +104,13 @@ namespace RoadCaptain.App.RouteBuilder.Models
                 (x - _offset) / ScaleFactor - OffsetX,
                 (y - _offset) / ScaleFactor - OffsetY,
                 0,
-                ZwiftWorldId.Unknown);
+                _worldId);
         }
 
         public Offsets Pad(int offset)
         {
             var doubleOffset = 2 * offset;
-            return new Offsets(MinX, MaxX, MinY, MaxY, ImageWidth - doubleOffset, ImageHeight - doubleOffset, offset);
+            return new Offsets(MinX, MaxX, MinY, MaxY, ImageWidth - doubleOffset, ImageHeight - doubleOffset, _worldId, offset);
         }
     }
 }
