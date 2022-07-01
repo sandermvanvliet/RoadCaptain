@@ -416,3 +416,5 @@ Thumbs.db
 Desktop.ini
 
 test/RoadCaptain.Tests.Benchmark/Results/
+
+*.drawio.bkp
