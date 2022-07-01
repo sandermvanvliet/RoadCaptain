@@ -15,12 +15,21 @@ namespace RoadCaptain
         private string _worldId;
         public string Name { get; set; }
         public string ZwiftRouteName { get; set; }
+        [JsonIgnore]
         public bool HasCompleted { get; private set; }
+        [JsonIgnore]
         public bool HasStarted { get; private set; }
+        [JsonIgnore]
+        public bool IsOnLastSegment => SegmentSequenceIndex == RouteSegmentSequence.Count - 1;
+        [JsonIgnore]
         public int SegmentSequenceIndex { get; private set; }
+        [JsonIgnore]
         public string StartingSegmentId => RouteSegmentSequence[SegmentSequenceIndex].SegmentId;
+        [JsonIgnore]
         public string NextSegmentId => HasStarted ? RouteSegmentSequence[SegmentSequenceIndex].NextSegmentId : null;
+        [JsonIgnore]
         public TurnDirection TurnToNextSegment => HasStarted ? RouteSegmentSequence[SegmentSequenceIndex].TurnToNextSegment : TurnDirection.None;
+        [JsonIgnore]
         public string CurrentSegmentId => HasStarted ? RouteSegmentSequence[SegmentSequenceIndex].SegmentId : null;
         public bool IsLoop =>
             RouteSegmentSequence.Count > 1 &&
@@ -47,7 +56,6 @@ namespace RoadCaptain
         }
 
         public SportType Sport { get; set; } = SportType.Unknown;
-        public bool IsOnLastSegment => SegmentSequenceIndex == RouteSegmentSequence.Count - 1;
 
         public RouteMoveResult EnteredSegment(string segmentId)
         {
