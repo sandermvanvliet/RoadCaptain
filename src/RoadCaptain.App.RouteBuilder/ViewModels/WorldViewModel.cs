@@ -37,7 +37,8 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
         }
 
         public string Name => _world.Name;
-        public bool CanSelect => _world.Status == WorldStatus.Available;
+        public bool CanSelect => _world.Status == WorldStatus.Available || _world.Status == WorldStatus.Beta;
         public string Id => _world.Id;
+        public bool IsBeta => _world.Status == WorldStatus.Beta;
     }
 }

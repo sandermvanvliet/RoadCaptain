@@ -169,9 +169,13 @@
 															</Style>
 														</Image.Styles>
 													</Image>
-													<Border Margin="0" Height="28" VerticalAlignment="Top" HorizontalAlignment="Right" BorderBrush="#FF6141" BorderThickness="1,0,0,1" CornerRadius="0,5,0,5" Background="White">
+													<Border Margin="0" Height="24" VerticalAlignment="Top" HorizontalAlignment="Right" BorderBrush="#FF6141" BorderThickness="1,0,0,1" CornerRadius="0,5,0,5" Background="White">
 														<TextBlock Text="{Binding Path=Name}" FontWeight="Bold" FontSize="16" Foreground="Black" Padding="4,2,4,0"  />
 													</Border>
+                                                    <Border Margin="0" Height="24" VerticalAlignment="Bottom" HorizontalAlignment="Left" BorderBrush="#FF6141" BorderThickness="0,1,1,0" CornerRadius="0,5,0,5" Background="White"
+                                                            IsVisible="{Binding Path=IsBeta}">
+                                                        <TextBlock Text="BETA" FontWeight="Bold" FontSize="16" Foreground="Black" Padding="4,2,4,0"  />
+                                                    </Border>
 												</Grid>
 											</Border>
 										</ControlTemplate>
