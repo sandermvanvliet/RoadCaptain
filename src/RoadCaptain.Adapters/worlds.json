@@ -208,17 +208,33 @@
         "sport": "Both"
       }
     ],
-    "status": "Unavailable",
+    "status": "Beta",
     "zwiftId": "MakuriIslands",
+    "worldMostLeft": {
+      "latitude": -10.80543,
+      "longitude": 165.83688,
+      "altitude": 0.0,
+      "distanceOnSegment": 0.0,
+      "distanceFromLast": 0.0,
+      "coordinatesDecimal": "S10.80543° E165.83688°"
+    },
+    "worldMostRight": {
+      "latitude": -10.74372,
+      "longitude": 165.85628,
+      "altitude": 0.0,
+      "distanceOnSegment": 0.0,
+      "distanceFromLast": 0.0,
+      "coordinatesDecimal": "S10.74372° E165.85628°"
+    },
     "mapMostLeft": {
-      "isEmpty": true,
-      "x": 0.0,
-      "y": 0.0
+      "isEmpty": false,
+      "x": 1704.0,
+      "y": 3632.0
     },
     "mapMostRight": {
-      "isEmpty": true,
-      "x": 0.0,
-      "y": 0.0
+      "isEmpty": false,
+      "x": 2721.0,
+      "y": 334.0
     }
   },
   {
