@@ -63,7 +63,8 @@ namespace RoadCaptain.GameStates
                                 return new CompletedRouteState(RiderId, ActivityId, segmentState.CurrentPosition,
                                     plannedRoute);
                             }
-
+                            
+                            // TODO reproduce this with the ItalianVillasRepro route
                             plannedRoute.LostLock();
                             return segmentState;
                         }
@@ -77,7 +78,8 @@ namespace RoadCaptain.GameStates
                                 return new CompletedRouteState(RiderId, ActivityId, segmentState.CurrentPosition,
                                     plannedRoute);
                             }
-
+                            
+                            plannedRoute.LostLock();
                             return segmentState;
                         }
                     }
