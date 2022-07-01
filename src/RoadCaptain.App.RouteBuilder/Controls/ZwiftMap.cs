@@ -339,7 +339,7 @@ namespace RoadCaptain.App.RouteBuilder.Controls
             var boundedSegments = pathsInBounds.Select(kv => Segments.Single(s => s.Id == kv.Key)).ToList();
 
             var reverseScaled = _overallOffsets.ReverseScaleAndTranslate(scaledPoint.X, scaledPoint.Y);
-            var scaledPointToPositionIntermediate = TrackPoint.FromGameLocation(reverseScaled.Latitude, reverseScaled.Longitude, reverseScaled.Altitude, _route?.World?.ZwiftId ?? ZwiftWorldId.Unknown);
+            var scaledPointToPositionIntermediate = TrackPoint.FromGameLocation(reverseScaled.X, reverseScaled.Y, reverseScaled.Altitude, _route?.World?.ZwiftId ?? ZwiftWorldId.Unknown);
             var scaledPointToPosition = new TrackPoint(
                 -scaledPointToPositionIntermediate.Longitude, 
                 scaledPointToPositionIntermediate.Latitude,
@@ -567,7 +567,7 @@ namespace RoadCaptain.App.RouteBuilder.Controls
             _renderOperation.Markers = markers;
         }
 
-        private static SKPath SkiaPathFromSegment(Offsets offsets, List<TrackPoint> data)
+        private static SKPath SkiaPathFromSegment(Offsets offsets, List<GameCoordinate> data)
         {
             var path = new SKPath();
 

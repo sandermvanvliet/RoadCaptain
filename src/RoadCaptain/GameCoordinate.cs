@@ -157,5 +157,7 @@ namespace RoadCaptain
 
             return TrackPoint.Unknown;
         }
+
+        public static GameCoordinate Unknown => new(Double.NaN, Double.NaN, Double.NaN, ZwiftWorldId.Unknown);
     }
 }

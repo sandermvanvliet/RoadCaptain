@@ -13,19 +13,12 @@ namespace RoadCaptain
     // TODO: Investigate converting to struct
     public class TrackPoint : IEquatable<TrackPoint>
     {
-        private readonly ZwiftWorldId _worldId;
+        private readonly ZwiftWorldId? _worldId;
         private const double CoordinateEqualityTolerance = 0.0001d;
         private const double PiRad = Math.PI / 180d;
         private const double RadToDegree = 180 / Math.PI;
 
-        public TrackPoint(double latitude, double longitude, double altitude)
-        {
-            Latitude = Math.Round(latitude, 5);
-            Longitude = Math.Round(longitude, 5);
-            Altitude = altitude;
-        }
-
-        public TrackPoint(double latitude, double longitude, double altitude, ZwiftWorldId worldId)
+        public TrackPoint(double latitude, double longitude, double altitude, ZwiftWorldId? worldId = null)
         {
             _worldId = worldId;
             Latitude = Math.Round(latitude, 5);
@@ -191,7 +184,7 @@ namespace RoadCaptain
                 { ZwiftWorldId.Paris, Paris },
             };
 
-        public static TrackPoint LatLongToGame(double latitude, double longitude, double altitude, ZwiftWorldId worldId)
+        public static GameCoordinate LatLongToGame(double latitude, double longitude, double altitude, ZwiftWorldId worldId)
         {
             ZwiftWorldConstants worldConstants;
 
@@ -231,7 +224,7 @@ namespace RoadCaptain
                     worldConstants = Paris;
                     break;
                 default:
-                    return TrackPoint.Unknown;
+                    return GameCoordinate.Unknown;
             }
 
             var latitudeAsCentimetersFromOrigin = (latitude * worldConstants.MetersBetweenLatitudeDegree * 100);
@@ -240,7 +233,7 @@ namespace RoadCaptain
             var longitudeAsCentimetersFromOrigin = longitude * worldConstants.MetersBetweenLongitudeDegree * 100;
             var longitudeOffsetCentimeters = longitudeAsCentimetersFromOrigin - worldConstants.CenterLongitudeFromOrigin;
 
-            return new TrackPoint(latitudeOffsetCentimeters, longitudeOffsetCentimeters, altitude);
+            return new GameCoordinate(latitudeOffsetCentimeters, longitudeOffsetCentimeters, altitude, worldId);
         }
 
         public static TrackPoint FromGameLocation(double latitudeOffsetCentimeters, double longitudeOffsetCentimeters,

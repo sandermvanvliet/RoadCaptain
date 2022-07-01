@@ -38,8 +38,8 @@ namespace RoadCaptain.Tests.Unit
             var outputGame = offsets.ReverseScaleAndTranslate(scaledPoint.X, scaledPoint.Y);
 
             var output = TrackPoint.FromGameLocation(
-                outputGame.Latitude,
-                outputGame.Longitude, 
+                outputGame.X,
+                outputGame.Y, 
                 outputGame.Altitude,
                 ZwiftWorldId.Watopia);
 
@@ -82,8 +82,8 @@ namespace RoadCaptain.Tests.Unit
             var outputGame = offsets.ReverseScaleAndTranslate(scaledPoint.X, scaledPoint.Y);
 
             var output = TrackPoint.FromGameLocation(
-                outputGame.Latitude,
-                outputGame.Longitude, 
+                outputGame.X,
+                outputGame.Y, 
                 outputGame.Altitude,
                 ZwiftWorldId.Watopia);
 

@@ -12,16 +12,16 @@ namespace RoadCaptain.App.RouteBuilder.Models
     {
         private readonly int _offset;
 
-        public Offsets(float imageWidth, float imageHeight, List<TrackPoint> data)
+        public Offsets(float imageWidth, float imageHeight, List<GameCoordinate> data)
         {
             ImageWidth = imageWidth;
             ImageHeight = imageHeight;
 
-            MinX = (float)data.Min(p => p.Latitude);
-            MaxX = (float)data.Max(p => p.Latitude);
+            MinX = (float)data.Min(p => p.X);
+            MaxX = (float)data.Max(p => p.X);
                    
-            MinY = (float)data.Min(p => p.Longitude);
-            MaxY = (float)data.Max(p => p.Longitude);
+            MinY = (float)data.Min(p => p.Y);
+            MaxY = (float)data.Max(p => p.Y);
         }
 
         private Offsets(float minX, float maxX, float minY, float maxY, float imageWidth, float imageHeight, int offset = 0)
@@ -62,11 +62,11 @@ namespace RoadCaptain.App.RouteBuilder.Models
             }
         }
 
-        public PointF ScaleAndTranslate(TrackPoint point)
+        public PointF ScaleAndTranslate(GameCoordinate point)
         {
             return new PointF(
-                _offset + (OffsetX + (float)point.Latitude) * ScaleFactor, 
-                _offset + (OffsetY + (float)point.Longitude) * ScaleFactor);
+                _offset + (OffsetX + (float)point.X) * ScaleFactor, 
+                _offset + (OffsetY + (float)point.Y) * ScaleFactor);
         }
 
         public static Offsets From(List<Offsets> offsets)
@@ -79,12 +79,13 @@ namespace RoadCaptain.App.RouteBuilder.Models
             return new Offsets(minX, maxX, minY, maxY, offsets.First().ImageWidth, offsets.First().ImageHeight);
         }
 
-        public TrackPoint ReverseScaleAndTranslate(double x, double y)
+        public GameCoordinate ReverseScaleAndTranslate(double x, double y)
         {
-            return new TrackPoint(
+            return new GameCoordinate(
                 (x - _offset) / ScaleFactor - OffsetX,
                 (y - _offset) / ScaleFactor - OffsetY,
-                0);
+                0,
+                ZwiftWorldId.Unknown);
         }
 
         public Offsets Pad(int offset)
