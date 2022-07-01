@@ -25,11 +25,9 @@ namespace RoadCaptain.Tests.Unit.Routing
         [Fact]
         public void ConvertGameToLatLon()
         {
-            var gameLat = 93536.016d;
-            var gameLon = 212496.77d;
-            var gamePoint = new TrackPoint(gameLat, gameLon, 0);
+            var gamePoint = new GameCoordinate(93536.016d, 212496.77d, 0, ZwiftWorldId.Watopia);
 
-            var reverted = TrackPoint.FromGameLocation(gamePoint.Latitude, gamePoint.Longitude, gamePoint.Altitude, ZwiftWorldId.Watopia);
+            var reverted = gamePoint.ToTrackPoint();
 
             reverted
                 .CoordinatesDecimal
