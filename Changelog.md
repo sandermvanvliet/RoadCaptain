@@ -1,5 +1,11 @@
 ﻿# Changelog
 
+## 0.6.5.0
+
+### Route Builder
+
+- Makuri Islands is now available for beta testing [#7](https://github.com/sandermvanvliet/RoadCaptain/issues/7)
+
 ## 0.6.4.0
 
 ### Runner
