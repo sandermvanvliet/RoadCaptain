@@ -55,7 +55,7 @@ namespace RoadCaptain
                 var longitudeAsCentimetersFromOrigin = Y + 1824587167.6433601;
                 var longitude = longitudeAsCentimetersFromOrigin * 9.15017561017031E-06 * 0.01;
 
-                return new TrackPoint(latitude, longitude, Altitude, WorldId);
+                return new TrackPoint(-longitude, latitude, Altitude, WorldId);
             }
 
             if (WorldId == ZwiftWorldId.Richmond)

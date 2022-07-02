@@ -35,7 +35,7 @@ namespace RoadCaptain.Tests.Unit
 
             var outputGame = offsets.ReverseScaleAndTranslate(scaledPoint.X, scaledPoint.Y);
 
-            var output = new GameCoordinate(
+            var output = new MapCoordinate(
                     outputGame.X,
                     outputGame.Y,
                     outputGame.Altitude,
@@ -77,7 +77,7 @@ namespace RoadCaptain.Tests.Unit
 
             var outputGame = offsets.ReverseScaleAndTranslate(scaledPoint.X, scaledPoint.Y);
 
-            var output = new GameCoordinate(
+            var output = new MapCoordinate(
                     outputGame.X,
                     outputGame.Y,
                     outputGame.Altitude,
