@@ -1,4 +1,5 @@
 using System;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
@@ -39,6 +40,10 @@ namespace RoadCaptain.App.Runner.Views
             DataContext = viewModel;
 
             InitializeComponent();
+
+#if DEBUG
+            this.AttachDevTools();
+#endif
         }
 
         private void CloseButton_Click(object? sender, RoutedEventArgs e)

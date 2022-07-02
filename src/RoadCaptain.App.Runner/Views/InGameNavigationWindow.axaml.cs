@@ -26,6 +26,10 @@ namespace RoadCaptain.App.Runner.Views
             _monitoringEvents = new MonitoringEventsWithSerilog(new LoggerConfiguration().WriteTo.Debug().CreateLogger());
 
             InitializeComponent();
+            
+#if DEBUG
+            this.AttachDevTools();
+#endif
         }
         
         public InGameNavigationWindow(IGameStateReceiver gameStateReceiver, 
@@ -35,6 +39,10 @@ namespace RoadCaptain.App.Runner.Views
             _userPreferences = userPreferences;
 
             InitializeComponent();
+            
+#if DEBUG
+            this.AttachDevTools();
+#endif
 
             gameStateReceiver.Register(
                 null,

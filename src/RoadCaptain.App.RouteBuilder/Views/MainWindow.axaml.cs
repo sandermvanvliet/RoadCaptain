@@ -28,6 +28,10 @@ namespace RoadCaptain.App.RouteBuilder.Views
 
             InitializeComponent();
 
+#if DEBUG
+            this.AttachDevTools();
+#endif
+
             var modifier = RuntimeInformation.IsOSPlatform(OSPlatform.OSX)
                 ? KeyModifiers.Meta
                 : KeyModifiers.Control;
