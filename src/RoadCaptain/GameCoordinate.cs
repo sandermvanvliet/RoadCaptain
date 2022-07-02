@@ -40,13 +40,6 @@ namespace RoadCaptain
             // This code has been optimized to be as quick as possible
             // which is why there is a bunch of if-statements instead
             // of switches or pattern matching.
-            
-            // NOTE 2:
-            // Because Zwift game coordinates are flipped you will see
-            // that latitude is the negative calculated longitude and
-            // longitude the calculated latitude. Ultimately we want to
-            // keep as close to real-world lat/lon as possible, hence
-            // this conversion here.
             if (WorldId == ZwiftWorldId.Watopia)
             {
                 var latitudeAsCentimetersFromOrigin = X + -128809769.40541935;
