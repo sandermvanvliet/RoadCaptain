@@ -84,8 +84,6 @@ namespace RoadCaptain.Tests.Unit
                     ZwiftWorldId.Watopia)
                 .ToTrackPoint();
 
-            //output = new TrackPoint(-output.Longitude, output.Latitude, output.Altitude);
-
             output
                 .Latitude
                 .Should()
