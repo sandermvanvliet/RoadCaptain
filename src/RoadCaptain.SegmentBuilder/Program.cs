@@ -10,6 +10,7 @@ using System.Linq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
+using RoadCaptain.Adapters;
 
 namespace RoadCaptain.SegmentBuilder
 {
@@ -83,7 +84,7 @@ namespace RoadCaptain.SegmentBuilder
             /*
              * When we have a set of segments we can see where we have T-junctions,
              * A route start/end that is close to a point in another segment where
-             * that point is somehwere in the middle of that segment.
+             * that point is somewhere in the middle of that segment.
              * For those matches we want to split up the larger segment.
              */
             var splitSteps = 1;
@@ -96,15 +97,142 @@ namespace RoadCaptain.SegmentBuilder
                     break;
                 }
             }
+            
+            var turns = _segments
+                .Select(segment => new SegmentTurns
+                {
+                    SegmentId = segment.Id,
+                    TurnsA = TurnsFromSegment(segment.NextSegmentsNodeA),
+                    TurnsB = TurnsFromSegment(segment.NextSegmentsNodeB)
+                })
+                .ToList();
 
             foreach (var segment in _segments)
             {
                 File.WriteAllText(Path.Combine(gpxDirectory, "segments", segment.Id + ".gpx"), segment.AsGpx());
+
+                // Clear turns from segments otherwise it blows up because
+                // loading the segments applies the turns to the segments
+                segment.NextSegmentsNodeA.Clear();
+                segment.NextSegmentsNodeB.Clear();
             }
 
             File.WriteAllText(
                 Path.Combine(gpxDirectory, "segments", "segments.json"),
-                JsonConvert.SerializeObject(_segments, _serializerSettings));
+                JsonConvert.SerializeObject(_segments, Formatting.Indented, _serializerSettings));
+
+            File.WriteAllText(
+                Path.Combine(gpxDirectory, "segments", "turns.json"),
+                JsonConvert.SerializeObject(turns, Formatting.Indented, _serializerSettings));
+        }
+
+        private List<SegmentTurns> GenerateTurns(List<Segment> segments)
+        {
+            var turns = new List<SegmentTurns>();
+
+            foreach (var segment in segments)
+            {
+                // Find segments connecting to the 'A' side of this segment
+                var overlaps = OverlapsWith(segment.A, segments, segment.Id);
+
+                if (overlaps.Count == 1)
+                {
+                    segment.NextSegmentsNodeA.Add(new Turn(TurnDirection.GoStraight, overlaps[0].Id));
+                }
+                else
+                {
+                    var turnDirection = TurnDirection.Left;
+                    foreach (var overlap in overlaps)
+                    {
+                        segment.NextSegmentsNodeA.Add(new Turn(turnDirection, overlap.Id));
+                        turnDirection = TurnDirection.Right;
+                    }
+                }
+
+                // Find segments connecting to the 'B' side of this segment
+                overlaps = OverlapsWith(segment.B, segments, segment.Id);
+
+                if (overlaps.Count == 1)
+                {
+                    segment.NextSegmentsNodeB.Add(new Turn(TurnDirection.GoStraight, overlaps[0].Id));
+                }
+                else
+                {
+                    var turnDirection = TurnDirection.Left;
+                    foreach (var overlap in overlaps)
+                    {
+                        segment.NextSegmentsNodeB.Add(new Turn(turnDirection, overlap.Id));
+                        turnDirection = TurnDirection.Right;
+                    }
+                }
+
+                turns.Add(new SegmentTurns
+                {
+                    SegmentId = segment.Id,
+                    TurnsA = TurnsFromSegment(segment.NextSegmentsNodeA),
+                    TurnsB = TurnsFromSegment(segment.NextSegmentsNodeB)
+                });
+            }
+
+            return turns;
+        }
+
+        private SegmentTurn TurnsFromSegment(List<Turn> turns)
+        {
+            var turn = new SegmentTurn();
+
+            var left = turns.SingleOrDefault(t => t.Direction == TurnDirection.Left);
+            if (left != null)
+            {
+                turn.Left = left.SegmentId;
+            }
+            var goStraight = turns.SingleOrDefault(t => t.Direction == TurnDirection.GoStraight);
+            if (goStraight != null)
+            {
+                turn.GoStraight = goStraight.SegmentId;
+            }
+            var right = turns.SingleOrDefault(t => t.Direction == TurnDirection.Right);
+            if (right != null)
+            {
+                turn.Right = right.SegmentId;
+            }
+
+            return turn;
+        }
+
+        private List<Segment> OverlapsWith(TrackPoint point, List<Segment> segments, string currentSegmentId)
+        {
+            return segments
+                .Where(s => s.Id != currentSegmentId)
+                .Where(s => IsCloseTo(s.A, point) || IsCloseTo(s.B, point))
+                .ToList();
+        }
+
+        public static bool IsCloseTo(TrackPoint point, TrackPoint other)
+        {
+            // 0.00013 degrees equivalent to 15 meters between degrees at latitude -11 
+            // That means that if the difference in longitude between
+            // the two points is more than 0.00013 then we're definitely
+            // going to be more than 15 meters apart and that means
+            // we're not close.
+            if (Math.Abs(other.Longitude - point.Longitude) > 0.00013)
+            {
+                return false;
+            }
+
+            var distance = TrackPoint.GetDistanceFromLatLonInMeters(
+                other.Latitude,
+                other.Longitude,
+                point.Latitude,
+                point.Longitude);
+
+            // TODO: re-enable altitude matching
+            if (distance < 25 && Math.Abs(other.Altitude - point.Altitude) <= 2d)
+            {
+                return true;
+            }
+
+            return false;
         }
 
         private bool SplitSegmentsAndUpdateSegmentList()
@@ -164,6 +292,15 @@ namespace RoadCaptain.SegmentBuilder
 
                         toAdd.Add(beforeSplit);
                         toAdd.Add(afterSplit);
+
+                        segment.NextSegmentsNodeA.Add(new Turn(TurnDirection.Left, beforeSplit.Id));
+                        segment.NextSegmentsNodeA.Add(new Turn(TurnDirection.Right, afterSplit.Id));
+
+                        beforeSplit.NextSegmentsNodeB.Add(new Turn(TurnDirection.GoStraight, afterSplit.Id));
+                        beforeSplit.NextSegmentsNodeB.Add(new Turn(TurnDirection.Right, segment.Id));
+
+                        afterSplit.NextSegmentsNodeA.Add(new Turn(TurnDirection.GoStraight, beforeSplit.Id));
+                        afterSplit.NextSegmentsNodeA.Add(new Turn(TurnDirection.Left, segment.Id));
                     }
                 }
 
@@ -192,6 +329,15 @@ namespace RoadCaptain.SegmentBuilder
 
                         toAdd.Add(beforeSplit);
                         toAdd.Add(afterSplit);
+
+                        segment.NextSegmentsNodeB.Add(new Turn(TurnDirection.Left, beforeSplit.Id));
+                        segment.NextSegmentsNodeB.Add(new Turn(TurnDirection.Right, afterSplit.Id));
+
+                        beforeSplit.NextSegmentsNodeB.Add(new Turn(TurnDirection.GoStraight, afterSplit.Id));
+                        beforeSplit.NextSegmentsNodeB.Add(new Turn(TurnDirection.Right, segment.Id));
+
+                        afterSplit.NextSegmentsNodeA.Add(new Turn(TurnDirection.GoStraight, beforeSplit.Id));
+                        afterSplit.NextSegmentsNodeA.Add(new Turn(TurnDirection.Left, segment.Id));
                     }
                 }
 
@@ -220,7 +366,7 @@ namespace RoadCaptain.SegmentBuilder
         {
             return segments
                 .AsParallel()
-                .Select(segment => segment.Points.Where(p => p.IsCloseTo(point)))
+                .Select(segment => segment.Points.Where(p => IsCloseTo(p, point)))
                 .Where(points => points.Any())
                 .SelectMany(points => points)
                 .ToList();
