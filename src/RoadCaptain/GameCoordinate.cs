@@ -11,7 +11,7 @@ namespace RoadCaptain
 
         public GameCoordinate(double x, double y, double altitude, ZwiftWorldId worldId)
         {
-            // TODO: Consider whether this is necassary for game coordinates
+            // TODO: Consider whether this is necessary for game coordinates
             // NOTE: It's an optimization for TrackPoint but might not be needed here
             X = Math.Round(x, 5);
             Y = Math.Round(y, 5);
