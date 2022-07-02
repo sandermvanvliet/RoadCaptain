@@ -186,7 +186,7 @@ namespace RoadCaptain
                 { ZwiftWorldId.Paris, Paris },
             };
 
-        public GameCoordinate ToGameCoordinate()
+        public MapCoordinate ToMapCoordinate()
         {
             var worldId = _worldId.GetValueOrDefault(ZwiftWorldId.Watopia);
             ZwiftWorldConstants worldConstants;
@@ -227,7 +227,7 @@ namespace RoadCaptain
                     worldConstants = Paris;
                     break;
                 default:
-                    return GameCoordinate.Unknown;
+                    return MapCoordinate.Unknown;
             }
 
             // NOTE: The coordinates in Zwift itself are flipped which
@@ -239,7 +239,7 @@ namespace RoadCaptain
             var longitudeAsCentimetersFromOrigin = -Latitude * worldConstants.MetersBetweenLongitudeDegree * 100;
             var longitudeOffsetCentimeters = longitudeAsCentimetersFromOrigin - worldConstants.CenterLongitudeFromOrigin;
 
-            return new GameCoordinate(latitudeOffsetCentimeters, longitudeOffsetCentimeters, Altitude, worldId);
+            return new MapCoordinate(latitudeOffsetCentimeters, longitudeOffsetCentimeters, Altitude, worldId);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

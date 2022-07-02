@@ -450,7 +450,7 @@ namespace RoadCaptain.App.RouteBuilder.Controls
                 .Select(seg => new
                 {
                     Segment = seg,
-                    GameCoordinates = seg.Points.Select(point => point.ToGameCoordinate()).ToList()
+                    GameCoordinates = seg.Points.Select(point => point.ToMapCoordinate()).ToList()
                 })
                 .Select(x => new
                 {
@@ -491,8 +491,8 @@ namespace RoadCaptain.App.RouteBuilder.Controls
                 return;
             }
             
-            var mostLeft = world.WorldMostLeft.ToGameCoordinate();
-            var mostRight = world.WorldMostRight.ToGameCoordinate();
+            var mostLeft = world.WorldMostLeft.ToMapCoordinate();
+            var mostRight = world.WorldMostRight.ToMapCoordinate();
 
             var mostLeftScaled = overallOffsets.ScaleAndTranslate(mostLeft);
             var mostRightScaled = overallOffsets.ScaleAndTranslate(mostRight);
@@ -536,7 +536,7 @@ namespace RoadCaptain.App.RouteBuilder.Controls
             {
                 var gameCoordinates = segment
                     .Points
-                    .Select(point => point.ToGameCoordinate())
+                    .Select(point => point.ToMapCoordinate())
                     .ToList();
 
                 var startPoint = _overallOffsets.ScaleAndTranslate(gameCoordinates.First());
@@ -566,7 +566,7 @@ namespace RoadCaptain.App.RouteBuilder.Controls
             _renderOperation.Markers = markers;
         }
 
-        private static SKPath SkiaPathFromSegment(Offsets offsets, List<GameCoordinate> data)
+        private static SKPath SkiaPathFromSegment(Offsets offsets, List<MapCoordinate> data)
         {
             var path = new SKPath();
 

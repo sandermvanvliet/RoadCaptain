@@ -25,11 +25,11 @@ namespace RoadCaptain.Tests.Unit
                         new TrackPoint(1, 1, 0, ZwiftWorldId.Watopia),
                         new TrackPoint(5, 5, 0, ZwiftWorldId.Watopia)
                     }
-                    .Select(point => point.ToGameCoordinate())
+                    .Select(point => point.ToMapCoordinate())
                     .ToList(),
                 ZwiftWorldId.Watopia);
 
-            var inputGame = input.ToGameCoordinate();
+            var inputGame = input.ToMapCoordinate();
 
             var scaledPoint = offsets.ScaleAndTranslate(inputGame);
 
@@ -66,12 +66,12 @@ namespace RoadCaptain.Tests.Unit
                             new TrackPoint(1, 1, 0),
                             new TrackPoint(5, 5, 0)
                         }
-                        .Select(point => point.ToGameCoordinate())
+                        .Select(point => point.ToMapCoordinate())
                         .ToList(),
                     ZwiftWorldId.Watopia)
                 .Pad(15);
 
-            var inputGame = input.ToGameCoordinate();
+            var inputGame = input.ToMapCoordinate();
 
             var scaledPoint = offsets.ScaleAndTranslate(inputGame);
 

@@ -17,7 +17,7 @@ namespace RoadCaptain.App.RouteBuilder.Models
         private readonly ZwiftWorldId _worldId;
         private readonly int _offset;
 
-        public Offsets(float imageWidth, float imageHeight, List<GameCoordinate> data, ZwiftWorldId worldId)
+        public Offsets(float imageWidth, float imageHeight, List<MapCoordinate> data, ZwiftWorldId worldId)
         {
             if (worldId == ZwiftWorldId.Unknown)
             {
@@ -79,7 +79,7 @@ namespace RoadCaptain.App.RouteBuilder.Models
             }
         }
 
-        public PointF ScaleAndTranslate(GameCoordinate point)
+        public PointF ScaleAndTranslate(MapCoordinate point)
         {
             return new PointF(
                 _offset + (OffsetX + (float)point.X) * ScaleFactor, 
@@ -98,9 +98,9 @@ namespace RoadCaptain.App.RouteBuilder.Models
             return new Offsets(minX, maxX, minY, maxY, offsets.First().ImageWidth, offsets.First().ImageHeight, worldId);
         }
 
-        public GameCoordinate ReverseScaleAndTranslate(double x, double y)
+        public MapCoordinate ReverseScaleAndTranslate(double x, double y)
         {
-            return new GameCoordinate(
+            return new MapCoordinate(
                 (x - _offset) / ScaleFactor - OffsetX,
                 (y - _offset) / ScaleFactor - OffsetY,
                 0,

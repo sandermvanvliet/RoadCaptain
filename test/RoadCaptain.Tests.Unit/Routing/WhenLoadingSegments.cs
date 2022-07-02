@@ -14,7 +14,7 @@ namespace RoadCaptain.Tests.Unit.Routing
         {
             var trackPoint = new TrackPoint(-11.640437d, 166.946204d, 13.2d, ZwiftWorldId.Watopia);
 
-            var gamePoint = trackPoint.ToGameCoordinate();
+            var gamePoint = trackPoint.ToMapCoordinate();
             var reverted = gamePoint.ToTrackPoint();
 
             // This is to ensure the conversion actually worked
@@ -46,6 +46,21 @@ namespace RoadCaptain.Tests.Unit.Routing
         }
 
         [Fact]
+        public void GameToLatLonReproRevert()
+        {
+            var expected =
+                JsonConvert.DeserializeObject<GameCoordinate>(
+                    @"{""Latitude"":82723.9,""Longitude"":13806.059,""Altitude"":9365.3,""WorldId"":1}");
+
+            var input = new TrackPoint(-11.64490d, 166.95293d, 9365.3, ZwiftWorldId.Watopia);
+            
+            input
+                .ToMapCoordinate()
+                .Should()
+                .Be(expected);
+        }
+
+        [Fact]
         public void ConvertGameToLatLon()
         {
             var gamePoint = new GameCoordinate(1975769797.96169d, -1697415291.43296, 0, ZwiftWorldId.Watopia);
@@ -64,7 +79,21 @@ namespace RoadCaptain.Tests.Unit.Routing
 
             var expected = new GameCoordinate(1975769797.96169d, -1697415291.43296, 0, ZwiftWorldId.Watopia);
             
-            input.ToGameCoordinate()
+            input.ToMapCoordinate()
+                .Should()
+                .Be(expected);
+        }
+
+        [Fact]
+        public void RoundtripConvert()
+        {
+            var input = new TrackPoint(-11.63645, 166.97237, 0, ZwiftWorldId.Watopia);
+
+            var expected = new GameCoordinate(1975769797.96169d, -1697415291.43296, 0, ZwiftWorldId.Watopia);
+            
+            input.ToMapCoordinate()
+                .ToTrackPoint()
+                .ToMapCoordinate()
                 .Should()
                 .Be(expected);
         }
