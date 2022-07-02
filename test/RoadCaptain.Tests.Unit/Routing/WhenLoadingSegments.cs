@@ -62,7 +62,7 @@ namespace RoadCaptain.Tests.Unit.Routing
         {
             var input = new TrackPoint(-11.63645, 166.97237, 0, ZwiftWorldId.Watopia);
 
-            var expected = new GameCoordinate(1975769797.96169d, -1697415291.43296, 0, ZwiftWorldId.Watopia);
+            var expected = new MapCoordinate(1975769797.96169d, -1697415291.43296, 0, ZwiftWorldId.Watopia);
             
             input.ToMapCoordinate()
                 .Should()
