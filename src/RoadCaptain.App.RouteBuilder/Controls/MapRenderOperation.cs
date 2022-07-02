@@ -26,6 +26,7 @@ namespace RoadCaptain.App.RouteBuilder.Controls
         private SKBitmap? _bitmap;
         private Rect _bounds;
         private SKImage? _worldImage;
+        private ZwiftWorldId _worldImageId;
         public SKMatrix LogicalMatrix { get; private set; }
         public string? HighlightedSegmentId { get; set; }
         public string? SelectedSegmentId { get; set; }
@@ -225,7 +226,7 @@ namespace RoadCaptain.App.RouteBuilder.Controls
 
         private void RenderZwiftMap(SKCanvas canvas, World world)
         {
-            if (_worldImage == null)
+            if (_worldImage == null || _worldImageId != world.ZwiftId)
             {
                 var assets = AvaloniaLocator.Current.GetService<IAssetLoader>();
 
@@ -233,6 +234,7 @@ namespace RoadCaptain.App.RouteBuilder.Controls
                 {
                     var stream = assets.Open(new Uri($"avares://RoadCaptain.App.RouteBuilder/Assets/map-{world.Id}.png"));
                     _worldImage = SKImage.FromEncodedData(stream);
+                    _worldImageId = world.ZwiftId;
                 }
             }
 
