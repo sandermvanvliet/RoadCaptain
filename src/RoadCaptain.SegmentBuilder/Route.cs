@@ -76,7 +76,7 @@ namespace RoadCaptain.SegmentBuilder
                     .Select(segment => new
                     {
                         Segment = segment,
-                        OverlappingPoints = segment.Points.Where(point => Program.IsCloseTo(point, currentPoint))
+                        OverlappingPoints = segment.Points.Where(point => TrackPointUtils.IsCloseTo(point, currentPoint))
                             .ToList()
                     })
                     .Where(overlap => overlap.OverlappingPoints.Any())
@@ -105,7 +105,7 @@ namespace RoadCaptain.SegmentBuilder
                     .Select(segment => new
                     {
                         Segment = segment,
-                        OverlappingPoints = segment.Points.Where(point => Program.IsCloseTo(point, currentPoint))
+                        OverlappingPoints = segment.Points.Where(point => TrackPointUtils.IsCloseTo(point, currentPoint))
                             .ToList()
                     })
                     .Where(overlap => overlap.OverlappingPoints.Any())

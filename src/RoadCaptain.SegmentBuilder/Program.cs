@@ -2,24 +2,15 @@
 // Licensed under Artistic License 2.0
 // See LICENSE or https://choosealicense.com/licenses/artistic-2.0/
 
-using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
-using RoadCaptain.Adapters;
 
 namespace RoadCaptain.SegmentBuilder
 {
     class Program
     {
-        // When splitting segments the overlap should be at least
-        // this many meters along the segment to prevent the creation
-        // of very short segments at three-way intersections for example.
-        private const int MinimumDistanceAlongSegment = 100;
 
         static void Main(string[] args)
         {
@@ -28,8 +19,9 @@ namespace RoadCaptain.SegmentBuilder
             new Program().Run(gpxDirectory);
         }
 
-        private List<Segment> _segments = new();
-        private readonly JsonSerializerSettings _serializerSettings = new()
+        private readonly List<Segment> _segments = new();
+
+        public static readonly JsonSerializerSettings SerializerSettings = new()
         {
             ContractResolver = new CamelCasePropertyNamesContractResolver(),
             Converters =
@@ -40,404 +32,19 @@ namespace RoadCaptain.SegmentBuilder
 
         public void Run(string gpxDirectory)
         {
-            if (!File.Exists(Path.Combine(gpxDirectory, "segments", "snapshot-1.json")))
-            {
-                /*
-                 * - Load the first route
-                 * - Create a single segment from that route
-                 * - Load the next route
-                 * - Walk points and see if there is an existing segment that overlaps
-                 *   - If so, ignore this point
-                 *   - If not, start building a new segment
-                 */
-                var gpxFiles = Directory.GetFiles(gpxDirectory, "*.gpx");
-                foreach (var filePath in gpxFiles)
-                {
-                    var route = Route.FromGpxFile(Path.Combine(gpxDirectory, filePath));
+            GpxToSegmentsStep.Run(_segments, gpxDirectory);
 
-                    Console.WriteLine($"Splitting {route.Slug} into segments");
+            JunctionAlignmentStep.Run(_segments);
 
-                    var newSegments = route.SplitToSegments(_segments);
+            JunctionSplitterStep.Run(_segments);
 
-                    if (newSegments.Any())
-                    {
-                        Console.WriteLine($"Found {newSegments.Count} new segments");
-                        _segments.AddRange(newSegments);
-                    }
-                }
+            TurnFinderStep.Run(_segments, gpxDirectory);
 
-                File.WriteAllText(Path.Combine(gpxDirectory, "segments", "snapshot-1.json"), JsonConvert.SerializeObject(_segments, _serializerSettings));
-            }
-            else
-            {
-                _segments = JsonConvert.DeserializeObject<List<Segment>>(File.ReadAllText(Path.Combine(gpxDirectory, "segments", "snapshot-1.json")), _serializerSettings);
+            CleanupStep.Run(_segments);
 
-                // Populate distance, index and parent properties
-                // of track points on the segment.
-                foreach (var segment in _segments)
-                {
-                    segment.CalculateDistances();
-                }
-            }
+            SegmentSplitStep.Run(_segments);
 
-            // Remove very short segments
-            var toRemove = _segments
-                .Where(s => s.Distance < 20)
-                .ToList();
-
-            foreach (var segment in toRemove)
-            {
-                _segments.Remove(segment);
-            }
-
-            /*
-             * When we have a set of segments we can see where we have T-junctions,
-             * A route start/end that is close to a point in another segment where
-             * that point is somewhere in the middle of that segment.
-             * For those matches we want to split up the larger segment.
-             */
-            var splitSteps = 1;
-
-            while (splitSteps++ < 30)
-            {
-                Console.WriteLine($"\n========\nStarting segment split step: {splitSteps}\n");
-                if (!SplitSegmentsAndUpdateSegmentList())
-                {
-                    break;
-                }
-            }
-
-            foreach (var segment in _segments)
-            {
-                // Clear turns from segments otherwise it blows up because
-                // loading the segments applies the turns to the segments
-                segment.NextSegmentsNodeA.Clear();
-                segment.NextSegmentsNodeB.Clear();
-            }
-
-            GenerateTurns(_segments);
-
-            var turns = _segments
-                .Select(segment => new SegmentTurns
-                {
-                    SegmentId = segment.Id,
-                    TurnsA = TurnsFromSegment(segment.NextSegmentsNodeA),
-                    TurnsB = TurnsFromSegment(segment.NextSegmentsNodeB)
-                })
-                .ToList();
-
-            foreach (var segment in _segments)
-            {
-                File.WriteAllText(Path.Combine(gpxDirectory, "segments", segment.Id + ".gpx"), segment.AsGpx());
-
-                // Clear turns from segments otherwise it blows up because
-                // loading the segments applies the turns to the segments
-                segment.NextSegmentsNodeA.Clear();
-                segment.NextSegmentsNodeB.Clear();
-            }
-
-            File.WriteAllText(
-                Path.Combine(gpxDirectory, "segments", "segments.json"),
-                JsonConvert.SerializeObject(_segments, Formatting.Indented, _serializerSettings));
-
-            File.WriteAllText(
-                Path.Combine(gpxDirectory, "segments", "turns.json"),
-                JsonConvert.SerializeObject(turns, Formatting.Indented, _serializerSettings));
-        }
-
-        private static void GenerateTurns(List<Segment> segments)
-        {
-            foreach (var segment in segments)
-            {
-                if (segment.Id == "makuri-islands-spirit-forest-001")
-                {
-                    Debugger.Break();
-                }
-
-                FindOverlapsWithSegmentNode(segments, segment, segment.A, segment.NextSegmentsNodeA);
-
-                FindOverlapsWithSegmentNode(segments, segment, segment.B, segment.NextSegmentsNodeB);
-            }
-        }
-
-        private static void FindOverlapsWithSegmentNode(List<Segment> segments, Segment segment, TrackPoint endPoint, List<Turn> endNode)
-        {
-            if (endNode.Count > 0)
-            {
-                Debugger.Break();
-            }
-
-            var overlaps = OverlapsWith(endPoint, segments, segment.Id);
-
-            if (!overlaps.Any())
-            {
-                overlaps = OverlapsWith(endPoint, segments, segment.Id, 30);
-            }
-
-            var pointBeforeEndPoint = endPoint.Index.Value == 0
-                ? segment.Points[1]
-                : segment.Points[endPoint.Index.Value - 1];
-
-            var segmentEndBearing = TrackPoint.Bearing(pointBeforeEndPoint, endPoint);
-
-            foreach (var overlap in overlaps)
-            {
-                var bearing = TrackPoint.Bearing(
-                    endPoint, 
-                    IsCloseTo(endPoint, overlap.A) ? overlap.A : overlap.B);
-
-                var turnDirection = TurnDirectionFromBearings(segmentEndBearing, bearing);
-
-                if (endNode.All(n => n.SegmentId != overlap.Id))
-                {
-                    var existing = endNode.SingleOrDefault(n => n.Direction == turnDirection);
-                    if (existing != null)
-                    {
-                        Console.WriteLine($"Already have a turn for {turnDirection} which goes to {existing.SegmentId}");
-                    }
-                    else
-                    {
-                        endNode.Add(new Turn(turnDirection, overlap.Id));
-                    }
-                }
-            }
-
-            if (endNode.Select(n => n.Direction).Distinct().Count() != endNode.Count)
-            {
-                Debugger.Break();
-            }
-        }
-
-        private static TurnDirection TurnDirectionFromBearings(double segmentEndBearing, double bearingToNextSegment)
-        {
-            // Given:
-            // - segmentEndBearing is treated as North - 0 degrees
-            // - calculate offset from 0 degrees
-            // - apply offset to bearingToNextSegment
-            // - determine direction based on bearingToNextSegment
-
-            var correctedBearingToNextSegment = bearingToNextSegment - segmentEndBearing;
-
-            if (correctedBearingToNextSegment > 15 && correctedBearingToNextSegment < 165)
-            {
-                return TurnDirection.Right;
-            }
-            
-            if (correctedBearingToNextSegment > 195 && correctedBearingToNextSegment < 345)
-            {
-                return TurnDirection.Left;
-            }
-
-            return TurnDirection.GoStraight;
-        }
-
-        private static TurnDirection GetNextAvailableTurnDirection(List<Turn> turns)
-        {
-            var nextAvailable = new[] { TurnDirection.GoStraight, TurnDirection.Left, TurnDirection.Right }
-                .Except(turns.Select(t => t.Direction).ToArray())
-                .ToList()
-                .FirstOrDefault();
-
-            if (nextAvailable == default)
-            {
-                throw new InvalidOperationException("No turn direction available!");
-            }
-
-            return nextAvailable;
-        }
-
-        private static SegmentTurn TurnsFromSegment(List<Turn> turns)
-        {
-            var turn = new SegmentTurn();
-
-            var left = turns.SingleOrDefault(t => t.Direction == TurnDirection.Left);
-            if (left != null)
-            {
-                turn.Left = left.SegmentId;
-            }
-            var goStraight = turns.SingleOrDefault(t => t.Direction == TurnDirection.GoStraight);
-            if (goStraight != null)
-            {
-                turn.GoStraight = goStraight.SegmentId;
-            }
-            var right = turns.SingleOrDefault(t => t.Direction == TurnDirection.Right);
-            if (right != null)
-            {
-                turn.Right = right.SegmentId;
-            }
-
-            return turn;
-        }
-
-        public static List<Segment> OverlapsWith(TrackPoint point, List<Segment> segments, string currentSegmentId, int radiusMeters = 15)
-        {
-            return segments
-                .Where(s => s.Id != currentSegmentId)
-                .Where(s => IsCloseTo(s.A, point, radiusMeters) || IsCloseTo(s.B, point, radiusMeters))
-                .ToList();
-        }
-
-        public static bool IsCloseTo(TrackPoint point, TrackPoint other, int radiusMeters = 15)
-        {
-            // 0.00013 degrees equivalent to 15 meters between degrees at latitude -11 
-            // That means that if the difference in longitude between
-            // the two points is more than 0.00013 then we're definitely
-            // going to be more than 15 meters apart and that means
-            // we're not close.
-            if (Math.Abs(other.Longitude - point.Longitude) > 0.00013)
-            {
-                return false;
-            }
-
-            var distance = TrackPoint.GetDistanceFromLatLonInMeters(
-                other.Latitude,
-                other.Longitude,
-                point.Latitude,
-                point.Longitude);
-            
-            if (distance < radiusMeters && Math.Abs(other.Altitude - point.Altitude) <= 2d)
-            {
-                return true;
-            }
-
-            return false;
-        }
-
-        private bool SplitSegmentsAndUpdateSegmentList()
-        {
-            var (toRemove, toAdd) = SplitSegmentsForOverlaps(_segments);
-
-            foreach (var segment in toRemove)
-            {
-                if (_segments.Remove(segment))
-                {
-                    Console.WriteLine($"{segment.Id} was removed");
-                }
-                else
-                {
-                    Console.WriteLine($"{segment.Id} was NOT found!");
-                }
-            }
-
-            foreach (var segment in toAdd)
-            {
-                Console.WriteLine($"{segment.Id} was added");
-                _segments.Add(segment);
-            }
-
-            return toRemove.Any();
-        }
-
-        private (List<Segment> toRemove, List<Segment> toAdd) SplitSegmentsForOverlaps(List<Segment> segments)
-        {
-            var toRemove = new List<Segment>();
-            var toAdd = new List<Segment>();
-
-            foreach (var segment in segments)
-            {
-                var startOverlaps = FindOverlappingPointsInSegments(segment.A, _segments);
-
-                foreach (var overlap in startOverlaps)
-                {
-                    if (overlap.DistanceOnSegment >= MinimumDistanceAlongSegment &&
-                        overlap.Segment.B.DistanceOnSegment - overlap.DistanceOnSegment >= MinimumDistanceAlongSegment)
-                    {
-                        Console.WriteLine(
-                            $"Found junction of start of {segment.Id} with {overlap.Segment.Id} {overlap.DistanceOnSegment:0}m along the segment");
-
-                        var overlapIndex = overlap.Segment.Points.IndexOf(overlap);
-                        if (overlapIndex <= 1)
-                        {
-                            Debugger.Break();
-                        }
-
-                        Console.WriteLine($"Splitting {overlap.Segment.Id} at index {overlapIndex}");
-
-                        toRemove.Add(overlap.Segment);
-
-                        var beforeSplit = overlap.Segment.Slice("before", 0, overlapIndex);
-                        var afterSplit = overlap.Segment.Slice("after", overlapIndex);
-
-                        toAdd.Add(beforeSplit);
-                        toAdd.Add(afterSplit);
-
-                        segment.NextSegmentsNodeA.Add(new Turn(TurnDirection.Left, beforeSplit.Id));
-                        segment.NextSegmentsNodeA.Add(new Turn(TurnDirection.Right, afterSplit.Id));
-
-                        beforeSplit.NextSegmentsNodeB.Add(new Turn(TurnDirection.GoStraight, afterSplit.Id));
-                        beforeSplit.NextSegmentsNodeB.Add(new Turn(TurnDirection.Right, segment.Id));
-
-                        afterSplit.NextSegmentsNodeA.Add(new Turn(TurnDirection.GoStraight, beforeSplit.Id));
-                        afterSplit.NextSegmentsNodeA.Add(new Turn(TurnDirection.Left, segment.Id));
-                    }
-                }
-
-                var endOverlaps = FindOverlappingPointsInSegments(segment.B, _segments);
-
-                foreach (var overlap in endOverlaps)
-                {
-                    if (overlap.DistanceOnSegment >= MinimumDistanceAlongSegment &&
-                        overlap.Segment.B.DistanceOnSegment - overlap.DistanceOnSegment >= MinimumDistanceAlongSegment)
-                    {
-                        Console.WriteLine(
-                            $"Found junction of end of {segment.Id} with {overlap.Segment.Id} {overlap.DistanceOnSegment:0}m along the segment");
-
-                        var overlapIndex = overlap.Segment.Points.IndexOf(overlap);
-                        if (overlapIndex <= 1)
-                        {
-                            Debugger.Break();
-                        }
-
-                        Console.WriteLine($"Splitting {overlap.Segment.Id} at index {overlapIndex}");
-
-                        toRemove.Add(overlap.Segment);
-
-                        var beforeSplit = overlap.Segment.Slice("before", 0, overlapIndex);
-                        var afterSplit = overlap.Segment.Slice("after", overlapIndex);
-
-                        toAdd.Add(beforeSplit);
-                        toAdd.Add(afterSplit);
-
-                        segment.NextSegmentsNodeB.Add(new Turn(TurnDirection.Left, beforeSplit.Id));
-                        segment.NextSegmentsNodeB.Add(new Turn(TurnDirection.Right, afterSplit.Id));
-
-                        beforeSplit.NextSegmentsNodeB.Add(new Turn(TurnDirection.GoStraight, afterSplit.Id));
-                        beforeSplit.NextSegmentsNodeB.Add(new Turn(TurnDirection.Right, segment.Id));
-
-                        afterSplit.NextSegmentsNodeA.Add(new Turn(TurnDirection.GoStraight, beforeSplit.Id));
-                        afterSplit.NextSegmentsNodeA.Add(new Turn(TurnDirection.Left, segment.Id));
-                    }
-                }
-
-                if (toRemove.Any())
-                {
-                    // In situations where we have intersections on
-                    // segments that we just added we need to ensure
-                    // that we're not re-adding them later on. That
-                    // will cause overlapping segments in the end result.
-                    foreach (var segmentToRemove in toRemove)
-                    {
-                        if (toAdd.Any(t => t == segmentToRemove))
-                        {
-                            toAdd.Remove(segmentToRemove);
-                        }
-                    }
-
-                    break;
-                }
-            }
-
-            return (toRemove, toAdd);
-        }
-
-        private static List<TrackPoint> FindOverlappingPointsInSegments(TrackPoint point, List<Segment> segments)
-        {
-            return segments
-                .AsParallel()
-                .Select(segment => segment.Points.Where(p => IsCloseTo(p, point)))
-                .Where(points => points.Any())
-                .SelectMany(points => points)
-                .ToList();
+            OutputStep.Run(_segments, gpxDirectory);
         }
     }
 }
