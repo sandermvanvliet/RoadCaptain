@@ -149,6 +149,11 @@ namespace RoadCaptain.SegmentBuilder
         {
             foreach (var segment in segments)
             {
+                if (segment.Id == "makuri-islands-spirit-forest-001")
+                {
+                    Debugger.Break();
+                }
+
                 FindOverlapsWithSegmentNode(segments, segment, segment.A, segment.NextSegmentsNodeA);
 
                 FindOverlapsWithSegmentNode(segments, segment, segment.B, segment.NextSegmentsNodeB);
@@ -163,6 +168,11 @@ namespace RoadCaptain.SegmentBuilder
             }
 
             var overlaps = OverlapsWith(endPoint, segments, segment.Id);
+
+            if (!overlaps.Any())
+            {
+                overlaps = OverlapsWith(endPoint, segments, segment.Id, 30);
+            }
 
             var pointBeforeEndPoint = endPoint.Index.Value == 0
                 ? segment.Points[1]
@@ -259,15 +269,15 @@ namespace RoadCaptain.SegmentBuilder
             return turn;
         }
 
-        public static List<Segment> OverlapsWith(TrackPoint point, List<Segment> segments, string currentSegmentId)
+        public static List<Segment> OverlapsWith(TrackPoint point, List<Segment> segments, string currentSegmentId, int radiusMeters = 15)
         {
             return segments
                 .Where(s => s.Id != currentSegmentId)
-                .Where(s => IsCloseTo(s.A, point) || IsCloseTo(s.B, point))
+                .Where(s => IsCloseTo(s.A, point, radiusMeters) || IsCloseTo(s.B, point, radiusMeters))
                 .ToList();
         }
 
-        public static bool IsCloseTo(TrackPoint point, TrackPoint other)
+        public static bool IsCloseTo(TrackPoint point, TrackPoint other, int radiusMeters = 15)
         {
             // 0.00013 degrees equivalent to 15 meters between degrees at latitude -11 
             // That means that if the difference in longitude between
@@ -285,7 +295,7 @@ namespace RoadCaptain.SegmentBuilder
                 point.Latitude,
                 point.Longitude);
             
-            if (distance < 15 && Math.Abs(other.Altitude - point.Altitude) <= 2d)
+            if (distance < radiusMeters && Math.Abs(other.Altitude - point.Altitude) <= 2d)
             {
                 return true;
             }
