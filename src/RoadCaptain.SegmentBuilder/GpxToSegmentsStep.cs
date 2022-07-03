@@ -10,6 +10,17 @@ namespace RoadCaptain.SegmentBuilder
     {
         public static void Run(List<Segment> segments, string gpxDirectory)
         {
+            var snapShotPath = Path.Combine(gpxDirectory, "segments", "snapshot-1.json");
+
+            if (File.Exists(snapShotPath))
+            {
+                var snapshotSegments = JsonConvert.DeserializeObject<List<Segment>>(File.ReadAllText(snapShotPath), Program.SerializerSettings);
+
+                segments.AddRange(snapshotSegments);
+
+                return;
+            }
+
             /*
                  * - Load the first route
                  * - Create a single segment from that route
@@ -34,7 +45,7 @@ namespace RoadCaptain.SegmentBuilder
                 }
             }
 
-            File.WriteAllText(Path.Combine(gpxDirectory, "segments", "snapshot-1.json"), JsonConvert.SerializeObject(segments, Program.SerializerSettings));
+            File.WriteAllText(snapShotPath, JsonConvert.SerializeObject(segments, Program.SerializerSettings));
         }
     }
 }
