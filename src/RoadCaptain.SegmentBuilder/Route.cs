@@ -55,7 +55,7 @@ namespace RoadCaptain.SegmentBuilder
         {
             return segments
                 .AsParallel()
-                .Where(s => s.Points.Any(p => p.IsCloseTo(point)))
+                .Where(s => s.Points.Any(p => Program.IsCloseTo(p, point)))
                 .ToList();
         }
 
@@ -84,7 +84,7 @@ namespace RoadCaptain.SegmentBuilder
             foreach (var point in TrackPoints)
             {
                 var overlappingExistingSegments = FindOverlappingExistingSegments(point, segments);
-                var overlappingNewSegments = result.Where(s => s.Points.Any(p => p.IsCloseTo(point))).ToList();
+                var overlappingNewSegments = result.Where(s => s.Points.Any(p => Program.IsCloseTo(p, point))).ToList();
 
                 if (overlappingExistingSegments.Any())
                 {
@@ -104,11 +104,11 @@ namespace RoadCaptain.SegmentBuilder
                     // just ignore that.
                 }
                 else if (currentSegment != null &&
-                         currentSegment.Points.Any(p => p.IsCloseTo(point)))
+                         currentSegment.Points.Any(p => Program.IsCloseTo(p, point)))
                 {
                     // If we find a single match and that was the last added 
                     // point on this segment then we can add the current point.
-                    if (currentSegment.B.IsCloseTo(point))
+                    if (Program.IsCloseTo(currentSegment.B, point))
                     {
                         currentSegment.Points.Add(point);
                     }

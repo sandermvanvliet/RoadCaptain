@@ -200,7 +200,7 @@ namespace RoadCaptain.SegmentBuilder
             return turn;
         }
 
-        private List<Segment> OverlapsWith(TrackPoint point, List<Segment> segments, string currentSegmentId)
+        public static List<Segment> OverlapsWith(TrackPoint point, List<Segment> segments, string currentSegmentId)
         {
             return segments
                 .Where(s => s.Id != currentSegmentId)
