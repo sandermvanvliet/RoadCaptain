@@ -51,7 +51,6 @@ namespace RoadCaptain.SegmentBuilder
                  *   - If not, start building a new segment
                  */
                 var gpxFiles = Directory.GetFiles(gpxDirectory, "*.gpx");
-                var toProcess = 2;
                 foreach (var filePath in gpxFiles)
                 {
                     var route = Route.FromGpxFile(Path.Combine(gpxDirectory, filePath));
@@ -64,11 +63,6 @@ namespace RoadCaptain.SegmentBuilder
                     {
                         Console.WriteLine($"Found {newSegments.Count} new segments");
                         _segments.AddRange(newSegments);
-                    }
-
-                    if (--toProcess <= 0)
-                    {
-                        break;
                     }
                 }
 
@@ -86,6 +80,16 @@ namespace RoadCaptain.SegmentBuilder
                 }
             }
 
+            // Remove very short segments
+            var toRemove = _segments
+                .Where(s => s.Distance < 20)
+                .ToList();
+
+            foreach (var segment in toRemove)
+            {
+                _segments.Remove(segment);
+            }
+
             /*
              * When we have a set of segments we can see where we have T-junctions,
              * A route start/end that is close to a point in another segment where
@@ -101,6 +105,14 @@ namespace RoadCaptain.SegmentBuilder
                 {
                     break;
                 }
+            }
+
+            foreach (var segment in _segments)
+            {
+                // Clear turns from segments otherwise it blows up because
+                // loading the segments applies the turns to the segments
+                segment.NextSegmentsNodeA.Clear();
+                segment.NextSegmentsNodeB.Clear();
             }
 
             GenerateTurns(_segments);
@@ -137,24 +149,76 @@ namespace RoadCaptain.SegmentBuilder
         {
             foreach (var segment in segments)
             {
-                FindOverlapsWithSegmentEnd(segments, segment, segment.A, segment.NextSegmentsNodeA);
+                FindOverlapsWithSegmentNode(segments, segment, segment.A, segment.NextSegmentsNodeA);
 
-                FindOverlapsWithSegmentEnd(segments, segment, segment.B, segment.NextSegmentsNodeB);
+                FindOverlapsWithSegmentNode(segments, segment, segment.B, segment.NextSegmentsNodeB);
             }
         }
 
-        private static void FindOverlapsWithSegmentEnd(List<Segment> segments, Segment segment, TrackPoint endPoint, List<Turn> endNode)
+        private static void FindOverlapsWithSegmentNode(List<Segment> segments, Segment segment, TrackPoint endPoint, List<Turn> endNode)
         {
+            if (endNode.Count > 0)
+            {
+                Debugger.Break();
+            }
+
             var overlaps = OverlapsWith(endPoint, segments, segment.Id);
+
+            var pointBeforeEndPoint = endPoint.Index.Value == 0
+                ? segment.Points[1]
+                : segment.Points[endPoint.Index.Value - 1];
+
+            var segmentEndBearing = TrackPoint.Bearing(pointBeforeEndPoint, endPoint);
 
             foreach (var overlap in overlaps)
             {
-                var turnDirection = GetNextAvailableTurnDirection(endNode);
+                var bearing = TrackPoint.Bearing(
+                    endPoint, 
+                    IsCloseTo(endPoint, overlap.A) ? overlap.A : overlap.B);
+
+                var turnDirection = TurnDirectionFromBearings(segmentEndBearing, bearing);
+
                 if (endNode.All(n => n.SegmentId != overlap.Id))
                 {
-                    endNode.Add(new Turn(turnDirection, overlap.Id));
+                    var existing = endNode.SingleOrDefault(n => n.Direction == turnDirection);
+                    if (existing != null)
+                    {
+                        Console.WriteLine($"Already have a turn for {turnDirection} which goes to {existing.SegmentId}");
+                    }
+                    else
+                    {
+                        endNode.Add(new Turn(turnDirection, overlap.Id));
+                    }
                 }
             }
+
+            if (endNode.Select(n => n.Direction).Distinct().Count() != endNode.Count)
+            {
+                Debugger.Break();
+            }
+        }
+
+        private static TurnDirection TurnDirectionFromBearings(double segmentEndBearing, double bearingToNextSegment)
+        {
+            // Given:
+            // - segmentEndBearing is treated as North - 0 degrees
+            // - calculate offset from 0 degrees
+            // - apply offset to bearingToNextSegment
+            // - determine direction based on bearingToNextSegment
+
+            var correctedBearingToNextSegment = bearingToNextSegment - segmentEndBearing;
+
+            if (correctedBearingToNextSegment > 15 && correctedBearingToNextSegment < 165)
+            {
+                return TurnDirection.Right;
+            }
+            
+            if (correctedBearingToNextSegment > 195 && correctedBearingToNextSegment < 345)
+            {
+                return TurnDirection.Left;
+            }
+
+            return TurnDirection.GoStraight;
         }
 
         private static TurnDirection GetNextAvailableTurnDirection(List<Turn> turns)
@@ -220,8 +284,7 @@ namespace RoadCaptain.SegmentBuilder
                 other.Longitude,
                 point.Latitude,
                 point.Longitude);
-
-            // TODO: re-enable altitude matching
+            
             if (distance < 15 && Math.Abs(other.Altitude - point.Altitude) <= 2d)
             {
                 return true;
