@@ -38,11 +38,11 @@ namespace RoadCaptain.SegmentBuilder
 
             JunctionAlignmentStep.Run(_segments);
 
-            //JunctionSplitterStep.Run(_segments);
+            JunctionSplitterStep.Run(_segments);
 
             //TurnFinderStep.Run(_segments, gpxDirectory);
 
-            CleanupStep.Run(_segments);
+            //CleanupStep.Run(_segments);
 
             //SegmentSplitStep.Run(_segments);
 
