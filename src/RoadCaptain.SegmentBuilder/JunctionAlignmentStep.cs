@@ -112,6 +112,7 @@ namespace RoadCaptain.SegmentBuilder
             // is the smallest
             down = down.OrderBy(d => d.Item2).ToList();
             newPoint = down[0].Item1;
+            newPoint.Index = segmentToAdjust.A.Index;
 
             // Replace original endpoint with new one
             var originalA = segmentToAdjust.A.Clone();
@@ -163,14 +164,14 @@ namespace RoadCaptain.SegmentBuilder
 
             // From closest point:
             var startIndex = closestPoint.Index.Value;
-            var endPoint = segmentToAdjust.Points[^1];
+            var endPoint = segmentToAdjust.Points[^2];
             
             var down = new List<Tuple<TrackPoint, double>>();
 
             // walk UP the junction segment and calculate distance
             // from endpoint' to current point and store the result
             // do this for 10 points
-            foreach(var point in junctionSegment.Segment.Points.Skip(startIndex).Take(20))
+            foreach(var point in junctionSegment.Segment.Points.Skip(startIndex - 20).Take(20))
             {
                 down.Add(new Tuple<TrackPoint, double>(
                     point,
@@ -187,7 +188,9 @@ namespace RoadCaptain.SegmentBuilder
             // new points and again find the closest distance
             // to endpoint'
             var newPointIndex = newPoint.Index.Value;
-            if (newPointIndex == junctionSegment.Segment.Points.Count - 1)
+
+            // Deal with segments that join head-on
+            if (newPointIndex == junctionSegment.Segment.Points.Count - 1 || newPointIndex == 0)
             {
                 return;
             }
@@ -212,14 +215,15 @@ namespace RoadCaptain.SegmentBuilder
             // is the smallest
             down = down.OrderBy(d => d.Item2).ToList();
             newPoint = down[0].Item1;
+            newPoint.Index = segmentToAdjust.B.Index;
 
             // Replace original endpoint with new one
             var originalA = segmentToAdjust.B.Clone();
             
             Console.WriteLine($"\tReplacing {originalA.CoordinatesDecimal} with {newPoint.CoordinatesDecimal}");
 
-            segmentToAdjust.Points.RemoveAt(0);
-            segmentToAdjust.Points.Insert(0, newPoint);
+            segmentToAdjust.Points.RemoveAt(newPoint.Index.Value);
+            segmentToAdjust.Points.Add( newPoint);
         }
 
         private static List<TrackPoint> Interpolate(TrackPoint start, TrackPoint end, int step)
