@@ -43,9 +43,9 @@ namespace RoadCaptain
         [JsonIgnore] public List<Turn> NextSegmentsNodeA { get; } = new();
         [JsonIgnore] public List<Turn> NextSegmentsNodeB { get; } = new();
 
-        public BoundingBox BoundingBox { get; }
+        [JsonIgnore] public BoundingBox BoundingBox { get; }
 
-        public double Distance
+        [JsonIgnore] public double Distance
         {
             get
             {
@@ -58,7 +58,7 @@ namespace RoadCaptain
             }
         }
 
-        public double Ascent
+        [JsonIgnore] public double Ascent
         {
             get
             {
@@ -71,7 +71,7 @@ namespace RoadCaptain
             }
         }
 
-        public double Descent
+        [JsonIgnore] public double Descent
         {
             get
             {
