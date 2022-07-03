@@ -97,7 +97,9 @@ namespace RoadCaptain.SegmentBuilder
                     break;
                 }
             }
-            
+
+            GenerateTurns(_segments);
+
             var turns = _segments
                 .Select(segment => new SegmentTurns
                 {
@@ -126,58 +128,46 @@ namespace RoadCaptain.SegmentBuilder
                 JsonConvert.SerializeObject(turns, Formatting.Indented, _serializerSettings));
         }
 
-        private List<SegmentTurns> GenerateTurns(List<Segment> segments)
+        private static void GenerateTurns(List<Segment> segments)
         {
-            var turns = new List<SegmentTurns>();
-
             foreach (var segment in segments)
             {
-                // Find segments connecting to the 'A' side of this segment
-                var overlaps = OverlapsWith(segment.A, segments, segment.Id);
+                FindOverlapsWithSegmentEnd(segments, segment, segment.A, segment.NextSegmentsNodeA);
 
-                if (overlaps.Count == 1)
-                {
-                    segment.NextSegmentsNodeA.Add(new Turn(TurnDirection.GoStraight, overlaps[0].Id));
-                }
-                else
-                {
-                    var turnDirection = TurnDirection.Left;
-                    foreach (var overlap in overlaps)
-                    {
-                        segment.NextSegmentsNodeA.Add(new Turn(turnDirection, overlap.Id));
-                        turnDirection = TurnDirection.Right;
-                    }
-                }
-
-                // Find segments connecting to the 'B' side of this segment
-                overlaps = OverlapsWith(segment.B, segments, segment.Id);
-
-                if (overlaps.Count == 1)
-                {
-                    segment.NextSegmentsNodeB.Add(new Turn(TurnDirection.GoStraight, overlaps[0].Id));
-                }
-                else
-                {
-                    var turnDirection = TurnDirection.Left;
-                    foreach (var overlap in overlaps)
-                    {
-                        segment.NextSegmentsNodeB.Add(new Turn(turnDirection, overlap.Id));
-                        turnDirection = TurnDirection.Right;
-                    }
-                }
-
-                turns.Add(new SegmentTurns
-                {
-                    SegmentId = segment.Id,
-                    TurnsA = TurnsFromSegment(segment.NextSegmentsNodeA),
-                    TurnsB = TurnsFromSegment(segment.NextSegmentsNodeB)
-                });
+                FindOverlapsWithSegmentEnd(segments, segment, segment.B, segment.NextSegmentsNodeB);
             }
-
-            return turns;
         }
 
-        private SegmentTurn TurnsFromSegment(List<Turn> turns)
+        private static void FindOverlapsWithSegmentEnd(List<Segment> segments, Segment segment, TrackPoint endPoint, List<Turn> endNode)
+        {
+            var overlaps = OverlapsWith(endPoint, segments, segment.Id);
+
+            foreach (var overlap in overlaps)
+            {
+                var turnDirection = GetNextAvailableTurnDirection(endNode);
+                if (endNode.All(n => n.SegmentId != overlap.Id))
+                {
+                    endNode.Add(new Turn(turnDirection, overlap.Id));
+                }
+            }
+        }
+
+        private static TurnDirection GetNextAvailableTurnDirection(List<Turn> turns)
+        {
+            var nextAvailable = new[] { TurnDirection.GoStraight, TurnDirection.Left, TurnDirection.Right }
+                .Except(turns.Select(t => t.Direction).ToArray())
+                .ToList()
+                .FirstOrDefault();
+
+            if (nextAvailable == default)
+            {
+                throw new InvalidOperationException("No turn direction available!");
+            }
+
+            return nextAvailable;
+        }
+
+        private static SegmentTurn TurnsFromSegment(List<Turn> turns)
         {
             var turn = new SegmentTurn();
 
