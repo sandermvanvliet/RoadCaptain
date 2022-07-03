@@ -25,7 +25,7 @@ namespace RoadCaptain.SegmentBuilder
             var doc = XDocument.Parse(File.ReadAllText(filePath));
 
             var trkElement = doc.Root.Element(XName.Get("trk", GpxNamespace));
-            
+
             var typeElement = trkElement.Element(XName.Get("link", GpxNamespace))?.Element(XName.Get("type", GpxNamespace));
             var trkSeg = trkElement.Elements(XName.Get("trkseg", GpxNamespace));
 
@@ -40,7 +40,7 @@ namespace RoadCaptain.SegmentBuilder
                 ))
                 .ToList();
 
-            var sports = typeElement?.Value.Split(',') ?? new [] { "running", "cycling" };
+            var sports = typeElement?.Value.Split(',') ?? new[] { "running", "cycling" };
 
             return new Route
             {
@@ -51,111 +51,111 @@ namespace RoadCaptain.SegmentBuilder
             };
         }
 
-        private static List<Segment> FindOverlappingExistingSegments(TrackPoint point, List<Segment> segments)
-        {
-            return segments
-                .AsParallel()
-                .Where(s => s.Points.Any(p => Program.IsCloseTo(p, point)))
-                .ToList();
-        }
-
         public List<Segment> SplitToSegments(List<Segment> segments)
         {
             var result = new List<Segment>();
 
             SportType sport = SportType.Unknown;
 
-            if(Sports.Contains("running") && Sports.Contains("cycling"))
+            if (Sports.Contains("running") && Sports.Contains("cycling"))
             {
                 sport = SportType.Both;
             }
-            else if(Enum.TryParse(typeof(SportType), Sports.First(), out var x))
+            else if (Enum.TryParse(typeof(SportType), Sports.First(), out var x))
             {
                 sport = (SportType)x;
             }
 
-            var currentSegment = new Segment(new List<TrackPoint>())
-            {
-                Id = $"{Slug}-{result.Count + 1:000}",
-                Sport = sport
-            };
+            Segment currentSegment = null;
             TrackPoint previousPoint = null;
 
-            foreach (var point in TrackPoints)
+            foreach (var currentPoint in TrackPoints)
             {
-                var overlappingExistingSegments = FindOverlappingExistingSegments(point, segments);
-                var overlappingNewSegments = result.Where(s => s.Points.Any(p => Program.IsCloseTo(p, point))).ToList();
+                // Check if the current point is overlapping with an existing segment.
+                var overlappingExistingSegments = segments
+                    .Select(segment => new
+                    {
+                        Segment = segment,
+                        OverlappingPoints = segment.Points.Where(point => Program.IsCloseTo(point, currentPoint))
+                            .ToList()
+                    })
+                    .Where(overlap => overlap.OverlappingPoints.Any())
+                    .ToList();
 
                 if (overlappingExistingSegments.Any())
                 {
-                    // We've found an overlap with an existing route so we can
-                    // skip points until we no longer have a match. THat's where
-                    // a new segment starts.
-                    if (currentSegment != null && currentSegment.Points.Count > 1)
+                    if (currentSegment == null)
                     {
-                        currentSegment.Points.Add(point);
-                        result.Add(currentSegment);
+                        // Progress to the next point until there is no overlap
+                        previousPoint = currentPoint;
+                        continue;
                     }
 
+                    currentSegment.Points.Add(currentPoint);
+                    result.Add(currentSegment);
                     currentSegment = null;
 
-                    // TODO: See if the matching point is the start of a segment
-                    // If not then we need to split _that_ segment. For now we'll
-                    // just ignore that.
+                    previousPoint = currentPoint;
+                    continue;
                 }
-                else if (currentSegment != null &&
-                         currentSegment.Points.Any(p => Program.IsCloseTo(p, point)))
+
+                // Check if the current point is overlapping with a segment we've created
+                // for this route. If that exists it means we're intersecting with ourselves
+                var overlappingNewSegments = result
+                    .Select(segment => new
+                    {
+                        Segment = segment,
+                        OverlappingPoints = segment.Points.Where(point => Program.IsCloseTo(point, currentPoint))
+                            .ToList()
+                    })
+                    .Where(overlap => overlap.OverlappingPoints.Any())
+                    .ToList();
+
+                if (overlappingNewSegments.Any())
                 {
-                    // If we find a single match and that was the last added 
-                    // point on this segment then we can add the current point.
-                    if (Program.IsCloseTo(currentSegment.B, point))
+                    if (currentSegment != null)
                     {
-                        currentSegment.Points.Add(point);
-                    }
-                    else
-                    {
-                        // We've found an overlap with the current segment so we can
-                        // skip points until we no longer have a match. THat's where
-                        // a new segment starts.
-                        if (currentSegment.Points.Count > 1)
+                        if (previousPoint != null)
                         {
-                            currentSegment.Points.Add(point);
-                            result.Add(currentSegment);
-                        }
+                            var bearing = TrackPoint.Bearing(previousPoint, currentPoint);
+                            var bearingToOverlap = TrackPoint.Bearing(previousPoint,
+                                overlappingNewSegments.First().OverlappingPoints.First());
 
-                        currentSegment = null;
+                            if (Math.Abs(bearing - bearingToOverlap) < 1)
+                            {
+                                // Heading in the same direction
+                                currentSegment.Points.Add(currentPoint);
+                                result.Add(currentSegment);
+                                currentSegment = null;
+                            }
+                            else
+                            {
+                                // At an angle
+                                currentSegment.Points.Add(currentPoint);
+                                result.Add(currentSegment);
+                                currentSegment = null;
+                            }
+                        }
                     }
                 }
-                else if (overlappingNewSegments.Any())
+                // If no overlap with any existing segments exists start
+                // creating a new segment
+                else if (currentSegment == null)
                 {
-                    // We've found an overlap with a segment of this route that
-                    // was detected previously so we can
-                    // skip points until we no longer have a match. THat's where
-                    // a new segment starts.
-                    if (currentSegment != null && currentSegment.Points.Count > 1)
+                    var trackPoints = new List<TrackPoint>();
+                    if (previousPoint != null)
                     {
-                        currentSegment.Points.Add(point);
-                        result.Add(currentSegment);
+                        trackPoints.Add(previousPoint);
                     }
-
-                    currentSegment = null;
+                    trackPoints.Add(currentPoint);
+                    currentSegment = new Segment(trackPoints) { Id = $"{Slug}-{result.Count + 1:000}", Sport = sport };
                 }
                 else
                 {
-                    if (currentSegment == null)
-                    {
-                        currentSegment = new Segment(new List<TrackPoint>()) { Id = $"{Slug}-{result.Count + 1:000}", Sport = sport };
-
-                        if (previousPoint != null)
-                        {
-                            currentSegment.Points.Add(previousPoint);
-                        }
-                    }
-
-                    currentSegment.Points.Add(point);
+                    currentSegment.Points.Add(currentPoint);
                 }
 
-                previousPoint = point;
+                previousPoint = currentPoint;
             }
 
             if (currentSegment != null && currentSegment.Points.Count > 1)
