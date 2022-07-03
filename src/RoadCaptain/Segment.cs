@@ -5,7 +5,6 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.IO;
 using System.Linq;
 using System.Xml.Linq;
 using Newtonsoft.Json;
@@ -18,17 +17,9 @@ namespace RoadCaptain
         private double? _descent;
         private double? _distance;
         private string _name;
-        public List<Turn> NextSegmentsNodeA { get; } = new();
-        public List<Turn> NextSegmentsNodeB { get; } = new();
         
-        public List<TrackPoint> Points { get; }
-
-        [JsonIgnore] public TrackPoint A => Points.First();
-
-        [JsonIgnore] public TrackPoint B => Points.Last();
-
         public string Id { get; set; }
-        public BoundingBox BoundingBox { get; }
+        public List<TrackPoint> Points { get; }
         public SportType Sport { get; set; } = SportType.Both;
         public SegmentType Type { get; set; } = SegmentType.Segment;
 
@@ -47,6 +38,12 @@ namespace RoadCaptain
         }
 
         public string NoSelectReason { get; set; }
+        [JsonIgnore] public TrackPoint A => Points.First();
+        [JsonIgnore] public TrackPoint B => Points.Last();
+        [JsonIgnore] public List<Turn> NextSegmentsNodeA { get; } = new();
+        [JsonIgnore] public List<Turn> NextSegmentsNodeB { get; } = new();
+
+        public BoundingBox BoundingBox { get; }
 
         public double Distance
         {
