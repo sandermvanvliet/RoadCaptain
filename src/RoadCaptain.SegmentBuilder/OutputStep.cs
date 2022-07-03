@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Newtonsoft.Json;
 
 namespace RoadCaptain.SegmentBuilder
@@ -20,7 +21,7 @@ namespace RoadCaptain.SegmentBuilder
 
             File.WriteAllText(
                 Path.Combine(gpxDirectory, "segments", "segments.json"),
-                JsonConvert.SerializeObject(segments, Formatting.Indented, Program.SerializerSettings));
+                JsonConvert.SerializeObject(segments.OrderBy(s=>s.Id).ToList(), Formatting.Indented, Program.SerializerSettings));
         }
     }
 }

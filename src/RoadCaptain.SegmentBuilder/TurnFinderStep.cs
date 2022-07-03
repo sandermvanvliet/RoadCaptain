@@ -23,7 +23,7 @@ namespace RoadCaptain.SegmentBuilder
             GenerateTurns(segments);
 
             var turns = segments
-                .Select(segment => new SegmentTurns
+                .Select(segment => new SegmentTurns 
                 {
                     SegmentId = segment.Id,
                     TurnsA = TurnsFromSegment(segment.NextSegmentsNodeA),
@@ -33,7 +33,7 @@ namespace RoadCaptain.SegmentBuilder
             
             File.WriteAllText(
                 Path.Combine(gpxDirectory, "segments", "turns.json"),
-                JsonConvert.SerializeObject(turns, Formatting.Indented, Program.SerializerSettings));
+                JsonConvert.SerializeObject(turns.OrderBy(t => t.SegmentId).ToList(), Formatting.Indented, Program.SerializerSettings));
         }
 
         private static void GenerateTurns(List<Segment> segments)
