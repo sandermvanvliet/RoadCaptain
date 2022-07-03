@@ -51,7 +51,7 @@ namespace RoadCaptain.SegmentBuilder
                  *   - If not, start building a new segment
                  */
                 var gpxFiles = Directory.GetFiles(gpxDirectory, "*.gpx");
-
+                var toProcess = 2;
                 foreach (var filePath in gpxFiles)
                 {
                     var route = Route.FromGpxFile(Path.Combine(gpxDirectory, filePath));
@@ -64,6 +64,11 @@ namespace RoadCaptain.SegmentBuilder
                     {
                         Console.WriteLine($"Found {newSegments.Count} new segments");
                         _segments.AddRange(newSegments);
+                    }
+
+                    if (--toProcess <= 0)
+                    {
+                        break;
                     }
                 }
 
@@ -217,7 +222,7 @@ namespace RoadCaptain.SegmentBuilder
                 point.Longitude);
 
             // TODO: re-enable altitude matching
-            if (distance < 25 && Math.Abs(other.Altitude - point.Altitude) <= 2d)
+            if (distance < 15 && Math.Abs(other.Altitude - point.Altitude) <= 2d)
             {
                 return true;
             }
