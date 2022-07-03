@@ -32,11 +32,6 @@ namespace RoadCaptain.SegmentBuilder
                         break;
                     }
 
-                    if (segmentToAdjust.Id == "makuri-islands-two-village-loop-001")
-                    {
-                        Debugger.Break();
-                    }
-
                     (toRemove, toAdd) = SplitJunctionNode(
                         segmentToAdjust,
                         segments
