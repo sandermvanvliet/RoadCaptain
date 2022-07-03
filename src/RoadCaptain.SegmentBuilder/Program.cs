@@ -34,15 +34,17 @@ namespace RoadCaptain.SegmentBuilder
         {
             GpxToSegmentsStep.Run(_segments, gpxDirectory);
 
+            CleanupStep.Run(_segments);
+
             JunctionAlignmentStep.Run(_segments);
 
-            JunctionSplitterStep.Run(_segments);
+            //JunctionSplitterStep.Run(_segments);
 
-            TurnFinderStep.Run(_segments, gpxDirectory);
+            //TurnFinderStep.Run(_segments, gpxDirectory);
 
             CleanupStep.Run(_segments);
 
-            SegmentSplitStep.Run(_segments);
+            //SegmentSplitStep.Run(_segments);
 
             OutputStep.Run(_segments, gpxDirectory);
         }
