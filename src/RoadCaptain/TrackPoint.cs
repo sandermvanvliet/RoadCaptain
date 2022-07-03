@@ -14,7 +14,7 @@ namespace RoadCaptain
     public class TrackPoint : IEquatable<TrackPoint>
     {
         private readonly ZwiftWorldId? _worldId;
-        private const double CoordinateEqualityTolerance = 0.0001d;
+        private const double CoordinateEqualityTolerance = 0.00001d;
         private const double PiRad = Math.PI / 180d;
         private const double RadToDegree = 180 / Math.PI;
 
