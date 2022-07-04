@@ -12,10 +12,11 @@ namespace RoadCaptain.SegmentBuilder
     {
         public static void Run(List<Segment> segments, string gpxDirectory)
         {
+            // Clear node turns from each segment to ensure
+            // we're not stuck with some pre-existing turns
+            // from before this step has run.
             foreach (var segment in segments)
             {
-                // Clear turns from segments otherwise it blows up because
-                // loading the segments applies the turns to the segments
                 segment.NextSegmentsNodeA.Clear();
                 segment.NextSegmentsNodeB.Clear();
             }
@@ -23,14 +24,14 @@ namespace RoadCaptain.SegmentBuilder
             GenerateTurns(segments);
 
             var turns = segments
-                .Select(segment => new SegmentTurns 
+                .Select(segment => new SegmentTurns
                 {
                     SegmentId = segment.Id,
                     TurnsA = TurnsFromSegment(segment.NextSegmentsNodeA),
                     TurnsB = TurnsFromSegment(segment.NextSegmentsNodeB)
                 })
                 .ToList();
-            
+
             File.WriteAllText(
                 Path.Combine(gpxDirectory, "segments", "turns.json"),
                 JsonConvert.SerializeObject(turns.OrderBy(t => t.SegmentId).ToList(), Formatting.Indented, Program.SerializerSettings));
@@ -48,12 +49,19 @@ namespace RoadCaptain.SegmentBuilder
 
         private static void FindOverlapsWithSegmentNode(List<Segment> segments, Segment segment, TrackPoint endPoint, List<Turn> endNode)
         {
+            if (segment.Id == "makuri-islands-chain-chomper-001-after-after-after-after")
+            {
+                Debugger.Break();
+            }
+
+            var radiusMeters = 25;
+
             if (endNode.Count > 0)
             {
                 Debugger.Break();
             }
 
-            var overlaps = OverlapsWith(endPoint, segments, segment.Id);
+            var overlaps = OverlapsWith(endPoint, segments, segment.Id, radiusMeters);
 
             if (!overlaps.Any())
             {
@@ -62,15 +70,18 @@ namespace RoadCaptain.SegmentBuilder
 
             var pointBeforeEndPoint = endPoint.Index.Value == 0
                 ? segment.Points[1]
-                : segment.Points[endPoint.Index.Value - 1];
+                : segment.Points[^2];
 
             var segmentEndBearing = TrackPoint.Bearing(pointBeforeEndPoint, endPoint);
 
             foreach (var overlap in overlaps)
             {
+                var endPointOfOverlap = TrackPointUtils.IsCloseTo(endPoint, overlap.A, radiusMeters) ? overlap.A : overlap.B;
+                var nextPointOfOverlap = endPointOfOverlap.Index == 0 ? overlap.Points[1] : overlap.Points[^2];
+
                 var bearing = TrackPoint.Bearing(
-                    endPoint, 
-                    TrackPointUtils.IsCloseTo(endPoint, overlap.A) ? overlap.A : overlap.B);
+                    endPointOfOverlap,
+                    nextPointOfOverlap);
 
                 var turnDirection = TurnDirectionFromBearings(segmentEndBearing, bearing);
 
@@ -83,6 +94,7 @@ namespace RoadCaptain.SegmentBuilder
                     }
                     else
                     {
+                        Console.WriteLine($"Adding turn {turnDirection} to {overlap.Id}");
                         endNode.Add(new Turn(turnDirection, overlap.Id));
                     }
                 }
@@ -108,7 +120,7 @@ namespace RoadCaptain.SegmentBuilder
             {
                 return TurnDirection.Right;
             }
-            
+
             if (correctedBearingToNextSegment > 195 && correctedBearingToNextSegment < 345)
             {
                 return TurnDirection.Left;
