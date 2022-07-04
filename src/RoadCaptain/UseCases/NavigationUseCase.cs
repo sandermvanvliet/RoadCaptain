@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using RoadCaptain.GameStates;
 using RoadCaptain.Ports;
@@ -88,7 +87,7 @@ namespace RoadCaptain.UseCases
             return commands.Contains(turnToNextSegment);
         }
 
-        internal static TurnDirection TurnCommandFor(IEnumerable<TurnDirection> commands, TurnDirection nextTurn)
+        internal static TurnDirection TurnCommandFor(List<TurnDirection> commands, TurnDirection nextTurn)
         {
             if (nextTurn == TurnDirection.Left)
             {

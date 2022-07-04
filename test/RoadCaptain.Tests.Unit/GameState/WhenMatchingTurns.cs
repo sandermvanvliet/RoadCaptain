@@ -1,4 +1,5 @@
-﻿using FluentAssertions;
+﻿using System.Collections.Generic;
+using FluentAssertions;
 using RoadCaptain.UseCases;
 using Xunit;
 
@@ -24,7 +25,7 @@ namespace RoadCaptain.Tests.Unit.GameState
             TurnDirection nextTurn,
             TurnDirection expectedCommand)
         {
-            var commands = new[] { commandOne, commandTwo };
+            var commands = new List<TurnDirection> { commandOne, commandTwo };
 
             var turnCommand = NavigationUseCase.TurnCommandFor(commands, nextTurn);
 
