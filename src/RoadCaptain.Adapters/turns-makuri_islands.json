@@ -12,18 +12,19 @@
   {
     "segmentId": "makuri-islands-chain-chomper-001-after-after-after-before",
     "turnsA": {
-      "right": "makuri-islands-flatland-loop-001-before",
-      "goStraight": "makuri-islands-chain-chomper-001-after-after-before-after"
+      "left": "makuri-islands-chain-chomper-001-after-after-before-after",
+      "right": "makuri-islands-flatland-loop-001-before"
     },
     "turnsB": {
-      "goStraight": "makuri-islands-kappa-quest-reverse-001"
+      "left": "makuri-islands-kappa-quest-reverse-001",
+      "goStraight": "makuri-islands-chain-chomper-001-after-after-after-after"
     }
   },
   {
     "segmentId": "makuri-islands-chain-chomper-001-after-after-before-after",
     "turnsA": {
-      "right": "makuri-islands-spirit-forest-001",
-      "goStraight": "makuri-islands-chain-chomper-001-after-after-before-before-after"
+      "left": "makuri-islands-chain-chomper-001-after-after-before-before-after",
+      "right": "makuri-islands-spirit-forest-001"
     },
     "turnsB": {
       "left": "makuri-islands-flatland-loop-001-before",
@@ -33,37 +34,41 @@
   {
     "segmentId": "makuri-islands-chain-chomper-001-after-after-before-before-after",
     "turnsA": {
-      "right": "makuri-islands-chain-chomper-001-after-after-before-before-before",
-      "goStraight": "makuri-islands-spirit-forest-001"
+      "right": "makuri-islands-spirit-forest-001",
+      "goStraight": "makuri-islands-chain-chomper-001-after-after-before-before-before"
     },
     "turnsB": {
-      "goStraight": "makuri-islands-spirit-forest-001"
+      "left": "makuri-islands-spirit-forest-001",
+      "right": "makuri-islands-chain-chomper-001-after-after-before-after"
     }
   },
   {
     "segmentId": "makuri-islands-chain-chomper-001-after-after-before-before-before",
     "turnsA": {
-      "right": "makuri-islands-chain-chomper-001-after-before-after-after-after",
-      "goStraight": "makuri-islands-countryside-tour-002-before-before"
+      "left": "makuri-islands-countryside-tour-002-before-before",
+      "right": "makuri-islands-chain-chomper-001-after-before-after-after-after"
     },
     "turnsB": {
-      "goStraight": "makuri-islands-spirit-forest-001"
+      "left": "makuri-islands-spirit-forest-001",
+      "goStraight": "makuri-islands-chain-chomper-001-after-after-before-before-after"
     }
   },
   {
     "segmentId": "makuri-islands-chain-chomper-001-after-before-after-after-after",
     "turnsA": {
-      "goStraight": "makuri-islands-two-village-loop-004"
+      "left": "makuri-islands-two-village-loop-004",
+      "goStraight": "makuri-islands-chain-chomper-001-after-before-after-after-before"
     },
     "turnsB": {
-      "right": "makuri-islands-countryside-tour-002-before-before",
-      "goStraight": "makuri-islands-chain-chomper-001-after-after-before-before-before"
+      "left": "makuri-islands-chain-chomper-001-after-after-before-before-before",
+      "right": "makuri-islands-countryside-tour-002-before-before"
     }
   },
   {
     "segmentId": "makuri-islands-chain-chomper-001-after-before-after-after-before",
     "turnsA": {
-      "goStraight": "makuri-islands-chain-chomper-001-after-before-after-before"
+      "left": "makuri-islands-chain-chomper-001-after-before-after-before",
+      "right": "makuri-islands-flatland-loop-001-after"
     },
     "turnsB": {
       "right": "makuri-islands-two-village-loop-004",
@@ -73,29 +78,30 @@
   {
     "segmentId": "makuri-islands-chain-chomper-001-after-before-after-before",
     "turnsA": {
-      "right": "makuri-islands-chain-chomper-001-after-before-before-after",
-      "goStraight": "makuri-islands-farmland-loop-001"
+      "left": "makuri-islands-farmland-loop-001",
+      "right": "makuri-islands-chain-chomper-001-after-before-before-after"
     },
     "turnsB": {
-      "right": "makuri-islands-chain-chomper-001-after-before-after-after-before",
-      "goStraight": "makuri-islands-flatland-loop-001-after"
+      "left": "makuri-islands-flatland-loop-001-after",
+      "right": "makuri-islands-chain-chomper-001-after-before-after-after-before"
     }
   },
   {
     "segmentId": "makuri-islands-chain-chomper-001-after-before-before-after",
     "turnsA": {
-      "goStraight": "makuri-islands-two-village-loop-001"
+      "left": "makuri-islands-two-village-loop-001",
+      "goStraight": "makuri-islands-chain-chomper-001-after-before-before-before"
     },
     "turnsB": {
-      "right": "makuri-islands-farmland-loop-001",
-      "goStraight": "makuri-islands-chain-chomper-001-after-before-after-before"
+      "left": "makuri-islands-chain-chomper-001-after-before-after-before",
+      "right": "makuri-islands-farmland-loop-001"
     }
   },
   {
     "segmentId": "makuri-islands-chain-chomper-001-after-before-before-before",
     "turnsA": {
-      "right": "makuri-islands-chain-chomper-001-before",
-      "goStraight": "makuri-islands-countryside-tour-001-after"
+      "left": "makuri-islands-countryside-tour-001-after",
+      "right": "makuri-islands-chain-chomper-001-before"
     },
     "turnsB": {
       "right": "makuri-islands-two-village-loop-001",
@@ -105,18 +111,18 @@
   {
     "segmentId": "makuri-islands-chain-chomper-001-before",
     "turnsA": {
-      "right": "makuri-islands-chain-chomper-001-after-after-after-after"
+      "goStraight": "makuri-islands-chain-chomper-001-after-after-after-after"
     },
     "turnsB": {
-      "right": "makuri-islands-countryside-tour-001-after",
-      "goStraight": "makuri-islands-chain-chomper-001-after-before-before-before"
+      "left": "makuri-islands-chain-chomper-001-after-before-before-before",
+      "right": "makuri-islands-countryside-tour-001-after"
     }
   },
   {
     "segmentId": "makuri-islands-countryside-tour-001-after",
     "turnsA": {
-      "right": "makuri-islands-temples-and-towers-001-after",
-      "goStraight": "makuri-islands-countryside-tour-001-before-after"
+      "left": "makuri-islands-countryside-tour-001-before-after",
+      "right": "makuri-islands-temples-and-towers-001-after"
     },
     "turnsB": {
       "left": "makuri-islands-chain-chomper-001-before",
@@ -126,12 +132,12 @@
   {
     "segmentId": "makuri-islands-countryside-tour-001-before-after",
     "turnsA": {
-      "right": "makuri-islands-countryside-tour-001-before-before",
-      "goStraight": "makuri-islands-two-village-loop-001"
+      "left": "makuri-islands-two-village-loop-001",
+      "right": "makuri-islands-countryside-tour-001-before-before"
     },
     "turnsB": {
-      "right": "makuri-islands-countryside-tour-001-after",
-      "goStraight": "makuri-islands-temples-and-towers-001-after"
+      "left": "makuri-islands-temples-and-towers-001-after",
+      "right": "makuri-islands-countryside-tour-001-after"
     }
   },
   {
@@ -140,7 +146,8 @@
       "goStraight": "makuri-islands-countryside-tour-002-after"
     },
     "turnsB": {
-      "goStraight": "makuri-islands-two-village-loop-001"
+      "left": "makuri-islands-countryside-tour-001-before-after",
+      "right": "makuri-islands-two-village-loop-001"
     }
   },
   {
@@ -156,7 +163,8 @@
   {
     "segmentId": "makuri-islands-countryside-tour-002-before-after",
     "turnsA": {
-      "goStraight": "makuri-islands-two-village-loop-004"
+      "left": "makuri-islands-two-village-loop-004",
+      "right": "makuri-islands-countryside-tour-002-before-before"
     },
     "turnsB": {
       "right": "makuri-islands-farmland-loop-001",
@@ -170,8 +178,8 @@
       "right": "makuri-islands-chain-chomper-001-after-after-before-before-before"
     },
     "turnsB": {
-      "right": "makuri-islands-two-village-loop-004",
-      "goStraight": "makuri-islands-countryside-tour-002-before-after"
+      "left": "makuri-islands-countryside-tour-002-before-after",
+      "right": "makuri-islands-two-village-loop-004"
     }
   },
   {
@@ -181,8 +189,8 @@
       "right": "makuri-islands-chain-chomper-001-after-before-after-before"
     },
     "turnsB": {
-      "right": "makuri-islands-countryside-tour-002-after",
-      "goStraight": "makuri-islands-countryside-tour-002-before-after"
+      "left": "makuri-islands-countryside-tour-002-before-after",
+      "right": "makuri-islands-countryside-tour-002-after"
     }
   },
   {
@@ -192,34 +200,36 @@
       "goStraight": "makuri-islands-kappa-quest-reverse-001"
     },
     "turnsB": {
-      "right": "makuri-islands-chain-chomper-001-after-before-after-before",
-      "goStraight": "makuri-islands-chain-chomper-001-after-before-after-after-before"
+      "left": "makuri-islands-chain-chomper-001-after-before-after-after-before",
+      "right": "makuri-islands-chain-chomper-001-after-before-after-before"
     }
   },
   {
     "segmentId": "makuri-islands-flatland-loop-001-before",
     "turnsA": {
-      "right": "makuri-islands-chain-chomper-001-after-after-before-after",
-      "goStraight": "makuri-islands-chain-chomper-001-after-after-after-before"
+      "left": "makuri-islands-chain-chomper-001-after-after-after-before",
+      "right": "makuri-islands-chain-chomper-001-after-after-before-after"
     },
     "turnsB": {
-      "goStraight": "makuri-islands-kappa-quest-reverse-001"
+      "right": "makuri-islands-kappa-quest-reverse-001"
     }
   },
   {
     "segmentId": "makuri-islands-kappa-quest-reverse-001",
     "turnsA": {
-      "goStraight": "makuri-islands-chain-chomper-001-after-after-after-before"
+      "left": "makuri-islands-chain-chomper-001-after-after-after-after",
+      "right": "makuri-islands-chain-chomper-001-after-after-after-before"
     },
     "turnsB": {
-      "goStraight": "makuri-islands-flatland-loop-001-before"
+      "left": "makuri-islands-flatland-loop-001-before",
+      "goStraight": "makuri-islands-flatland-loop-001-after"
     }
   },
   {
     "segmentId": "makuri-islands-neokyo-all-nighter-001-after",
     "turnsA": {
-      "right": "makuri-islands-neon-flats-001",
-      "goStraight": "makuri-islands-neokyo-all-nighter-001-before-after"
+      "left": "makuri-islands-neokyo-all-nighter-001-before-after",
+      "right": "makuri-islands-neon-flats-001"
     },
     "turnsB": {
       "goStraight": "makuri-islands-neokyo-all-nighter-001-before-before-before"
@@ -228,12 +238,12 @@
   {
     "segmentId": "makuri-islands-neokyo-all-nighter-001-before-after",
     "turnsA": {
-      "right": "makuri-islands-neon-flats-001",
-      "goStraight": "makuri-islands-neokyo-all-nighter-001-before-before-after"
+      "left": "makuri-islands-neokyo-all-nighter-001-before-before-after",
+      "right": "makuri-islands-neon-flats-001"
     },
     "turnsB": {
-      "right": "makuri-islands-neokyo-all-nighter-001-after",
-      "goStraight": "makuri-islands-neon-flats-001"
+      "left": "makuri-islands-neon-flats-001",
+      "right": "makuri-islands-neokyo-all-nighter-001-after"
     }
   },
   {
@@ -250,39 +260,40 @@
   {
     "segmentId": "makuri-islands-neokyo-all-nighter-001-before-before-before",
     "turnsA": {
-      "right": "makuri-islands-neokyo-all-nighter-001-after"
+      "goStraight": "makuri-islands-neokyo-all-nighter-001-after"
     },
     "turnsB": {
-      "right": "makuri-islands-temples-and-towers-001-before-before",
-      "goStraight": "makuri-islands-neokyo-all-nighter-001-before-before-after"
+      "left": "makuri-islands-neokyo-all-nighter-001-before-before-after",
+      "right": "makuri-islands-temples-and-towers-001-before-before"
     }
   },
   {
     "segmentId": "makuri-islands-neon-flats-001",
     "turnsA": {
-      "goStraight": "makuri-islands-neokyo-all-nighter-001-after"
+      "left": "makuri-islands-neokyo-all-nighter-001-after",
+      "right": "makuri-islands-neokyo-all-nighter-001-before-after"
     },
     "turnsB": {
-      "right": "makuri-islands-neokyo-all-nighter-001-before-before-after",
-      "goStraight": "makuri-islands-neokyo-all-nighter-001-before-after"
+      "left": "makuri-islands-neokyo-all-nighter-001-before-after",
+      "right": "makuri-islands-neokyo-all-nighter-001-before-before-after"
     }
   },
   {
     "segmentId": "makuri-islands-spirit-forest-001",
     "turnsA": {
-      "right": "makuri-islands-chain-chomper-001-after-after-before-before-after",
-      "goStraight": "makuri-islands-chain-chomper-001-after-after-before-after"
+      "left": "makuri-islands-chain-chomper-001-after-after-before-after",
+      "right": "makuri-islands-chain-chomper-001-after-after-before-before-after"
     },
     "turnsB": {
-      "right": "makuri-islands-chain-chomper-001-after-after-before-before-before",
-      "goStraight": "makuri-islands-chain-chomper-001-after-after-before-before-after"
+      "left": "makuri-islands-chain-chomper-001-after-after-before-before-after",
+      "right": "makuri-islands-chain-chomper-001-after-after-before-before-before"
     }
   },
   {
     "segmentId": "makuri-islands-temples-and-towers-001-after",
     "turnsA": {
-      "right": "makuri-islands-temples-and-towers-001-before-after",
-      "goStraight": "makuri-islands-temples-and-towers-002"
+      "left": "makuri-islands-temples-and-towers-002",
+      "right": "makuri-islands-temples-and-towers-001-before-after"
     },
     "turnsB": {
       "left": "makuri-islands-countryside-tour-001-after",
@@ -296,39 +307,41 @@
       "right": "makuri-islands-temples-and-towers-001-before-before"
     },
     "turnsB": {
-      "goStraight": "makuri-islands-temples-and-towers-002"
+      "left": "makuri-islands-temples-and-towers-001-after",
+      "right": "makuri-islands-temples-and-towers-002"
     }
   },
   {
     "segmentId": "makuri-islands-temples-and-towers-001-before-before",
     "turnsA": {
-      "right": "makuri-islands-neokyo-all-nighter-001-before-before-after",
-      "goStraight": "makuri-islands-neokyo-all-nighter-001-before-before-before"
+      "left": "makuri-islands-neokyo-all-nighter-001-before-before-before",
+      "right": "makuri-islands-neokyo-all-nighter-001-before-before-after"
     },
     "turnsB": {
-      "right": "makuri-islands-temples-and-towers-002",
-      "goStraight": "makuri-islands-temples-and-towers-001-before-after"
+      "left": "makuri-islands-temples-and-towers-001-before-after",
+      "right": "makuri-islands-temples-and-towers-002"
     }
   },
   {
     "segmentId": "makuri-islands-temples-and-towers-002",
     "turnsA": {
-      "right": "makuri-islands-temples-and-towers-001-after",
-      "goStraight": "makuri-islands-temples-and-towers-001-before-after"
+      "left": "makuri-islands-temples-and-towers-001-before-after",
+      "right": "makuri-islands-temples-and-towers-001-after"
     },
     "turnsB": {
-      "right": "makuri-islands-temples-and-towers-001-before-after",
-      "goStraight": "makuri-islands-temples-and-towers-001-before-before"
+      "left": "makuri-islands-temples-and-towers-001-before-before",
+      "right": "makuri-islands-temples-and-towers-001-before-after"
     }
   },
   {
     "segmentId": "makuri-islands-two-village-loop-001",
     "turnsA": {
-      "right": "makuri-islands-countryside-tour-001-before-after",
-      "goStraight": "makuri-islands-countryside-tour-001-before-before"
+      "left": "makuri-islands-countryside-tour-001-before-before",
+      "right": "makuri-islands-countryside-tour-001-before-after"
     },
     "turnsB": {
-      "goStraight": "makuri-islands-chain-chomper-001-after-before-before-before"
+      "left": "makuri-islands-chain-chomper-001-after-before-before-before",
+      "right": "makuri-islands-chain-chomper-001-after-before-before-after"
     }
   },
   {
@@ -337,7 +350,7 @@
       "goStraight": "makuri-islands-two-village-loop-003"
     },
     "turnsB": {
-      "right": "makuri-islands-two-village-loop-003"
+      "goStraight": "makuri-islands-two-village-loop-003"
     }
   },
   {
@@ -346,14 +359,14 @@
       "goStraight": "makuri-islands-two-village-loop-002"
     },
     "turnsB": {
-      "right": "makuri-islands-two-village-loop-002"
+      "goStraight": "makuri-islands-two-village-loop-002"
     }
   },
   {
     "segmentId": "makuri-islands-two-village-loop-004",
     "turnsA": {
-      "right": "makuri-islands-countryside-tour-002-before-after",
-      "goStraight": "makuri-islands-countryside-tour-002-before-before"
+      "left": "makuri-islands-countryside-tour-002-before-before",
+      "right": "makuri-islands-countryside-tour-002-before-after"
     },
     "turnsB": {
       "left": "makuri-islands-chain-chomper-001-after-before-after-after-before",
