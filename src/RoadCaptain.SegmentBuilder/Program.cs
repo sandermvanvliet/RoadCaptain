@@ -2,6 +2,7 @@
 // Licensed under Artistic License 2.0
 // See LICENSE or https://choosealicense.com/licenses/artistic-2.0/
 
+using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
@@ -32,20 +33,27 @@ namespace RoadCaptain.SegmentBuilder
 
         public void Run(string gpxDirectory)
         {
+            Console.WriteLine("\n==== STEP 1 ====");
             GpxToSegmentsStep.Run(_segments, gpxDirectory);
-
+            
+            Console.WriteLine("\n==== STEP 2 ====");
             CleanupStep.Run(_segments);
-
+            
+            Console.WriteLine("\n==== STEP 3 ====");
             JunctionAlignmentStep.Run(_segments);
-
+            
+            Console.WriteLine("\n==== STEP 4 ====");
             JunctionSplitterStep.Run(_segments);
-
-            //TurnFinderStep.Run(_segments, gpxDirectory);
-
-            //CleanupStep.Run(_segments);
+            
+            Console.WriteLine("\n==== STEP 5 ====");
+            TurnFinderStep.Run(_segments, gpxDirectory);
 
             //SegmentSplitStep.Run(_segments);
-
+            
+            Console.WriteLine("\n==== STEP 6 ====");
+            CleanupStep.Run(_segments);
+            
+            Console.WriteLine("\n==== STEP 7 ====");
             OutputStep.Run(_segments, gpxDirectory);
         }
     }
