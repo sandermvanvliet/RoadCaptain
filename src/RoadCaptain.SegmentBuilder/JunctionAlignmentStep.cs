@@ -32,18 +32,23 @@ namespace RoadCaptain.SegmentBuilder
                     Segment = segment,
                     OverlappingPoints = segment
                         .Points
-                        .Where(point => TrackPointUtils.IsCloseTo(point, segmentToAdjust.A))
+                        .Where(point => TrackPointUtils.IsCloseTo(point, segmentToAdjust.A, 30) &&
+                                        (point.DistanceOnSegment > 100 ||
+                                         point.DistanceOnSegment < segment.Distance - 100))
                         .ToList()
                 })
                 .Where(overlap => overlap.OverlappingPoints.Any())
-                .Select(overlap => new 
+                .Select(overlap => new
                 {
                     overlap.Segment,
-                    ClosestPoint = overlap.OverlappingPoints.Select(p => new
-                    {
-                        Point = p,
-                        Distance = TrackPoint.GetDistanceFromLatLonInMeters(p.Latitude, p.Longitude, segmentToAdjust.A.Latitude, segmentToAdjust.A.Longitude)
-                    })
+                    ClosestPoint = overlap
+                        .OverlappingPoints
+                        .Select(p => new
+                        {
+                            Point = p,
+                            Distance = TrackPoint.GetDistanceFromLatLonInMeters(p.Latitude, p.Longitude,
+                                segmentToAdjust.A.Latitude, segmentToAdjust.A.Longitude)
+                        })
                         .OrderBy(x => x.Distance)
                         .First()
                 })
