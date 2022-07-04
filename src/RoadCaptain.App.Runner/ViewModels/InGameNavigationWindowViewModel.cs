@@ -112,7 +112,7 @@ namespace RoadCaptain.App.Runner.ViewModels
                     }
                 }
 
-                if (gameState is CompletedRouteState)
+                if (gameState is CompletedRouteState && !Model.Route.IsLoop)
                 {
                     HasRouteFinished = true;
                 }
