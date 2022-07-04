@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using RoadCaptain.GameStates;
@@ -103,34 +102,6 @@ namespace RoadCaptain.UseCases
                         _segments ??= _segmentStore.LoadSegments(_route.World, _route.Sport);
 
                         var newState = State.UpdatePosition(position, _segments, _route);
-                        
-#if DEBUG
-                        if (newState is OnSegmentState segmentState)
-                        {
-                            // Shortcut to resuming a route at a later stage.
-                            // This helps during debugging so that you can leave
-                            // Zwift open and quickly restart the Runner to fix
-                            // a bug and retest it without having to start the
-                            // entire route all over again.
-                            if (_route.RouteSegmentSequence.Any(s => s.SegmentId == segmentState.CurrentSegment.Id) && !_route.HasStarted)
-                            {
-                                while (true)
-                                {
-                                    if (_route.CurrentSegmentId != segmentState.CurrentSegment.Id)
-                                    {
-                                        _route.EnteredSegment(
-                                            _route.RouteSegmentSequence[_route.SegmentSequenceIndex+1]
-                                                .SegmentId);
-                                    }
-                                    else
-                                    {
-                                        newState = newState.UpdatePosition(position, _segments, _route);
-                                        break;
-                                    }
-                                }
-                            }
-                        }
-#endif
 
                         State = newState;
                     }
