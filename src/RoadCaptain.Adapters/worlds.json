@@ -109,7 +109,7 @@
       "altitude": 0.0,
       "distanceOnSegment": 0.0,
       "distanceFromLast": 0.0,
-      "coordinatesDecimal": "S11.68401° E166.89304°"
+      "coordinatesDecimal": "S11.68401ï¿½ E166.89304ï¿½"
     },
     "worldMostRight": {
       "latitude": -11.64594,
@@ -117,7 +117,7 @@
       "altitude": 0.0,
       "distanceOnSegment": 0.0,
       "distanceFromLast": 0.0,
-      "coordinatesDecimal": "S11.64594° E167.00275°"
+      "coordinatesDecimal": "S11.64594ï¿½ E167.00275ï¿½"
     },
     "mapMostLeft": {
       "isEmpty": false,
@@ -136,74 +136,56 @@
     "description": "",
     "spawnPoints": [
       {
-        "segmentId": "makuri-islands-temples-and-towers-001-before-before",
-        "zwiftRouteName": "Castle to Castle",
-        "direction": "AtoB",
-        "sport": "Both"
-      },
-      {
-        "segmentId": "makuri-islands-chain-chomper-001-before-before",
-        "zwiftRouteName": "Chain Chomper",
-        "direction": "AtoB",
-        "sport": "Both"
-      },
-      {
-        "segmentId": "makuri-islands-neokyo-all-nighter-001-after-after-after",
-        "zwiftRouteName": "Chasing the Sun",
+        "segmentId": "makuri-islands-chain-chomper-001-after-after-after-before",
+        "zwiftRouteName": "Sea to Tree (makuri-islands)",
         "direction": "BtoA",
         "sport": "Both"
       },
       {
-        "segmentId": "makuri-islands-neokyo-all-nighter-001-after-after-after",
-        "zwiftRouteName": "Twilight Harbor",
+        "segmentId": "makuri-islands-chain-chomper-001-after-after-before-before-after",
+        "zwiftRouteName": "Kappa Quest Reverse (makuri-islands)",
+        "direction": "AtoB",
+        "sport": "Both"
+      },
+      {
+        "segmentId": "makuri-islands-chain-chomper-001-before",
+        "zwiftRouteName": "Chain Chomper (makuri-islands)",
         "direction": "AtoB",
         "sport": "Both"
       },
       {
         "segmentId": "makuri-islands-countryside-tour-001-before-before",
-        "zwiftRouteName": "Countryside Tour",
+        "zwiftRouteName": "Countryside Tour (makuri-islands)",
         "direction": "AtoB",
         "sport": "Both"
       },
       {
-        "segmentId": "makuri-islands-chain-chomper-002-after-after-after-before",
-        "zwiftRouteName": "Kappa Quest Reverse",
+        "segmentId": "makuri-islands-kappa-quest-reverse-001",
+        "zwiftRouteName": "Valley to Mountaintop (makuri-islands)",
         "direction": "AtoB",
         "sport": "Both"
       },
       {
-        "segmentId": "makuri-islands-chain-chomper-002-after-after-after-before",
-        "zwiftRouteName": "Sea to Tree",
+        "segmentId": "makuri-islands-neokyo-all-nighter-001-after",
+        "zwiftRouteName": "Sleepless City (makuri-islands)",
         "direction": "BtoA",
         "sport": "Both"
       },
       {
-        "segmentId": "makuri-islands-chain-chomper-002-after-after-after-before",
-        "zwiftRouteName": "Kappa Quest Reverse",
-        "direction": "AtoB",
-        "sport": "Both"
-      },
-      {
-        "segmentId": "makuri-islands-chain-chomper-002-after-after-after-before",
-        "zwiftRouteName": "Kappa Quest",
+        "segmentId": "makuri-islands-neokyo-all-nighter-001-before-after",
+        "zwiftRouteName": "Neokyo Crit Course (makuri-islands)",
         "direction": "BtoA",
         "sport": "Both"
       },
       {
-        "segmentId": "makuri-islands-neokyo-all-nighter-001-before-before-before-before",
-        "zwiftRouteName": "Neon Flats",
+        "segmentId": "makuri-islands-neokyo-all-nighter-001-before-before-after",
+        "zwiftRouteName": "Temples and Towers (makuri-islands)",
         "direction": "AtoB",
         "sport": "Both"
       },
       {
-        "segmentId": "makuri-islands-neokyo-all-nighter-007",
-        "zwiftRouteName": "Railways and Rooftops",
-        "direction": "BtoA",
-        "sport": "Both"
-      },
-      {
-        "segmentId": "makuri-islands-neokyo-all-nighter-001-before-before-before-after",
-        "zwiftRouteName": "Temples and Towers",
+        "segmentId": "makuri-islands-neokyo-all-nighter-001-before-before-before",
+        "zwiftRouteName": "Neokyo All-Nighter (makuri-islands)",
         "direction": "AtoB",
         "sport": "Both"
       }
@@ -216,7 +198,7 @@
       "altitude": 0.0,
       "distanceOnSegment": 0.0,
       "distanceFromLast": 0.0,
-      "coordinatesDecimal": "S10.80543° E165.83688°"
+      "coordinatesDecimal": "S10.80543ï¿½ E165.83688ï¿½"
     },
     "worldMostRight": {
       "latitude": -10.74372,
@@ -224,7 +206,7 @@
       "altitude": 0.0,
       "distanceOnSegment": 0.0,
       "distanceFromLast": 0.0,
-      "coordinatesDecimal": "S10.74372° E165.85628°"
+      "coordinatesDecimal": "S10.74372ï¿½ E165.85628ï¿½"
     },
     "mapMostLeft": {
       "isEmpty": false,
