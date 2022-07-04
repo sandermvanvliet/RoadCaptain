@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using RoadCaptain.GameStates;
 using RoadCaptain.Ports;
@@ -43,16 +44,18 @@ namespace RoadCaptain.UseCases
         {
             if (gameState is UpcomingTurnState turnState && _previousState is not UpcomingTurnState)
             {
-                if (CommandsMatchTurnToNextSegment(turnState.Directions, turnState.Route.TurnToNextSegment))
+                var nextTurnDirection = TurnCommandFor(turnState.Directions, turnState.Route.TurnToNextSegment);
+
+                if (CommandsMatchTurnToNextSegment(turnState.Directions, nextTurnDirection))
                 {
-                    _monitoringEvents.Information("Executing turn {TurnDirection} onto {SegmentId}", turnState.Route.TurnToNextSegment, turnState.Route.NextSegmentId);
-                    _gameConnection.SendTurnCommand(turnState.Route.TurnToNextSegment, _lastSequenceNumber, gameState.RiderId);
+                    _monitoringEvents.Information("Executing turn {TurnDirection} onto {SegmentId}", nextTurnDirection, turnState.Route.NextSegmentId);
+                    _gameConnection.SendTurnCommand(nextTurnDirection, _lastSequenceNumber, gameState.RiderId);
                 }
                 else
                 {
                     _monitoringEvents.Error(
                         "Expected turn command {ExpectedTurnCommand} to be present but instead got: {TurnCommands}",
-                        turnState.Route.TurnToNextSegment,
+                        nextTurnDirection,
                         string.Join(", ", turnState.Directions));
                 }
             }
@@ -80,9 +83,43 @@ namespace RoadCaptain.UseCases
 
         private static bool CommandsMatchTurnToNextSegment(
             List<TurnDirection> commands,
-            TurnDirection turnToNextSegemnt)
+            TurnDirection turnToNextSegment)
         {
-            return commands.Contains(turnToNextSegemnt);
+            return commands.Contains(turnToNextSegment);
+        }
+
+        internal static TurnDirection TurnCommandFor(IEnumerable<TurnDirection> commands, TurnDirection nextTurn)
+        {
+            if (nextTurn == TurnDirection.Left)
+            {
+                if (commands.Contains(TurnDirection.Left))
+                {
+                    if (commands.Contains(TurnDirection.GoStraight) ||
+                        commands.Contains(TurnDirection.Right))
+                    {
+                        return TurnDirection.Left;
+                    }
+                }
+
+                return TurnDirection.GoStraight;
+            }
+
+            if (nextTurn == TurnDirection.GoStraight ||
+                nextTurn == TurnDirection.Right)
+            {
+                if (commands.Contains(TurnDirection.Right))
+                {
+                    if (commands.Contains(TurnDirection.GoStraight) ||
+                        commands.Contains(TurnDirection.Left))
+                    {
+                        return TurnDirection.Right;
+                    }
+                }
+                
+                return TurnDirection.GoStraight;
+            }
+
+            return TurnDirection.None;
         }
     }
 }

@@ -52,7 +52,7 @@ namespace RoadCaptain.Tests.Unit
         }
 
         [Fact]
-        public void GivenStartedRouteOnSegmentThreeAndLeftAndGoStraightCommandsAvailable_NoCommandIsSent()
+        public void GivenStartedRouteOnSegmentThreeAndLeftAndGoStraightCommandsAvailable_GoStraightCommandIsSentBecauseItsMappedFromTurnRight()
         {
             _plannedRoute.EnteredSegment("seg-1");
             _plannedRoute.EnteredSegment("seg-2");
@@ -67,7 +67,7 @@ namespace RoadCaptain.Tests.Unit
             _inMemoryZwiftGameConnection
                 .SentCommands
                 .Should()
-                .BeEmpty();
+                .ContainSingle(TurnDirection.GoStraight.ToString());
         }
 
         [Fact]
@@ -86,9 +86,7 @@ namespace RoadCaptain.Tests.Unit
             _inMemoryZwiftGameConnection
                 .SentCommands
                 .Should()
-                .Contain(TurnDirection.Right.ToString())
-                .And
-                .HaveCount(1);
+                .ContainSingle(TurnDirection.Right.ToString());
         }
 
         [Fact]
