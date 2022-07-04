@@ -133,7 +133,7 @@
     "segmentId": "makuri-islands-countryside-tour-001-before-after",
     "turnsA": {
       "left": "makuri-islands-two-village-loop-001",
-      "right": "makuri-islands-countryside-tour-001-before-before"
+      "goStraight": "makuri-islands-countryside-tour-001-before-before"
     },
     "turnsB": {
       "left": "makuri-islands-temples-and-towers-001-after",
@@ -146,8 +146,8 @@
       "goStraight": "makuri-islands-countryside-tour-002-after"
     },
     "turnsB": {
-      "left": "makuri-islands-countryside-tour-001-before-after",
-      "right": "makuri-islands-two-village-loop-001"
+      "right": "makuri-islands-two-village-loop-001",
+      "goStraight": "makuri-islands-countryside-tour-001-before-after"
     }
   },
   {
@@ -196,8 +196,8 @@
   {
     "segmentId": "makuri-islands-flatland-loop-001-after",
     "turnsA": {
-      "right": "makuri-islands-flatland-loop-001-before",
-      "goStraight": "makuri-islands-kappa-quest-reverse-001"
+      "left": "makuri-islands-kappa-quest-reverse-001",
+      "goStraight": "makuri-islands-flatland-loop-001-before"
     },
     "turnsB": {
       "left": "makuri-islands-chain-chomper-001-after-before-after-after-before",
@@ -211,7 +211,8 @@
       "right": "makuri-islands-chain-chomper-001-after-after-before-after"
     },
     "turnsB": {
-      "right": "makuri-islands-kappa-quest-reverse-001"
+      "right": "makuri-islands-kappa-quest-reverse-001",
+      "goStraight": "makuri-islands-flatland-loop-001-after"
     }
   },
   {
@@ -222,7 +223,7 @@
     },
     "turnsB": {
       "left": "makuri-islands-flatland-loop-001-before",
-      "goStraight": "makuri-islands-flatland-loop-001-after"
+      "right": "makuri-islands-flatland-loop-001-after"
     }
   },
   {
