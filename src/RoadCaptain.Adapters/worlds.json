@@ -137,55 +137,55 @@
     "spawnPoints": [
       {
         "segmentId": "makuri-islands-chain-chomper-001-after-after-after-before",
-        "zwiftRouteName": "Sea to Tree (makuri-islands)",
+        "zwiftRouteName": "Sea to Tree",
         "direction": "BtoA",
         "sport": "Both"
       },
       {
         "segmentId": "makuri-islands-chain-chomper-001-after-after-before-before-after",
-        "zwiftRouteName": "Kappa Quest Reverse (makuri-islands)",
+        "zwiftRouteName": "Kappa Quest Reverse",
         "direction": "AtoB",
         "sport": "Both"
       },
       {
         "segmentId": "makuri-islands-chain-chomper-001-before",
-        "zwiftRouteName": "Chain Chomper (makuri-islands)",
+        "zwiftRouteName": "Chain Chomper",
         "direction": "AtoB",
         "sport": "Both"
       },
       {
         "segmentId": "makuri-islands-countryside-tour-001-before-before",
-        "zwiftRouteName": "Countryside Tour (makuri-islands)",
+        "zwiftRouteName": "Countryside Tour",
         "direction": "AtoB",
         "sport": "Both"
       },
       {
         "segmentId": "makuri-islands-kappa-quest-reverse-001",
-        "zwiftRouteName": "Valley to Mountaintop (makuri-islands)",
+        "zwiftRouteName": "Valley to Mountaintop",
         "direction": "AtoB",
         "sport": "Both"
       },
       {
         "segmentId": "makuri-islands-neokyo-all-nighter-001-after",
-        "zwiftRouteName": "Sleepless City (makuri-islands)",
+        "zwiftRouteName": "Sleepless City",
         "direction": "BtoA",
         "sport": "Both"
       },
       {
         "segmentId": "makuri-islands-neokyo-all-nighter-001-before-after",
-        "zwiftRouteName": "Neokyo Crit Course (makuri-islands)",
+        "zwiftRouteName": "Neokyo Crit Course",
         "direction": "BtoA",
         "sport": "Both"
       },
       {
         "segmentId": "makuri-islands-neokyo-all-nighter-001-before-before-after",
-        "zwiftRouteName": "Temples and Towers (makuri-islands)",
+        "zwiftRouteName": "Temples and Towers",
         "direction": "AtoB",
         "sport": "Both"
       },
       {
         "segmentId": "makuri-islands-neokyo-all-nighter-001-before-before-before",
-        "zwiftRouteName": "Neokyo All-Nighter (makuri-islands)",
+        "zwiftRouteName": "Neokyo All-Nighter",
         "direction": "AtoB",
         "sport": "Both"
       }
