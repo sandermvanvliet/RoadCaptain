@@ -49,11 +49,6 @@ namespace RoadCaptain.SegmentBuilder
 
         private static void FindOverlapsWithSegmentNode(List<Segment> segments, Segment segment, TrackPoint endPoint, List<Turn> endNode)
         {
-            if (segment.Id == "makuri-islands-chain-chomper-001-after-after-after-after")
-            {
-                Debugger.Break();
-            }
-
             var radiusMeters = 25;
 
             if (endNode.Count > 0)
@@ -73,6 +68,13 @@ namespace RoadCaptain.SegmentBuilder
                 : segment.Points[^2];
 
             var segmentEndBearing = TrackPoint.Bearing(pointBeforeEndPoint, endPoint);
+
+            // Single overlap always means GoStraight
+            if (overlaps.Count == 1)
+            {
+                endNode.Add(new Turn(TurnDirection.GoStraight, overlaps[0].Id));
+                return;
+            }
 
             foreach (var overlap in overlaps)
             {
@@ -114,14 +116,15 @@ namespace RoadCaptain.SegmentBuilder
             // - apply offset to bearingToNextSegment
             // - determine direction based on bearingToNextSegment
 
-            var correctedBearingToNextSegment = bearingToNextSegment - segmentEndBearing;
+            var offset = 360 - segmentEndBearing;
+            var correctedBearingToNextSegment = (bearingToNextSegment  + offset) % 360;
 
-            if (correctedBearingToNextSegment > 15 && correctedBearingToNextSegment < 165)
+            if (correctedBearingToNextSegment > 25 && correctedBearingToNextSegment < 155)
             {
                 return TurnDirection.Right;
             }
 
-            if (correctedBearingToNextSegment > 195 && correctedBearingToNextSegment < 345)
+            if (correctedBearingToNextSegment > 225 && correctedBearingToNextSegment < 335)
             {
                 return TurnDirection.Left;
             }
