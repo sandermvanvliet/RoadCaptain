@@ -38,6 +38,8 @@ namespace RoadCaptain.SegmentBuilder
             
             Console.WriteLine("\n==== STEP 2 ====");
             CleanupStep.Run(_segments);
+
+            SegmentSmootherStep.Run(_segments);
             
             Console.WriteLine("\n==== STEP 3 ====");
             JunctionAlignmentStep.Run(_segments);
