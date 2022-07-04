@@ -22,6 +22,7 @@ The **[PREVIEW]** items should work but may have some quirks. Any feedback is mo
 
 - Makuri Islands is now available for beta testing [#7](https://github.com/sandermvanvliet/RoadCaptain/issues/7)
 - Improved turn command to route mapping. This should prevent issues where RoadCaptain has different turns defined on a segment vs what Zwift reports.
+- Show loop counter in the bottom bar of the in-game window. This makes it easy to see on which repetition of the loop you are: ![Runner showing loop count 1](./images/runner-loop-count-1.png) ![Runner showing loop count 2](./images/runner-loop-count-2.png)
 
 ### Route Builder
 

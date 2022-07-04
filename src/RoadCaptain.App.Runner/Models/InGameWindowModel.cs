@@ -23,6 +23,7 @@ namespace RoadCaptain.App.Runner.Models
         private string _waitingReason = "Waiting for Zwift connection...";
         private string _instructionText;
         private bool _lostRouteLock;
+        private int _loopCount = 1;
 
         public InGameWindowModel(List<Segment> segments)
         {
@@ -186,6 +187,20 @@ namespace RoadCaptain.App.Runner.Models
                 if (value == _instructionText) return;
                 _instructionText = value;
                 this.RaisePropertyChanged();
+            }
+        }
+
+        public string LoopText => $"Loop: {LoopCount}";
+
+        public int LoopCount
+        {
+            get => _loopCount;
+            set
+            {
+                if (value == _loopCount) return;
+                _loopCount = value;
+                this.RaisePropertyChanged();
+                this.RaisePropertyChanged(nameof(LoopText));
             }
         }
 

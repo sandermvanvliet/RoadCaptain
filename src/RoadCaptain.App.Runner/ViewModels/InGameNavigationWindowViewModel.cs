@@ -19,6 +19,7 @@ namespace RoadCaptain.App.Runner.ViewModels
         private TrackPoint? _previousPosition;
         private bool _hasRouteFinished;
         private IZwiftGameConnection _gameConnection;
+        private int? _lastRouteSequenceIndex = null;
 
         public InGameNavigationWindowViewModel(InGameWindowModel inGameWindowModel, List<Segment> segments, IZwiftGameConnection gameConnection)
         {
@@ -183,6 +184,11 @@ namespace RoadCaptain.App.Runner.ViewModels
 
         private void RouteProgression(int segmentSequenceIndex)
         {
+            if (_lastRouteSequenceIndex != null && segmentSequenceIndex == 0 && Model.Route.IsLoop)
+            {
+                Model.LoopCount++;
+            }
+
             // Set CurrentSegment and NextSegment accordingly
             Model.CurrentSegment = SegmentSequenceModelFromIndex(segmentSequenceIndex);
 
@@ -194,6 +200,8 @@ namespace RoadCaptain.App.Runner.ViewModels
             {
                 Model.NextSegment = null;
             }
+
+            _lastRouteSequenceIndex = segmentSequenceIndex;
         }
 
         private SegmentSequenceModel SegmentSequenceModelFromIndex(int index)

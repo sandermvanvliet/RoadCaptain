@@ -252,6 +252,7 @@
 				<TextBlock Text="{Binding Path=Model.CurrentSegment.SequenceNumber,FallbackValue=0, TargetNullValue=0}" />
 				<TextBlock Text="of"  />
 				<TextBlock Text="{Binding Path=Model.Route.RouteSegmentSequence.Count,FallbackValue=0, TargetNullValue=0}" />
+				<TextBlock Text="{Binding Path=Model.LoopText}" IsVisible="{Binding Path=Model.Route.IsLoop}" Margin="8,0,0,0" />
 			</StackPanel>
 		</Border>
 	</Grid>
