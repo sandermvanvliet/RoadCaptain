@@ -2,10 +2,28 @@
 
 ## 0.6.5.0
 
+This release is the first release to add another Zwift world to RoadCaptain: Makuri Islands!
+
+It is now possible to build routes in Makuri Islands and ride (or run!) them with RoadCaptain Runner. The segments and turns have all been automatically generated which saves a ton of time because I no longer have to ride each segment to find the junctions.
+
+Behind the scenes there have been some changes to make it easier to support new worlds. In the last release we saw a few issues where the segment had incorrect turns defined which would break routing. To solve this for the future, RoadCaptain now automatically works out what the correct turn is based on what Zwift provides as turn commands.
+
+Ride on!
+
+The **[PREVIEW]** items should work but may have some quirks. Any feedback is more than welcome!
+
+### Runner
+
+- Improved turn command to route mapping. This should prevent issues where RoadCaptain has different turns defined on a segment vs what Zwift reports.
+
 ### Route Builder
 
 - Makuri Islands is now available for beta testing [#7](https://github.com/sandermvanvliet/RoadCaptain/issues/7)
 - Fixed a bug where the Zwift map would not be changed when switching worlds
+
+### Routing
+
+- **[PREVIEW]** [Makuri Islands] Segments and turns are now available for testing. Most of Makuri Islands should be fine however you could encounter problems in Neokyo.
 
 ## 0.6.4.0
 
@@ -81,6 +99,7 @@ A number of routing issues were found (see [#84](https://github.com/sandermvanvl
 - A message box is shown when another instance of RoadCaptain Runner is already running.
 
 The **[PREVIEW]** items should work but may have some quirks. Any feedback is more than welcome!
+
 ## 0.6.2.1
 
 **Breaking change:**
