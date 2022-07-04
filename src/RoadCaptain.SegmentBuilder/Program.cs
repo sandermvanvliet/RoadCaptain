@@ -49,14 +49,15 @@ namespace RoadCaptain.SegmentBuilder
             
             Console.WriteLine("\n==== STEP 5 ====");
             TurnFinderStep.Run(_segments, gpxDirectory);
-
-            //SegmentSplitStep.Run(_segments);
             
             Console.WriteLine("\n==== STEP 6 ====");
             CleanupStep.Run(_segments);
             
             Console.WriteLine("\n==== STEP 7 ====");
             OutputStep.Run(_segments, gpxDirectory);
+            
+            Console.WriteLine("\n==== STEP 8 ====");
+            SpawnPointFinderStep.Run(_segments, gpxDirectory);
         }
     }
 }
