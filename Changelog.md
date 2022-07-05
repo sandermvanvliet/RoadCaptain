@@ -2,9 +2,12 @@
 
 ## 0.6.6.0
 
+France is now available to plan routes!
+
 ### Routing
 
 - [Makuri Islands] Add KOM and Sprint segments
+- [France] Added segments, KOMs and Sprints [#12](https://github.com/sandermvanvliet/RoadCaptain/issues/12)
 
 ## 0.6.5.0
 

@@ -313,18 +313,51 @@
     "id": "france",
     "name": "France",
     "description": "",
-    "spawnPoints": [],
-    "status": "Unavailable",
+    "spawnPoints": [
+      {
+        "segmentId": "france-casse-pattes-001-before-after-after",
+        "zwiftRouteName": "Douce France (france)",
+        "direction": "AtoB",
+        "sport": "Both"
+      },
+      {
+        "segmentId": "france-casse-pattes-001-before-after-before",
+        "zwiftRouteName": "Roule Ma Poule (france)",
+        "direction": "BtoA",
+        "sport": "Both"
+      },
+      {
+        "segmentId": "france-casse-pattes-001-before-before",
+        "zwiftRouteName": "Casse-Pattes (france)",
+        "direction": "AtoB",
+        "sport": "Both"
+      }
+    ],
+    "status": "Beta",
     "zwiftId": "France",
+    "worldMostLeft": {
+      "latitude": -21.74424,
+      "longitude": 166.15056,
+      "altitude": 0.0,
+      "distanceOnSegment": 0.0,
+      "distanceFromLast": 0.0
+    },
+    "worldMostRight": {
+      "latitude": -21.65402,
+      "longitude": 166.24460,
+      "altitude": 0.0,
+      "distanceOnSegment": 0.0,
+      "distanceFromLast": 0.0
+    },
     "mapMostLeft": {
       "isEmpty": true,
-      "x": 0.0,
-      "y": 0.0
+      "x": 610.0,
+      "y": 5494.0
     },
     "mapMostRight": {
       "isEmpty": true,
-      "x": 0.0,
-      "y": 0.0
+      "x": 5307.0,
+      "y": 665.0
     }
   },
   {

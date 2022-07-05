@@ -15,7 +15,7 @@ namespace RoadCaptain.SegmentBuilder
 
         static void Main(string[] args)
         {
-            var gpxDirectory = args.Length > 0 ? args[0] : @"C:\git\temp\zwift\zwift-makuri_islands-gpx";
+            var gpxDirectory = args.Length > 0 ? args[0] : @"C:\git\temp\zwift\zwift-france-gpx";
 
             new Program().Run(gpxDirectory);
         }

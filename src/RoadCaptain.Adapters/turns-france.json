@@ -1,0 +1,77 @@
+[
+  {
+    "segmentId": "france-casse-pattes-001-after",
+    "turnsA": {
+      "left": "france-douce-france-001",
+      "goStraight": "france-casse-pattes-001-before-after-after"
+    },
+    "turnsB": {
+      "goStraight": "france-casse-pattes-001-before-before"
+    }
+  },
+  {
+    "segmentId": "france-casse-pattes-001-before-after-after",
+    "turnsA": {
+      "right": "france-la-reine-002",
+      "goStraight": "france-casse-pattes-001-before-after-before"
+    },
+    "turnsB": {
+      "right": "france-douce-france-001",
+      "goStraight": "france-casse-pattes-001-after"
+    }
+  },
+  {
+    "segmentId": "france-casse-pattes-001-before-after-before",
+    "turnsA": {
+      "left": "france-douce-france-001",
+      "right": "france-casse-pattes-001-before-before"
+    },
+    "turnsB": {
+      "left": "france-la-reine-002",
+      "goStraight": "france-casse-pattes-001-before-after-after"
+    }
+  },
+  {
+    "segmentId": "france-casse-pattes-001-before-before",
+    "turnsA": {
+      "goStraight": "france-casse-pattes-001-after"
+    },
+    "turnsB": {
+      "left": "france-casse-pattes-001-before-after-before",
+      "goStraight": "france-douce-france-001"
+    }
+  },
+  {
+    "segmentId": "france-douce-france-001",
+    "turnsA": {
+      "left": "france-casse-pattes-001-before-after-after",
+      "right": "france-casse-pattes-001-after"
+    },
+    "turnsB": {
+      "right": "france-casse-pattes-001-before-after-before",
+      "goStraight": "france-casse-pattes-001-before-before"
+    }
+  },
+  {
+    "segmentId": "france-la-reine-001",
+    "turnsA": {},
+    "turnsB": {}
+  },
+  {
+    "segmentId": "france-la-reine-002",
+    "turnsA": {
+      "left": "france-casse-pattes-001-before-after-after",
+      "right": "france-casse-pattes-001-before-after-before"
+    },
+    "turnsB": {
+      "goStraight": "france-ven-top-002"
+    }
+  },
+  {
+    "segmentId": "france-ven-top-002",
+    "turnsA": {
+      "goStraight": "france-la-reine-002"
+    },
+    "turnsB": {}
+  }
+]
