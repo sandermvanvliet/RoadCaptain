@@ -331,6 +331,12 @@
         "zwiftRouteName": "Casse-Pattes (france)",
         "direction": "AtoB",
         "sport": "Both"
+      },
+      {
+        "segmentId": "france-casse-pattes-001-before-after-after",
+        "zwiftRouteName": "Ven-Top",
+        "direction": "BtoA",
+        "sport": "Both"
       }
     ],
     "status": "Beta",
