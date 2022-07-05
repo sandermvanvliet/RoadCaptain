@@ -339,7 +339,11 @@ namespace RoadCaptain.App.RouteBuilder.Controls
             var boundedSegments = pathsInBounds.Select(kv => Segments.Single(s => s.Id == kv.Key)).ToList();
 
             var reverseScaled = _overallOffsets.ReverseScaleAndTranslate(scaledPoint.X, scaledPoint.Y);
-            var scaledPointToPositionIntermediate = new GameCoordinate(reverseScaled.X, reverseScaled.Y, reverseScaled.Altitude, _route?.World?.ZwiftId ?? ZwiftWorldId.Unknown).ToTrackPoint();
+            
+            var scaledPointToPositionIntermediate = reverseScaled
+                .ToGameCoordinate()
+                .ToTrackPoint();
+
             var scaledPointToPosition = new TrackPoint(
                 -scaledPointToPositionIntermediate.Longitude, 
                 scaledPointToPositionIntermediate.Latitude,

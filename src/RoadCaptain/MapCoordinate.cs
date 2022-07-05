@@ -34,6 +34,11 @@ namespace RoadCaptain
             return HashCode.Combine(X, Y, Altitude);
         }
 
+        public GameCoordinate ToGameCoordinate()
+        {
+            return new GameCoordinate(X, Y, Altitude, WorldId);
+        }
+
         public TrackPoint ToTrackPoint()
         {
             // NOTE 1:
