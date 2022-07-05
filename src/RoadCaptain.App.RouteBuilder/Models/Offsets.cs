@@ -33,6 +33,8 @@ namespace RoadCaptain.App.RouteBuilder.Models
                    
             MinY = (float)data.Min(p => p.Y);
             MaxY = (float)data.Max(p => p.Y);
+
+            ScaleFactor = CalculateScaleFactor();
         }
 
         private Offsets(float minX, float maxX, float minY, float maxY, float imageWidth, float imageHeight, ZwiftWorldId worldId, int offset = 0)
@@ -50,6 +52,8 @@ namespace RoadCaptain.App.RouteBuilder.Models
             MaxX = maxX;
             MinY = minY;
             MaxY = maxY;
+
+            ScaleFactor = CalculateScaleFactor();
         }
 
         public float ImageWidth { get; }
@@ -65,18 +69,16 @@ namespace RoadCaptain.App.RouteBuilder.Models
         // If minX is negative the offset is positive because we shift everything to the right, if it is positive the offset is negative because we shift to the left
         public float OffsetX => -MinX;
         public float OffsetY => -MinY;
+        public float ScaleFactor { get; }
 
-        public float ScaleFactor
+        private float CalculateScaleFactor()
         {
-            get
+            if (RangeY > RangeX)
             {
-                if (RangeY > RangeX)
-                {
-                    return (ImageHeight - 1) / RangeY;
-                }
-
-                return (ImageWidth - 1) / RangeX;
+                return (ImageHeight - 1) / RangeY;
             }
+
+            return (ImageWidth - 1) / RangeX;
         }
 
         public PointF ScaleAndTranslate(MapCoordinate point)
