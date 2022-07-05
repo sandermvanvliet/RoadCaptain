@@ -1,5 +1,11 @@
 ﻿# Changelog
 
+## 0.6.6.0
+
+### Routing
+
+- [Makuri Islands] Add KOM and Sprint segments
+
 ## 0.6.5.0
 
 This release is the first release to add another Zwift world to RoadCaptain: Makuri Islands! 🎉🎉🎉

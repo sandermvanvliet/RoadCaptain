@@ -11,7 +11,7 @@ namespace RoadCaptain.MarkerBuilder
     {
         public static void Main(string[] args)
         {
-            var poiFiles = Directory.GetFiles(@"C:\git\temp\zwift\zwift-watopia-gpx\special_segments", "*.gpx");
+            var poiFiles = Directory.GetFiles(@"C:\git\temp\zwift\zwift-makuri_islands-gpx\special_segments", "*.gpx");
             var world = "watopia";
 
             var markers = poiFiles
