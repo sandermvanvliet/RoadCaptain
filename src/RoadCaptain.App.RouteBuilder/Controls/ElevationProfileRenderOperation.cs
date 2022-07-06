@@ -39,7 +39,7 @@ namespace RoadCaptain.App.RouteBuilder.Controls
             }
         }
 
-        public List<Segment?>? Segments { get; set; }
+        public List<Segment>? Segments { get; set; }
 
         public void Dispose()
         {
