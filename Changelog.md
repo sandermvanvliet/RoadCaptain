@@ -25,7 +25,7 @@ It is now possible to build routes in Makuri Islands and ride (or run!) them wit
 
 A quick look at planning a route on Makuri Islands:
 
-![Map of Makuri Islands with a route in Route Builder](./images/makuri-islands-route-builder.png)
+![Map of Makuri Islands with a route in Route Builder](https://github.com/sandermvanvliet/RoadCaptain/blob/ee8390c8ecd1d3485b007b275a6f004c48efc5a8/images/makuri-islands-route-builder.png)
 
 As you can see the segment names still have the "technical" names, those will be updated soon but that's some manual work.
 
@@ -39,7 +39,7 @@ The **[PREVIEW]** items should work but may have some quirks. Any feedback is mo
 
 - Makuri Islands is now available for beta testing [#7](https://github.com/sandermvanvliet/RoadCaptain/issues/7)
 - Improved turn command to route mapping. This should prevent issues where RoadCaptain has different turns defined on a segment vs what Zwift reports.
-- Show loop counter in the bottom bar of the in-game window. This makes it easy to see on which repetition of the loop you are: ![Runner showing loop count 1](./images/runner-loop-count-1.png) ![Runner showing loop count 2](./images/runner-loop-count-2.png)
+- Show loop counter in the bottom bar of the in-game window. This makes it easy to see on which repetition of the loop you are: ![Runner showing loop count 1](https://github.com/sandermvanvliet/RoadCaptain/blob/ee8390c8ecd1d3485b007b275a6f004c48efc5a8/images/runner-loop-count-1.png) ![Runner showing loop count 2](https://github.com/sandermvanvliet/RoadCaptain/blob/ee8390c8ecd1d3485b007b275a6f004c48efc5a8/images/runner-loop-count-2.png)
 
 ### Route Builder
 
