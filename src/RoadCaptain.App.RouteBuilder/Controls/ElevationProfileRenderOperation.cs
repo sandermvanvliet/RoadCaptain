@@ -19,8 +19,9 @@ namespace RoadCaptain.App.RouteBuilder.Controls
         private Rect _bounds;
         private float _altitudeOffset;
         private readonly int _padding = 10;
-        private double _altitudeScaleFactor;
+        private double _altitudeScaleFactor = 1;
         private List<float> _elevationLines = new();
+        private readonly SKFont _defaultFont = new SKFont(SKTypeface.Default);
 
         public RouteViewModel? Route
         {
@@ -96,13 +97,13 @@ namespace RoadCaptain.App.RouteBuilder.Controls
 
                 return;
             }
-            
+
             var routePoints = new List<TrackPoint>();
 
             foreach (var routeStep in Route.Sequence)
             {
                 var segment = GetSegmentById(routeStep.SegmentId);
-                
+
                 if (segment == null)
                 {
                     // TODO: yolo!
@@ -124,9 +125,9 @@ namespace RoadCaptain.App.RouteBuilder.Controls
 
             // When min is above sea level use max as the delta, otherwise include the min
             var altitudeDelta = minAltitude < 0 ? -minAltitude + maxAltitude : maxAltitude;
-            
+
             _altitudeScaleFactor = (Bounds.Height - (2 * _padding)) / altitudeDelta;
-            
+
             // When min is below sea level we need to correct the resulting coordinate
             // so it isn't rendered off-screen.
             _altitudeOffset = (float)(minAltitude < 0 ? -minAltitude : 0);
@@ -185,46 +186,49 @@ namespace RoadCaptain.App.RouteBuilder.Controls
         {
             canvas.Clear(CanvasBackgroundColor);
 
-            if (_elevationPath == null || _elevationPath.PointCount == 0)
+            if (_elevationPath != null && _elevationPath.PointCount > 0)
             {
-                return;
+                // Flip the canvas because otherwise the elevation is upside down
+                canvas.Save();
+                canvas.Scale(1, -1);
+                canvas.Translate(0, -(float)Bounds.Height);
+
+                var lastPoint = _elevationPath.Points.Last();
+                var backgroundPath = new SKPath();
+                backgroundPath.AddPoly(
+                    _elevationPath.Points.Concat(new[] { new SKPoint(lastPoint.X, 0), new SKPoint(0, 0) }).ToArray());
+
+                canvas.DrawPath(backgroundPath, SkiaPaints.ElevationPlotBackgroundPaint);
+
+                canvas.DrawPath(_elevationPath, SkiaPaints.ElevationPlotPaint);
+
+                // Back to normal
+                canvas.Restore();
             }
-            
-            // Flip the canvas because otherwise the elevation is upside down
-            canvas.Save();
-            canvas.Scale(1, -1);
-            canvas.Translate(0, -(float)Bounds.Height);
 
-            var lastPoint = _elevationPath.Points.Last();
-            var backgroundPath =new SKPath();
-            backgroundPath.AddPoly(
-                _elevationPath.Points.Concat(new[] { new SKPoint(lastPoint.X, 0), new SKPoint(0, 0) }).ToArray());
+            // Ensure sea-level exists
+            if (!_elevationLines.Any())
+            {
+                _elevationLines.Add(0);
+            }
 
-            canvas.DrawPath(backgroundPath, SkiaPaints.ElevationPlotBackgroundPaint);
-
-            canvas.DrawPath(_elevationPath, SkiaPaints.ElevationPlotPaint);
-            
-            // Back to normal
-            canvas.Restore();
-
-            var defaultFont = new SKFont(SKTypeface.Default);
             foreach (var elevation in _elevationLines)
             {
                 var correctedAltitudeOffset = (float)(Bounds.Height - CalculateYFromAltitude(elevation));
 
                 canvas.DrawLine(0, correctedAltitudeOffset, (float)Bounds.Width, correctedAltitudeOffset,
                     SkiaPaints.ElevationLinePaint);
-                
+
                 var text = elevation == 0 ? "Sea level" : elevation.ToString(CultureInfo.InvariantCulture) + "m";
 
-                canvas.DrawText(text, 5, correctedAltitudeOffset, defaultFont, SkiaPaints.ElevationLineTextPaint);
+                canvas.DrawText(text, 5, correctedAltitudeOffset, _defaultFont, SkiaPaints.ElevationLineTextPaint);
             }
         }
 
         private void InitializeBitmap()
         {
             _bitmap = new SKBitmap((int)Bounds.Width, (int)Bounds.Height, SKColorType.Bgra8888, SKAlphaType.Premul);
-            
+
             using var canvas = new SKCanvas(_bitmap);
         }
     }
