@@ -4,6 +4,14 @@
 
 France is now available to plan routes!
 
+### Runner
+
+- Show "What is new" dialog when opening Runner after installation or upgrade. This dialog will only be shown once. [#80](https://github.com/sandermvanvliet/RoadCaptain/issues/80)
+
+### Route Builder
+
+- Show "What is new" dialog when opening Runner after installation or upgrade. This dialog will only be shown once. [#80](https://github.com/sandermvanvliet/RoadCaptain/issues/80)
+
 ### Routing
 
 - [Makuri Islands] Add KOM and Sprint segments
