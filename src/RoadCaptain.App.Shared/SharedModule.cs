@@ -8,6 +8,7 @@ namespace RoadCaptain.App.Shared
         protected override void Load(ContainerBuilder builder)
         {
             builder.RegisterType<UpdateAvailableWindow>().AsSelf();
+            builder.RegisterType<WhatIsNewWindow>().AsSelf();
         }
     }
 }

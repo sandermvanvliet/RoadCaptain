@@ -11,6 +11,7 @@ namespace RoadCaptain.App.RouteBuilder
         Task ShowErrorDialog(string message, Window owner);
         void ShowMainWindow(IApplicationLifetime applicationLifetime);
         Task ShowNewVersionDialog(Release release);
+        Task ShowWhatIsNewDialog(Release release);
         Task<string?> ShowSaveFileDialog(string? previousLocation, string? suggestedFileName = null);
         Task<bool> ShowDefaultSportSelectionDialog(SportType sport);
         Task<MessageBoxResult> ShowSaveRouteDialog();

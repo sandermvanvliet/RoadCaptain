@@ -59,6 +59,11 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels
             throw new NotImplementedException();
         }
 
+        public Task ShowWhatIsNewDialog(Release release)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<string?> ShowOpenFileDialog(string? previousLocation)
         {
             OpenFileDialogInvocations++;

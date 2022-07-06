@@ -70,6 +70,11 @@ namespace RoadCaptain.App.Runner
             InvokeIfNeeded(() => _decorated.Shutdown(exitCode));
         }
 
+        public async Task ShowWhatIsNewDialog(Release release)
+        {
+            await InvokeIfNeededAsync(() => _decorated.ShowWhatIsNewDialog(release));
+        }
+
         private async Task<TResult> InvokeIfNeededAsync<TResult>(Func<Task<TResult>> action)
         {
             if (!_dispatcher.CheckAccess())

@@ -74,6 +74,7 @@ namespace RoadCaptain.App.Runner.Views
         {
             Dispatcher.UIThread.InvokeAsync(() => _viewModel.Initialize());
             Dispatcher.UIThread.InvokeAsync(() => _viewModel.CheckForNewVersion());
+            Dispatcher.UIThread.InvokeAsync(() => _viewModel.CheckLastOpenedVersion());
         }
 
         private void InputElement_OnPointerPressed(object? sender, PointerPressedEventArgs e)

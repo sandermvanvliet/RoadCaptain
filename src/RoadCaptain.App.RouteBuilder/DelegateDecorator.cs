@@ -38,6 +38,11 @@ namespace RoadCaptain.App.RouteBuilder
             await InvokeIfNeededAsync(() => _decorated.ShowNewVersionDialog(release));
         }
 
+        public async Task ShowWhatIsNewDialog(Release release)
+        {
+            await InvokeIfNeededAsync(() => _decorated.ShowWhatIsNewDialog(release));
+        }
+
         public async Task<string?> ShowSaveFileDialog(string? previousLocation, string? suggestedFileName = null)
         {
             return await InvokeIfNeededAsync(() => _decorated.ShowSaveFileDialog(previousLocation, suggestedFileName));

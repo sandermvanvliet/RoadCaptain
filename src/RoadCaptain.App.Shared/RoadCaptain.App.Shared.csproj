@@ -32,4 +32,10 @@
 	  <Folder Include="Models\" />
 	  <Folder Include="Views\" />
 	</ItemGroup>
+
+	<ItemGroup>
+	  <Compile Update="Dialogs\WhatIsNewWindow.axaml.cs">
+	    <DependentUpon>WhatIsNewWindow.axaml</DependentUpon>
+	  </Compile>
+	</ItemGroup>
 </Project>

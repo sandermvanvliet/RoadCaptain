@@ -1,3 +1,4 @@
+using System;
 using System.Drawing;
 using RoadCaptain.App.Shared.UserPreferences;
 
@@ -11,6 +12,7 @@ namespace RoadCaptain.App.Runner
         public Point? InGameWindowLocation { get; set; }
         public bool EndActivityAtEndOfRoute { get; set; }
         public bool LoopRouteAtEndOfRoute { get; set; }
+        public Version LastOpenedVersion { get; set; } = new Version(0, 0, 0, 0);
 
         public void Load()
         {

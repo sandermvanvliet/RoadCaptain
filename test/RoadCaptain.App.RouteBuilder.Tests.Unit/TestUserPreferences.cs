@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
 using RoadCaptain.App.Shared.UserPreferences;
 
 namespace RoadCaptain.App.RouteBuilder.Tests.Unit
@@ -11,6 +12,7 @@ namespace RoadCaptain.App.RouteBuilder.Tests.Unit
         public Point? InGameWindowLocation { get; set; }
         public bool EndActivityAtEndOfRoute { get; set; }
         public bool LoopRouteAtEndOfRoute { get; set; }
+        public Version LastOpenedVersion { get; set; }
 
         public void Load()
         {

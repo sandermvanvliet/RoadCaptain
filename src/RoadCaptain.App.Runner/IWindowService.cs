@@ -19,5 +19,6 @@ namespace RoadCaptain.App.Runner
         Task ShowAlreadyRunningDialog();
         void SetLifetime(IApplicationLifetime applicationLifetime);
         void Shutdown(int exitCode);
+        Task ShowWhatIsNewDialog(Release release);
     }
 }

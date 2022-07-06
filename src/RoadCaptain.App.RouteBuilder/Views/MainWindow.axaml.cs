@@ -100,6 +100,7 @@ namespace RoadCaptain.App.RouteBuilder.Views
         private void MainWindow_OnActivated(object sender, EventArgs e)
         {
             Dispatcher.UIThread.InvokeAsync(() => ViewModel.CheckForNewVersion());
+            Dispatcher.UIThread.InvokeAsync(() => ViewModel.CheckLastOpenedVersion());
         }
 
         // ReSharper disable once UnusedMember.Local

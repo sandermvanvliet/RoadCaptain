@@ -62,6 +62,15 @@ namespace RoadCaptain.App.Runner
             await ShowDialog(window);
         }
 
+        public async Task ShowWhatIsNewDialog(Release release)
+        {
+            var window = Resolve<WhatIsNewWindow>();
+
+            window.DataContext = new WhatIsNewViewModel(release);
+
+            await ShowDialog(window);
+        }
+
         public virtual async Task ShowErrorDialog(string message)
         {
             await ShowErrorDialog(message, CurrentWindow ?? throw new ArgumentNullException(nameof(CurrentWindow)));

@@ -1,0 +1,120 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:avalonia="clr-namespace:Markdown.Avalonia;assembly=Markdown.Avalonia"
+        mc:Ignorable="d" d:DesignWidth="632" d:DesignHeight="437"
+        x:Class="RoadCaptain.App.Shared.Dialogs.WhatIsNewWindow"
+        Title="What is new?"
+        Height="437" Width="632"
+        Icon="avares://RoadCaptain.App.Shared/icon.png"
+        TransparencyLevelHint="Transparent"
+        CanResize="False"
+        SystemDecorations="None"
+        WindowStartupLocation="CenterOwner">
+	<Window.Styles>
+		<Style Selector="Button">
+			<Setter Property="Background" Value="#FF6141" />
+			<Setter Property="Foreground" Value="White" />
+			<Setter Property="Height" Value="32" />
+			<Setter Property="FontSize" Value="20" />
+			<Setter Property="FontWeight" Value="Bold" />
+			<Setter Property="BorderThickness" Value="0" />
+			<Setter Property="VerticalAlignment" Value="Center" />
+			<Setter Property="Cursor" Value="Hand" />
+			<Setter Property="Template">
+				<Setter.Value>
+					<ControlTemplate TargetType="Button">
+						<Border Name="borderZero" Background="{TemplateBinding Background}" CornerRadius="8" Padding="4,0,4,0">
+							<ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" Content="{TemplateBinding Content}" />
+						</Border>
+					</ControlTemplate>
+				</Setter.Value>
+			</Setter>
+		</Style>
+		<Style Selector="Button.linkButton">
+			<Setter Property="Background" Value="Transparent" />
+			<Setter Property="Foreground" Value="Blue" />
+			<Setter Property="BorderThickness" Value="0" />
+			<Setter Property="VerticalAlignment" Value="Center" />
+			<Setter Property="Cursor" Value="Hand" />
+			<Setter Property="Padding" Value="0" />
+			<Setter Property="FontSize" Value="14" />
+			<Setter Property="FontWeight" Value="Normal" />
+		</Style>
+	</Window.Styles>
+	<Border BorderBrush="DarkGray" BorderThickness="1" CornerRadius="8" Opacity="1" Background="White">
+		<Grid Margin="4">
+			<Grid.RowDefinitions>
+				<RowDefinition Height="50" />
+				<!-- banner -->
+				<RowDefinition Height="*" />
+				<!-- main content-->
+				<RowDefinition Height="40" />
+				<!-- bottom button row -->
+			</Grid.RowDefinitions>
+
+			<StackPanel Orientation="Horizontal" Grid.Row="0">
+				<Image Source="avares://RoadCaptain.App.Shared/icon.png" Height="22" VerticalAlignment="Center" Margin="4,4,4,0" />
+				<TextBlock Text="What's new in this release" FontWeight="ExtraBold" FontSize="32" VerticalAlignment="Center" />
+			</StackPanel>
+			<Button Content="X" Background="Red" Foreground="White" Grid.Row="0" HorizontalAlignment="Right" Width="40" Height="20" Margin="0,-3,-3,0" VerticalAlignment="Top"
+                Click="CloseButton_Click" FontSize="14">
+				<Button.Styles>
+					<Style Selector="Button">
+						<Setter Property="Template">
+							<Setter.Value>
+								<ControlTemplate TargetType="Button">
+									<Border Name="borderZero" Background="{TemplateBinding Background}" CornerRadius="0,8,0,0">
+										<ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" Content="{TemplateBinding Content}"/>
+									</Border>
+								</ControlTemplate>
+							</Setter.Value>
+						</Setter>
+					</Style>
+				</Button.Styles>
+			</Button>
+
+			<Image Grid.Row="1"
+               ZIndex="1"
+               Source="avares://RoadCaptain.App.Shared/Assets/background.jpg"
+               Stretch="UniformToFill"
+               StretchDirection="DownOnly"
+                   Opacity="0.45"/>
+
+			<Grid Grid.Row="1" ZIndex="2" Margin="8,8,0,0">
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="100" />
+					<ColumnDefinition />
+					<ColumnDefinition Width="76" />
+				</Grid.ColumnDefinitions>
+				<Grid.RowDefinitions>
+					<RowDefinition Height="20" />
+					<RowDefinition Height="*" />
+				</Grid.RowDefinitions>
+
+				<StackPanel Orientation="Horizontal" Grid.Column="1">
+					<TextBlock Text="Updates in release " FontWeight="Bold" />
+					<TextBlock Text="{Binding Path=Version,FallbackValue=0.0.0.0,TargetNullValue=0.0.0.0}"
+							   FontWeight="Bold" />
+				</StackPanel>
+
+				<TextBlock Text="Release notes:" Grid.Row="1" Grid.Column="0" HorizontalAlignment="Right"  Margin="0,0,4,0"/>
+				<Border
+                    Margin="0,0,4,4"
+                    Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2"
+                    BorderThickness="1" BorderBrush="LightGray">
+					<ScrollViewer Background="White" Opacity="0.75">
+						<avalonia:MarkdownScrollViewer Markdown="{Binding Path=ReleaseNotes}"/>
+					</ScrollViewer>
+				</Border>
+			</Grid>
+
+			<!-- Bottom row -->
+			<Button
+                        Grid.Row="2"
+                    Content="Close" HorizontalAlignment="Right" Margin="2,4,4,2" VerticalAlignment="Center"
+                        Click="CloseButton_Click" />
+		</Grid>
+	</Border>
+</Window>

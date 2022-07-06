@@ -16,6 +16,7 @@ namespace RoadCaptain.App.Shared.UserPreferences
         Point? InGameWindowLocation { get; set; }
         public bool EndActivityAtEndOfRoute { get; set; }
         public bool LoopRouteAtEndOfRoute { get; set; }
+        Version LastOpenedVersion { get; set; }
         public void Load();
         public void Save();
     }
@@ -36,6 +37,7 @@ namespace RoadCaptain.App.Shared.UserPreferences
         public bool EndActivityAtEndOfRoute { get; set; }
         // This preference is transient and will not be stored
         public bool LoopRouteAtEndOfRoute { get; set; }
+        public Version LastOpenedVersion { get; set; } = new Version(0, 0, 0, 0);
 
         public void Load()
         {
@@ -56,6 +58,7 @@ namespace RoadCaptain.App.Shared.UserPreferences
                 LastUsedFolder = storageObject.LastUsedFolder;
                 Route = storageObject.Route;
                 InGameWindowLocation = storageObject.InGameWindowLocation;
+                LastOpenedVersion = storageObject.LastOpenedVersion ?? new Version(0, 0, 0, 0);
             }
             catch
             {
@@ -70,11 +73,12 @@ namespace RoadCaptain.App.Shared.UserPreferences
                 DefaultSport = DefaultSport,
                 InGameWindowLocation = InGameWindowLocation,
                 LastUsedFolder = LastUsedFolder,
-                Route = Route
+                Route = Route,
+                LastOpenedVersion = GetType().Assembly.GetName().Version ?? new Version(0, 0, 0, 0)
             };
 
             var serializedContents = JsonConvert.SerializeObject(storageObject, Formatting.Indented, _serializerSettings);
-            
+
             var preferencesPath = GetPreferencesPath();
 
             EnsureConfigDirectoryExists();
@@ -93,5 +97,6 @@ namespace RoadCaptain.App.Shared.UserPreferences
         public string? LastUsedFolder { get; set; }
         public string? Route { get; set; }
         public Point? InGameWindowLocation { get; set; }
+        public Version? LastOpenedVersion { get; set; }
     }
 }

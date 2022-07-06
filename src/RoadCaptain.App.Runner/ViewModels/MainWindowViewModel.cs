@@ -43,6 +43,7 @@ namespace RoadCaptain.App.Runner.ViewModels
         private bool _endActivityAtEndOfRoute;
         private bool _loopRouteAtEndOfRoute;
         private readonly IZwiftCredentialCache _credentialCache;
+        private bool _haveCheckedLastOpenedVersion;
 
         public MainWindowViewModel(Configuration configuration,
             IUserPreferences userPreferences,
@@ -328,6 +329,35 @@ namespace RoadCaptain.App.Runner.ViewModels
             if (latestRelease != null && latestRelease.Version > currentVersion)
             {
                 await _windowService.ShowNewVersionDialog(latestRelease);
+            }
+        }
+
+        public async Task CheckLastOpenedVersion()
+        {
+            if (_haveCheckedLastOpenedVersion)
+            {
+                return;
+            }
+
+            _haveCheckedLastOpenedVersion = true;
+
+            var previousVersion = _userPreferences.LastOpenedVersion;
+            var thisVersion = System.Version.Parse(Version);
+            var latestRelease = _versionChecker.GetLatestRelease();
+
+            // If there is a newer version available don't display anything
+            if (latestRelease != null && latestRelease.Version > thisVersion)
+            {
+                return;
+            }
+
+            // If this version is newer than the previous one shown and it's
+            // the latest version then show the what is new dialog
+            if (latestRelease != null && thisVersion > previousVersion && thisVersion == latestRelease.Version)
+            {
+                // Update the current version so that the next time this won't be shown
+                _userPreferences.Save();
+                await _windowService.ShowWhatIsNewDialog(latestRelease);
             }
         }
 
