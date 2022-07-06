@@ -133,6 +133,16 @@ namespace RoadCaptain
                    Math.Abs(Altitude - other.Altitude) < CoordinateEqualityTolerance;
         }
 
+        public static bool Equals(TrackPoint a, TrackPoint b)
+        {
+            if (a == null || b == null)
+            {
+                return false;
+            }
+
+            return a.Equals(b);
+        }
+
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj))

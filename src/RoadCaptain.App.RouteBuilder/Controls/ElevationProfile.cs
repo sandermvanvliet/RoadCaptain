@@ -11,6 +11,7 @@ namespace RoadCaptain.App.RouteBuilder.Controls
         private readonly ElevationProfileRenderOperation _renderOperation;
         public static readonly DirectProperty<ElevationProfile, RouteViewModel?> RouteProperty = AvaloniaProperty.RegisterDirect<ElevationProfile, RouteViewModel?>(nameof(Route), map => map.Route, (map, value) => map.Route = value);
         public static readonly DirectProperty<ElevationProfile, List<Segment>?> SegmentsProperty = AvaloniaProperty.RegisterDirect<ElevationProfile, List<Segment>?>(nameof(Segments), map => map.Segments, (map, value) => map.Segments = value);
+        public static readonly DirectProperty<ElevationProfile, TrackPoint?> RiderPositionProperty = AvaloniaProperty.RegisterDirect<ElevationProfile, TrackPoint?>(nameof(RiderPosition), map => map.RiderPosition, (map, value) => map.RiderPosition = value);
         private RouteViewModel? _route;
         
         public RouteViewModel? Route
@@ -33,6 +34,24 @@ namespace RoadCaptain.App.RouteBuilder.Controls
                 _renderOperation.Segments = value;
 
                 InvalidateVisual();
+            }
+        }
+
+        public TrackPoint? RiderPosition
+        {
+            get => null;
+            set
+            {
+                if(value is { Index: { } })
+                {
+                    _renderOperation.RiderPosition = value;
+
+                    InvalidateVisual();
+                }
+                else
+                {
+                    _renderOperation.RiderPosition = null;
+                }
             }
         }
 

@@ -113,6 +113,7 @@
 				HorizontalAlignment="Stretch"
                 Segments="{Binding Path=Segments}"
                 Route="{Binding Path=Route}"
+                RiderPosition="{Binding Path=RiderPosition}"
 				IsVisible="{Binding Path=ShowElevationPlot}"
             />
 

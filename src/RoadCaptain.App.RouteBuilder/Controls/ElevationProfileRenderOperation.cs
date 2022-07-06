@@ -20,8 +20,13 @@ namespace RoadCaptain.App.RouteBuilder.Controls
         private float _altitudeOffset;
         private readonly int _padding = 10;
         private double _altitudeScaleFactor = 1;
-        private List<float> _elevationLines = new();
-        private readonly SKFont _defaultFont = new SKFont(SKTypeface.Default);
+        private readonly List<float> _elevationLines = new();
+        private readonly SKFont _defaultFont = new(SKTypeface.Default);
+        private List<TrackPoint>? _routePoints;
+        private float _step;
+        private int _previousIndex;
+        private TrackPoint? _riderPosition;
+        private const int CircleMarkerRadius = 10;
 
         public RouteViewModel? Route
         {
@@ -46,6 +51,21 @@ namespace RoadCaptain.App.RouteBuilder.Controls
         }
 
         public List<Segment>? Segments { get; set; }
+
+        public TrackPoint? RiderPosition
+        {
+            get => _riderPosition;
+            set
+            {
+                if (TrackPoint.Equals(_riderPosition, value)) return;
+                _riderPosition = value;
+                if (_riderPosition == null)
+                {
+                    // Reset
+                    _previousIndex = 0;
+                }
+            }
+        }
 
         public void Dispose()
         {
@@ -98,7 +118,7 @@ namespace RoadCaptain.App.RouteBuilder.Controls
                 return;
             }
 
-            var routePoints = new List<TrackPoint>();
+            _routePoints = new List<TrackPoint>();
 
             foreach (var routeStep in Route.Sequence)
             {
@@ -117,11 +137,11 @@ namespace RoadCaptain.App.RouteBuilder.Controls
                     points = points.Reverse().ToArray();
                 }
 
-                routePoints.AddRange(points);
+                _routePoints.AddRange(points);
             }
 
-            var minAltitude = routePoints.Min(point => point.Altitude);
-            var maxAltitude = routePoints.Max(point => point.Altitude);
+            var minAltitude = _routePoints.Min(point => point.Altitude);
+            var maxAltitude = _routePoints.Max(point => point.Altitude);
 
             // When min is above sea level use max as the delta, otherwise include the min
             var altitudeDelta = minAltitude < 0 ? -minAltitude + maxAltitude : maxAltitude;
@@ -132,12 +152,12 @@ namespace RoadCaptain.App.RouteBuilder.Controls
             // so it isn't rendered off-screen.
             _altitudeOffset = (float)(minAltitude < 0 ? -minAltitude : 0);
 
-            var step = routePoints.Count > Bounds.Width
-                ? (float)(Bounds.Width / routePoints.Count)
+            _step = _routePoints.Count > Bounds.Width
+                ? (float)(Bounds.Width / _routePoints.Count)
                 : 1f;
 
-            var polyPoints = routePoints
-                .Select((point, index) => new SKPoint(step * index, CalculateYFromAltitude(point.Altitude)))
+            var polyPoints = _routePoints
+                .Select((point, index) => new SKPoint(_step * index, CalculateYFromAltitude(point.Altitude)))
                 .ToArray();
 
             _elevationPath = new SKPath();
@@ -202,6 +222,22 @@ namespace RoadCaptain.App.RouteBuilder.Controls
 
                 canvas.DrawPath(_elevationPath, SkiaPaints.ElevationPlotPaint);
 
+                if (RiderPosition != null && _routePoints != null)
+                {
+                    for (var index = _previousIndex; index < _routePoints.Count; index++)
+                    {
+                        if (_routePoints[index].Equals(RiderPosition))
+                        {
+                            DrawCircleMarker(canvas, new SKPoint(_step * index, CalculateYFromAltitude(RiderPosition.Altitude)), SkiaPaints.RiderPositionFillPaint);
+                            // RiderPosition always moves forward, so
+                            // store this value and pick up from there
+                            // on the next update.
+                            _previousIndex = index;
+                            break;
+                        }
+                    }
+                }
+
                 // Back to normal
                 canvas.Restore();
             }
@@ -223,6 +259,12 @@ namespace RoadCaptain.App.RouteBuilder.Controls
 
                 canvas.DrawText(text, 5, correctedAltitudeOffset, _defaultFont, SkiaPaints.ElevationLineTextPaint);
             }
+        }
+
+        private static void DrawCircleMarker(SKCanvas canvas, SKPoint point, SKPaint fill)
+        {
+            canvas.DrawCircle(point, CircleMarkerRadius, SkiaPaints.CircleMarkerPaint);
+            canvas.DrawCircle(point, CircleMarkerRadius - SkiaPaints.CircleMarkerPaint.StrokeWidth, fill);
         }
 
         private void InitializeBitmap()
