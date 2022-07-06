@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -41,6 +41,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
         private bool _showSprints;
         private Segment? _highlightedSegment;
         private bool _haveCheckedLastOpenedVersion;
+        private bool _showElevationPlot;
 
         public MainWindowViewModel(IRouteStore routeStore, ISegmentStore segmentStore, IVersionChecker versionChecker, IWindowService windowService, IWorldStore worldStore, IUserPreferences userPreferences)
         {
@@ -324,6 +325,17 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
                 if (value == _showSprints) return;
                 _showSprints = value;
                 this.RaisePropertyChanged(nameof(ShowSprints));
+            }
+        }
+
+        public bool ShowElevationPlot
+        {
+            get => _showElevationPlot;
+            set
+            {
+                if (value == _showElevationPlot) return;
+                _showElevationPlot = value;
+                this.RaisePropertyChanged(nameof(ShowElevationPlot));
             }
         }
 
