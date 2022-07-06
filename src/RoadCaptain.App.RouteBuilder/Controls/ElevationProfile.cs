@@ -68,12 +68,8 @@ namespace RoadCaptain.App.RouteBuilder.Controls
                 // For rendering we don't want that translation to happen
                 // as we're drawing _inside_ of the control, not the parent.
                 _renderOperation.Bounds = new Rect(0, 0, Bounds.Width, Bounds.Height);
+
                 InvalidateVisual();
-                // TODO: make it work
-                //if (Segments != null && Bounds.Width > 0 && Bounds.Height > 0)
-                //{
-                //    CreatePathsForSegments(Segments, Bounds);
-                //}
             }
 
             base.OnPropertyChanged(change);
