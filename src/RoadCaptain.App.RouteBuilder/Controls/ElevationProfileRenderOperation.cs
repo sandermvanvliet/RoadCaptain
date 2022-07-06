@@ -16,6 +16,9 @@ namespace RoadCaptain.App.RouteBuilder.Controls
         private RouteViewModel? _route;
         private SKPath? _elevationPath;
         private Rect _bounds;
+        private float _altitudeOffset;
+        private readonly int _padding = 10;
+        private double _altitudeScaleFactor;
 
         public RouteViewModel? Route
         {
@@ -114,23 +117,33 @@ namespace RoadCaptain.App.RouteBuilder.Controls
                 routePoints.AddRange(points);
             }
 
+            var minAltitude = routePoints.Min(point => point.Altitude);
             var maxAltitude = routePoints.Max(point => point.Altitude);
-            var altitudeScaleFactor = (Bounds.Height - 10) / maxAltitude;
 
-            var step = 1f;
+            // When min is above sea level use max as the delta, otherwise include the min
+            var altitudeDelta = minAltitude < 0 ? -minAltitude + maxAltitude : maxAltitude;
+            
+            _altitudeScaleFactor = (Bounds.Height - (2 * _padding)) / altitudeDelta;
+            
+            // When min is below sea level we need to correct the resulting coordinate
+            // so it isn't rendered off-screen.
+            _altitudeOffset = (float)(minAltitude < 0 ? -minAltitude : 0);
 
-            if (routePoints.Count > Bounds.Width)
-            {
-                step = (float)(Bounds.Width / routePoints.Count);
-            }
+            var step = routePoints.Count > Bounds.Width
+                ? (float)(Bounds.Width / routePoints.Count)
+                : 1f;
 
             var polyPoints = routePoints
-                .Select((point, index) => new SKPoint(step * index, (float)(point.Altitude * altitudeScaleFactor)))
+                .Select((point, index) => new SKPoint(step * index, CalculateYFromAltitude(point.Altitude)))
                 .ToArray();
 
             _elevationPath = new SKPath();
-            _elevationPath = new SKPath();
             _elevationPath.AddPoly(polyPoints, false);
+        }
+
+        private float CalculateYFromAltitude(double altitude)
+        {
+            return (float)((altitude + _altitudeOffset) * _altitudeScaleFactor) + _padding;
         }
 
         private Segment? GetSegmentById(string id)
@@ -146,7 +159,9 @@ namespace RoadCaptain.App.RouteBuilder.Controls
             {
                 return;
             }
-
+            
+            // Flip the canvas because otherwise the elevation is upside down
+            canvas.Save();
             canvas.Scale(1, -1);
             canvas.Translate(0, -(float)Bounds.Height);
 
@@ -158,6 +173,13 @@ namespace RoadCaptain.App.RouteBuilder.Controls
             canvas.DrawPath(backgroundPath, SkiaPaints.ElevationPlotBackgroundPaint);
 
             canvas.DrawPath(_elevationPath, SkiaPaints.ElevationPlotPaint);
+            
+            // Back to normal
+            canvas.Restore();
+
+            var correctedAltitudeOffset = (float)(Bounds.Height - CalculateYFromAltitude(0));
+            canvas.DrawLine(0, correctedAltitudeOffset, (float)Bounds.Width, correctedAltitudeOffset, SkiaPaints.SeaLevelPaint);
+            canvas.DrawText("Sea level", 5, correctedAltitudeOffset, new SKFont(SKTypeface.Default), SkiaPaints.SeaLevelPaint);
         }
 
         private void InitializeBitmap()

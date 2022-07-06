@@ -48,5 +48,9 @@ namespace RoadCaptain.App.RouteBuilder
         
         public static readonly SKPaint ElevationPlotBackgroundPaint = new()
             { Color = new SKColor(204, 204, 204, 100), Style = SKPaintStyle.Fill, IsAntialias = true };
+
+        public static readonly SKPaint SeaLevelPaint = new()
+            { Color = SKColor.Parse("#0000ff"), Style = SKPaintStyle.Stroke, StrokeWidth = 1, IsAntialias = true };
+        
     }
 }
