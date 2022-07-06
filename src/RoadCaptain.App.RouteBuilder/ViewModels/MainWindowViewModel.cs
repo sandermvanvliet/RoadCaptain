@@ -215,36 +215,6 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
 
         private void HandleRoutePropertyChanged(ISegmentStore segmentStore, PropertyChangedEventArgs args)
         {
-            if (args.PropertyName == nameof(Route.Sequence))
-            {
-                //if (Route.Sequence.Any())
-                //{
-                //    if (Route.Sequence.Count() == 2)
-                //    {
-                //        RoutePath.Reset();
-                //        var firstSequence = Route.Sequence.First();
-
-                //        SKPoint[] pointsOfFirstSegment = SegmentPaths[firstSequence.SegmentId].Points;
-
-                //        if (firstSequence.Direction == SegmentDirection.BtoA)
-                //        {
-                //            pointsOfFirstSegment = pointsOfFirstSegment.Reverse().ToArray();
-                //        }
-
-                //        RoutePath.AddPoly(pointsOfFirstSegment, false);
-                //    }
-
-                //    var points = SegmentPaths[Route.Last.SegmentId].Points;
-
-                //    if (Route.Sequence.Last().Direction == SegmentDirection.BtoA)
-                //    {
-                //        points = points.Reverse().ToArray();
-                //    }
-
-                //    RoutePath.AddPoly(points, false);
-                //}
-            }
-
             if (args.PropertyName == nameof(Route.World))
             {
                 if (Route.World == null)
