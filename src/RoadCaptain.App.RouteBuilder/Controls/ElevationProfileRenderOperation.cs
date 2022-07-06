@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using Avalonia;
 using Avalonia.Platform;
@@ -19,6 +20,7 @@ namespace RoadCaptain.App.RouteBuilder.Controls
         private float _altitudeOffset;
         private readonly int _padding = 10;
         private double _altitudeScaleFactor;
+        private List<float> _elevationLines = new();
 
         public RouteViewModel? Route
         {
@@ -139,6 +141,34 @@ namespace RoadCaptain.App.RouteBuilder.Controls
 
             _elevationPath = new SKPath();
             _elevationPath.AddPoly(polyPoints, false);
+
+            _elevationLines.Clear();
+            _elevationLines.Add(0); // Always ensure sea-level exists
+
+            if (altitudeDelta is > 50 and < 250)
+            {
+                var altitudeStep = 50;
+                for (var altitude = altitudeStep; altitude < maxAltitude; altitude += altitudeStep)
+                {
+                    _elevationLines.Add(altitude);
+                }
+            }
+            else if (altitudeDelta is > 100 and < 1000)
+            {
+                var altitudeStep = 100;
+                for (var altitude = altitudeStep; altitude < maxAltitude; altitude += altitudeStep)
+                {
+                    _elevationLines.Add(altitude);
+                }
+            }
+            else if (altitudeDelta is > 250 and < 5000)
+            {
+                var altitudeStep = 250;
+                for (var altitude = altitudeStep; altitude < maxAltitude; altitude += altitudeStep)
+                {
+                    _elevationLines.Add(altitude);
+                }
+            }
         }
 
         private float CalculateYFromAltitude(double altitude)
@@ -177,9 +207,18 @@ namespace RoadCaptain.App.RouteBuilder.Controls
             // Back to normal
             canvas.Restore();
 
-            var correctedAltitudeOffset = (float)(Bounds.Height - CalculateYFromAltitude(0));
-            canvas.DrawLine(0, correctedAltitudeOffset, (float)Bounds.Width, correctedAltitudeOffset, SkiaPaints.SeaLevelPaint);
-            canvas.DrawText("Sea level", 5, correctedAltitudeOffset, new SKFont(SKTypeface.Default), SkiaPaints.SeaLevelPaint);
+            var defaultFont = new SKFont(SKTypeface.Default);
+            foreach (var elevation in _elevationLines)
+            {
+                var correctedAltitudeOffset = (float)(Bounds.Height - CalculateYFromAltitude(elevation));
+
+                canvas.DrawLine(0, correctedAltitudeOffset, (float)Bounds.Width, correctedAltitudeOffset,
+                    SkiaPaints.ElevationLinePaint);
+                
+                var text = elevation == 0 ? "Sea level" : elevation.ToString(CultureInfo.InvariantCulture) + "m";
+
+                canvas.DrawText(text, 5, correctedAltitudeOffset, defaultFont, SkiaPaints.ElevationLineTextPaint);
+            }
         }
 
         private void InitializeBitmap()
