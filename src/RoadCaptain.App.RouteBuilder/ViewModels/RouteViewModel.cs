@@ -307,6 +307,17 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
                     Last.ResetTurn();
                 }
 
+                // If the last segment of a loop is removed then reset
+                // the segment sequence type to regular because the
+                // loop has been broken.
+                if (lastSegment.Type == SegmentSequenceType.Loop || lastSegment.Type == SegmentSequenceType.LeadIn)
+                {
+                    foreach (var seq in Sequence)
+                    {
+                        seq.Model.Type = SegmentSequenceType.Regular;
+                    }
+                }
+
                 IsTainted = _sequence.Any();
 
                 this.RaisePropertyChanged(nameof(Sequence));
