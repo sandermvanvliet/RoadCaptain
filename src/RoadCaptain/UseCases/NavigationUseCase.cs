@@ -103,8 +103,26 @@ namespace RoadCaptain.UseCases
                 return TurnDirection.GoStraight;
             }
 
-            if (nextTurn == TurnDirection.GoStraight ||
-                nextTurn == TurnDirection.Right)
+            if (nextTurn == TurnDirection.GoStraight)
+            {
+                if (commands.Contains(TurnDirection.Right))
+                {
+                    if (commands.Contains(TurnDirection.GoStraight))
+                    {
+                        return TurnDirection.GoStraight;
+                    }
+
+                    // Other available command is Left
+                    return TurnDirection.Right;
+                }
+
+                if (commands.Contains(TurnDirection.Left))
+                {
+                    return TurnDirection.GoStraight;
+                }
+            }
+
+            if (nextTurn == TurnDirection.Right)
             {
                 if (commands.Contains(TurnDirection.Right))
                 {

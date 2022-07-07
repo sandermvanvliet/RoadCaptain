@@ -10,7 +10,7 @@ namespace RoadCaptain.Tests.Unit.GameState
         [Theory]
         [InlineData(TurnDirection.Left, TurnDirection.Right, TurnDirection.GoStraight, TurnDirection.Right)]
         [InlineData(TurnDirection.Left, TurnDirection.GoStraight, TurnDirection.GoStraight, TurnDirection.GoStraight)]
-        [InlineData(TurnDirection.GoStraight, TurnDirection.Right, TurnDirection.GoStraight, TurnDirection.Right)]
+        [InlineData(TurnDirection.GoStraight, TurnDirection.Right, TurnDirection.GoStraight, TurnDirection.GoStraight)]
 
         [InlineData(TurnDirection.Left, TurnDirection.Right, TurnDirection.Left, TurnDirection.Left)]
         [InlineData(TurnDirection.Left, TurnDirection.GoStraight, TurnDirection.Left, TurnDirection.Left)]
