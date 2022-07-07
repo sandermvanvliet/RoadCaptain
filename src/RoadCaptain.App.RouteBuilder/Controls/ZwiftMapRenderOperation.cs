@@ -124,6 +124,10 @@ namespace RoadCaptain.App.RouteBuilder.Controls
                 {
                     segmentPaint = SkiaPaints.SpawnPointSegmentPathPaint;
                 }
+                else if (Route != null && Route.Sequence.Any(s => s.SegmentId == segmentId && s.IsLeadIn))
+                {
+                    segmentPaint = SkiaPaints.LeadInPaint;
+                }
                 else if (Route != null && Route.Sequence.Any(s => s.SegmentId == segmentId))
                 {
                     segmentPaint = SkiaPaints.RoutePathPaint;
