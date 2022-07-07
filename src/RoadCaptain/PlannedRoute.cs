@@ -31,9 +31,11 @@ namespace RoadCaptain
         public TurnDirection TurnToNextSegment => HasStarted ? RouteSegmentSequence[SegmentSequenceIndex].TurnToNextSegment : TurnDirection.None;
         [JsonIgnore]
         public string CurrentSegmentId => HasStarted ? RouteSegmentSequence[SegmentSequenceIndex].SegmentId : null;
+
         public bool IsLoop =>
-            RouteSegmentSequence.Count > 1 &&
-            RouteSegmentSequence.Last().NextSegmentId == RouteSegmentSequence.First().SegmentId;
+            RouteSegmentSequence.Count(seq => seq.Type == SegmentSequenceType.Loop) > 1 &&
+            RouteSegmentSequence.Count(seq => seq.Type == SegmentSequenceType.LeadIn) >= 0 &&
+            RouteSegmentSequence.Count(seq => seq.Type == SegmentSequenceType.Regular) == 0;
 
         public List<SegmentSequence> RouteSegmentSequence { get; } = new();
 

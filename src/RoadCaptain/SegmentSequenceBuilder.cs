@@ -89,6 +89,18 @@ namespace RoadCaptain
             return this;
         }
 
+        public SegmentSequenceBuilder Loop()
+        {
+            Last.NextSegmentId = _route.RouteSegmentSequence.First().SegmentId;
+
+            foreach (var sequence in _route.RouteSegmentSequence)
+            {
+                sequence.Type = SegmentSequenceType.Loop;
+            }
+
+            return this;
+        }
+
         public PlannedRoute Build()
         {
             return _route;

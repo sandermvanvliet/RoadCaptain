@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using FluentAssertions;
+﻿using FluentAssertions;
 using RoadCaptain.GameStates;
 using Xunit;
 
@@ -41,10 +40,9 @@ namespace RoadCaptain.App.Runner.Tests.Unit.Engine
                 .GoingStraightTo("seg-2")
                 .GoingStraightTo("seg-3")
                 .EndingAt("seg-3")
+                .Loop()
                 .Build();
-
-            _route.RouteSegmentSequence.Last().NextSegmentId = "seg-1";
-
+            
             _route.EnteredSegment("seg-1");
             _route.EnteredSegment("seg-2");
             _route.EnteredSegment("seg-3");

@@ -143,7 +143,7 @@ namespace RoadCaptain.Adapters
         {
             var type = SegmentSequenceType.Regular;
 
-            if (route.IsLoop)
+            if (RouteIsALoop(route))
             {
                 type = SegmentSequenceType.Loop;
             }
@@ -152,6 +152,26 @@ namespace RoadCaptain.Adapters
             {
                 sequence.Type = type;
             }
+        }
+
+        private static bool RouteIsALoop(PlannedRoute route)
+        {
+            // We can't use IsLoop here because that relies on
+            // the SegmentSequenceType of each segment sequence.
+            // Therefore we need to check that the last sequence
+            // has a turn direction None and a NextSegmentId 
+            // that is the first segment of the route
+
+            var firstSequence = route.RouteSegmentSequence[0];
+            var lastSequence = route.RouteSegmentSequence[^1];
+
+            if (lastSequence.TurnToNextSegment == TurnDirection.None &&
+                lastSequence.NextSegmentId == firstSequence.SegmentId)
+            {
+                return true;
+            }
+
+            return false;
         }
 
         public void Store(PlannedRoute route, string path)
