@@ -319,5 +319,66 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
 
             return null;
         }
+
+        public bool IsPossibleLoop()
+        {
+            if (Last == null || Sequence.Count() == 1)
+            {
+                return false;
+            }
+
+            var firstSequence = Sequence.First();
+
+            if (Last.Direction == SegmentDirection.AtoB)
+            {
+                if (Last.Segment.NextSegmentsNodeB.Any(n => n.SegmentId == firstSequence.SegmentId))
+                {
+                    if (firstSequence.Direction == SegmentDirection.AtoB)
+                    {
+                        if (firstSequence.Segment.NextSegmentsNodeA.Any(n => n.SegmentId == Last.SegmentId))
+                        {
+                            return true;
+                        }
+                    }
+                    else
+                    {
+                        if (firstSequence.Segment.NextSegmentsNodeB.Any(n => n.SegmentId == Last.SegmentId))
+                        {
+                            return true;
+                        }
+                    }
+                }
+            }
+            else
+            {
+                if (Last.Segment.NextSegmentsNodeA.Any(n => n.SegmentId == firstSequence.SegmentId))
+                {
+                    if (firstSequence.Direction == SegmentDirection.AtoB)
+                    {
+                        if (firstSequence.Segment.NextSegmentsNodeA.Any(n => n.SegmentId == Last.SegmentId))
+                        {
+                            return true;
+                        }
+                    }
+                    else
+                    {
+                        if (firstSequence.Segment.NextSegmentsNodeB.Any(n => n.SegmentId == Last.SegmentId))
+                        {
+                            return true;
+                        }
+                    }
+                }
+            }
+
+            return false;
+        }
+
+        public void MakeLoop()
+        {
+            foreach (var sequence in Sequence)
+            {
+                sequence.Type = SegmentSequenceType.Loop;
+            }
+        }
     }
 }

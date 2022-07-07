@@ -232,18 +232,6 @@
 													</Style>
 												</Border.Styles>
 												<Grid>
-													<!-- TODO: Figure out OpacityMask with drawing -->
-													<!--<Grid.OpacityMask>
-                                    <DrawingBrush>
-                                        <DrawingBrush.Drawing>
-                                            <GeometryDrawing Brush="Black">
-                                                <GeometryDrawing.Geometry>
-                                                    <RectangleGeometry RadiusX="5" RadiusY="5" Rect="0,0,180,100" />
-                                                </GeometryDrawing.Geometry>
-                                            </GeometryDrawing>
-                                        </DrawingBrush.Drawing>
-                                    </DrawingBrush>
-                                </Grid.OpacityMask>-->
 													<Image Source="{Binding Path=Image}" Height="100" Stretch="Uniform" ClipToBounds="True" Margin="0"
 														   Classes.isSelected="{Binding Path=IsSelected}">
 														<Image.Styles>
@@ -348,31 +336,10 @@
                           Name="RouteListView"
                           SelectionChanged="RouteListView_OnSelectionChanged"
                           KeyUp="RouteListView_KeyUp">
-					<ListBox.Resources>
-						<Style Selector="ListBox" x:Key="ListBoxStyle">
-							<!-- TODO: Figure out if ListBox provides alternation as a pseudo selector -->
-							<!--<Style.Triggers>
-                                <Trigger Property="ItemsControl.AlternationIndex"  Value="0">
-                                    <Setter Property="Background">
-                                        <Setter.Value>
-                                            <SolidColorBrush Color="Black" Opacity="0.05" />
-                                        </Setter.Value>
-                                    </Setter>
-                                </Trigger>
-                                <Trigger Property="ItemsControl.AlternationIndex"  Value="1">
-                                    <Setter Property="Background">
-                                        <Setter.Value>
-                                            <SolidColorBrush Color="Black" Opacity="0.15" />
-                                        </Setter.Value>
-                                    </Setter>
-                                </Trigger>
-                            </Style.Triggers>-->
-						</Style>
-					</ListBox.Resources>
-					<ListBox.ItemTemplate>
+                    <ListBox.ItemTemplate>
 						<DataTemplate DataType="viewModels:SegmentSequenceViewModel">
 							<Grid Margin="0">
-								<Grid.Resources>
+                                  <Grid.Resources>
 									<Style Selector="TextBlock" x:Key="ListBoxItemStyle">
 										<Setter Property="Foreground" Value="Black" />
 										<Setter Property="FontWeight" Value="Bold" />
@@ -386,6 +353,7 @@
 								<Grid.ColumnDefinitions>
 									<ColumnDefinition Width="24" />
 									<ColumnDefinition />
+									<ColumnDefinition Width="24" />
 								</Grid.ColumnDefinitions>
 
 								<TextBlock Grid.Column="0" Grid.Row="0" Text="{Binding Path=SequenceNumber}" HorizontalAlignment="Center" />
@@ -393,7 +361,7 @@
 
 								<TextBlock Grid.Column="1" Grid.Row="0" Text="{Binding Path=SegmentName}" Margin="4,0,0,0" />
 
-								<StackPanel Grid.Column="1" Grid.Row="1" Orientation="Horizontal" Margin="4,0,0,0">
+								<StackPanel Grid.Column="1" Grid.Row="1" Orientation="Horizontal" Margin="4,0,0,0" Grid.ColumnSpan="{Binding Path=ColumnSpan}">
 									<StackPanel Orientation="Horizontal" Height="18">
 										<TextBlock Text="{Binding Path=Distance,StringFormat=\{0:0.0\}}" FontSize="16" FontWeight="Bold" VerticalAlignment="Bottom" />
 										<TextBlock Text="km" FontSize="10" FontWeight="Bold" VerticalAlignment="Bottom" Padding="0,0,0,1.5"/>
@@ -408,6 +376,10 @@
 										<TextBlock Text="m" FontSize="10" FontWeight="Bold" VerticalAlignment="Bottom" Padding="0,0,0,1.5"/>
 									</StackPanel>
 								</StackPanel>
+
+								<TextBlock Grid.Column="2" Grid.Row="1" Text="🔁" IsVisible="{Binding Path=IsLoop}" />
+								<TextBlock Grid.Column="2" Grid.Row="1" Text="↓" IsVisible="{Binding Path=IsLeadIn}" />
+                                
 							</Grid>
 						</DataTemplate>
 					</ListBox.ItemTemplate>

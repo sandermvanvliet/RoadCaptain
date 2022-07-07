@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Threading.Tasks;
 using RoadCaptain.App.RouteBuilder.ViewModels;
 using RoadCaptain.App.Shared.Commands;
 using RoadCaptain.App.Shared.UserPreferences;
@@ -15,9 +16,9 @@ namespace RoadCaptain.App.RouteBuilder.Tests.Unit
         }
 
         [DebuggerStepThrough]
-        public CommandResult CallAddSegmentToRoute(Segment segment)
+        public async Task<CommandResult> CallAddSegmentToRoute(Segment segment)
         {
-            return SelectSegment(segment);
+            return await SelectSegment(segment);
         }
     }
 }

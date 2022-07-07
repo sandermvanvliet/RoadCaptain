@@ -86,7 +86,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
                 .OnSuccess(_ => Model.StatusBarInfo("Route cleared"))
                 .OnFailure(_ => Model.StatusBarError("Failed to clear route because: {0}", _.Message));
 
-            SelectSegmentCommand = new RelayCommand(
+            SelectSegmentCommand = new AsyncRelayCommand(
                     _ => SelectSegment(_ as Segment ?? throw new ArgumentNullException(nameof(RelayCommand.CommandParameter))),
                     _ => true)
                 .OnSuccess(_ => Model.StatusBarInfo("Added segment"))
@@ -339,7 +339,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             }
         }
 
-        protected CommandResult SelectSegment(Segment newSelectedSegment)
+        protected async Task<CommandResult> SelectSegment(Segment newSelectedSegment)
         {
             var segmentId = newSelectedSegment.Id;
 
@@ -389,6 +389,8 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
 
                     SelectedSegment = newSelectedSegment;
 
+                    await CheckForPossibleLoop();
+
                     return CommandResult.SuccessWithMessage(newSelectedSegment.Name);
                 }
             }
@@ -402,6 +404,8 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
                         newSegmentDirection);
 
                     SelectedSegment = newSelectedSegment;
+
+                    await CheckForPossibleLoop();
 
                     return CommandResult.SuccessWithMessage(newSelectedSegment.Name);
                 }
@@ -422,6 +426,8 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
 
                     SelectedSegment = newSelectedSegment;
 
+                    await CheckForPossibleLoop();
+
                     return CommandResult.SuccessWithMessage(newSelectedSegment.Name);
                 }
 
@@ -439,6 +445,8 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
 
                     SelectedSegment = newSelectedSegment;
 
+                    await CheckForPossibleLoop();
+
                     return CommandResult.SuccessWithMessage(newSelectedSegment.Name);
                 }
             }
@@ -450,6 +458,19 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
 
             return CommandResult.Failure(
                 "Did not find a connection between the last segment and the selected segment");
+        }
+
+        private async Task CheckForPossibleLoop()
+        {
+            if (Route.IsPossibleLoop())
+            {
+                var shouldCreateLoop = await _windowService.ShowRouteLoopDialog();
+
+                if (shouldCreateLoop)
+                {
+                    Route.MakeLoop();
+                }
+            }
         }
 
         private bool IsValidSpawnPointProgression(out CommandResult commandResult, SegmentDirection segmentDirection)
@@ -537,70 +558,6 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             if (string.IsNullOrEmpty(routeOutputFilePath))
             {
                 return CommandResult.Success();
-            }
-
-            var firstInSequence = Route.Sequence.First();
-            var lastInSequence = Route.Sequence.Last();
-
-            if (lastInSequence.Model.NextSegmentId == null)
-            {
-                // Check if firstInSequence and lastInSequence share a connection
-                var lastSegment = _segments.Single(s => s.Id == lastInSequence.SegmentId);
-                var firstSegment = _segments.Single(s => s.Id == firstInSequence.SegmentId);
-
-                if (lastInSequence.Direction == SegmentDirection.AtoB)
-                {
-                    if (lastSegment.NextSegmentsNodeB.Any(t => t.SegmentId == firstInSequence.SegmentId))
-                    {
-                        if (firstInSequence.Direction == SegmentDirection.AtoB)
-                        {
-                            if (firstSegment.NextSegmentsNodeA.Any(t => t.SegmentId == lastInSequence.SegmentId))
-                            {
-                                if (await _windowService.ShowRouteLoopDialog())
-                                {
-                                    lastInSequence.SetTurn(TurnDirection.None, firstInSequence.SegmentId, lastInSequence.Direction);
-                                }
-                            }
-                        }
-                        else if (firstInSequence.Direction == SegmentDirection.BtoA)
-                        {
-                            if (firstSegment.NextSegmentsNodeB.Any(t => t.SegmentId == lastInSequence.SegmentId))
-                            {
-                                if (await _windowService.ShowRouteLoopDialog())
-                                {
-                                    lastInSequence.SetTurn(TurnDirection.None, firstInSequence.SegmentId, lastInSequence.Direction);
-                                }
-                            }
-                        }
-                    }
-                }
-
-                if (lastInSequence.Direction == SegmentDirection.BtoA)
-                {
-                    if (lastSegment.NextSegmentsNodeA.Any(t => t.SegmentId == firstInSequence.SegmentId))
-                    {
-                        if (firstInSequence.Direction == SegmentDirection.AtoB)
-                        {
-                            if (firstSegment.NextSegmentsNodeA.Any(t => t.SegmentId == lastInSequence.SegmentId))
-                            {
-                                if (await _windowService.ShowRouteLoopDialog())
-                                {
-                                    lastInSequence.SetTurn(TurnDirection.None, firstInSequence.SegmentId, lastInSequence.Direction);
-                                }
-                            }
-                        }
-                        else if (firstInSequence.Direction == SegmentDirection.BtoA)
-                        {
-                            if (firstSegment.NextSegmentsNodeB.Any(t => t.SegmentId == lastInSequence.SegmentId))
-                            {
-                                if (await _windowService.ShowRouteLoopDialog())
-                                {
-                                    lastInSequence.SetTurn(TurnDirection.None, firstInSequence.SegmentId, lastInSequence.Direction);
-                                }
-                            }
-                        }
-                    }
-                }
             }
 
             Route.OutputFilePath = routeOutputFilePath;

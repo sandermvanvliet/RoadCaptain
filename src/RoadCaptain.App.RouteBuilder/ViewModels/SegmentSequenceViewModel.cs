@@ -21,6 +21,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             Direction = SegmentDirection.Unknown;
             SegmentName = segment.Name;
             NoSelectReason = segment.NoSelectReason;
+            Segment = segment;
         }
 
         private static string? GlyphFromTurn(TurnDirection turnDirection)
@@ -35,6 +36,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
         }
 
         public SegmentSequence Model { get; }
+        public Segment Segment { get; }
 
         public int SequenceNumber { get; }
 
@@ -92,6 +94,24 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
         public string SegmentName { get; }
 
         public string NoSelectReason { get; }
+
+        public SegmentSequenceType Type
+        {
+            get => Model.Type;
+            set
+            {
+                if (Model.Type == value) return;
+                Model.Type = value;
+                this.RaisePropertyChanged();
+                this.RaisePropertyChanged(nameof(IsLeadIn));
+                this.RaisePropertyChanged(nameof(IsLoop));
+                this.RaisePropertyChanged(nameof(ColumnSpan));
+            }
+        }
+
+        public bool IsLoop => Model.Type == SegmentSequenceType.Loop;
+        public bool IsLeadIn => Model.Type == SegmentSequenceType.LeadIn;
+        public int ColumnSpan => IsLoop || IsLeadIn ? 1 : 2;
 
         public void SetTurn(TurnDirection direction, string ontoSegmentId, SegmentDirection segmentDirection)
         {
