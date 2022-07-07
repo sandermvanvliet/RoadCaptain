@@ -98,6 +98,9 @@ namespace RoadCaptain
                 sequence.Type = SegmentSequenceType.Loop;
             }
 
+            _route.RouteSegmentSequence[0].Type = SegmentSequenceType.LoopStart;
+            Last.Type = SegmentSequenceType.LoopEnd;
+
             return this;
         }
 

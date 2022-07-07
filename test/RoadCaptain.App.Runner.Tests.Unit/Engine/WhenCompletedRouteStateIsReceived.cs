@@ -31,7 +31,7 @@ namespace RoadCaptain.App.Runner.Tests.Unit.Engine
         }
 
         [Fact]
-        public void GivenLoopedRouteAndUserWantsToLoop_RouteIsResetToNotStarted()
+        public void GivenLoopedRouteAndUserWantsToLoop_SequenceIndexIsSetToLoopStartSegment1()
         {
             UserPreferences.LoopRouteAtEndOfRoute = true;
 

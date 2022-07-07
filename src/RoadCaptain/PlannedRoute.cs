@@ -76,17 +76,6 @@ namespace RoadCaptain
             {
                 SegmentSequenceIndex++;
 
-                //// Use the segment index instead of comparing the segment
-                //// id with the id of the last segment because we may pass
-                //// the same segment multiple times in the course of this
-                //// route.
-                //if (SegmentSequenceIndex == RouteSegmentSequence.Count - 1)
-                //{
-                //    HasCompleted = true;
-
-                //    return RouteMoveResult.CompletedRoute;
-                //}
-
                 return RouteMoveResult.EnteredNextSegment;
             }
 
@@ -109,6 +98,20 @@ namespace RoadCaptain
         public void Complete()
         {
             HasCompleted = true;
+        }
+
+        public void EnterNextLoop()
+        {
+            for (var index = 0; index < RouteSegmentSequence.Count; index++)
+            {
+                if (RouteSegmentSequence[index].Type == SegmentSequenceType.LoopStart)
+                {
+                    HasStarted = true;
+                    HasCompleted = false;
+                    SegmentSequenceIndex = index;
+                    return;
+                }
+            }
         }
     }
 

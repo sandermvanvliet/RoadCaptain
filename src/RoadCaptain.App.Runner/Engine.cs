@@ -159,7 +159,7 @@ namespace RoadCaptain.App.Runner
                 }
                 else if (completed.Route.IsLoop && _userPreferences.LoopRouteAtEndOfRoute)
                 {
-                    completed.Route.Reset();
+                    completed.Route.EnterNextLoop();
                 }
             }
 
