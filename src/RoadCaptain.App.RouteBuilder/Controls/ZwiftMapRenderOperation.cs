@@ -15,7 +15,7 @@ using SkiaSharp;
 
 namespace RoadCaptain.App.RouteBuilder.Controls
 {
-    internal class MapRenderOperation : ICustomDrawOperation
+    internal class ZwiftMapRenderOperation : ICustomDrawOperation
     {
         private const int KomMarkerHeight = 32;
         private const int KomMarkerWidth = 6;

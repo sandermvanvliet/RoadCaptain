@@ -24,7 +24,7 @@ namespace RoadCaptain.App.RouteBuilder.Controls
     public class ZwiftMap : UserControl
     {
         private const float ZoomDelta = 0.1f;
-        private readonly MapRenderOperation _renderOperation;
+        private readonly ZwiftMapRenderOperation _renderOperation;
         private Point _previousPanPosition;
         private bool _isPanning;
         private Segment? _highlightedSegment;
@@ -53,7 +53,7 @@ namespace RoadCaptain.App.RouteBuilder.Controls
         {
             Background = new SolidColorBrush(Colors.Transparent);
 
-            _renderOperation = new MapRenderOperation();
+            _renderOperation = new ZwiftMapRenderOperation();
 
             _closeTimer = new Timer(_ => Dispatcher.UIThread.InvokeAsync(() => ToolTip.SetIsOpen(this, false)),
                 null,
