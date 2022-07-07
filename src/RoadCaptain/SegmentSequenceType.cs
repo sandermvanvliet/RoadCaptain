@@ -5,6 +5,9 @@ namespace RoadCaptain
         Unknown,
         Regular,
         LeadIn,
-        Loop
+        LoopStart,
+        Loop,
+        LoopEnd,
+        LeadOut
     }
 }

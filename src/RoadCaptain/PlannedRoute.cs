@@ -33,9 +33,8 @@ namespace RoadCaptain
         public string CurrentSegmentId => HasStarted ? RouteSegmentSequence[SegmentSequenceIndex].SegmentId : null;
 
         public bool IsLoop =>
-            RouteSegmentSequence.Count(seq => seq.Type == SegmentSequenceType.Loop) > 1 &&
-            RouteSegmentSequence.Count(seq => seq.Type == SegmentSequenceType.LeadIn) >= 0 &&
-            RouteSegmentSequence.Count(seq => seq.Type == SegmentSequenceType.Regular) == 0;
+            RouteSegmentSequence.Count(seq => seq.Type == SegmentSequenceType.Regular) == 0 &&
+            RouteSegmentSequence.Count >= 2;
 
         public List<SegmentSequence> RouteSegmentSequence { get; } = new();
 

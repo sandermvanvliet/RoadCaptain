@@ -392,6 +392,14 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
                 {
                     type = SegmentSequenceType.LeadIn;
                 }
+                else if (index == startIndex)
+                {
+                    type = SegmentSequenceType.LoopStart;
+                }
+                else if (index == endIndex)
+                {
+                    type = SegmentSequenceType.LoopEnd;
+                }
 
                 seqList[index].Type = type;
             }
