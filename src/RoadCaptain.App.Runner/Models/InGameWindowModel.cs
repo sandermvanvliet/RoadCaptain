@@ -23,7 +23,7 @@ namespace RoadCaptain.App.Runner.Models
         private string _waitingReason = "Waiting for Zwift connection...";
         private string _instructionText;
         private bool _lostRouteLock;
-        private int _loopCount = 1;
+        private int _loopCount;
 
         public InGameWindowModel(List<Segment> segments)
         {
@@ -190,7 +190,7 @@ namespace RoadCaptain.App.Runner.Models
             }
         }
 
-        public string LoopText => $"Loop: {LoopCount}";
+        public string LoopText => LoopCount == 0 ? "Lead-in to loop" : $"On loop: {LoopCount}";
 
         public int LoopCount
         {

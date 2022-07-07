@@ -95,6 +95,11 @@ namespace RoadCaptain.App.Runner.ViewModels
                     {
                         // Moved to next segment on route
                         RouteProgression(routeState.Route.SegmentSequenceIndex);
+
+                        if (Model.Route.IsLoop && Model.Route.RouteSegmentSequence[routeState.Route.SegmentSequenceIndex].Type == SegmentSequenceType.LoopStart)
+                        {
+                            Model.LoopCount++;
+                        }
                     }
 
                     if (_previousState is OnSegmentState and not OnRouteState)
@@ -184,11 +189,6 @@ namespace RoadCaptain.App.Runner.ViewModels
 
         private void RouteProgression(int segmentSequenceIndex)
         {
-            if (_lastRouteSequenceIndex != null && segmentSequenceIndex == 0 && Model.Route.IsLoop)
-            {
-                Model.LoopCount++;
-            }
-
             // Set CurrentSegment and NextSegment accordingly
             Model.CurrentSegment = SegmentSequenceModelFromIndex(segmentSequenceIndex);
 

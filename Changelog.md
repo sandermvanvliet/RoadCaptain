@@ -7,6 +7,8 @@ France is now available to plan routes!
 ### Runner
 
 - Show "What is new" dialog when opening Runner after installation or upgrade. This dialog will only be shown once. [#80](https://github.com/sandermvanvliet/RoadCaptain/issues/80)
+- Fixed a bug where a GoStraight with GoStraight & Right turn commands available would result in Right instead of GoStraight causing you to lose route lock
+- When riding on the lead-in to a loop the status bar in the bottom now shows that instead of telling you that you're on loop 1: ![Status bar showing lead-in](./images/runner-loop-lead-in.png)
 
 ### Route Builder
 
