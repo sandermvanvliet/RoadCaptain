@@ -11,7 +11,7 @@ France is now available to plan routes!
 ### Route Builder
 
 - Show "What is new" dialog when opening Runner after installation or upgrade. This dialog will only be shown once. [#80](https://github.com/sandermvanvliet/RoadCaptain/issues/80)
-- You can now show an elevation plot of your route using the "Show elevation plot" toggle [#31](https://github.com/sandermvanvliet/RoadCaptain/issues/31)
+- You can now show an elevation plot of your route using the "Show elevation plot" toggle, KOM segments are visible too when those are enabled on the map [#31](https://github.com/sandermvanvliet/RoadCaptain/issues/31)
 
 ### Routing
 
