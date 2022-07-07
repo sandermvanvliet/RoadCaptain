@@ -29,11 +29,13 @@ namespace RoadCaptain.Adapters
 
         private readonly ISegmentStore _segmentStore;
         private readonly IWorldStore _worldStore;
+        private readonly Version _currentVersion;
 
         public RouteStoreToDisk(ISegmentStore segmentStore, IWorldStore worldStore)
         {
             _segmentStore = segmentStore;
             _worldStore = worldStore;
+            _currentVersion = GetType().Assembly.GetName().Version;
         }
 
         public PlannedRoute LoadFrom(string path)
@@ -78,6 +80,12 @@ namespace RoadCaptain.Adapters
                     var deserialized = JsonConvert.DeserializeObject<PersistedRouteVersion2>(
                         serialized,
                         RouteSerializationSettings);
+
+                    if (Version.Parse(deserialized.RoadCaptainVersion) > _currentVersion)
+                    {
+                        throw new InvalidOperationException(
+                            "Route was created with a newer version of RoadCaptain and that won't work");
+                    }
 
                     deserialized.Route.World = _worldStore.LoadWorldById(deserialized.Route.WorldId);
                     
