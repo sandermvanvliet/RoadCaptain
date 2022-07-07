@@ -13,14 +13,13 @@ namespace RoadCaptain
     // TODO: Investigate converting to struct
     public class TrackPoint : IEquatable<TrackPoint>
     {
-        private readonly ZwiftWorldId? _worldId;
         private const double CoordinateEqualityTolerance = 0.00001d;
         private const double PiRad = Math.PI / 180d;
         private const double RadToDegree = 180 / Math.PI;
 
         public TrackPoint(double latitude, double longitude, double altitude, ZwiftWorldId? worldId = null)
         {
-            _worldId = worldId;
+            WorldId = worldId;
             Latitude = Math.Round(latitude, 5);
             Longitude = Math.Round(longitude, 5);
             Altitude = altitude;
@@ -198,7 +197,7 @@ namespace RoadCaptain
 
         public MapCoordinate ToMapCoordinate()
         {
-            var worldId = _worldId.GetValueOrDefault(ZwiftWorldId.Watopia);
+            var worldId = WorldId.GetValueOrDefault(ZwiftWorldId.Watopia);
             ZwiftWorldConstants worldConstants;
 
             switch (worldId)
@@ -264,5 +263,7 @@ namespace RoadCaptain
         }
 
         public static TrackPoint Unknown => new(Double.NaN, Double.NaN, Double.NaN);
+
+        public ZwiftWorldId? WorldId { get; }
     }
 }

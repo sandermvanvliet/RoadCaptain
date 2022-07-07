@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using Avalonia;
@@ -118,7 +119,7 @@ namespace RoadCaptain.App.RouteBuilder.Controls
                 return;
             }
 
-            _routePoints = new List<TrackPoint>();
+            var routePoints = new List<TrackPoint>();
 
             foreach (var routeStep in Route.Sequence)
             {
@@ -137,7 +138,41 @@ namespace RoadCaptain.App.RouteBuilder.Controls
                     points = points.Reverse().ToArray();
                 }
 
-                _routePoints.AddRange(points);
+                routePoints.AddRange(points);
+            }
+
+            // And now for a bit of trickery.
+            // To show an accurate plot of distance vs altitude we can't simply use the point index
+            // as the x coordinate on the plot because the track points aren't consistently 1m apart.
+            // What needs to happen is that we calculate the total distance of the route and use that
+            // value to calculate how many pixels 1m is.
+            // With that value we can then calculate the x coordinate based on the distance on segment
+            // of a track point on the entire route. (Yes it's actually distance on route here but
+            // we're creating new track points anyway so it doesn't matter... too much I hope)
+            TrackPoint? previousPoint = null;
+            double distanceOnSegment = 0;
+
+            _routePoints = new List<TrackPoint>();
+            
+            foreach (var point in routePoints)
+            {
+                var distanceFromLast = previousPoint == null
+                    ? 0
+                    : TrackPoint.GetDistanceFromLatLonInMeters(previousPoint.Latitude, previousPoint.Longitude, point.Latitude, point.Longitude);
+
+                distanceOnSegment += distanceFromLast;
+
+                var newPoint = new TrackPoint(point.Latitude, point.Longitude, point.Altitude, point.WorldId)
+                {
+                    DistanceFromLast = distanceFromLast,
+                    DistanceOnSegment = distanceOnSegment,
+                    Segment = point.Segment, // Copy 
+                    Index = point.Index // Copy
+                };
+
+                _routePoints.Add(newPoint);
+
+                previousPoint = point;
             }
 
             var minAltitude = _routePoints.Min(point => point.Altitude);
@@ -152,12 +187,13 @@ namespace RoadCaptain.App.RouteBuilder.Controls
             // so it isn't rendered off-screen.
             _altitudeOffset = (float)(minAltitude < 0 ? -minAltitude : 0);
 
-            _step = _routePoints.Count > Bounds.Width
-                ? (float)(Bounds.Width / _routePoints.Count)
-                : 1f;
+            // This works because we've calculated it above
+            var totalDistanceMeters = Math.Round(_routePoints.Last().DistanceOnSegment, MidpointRounding.AwayFromZero);
+
+            _step = (float)(Bounds.Width / totalDistanceMeters);
 
             var polyPoints = _routePoints
-                .Select((point, index) => new SKPoint(_step * index, CalculateYFromAltitude(point.Altitude)))
+                .Select(point => new SKPoint((float)(_step * point.DistanceOnSegment), CalculateYFromAltitude(point.Altitude)))
                 .ToArray();
 
             _elevationPath = new SKPath();
@@ -228,11 +264,18 @@ namespace RoadCaptain.App.RouteBuilder.Controls
                     {
                         if (_routePoints[index].Equals(RiderPosition))
                         {
-                            DrawCircleMarker(canvas, new SKPoint(_step * index, CalculateYFromAltitude(RiderPosition.Altitude)), SkiaPaints.RiderPositionFillPaint);
+                            DrawCircleMarker(
+                                canvas,
+                                new SKPoint(
+                                    (float)(_step * _routePoints[index].DistanceOnSegment),
+                                    CalculateYFromAltitude(RiderPosition.Altitude)),
+                                SkiaPaints.RiderPositionFillPaint);
+
                             // RiderPosition always moves forward, so
                             // store this value and pick up from there
                             // on the next update.
                             _previousIndex = index;
+
                             break;
                         }
                     }
