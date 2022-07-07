@@ -50,7 +50,7 @@ namespace RoadCaptain.App.Shared.Commands
                     _onSuccess(result);
                 }
             }
-            else if (result.Result == Result.SuccessWithWarnings)
+            else if (result.Result == Result.SuccessWithMessage)
             {
                 if (result is CommandResultWithMessage resultWithMessage)
                 {

@@ -108,7 +108,7 @@ namespace RoadCaptain.App.RouteBuilder.Tests.Unit
             result
                 .Result
                 .Should()
-                .Be(Result.SuccessWithWarnings);
+                .Be(Result.SuccessWithMessage);
 
             result
                 .Should()
@@ -130,7 +130,7 @@ namespace RoadCaptain.App.RouteBuilder.Tests.Unit
             result
                 .Result
                 .Should()
-                .Be(Result.SuccessWithWarnings);
+                .Be(Result.SuccessWithMessage);
 
             result
                 .Should()

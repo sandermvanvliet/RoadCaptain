@@ -11,7 +11,7 @@
 
         public static CommandResultWithMessage SuccessWithMessage(string message)
         {
-            return new CommandResultWithMessage(Result.SuccessWithWarnings, message);
+            return new CommandResultWithMessage(Result.SuccessWithMessage, message);
         }
 
         public static CommandResultWithMessage Failure(string message)

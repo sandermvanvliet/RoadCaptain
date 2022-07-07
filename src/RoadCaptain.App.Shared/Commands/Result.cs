@@ -4,7 +4,7 @@
     {
         NotExecuted,
         Success,
-        SuccessWithWarnings,
+        SuccessWithMessage,
         Failure
     }
 }
