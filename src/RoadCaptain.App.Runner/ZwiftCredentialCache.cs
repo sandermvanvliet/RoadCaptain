@@ -18,10 +18,12 @@ namespace RoadCaptain.App.Runner
     {
         private TokenResponse? _cachedCredentials;
         private readonly IZwift _zwift;
+        private readonly MonitoringEvents _monitoringEvents;
 
-        public ZwiftCredentialCache(IZwift zwift)
+        public ZwiftCredentialCache(IZwift zwift, MonitoringEvents monitoringEvents)
         {
             _zwift = zwift;
+            _monitoringEvents = monitoringEvents;
         }
 
         public async Task StoreAsync(TokenResponse tokenResponse)
@@ -46,23 +48,31 @@ namespace RoadCaptain.App.Runner
             // This is for testing only to prevent me having to log in all the time.
             if (tokenResponse == null && File.Exists("devtokens.json"))
             {
-                tokenResponse = JsonConvert.DeserializeObject<TokenResponse>(await File.ReadAllTextAsync("devtokens.json"));
-
-                if (tokenResponse?.AccessToken != null && new JsonWebToken(tokenResponse.AccessToken).ValidTo < DateTime.Now)
+                try
                 {
-                    // When the token expires, break here and use postman to refresh the token manually
-                    var oauthToken = await _zwift.RefreshTokenAsync(tokenResponse.RefreshToken);
+                    tokenResponse = JsonConvert.DeserializeObject<TokenResponse>(await File.ReadAllTextAsync("devtokens.json"));
 
-                    if (oauthToken != null)
+                    if (tokenResponse?.AccessToken != null && new JsonWebToken(tokenResponse.AccessToken).ValidTo < DateTime.Now)
                     {
-                        tokenResponse.AccessToken = oauthToken.AccessToken;
-                        tokenResponse.RefreshToken = oauthToken.RefreshToken;
-                        tokenResponse.ExpiresIn = (int)oauthToken.ExpiresOn.Subtract(DateTime.UtcNow).TotalSeconds;
+                        // When the token expires, break here and use postman to refresh the token manually
+                        var oauthToken = await _zwift.RefreshTokenAsync(tokenResponse.RefreshToken);
+
+                        if (oauthToken != null)
+                        {
+                            tokenResponse.AccessToken = oauthToken.AccessToken;
+                            tokenResponse.RefreshToken = oauthToken.RefreshToken;
+                            tokenResponse.ExpiresIn = (int)oauthToken.ExpiresOn.Subtract(DateTime.UtcNow).TotalSeconds;
+                        }
+                        else
+                        {
+                            tokenResponse = null;
+                        }
                     }
-                    else
-                    {
-                        tokenResponse = null;
-                    }
+                }
+                catch (Exception e)
+                {
+                    _monitoringEvents.Warning(e, "Failed to load or refresh token");
+                    tokenResponse = null;
                 }
             }
 #endif

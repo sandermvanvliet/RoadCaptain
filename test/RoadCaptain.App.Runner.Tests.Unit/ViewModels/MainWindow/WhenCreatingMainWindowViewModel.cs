@@ -23,7 +23,7 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.MainWindow
         public WhenCreatingMainWindowViewModel()
         {
             _gameStateDispatcher = new InMemoryGameStateDispatcher(new NopMonitoringEvents());
-            _credentialCache = new ZwiftCredentialCache(new Zwift(new HttpClient(new TestableMessageHandler())));
+            _credentialCache = new ZwiftCredentialCache(new Zwift(new HttpClient(new TestableMessageHandler())), new NopMonitoringEvents());
         }
 
         [Fact]

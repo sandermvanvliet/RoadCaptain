@@ -27,7 +27,7 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.MainWindow
         {
             _windowService = new StubWindowService();
             _gameStateDispatcher = new InMemoryGameStateDispatcher(new NopMonitoringEvents());
-            _credentialCache = new ZwiftCredentialCache(new Zwift(new HttpClient(new TestableMessageHandler())));
+            _credentialCache = new ZwiftCredentialCache(new Zwift(new HttpClient(new TestableMessageHandler())), new NopMonitoringEvents());
 
             StubRouteStore routeStore = new StubRouteStore();
             _viewModel = new MainWindowViewModel(new Configuration(null),
