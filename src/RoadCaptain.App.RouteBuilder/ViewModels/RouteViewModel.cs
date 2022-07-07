@@ -367,6 +367,8 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
 
                 seqList[index].Type = type;
             }
+
+            seqList[endIndex].Model.NextSegmentId = seqList[startIndex].SegmentId;
         }
     }
 }
