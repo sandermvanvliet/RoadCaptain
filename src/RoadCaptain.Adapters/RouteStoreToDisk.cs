@@ -69,6 +69,9 @@ namespace RoadCaptain.Adapters
 
                     // ReSharper disable once PossibleNullReferenceException
                     plannedRoute = deserialized.Route;
+                    
+                    // Routes created before 0.6.5.0 did not have a segment sequence type
+                    SetSegmentSequenceType(plannedRoute);
                 }
                 else if (schemaVersion == PersistedRouteVersion2.Version)
                 {
@@ -87,6 +90,12 @@ namespace RoadCaptain.Adapters
 
                     // ReSharper disable once PossibleNullReferenceException
                     plannedRoute = deserialized.Route;
+
+                    // Routes created before 0.6.6.0 did not have a segment sequence type
+                    if (Version.Parse(deserialized.RoadCaptainVersion) < new Version(0, 6, 6, 0))
+                    {
+                        SetSegmentSequenceType(plannedRoute);
+                    }
                 }
                 else
                 {
@@ -101,6 +110,8 @@ namespace RoadCaptain.Adapters
 
                 // ReSharper disable once PossibleNullReferenceException
                 plannedRoute = deserializeObject.AsRoute(_worldStore.LoadWorldById("watopia"));
+
+                SetSegmentSequenceType(plannedRoute);
             }
 
             if (plannedRoute != null)
@@ -121,6 +132,26 @@ namespace RoadCaptain.Adapters
             }
 
             return plannedRoute;
+        }
+
+        /// <summary>
+        /// Set the segment sequence type on the route
+        /// </summary>
+        /// <remarks>This method ensures that the type is set for routes that were created with earlier versions of RoadCaptain</remarks>
+        /// <param name="route"></param>
+        private static void SetSegmentSequenceType(PlannedRoute route)
+        {
+            var type = SegmentSequenceType.Regular;
+
+            if (route.IsLoop)
+            {
+                type = SegmentSequenceType.Loop;
+            }
+
+            foreach (var sequence in route.RouteSegmentSequence)
+            {
+                sequence.Type = type;
+            }
         }
 
         public void Store(PlannedRoute route, string path)
