@@ -42,6 +42,12 @@ namespace RoadCaptain.App.RouteBuilder
 
         public static readonly SKPaint ClimbSegmentPaint = new()
             { Color = SKColor.Parse("#FF6A00"), Style = SKPaintStyle.Stroke, StrokeWidth = 4, IsAntialias = true };
+
+        public static readonly SKPaint ElevationPlotClimbSegmentPaint = new()
+            { Color = SKColor.Parse("#FF6A00"), Style = SKPaintStyle.Stroke, StrokeWidth = 2, IsAntialias = true };
+
+        public static readonly SKPaint ElevationPlotClimbTextPaint = new()
+            { Color = SKColor.Parse("#FF6A00"), Style = SKPaintStyle.Fill, IsAntialias = true };
         
         public static readonly SKPaint ElevationPlotPaint = new()
             { Color = SKColor.Parse("#000000"), Style = SKPaintStyle.Stroke, StrokeWidth = 2, IsAntialias = true };

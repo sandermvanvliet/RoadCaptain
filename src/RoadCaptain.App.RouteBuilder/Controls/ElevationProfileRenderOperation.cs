@@ -68,6 +68,9 @@ namespace RoadCaptain.App.RouteBuilder.Controls
             }
         }
 
+        public bool ShowClimbs { get; set; }
+        public List<Segment>? Markers { get; set; }
+
         public void Dispose()
         {
         }
@@ -283,6 +286,33 @@ namespace RoadCaptain.App.RouteBuilder.Controls
 
                 // Back to normal
                 canvas.Restore();
+
+                if (_routePoints != null && ShowClimbs && Markers!= null && Markers.Any())
+                {
+                    var climbMarkers = Markers.Where(m => m.Type == SegmentType.Climb).ToList();
+
+                    var climbMarkersOnRoute = _routePoints
+                        .Select(point => new
+                        {
+                            Point = point,
+                            Marker = climbMarkers.FirstOrDefault(m => m.Contains(point))
+                        })
+                        .Where(x => x.Marker != null)
+                        .GroupBy(x => x.Marker.Id, x => x.Marker, (key, values) => values.First())
+                        .ToList();
+
+                    foreach (var climbMarker in climbMarkersOnRoute)
+                    {
+                        var closestA = GetClosestPointOnRoute(climbMarker.A);
+                        var closestB = GetClosestPointOnRoute(climbMarker.B);
+
+                        if (closestA != null && closestB != null && closestA.DistanceOnSegment < closestB.DistanceOnSegment)
+                        {
+                            DrawClimbMarker(canvas, closestA, climbMarker.Name);
+                            DrawClimbMarker(canvas, closestB, null);
+                        }
+                    }
+                }
             }
 
             // Ensure sea-level exists
@@ -302,6 +332,44 @@ namespace RoadCaptain.App.RouteBuilder.Controls
 
                 canvas.DrawText(text, 5, correctedAltitudeOffset, _defaultFont, SkiaPaints.ElevationLineTextPaint);
             }
+        }
+
+        private void DrawClimbMarker(SKCanvas canvas, TrackPoint climbMarkerPoint, string? climbName)
+        {
+            var x = (float)(_step * climbMarkerPoint.DistanceOnSegment);
+            canvas.DrawLine(
+                x,
+                0,
+                x,
+                (float)(Bounds.Height - _padding),
+                SkiaPaints.ElevationPlotClimbSegmentPaint);
+
+            if (climbName != null)
+            {
+                canvas
+                    .DrawText(
+                        climbName,
+                        new SKPoint(
+                            x + 4,
+                            20),
+                        SkiaPaints.ElevationPlotClimbTextPaint
+                    );
+            }
+        }
+
+        private TrackPoint? GetClosestPointOnRoute(TrackPoint climbMarkerPoint)
+        {
+            return _routePoints
+                .Where(point => point.IsCloseTo(climbMarkerPoint))
+                .Select(point => new
+                {
+                    Point = point,
+                    Distance = TrackPoint.GetDistanceFromLatLonInMeters(point.Latitude, point.Longitude,
+                        climbMarkerPoint.Latitude, climbMarkerPoint.Longitude)
+                })
+                .OrderBy(x => x.Distance)
+                .FirstOrDefault()
+                ?.Point;
         }
 
         private static void DrawCircleMarker(SKCanvas canvas, SKPoint point, SKPaint fill)

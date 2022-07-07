@@ -12,6 +12,9 @@ namespace RoadCaptain.App.RouteBuilder.Controls
         public static readonly DirectProperty<ElevationProfile, RouteViewModel?> RouteProperty = AvaloniaProperty.RegisterDirect<ElevationProfile, RouteViewModel?>(nameof(Route), map => map.Route, (map, value) => map.Route = value);
         public static readonly DirectProperty<ElevationProfile, List<Segment>?> SegmentsProperty = AvaloniaProperty.RegisterDirect<ElevationProfile, List<Segment>?>(nameof(Segments), map => map.Segments, (map, value) => map.Segments = value);
         public static readonly DirectProperty<ElevationProfile, TrackPoint?> RiderPositionProperty = AvaloniaProperty.RegisterDirect<ElevationProfile, TrackPoint?>(nameof(RiderPosition), map => map.RiderPosition, (map, value) => map.RiderPosition = value);
+        public static readonly DirectProperty<ElevationProfile, List<Segment>?> MarkersProperty = AvaloniaProperty.RegisterDirect<ElevationProfile, List<Segment>?>(nameof(Markers), map => map.Markers, (map, value) => map.Markers = value);
+        public static readonly DirectProperty<ElevationProfile, bool> ShowClimbsProperty = AvaloniaProperty.RegisterDirect<ElevationProfile, bool>(nameof(ShowClimbs), map => map.ShowClimbs, (map, value) => map.ShowClimbs = value);
+
         private RouteViewModel? _route;
         
         public RouteViewModel? Route
@@ -52,6 +55,28 @@ namespace RoadCaptain.App.RouteBuilder.Controls
                 {
                     _renderOperation.RiderPosition = null;
                 }
+            }
+        }
+
+        public List<Segment>? Markers
+        {
+            get => _renderOperation.Markers;
+            set
+            {
+                _renderOperation.Markers = value ?? new List<Segment>();
+
+                InvalidateVisual();
+            }
+        }
+
+        public bool ShowClimbs
+        {
+            get => _renderOperation.ShowClimbs;
+            set
+            {
+                _renderOperation.ShowClimbs = value;
+
+                InvalidateVisual();
             }
         }
 

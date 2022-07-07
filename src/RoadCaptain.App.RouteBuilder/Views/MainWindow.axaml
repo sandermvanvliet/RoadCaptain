@@ -114,6 +114,8 @@
                 Segments="{Binding Path=Segments}"
                 Route="{Binding Path=Route}"
                 RiderPosition="{Binding Path=RiderPosition}"
+                ShowClimbs="{Binding Path=ShowClimbs}"
+                Markers="{Binding Path=Markers}"
 				IsVisible="{Binding Path=ShowElevationPlot}"
             />
 
