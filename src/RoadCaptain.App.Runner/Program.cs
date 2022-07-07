@@ -2,6 +2,7 @@ using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.ReactiveUI;
 using System;
+using System.Diagnostics;
 using Serilog.Core;
 #if MACOS
 using System.IO;
@@ -41,6 +42,11 @@ namespace RoadCaptain.App.Runner
             }
             catch (Exception ex)
             {
+                if (ex is ArgumentException)
+                {
+                    Debugger.Break();
+                }
+
                 Logger.Fatal(ex, "Something went really wrong!");
             }
             finally
