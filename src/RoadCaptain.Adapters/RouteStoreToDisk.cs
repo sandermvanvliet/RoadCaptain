@@ -156,6 +156,16 @@ namespace RoadCaptain.Adapters
 
         public void Store(PlannedRoute route, string path)
         {
+            // Ensure that segment sequences have at least
+            // the type regular if it's not been set.
+            foreach (var sequence in route.RouteSegmentSequence)
+            {
+                if (sequence.Type == SegmentSequenceType.Unknown)
+                {
+                    sequence.Type = SegmentSequenceType.Regular;
+                }
+            }
+
             var serialized = path.EndsWith(".gpx", StringComparison.InvariantCultureIgnoreCase)
                 ? SerializeAsGpx(route)
                 : SerializeAsJson(route);

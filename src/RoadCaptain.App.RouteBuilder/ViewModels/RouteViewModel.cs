@@ -109,7 +109,8 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
                     SegmentId = segment.Id,
                     TurnToNextSegment = TurnDirection.None,
                     NextSegmentId = null,
-                    Direction = segmentDirection
+                    Direction = segmentDirection,
+                    Type = SegmentSequenceType.Regular
                 },
                 segment,
                 _sequence.Count + 1)
@@ -144,12 +145,13 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
                     SegmentId = ontoSegmentId,
                     TurnToNextSegment = TurnDirection.None,
                     NextSegmentId = null,
-                    Direction = newSegmentDirection
+                    Direction = newSegmentDirection,
+                    Type = SegmentSequenceType.Regular
                 },
                 segment,
                 _sequence.Count + 1)
             {
-                Direction = newSegmentDirection
+                Direction = newSegmentDirection,
             };
 
             _sequence.Add(segmentSequenceViewModel);
