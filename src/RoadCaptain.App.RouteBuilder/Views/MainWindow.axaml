@@ -59,6 +59,7 @@
 		<converters:BooleanConverter x:Key="BooleanConverter" />
 		<converters:ValueToBooleanConverter x:Key="ValueToBooleanConverter" />
 		<converters:BitmapConverter x:Key="BitmapConverter" />
+		<converters:NullabilityConverter x:Key="NullabilityConverter" />
 	</Window.Resources>
 	<DockPanel>
 		<Grid
@@ -336,6 +337,12 @@
                           Name="RouteListView"
                           SelectionChanged="RouteListView_OnSelectionChanged"
                           KeyUp="RouteListView_KeyUp">
+					<ListBox.Styles>
+						<Style Selector="ListBoxItem">
+							<Setter Property="Margin" Value="0" />
+							<Setter Property="Padding" Value="8,0,8,0" />
+                        </Style>
+                    </ListBox.Styles>
                     <ListBox.ItemTemplate>
 						<DataTemplate DataType="viewModels:SegmentSequenceViewModel">
 							<Grid Margin="0">
@@ -356,10 +363,11 @@
 									<ColumnDefinition Width="24" />
 								</Grid.ColumnDefinitions>
 
-								<TextBlock Grid.Column="0" Grid.Row="0" Text="{Binding Path=SequenceNumber}" HorizontalAlignment="Center" />
-								<TextBlock Grid.Column="0" Grid.Row="1" Text="{Binding Path=TurnGlyph}"  FontSize="14" Foreground="#1192CC"  Margin="4,-2,0,0" Padding="0" FontWeight="ExtraBold" HorizontalAlignment="Left" VerticalAlignment="Center" />
+								<TextBlock Grid.Column="0" Grid.Row="0" Text="{Binding Path=SequenceNumber}" HorizontalAlignment="Center" Margin="0,4,0,0" />
+								<TextBlock Grid.Column="0" Grid.Row="1" Text="{Binding Path=TurnGlyph}"  FontSize="14" Foreground="#1192CC"  Margin="4,-2,0,0" 
+                                           Padding="0" FontWeight="ExtraBold" HorizontalAlignment="Left" VerticalAlignment="Center" />
 
-								<TextBlock Grid.Column="1" Grid.Row="0" Text="{Binding Path=SegmentName}" Margin="4,0,0,0" />
+								<TextBlock Grid.Column="1" Grid.Row="0" Text="{Binding Path=SegmentName}" Margin="4,4,0,0" />
 
 								<StackPanel Grid.Column="1" Grid.Row="1" Orientation="Horizontal" Margin="4,0,0,0" Grid.ColumnSpan="{Binding Path=ColumnSpan}">
 									<StackPanel Orientation="Horizontal" Height="18">
@@ -377,8 +385,11 @@
 									</StackPanel>
 								</StackPanel>
 
-								<TextBlock Grid.Column="2" Grid.Row="1" Text="🔁" IsVisible="{Binding Path=IsLoop}" />
-								<TextBlock Grid.Column="2" Grid.Row="1" Text="↓" IsVisible="{Binding Path=IsLeadIn}" />
+								<Image Grid.Column="2" Grid.Row="0" Grid.RowSpan="2"
+                                       Source="{Binding Path=LoopImage,Converter={StaticResource BitmapConverter}}" 
+                                       IsVisible="{Binding Path=LoopImage,Converter={StaticResource NullabilityConverter}}" 
+                                       Width="24"
+                                       Height="56" />
                                 
 							</Grid>
 						</DataTemplate>

@@ -106,12 +106,42 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
                 this.RaisePropertyChanged(nameof(IsLeadIn));
                 this.RaisePropertyChanged(nameof(IsLoop));
                 this.RaisePropertyChanged(nameof(ColumnSpan));
+                this.RaisePropertyChanged(nameof(LoopImage));
             }
         }
 
         public bool IsLoop => Model.Type == SegmentSequenceType.Loop;
         public bool IsLeadIn => Model.Type == SegmentSequenceType.LeadIn;
         public int ColumnSpan => IsLoop || IsLeadIn ? 1 : 2;
+
+        public string? LoopImage
+        {
+            get
+            {
+                if (IsLoopStart)
+                {
+                    return "avares://RoadCaptain.App.RouteBuilder/Assets/loop-start.png";
+                }
+
+                if (IsLoop)
+                {
+                    if (Model.NextSegmentId != null && Model.TurnToNextSegment == TurnDirection.None)
+                    {
+                        return "avares://RoadCaptain.App.RouteBuilder/Assets/loop-end.png";
+                    }
+                    return "avares://RoadCaptain.App.RouteBuilder/Assets/loop-middle.png";
+                }
+
+                if (IsLeadIn)
+                {
+                    return "avares://RoadCaptain.App.RouteBuilder/Assets/lead-in.png";
+                }
+
+                return null;
+            }
+        }
+
+        public bool IsLoopStart { get; set; }
 
         public void SetTurn(TurnDirection direction, string ontoSegmentId, SegmentDirection segmentDirection)
         {
