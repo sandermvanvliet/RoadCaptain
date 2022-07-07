@@ -110,29 +110,31 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             }
         }
 
-        public bool IsLoop => Model.Type == SegmentSequenceType.Loop;
-        public bool IsLeadIn => Model.Type == SegmentSequenceType.LeadIn;
+        public bool IsLoop => Model.Type == SegmentSequenceType.Loop || Model.Type == SegmentSequenceType.LoopStart || Model.Type == SegmentSequenceType.LoopEnd;
+        public bool IsLeadIn => Model.Type == SegmentSequenceType.LeadIn || Model.Type == SegmentSequenceType.LeadOut;
         public int ColumnSpan => IsLoop || IsLeadIn ? 1 : 2;
 
         public string? LoopImage
         {
             get
             {
-                if (IsLoopStart)
+                if (Model.Type == SegmentSequenceType.LoopStart)
                 {
                     return "avares://RoadCaptain.App.RouteBuilder/Assets/loop-start.png";
                 }
 
-                if (IsLoop)
+                if (Model.Type == SegmentSequenceType.LoopEnd)
                 {
-                    if (Model.NextSegmentId != null && Model.TurnToNextSegment == TurnDirection.None)
-                    {
                         return "avares://RoadCaptain.App.RouteBuilder/Assets/loop-end.png";
-                    }
+                }
+
+                if(Model.Type == SegmentSequenceType.Loop)
+                {
                     return "avares://RoadCaptain.App.RouteBuilder/Assets/loop-middle.png";
                 }
 
-                if (IsLeadIn)
+                if (Model.Type == SegmentSequenceType.LeadIn || 
+                    Model.Type == SegmentSequenceType.LeadOut)
                 {
                     return "avares://RoadCaptain.App.RouteBuilder/Assets/lead-in.png";
                 }
@@ -140,8 +142,6 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
                 return null;
             }
         }
-
-        public bool IsLoopStart { get; set; }
 
         public void SetTurn(TurnDirection direction, string ontoSegmentId, SegmentDirection segmentDirection)
         {

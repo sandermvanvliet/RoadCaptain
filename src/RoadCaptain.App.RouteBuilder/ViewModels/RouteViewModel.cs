@@ -259,34 +259,17 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             var segments = _segmentStore.LoadSegments(plannedRoute.World, plannedRoute.Sport);
 
             _sequence.Clear();
-
-            SegmentSequence? previous = null;
-
+            
             foreach (var seq in plannedRoute.RouteSegmentSequence)
             {
-                var isLoopStart = false;
-                
-                if (previous == null && seq.Type == SegmentSequenceType.Loop)
-                {
-                    isLoopStart = true;
-                }
-                else if (previous != null && previous.Type != SegmentSequenceType.Loop &&
-                         seq.Type == SegmentSequenceType.Loop)
-                {
-                    isLoopStart = true;
-                }
-
                 _sequence.Add(
                     new SegmentSequenceViewModel(
                         seq,
                         segments.Single(s => s.Id == seq.SegmentId),
                         _sequence.Count + 1)
                     {
-                        Direction = seq.Direction,
-                        IsLoopStart = isLoopStart
+                        Direction = seq.Direction
                     });
-
-                previous = seq;
             }
 
             IsTainted = false;
