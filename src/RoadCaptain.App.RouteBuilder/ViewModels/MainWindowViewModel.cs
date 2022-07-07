@@ -68,7 +68,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
                     _ => Route.Sequence.Any())
                 .SubscribeTo(this, () => Route.Sequence)
                 .OnSuccess(_ => Model.StatusBarInfo("Route saved successfully"))
-                .OnSuccessWithWarnings(_ => Model.StatusBarInfo("Route saved successfully: {0}", _.Message))
+                .OnSuccessWithMessage(_ => Model.StatusBarInfo("Route saved successfully: {0}", _.Message))
                 .OnFailure(_ => Model.StatusBarError("Failed to save route because: {0}", _.Message))
                 .OnNotExecuted(_ => Model.StatusBarInfo("Route hasn't changed dit not need to not saved"));
 
@@ -90,7 +90,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
                     _ => SelectSegment(_ as Segment ?? throw new ArgumentNullException(nameof(RelayCommand.CommandParameter))),
                     _ => true)
                 .OnSuccess(_ => Model.StatusBarInfo("Added segment"))
-                .OnSuccessWithWarnings(_ => Model.StatusBarInfo("Added segment {0}", _.Message))
+                .OnSuccessWithMessage(_ => Model.StatusBarInfo("Added segment {0}", _.Message))
                 .OnFailure(_ => Model.StatusBarWarning(_.Message));
 
             RemoveLastSegmentCommand = new RelayCommand(
@@ -101,7 +101,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
                 {
                     Model.StatusBarInfo("Removed segment");
                 })
-                .OnSuccessWithWarnings(_ =>
+                .OnSuccessWithMessage(_ =>
                 {
                     Model.StatusBarInfo("Removed segment {0}", _.Message);
                 })
@@ -356,7 +356,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
 
                 SelectedSegment = newSelectedSegment;
 
-                return CommandResult.SuccessWithWarning(newSelectedSegment.Name);
+                return CommandResult.SuccessWithMessage(newSelectedSegment.Name);
             }
 
             // Prevent selecting the same segment again
@@ -389,7 +389,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
 
                     SelectedSegment = newSelectedSegment;
 
-                    return CommandResult.SuccessWithWarning(newSelectedSegment.Name);
+                    return CommandResult.SuccessWithMessage(newSelectedSegment.Name);
                 }
             }
             else if (Route.Last.Direction == SegmentDirection.BtoA)
@@ -403,7 +403,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
 
                     SelectedSegment = newSelectedSegment;
 
-                    return CommandResult.SuccessWithWarning(newSelectedSegment.Name);
+                    return CommandResult.SuccessWithMessage(newSelectedSegment.Name);
                 }
             }
             else if (Route.Last.Direction == SegmentDirection.Unknown)
@@ -422,7 +422,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
 
                     SelectedSegment = newSelectedSegment;
 
-                    return CommandResult.SuccessWithWarning(newSelectedSegment.Name);
+                    return CommandResult.SuccessWithMessage(newSelectedSegment.Name);
                 }
 
                 if (fromB != null)
@@ -439,7 +439,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
 
                     SelectedSegment = newSelectedSegment;
 
-                    return CommandResult.SuccessWithWarning(newSelectedSegment.Name);
+                    return CommandResult.SuccessWithMessage(newSelectedSegment.Name);
                 }
             }
 
@@ -487,7 +487,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
 
             if (lastSegment != null)
             {
-                return CommandResult.SuccessWithWarning(lastSegment.SegmentName);
+                return CommandResult.SuccessWithMessage(lastSegment.SegmentName);
             }
 
             return CommandResult.Success();

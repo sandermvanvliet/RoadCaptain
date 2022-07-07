@@ -15,8 +15,8 @@ namespace RoadCaptain.App.Shared.Commands
         private Func<CommandResultWithMessage, Task>? _onFailureAsync;
         private Action<CommandResult>? _onSuccess;
         private Func<CommandResult, Task>? _onSuccessAsync;
-        private Action<CommandResultWithMessage>? _onSuccessWithWarnings;
-        private Func<CommandResultWithMessage, Task>? _onSuccessWithWarningsAsync;
+        private Action<CommandResultWithMessage>? _onSuccessWithMessage;
+        private Func<CommandResultWithMessage, Task>? _onSuccessWithMessageAsync;
         private Action<CommandResult>? _onNotExecuted;
         private Func<CommandResult, Task>? _onNotExecutedAsync;
 
@@ -54,13 +54,13 @@ namespace RoadCaptain.App.Shared.Commands
             {
                 if (result is CommandResultWithMessage resultWithMessage)
                 {
-                    if (_onSuccessWithWarnings != null)
+                    if (_onSuccessWithMessage != null)
                     {
-                        _onSuccessWithWarnings(resultWithMessage);
+                        _onSuccessWithMessage(resultWithMessage);
                     }
-                    else if (_onSuccessWithWarningsAsync != null)
+                    else if (_onSuccessWithMessageAsync != null)
                     {
-                        await _onSuccessWithWarningsAsync(resultWithMessage);
+                        await _onSuccessWithMessageAsync(resultWithMessage);
                     }
                 }
                 else
@@ -111,15 +111,15 @@ namespace RoadCaptain.App.Shared.Commands
             return this;
         }
 
-        public AsyncRelayCommand OnSuccessWithWarnings(Func<CommandResultWithMessage, Task> action)
+        public AsyncRelayCommand OnSuccessWithMessage(Func<CommandResultWithMessage, Task> action)
         {
-            _onSuccessWithWarningsAsync = action;
+            _onSuccessWithMessageAsync = action;
             return this;
         }
 
-        public AsyncRelayCommand OnSuccessWithWarnings(Action<CommandResultWithMessage> action)
+        public AsyncRelayCommand OnSuccessWithMessage(Action<CommandResultWithMessage> action)
         {
-            _onSuccessWithWarnings = action;
+            _onSuccessWithMessage = action;
             return this;
         }
 

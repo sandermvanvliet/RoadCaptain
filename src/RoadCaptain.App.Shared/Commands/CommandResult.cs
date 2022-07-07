@@ -9,7 +9,7 @@
             return new() { Result = Result.Success };
         }
 
-        public static CommandResultWithMessage SuccessWithWarning(string message)
+        public static CommandResultWithMessage SuccessWithMessage(string message)
         {
             return new CommandResultWithMessage(Result.SuccessWithWarnings, message);
         }

@@ -12,7 +12,7 @@ namespace RoadCaptain.App.Shared.Commands
         private readonly Func<object?, CommandResult> _execute;
         private Action<CommandResultWithMessage>? _onFailure;
         private Action<CommandResult>? _onSuccess;
-        private Action<CommandResultWithMessage>? _onSuccessWithWarnings;
+        private Action<CommandResultWithMessage>? _onSuccessWithMessage;
         private Action<CommandResult>? _onNotExecuted;
 
         public RelayCommand(Func<object?, CommandResult> execute, Func<object?, bool>? canExecute = null)
@@ -42,7 +42,7 @@ namespace RoadCaptain.App.Shared.Commands
             {
                 if (result is CommandResultWithMessage resultWithMessage)
                 {
-                    _onSuccessWithWarnings?.Invoke(resultWithMessage);
+                    _onSuccessWithMessage?.Invoke(resultWithMessage);
                 }
                 else
                 {
@@ -72,9 +72,9 @@ namespace RoadCaptain.App.Shared.Commands
             return this;
         }
 
-        public RelayCommand OnSuccessWithWarnings(Action<CommandResultWithMessage> action)
+        public RelayCommand OnSuccessWithMessage(Action<CommandResultWithMessage> action)
         {
-            _onSuccessWithWarnings = action;
+            _onSuccessWithMessage = action;
             return this;
         }
 
