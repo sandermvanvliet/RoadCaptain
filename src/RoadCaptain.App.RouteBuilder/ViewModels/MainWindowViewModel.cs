@@ -140,7 +140,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
         {
             if (Route.IsTainted)
             {
-                var result = await _windowService.ShowSaveRouteDialog();
+                var result = await _windowService.ShowShouldSaveRouteDialog();
 
                 if (result == MessageBoxResult.Cancel)
                 {
@@ -553,36 +553,24 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
 
         private async Task<CommandResult> SaveRoute()
         {
-            var suggestedFileName = string.IsNullOrWhiteSpace(Route.Name) ? null : Route.Name;
+            var outputFilePath = await _windowService.ShowSaveRouteDialog(_userPreferences.LastUsedFolder, Route);
 
-            var routeOutputFilePath = await _windowService.ShowSaveFileDialog(_userPreferences.LastUsedFolder, suggestedFileName);
-
-            if (string.IsNullOrEmpty(routeOutputFilePath))
+            if (!string.IsNullOrEmpty(outputFilePath))
             {
+                _userPreferences.LastUsedFolder = Path.GetDirectoryName(outputFilePath);
+                _userPreferences.Save();
+
                 return CommandResult.Success();
             }
 
-            Route.OutputFilePath = routeOutputFilePath;
-
-            _userPreferences.LastUsedFolder = Path.GetDirectoryName(Route.OutputFilePath);
-            _userPreferences.Save();
-
-            try
-            {
-                Route.Save();
-                return CommandResult.Success();
-            }
-            catch (Exception e)
-            {
-                return CommandResult.Failure(e.Message);
-            }
+            return CommandResult.Aborted();
         }
 
         private async Task<CommandResult> OpenRoute()
         {
             if (Route.IsTainted)
             {
-                MessageBoxResult questionResult = await _windowService.ShowSaveRouteDialog();
+                MessageBoxResult questionResult = await _windowService.ShowShouldSaveRouteDialog();
 
                 if (questionResult == MessageBoxResult.Cancel)
                 {

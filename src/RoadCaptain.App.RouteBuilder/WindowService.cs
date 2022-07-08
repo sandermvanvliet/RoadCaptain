@@ -5,9 +5,11 @@ using System.Threading.Tasks;
 using Autofac;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
+using RoadCaptain.App.RouteBuilder.ViewModels;
 using RoadCaptain.App.RouteBuilder.Views;
 using RoadCaptain.App.Shared.Dialogs;
 using RoadCaptain.App.Shared.Dialogs.ViewModels;
+using RoadCaptain.App.Shared.UserPreferences;
 
 namespace RoadCaptain.App.RouteBuilder
 {
@@ -54,7 +56,7 @@ namespace RoadCaptain.App.RouteBuilder
             return result == MessageBoxResult.Yes;
         }
 
-        public async Task<MessageBoxResult> ShowSaveRouteDialog()
+        public async Task<MessageBoxResult> ShowShouldSaveRouteDialog()
         {
             return await MessageBox.ShowAsync(
                 "Do you want to save the current route?",
@@ -83,6 +85,22 @@ namespace RoadCaptain.App.RouteBuilder
                 MessageBoxIcon.Question);
 
             return result == MessageBoxResult.Yes;
+        }
+
+        public async Task<string?> ShowSaveRouteDialog(string? lastUsedFolder, RouteViewModel routeViewModel)
+        {
+            var saveRouteDialog = Resolve<SaveRouteDialog>();
+
+            var viewModel = new SaveRouteDialogViewModel(this, Resolve<IUserPreferences>())
+            {
+                Route = routeViewModel
+            };
+
+            saveRouteDialog.DataContext = viewModel;
+
+            await saveRouteDialog.ShowDialog(CurrentWindow);
+
+            return viewModel.Path;
         }
 
         public void ShowMainWindow(IApplicationLifetime applicationLifetime)
