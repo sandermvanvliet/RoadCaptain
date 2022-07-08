@@ -33998,5 +33998,1212 @@
       "type": "Segment",
       "name": "france-ven-top-002",
       "noSelectReason": null
-    }
+    },
+    
+  {
+    "id": "france-ven-top-summit",
+    "points": [
+      {
+        "latitude": -21.65619,
+        "longitude": 166.20553,
+        "altitude": 1543.0,
+        "index": 0,
+        "distanceOnSegment": 0.0,
+        "distanceFromLast": 0.0,
+        "worldId": null
+      },
+      {
+        "latitude": -21.65621,
+        "longitude": 166.20549,
+        "altitude": 1543.0,
+        "index": 1,
+        "distanceOnSegment": 4.694084909756095,
+        "distanceFromLast": 4.694084909756095,
+        "worldId": null
+      },
+      {
+        "latitude": -21.65622,
+        "longitude": 166.20545,
+        "altitude": 1543.0,
+        "index": 2,
+        "distanceOnSegment": 8.974871758925229,
+        "distanceFromLast": 4.280786849169133,
+        "worldId": null
+      },
+      {
+        "latitude": -21.65623,
+        "longitude": 166.20541,
+        "altitude": 1543.0,
+        "index": 3,
+        "distanceOnSegment": 13.255658334285798,
+        "distanceFromLast": 4.28078657536057,
+        "worldId": null
+      },
+      {
+        "latitude": -21.65623,
+        "longitude": 166.20536,
+        "altitude": 1543.0,
+        "index": 4,
+        "distanceOnSegment": 18.4229686430087,
+        "distanceFromLast": 5.1673103087229055,
+        "worldId": null
+      },
+      {
+        "latitude": -21.65624,
+        "longitude": 166.20532,
+        "altitude": 1543.0,
+        "index": 5,
+        "distanceOnSegment": 22.703754941724135,
+        "distanceFromLast": 4.280786298715432,
+        "worldId": null
+      },
+      {
+        "latitude": -21.65623,
+        "longitude": 166.20527,
+        "altitude": 1543.0,
+        "index": 6,
+        "distanceOnSegment": 27.9893509485416,
+        "distanceFromLast": 5.285596006817462,
+        "worldId": null
+      },
+      {
+        "latitude": -21.65622,
+        "longitude": 166.20522,
+        "altitude": 1543.0,
+        "index": 7,
+        "distanceOnSegment": 33.274947308314914,
+        "distanceFromLast": 5.285596359773318,
+        "worldId": null
+      },
+      {
+        "latitude": -21.6562,
+        "longitude": 166.20518,
+        "altitude": 1543.0,
+        "index": 8,
+        "distanceOnSegment": 37.96903196319706,
+        "distanceFromLast": 4.694084654882147,
+        "worldId": null
+      },
+      {
+        "latitude": -21.65616,
+        "longitude": 166.20514,
+        "altitude": 1543.0,
+        "index": 9,
+        "distanceOnSegment": 44.04123188809522,
+        "distanceFromLast": 6.072199924898158,
+        "worldId": null
+      },
+      {
+        "latitude": -21.65612,
+        "longitude": 166.20512,
+        "altitude": 1543.0,
+        "index": 10,
+        "distanceOnSegment": 48.94582967009099,
+        "distanceFromLast": 4.904597781995772,
+        "worldId": null
+      },
+      {
+        "latitude": -21.65608,
+        "longitude": 166.2051,
+        "altitude": 1543.0,
+        "index": 11,
+        "distanceOnSegment": 53.850427693902915,
+        "distanceFromLast": 4.904598023811927,
+        "worldId": null
+      },
+      {
+        "latitude": -21.65603,
+        "longitude": 166.20509,
+        "altitude": 1543.0,
+        "index": 12,
+        "distanceOnSegment": 59.50541007187259,
+        "distanceFromLast": 5.654982377969674,
+        "worldId": null
+      },
+      {
+        "latitude": -21.65598,
+        "longitude": 166.20511,
+        "altitude": 1543.0,
+        "index": 13,
+        "distanceOnSegment": 65.43693331035067,
+        "distanceFromLast": 5.931523238478076,
+        "worldId": null
+      },
+      {
+        "latitude": -21.65594,
+        "longitude": 166.20514,
+        "altitude": 1543.0,
+        "index": 14,
+        "distanceOnSegment": 70.85867926687425,
+        "distanceFromLast": 5.4217459565235835,
+        "worldId": null
+      },
+      {
+        "latitude": -21.6559,
+        "longitude": 166.20518,
+        "altitude": 1543.0,
+        "index": 15,
+        "distanceOnSegment": 76.9308842627956,
+        "distanceFromLast": 6.072204995921349,
+        "worldId": null
+      },
+      {
+        "latitude": -21.65587,
+        "longitude": 166.20523,
+        "altitude": 1543.0,
+        "index": 16,
+        "distanceOnSegment": 83.08142115344278,
+        "distanceFromLast": 6.15053689064718,
+        "worldId": null
+      },
+      {
+        "latitude": -21.65585,
+        "longitude": 166.20528,
+        "altitude": 1543.0,
+        "index": 17,
+        "distanceOnSegment": 88.70698400882313,
+        "distanceFromLast": 5.62556285538035,
+        "worldId": null
+      },
+      {
+        "latitude": -21.65582,
+        "longitude": 166.20534,
+        "altitude": 1543.0,
+        "index": 18,
+        "distanceOnSegment": 95.74812518597979,
+        "distanceFromLast": 7.041141177156654,
+        "worldId": null
+      },
+      {
+        "latitude": -21.65581,
+        "longitude": 166.20539,
+        "altitude": 1543.0,
+        "index": 19,
+        "distanceOnSegment": 101.03373589620678,
+        "distanceFromLast": 5.285610710226996,
+        "worldId": null
+      },
+      {
+        "latitude": -21.65578,
+        "longitude": 166.20545,
+        "altitude": 1543.0,
+        "index": 20,
+        "distanceOnSegment": 108.07487858687463,
+        "distanceFromLast": 7.04114269066786,
+        "worldId": null
+      },
+      {
+        "latitude": -21.65576,
+        "longitude": 166.2055,
+        "altitude": 1543.0,
+        "index": 21,
+        "distanceOnSegment": 113.70044440255938,
+        "distanceFromLast": 5.625565815684745,
+        "worldId": null
+      },
+      {
+        "latitude": -21.65572,
+        "longitude": 166.20555,
+        "altitude": 1543.0,
+        "index": 22,
+        "distanceOnSegment": 120.51837487338463,
+        "distanceFromLast": 6.81793047082525,
+        "worldId": null
+      },
+      {
+        "latitude": -21.65567,
+        "longitude": 166.20559,
+        "altitude": 1543.0,
+        "index": 23,
+        "distanceOnSegment": 127.446549765756,
+        "distanceFromLast": 6.928174892371376,
+        "worldId": null
+      },
+      {
+        "latitude": -21.65562,
+        "longitude": 166.20563,
+        "altitude": 1543.0,
+        "index": 24,
+        "distanceOnSegment": 134.37472551309526,
+        "distanceFromLast": 6.928175747339254,
+        "worldId": null
+      },
+      {
+        "latitude": -21.65557,
+        "longitude": 166.20566,
+        "altitude": 1543.0,
+        "index": 25,
+        "distanceOnSegment": 140.74051363132332,
+        "distanceFromLast": 6.365788118228074,
+        "worldId": null
+      },
+      {
+        "latitude": -21.65551,
+        "longitude": 166.20569,
+        "altitude": 1543.0,
+        "index": 26,
+        "distanceOnSegment": 148.09741573741982,
+        "distanceFromLast": 7.35690210609651,
+        "worldId": null
+      },
+      {
+        "latitude": -21.65546,
+        "longitude": 166.20571,
+        "altitude": 1543.0,
+        "index": 27,
+        "distanceOnSegment": 154.02894157202005,
+        "distanceFromLast": 5.931525834600213,
+        "worldId": null
+      },
+      {
+        "latitude": -21.65539,
+        "longitude": 166.20572,
+        "altitude": 1543.0,
+        "index": 28,
+        "distanceOnSegment": 161.8808956688397,
+        "distanceFromLast": 7.851954096819668,
+        "worldId": null
+      },
+      {
+        "latitude": -21.65533,
+        "longitude": 166.20573,
+        "altitude": 1543.0,
+        "index": 29,
+        "distanceOnSegment": 168.6321606517948,
+        "distanceFromLast": 6.751264982955081,
+        "worldId": null
+      },
+      {
+        "latitude": -21.65527,
+        "longitude": 166.20573,
+        "altitude": 1543.0,
+        "index": 30,
+        "distanceOnSegment": 175.30385625021574,
+        "distanceFromLast": 6.67169559842095,
+        "worldId": null
+      },
+      {
+        "latitude": -21.6552,
+        "longitude": 166.20573,
+        "altitude": 1543.0,
+        "index": 31,
+        "distanceOnSegment": 183.08750111543523,
+        "distanceFromLast": 7.783644865219485,
+        "worldId": null
+      },
+      {
+        "latitude": -21.65514,
+        "longitude": 166.20573,
+        "altitude": 1543.0,
+        "index": 32,
+        "distanceOnSegment": 189.75919671425123,
+        "distanceFromLast": 6.671695598815993,
+        "worldId": null
+      },
+      {
+        "latitude": -21.65507,
+        "longitude": 166.20571,
+        "altitude": 1543.0,
+        "index": 33,
+        "distanceOnSegment": 197.8126040258182,
+        "distanceFromLast": 8.053407311566971,
+        "worldId": null
+      },
+      {
+        "latitude": -21.65501,
+        "longitude": 166.20569,
+        "altitude": 1543.0,
+        "index": 34,
+        "distanceOnSegment": 204.79714180271873,
+        "distanceFromLast": 6.984537776900546,
+        "worldId": null
+      },
+      {
+        "latitude": -21.65495,
+        "longitude": 166.20565,
+        "altitude": 1543.0,
+        "index": 35,
+        "distanceOnSegment": 212.64574165043481,
+        "distanceFromLast": 7.8485998477161,
+        "worldId": null
+      },
+      {
+        "latitude": -21.65489,
+        "longitude": 166.20561,
+        "altitude": 1543.0,
+        "index": 36,
+        "distanceOnSegment": 220.49434240155247,
+        "distanceFromLast": 7.848600751117653,
+        "worldId": null
+      },
+      {
+        "latitude": -21.65483,
+        "longitude": 166.20557,
+        "altitude": 1543.0,
+        "index": 37,
+        "distanceOnSegment": 228.34294405983536,
+        "distanceFromLast": 7.848601658282875,
+        "worldId": null
+      },
+      {
+        "latitude": -21.65478,
+        "longitude": 166.20553,
+        "altitude": 1543.0,
+        "index": 38,
+        "distanceOnSegment": 235.2711341633041,
+        "distanceFromLast": 6.928190103468742,
+        "worldId": null
+      },
+      {
+        "latitude": -21.65472,
+        "longitude": 166.20549,
+        "altitude": 1543.0,
+        "index": 39,
+        "distanceOnSegment": 243.11973748092996,
+        "distanceFromLast": 7.8486033176258445,
+        "worldId": null
+      },
+      {
+        "latitude": -21.65465,
+        "longitude": 166.20547,
+        "altitude": 1543.0,
+        "index": 40,
+        "distanceOnSegment": 251.1731463372061,
+        "distanceFromLast": 8.053408856276162,
+        "worldId": null
+      },
+      {
+        "latitude": -21.65458,
+        "longitude": 166.20546,
+        "altitude": 1543.0,
+        "index": 41,
+        "distanceOnSegment": 259.0251011975352,
+        "distanceFromLast": 7.851954860329106,
+        "worldId": null
+      },
+      {
+        "latitude": -21.65451,
+        "longitude": 166.20545,
+        "altitude": 1543.0,
+        "index": 42,
+        "distanceOnSegment": 266.87705612345894,
+        "distanceFromLast": 7.851954925923716,
+        "worldId": null
+      },
+      {
+        "latitude": -21.65443,
+        "longitude": 166.20545,
+        "altitude": 1543.0,
+        "index": 43,
+        "distanceOnSegment": 275.7726502546869,
+        "distanceFromLast": 8.89559413122793,
+        "worldId": null
+      },
+      {
+        "latitude": -21.65436,
+        "longitude": 166.20545,
+        "altitude": 1543.0,
+        "index": 44,
+        "distanceOnSegment": 283.55629511990634,
+        "distanceFromLast": 7.783644865219485,
+        "worldId": null
+      },
+      {
+        "latitude": -21.65429,
+        "longitude": 166.20544,
+        "altitude": 1543.0,
+        "index": 45,
+        "distanceOnSegment": 291.4082502535851,
+        "distanceFromLast": 7.851955133678751,
+        "worldId": null
+      },
+      {
+        "latitude": -21.65422,
+        "longitude": 166.20542,
+        "altitude": 1543.0,
+        "index": 46,
+        "distanceOnSegment": 299.46166069055226,
+        "distanceFromLast": 8.053410436967143,
+        "worldId": null
+      },
+      {
+        "latitude": -21.65414,
+        "longitude": 166.2054,
+        "altitude": 1543.0,
+        "index": 47,
+        "distanceOnSegment": 308.59423380367707,
+        "distanceFromLast": 9.13257311312478,
+        "worldId": null
+      },
+      {
+        "latitude": -21.65407,
+        "longitude": 166.20538,
+        "altitude": 1543.0,
+        "index": 48,
+        "distanceOnSegment": 316.64764479204206,
+        "distanceFromLast": 8.05341098836498,
+        "worldId": null
+      },
+      {
+        "latitude": -21.654,
+        "longitude": 166.20535,
+        "altitude": 1543.0,
+        "index": 49,
+        "distanceOnSegment": 325.0260583831803,
+        "distanceFromLast": 8.37841359113829,
+        "worldId": null
+      },
+      {
+        "latitude": -21.65393,
+        "longitude": 166.20532,
+        "altitude": 1543.0,
+        "index": 50,
+        "distanceOnSegment": 333.4044725319111,
+        "distanceFromLast": 8.378414148730798,
+        "worldId": null
+      },
+      {
+        "latitude": -21.65386,
+        "longitude": 166.20528,
+        "altitude": 1543.0,
+        "index": 51,
+        "distanceOnSegment": 342.2177796158104,
+        "distanceFromLast": 8.813307083899275,
+        "worldId": null
+      },
+      {
+        "latitude": -21.6538,
+        "longitude": 166.20523,
+        "altitude": 1543.0,
+        "index": 52,
+        "distanceOnSegment": 350.65658913756715,
+        "distanceFromLast": 8.438809521756726,
+        "worldId": null
+      },
+      {
+        "latitude": -21.65374,
+        "longitude": 166.20518,
+        "altitude": 1543.0,
+        "index": 53,
+        "distanceOnSegment": 359.09539997484427,
+        "distanceFromLast": 8.438810837277115,
+        "worldId": null
+      },
+      {
+        "latitude": -21.65368,
+        "longitude": 166.20512,
+        "altitude": 1543.0,
+        "index": 54,
+        "distanceOnSegment": 368.2037721169355,
+        "distanceFromLast": 9.108372142091236,
+        "worldId": null
+      },
+      {
+        "latitude": -21.65363,
+        "longitude": 166.20506,
+        "altitude": 1543.0,
+        "index": 55,
+        "distanceOnSegment": 376.53214107326914,
+        "distanceFromLast": 8.328368956333613,
+        "worldId": null
+      },
+      {
+        "latitude": -21.65358,
+        "longitude": 166.20499,
+        "altitude": 1543.0,
+        "index": 56,
+        "distanceOnSegment": 385.6561112117052,
+        "distanceFromLast": 9.123970138436043,
+        "worldId": null
+      },
+      {
+        "latitude": -21.65355,
+        "longitude": 166.20491,
+        "altitude": 1543.0,
+        "index": 57,
+        "distanceOnSegment": 394.5715590749674,
+        "distanceFromLast": 8.915447863262209,
+        "worldId": null
+      },
+      {
+        "latitude": -21.65352,
+        "longitude": 166.20483,
+        "altitude": 1543.0,
+        "index": 58,
+        "distanceOnSegment": 403.4870085346341,
+        "distanceFromLast": 8.915449459666716,
+        "worldId": null
+      },
+      {
+        "latitude": -21.6535,
+        "longitude": 166.20475,
+        "altitude": 1543.0,
+        "index": 59,
+        "distanceOnSegment": 412.0487318919277,
+        "distanceFromLast": 8.56172335729357,
+        "worldId": null
+      },
+      {
+        "latitude": -21.65348,
+        "longitude": 166.20466,
+        "altitude": 1543.0,
+        "index": 60,
+        "distanceOnSegment": 421.61223336739005,
+        "distanceFromLast": 9.563501475462363,
+        "worldId": null
+      },
+      {
+        "latitude": -21.65347,
+        "longitude": 166.20458,
+        "altitude": 1543.0,
+        "index": 61,
+        "distanceOnSegment": 429.954526007279,
+        "distanceFromLast": 8.342292639888946,
+        "worldId": null
+      },
+      {
+        "latitude": -21.65348,
+        "longitude": 166.20449,
+        "altitude": 1543.0,
+        "index": 62,
+        "distanceOnSegment": 439.3220915896675,
+        "distanceFromLast": 9.367565582388464,
+        "worldId": null
+      },
+      {
+        "latitude": -21.65348,
+        "longitude": 166.20441,
+        "altitude": 1543.0,
+        "index": 63,
+        "distanceOnSegment": 447.58994563905287,
+        "distanceFromLast": 8.267854049385367,
+        "worldId": null
+      },
+      {
+        "latitude": -21.6535,
+        "longitude": 166.20432,
+        "altitude": 1543.0,
+        "index": 64,
+        "distanceOnSegment": 457.15344711451525,
+        "distanceFromLast": 9.563501475462363,
+        "worldId": null
+      },
+      {
+        "latitude": -21.65352,
+        "longitude": 166.20424,
+        "altitude": 1543.0,
+        "index": 65,
+        "distanceOnSegment": 465.7151704718088,
+        "distanceFromLast": 8.56172335729357,
+        "worldId": null
+      },
+      {
+        "latitude": -21.65355,
+        "longitude": 166.20415,
+        "altitude": 1543.0,
+        "index": 66,
+        "distanceOnSegment": 475.5966006502965,
+        "distanceFromLast": 9.88143017848774,
+        "worldId": null
+      },
+      {
+        "latitude": -21.65358,
+        "longitude": 166.20407,
+        "altitude": 1543.0,
+        "index": 67,
+        "distanceOnSegment": 484.51204851355874,
+        "distanceFromLast": 8.915447863262209,
+        "worldId": null
+      },
+      {
+        "latitude": -21.65361,
+        "longitude": 166.20399,
+        "altitude": 1543.0,
+        "index": 68,
+        "distanceOnSegment": 493.42749478284276,
+        "distanceFromLast": 8.915446269283992,
+        "worldId": null
+      },
+      {
+        "latitude": -21.65366,
+        "longitude": 166.20392,
+        "altitude": 1543.0,
+        "index": 69,
+        "distanceOnSegment": 502.55146372888925,
+        "distanceFromLast": 9.123968946046508,
+        "worldId": null
+      },
+      {
+        "latitude": -21.65371,
+        "longitude": 166.20385,
+        "altitude": 1543.0,
+        "index": 70,
+        "distanceOnSegment": 511.6754306901863,
+        "distanceFromLast": 9.123966961297045,
+        "worldId": null
+      },
+      {
+        "latitude": -21.65377,
+        "longitude": 166.20378,
+        "altitude": 1543.0,
+        "index": 71,
+        "distanceOnSegment": 521.5165422158133,
+        "distanceFromLast": 9.841111525626918,
+        "worldId": null
+      },
+      {
+        "latitude": -21.65383,
+        "longitude": 166.20372,
+        "altitude": 1543.0,
+        "index": 72,
+        "distanceOnSegment": 530.6249117232669,
+        "distanceFromLast": 9.108369507453656,
+        "worldId": null
+      },
+      {
+        "latitude": -21.65389,
+        "longitude": 166.20366,
+        "altitude": 1543.0,
+        "index": 73,
+        "distanceOnSegment": 539.7332794759127,
+        "distanceFromLast": 9.1083677526458,
+        "worldId": null
+      },
+      {
+        "latitude": -21.65395,
+        "longitude": 166.2036,
+        "altitude": 1543.0,
+        "index": 74,
+        "distanceOnSegment": 548.8416454751674,
+        "distanceFromLast": 9.10836599925468,
+        "worldId": null
+      },
+      {
+        "latitude": -21.654,
+        "longitude": 166.20353,
+        "altitude": 1543.0,
+        "index": 75,
+        "distanceOnSegment": 557.9656009076031,
+        "distanceFromLast": 9.123955432435686,
+        "worldId": null
+      },
+      {
+        "latitude": -21.65404,
+        "longitude": 166.20345,
+        "altitude": 1543.0,
+        "index": 76,
+        "distanceOnSegment": 567.3538807162803,
+        "distanceFromLast": 9.38827980867717,
+        "worldId": null
+      },
+      {
+        "latitude": -21.65409,
+        "longitude": 166.20337,
+        "altitude": 1543.0,
+        "index": 77,
+        "distanceOnSegment": 577.31719520896,
+        "distanceFromLast": 9.963314492679693,
+        "worldId": null
+      },
+      {
+        "latitude": -21.65413,
+        "longitude": 166.20329,
+        "altitude": 1543.0,
+        "index": 78,
+        "distanceOnSegment": 586.7054704768791,
+        "distanceFromLast": 9.388275267919045,
+        "worldId": null
+      },
+      {
+        "latitude": -21.65417,
+        "longitude": 166.20321,
+        "altitude": 1543.0,
+        "index": 79,
+        "distanceOnSegment": 596.093743726865,
+        "distanceFromLast": 9.388273249985918,
+        "worldId": null
+      },
+      {
+        "latitude": -21.65422,
+        "longitude": 166.20314,
+        "altitude": 1543.0,
+        "index": 80,
+        "distanceOnSegment": 605.2176904170308,
+        "distanceFromLast": 9.123946690165733,
+        "worldId": null
+      },
+      {
+        "latitude": -21.65428,
+        "longitude": 166.20307,
+        "altitude": 1543.0,
+        "index": 81,
+        "distanceOnSegment": 615.0587831489185,
+        "distanceFromLast": 9.841092731887692,
+        "worldId": null
+      },
+      {
+        "latitude": -21.65434,
+        "longitude": 166.20301,
+        "altitude": 1543.0,
+        "index": 82,
+        "distanceOnSegment": 624.1671377382,
+        "distanceFromLast": 9.108354589281582,
+        "worldId": null
+      },
+      {
+        "latitude": -21.65442,
+        "longitude": 166.20297,
+        "altitude": 1543.0,
+        "index": 83,
+        "distanceOnSegment": 633.9763545497879,
+        "distanceFromLast": 9.809216811587872,
+        "worldId": null
+      },
+      {
+        "latitude": -21.6545,
+        "longitude": 166.20294,
+        "altitude": 1543.0,
+        "index": 84,
+        "distanceOnSegment": 643.3967698937449,
+        "distanceFromLast": 9.42041534395711,
+        "worldId": null
+      },
+      {
+        "latitude": -21.65458,
+        "longitude": 166.20291,
+        "altitude": 1543.0,
+        "index": 85,
+        "distanceOnSegment": 652.8171846730012,
+        "distanceFromLast": 9.42041477925629,
+        "worldId": null
+      },
+      {
+        "latitude": -21.65466,
+        "longitude": 166.20289,
+        "altitude": 1543.0,
+        "index": 86,
+        "distanceOnSegment": 661.9497563601915,
+        "distanceFromLast": 9.132571687190346,
+        "worldId": null
+      },
+      {
+        "latitude": -21.65475,
+        "longitude": 166.20288,
+        "altitude": 1543.0,
+        "index": 87,
+        "distanceOnSegment": 672.0105213048643,
+        "distanceFromLast": 10.060764944672824,
+        "worldId": null
+      },
+      {
+        "latitude": -21.65483,
+        "longitude": 166.20287,
+        "altitude": 1543.0,
+        "index": 88,
+        "distanceOnSegment": 680.965947598734,
+        "distanceFromLast": 8.955426293869754,
+        "worldId": null
+      },
+      {
+        "latitude": -21.65492,
+        "longitude": 166.20287,
+        "altitude": 1543.0,
+        "index": 89,
+        "distanceOnSegment": 690.9734909967605,
+        "distanceFromLast": 10.007543398026467,
+        "worldId": null
+      },
+      {
+        "latitude": -21.65501,
+        "longitude": 166.20286,
+        "altitude": 1543.0,
+        "index": 90,
+        "distanceOnSegment": 701.0342557501634,
+        "distanceFromLast": 10.060764753402966,
+        "worldId": null
+      },
+      {
+        "latitude": -21.65509,
+        "longitude": 166.20287,
+        "altitude": 1543.0,
+        "index": 91,
+        "distanceOnSegment": 709.9896818291548,
+        "distanceFromLast": 8.955426078991414,
+        "worldId": null
+      },
+      {
+        "latitude": -21.65518,
+        "longitude": 166.20288,
+        "altitude": 1543.0,
+        "index": 92,
+        "distanceOnSegment": 720.0504464574958,
+        "distanceFromLast": 10.060764628340905,
+        "worldId": null
+      },
+      {
+        "latitude": -21.65526,
+        "longitude": 166.2029,
+        "altitude": 1543.0,
+        "index": 93,
+        "distanceOnSegment": 729.1830161992827,
+        "distanceFromLast": 9.132569741786975,
+        "worldId": null
+      },
+      {
+        "latitude": -21.65535,
+        "longitude": 166.20293,
+        "altitude": 1543.0,
+        "index": 94,
+        "distanceOnSegment": 739.6598211801303,
+        "distanceFromLast": 10.476804980847588,
+        "worldId": null
+      },
+      {
+        "latitude": -21.65543,
+        "longitude": 166.20296,
+        "altitude": 1543.0,
+        "index": 95,
+        "distanceOnSegment": 749.0802299480966,
+        "distanceFromLast": 9.420408767966364,
+        "worldId": null
+      },
+      {
+        "latitude": -21.65551,
+        "longitude": 166.20299,
+        "altitude": 1543.0,
+        "index": 96,
+        "distanceOnSegment": 758.5006381513423,
+        "distanceFromLast": 9.420408203245657,
+        "worldId": null
+      },
+      {
+        "latitude": -21.65558,
+        "longitude": 166.20304,
+        "altitude": 1543.0,
+        "index": 97,
+        "distanceOnSegment": 767.8433613473201,
+        "distanceFromLast": 9.342723195977786,
+        "worldId": null
+      },
+      {
+        "latitude": -21.65566,
+        "longitude": 166.20309,
+        "altitude": 1543.0,
+        "index": 98,
+        "distanceOnSegment": 778.1308739989927,
+        "distanceFromLast": 10.28751265167262,
+        "worldId": null
+      },
+      {
+        "latitude": -21.65573,
+        "longitude": 166.20315,
+        "altitude": 1543.0,
+        "index": 99,
+        "distanceOnSegment": 788.0825065528409,
+        "distanceFromLast": 9.951632553848144,
+        "worldId": null
+      },
+      {
+        "latitude": -21.6558,
+        "longitude": 166.2032,
+        "altitude": 1543.0,
+        "index": 100,
+        "distanceOnSegment": 797.4252253932514,
+        "distanceFromLast": 9.3427188404105,
+        "worldId": null
+      },
+      {
+        "latitude": -21.65588,
+        "longitude": 166.20325,
+        "altitude": 1543.0,
+        "index": 101,
+        "distanceOnSegment": 807.7127340864038,
+        "distanceFromLast": 10.287508693152402,
+        "worldId": null
+      },
+      {
+        "latitude": -21.65596,
+        "longitude": 166.2033,
+        "altitude": 1543.0,
+        "index": 102,
+        "distanceOnSegment": 818.0002413420978,
+        "distanceFromLast": 10.28750725569401,
+        "worldId": null
+      },
+      {
+        "latitude": -21.65604,
+        "longitude": 166.20335,
+        "altitude": 1543.0,
+        "index": 103,
+        "distanceOnSegment": 828.2877471573781,
+        "distanceFromLast": 10.28750581528041,
+        "worldId": null
+      },
+      {
+        "latitude": -21.65611,
+        "longitude": 166.2034,
+        "altitude": 1543.0,
+        "index": 104,
+        "distanceOnSegment": 837.6304598564209,
+        "distanceFromLast": 9.342712699042798,
+        "worldId": null
+      },
+      {
+        "latitude": -21.6562,
+        "longitude": 166.20344,
+        "altitude": 1543.0,
+        "index": 105,
+        "distanceOnSegment": 848.4581855625792,
+        "distanceFromLast": 10.827725706158299,
+        "worldId": null
+      },
+      {
+        "latitude": -21.65628,
+        "longitude": 166.20347,
+        "altitude": 1543.0,
+        "index": 106,
+        "distanceOnSegment": 857.878588320996,
+        "distanceFromLast": 9.42040275841685,
+        "worldId": null
+      },
+      {
+        "latitude": -21.65637,
+        "longitude": 166.20351,
+        "altitude": 1543.0,
+        "index": 107,
+        "distanceOnSegment": 868.7063121670594,
+        "distanceFromLast": 10.827723846063446,
+        "worldId": null
+      },
+      {
+        "latitude": -21.65645,
+        "longitude": 166.20355,
+        "altitude": 1543.0,
+        "index": 108,
+        "distanceOnSegment": 878.515504471708,
+        "distanceFromLast": 9.809192304648594,
+        "worldId": null
+      },
+      {
+        "latitude": -21.65652,
+        "longitude": 166.20361,
+        "altitude": 1543.0,
+        "index": 109,
+        "distanceOnSegment": 888.4671158734437,
+        "distanceFromLast": 9.951611401735665,
+        "worldId": null
+      },
+      {
+        "latitude": -21.65658,
+        "longitude": 166.20368,
+        "altitude": 1543.0,
+        "index": 110,
+        "distanceOnSegment": 898.308123844397,
+        "distanceFromLast": 9.841007970953187,
+        "worldId": null
+      },
+      {
+        "latitude": -21.65663,
+        "longitude": 166.20376,
+        "altitude": 1543.0,
+        "index": 111,
+        "distanceOnSegment": 908.271317576409,
+        "distanceFromLast": 9.963193732012144,
+        "worldId": null
+      },
+      {
+        "latitude": -21.65667,
+        "longitude": 166.20385,
+        "altitude": 1543.0,
+        "index": 112,
+        "distanceOnSegment": 918.5812130971664,
+        "distanceFromLast": 10.30989552075736,
+        "worldId": null
+      },
+      {
+        "latitude": -21.65669,
+        "longitude": 166.20395,
+        "altitude": 1543.0,
+        "index": 113,
+        "distanceOnSegment": 929.1523739559426,
+        "distanceFromLast": 10.571160858776215,
+        "worldId": null
+      },
+      {
+        "latitude": -21.6567,
+        "longitude": 166.20404,
+        "altitude": 1543.0,
+        "index": 114,
+        "distanceOnSegment": 938.519733462465,
+        "distanceFromLast": 9.367359506522373,
+        "worldId": null
+      },
+      {
+        "latitude": -21.6567,
+        "longitude": 166.20414,
+        "altitude": 1543.0,
+        "index": 115,
+        "distanceOnSegment": 948.8543204212733,
+        "distanceFromLast": 10.334586958808401,
+        "worldId": null
+      },
+      {
+        "latitude": -21.65669,
+        "longitude": 166.20423,
+        "altitude": 1543.0,
+        "index": 116,
+        "distanceOnSegment": 958.2216799277957,
+        "distanceFromLast": 9.367359506522373,
+        "worldId": null
+      },
+      {
+        "latitude": -21.65667,
+        "longitude": 166.20433,
+        "altitude": 1543.0,
+        "index": 117,
+        "distanceOnSegment": 968.7928407865719,
+        "distanceFromLast": 10.571160858776215,
+        "worldId": null
+      },
+      {
+        "latitude": -21.65664,
+        "longitude": 166.20442,
+        "altitude": 1543.0,
+        "index": 118,
+        "distanceOnSegment": 978.6740816730266,
+        "distanceFromLast": 9.881240886454716,
+        "worldId": null
+      },
+      {
+        "latitude": -21.65659,
+        "longitude": 166.2045,
+        "altitude": 1543.0,
+        "index": 119,
+        "distanceOnSegment": 988.6372749295787,
+        "distanceFromLast": 9.963193256551973,
+        "worldId": null
+      },
+      {
+        "latitude": -21.65654,
+        "longitude": 166.20458,
+        "altitude": 1543.0,
+        "index": 120,
+        "distanceOnSegment": 998.60047056365,
+        "distanceFromLast": 9.96319563407128,
+        "worldId": null
+      },
+      {
+        "latitude": -21.65648,
+        "longitude": 166.20464,
+        "altitude": 1543.0,
+        "index": 121,
+        "distanceOnSegment": 1007.7087607972747,
+        "distanceFromLast": 9.108290233624741,
+        "worldId": null
+      },
+      {
+        "latitude": -21.65642,
+        "longitude": 166.20471,
+        "altitude": 1543.0,
+        "index": 122,
+        "distanceOnSegment": 1017.5497724533834,
+        "distanceFromLast": 9.841011656108675,
+        "worldId": null
+      },
+      {
+        "latitude": -21.65637,
+        "longitude": 166.20479,
+        "altitude": 1543.0,
+        "index": 123,
+        "distanceOnSegment": 1027.5129761702337,
+        "distanceFromLast": 9.963203716850238,
+        "worldId": null
+      },
+      {
+        "latitude": -21.65633,
+        "longitude": 166.20488,
+        "altitude": 1543.0,
+        "index": 124,
+        "distanceOnSegment": 1037.8228891364583,
+        "distanceFromLast": 10.309912966224562,
+        "worldId": null
+      },
+      {
+        "latitude": -21.65631,
+        "longitude": 166.20497,
+        "altitude": 1543.0,
+        "index": 125,
+        "distanceOnSegment": 1047.3862132076413,
+        "distanceFromLast": 9.563324071182866,
+        "worldId": null
+      },
+      {
+        "latitude": -21.65629,
+        "longitude": 166.20507,
+        "altitude": 1543.0,
+        "index": 126,
+        "distanceOnSegment": 1057.9574006731273,
+        "distanceFromLast": 10.571187465485881,
+        "worldId": null
+      },
+      {
+        "latitude": -21.65629,
+        "longitude": 166.20516,
+        "altitude": 1543.0,
+        "index": 127,
+        "distanceOnSegment": 1067.258555363713,
+        "distanceFromLast": 9.301154690585754,
+        "worldId": null
+      },
+      {
+        "latitude": -21.65628,
+        "longitude": 166.20525,
+        "altitude": 1543.0,
+        "index": 128,
+        "distanceOnSegment": 1076.625941111326,
+        "distanceFromLast": 9.367385747612992,
+        "worldId": null
+      },
+      {
+        "latitude": -21.65627,
+        "longitude": 166.20535,
+        "altitude": 1543.0,
+        "index": 129,
+        "distanceOnSegment": 1087.0202062572462,
+        "distanceFromLast": 10.394265145920084,
+        "worldId": null
+      },
+      {
+        "latitude": -21.65626,
+        "longitude": 166.20544,
+        "altitude": 1543.0,
+        "index": 130,
+        "distanceOnSegment": 1096.3875932849003,
+        "distanceFromLast": 9.367387027654123,
+        "worldId": null
+      },
+      {
+        "latitude": -21.65624,
+        "longitude": 166.20553,
+        "altitude": 1543.0,
+        "index": 131,
+        "distanceOnSegment": 1105.9509217444365,
+        "distanceFromLast": 9.563328459536237,
+        "worldId": null
+      },
+      {
+        "latitude": -21.65621,
+        "longitude": 166.20562,
+        "altitude": 1543.0,
+        "index": 132,
+        "distanceOnSegment": 1115.832188720731,
+        "distanceFromLast": 9.881266976294512,
+        "worldId": null
+      }
+    ],
+    "sport": "Both",
+    "type": "Segment",
+    "name": "Ven-Top Summit",
+    "noSelectReason": null
+  }
   ]

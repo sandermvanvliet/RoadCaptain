@@ -72,6 +72,17 @@
     "turnsA": {
       "goStraight": "france-la-reine-002"
     },
-    "turnsB": {}
+    "turnsB": {
+      "goStraight": "france-ven-top-summit"
+    }
+  },
+  {
+    "segmentId": "france-ven-top-summit",
+    "turnsA": {
+      "goStraight": "france-ven-top-002"
+    },
+    "turnsB": {
+      "goStraight": "france-ven-top-002"
+    }
   }
 ]
