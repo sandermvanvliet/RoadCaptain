@@ -301,7 +301,6 @@
 				<Grid.RowDefinitions>
 					<RowDefinition Height="56" />
 					<RowDefinition Height="*" />
-					<RowDefinition Height="38" />
 				</Grid.RowDefinitions>
 
 				<Border
@@ -395,10 +394,6 @@
 						</DataTemplate>
 					</ListBox.ItemTemplate>
 				</ListBox>
-				<StackPanel Orientation="Horizontal" Grid.Row="2">
-					<TextBlock Text="Route name:" VerticalAlignment="Center" Margin="4,0,0,0" FontWeight="Bold" />
-					<TextBox Text="{Binding Path=Route.Name}" Width="200" Height="30" Margin="4,4,4,2" HorizontalAlignment="Stretch" VerticalAlignment="Center" />
-				</StackPanel>
 			</Grid>
 		</Grid>
 	</DockPanel>
