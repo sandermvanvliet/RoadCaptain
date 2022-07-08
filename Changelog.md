@@ -14,6 +14,7 @@ France is now available to plan routes!
 
 - Show "What is new" dialog when opening Runner after installation or upgrade. This dialog will only be shown once. [#80](https://github.com/sandermvanvliet/RoadCaptain/issues/80)
 - You can now show an elevation plot of your route using the "Show elevation plot" toggle, KOM segments are visible too when those are enabled on the map [#31](https://github.com/sandermvanvliet/RoadCaptain/issues/31)
+- Planning a route with a loop is now much better! Route Builder supports building a loop that has a lead-in before a loop. When creating the route, Route Builder will ask you whether you want to create a loop when the last added segment connects to your route. In the route segment list you can see the lead-in and the segments that form the loop: ![Route Builder showing a loop](./images/route-builder-loop.png) [#95](https://github.com/sandermvanvliet/RoadCaptain/issues/95)
 
 ### Routing
 
