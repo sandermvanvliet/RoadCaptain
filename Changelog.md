@@ -2,7 +2,11 @@
 
 ## 0.6.6.0
 
-France is now available to plan routes!
+A Tour de France special: France is now available to plan routes!
+
+Get into the TDF2022 mood by riding your custom routes in France. Allez Allez!
+
+It's also time for some new features in Route Builder: you can now see the elevation plot of your route and planning a route with a loop has become much easier 👍 See below for details!
 
 ### Runner
 
@@ -15,7 +19,7 @@ France is now available to plan routes!
 - Show "What is new" dialog when opening Runner after installation or upgrade. This dialog will only be shown once. [#80](https://github.com/sandermvanvliet/RoadCaptain/issues/80)
 - You can now show an elevation plot of your route using the "Show elevation plot" toggle, KOM segments are visible too when those are enabled on the map [#31](https://github.com/sandermvanvliet/RoadCaptain/issues/31)
 - Planning a route with a loop is now much better! Route Builder supports building a loop that has a lead-in before a loop. When creating the route, Route Builder will ask you whether you want to create a loop when the last added segment connects to your route. In the route segment list you can see the lead-in and the segments that form the loop: ![Route Builder showing a loop](./images/route-builder-loop.png) [#95](https://github.com/sandermvanvliet/RoadCaptain/issues/95)
-- The route name text box at the bottom of the segment list has been removed. You can now set the name of the route when saving it: ![Save route dialog screenshot](./images/route-builder-save-route.png) [#9](https://github.com/sandermvanvliet/RoadCaptain/issues/9)
+- The route name text box at the bottom of the segment list has been removed. You can now set the name of the route when saving it: ![Save route dialog screenshot](./images/route-builder-save-dialog.png) [#9](https://github.com/sandermvanvliet/RoadCaptain/issues/9)
 
 ### Routing
 
