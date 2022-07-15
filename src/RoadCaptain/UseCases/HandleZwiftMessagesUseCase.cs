@@ -139,6 +139,7 @@ namespace RoadCaptain.UseCases
 
             if (state is OnRouteState routeState)
             {
+                _monitoringEvents.Debug("Received command type {Type}", commandAvailable.Type);
                 return routeState.TurnCommandAvailable(commandAvailable.Type);
             }
 
