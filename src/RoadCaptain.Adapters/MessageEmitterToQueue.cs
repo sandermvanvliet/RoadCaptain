@@ -76,34 +76,47 @@ namespace RoadCaptain.Adapters
 
                 switch (item.Type)
                 {
-                    case 1:
-                    case 3:
-                    case 6:
-                        // Empty, ignore this
-                        break;
-                    case 2:
+                    case (uint)GameToPhoneCommandType.SetPowerUp:
                         var powerUp = ZwiftAppToCompanionPowerUpMessage.Parser.ParseFrom(byteArray);
 
                         OnPowerUp(powerUp.PowerUp);
 
                         break;
-                    case 4:
+                    case (uint)GameToPhoneCommandType.CustomizeActionButton:
                         var buttonMessage = ZwiftAppToCompanionButtonMessage.Parser.ParseFrom(byteArray);
 
                         OnCommandAvailable(buttonMessage.TypeId, buttonMessage.Title, buttonMessage.Tag1);
 
                         break;
-                    case 9:
+                    case (uint)GameToPhoneCommandType.PairingStatus:
                         _monitoringEvents.Information("Received a pairing status message");
                         break;
-                    case 13:
+                    case (uint)GameToPhoneCommandType.Packet:
                         var activityDetails = ZwiftAppToCompanionActivityDetailsMessage.Parser.ParseFrom(byteArray);
 
                         DecodeIncomingActivityDetailsMessage(activityDetails, packetData.RiderId);
 
                         break;
                     default:
-                        _monitoringEvents.Warning("Received type {Type} message that we don't understand yet", item.Type);
+                        var commandType = GameToPhoneCommandType.UnknownCommand;
+
+                        try
+                        {
+                            commandType = (GameToPhoneCommandType)item.Type;
+                        }
+                        catch
+                        {
+                            // Nop
+                        }
+
+                        if (commandType == GameToPhoneCommandType.UnknownCommand)
+                        {
+                            _monitoringEvents.Warning($"Did not recognise command {item.Type}");
+                        }
+                        else
+                        {
+                            _monitoringEvents.Warning("Received type {Type} message, but it will be ignored", (GameToPhoneCommandType)item.Type);
+                        }
 
                         break;
                 }
