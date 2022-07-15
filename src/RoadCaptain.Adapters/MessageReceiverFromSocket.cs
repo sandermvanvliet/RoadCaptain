@@ -283,7 +283,7 @@ namespace RoadCaptain.Adapters
                 {
                     RiderId = riderId,
                     Tag1 = _commandCounter++,
-                    Type = 28
+                    Type = (uint)PhoneToGameCommandType.PairingAs
                 },
                 Sequence = sequenceNumber
             };
@@ -300,7 +300,7 @@ namespace RoadCaptain.Adapters
                 {
                     CommandType = (uint)GetCommandTypeForTurnDirection(direction),
                     Tag1 = _commandCounter++, // This is a sequence of the number of commands we've sent to the game
-                    Type = 22, // Tag2
+                    Type = (uint)PhoneToGameCommandType.CustomAction, // Tag2
                     Tag3 = 0,
                     Tag5 = 0,
                     Tag7 = 0
@@ -319,7 +319,7 @@ namespace RoadCaptain.Adapters
                 Details = new ZwiftCompanionToAppRiderMessage.Types.RiderMessage
                 {
                     Tag1 = _commandCounter++, // This is a sequence of the number of commands we've sent to the game
-                    Type = 14, // Tag2
+                    Type = (uint)PhoneToGameCommandType.DoneRiding, // Tag2
                     Tag3 = 0,
                     Tag5 = 0,
                     Tag7 = 0,
@@ -368,22 +368,6 @@ namespace RoadCaptain.Adapters
                 .Concat(payload)
                 .ToArray();
         }
-    }
-
-    internal enum CommandType
-    {
-        Unknown = 0,
-        ElbowFlick = 4,
-        Wave = 5,
-        RideOn = 6,
-        SomethingEmpty = 23, // This is the synchronisation event for command sequence numbers that are sent to back to the game
-        TurnLeft = 1010,
-        GoStraight = 1011,
-        TurnRight = 1012,
-        DiscardAero = 1030,
-        DiscardLightweight = 1034,
-        PowerGraph = 1060,
-        HeadsUpDisplay = 1081,
     }
 }
 
