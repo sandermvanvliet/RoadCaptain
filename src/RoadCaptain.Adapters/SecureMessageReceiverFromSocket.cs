@@ -14,7 +14,7 @@ using RoadCaptain.Ports;
 
 namespace RoadCaptain.Adapters
 {
-    internal class MessageReceiverFromSocket : IMessageReceiver, IZwiftGameConnection
+    internal class SecureMessageReceiverFromSocket : IMessageReceiver, IZwiftGameConnection
     {
         private Socket _socket;
         private Socket _acceptedSocket;
@@ -23,7 +23,7 @@ namespace RoadCaptain.Adapters
         private uint _commandCounter = 1;
         private static readonly object SyncRoot = new();
 
-        public MessageReceiverFromSocket(
+        public SecureMessageReceiverFromSocket(
             MonitoringEvents monitoringEvents,
             IGameStateDispatcher gameStateDispatcher)
         {
@@ -76,7 +76,7 @@ namespace RoadCaptain.Adapters
          * When Receive() fails with a socket error we clear the established connection
          * so that the next call to ReceiveMessageBytes will block again on Accept()
          */
-        public byte[]? ReceiveMessageBytes(string? connectionEncryptionSecret)
+        public byte[] ReceiveMessageBytes(string connectionEncryptionSecret)
         {
             // Do we have an established connection?
             if (_acceptedSocket == null)
@@ -95,7 +95,7 @@ namespace RoadCaptain.Adapters
                         // assume that it's not listening yet.
                         // This should only happen when ReceiveMessageBytes
                         // is called the first time.
-                        _socket.Bind(new IPEndPoint(IPAddress.Any, 21587));
+                        _socket.Bind(new IPEndPoint(IPAddress.Any, 21588));
                         _socket.Listen();
                     }
 

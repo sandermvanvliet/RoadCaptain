@@ -82,7 +82,7 @@ namespace RoadCaptain.Tests.Unit
             try
             {
                 _useCase
-                    .ExecuteAsync(cancellationTokenSource.Token) // Always in cancelled state because otherwise the usecasse remains in an infinite loop
+                    .ExecuteAsync(null, cancellationTokenSource.Token) // Always in cancelled state because otherwise the usecasse remains in an infinite loop
                     .GetAwaiter()
                     .GetResult();
             }

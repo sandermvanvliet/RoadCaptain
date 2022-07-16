@@ -48,7 +48,7 @@ namespace RoadCaptain.Adapters
             _companionPacketAssemblerPcToApp.PayloadReady += (_, e) => EnqueueForReceive(e.Payload);
         }
 
-        public byte[] ReceiveMessageBytes()
+        public byte[]? ReceiveMessageBytes(string? connectionEncryptionSecret)
         {
             _gameStateDispatcher.Dispatch(new ConnectedToZwiftState());
 

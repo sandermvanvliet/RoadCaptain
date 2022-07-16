@@ -72,7 +72,9 @@ namespace RoadCaptain.UseCases
             // TODO: Work out what the correct IP address should be
             var ipAddress = GetMostLikelyAddress().ToString();
 
-            _monitoringEvents.Information("Telling Zwift to connect to {IPAddress}:21587", ipAddress);
+            var zwiftConnectionPort = string.IsNullOrEmpty(connectCommand.ConnectionEncryptionSecret) ? 21587 : 21588;
+
+            _monitoringEvents.Information("Telling Zwift to connect to {IPAddress}:{Port}", ipAddress, zwiftConnectionPort);
 
             Uri relayUri;
 
@@ -80,7 +82,7 @@ namespace RoadCaptain.UseCases
             {
                 relayUri = await _zwift.RetrieveRelayUrl(connectCommand.AccessToken);
 
-                await _zwift.InitiateRelayAsync(connectCommand.AccessToken, relayUri, ipAddress);
+                await _zwift.InitiateRelayAsync(connectCommand.AccessToken, relayUri, ipAddress, connectCommand.ConnectionEncryptionSecret);
             }
             catch (Exception e)
             {
@@ -117,9 +119,9 @@ namespace RoadCaptain.UseCases
 
                     if (remainingAttempts <= 0 && !_userIsInGame)
                     {
-                        _monitoringEvents.Warning("Zwift did not connect, attempting link again on {IPAddress}:21587", ipAddress);
+                        _monitoringEvents.Warning("Zwift did not connect, attempting link again on {IPAddress}:{Port}", ipAddress, zwiftConnectionPort);
 
-                        await _zwift.InitiateRelayAsync(connectCommand.AccessToken, relayUri, ipAddress);
+                        await _zwift.InitiateRelayAsync(connectCommand.AccessToken, relayUri, ipAddress, connectCommand.ConnectionEncryptionSecret);
 
                         remainingAttempts = 5;
                     }

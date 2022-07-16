@@ -25,7 +25,7 @@ namespace RoadCaptain.UseCases
             _monitoringEvents = monitoringEvents;
         }
 
-        public Task ExecuteAsync(CancellationToken token)
+        public Task ExecuteAsync(string? connectionEncryptionSecret, CancellationToken token)
         {
             // Because socket.Accept() is a blocking call with
             // no way of setting a time-out or passing a cancellation 
@@ -38,7 +38,7 @@ namespace RoadCaptain.UseCases
             // do-while to at least attempt one receive action
             do
             {
-                var bytes = _messageReceiver.ReceiveMessageBytes();
+                var bytes = _messageReceiver.ReceiveMessageBytes(connectionEncryptionSecret);
 
                 if (bytes == null || bytes.Length <= 0)
                 {
