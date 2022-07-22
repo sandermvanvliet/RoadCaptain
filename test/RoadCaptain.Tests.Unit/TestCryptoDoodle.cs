@@ -25,6 +25,29 @@ namespace RoadCaptain.Tests.Unit
         }
 
         [Fact]
+        public void EncryptionTestRoundtrip()
+        {
+            var key = Convert.FromBase64String("3qlTEMUx3dZ86aH2kHavUA==");
+            var messageBytes = Convert.FromBase64String("AgAAa4Tlae6h+nJoNatW2A2jIOWov0YZ");
+
+            var doodle = new ZwiftCrypto(new TestUserPreferences { ConnectionSecret = key }, new NopMonitoringEvents());
+
+            byte[]? decrypted = null;
+
+            Action action = () => decrypted = doodle.Decrypt(new ByteBuffer(messageBytes));
+
+            action
+                .Should()
+                .NotThrow();
+
+            action = () => doodle.Encrypt(decrypted);
+
+            action
+                .Should()
+                .NotThrow();
+        }
+
+        [Fact]
         public void EncryptionTestRepro1()
         {
             var key = Convert.FromBase64String("Xsnlr1vNWfryLM0Qf9FGxQ==");

@@ -29,7 +29,7 @@ namespace RoadCaptain.Adapters
         {
             _monitoringEvents = monitoringEvents;
             _gameStateDispatcher = gameStateDispatcher;
-            
+
             _socket = CreateListeningSocket();
         }
 
@@ -268,7 +268,7 @@ namespace RoadCaptain.Adapters
             {
                 var sent = _acceptedSocket.Send(payloadToSend, offset, payloadToSend.Length - offset, SocketFlags.None);
                 
-                _monitoringEvents.Debug("Sent {Count} bytes, {Offset} sent so far of {Total} total payload size", sent, offset, payloadToSend.Length);
+                _monitoringEvents.Debug("Sent {Count} bytes, {Sent} sent so far of {Total} total payload size", sent, offset + sent, payloadToSend.Length);
 
                 offset += sent;
             }

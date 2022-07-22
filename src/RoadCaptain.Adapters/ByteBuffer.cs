@@ -76,6 +76,11 @@ namespace RoadCaptain.Adapters
             }
         }
 
+        public void put(byte value)
+        {
+            _stream.WriteByte(value);
+        }
+
         public void flip()
         {
             _stream.Seek(0, SeekOrigin.Begin);
@@ -97,6 +102,20 @@ namespace RoadCaptain.Adapters
             var result = new byte[Remaining];
             _data.AsSpan().Slice((int)Position, (int)Remaining).CopyTo(result);
             return result;
+        }
+
+        public void putInt(int relayId)
+        {
+            var bytes = BitConverter.GetBytes(relayId);
+            Array.Reverse(bytes);
+            _stream.Write(bytes, 0, 4);
+        }
+
+        public void putShort(short value)
+        {
+            var bytes = BitConverter.GetBytes(value);
+            Array.Reverse(bytes);
+            _stream.Write(bytes, 0, 2);
         }
     }
 }

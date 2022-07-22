@@ -62,7 +62,7 @@ namespace RoadCaptain.Adapters
             setCounter(value);
         }
 
-        private int getCounter()
+        public int getCounter()
         {
             var bytes = new[] { _vector[11], _vector[10], _vector[9], _vector[8] };
             return BitConverter.ToInt32(bytes);

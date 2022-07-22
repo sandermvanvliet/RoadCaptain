@@ -22,14 +22,17 @@ namespace RoadCaptain.Adapters
         private readonly IGameStateDispatcher _gameStateDispatcher;
         private uint _commandCounter = 1;
         private static readonly object SyncRoot = new();
+        private readonly IZwiftCrypto _zwiftCrypto;
 
         public SecureMessageReceiverFromSocket(
             MonitoringEvents monitoringEvents,
-            IGameStateDispatcher gameStateDispatcher)
+            IGameStateDispatcher gameStateDispatcher, 
+            IZwiftCrypto zwiftCrypto)
         {
             _monitoringEvents = monitoringEvents;
             _gameStateDispatcher = gameStateDispatcher;
-            
+            _zwiftCrypto = zwiftCrypto;
+
             _socket = CreateListeningSocket();
         }
 
@@ -161,12 +164,20 @@ namespace RoadCaptain.Adapters
                     {
                         // Don't care
                     }
+                    catch (ObjectDisposedException)
+                    {
+                        _acceptedSocket = null;
+                    }
 
                     try
                     {
                         _acceptedSocket?.Close();
                     }
                     catch (SocketException)
+                    {
+                        // Don't care
+                    }
+                    catch (ObjectDisposedException)
                     {
                         // Don't care
                     }
@@ -260,7 +271,7 @@ namespace RoadCaptain.Adapters
 
             // Note: For messages to the Zwift app we need to have a 4-byte length prefix instead
             // of the 2-byte one we see on incoming messages...
-            var payloadToSend = WrapWithLength(payload);
+            var payloadToSend = WrapWithLength(_zwiftCrypto.Encrypt(payload));
 
             var offset = 0;
 
@@ -268,7 +279,7 @@ namespace RoadCaptain.Adapters
             {
                 var sent = _acceptedSocket.Send(payloadToSend, offset, payloadToSend.Length - offset, SocketFlags.None);
                 
-                _monitoringEvents.Debug("Sent {Count} bytes, {Offset} sent so far of {Total} total payload size", sent, offset, payloadToSend.Length);
+                _monitoringEvents.Debug("Sent {Count} bytes, {Sent} sent so far of {Total} total payload size", sent, offset + sent, payloadToSend.Length);
 
                 offset += sent;
             }

@@ -27,31 +27,92 @@ namespace RoadCaptain.Adapters
             _gameToClientInitializationVector = new InitializationVector(ChannelType.TcpClient);
         }
 
-        public byte[] Encrypt(byte[] input)
+        public byte[] Encrypt(byte[] inputMessage)
         {
-            var encryptedOutput = new byte[input.Length + 1 + 4];
-            encryptedOutput[0] = 0x0;
-            var tag = new byte[1];
-            tag[0] = encryptedOutput[1];
+            var input = new ByteBuffer(inputMessage);
 
-            var cipher = CipherUtilities.GetCipher("AES/GCM/NoPadding");
-            
-            cipher.Init(true, 
-                new AeadParameters(new KeyParameter(_key), 32, _clientToGameInitializationVector));
-            
-            cipher.DoFinal(input, encryptedOutput, 1);
+            ByteBuffer? encryptedOutput = null;
 
-            _clientToGameInitializationVector.incrementCounter();
+            if (input != null && input.remaining() != 0)
+            {
+                if (isEncryptedConnection && !hasConnectionId)
+                {
+                    throw new Exception("Connection id expected but missing");
+                }
 
-            return encryptedOutput;
+                int i = 0;
+                int i2 = (a ? 4 : 0) + 1 + (b ? 2 : 0); // a and b are always false zo i2 is always 1
+                if (c)
+                {
+                    // c is always false so i is 0
+                    i = 4;
+                }
+
+                int i3 = i2 + i; // i3 = 1
+                int remaining = input.remaining() + i3 + 4; // remaining bytes + 5
+                if (encryptedOutput == null)
+                {
+                    encryptedOutput = ByteBuffer.allocate(remaining);
+                }
+
+                int position = encryptedOutput.position();
+                encryptedOutput.put(e()); // as a, b and c are false this puts a 0 byte to the encrypted output
+                if (a)
+                {
+                    encryptedOutput.putInt(relayId);
+                }
+
+                if (b)
+                {
+                    encryptedOutput.putShort((short)_clientToGameInitializationVector.getConnectionId());
+                }
+
+                if (c)
+                {
+                    encryptedOutput.putInt((int)_clientToGameInitializationVector.getCounter());
+                }
+
+                ByteBuffer additionalAuthenticationData = ByteBuffer.allocate(i3); // this allocates a 1-byte ByteBuffer
+                int position2 = encryptedOutput.position(); // position2 = 1
+                int limit = encryptedOutput.limit(); // limit is total size of the buffer
+                encryptedOutput.position(position); // position = 1 because we've written one 0-byte previously
+                encryptedOutput.limit(position + i3); // limit is 1 + 1 = 2
+                additionalAuthenticationData.put(encryptedOutput); // this writes from position -> limit from enryptedOutput to allocate
+                encryptedOutput.limit(limit);
+                encryptedOutput.position(position2); // this ensures the encryption skips the first byte
+                additionalAuthenticationData.flip(); // this sets limit to the current position of allocate and sets position to 0
+                // Effectively it's 0 -> 1 now because only 1 byte has been written to allocate
+                
+                var cipher = CipherUtilities.GetCipher("AES/GCM/NoPadding");
+                    
+                cipher.Init(true,
+                    new AeadParameters(new KeyParameter(_key), 32, _clientToGameInitializationVector, additionalAuthenticationData.array()));
+
+                cipher.DoFinal(input.array(), encryptedOutput, 0);
+                
+                _monitoringEvents.Information(
+                    "Encrypted using key: {Key} and IV: {IV}: data: {Data}",
+                    Convert.ToBase64String(_key),
+                    Convert.ToBase64String((byte[])_clientToGameInitializationVector),
+                    Convert.ToBase64String((byte[])encryptedOutput));
+
+                _clientToGameInitializationVector.incrementCounter();
+
+                _monitoringEvents.Information("Incremented IV counter to {Count}", _clientToGameInitializationVector.getCounter());
+
+                return encryptedOutput;
+            }
+
+            throw new Exception("Empty message");
         }
 
         public byte[]? Decrypt(byte[] inputMessage)
         {
             _monitoringEvents.Information(
-                "Decrypting using key: {Key} and data: {Data}",
+                "Decrypting using key: {Key}, data: {Data} and IV: {IV}",
                 Convert.ToBase64String(_key),
-                Convert.ToBase64String(inputMessage));
+                Convert.ToBase64String(inputMessage),
+                Convert.ToBase64String((byte[])_gameToClientInitializationVector));
 
             var input = new ByteBuffer(inputMessage);
 
@@ -63,7 +124,7 @@ namespace RoadCaptain.Adapters
             if (BitTwiddle(a)) {
                 if (HasRelayId(a)) {
                     if (input.remaining() >= 4) {
-                        if (input.getInt() != this.relayId) {
+                        if (input.getInt() != relayId) {
                             throw new Exception("Relay id does not match");
                         }
                     } else {
@@ -73,19 +134,19 @@ namespace RoadCaptain.Adapters
                 if (HasConnectionId(a)) {
                     if (input.remaining() >= 2) {
                         var a2 = BABitTwiddle(input.getShort());
-                        if (a2 != this._gameToClientInitializationVector.getConnectionId()) {
+                        if (a2 != _gameToClientInitializationVector.getConnectionId()) {
                             initInitializationVectors((short)a2);
                         }
-                        this.hasConnectionId = true;
+                        hasConnectionId = true;
                     } else {
                         throw new Exception("Connection id announced but missing");
                     }
-                } else if (this.isEncryptedConnection && !this.hasConnectionId) {
+                } else if (isEncryptedConnection && !hasConnectionId) {
                     throw new Exception("Connection id expected but missing");
                 }
                 if (HasCounter(a)) {
                     if (input.remaining() >= 4) {
-                        this._gameToClientInitializationVector.setCounter(CABitTwiddle(input.getInt()));
+                        _gameToClientInitializationVector.setCounter(CABitTwiddle(input.getInt()));
                     } else {
                         throw new Exception("Sequence number announced but missing");
                     }
@@ -116,6 +177,9 @@ namespace RoadCaptain.Adapters
                 }
 
                 _gameToClientInitializationVector.incrementCounter();
+
+                _monitoringEvents.Information("Incremented IV counter to {Count}", _gameToClientInitializationVector.getCounter());
+
                 return decryptedOutput;
             }
 
@@ -154,7 +218,7 @@ namespace RoadCaptain.Adapters
         private readonly MonitoringEvents _monitoringEvents;
 
         private byte e() {
-            return (byte) ((this.a ? 4 : 0) | 0 | (this.b ? 2 : 0) | (this.c ? 1 : 0));
+            return (byte) ((a ? 4 : 0) | 0 | (b ? 2 : 0) | (c ? 1 : 0));
         }
 
         private static int f(int i) {
