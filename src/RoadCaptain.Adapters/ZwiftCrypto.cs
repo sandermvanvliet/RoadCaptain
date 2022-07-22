@@ -88,7 +88,11 @@ namespace RoadCaptain.Adapters
                 cipher.Init(true,
                     new AeadParameters(new KeyParameter(_key), 32, _clientToGameInitializationVector, additionalAuthenticationData.array()));
 
-                cipher.DoFinal(input.array(), encryptedOutput, 0);
+                var encryptedPayloadOutput = new byte[inputMessage.Length + 4];
+
+                cipher.DoFinal(input.array(), encryptedPayloadOutput, 0);
+
+                encryptedOutput.put(new ByteBuffer(encryptedPayloadOutput));
                 
                 _monitoringEvents.Information(
                     "Encrypted using key: {Key} and IV: {IV}: data: {Data}",
@@ -108,12 +112,6 @@ namespace RoadCaptain.Adapters
 
         public byte[]? Decrypt(byte[] inputMessage)
         {
-            _monitoringEvents.Information(
-                "Decrypting using key: {Key}, data: {Data} and IV: {IV}",
-                Convert.ToBase64String(_key),
-                Convert.ToBase64String(inputMessage),
-                Convert.ToBase64String((byte[])_gameToClientInitializationVector));
-
             var input = new ByteBuffer(inputMessage);
 
             ByteBuffer? decryptedOutput = null;
@@ -175,6 +173,13 @@ namespace RoadCaptain.Adapters
 
                     cipher.DoFinal(input.array(), decryptedOutput, 0);
                 }
+
+                _monitoringEvents.Information(
+                    "Decrypted using key: {Key}, input: {Input} and IV: {IV} => data: {Data}",
+                    Convert.ToBase64String(_key),
+                    Convert.ToBase64String(inputMessage),
+                    Convert.ToBase64String((byte[])_gameToClientInitializationVector),
+                    Convert.ToBase64String((byte[])decryptedOutput));
 
                 _gameToClientInitializationVector.incrementCounter();
 
