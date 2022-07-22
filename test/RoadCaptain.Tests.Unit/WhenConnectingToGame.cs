@@ -41,7 +41,8 @@ namespace RoadCaptain.Tests.Unit
         {
             _useCase.ExecuteAsync(new ConnectCommand
                     {
-                        AccessToken = "supersecret"
+                        AccessToken = "supersecret",
+                        ConnectionEncryptionSecret = new byte[0]
                     },
                     CancellationToken.None)
                 .GetAwaiter()

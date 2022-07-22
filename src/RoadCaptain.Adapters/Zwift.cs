@@ -44,6 +44,11 @@ namespace RoadCaptain.Adapters
 
         public async Task InitiateRelayAsync(string accessToken, Uri uri, string ipAddress, byte[] connectionSecret)
         {
+            if (connectionSecret == null)
+            {
+                throw new ArgumentNullException(nameof(connectionSecret), "Connection secret is required");
+            }
+
             var request = new HttpRequestMessage(HttpMethod.Put, new Uri(uri, "/relay/profiles/me/phone"));
             request.Headers.Add("Zwift-Api-Version", "2.6");
             request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
