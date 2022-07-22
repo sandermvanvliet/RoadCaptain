@@ -7,36 +7,30 @@ namespace RoadCaptain.Adapters
     {
         private readonly byte[] _data;
         private readonly MemoryStream _stream;
-        private long _limit;
 
         public ByteBuffer(byte[] data)
         {
             _data = data;
             _stream = new MemoryStream(_data);
-            _limit = _stream.Length;
+            Limit = _stream.Length;
         }
 
-        public int remaining()
+        public int Position
         {
-            return (int)(_limit - _stream.Position);
+            get => (int)_stream.Position;
+            set => _stream.Seek(value, SeekOrigin.Begin);
         }
 
-        public byte get()
+        public long Limit { get; set; }
+
+        public int Remaining => (int)(Limit - _stream.Position);
+
+        public byte GetByte()
         {
             return (byte)_stream.ReadByte();
         }
 
-        public int position()
-        {
-            return (int)_stream.Position;
-        }
-
-        public int position(int position)
-        {
-            return (int)_stream.Seek(position, SeekOrigin.Begin);
-        }
-
-        public int getInt()
+        public int GetInt()
         {
             var intBuffer = new byte[4];
             _stream.Read(intBuffer, 0, 4);
@@ -44,7 +38,7 @@ namespace RoadCaptain.Adapters
             return BitConverter.ToInt32(intBuffer);
         }
 
-        public short getShort()
+        public short GetShort()
         {
             var intBuffer = new byte[2];
             _stream.Read(intBuffer, 0, 2);
@@ -52,39 +46,29 @@ namespace RoadCaptain.Adapters
             return BitConverter.ToInt16(intBuffer);
         }
 
-        public int limit()
-        {
-            return (int)_limit;
-        }
-
-        public void limit(long value)
-        {
-            _limit = value;
-        }
-
-        public static ByteBuffer allocate(int size)
+        public static ByteBuffer Allocate(int size)
         {
             return new ByteBuffer(new byte[size]);
         }
 
-        public void put(ByteBuffer input)
+        public void Put(ByteBuffer input)
         {
-            for (var i = input.position(); i < input._limit; i++)
+            for (var i = input.Position; i < input.Limit; i++)
             {
-                var value = input.get();
+                var value = input.GetByte();
                 _stream.WriteByte(value);
             }
         }
 
-        public void put(byte value)
+        public void Put(byte value)
         {
             _stream.WriteByte(value);
         }
 
-        public void flip()
+        public void Flip()
         {
             _stream.Seek(0, SeekOrigin.Begin);
-            _limit = _stream.Length;
+            Limit = _stream.Length;
         }
 
         public static implicit operator byte[]?(ByteBuffer? self)
@@ -92,26 +76,21 @@ namespace RoadCaptain.Adapters
             return self?._data;
         }
 
-        public long Position => position();
-        public long Limit => limit();
-        public long Size => _stream.Length;
-        public long Remaining => remaining();
-
-        public byte[] array()
+        public byte[] ToArray()
         {
             var result = new byte[Remaining];
-            _data.AsSpan().Slice((int)Position, (int)Remaining).CopyTo(result);
+            _data.AsSpan().Slice(Position, Remaining).CopyTo(result);
             return result;
         }
 
-        public void putInt(int relayId)
+        public void PutInt(int relayId)
         {
             var bytes = BitConverter.GetBytes(relayId);
             Array.Reverse(bytes);
             _stream.Write(bytes, 0, 4);
         }
 
-        public void putShort(short value)
+        public void PutShort(short value)
         {
             var bytes = BitConverter.GetBytes(value);
             Array.Reverse(bytes);

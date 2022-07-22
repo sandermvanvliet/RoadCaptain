@@ -13,22 +13,23 @@ namespace RoadCaptain.Adapters
 
         private static byte[] CreateInitializationVector(ChannelType channelType)
         {
-            var deviceTypeBytes = BitConverter.GetBytes((short)2);
-            Array.Reverse(deviceTypeBytes); // Because Endianness
+            var deviceTypeBytes = BitConverter.GetBytes((short)2); // 2 = device type Zwift Companion (Zc)
             var channelTypeBytes = BitConverter.GetBytes((short)channelType);
-            Array.Reverse(channelTypeBytes); // Because Endianness
             var connectionIdBytes = BitConverter.GetBytes(0);
             
+            // Note that the bytes are written "reversed"
+            // because the data is expected in Big Endian 
+            // order.
             return new byte[]
             {
                 0,
                 0,
-                deviceTypeBytes[0],
                 deviceTypeBytes[1],
-                channelTypeBytes[0],
+                deviceTypeBytes[0],
                 channelTypeBytes[1],
-                connectionIdBytes[0],
+                channelTypeBytes[0],
                 connectionIdBytes[1],
+                connectionIdBytes[0],
                 0,
                 0,
                 0,
@@ -41,39 +42,39 @@ namespace RoadCaptain.Adapters
             return value & 65535;
         }
 
-        public int getConnectionId()
+        public int GetConnectionId()
         {
             var connectionIdBytes = new[] { _vector[7], _vector[6] };
 
             return BABitTwiddle(BitConverter.ToInt16(connectionIdBytes));
         }
 
-        public void setCounter(long value)
+        public void SetCounter(long value)
         {
             var bytes = BitConverter.GetBytes((int)value); // Yes, cast to int because why not...
             Array.Reverse(bytes);
             bytes.CopyTo(_vector, 8);
         }
 
-        public void incrementCounter()
+        public void IncrementCounter()
         {
-            var value = getCounter() + 1;
+            var value = GetCounter() + 1;
 
-            setCounter(value);
+            SetCounter(value);
         }
 
-        public int getCounter()
+        public int GetCounter()
         {
             var bytes = new[] { _vector[11], _vector[10], _vector[9], _vector[8] };
             return BitConverter.ToInt32(bytes);
         }
 
-        public static implicit operator byte[](InitializationVector self)
+        public byte[] GetBytes()
         {
-            return self._vector;
+            return _vector;
         }
 
-        public void setConnectionId(short value)
+        public void SetConnectionId(short value)
         {
             var bytes = BitConverter.GetBytes(value);
             Array.Reverse(bytes);

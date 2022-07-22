@@ -5,20 +5,20 @@ using RoadCaptain.Ports;
 
 namespace RoadCaptain.Adapters
 {
-    public enum ChannelType {
-        None,
-        UdpClient,
-        UdpServer,
-        TcpClient,
-        TcpServer
-    }
-
-    public class ZwiftCrypto : IZwiftCrypto
+    internal class ZwiftCrypto : IZwiftCrypto
     {
-        private readonly byte[] _key;
+        private readonly byte[]? _key;
+        private readonly MonitoringEvents _monitoringEvents;
         private InitializationVector _clientToGameInitializationVector;
         private InitializationVector _gameToClientInitializationVector;
-        
+        private bool _hasConnectionId;
+        private bool _isEncryptedConnection;
+        private int _relayId;
+
+        private readonly bool a = false;
+        private readonly bool b = false;
+        private readonly bool c = false;
+
         public ZwiftCrypto(IUserPreferences userPreferences, MonitoringEvents monitoringEvents)
         {
             _monitoringEvents = monitoringEvents;
@@ -29,80 +29,90 @@ namespace RoadCaptain.Adapters
 
         public byte[] Encrypt(byte[] inputMessage)
         {
+            // If no key is defined then bypass encryption
+            if (_key == null)
+            {
+                return inputMessage;
+            }
+
             var input = new ByteBuffer(inputMessage);
 
             ByteBuffer? encryptedOutput = null;
 
-            if (input != null && input.remaining() != 0)
+            if (input.Remaining != 0)
             {
-                if (isEncryptedConnection && !hasConnectionId)
+                if (_isEncryptedConnection && !_hasConnectionId)
                 {
                     throw new Exception("Connection id expected but missing");
                 }
 
-                int i = 0;
-                int i2 = (a ? 4 : 0) + 1 + (b ? 2 : 0); // a and b are always false zo i2 is always 1
+                var i = 0;
+                var i2 = (a ? 4 : 0) + 1 + (b ? 2 : 0); // a and b are always false zo i2 is always 1
                 if (c)
                 {
                     // c is always false so i is 0
                     i = 4;
                 }
 
-                int i3 = i2 + i; // i3 = 1
-                int remaining = input.remaining() + i3 + 4; // remaining bytes + 5
+                var i3 = i2 + i; // i3 = 1
+                var remaining = input.Remaining + i3 + 4; // remaining bytes + 5
                 if (encryptedOutput == null)
                 {
-                    encryptedOutput = ByteBuffer.allocate(remaining);
+                    encryptedOutput = ByteBuffer.Allocate(remaining);
                 }
 
-                int position = encryptedOutput.position();
-                encryptedOutput.put(e()); // as a, b and c are false this puts a 0 byte to the encrypted output
+                var position = encryptedOutput.Position;
+                encryptedOutput.Put(GenerateHeaderByte()); // as a, b and c are false this puts a 0 byte to the encrypted output
                 if (a)
                 {
-                    encryptedOutput.putInt(relayId);
+                    encryptedOutput.PutInt(_relayId);
                 }
 
                 if (b)
                 {
-                    encryptedOutput.putShort((short)_clientToGameInitializationVector.getConnectionId());
+                    encryptedOutput.PutShort((short)_clientToGameInitializationVector.GetConnectionId());
                 }
 
                 if (c)
                 {
-                    encryptedOutput.putInt((int)_clientToGameInitializationVector.getCounter());
+                    encryptedOutput.PutInt(_clientToGameInitializationVector.GetCounter());
                 }
 
-                ByteBuffer additionalAuthenticationData = ByteBuffer.allocate(i3); // this allocates a 1-byte ByteBuffer
-                int position2 = encryptedOutput.position(); // position2 = 1
-                int limit = encryptedOutput.limit(); // limit is total size of the buffer
-                encryptedOutput.position(position); // position = 1 because we've written one 0-byte previously
-                encryptedOutput.limit(position + i3); // limit is 1 + 1 = 2
-                additionalAuthenticationData.put(encryptedOutput); // this writes from position -> limit from enryptedOutput to allocate
-                encryptedOutput.limit(limit);
-                encryptedOutput.position(position2); // this ensures the encryption skips the first byte
-                additionalAuthenticationData.flip(); // this sets limit to the current position of allocate and sets position to 0
+                var additionalAuthenticationData = ByteBuffer.Allocate(i3); // this allocates a 1-byte ByteBuffer
+                var position2 = encryptedOutput.Position; // position2 = 1
+                var limit = encryptedOutput.Limit; // limit is total size of the buffer
+                encryptedOutput.Position = position; // position = 1 because we've written one 0-byte previously
+                encryptedOutput.Limit = position + i3; // limit is 1 + 1 = 2
+                additionalAuthenticationData
+                    .Put(encryptedOutput); // this writes from position -> limit from enryptedOutput to allocate
+                encryptedOutput.Limit = limit;
+                encryptedOutput.Position = position2; // this ensures the encryption skips the first byte
+                additionalAuthenticationData
+                    .Flip(); // this sets limit to the current position of allocate and sets position to 0
                 // Effectively it's 0 -> 1 now because only 1 byte has been written to allocate
-                
+
                 var cipher = CipherUtilities.GetCipher("AES/GCM/NoPadding");
-                    
+
                 cipher.Init(true,
-                    new AeadParameters(new KeyParameter(_key), 32, _clientToGameInitializationVector, additionalAuthenticationData.array()));
+                    new AeadParameters(new KeyParameter(_key), 32, _clientToGameInitializationVector.GetBytes(),
+                        additionalAuthenticationData.ToArray()));
 
                 var encryptedPayloadOutput = new byte[inputMessage.Length + 4];
 
-                cipher.DoFinal(input.array(), encryptedPayloadOutput, 0);
+                cipher.DoFinal(input.ToArray(), encryptedPayloadOutput, 0);
 
-                encryptedOutput.put(new ByteBuffer(encryptedPayloadOutput));
-                
+                encryptedOutput.Put(new ByteBuffer(encryptedPayloadOutput));
+
                 _monitoringEvents.Information(
                     "Encrypted using key: {Key} and IV: {IV}: data: {Data}",
                     Convert.ToBase64String(_key),
-                    Convert.ToBase64String((byte[])_clientToGameInitializationVector),
+                    Convert.ToBase64String(_clientToGameInitializationVector.GetBytes()),
                     Convert.ToBase64String((byte[])encryptedOutput));
 
-                _clientToGameInitializationVector.incrementCounter();
+                _clientToGameInitializationVector.IncrementCounter();
 
-                _monitoringEvents.Information("Incremented IV counter to {Count}", _clientToGameInitializationVector.getCounter());
+                _monitoringEvents.Information("Incremented IV counter to {Count}",
+                    _clientToGameInitializationVector.GetCounter());
 
                 return encryptedOutput;
             }
@@ -110,141 +120,170 @@ namespace RoadCaptain.Adapters
             throw new Exception("Empty message");
         }
 
-        public byte[]? Decrypt(byte[] inputMessage)
+        public byte[] Decrypt(byte[] inputMessage)
         {
+            // If no key is defined then bypass decryption
+            if (_key == null)
+            {
+                return inputMessage;
+            }
+
             var input = new ByteBuffer(inputMessage);
 
-            ByteBuffer? decryptedOutput = null;
-            
-            int position = input.position();
-            int a = AABitTwiddle(input.get());
+            var position = input.Position;
+            var firstByte = AABitTwiddle(input.GetByte());
 
-            if (BitTwiddle(a)) {
-                if (HasRelayId(a)) {
-                    if (input.remaining() >= 4) {
-                        if (input.getInt() != relayId) {
+            if (ProtocolVersionIsZero(firstByte))
+            {
+                if (HasRelayId(firstByte))
+                {
+                    if (input.Remaining >= 4)
+                    {
+                        if (input.GetInt() != _relayId)
+                        {
                             throw new Exception("Relay id does not match");
                         }
-                    } else {
+                    }
+                    else
+                    {
                         throw new Exception("Relay id announced but missing");
                     }
                 }
-                if (HasConnectionId(a)) {
-                    if (input.remaining() >= 2) {
-                        var a2 = BABitTwiddle(input.getShort());
-                        if (a2 != _gameToClientInitializationVector.getConnectionId()) {
-                            initInitializationVectors((short)a2);
+
+                if (HasConnectionId(firstByte))
+                {
+                    if (input.Remaining >= 2)
+                    {
+                        var a2 = BABitTwiddle(input.GetShort());
+                        if (a2 != _gameToClientInitializationVector.GetConnectionId())
+                        {
+                            InitInitializationVectors((short)a2);
                         }
-                        hasConnectionId = true;
-                    } else {
+
+                        _hasConnectionId = true;
+                    }
+                    else
+                    {
                         throw new Exception("Connection id announced but missing");
                     }
-                } else if (isEncryptedConnection && !hasConnectionId) {
+                }
+                else if (_isEncryptedConnection && !_hasConnectionId)
+                {
                     throw new Exception("Connection id expected but missing");
                 }
-                if (HasCounter(a)) {
-                    if (input.remaining() >= 4) {
-                        _gameToClientInitializationVector.setCounter(CABitTwiddle(input.getInt()));
-                    } else {
+
+                if (HasCounter(firstByte))
+                {
+                    if (input.Remaining >= 4)
+                    {
+                        _gameToClientInitializationVector.SetCounter(CABitTwiddle(input.GetInt()));
+                    }
+                    else
+                    {
                         throw new Exception("Sequence number announced but missing");
                     }
                 }
-                int remaining = input.remaining();
-                if (remaining > 0) {
-                    int position2 = input.position();
-                    int i = position2 - position;
-                    int c = remaining - 4;
-                    if (decryptedOutput == null) {
-                        decryptedOutput = ByteBuffer.allocate(c);
-                    }
-                    ByteBuffer additionalAuthenticationData = ByteBuffer.allocate(i);
-                    int limit = input.limit();
-                    input.position(position);
-                    input.limit(position + i);
-                    additionalAuthenticationData.put(input);
-                    input.limit(limit);
-                    input.position(position2);
-                    additionalAuthenticationData.flip();
+
+                var remaining = input.Remaining;
+                ByteBuffer decryptedOutput;
+
+                if (remaining > 0)
+                {
+                    var position2 = input.Position;
+                    var i = position2 - position;
+                    var c = remaining - 4;
+                    decryptedOutput = ByteBuffer.Allocate(c);
+                    var additionalAuthenticationData = ByteBuffer.Allocate(i);
+                    var limit = input.Limit;
+                    input.Position = position;
+                    input.Limit = position + i;
+                    additionalAuthenticationData.Put(input);
+                    input.Limit = limit;
+                    input.Position = position2;
+                    additionalAuthenticationData.Flip();
 
                     var cipher = CipherUtilities.GetCipher("AES/GCM/NoPadding");
-                    
-                    cipher.Init(false,
-                        new AeadParameters(new KeyParameter(_key), 32, _gameToClientInitializationVector, additionalAuthenticationData.array()));
 
-                    cipher.DoFinal(input.array(), decryptedOutput, 0);
+                    cipher.Init(false,
+                        new AeadParameters(new KeyParameter(_key), 32, _gameToClientInitializationVector.GetBytes(),
+                            additionalAuthenticationData.ToArray()));
+
+                    cipher.DoFinal(input.ToArray(), decryptedOutput, 0);
+
+                    _monitoringEvents.Information(
+                        "Decrypted using key: {Key}, input: {Input} and IV: {IV} => data: {Data}",
+                        Convert.ToBase64String(_key),
+                        Convert.ToBase64String(inputMessage),
+                        Convert.ToBase64String(_gameToClientInitializationVector.GetBytes()),
+                        Convert.ToBase64String((byte[])decryptedOutput));
+                }
+                else
+                {
+                    decryptedOutput = new ByteBuffer(Array.Empty<byte>());
                 }
 
-                _monitoringEvents.Information(
-                    "Decrypted using key: {Key}, input: {Input} and IV: {IV} => data: {Data}",
-                    Convert.ToBase64String(_key),
-                    Convert.ToBase64String(inputMessage),
-                    Convert.ToBase64String((byte[])_gameToClientInitializationVector),
-                    Convert.ToBase64String((byte[])decryptedOutput));
+                _gameToClientInitializationVector.IncrementCounter();
 
-                _gameToClientInitializationVector.incrementCounter();
-
-                _monitoringEvents.Information("Incremented IV counter to {Count}", _gameToClientInitializationVector.getCounter());
+                _monitoringEvents.Information("Incremented IV counter to {Count}",
+                    _gameToClientInitializationVector.GetCounter());
 
                 return decryptedOutput;
             }
 
-            throw new Exception($"Unsupported protocol version {f(a)}");
+            throw new Exception($"Unsupported protocol version {FBitTwiddle(firstByte)}");
         }
 
-        private long CABitTwiddle(int value)
-        {
-            return value & 4294967295L;
-        }
-
-        private void initInitializationVectors(short connectionId)
+        private void InitInitializationVectors(short connectionId)
         {
             _clientToGameInitializationVector = new InitializationVector(ChannelType.TcpServer);
-            _clientToGameInitializationVector.setConnectionId(connectionId);
+            _clientToGameInitializationVector.SetConnectionId(connectionId);
             _gameToClientInitializationVector = new InitializationVector(ChannelType.TcpClient);
-            _gameToClientInitializationVector.setConnectionId(connectionId);
+            _gameToClientInitializationVector.SetConnectionId(connectionId);
         }
 
-        private int BABitTwiddle(short value)
-        {
-            return value & 65535;
-        }
-
-        private int AABitTwiddle(byte value)
+        private static int AABitTwiddle(byte value)
         {
             return value & 255;
         }
 
-        private bool a = false;
-        private bool b = false;
-        private bool c = false;
-        private int relayId;
-        private bool hasConnectionId;
-        private bool isEncryptedConnection;
-        private readonly MonitoringEvents _monitoringEvents;
-
-        private byte e() {
-            return (byte) ((a ? 4 : 0) | 0 | (b ? 2 : 0) | (c ? 1 : 0));
+        private static int BABitTwiddle(short value)
+        {
+            return value & 65535;
         }
 
-        private static int f(int i) {
+        private static long CABitTwiddle(int value)
+        {
+            return value & 4294967295L;
+        }
+
+        private byte GenerateHeaderByte()
+        {
+            return (byte)((a ? 4 : 0) | 0 | (b ? 2 : 0) | (c ? 1 : 0));
+        }
+
+        private static int FBitTwiddle(int i)
+        {
             return (i & 240) >> 4;
         }
 
-        private static bool HasConnectionId(int i) {
+        private static bool HasConnectionId(int i)
+        {
             return (i & 2) != 0;
         }
 
-        private static bool HasRelayId(int i) {
+        private static bool HasRelayId(int i)
+        {
             return (i & 4) != 0;
         }
 
-        private static bool HasCounter(int i) {
+        private static bool HasCounter(int i)
+        {
             return (i & 1) != 0;
         }
 
-        private static bool BitTwiddle(int i) {
-            return f(i) == 0;
+        private static bool ProtocolVersionIsZero(int i)
+        {
+            return FBitTwiddle(i) == 0;
         }
-
     }
 }
