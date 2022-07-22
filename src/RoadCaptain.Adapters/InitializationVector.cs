@@ -6,12 +6,12 @@ namespace RoadCaptain.Adapters
     {
         private readonly byte[] _vector;
 
-        public InitializationVector(int channelType)
+        public InitializationVector(ChannelType channelType)
         {
             _vector = CreateInitializationVector(channelType);
         }
 
-        private static byte[] CreateInitializationVector(int channelType)
+        private static byte[] CreateInitializationVector(ChannelType channelType)
         {
             var deviceTypeBytes = BitConverter.GetBytes((short)2);
             Array.Reverse(deviceTypeBytes); // Because Endianness
@@ -43,9 +43,9 @@ namespace RoadCaptain.Adapters
 
         public int getConnectionId()
         {
-            var connectionIdBytes = new byte[] { _vector[7], _vector[6] };
+            var connectionIdBytes = new[] { _vector[7], _vector[6] };
 
-            return BABitTwiddle(BitConverter.ToInt16(connectionIdBytes, 6));
+            return BABitTwiddle(BitConverter.ToInt16(connectionIdBytes));
         }
 
         public void setCounter(long value)
@@ -64,8 +64,8 @@ namespace RoadCaptain.Adapters
 
         private int getCounter()
         {
-            var bytes = new byte[] { _vector[11], _vector[10], _vector[9], _vector[8] };
-            return BitConverter.ToInt32(bytes, 8);
+            var bytes = new[] { _vector[11], _vector[10], _vector[9], _vector[8] };
+            return BitConverter.ToInt32(bytes);
         }
 
         public static implicit operator byte[](InitializationVector self)

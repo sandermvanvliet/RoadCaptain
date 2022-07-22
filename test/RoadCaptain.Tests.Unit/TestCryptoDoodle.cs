@@ -12,10 +12,8 @@ namespace RoadCaptain.Tests.Unit
         [Fact]
         public void EncryptionTest()
         {
-            var key = Convert.FromBase64String("e2mQiH8JVxV98ZLhNpfnRQ==");
-            //var messageBytes = FromWireShark(
-            //    "00000016005d9f06bf48c63dff9d7de15a9aa5a8d6e62c89a551".Replace("-", ""));
-            var messageBytes = Convert.FromBase64String("AAAAGAIAAMeDMR8w1qvfrx7Zcpyffr/VqhXAJA==");
+            var key = Convert.FromBase64String("3qlTEMUx3dZ86aH2kHavUA==");
+            var messageBytes = Convert.FromBase64String("AgAAa4Tlae6h+nJoNatW2A2jIOWov0YZ");
 
             var doodle = new ZwiftCrypto(new TestUserPreferences { ConnectionSecret = key });
 

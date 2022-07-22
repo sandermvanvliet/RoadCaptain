@@ -5,6 +5,14 @@ using RoadCaptain.Ports;
 
 namespace RoadCaptain.Adapters
 {
+    public enum ChannelType {
+        None,
+        UdpClient,
+        UdpServer,
+        TcpClient,
+        TcpServer
+    }
+
     public class ZwiftCrypto : IZwiftCrypto
     {
         private readonly byte[] _key;
@@ -14,8 +22,8 @@ namespace RoadCaptain.Adapters
         public ZwiftCrypto(IUserPreferences userPreferences)
         {
             _key = userPreferences.ConnectionSecret;
-            _clientToGameInitializationVector = new InitializationVector(3);
-            _gameToClientInitializationVector = new InitializationVector(4);
+            _clientToGameInitializationVector = new InitializationVector(ChannelType.TcpServer);
+            _gameToClientInitializationVector = new InitializationVector(ChannelType.TcpClient);
         }
 
         public byte[] Encrypt(byte[] input)
@@ -96,7 +104,7 @@ namespace RoadCaptain.Adapters
                     var cipher = CipherUtilities.GetCipher("AES/GCM/NoPadding");
                     
                     cipher.Init(false,
-                        new AeadParameters(new KeyParameter(_key), 32, _gameToClientInitializationVector));
+                        new AeadParameters(new KeyParameter(_key), 32, _gameToClientInitializationVector, additionalAuthenticationData.array()));
 
                     cipher.DoFinal(input.array(), decryptedOutput, 0);
                 }
@@ -115,9 +123,9 @@ namespace RoadCaptain.Adapters
 
         private void initInitializationVectors(short connectionId)
         {
-            _clientToGameInitializationVector = new InitializationVector(3);
+            _clientToGameInitializationVector = new InitializationVector(ChannelType.TcpServer);
             _clientToGameInitializationVector.setConnectionId(connectionId);
-            _gameToClientInitializationVector = new InitializationVector(4);
+            _gameToClientInitializationVector = new InitializationVector(ChannelType.TcpClient);
             _gameToClientInitializationVector.setConnectionId(connectionId);
         }
 

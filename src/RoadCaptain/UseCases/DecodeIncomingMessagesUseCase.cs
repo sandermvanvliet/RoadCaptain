@@ -89,7 +89,7 @@ namespace RoadCaptain.UseCases
                         {
                             if (_zwiftCrypto != null)
                             {
-                                messageBytes = _zwiftCrypto.Decrypt(toSend.ToArray());
+                                messageBytes = _zwiftCrypto.Decrypt(messageBytes);
                             }
                         }
                         catch (Exception e)

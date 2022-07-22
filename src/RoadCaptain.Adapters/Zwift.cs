@@ -52,7 +52,7 @@ namespace RoadCaptain.Adapters
 
             request.Content = new StringContent(
                 SecureRelayRequestPayload
-                    .Replace("##IP##", "192.168.232.1" /*ipAddress*/)
+                    .Replace("##IP##", ipAddress)
                     .Replace("##SECRET##", encodedConnectionSecret),
                 null);
             
