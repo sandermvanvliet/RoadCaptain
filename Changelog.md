@@ -8,6 +8,8 @@ Get into the TDF2022 mood by riding your custom routes in France. Allez Allez!
 
 It's also time for some new features in Route Builder: you can now see the elevation plot of your route and planning a route with a loop has become much easier 👍 See below for details!
 
+This release also adds support for the encrypted connection that was introduced in Zwift version 1.27 and is now required for all connectivity to the Zwift game itself.
+
 ### Runner
 
 - Show "What is new" dialog when opening Runner after installation or upgrade. This dialog will only be shown once. [#80](https://github.com/sandermvanvliet/RoadCaptain/issues/80)
