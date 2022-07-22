@@ -19,8 +19,9 @@ namespace RoadCaptain.Adapters
         private InitializationVector _clientToGameInitializationVector;
         private InitializationVector _gameToClientInitializationVector;
         
-        public ZwiftCrypto(IUserPreferences userPreferences)
+        public ZwiftCrypto(IUserPreferences userPreferences, MonitoringEvents monitoringEvents)
         {
+            _monitoringEvents = monitoringEvents;
             _key = userPreferences.ConnectionSecret;
             _clientToGameInitializationVector = new InitializationVector(ChannelType.TcpServer);
             _gameToClientInitializationVector = new InitializationVector(ChannelType.TcpClient);
@@ -47,6 +48,11 @@ namespace RoadCaptain.Adapters
 
         public byte[]? Decrypt(byte[] inputMessage)
         {
+            _monitoringEvents.Information(
+                "Decrypting using key: {Key} and data: {Data}",
+                Convert.ToBase64String(_key),
+                Convert.ToBase64String(inputMessage));
+
             var input = new ByteBuffer(inputMessage);
 
             ByteBuffer? decryptedOutput = null;
@@ -67,7 +73,7 @@ namespace RoadCaptain.Adapters
                 if (HasConnectionId(a)) {
                     if (input.remaining() >= 2) {
                         var a2 = BABitTwiddle(input.getShort());
-                        if (a2 != this._clientToGameInitializationVector.getConnectionId()) {
+                        if (a2 != this._gameToClientInitializationVector.getConnectionId()) {
                             initInitializationVectors((short)a2);
                         }
                         this.hasConnectionId = true;
@@ -79,7 +85,7 @@ namespace RoadCaptain.Adapters
                 }
                 if (HasCounter(a)) {
                     if (input.remaining() >= 4) {
-                        this._clientToGameInitializationVector.setCounter(CABitTwiddle(input.getInt()));
+                        this._gameToClientInitializationVector.setCounter(CABitTwiddle(input.getInt()));
                     } else {
                         throw new Exception("Sequence number announced but missing");
                     }
@@ -145,6 +151,7 @@ namespace RoadCaptain.Adapters
         private int relayId;
         private bool hasConnectionId;
         private bool isEncryptedConnection;
+        private readonly MonitoringEvents _monitoringEvents;
 
         private byte e() {
             return (byte) ((this.a ? 4 : 0) | 0 | (this.b ? 2 : 0) | (this.c ? 1 : 0));

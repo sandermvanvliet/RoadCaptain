@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Buffers;
+using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 using RoadCaptain.Ports;
@@ -94,6 +95,7 @@ namespace RoadCaptain.UseCases
                         }
                         catch (Exception e)
                         {
+                            Debugger.Break();
                             _monitoringEvents.Error(e, "Failed to decrypt message");
                         }
 
