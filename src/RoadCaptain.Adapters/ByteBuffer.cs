@@ -3,7 +3,7 @@ using System.IO;
 
 namespace RoadCaptain.Adapters
 {
-    public class ByteBuffer
+    internal class ByteBuffer
     {
         private readonly byte[] _data;
         private readonly MemoryStream _stream;
