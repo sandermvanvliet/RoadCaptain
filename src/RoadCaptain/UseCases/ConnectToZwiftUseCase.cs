@@ -72,7 +72,7 @@ namespace RoadCaptain.UseCases
             // TODO: Work out what the correct IP address should be
             var ipAddress = GetMostLikelyAddress().ToString();
 
-            var zwiftConnectionPort = string.IsNullOrEmpty(connectCommand.ConnectionEncryptionSecret) ? 21587 : 21588;
+            var zwiftConnectionPort = connectCommand.ConnectionEncryptionSecret == null ? 21587 : 21588;
 
             _monitoringEvents.Information("Telling Zwift to connect to {IPAddress}:{Port}", ipAddress, zwiftConnectionPort);
 

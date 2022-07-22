@@ -3,6 +3,6 @@
     public class ConnectCommand
     {
         public string AccessToken { get; set; }
-        public string ConnectionEncryptionSecret { get; set; }
+        public byte[]? ConnectionEncryptionSecret { get; set; }
     }
 }

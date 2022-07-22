@@ -11,7 +11,7 @@ namespace RoadCaptain.Tests.Unit
         private bool _wasCalled;
         private static readonly object SyncRoot = new();
 
-        public byte[]? ReceiveMessageBytes(string? connectionEncryptionSecret)
+        public byte[]? ReceiveMessageBytes()
         {
             // Note: This method should only return the bytes once.
             //       The next call should pretend that all bytes have

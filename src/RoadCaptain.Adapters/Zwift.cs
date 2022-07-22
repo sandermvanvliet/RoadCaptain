@@ -42,16 +42,18 @@ namespace RoadCaptain.Adapters
             return new Uri(responseObject["baseUrl"].Value<string>());
         }
 
-        public async Task InitiateRelayAsync(string accessToken, Uri uri, string ipAddress, string connectionSecret)
+        public async Task InitiateRelayAsync(string accessToken, Uri uri, string ipAddress, byte[] connectionSecret)
         {
             var request = new HttpRequestMessage(HttpMethod.Put, new Uri(uri, "/relay/profiles/me/phone"));
             request.Headers.Add("Zwift-Api-Version", "2.6");
             request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
-            
+
+            var encodedConnectionSecret = Convert.ToBase64String(connectionSecret);
+
             request.Content = new StringContent(
                 SecureRelayRequestPayload
-                    .Replace("##IP##", ipAddress)
-                    .Replace("##SECRET##", connectionSecret),
+                    .Replace("##IP##", "192.168.232.1" /*ipAddress*/)
+                    .Replace("##SECRET##", encodedConnectionSecret),
                 null);
             
             request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/json");

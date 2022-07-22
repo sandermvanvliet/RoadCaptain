@@ -13,6 +13,7 @@ namespace RoadCaptain.App.RouteBuilder.Tests.Unit
         public bool EndActivityAtEndOfRoute { get; set; }
         public bool LoopRouteAtEndOfRoute { get; set; }
         public Version LastOpenedVersion { get; set; }
+        public byte[] ConnectionSecret { get; }
 
         public void Load()
         {

@@ -1,7 +1,6 @@
 using System;
 using System.Linq.Expressions;
 using System.Reflection;
-using System.Security.Cryptography;
 using RoadCaptain.App.Runner.Models;
 using RoadCaptain.App.Runner.ViewModels;
 using RoadCaptain.App.Shared;
@@ -37,7 +36,6 @@ namespace RoadCaptain.App.Runner
         private readonly IZwiftGameConnection _zwiftGameConnection;
         private ulong _lastSequenceNumber;
         private readonly IUserPreferences _userPreferences;
-        private readonly string _connectionEncryptionSecret;
 
         public Engine(
             MonitoringEvents monitoringEvents,
@@ -50,7 +48,8 @@ namespace RoadCaptain.App.Runner
             NavigationUseCase navigationUseCase,
             IGameStateReceiver gameStateReceiver, 
             ISegmentStore segmentStore, 
-            IZwiftGameConnection zwiftGameConnection, IUserPreferences userPreferences)
+            IZwiftGameConnection zwiftGameConnection, 
+            IUserPreferences userPreferences)
         {
             _monitoringEvents = monitoringEvents;
             _loadRouteUseCase = loadRouteUseCase;
@@ -69,17 +68,6 @@ namespace RoadCaptain.App.Runner
                 route => _loadedRoute = route,
                 sequenceNumber => _lastSequenceNumber = sequenceNumber,
                 GameStateReceived);
-
-            _connectionEncryptionSecret = GenerateSecret();
-        }
-
-        private static string GenerateSecret()
-        {
-            // This is an AES 128 bit key
-            var aes = Aes.Create();
-            aes.KeySize = 128;
-            aes.GenerateKey();
-            return Convert.ToBase64String(aes.Key);
         }
 
         protected void GameStateReceived(GameState gameState)
@@ -213,7 +201,7 @@ namespace RoadCaptain.App.Runner
             _monitoringEvents.Information("Starting connection listener");
 
             _listenerTask =
-                TaskWithCancellation.Start(cancellationToken => _listenerUseCase.ExecuteAsync(_connectionEncryptionSecret, cancellationToken));
+                TaskWithCancellation.Start(cancellationToken => _listenerUseCase.ExecuteAsync(cancellationToken));
         }
 
         private void StartZwiftConnectionInitiator(string accessToken)
@@ -230,7 +218,7 @@ namespace RoadCaptain.App.Runner
 #pragma warning restore CS8602
                 token => _connectUseCase
                     .ExecuteAsync(
-                        new ConnectCommand { AccessToken = accessToken, ConnectionEncryptionSecret = _connectionEncryptionSecret },
+                        new ConnectCommand { AccessToken = accessToken, ConnectionEncryptionSecret = _userPreferences.ConnectionSecret },
                         token)
                     .GetAwaiter()
                     .GetResult());

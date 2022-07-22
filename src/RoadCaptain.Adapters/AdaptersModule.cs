@@ -35,9 +35,11 @@ namespace RoadCaptain.Adapters
                 .Except<MessageEmitterToQueue>()
                 .Except<IGameStateDispatcher>()
                 .Except<IGameStateReceiver>()
-                .Except<IZwiftGameConnection>();
+                .Except<IZwiftGameConnection>()
+                .Except<IZwiftCrypto>();
 
             builder.RegisterType<MessageEmitterConfiguration>().AsSelf();
+            builder.RegisterType<ZwiftCrypto>().As<IZwiftCrypto>().SingleInstance();
 
             if ("socket".Equals(MessageReceiverSource, StringComparison.InvariantCultureIgnoreCase))
             {

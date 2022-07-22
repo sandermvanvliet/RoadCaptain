@@ -15,17 +15,21 @@ namespace RoadCaptain.UseCases
         private readonly IMessageReceiver _messageReceiver;
         private readonly IMessageEmitter _messageEmitter;
         private readonly MonitoringEvents _monitoringEvents;
+        private readonly IZwiftCrypto _zwiftCrypto;
 
         public DecodeIncomingMessagesUseCase(
             IMessageReceiver messageReceiver,
-            IMessageEmitter messageEmitter, MonitoringEvents monitoringEvents)
+            IMessageEmitter messageEmitter,
+            MonitoringEvents monitoringEvents, 
+            IZwiftCrypto zwiftCrypto)
         {
             _messageReceiver = messageReceiver;
             _messageEmitter = messageEmitter;
             _monitoringEvents = monitoringEvents;
+            _zwiftCrypto = zwiftCrypto;
         }
 
-        public Task ExecuteAsync(string? connectionEncryptionSecret, CancellationToken token)
+        public Task ExecuteAsync(CancellationToken token)
         {
             // Because socket.Accept() is a blocking call with
             // no way of setting a time-out or passing a cancellation 
@@ -38,7 +42,7 @@ namespace RoadCaptain.UseCases
             // do-while to at least attempt one receive action
             do
             {
-                var bytes = _messageReceiver.ReceiveMessageBytes(connectionEncryptionSecret);
+                var bytes = _messageReceiver.ReceiveMessageBytes();
 
                 if (bytes == null || bytes.Length <= 0)
                 {
@@ -79,9 +83,23 @@ namespace RoadCaptain.UseCases
                     //       is only a tag index + wire type which can't happen.
                     if (toSend.Length > 1)
                     {
-                        _messageEmitter.EmitMessageFromBytes(toSend.ToArray());
-                    }
+                        var messageBytes = toSend.ToArray();
 
+                        try
+                        {
+                            if (_zwiftCrypto != null)
+                            {
+                                messageBytes = _zwiftCrypto.Decrypt(toSend.ToArray());
+                            }
+                        }
+                        catch (Exception e)
+                        {
+                            _monitoringEvents.Error(e, "Failed to decrypt message");
+                        }
+
+                        _messageEmitter.EmitMessageFromBytes(messageBytes);
+                    }
+                
                     offset += (MessageLengthPrefix + (int)toSend.Length);
                 }
             } while (!token.IsCancellationRequested);

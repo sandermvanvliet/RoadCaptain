@@ -28,6 +28,7 @@
     <ProjectReference Include="..\..\src\RoadCaptain.Adapters\RoadCaptain.Adapters.csproj" />
     <ProjectReference Include="..\..\src\RoadCaptain.App.RouteBuilder\RoadCaptain.App.RouteBuilder.csproj" />
     <ProjectReference Include="..\..\src\RoadCaptain\RoadCaptain.csproj" />
+    <ProjectReference Include="..\RoadCaptain.App.RouteBuilder.Tests.Unit\RoadCaptain.App.RouteBuilder.Tests.Unit.csproj" />
   </ItemGroup>
 
 </Project>

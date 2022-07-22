@@ -4,7 +4,7 @@ namespace RoadCaptain.App.Runner.Tests.Unit.Engine
 {
     public class StubMessageReceiver : IMessageReceiver
     {
-        public byte[]? ReceiveMessageBytes(string? connectionEncryptionSecret)
+        public byte[]? ReceiveMessageBytes()
         {
             return null;
         }
