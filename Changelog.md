@@ -8,7 +8,17 @@ Get into the TDF2022 mood by riding your custom routes in France. Allez Allez!
 
 It's also time for some new features in Route Builder: you can now see the elevation plot of your route and planning a route with a loop has become much easier 👍 See below for details!
 
-This release also adds support for the encrypted connection that was introduced in Zwift version 1.27 and is now required for all connectivity to the Zwift game itself.
+### Important note
+
+With the release of Zwift 1.27 there are a few challenges for RoadCaptain as well as other 3rd party Zwift extensions.
+
+Zwift introduced encrypted connections to make sure that no data will leak between Zwift, Zwift Companion and the Zwift back-end. Obviously this meant that RoadCaptain and other extensions could no longer communicate with the Zwift apps and for the most part that meant that all apps would no longer work.
+
+Well, good news! This release adds support for encrypted connections!
+
+Unfortunately there is some bad news too: Turn commands don't work very well anymore... 
+
+This happens even when using the official Zwift Companion app, it looks like Zwift ignores the turn commands that are sent to it. I'm tracking this issue in [#99](https://github.com/sandermvanvliet/RoadCaptain/issues/99) and [#98](https://github.com/sandermvanvliet/RoadCaptain/issues/98) as well as on the official Zwift forum [here](https://forums.zwift.com/t/turn-commands-flaky-when-using-zwift-companion/586977) so stay tuned for updates in that area.
 
 ### Runner
 
