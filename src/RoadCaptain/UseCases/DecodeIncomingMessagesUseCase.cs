@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Buffers;
+using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 using RoadCaptain.Ports;
@@ -15,14 +16,18 @@ namespace RoadCaptain.UseCases
         private readonly IMessageReceiver _messageReceiver;
         private readonly IMessageEmitter _messageEmitter;
         private readonly MonitoringEvents _monitoringEvents;
+        private readonly IZwiftCrypto _zwiftCrypto;
 
         public DecodeIncomingMessagesUseCase(
             IMessageReceiver messageReceiver,
-            IMessageEmitter messageEmitter, MonitoringEvents monitoringEvents)
+            IMessageEmitter messageEmitter,
+            MonitoringEvents monitoringEvents, 
+            IZwiftCrypto zwiftCrypto)
         {
             _messageReceiver = messageReceiver;
             _messageEmitter = messageEmitter;
             _monitoringEvents = monitoringEvents;
+            _zwiftCrypto = zwiftCrypto;
         }
 
         public Task ExecuteAsync(CancellationToken token)
@@ -79,9 +84,24 @@ namespace RoadCaptain.UseCases
                     //       is only a tag index + wire type which can't happen.
                     if (toSend.Length > 1)
                     {
-                        _messageEmitter.EmitMessageFromBytes(toSend.ToArray());
-                    }
+                        var messageBytes = toSend.ToArray();
 
+                        try
+                        {
+                            if (_zwiftCrypto != null)
+                            {
+                                messageBytes = _zwiftCrypto.Decrypt(messageBytes);
+                            }
+                        }
+                        catch (Exception e)
+                        {
+                            Debugger.Break();
+                            _monitoringEvents.Error(e, "Failed to decrypt message");
+                        }
+
+                        _messageEmitter.EmitMessageFromBytes(messageBytes);
+                    }
+                
                     offset += (MessageLengthPrefix + (int)toSend.Length);
                 }
             } while (!token.IsCancellationRequested);

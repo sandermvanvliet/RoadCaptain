@@ -6,6 +6,7 @@
 	  <TargetFramework Condition="'$(RuntimeIdentifier)'=='win-x64'">net6.0-windows</TargetFramework>
 
     <IsPackable>false</IsPackable>
+	  <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
@@ -25,7 +26,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\RoadCaptain.Adapters\RoadCaptain.Adapters.csproj" />
-    <ProjectReference Include="..\..\src\RoadCaptain.App.RouteBuilder\RoadCaptain.App.RouteBuilder.csproj" />
     <ProjectReference Include="..\..\src\RoadCaptain\RoadCaptain.csproj" />
   </ItemGroup>
 

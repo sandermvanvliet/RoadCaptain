@@ -10,7 +10,7 @@
         /// </summary>
         /// <returns>An array of bytes with a payload or <c>null</c> if the connection is closed</returns>
         /// <remarks>This method blocks while waiting for new input</remarks>
-        byte[] ReceiveMessageBytes();
+        byte[]? ReceiveMessageBytes();
 
         /// <summary>
         /// Stop the message receiver from accepting data from a Zwift connection

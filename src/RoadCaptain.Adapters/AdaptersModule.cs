@@ -30,18 +30,21 @@ namespace RoadCaptain.Adapters
                 .RegisterAssemblyTypes(ThisAssembly)
                 .AsImplementedInterfaces()
                 .Except<MessageReceiverFromSocket>()
+                .Except<SecureMessageReceiverFromSocket>()
                 .Except<MessageReceiverFromCaptureFile>()
                 .Except<MessageEmitterToQueue>()
                 .Except<IGameStateDispatcher>()
                 .Except<IGameStateReceiver>()
-                .Except<IZwiftGameConnection>();
+                .Except<IZwiftGameConnection>()
+                .Except<IZwiftCrypto>();
 
             builder.RegisterType<MessageEmitterConfiguration>().AsSelf();
+            builder.RegisterType<ZwiftCrypto>().As<IZwiftCrypto>().SingleInstance();
 
             if ("socket".Equals(MessageReceiverSource, StringComparison.InvariantCultureIgnoreCase))
             {
                 builder
-                    .RegisterType<MessageReceiverFromSocket>()
+                    .RegisterType<SecureMessageReceiverFromSocket>()
                     .As<IMessageReceiver>()
                     .As<IZwiftGameConnection>()
                     .SingleInstance();

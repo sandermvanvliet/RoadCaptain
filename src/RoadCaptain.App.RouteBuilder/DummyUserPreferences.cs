@@ -14,6 +14,8 @@ namespace RoadCaptain.App.RouteBuilder
         public bool LoopRouteAtEndOfRoute { get; set; }
         public Version LastOpenedVersion { get; set; } = new Version(0, 0, 0, 0);
 
+        public byte[]? ConnectionSecret { get; }
+
         public void Load()
         {
         }

@@ -35,7 +35,7 @@ namespace RoadCaptain.App.Runner
 #elif MACOS
             builder.RegisterModule(new RoadCaptain.App.MacOs.MacOsModule());
 #else
-            builder.RegisterType<DummyUserPreferences>().As<RoadCaptain.App.Shared.UserPreferences.IUserPreferences>().SingleInstance();
+            builder.RegisterType<DummyUserPreferences>().As<RoadCaptain.IUserPreferences>().SingleInstance();
 #endif
             
             

@@ -8,7 +8,7 @@ using FluentAssertions;
 using RoadCaptain.App.RouteBuilder.Models;
 using Xunit;
 
-namespace RoadCaptain.Tests.Unit
+namespace RoadCaptain.App.RouteBuilder.Tests.Unit
 {
     public class OffsetsTests
     {
