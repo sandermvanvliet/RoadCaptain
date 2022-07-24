@@ -31,7 +31,7 @@ namespace RoadCaptain.Adapters
 
         public void EmitMessageFromBytes(byte[] payload)
         {
-            if (payload == null || payload.Length == 0)
+            if (payload.Length == 0)
             {
                 _monitoringEvents.Debug("Ignoring empty message payload");
                 return;
@@ -176,7 +176,6 @@ namespace RoadCaptain.Adapters
 
         protected virtual void OnZwiftPing(ZwiftAppToCompanion zwiftAppToCompanion)
         {
-            _monitoringEvents.Debug("Zwift ping message");
             Enqueue(new ZwiftPingMessage
             {
                 RiderId = zwiftAppToCompanion.RiderId
@@ -185,7 +184,6 @@ namespace RoadCaptain.Adapters
 
         protected virtual void OnActivityDetails(uint riderId, ulong activityId)
         {
-            _monitoringEvents.Debug("Zwift activity details message");
             Enqueue(new ZwiftActivityDetailsMessage
             {
                 RiderId = riderId,
@@ -195,13 +193,11 @@ namespace RoadCaptain.Adapters
 
         protected virtual void OnPowerUp(string type)
         {
-            _monitoringEvents.Debug("Zwift power-up message");
             Enqueue(new ZwiftPowerUpMessage { Type = type });
         }
 
         protected virtual void OnCommandAvailable(uint numericalCommandType, string description, ulong sequenceNumber)
         {
-            _monitoringEvents.Debug("Zwift command available message");
             var commandType = CommandType.Unknown;
 
             try
@@ -227,7 +223,6 @@ namespace RoadCaptain.Adapters
 
         protected virtual void OnRiderPosition(float latitude, float longitude, float altitude)
         {
-            _monitoringEvents.Debug("Zwift rider position message");
             Enqueue(new ZwiftRiderPositionMessage
             {
                 Latitude = latitude,
@@ -263,7 +258,7 @@ namespace RoadCaptain.Adapters
             }
         }
 
-        public ZwiftMessage Dequeue(CancellationToken token)
+        public ZwiftMessage? Dequeue(CancellationToken token)
         {
 
             // To ensure that we don't block a long time 

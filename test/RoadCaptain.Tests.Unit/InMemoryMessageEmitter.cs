@@ -25,7 +25,7 @@ namespace RoadCaptain.Tests.Unit
             Messages.Add(payload);
         }
 
-        public ZwiftMessage Dequeue(CancellationToken token)
+        public ZwiftMessage? Dequeue(CancellationToken token)
         {
             while (!token.IsCancellationRequested)
             {
