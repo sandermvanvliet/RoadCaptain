@@ -13,7 +13,7 @@ namespace RoadCaptain.Tests.Unit
             var key = Convert.FromBase64String("3qlTEMUx3dZ86aH2kHavUA==");
             var messageBytes = Convert.FromBase64String("AgAAa4Tlae6h+nJoNatW2A2jIOWov0YZ");
 
-            var doodle = new ZwiftCrypto(new TestUserPreferences { ConnectionSecret = key }, new NopMonitoringEvents());
+            var doodle = new ZwiftCrypto(new TestUserPreferences { ConnectionSecret = key });
 
             Action action = () => doodle.Decrypt(new ByteBuffer(messageBytes).ToArray());
 
@@ -28,7 +28,7 @@ namespace RoadCaptain.Tests.Unit
             var key = Convert.FromBase64String("3qlTEMUx3dZ86aH2kHavUA==");
             var messageBytes = Convert.FromBase64String("AgAAa4Tlae6h+nJoNatW2A2jIOWov0YZ");
 
-            var doodle = new ZwiftCrypto(new TestUserPreferences { ConnectionSecret = key }, new NopMonitoringEvents());
+            var doodle = new ZwiftCrypto(new TestUserPreferences { ConnectionSecret = key });
 
             byte[]? decrypted = null;
 

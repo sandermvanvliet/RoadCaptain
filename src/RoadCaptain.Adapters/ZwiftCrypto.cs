@@ -8,7 +8,6 @@ namespace RoadCaptain.Adapters
     internal class ZwiftCrypto : IZwiftCrypto
     {
         private readonly byte[]? _key;
-        private readonly MonitoringEvents _monitoringEvents;
         private InitializationVector _clientToGameInitializationVector;
         private InitializationVector _gameToClientInitializationVector;
         private bool _hasConnectionId;
@@ -19,9 +18,8 @@ namespace RoadCaptain.Adapters
         private readonly bool b = false;
         private readonly bool c = false;
 
-        public ZwiftCrypto(IUserPreferences userPreferences, MonitoringEvents monitoringEvents)
+        public ZwiftCrypto(IUserPreferences userPreferences)
         {
-            _monitoringEvents = monitoringEvents;
             _key = userPreferences.ConnectionSecret;
             _clientToGameInitializationVector = new InitializationVector(ChannelType.TcpServer);
             _gameToClientInitializationVector = new InitializationVector(ChannelType.TcpClient);
@@ -103,16 +101,7 @@ namespace RoadCaptain.Adapters
 
                 encryptedOutput.Put(new ByteBuffer(encryptedPayloadOutput));
 
-                _monitoringEvents.Information(
-                    "Encrypted using key: {Key} and IV: {IV}: data: {Data}",
-                    Convert.ToBase64String(_key),
-                    Convert.ToBase64String(_clientToGameInitializationVector.GetBytes()),
-                    Convert.ToBase64String((byte[])encryptedOutput));
-
                 _clientToGameInitializationVector.IncrementCounter();
-
-                _monitoringEvents.Information("Incremented IV counter to {Count}",
-                    _clientToGameInitializationVector.GetCounter());
 
                 return encryptedOutput;
             }
@@ -209,13 +198,6 @@ namespace RoadCaptain.Adapters
                             additionalAuthenticationData.ToArray()));
 
                     cipher.DoFinal(input.ToArray(), decryptedOutput, 0);
-
-                    _monitoringEvents.Information(
-                        "Decrypted using key: {Key}, input: {Input} and IV: {IV} => data: {Data}",
-                        Convert.ToBase64String(_key),
-                        Convert.ToBase64String(inputMessage),
-                        Convert.ToBase64String(_gameToClientInitializationVector.GetBytes()),
-                        Convert.ToBase64String((byte[])decryptedOutput));
                 }
                 else
                 {
@@ -223,9 +205,6 @@ namespace RoadCaptain.Adapters
                 }
 
                 _gameToClientInitializationVector.IncrementCounter();
-
-                _monitoringEvents.Information("Incremented IV counter to {Count}",
-                    _gameToClientInitializationVector.GetCounter());
 
                 return decryptedOutput;
             }
