@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Security.Cryptography;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -15,7 +16,7 @@ namespace RoadCaptain.Adapters
 {
     internal class Zwift : IZwift
     {
-        private const string RelayRequestPayload = "{\"mobileEnvironment\":{\"appBuild\":1276,\"appDisplayName\":\"Companion\",\"appVersion\":\"3.29.0\",\"systemHardware\":\"Google sdk_gphone_x86_64\",\"systemOS\":\"Android\",\"systemOSVersion\":\"11 (API 30)\"},\"phoneAddress\":\"##IP##\",\"port\":21587,\"protocol\":\"TCP\"}";
+        private const string SecureRelayRequestPayload = "{\"secret\":\"##SECRET##\",\"mobileEnvironment\":{\"systemHardware\":\"iPhone14,2\",\"appBuild\":1258,\"systemOSVersion\":\"15.5\",\"appVersion\":\"3.37.0\",\"systemOS\":\"iOS\",\"appDisplayName\":\"Companion\"},\"phoneAddress\":\"##IP##\"}";
         private readonly HttpClient _httpClient;
 
         public Zwift(HttpClient httpClient)
@@ -41,15 +42,25 @@ namespace RoadCaptain.Adapters
             return new Uri(responseObject["baseUrl"].Value<string>());
         }
 
-        public async Task InitiateRelayAsync(string accessToken, Uri uri, string ipAddress)
+        public async Task InitiateRelayAsync(string accessToken, Uri uri, string ipAddress, byte[] connectionSecret)
         {
+            if (connectionSecret == null)
+            {
+                throw new ArgumentNullException(nameof(connectionSecret), "Connection secret is required");
+            }
+
             var request = new HttpRequestMessage(HttpMethod.Put, new Uri(uri, "/relay/profiles/me/phone"));
             request.Headers.Add("Zwift-Api-Version", "2.6");
             request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
 
+            var encodedConnectionSecret = Convert.ToBase64String(connectionSecret);
+
             request.Content = new StringContent(
-                RelayRequestPayload.Replace("##IP##", ipAddress),
+                SecureRelayRequestPayload
+                    .Replace("##IP##", ipAddress)
+                    .Replace("##SECRET##", encodedConnectionSecret),
                 null);
+            
             request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
 
             var response = await _httpClient.SendAsync(request);

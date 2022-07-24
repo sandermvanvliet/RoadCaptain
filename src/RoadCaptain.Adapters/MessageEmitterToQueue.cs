@@ -31,7 +31,7 @@ namespace RoadCaptain.Adapters
 
         public void EmitMessageFromBytes(byte[] payload)
         {
-            if (payload == null || payload.Length == 0)
+            if (payload.Length == 0)
             {
                 _monitoringEvents.Debug("Ignoring empty message payload");
                 return;
@@ -258,7 +258,7 @@ namespace RoadCaptain.Adapters
             }
         }
 
-        public ZwiftMessage Dequeue(CancellationToken token)
+        public ZwiftMessage? Dequeue(CancellationToken token)
         {
 
             // To ensure that we don't block a long time 

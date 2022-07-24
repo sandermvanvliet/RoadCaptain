@@ -48,7 +48,8 @@ namespace RoadCaptain.App.Runner
             NavigationUseCase navigationUseCase,
             IGameStateReceiver gameStateReceiver, 
             ISegmentStore segmentStore, 
-            IZwiftGameConnection zwiftGameConnection, IUserPreferences userPreferences)
+            IZwiftGameConnection zwiftGameConnection, 
+            IUserPreferences userPreferences)
         {
             _monitoringEvents = monitoringEvents;
             _loadRouteUseCase = loadRouteUseCase;
@@ -217,7 +218,7 @@ namespace RoadCaptain.App.Runner
 #pragma warning restore CS8602
                 token => _connectUseCase
                     .ExecuteAsync(
-                        new ConnectCommand { AccessToken = accessToken },
+                        new ConnectCommand { AccessToken = accessToken, ConnectionEncryptionSecret = _userPreferences.ConnectionSecret },
                         token)
                     .GetAwaiter()
                     .GetResult());
