@@ -85,3 +85,9 @@ After every decrypt and encrypt operation the app increments the int value start
 The device type is always `0x2`.
 
 The channel type is `0x3` for _client to game_ and `0x4` for _game to client_.
+
+The `connection id` starts as zero and is incremented if the connection closes. When the connection is closed the `counter` should be reset to zero. Note that this situation appears not to apply with Zwift Companion to Zwift connections. It looks like this is only applicable for Zwift to Zwift Server connections.
+
+## Byte order
+
+The header and IV use [network byte order](https://en.wikipedia.org/wiki/Endianness#Networking), or Big Endian. Depending on the platform you build on, you will have to convert from little to big endian in order to ensure compatibility with Zwift apps.
