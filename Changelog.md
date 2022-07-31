@@ -1,5 +1,8 @@
 ﻿# Changelog
 
+## 0.6.7.0
+
+
 ## 0.6.6.0
 
 A Tour de France special: France is now available to plan routes!
