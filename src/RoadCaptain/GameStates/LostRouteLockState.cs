@@ -6,8 +6,9 @@ namespace RoadCaptain.GameStates
     {
         public PlannedRoute PlannedRoute { get; }
         
-        public LostRouteLockState(uint riderId, ulong activityId, TrackPoint currentPosition, Segment segment, SegmentDirection direction, PlannedRoute plannedRoute) 
-            : base(riderId, activityId, currentPosition, segment, direction)
+        public LostRouteLockState(uint riderId, ulong activityId, TrackPoint currentPosition, Segment segment,
+            SegmentDirection direction, PlannedRoute plannedRoute, double elapsedDistance, double elapsedAscent, double elapsedDescent) 
+            : base(riderId, activityId, currentPosition, segment, direction, elapsedDistance, elapsedAscent, elapsedDescent)
         {
             PlannedRoute = plannedRoute;
         }

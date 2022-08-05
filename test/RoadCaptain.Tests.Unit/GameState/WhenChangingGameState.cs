@@ -454,6 +454,58 @@ namespace RoadCaptain.Tests.Unit.GameState
                 .Be(RoutePosition1);
         }
 
+        [Fact]
+        public void GivenPositionChangesWithinSegment_ElapsedDistanceIsIncreased()
+        {
+            var state = new OnSegmentState(RiderId, ActivityId, RoutePosition1, SegmentById("route-segment-1"));
+
+            state = state.UpdatePosition(RoutePosition1Point2, _segments, _route) as OnSegmentState;
+
+            state
+                .ElapsedDistance
+                .Should()
+                .BeApproximately(109.5d, 0.01);
+        }
+
+        [Fact]
+        public void GivenPositionChangesWithinSegmentAndRiderHasProgress_ElapsedDistanceIsIncreased()
+        {
+            GameStates.GameState state = new OnSegmentState(RiderId, ActivityId, RoutePosition1, SegmentById("route-segment-1"));
+            state = state.UpdatePosition(RoutePosition1Point2, _segments, _route);
+            var result = state.UpdatePosition(RoutePosition1Point3, _segments, _route) as OnSegmentState;
+
+            result
+                .ElapsedDistance
+                .Should()
+                .BeApproximately(219.01d, 0.01);
+        }
+
+        [Fact]
+        public void GivenPositionChangesWithinSegmentAndRiderHasProgress_AscentIsIncreased()
+        {
+            GameStates.GameState state = new OnSegmentState(RiderId, ActivityId, RoutePosition1, SegmentById("route-segment-1"));
+            state = state.UpdatePosition(RoutePosition1Point2, _segments, _route);
+            var result = state.UpdatePosition(RoutePosition1Point3, _segments, _route) as OnSegmentState;
+
+            result
+                .ElapsedAscent
+                .Should()
+                .Be(2);
+        }
+
+        [Fact]
+        public void GivenPositionChangesWithinSegmentAndRiderHasProgress_DescentIsIncreased()
+        {
+            GameStates.GameState state = new OnSegmentState(RiderId, ActivityId, RoutePosition1Point3, SegmentById("route-segment-1"));
+            state = state.UpdatePosition(RoutePosition1Point2, _segments, _route);
+            var result = state.UpdatePosition(RoutePosition1, _segments, _route) as OnSegmentState;
+
+            result
+                .ElapsedDescent
+                .Should()
+                .Be(2);
+        }
+
         // Ignore in build
         //[Fact]
         public void OverlappingSegmentMatch()
@@ -597,8 +649,8 @@ namespace RoadCaptain.Tests.Unit.GameState
         private static readonly TrackPoint PositionOnAnotherSegment = new(4, 2, 3);
 
         private static readonly TrackPoint RoutePosition1 = new(10, 1, 3);
-        private static readonly TrackPoint RoutePosition1Point2 = new(10, 2, 3);
-        private static readonly TrackPoint RoutePosition1Point3 = new(10, 3, 3);
+        private static readonly TrackPoint RoutePosition1Point2 = new(10, 2, 4);
+        private static readonly TrackPoint RoutePosition1Point3 = new(10, 3, 5);
         private static readonly TrackPoint RoutePosition2 = new(12, 2, 3);
         private static readonly TrackPoint RoutePosition2Point2 = new(12.5, 2.5, 3);
         private static readonly TrackPoint RoutePosition2Point3 = new(12.75, 2.75, 3);

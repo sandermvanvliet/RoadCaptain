@@ -173,7 +173,10 @@ namespace RoadCaptain.Tests.Unit
                 new Segment(new List<TrackPoint>()) { Id = _plannedRoute.CurrentSegmentId },
                 _plannedRoute, 
                 SegmentDirection.AtoB, 
-                directions.ToList());
+                directions.ToList(),
+                0,
+                0,
+                0);
         }
     }
 }

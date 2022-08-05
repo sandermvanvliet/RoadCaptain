@@ -16,10 +16,8 @@ namespace RoadCaptain.App.Runner.ViewModels
         private GameState? _previousState;
         private int _previousRouteSequenceIndex;
         private readonly List<Segment> _segments;
-        private TrackPoint? _previousPosition;
         private bool _hasRouteFinished;
-        private IZwiftGameConnection _gameConnection;
-        private int? _lastRouteSequenceIndex = null;
+        private readonly IZwiftGameConnection _gameConnection;
 
         public InGameNavigationWindowViewModel(InGameWindowModel inGameWindowModel, List<Segment> segments, IZwiftGameConnection gameConnection)
         {
@@ -39,7 +37,7 @@ namespace RoadCaptain.App.Runner.ViewModels
             _gameConnection = gameConnection;
 
             EndActivityCommand = new AsyncRelayCommand(
-                param => EndActivity(),
+                _ => EndActivity(),
                 _ => true);
         }
 
@@ -69,24 +67,14 @@ namespace RoadCaptain.App.Runner.ViewModels
 
                 if (gameState is PositionedState positionedState and OnSegmentState)
                 {
-                    if (_previousPosition != null)
-                    {
-                        var distanceFromLast = _previousPosition.DistanceTo(positionedState.CurrentPosition);
-
-                        Model.ElapsedDistance += distanceFromLast / 1000;
-
-                        if (_previousPosition.Altitude < positionedState.CurrentPosition.Altitude)
-                        {
-                            Model.ElapsedAscent += positionedState.CurrentPosition.Altitude - _previousPosition.Altitude;
-                        }
-                        else if (_previousPosition.Altitude > positionedState.CurrentPosition.Altitude)
-                        {
-                            Model.ElapsedDescent += _previousPosition.Altitude - positionedState.CurrentPosition.Altitude;
-                        }
-                    }
-
-                    _previousPosition = positionedState.CurrentPosition;
                     Model.CurrentSegment.PointOnSegment = positionedState.CurrentPosition;
+                }
+
+                if (gameState is OnSegmentState segmentState)
+                {
+                    Model.ElapsedAscent = segmentState.ElapsedAscent;
+                    Model.ElapsedDescent = segmentState.ElapsedDescent;
+                    Model.ElapsedDistance = segmentState.ElapsedDistance;
                 }
 
                 if (gameState is OnRouteState routeState)
@@ -200,8 +188,6 @@ namespace RoadCaptain.App.Runner.ViewModels
             {
                 Model.NextSegment = null;
             }
-
-            _lastRouteSequenceIndex = segmentSequenceIndex;
         }
 
         private SegmentSequenceModel SegmentSequenceModelFromIndex(int index)
@@ -225,11 +211,11 @@ namespace RoadCaptain.App.Runner.ViewModels
             return segment;
         }
 
-        private async Task<CommandResult> EndActivity()
+        private Task<CommandResult> EndActivity()
         {
             _gameConnection.EndActivity(LastSequenceNumber, "RoadCaptain: " + Model.Route.Name, _previousState?.RiderId ?? 0);
 
-            return CommandResult.Success();
+            return Task.FromResult(CommandResult.Success());
         }
     }
 }

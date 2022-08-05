@@ -26,11 +26,11 @@ namespace RoadCaptain
         [JsonIgnore]
         public string StartingSegmentId => RouteSegmentSequence[SegmentSequenceIndex].SegmentId;
         [JsonIgnore]
-        public string NextSegmentId => HasStarted ? RouteSegmentSequence[SegmentSequenceIndex].NextSegmentId : null;
+        public string? NextSegmentId => HasStarted ? RouteSegmentSequence[SegmentSequenceIndex].NextSegmentId : null;
         [JsonIgnore]
         public TurnDirection TurnToNextSegment => HasStarted ? RouteSegmentSequence[SegmentSequenceIndex].TurnToNextSegment : TurnDirection.None;
         [JsonIgnore]
-        public string CurrentSegmentId => HasStarted ? RouteSegmentSequence[SegmentSequenceIndex].SegmentId : null;
+        public string? CurrentSegmentId => HasStarted ? RouteSegmentSequence[SegmentSequenceIndex].SegmentId : null;
 
         public bool IsLoop =>
             RouteSegmentSequence.Count(seq => seq.Type == SegmentSequenceType.Regular) == 0 &&

@@ -15,16 +15,16 @@ namespace RoadCaptain.GameStates
         }
 
         protected OnRouteState(uint riderId, ulong activityId, TrackPoint currentPosition, Segment segment,
-            PlannedRoute plannedRoute, SegmentDirection direction)
-            : base(riderId, activityId, currentPosition, segment, direction)
+            PlannedRoute plannedRoute, SegmentDirection direction, double elapsedDistance, double elapsedAscent, double elapsedDescent)
+            : base(riderId, activityId, currentPosition, segment, direction, elapsedDistance, elapsedAscent, elapsedDescent)
         {
             Route = plannedRoute;
         }
 
         protected OnRouteState(uint riderId, ulong activityId, TrackPoint currentPosition, Segment segment,
             PlannedRoute plannedRoute,
-            SegmentDirection direction, List<TurnDirection> turnDirections) 
-            : this(riderId, activityId, currentPosition, segment, plannedRoute, direction)
+            SegmentDirection direction, List<TurnDirection> turnDirections, double elapsedDistance, double elapsedAscent, double elapsedDescent) 
+            : this(riderId, activityId, currentPosition, segment, plannedRoute, direction, elapsedDistance, elapsedAscent, elapsedDescent)
         {
             TurnCommands = turnDirections;
         }
@@ -57,7 +57,7 @@ namespace RoadCaptain.GameStates
                             }
                             
                             // TODO reproduce this with the ItalianVillasRepro route
-                            return new LostRouteLockState(RiderId, ActivityId ,segmentState.CurrentPosition, segmentState.CurrentSegment, segmentState.Direction, plannedRoute);
+                            return new LostRouteLockState(RiderId, ActivityId ,segmentState.CurrentPosition, segmentState.CurrentSegment, segmentState.Direction, plannedRoute, segmentState.ElapsedDistance, segmentState.ElapsedAscent, segmentState.ElapsedDescent);
                         }
 
                         if (lastOfRoute.Direction == SegmentDirection.BtoA)
@@ -70,12 +70,12 @@ namespace RoadCaptain.GameStates
                                     plannedRoute);
                             }
                             
-                            return new LostRouteLockState(RiderId, ActivityId ,segmentState.CurrentPosition, segmentState.CurrentSegment, segmentState.Direction, plannedRoute);
+                            return new LostRouteLockState(RiderId, ActivityId ,segmentState.CurrentPosition, segmentState.CurrentSegment, segmentState.Direction, plannedRoute, segmentState.ElapsedDistance, segmentState.ElapsedAscent, segmentState.ElapsedDescent);
                         }
                     }
 
                     return new OnRouteState(RiderId, ActivityId, segmentState.CurrentPosition,
-                        segmentState.CurrentSegment, Route, segmentState.Direction);
+                        segmentState.CurrentSegment, Route, segmentState.Direction, segmentState.ElapsedDistance, segmentState.ElapsedAscent, segmentState.ElapsedDescent);
                 }
 
                 if (segmentState.CurrentSegment.Id == Route.NextSegmentId)
@@ -94,7 +94,7 @@ namespace RoadCaptain.GameStates
 
                 if (segmentState.CurrentSegment.Id == Route.CurrentSegmentId)
                 {
-                    return new OnRouteState(RiderId, ActivityId, segmentState.CurrentPosition, segmentState.CurrentSegment, Route, segmentState.Direction);
+                    return new OnRouteState(RiderId, ActivityId, segmentState.CurrentPosition, segmentState.CurrentSegment, Route, segmentState.Direction, segmentState.ElapsedDistance, segmentState.ElapsedAscent, segmentState.ElapsedDescent);
                 }
 
                 var distance = position.DistanceTo(CurrentPosition);
@@ -107,7 +107,10 @@ namespace RoadCaptain.GameStates
                         CurrentPosition, // Use the last known position on the segment
                         CurrentSegment,  // Use the current segment of the route
                         Route, 
-                        Direction);
+                        Direction,
+                        ElapsedDistance,
+                        ElapsedAscent,
+                        ElapsedDescent);
                 }
 
                 return segmentState;
@@ -142,7 +145,7 @@ namespace RoadCaptain.GameStates
                     x.Count != 1) // If there is only 1 command then it means there are two segments joining without any intersection
                 {
                     // We've got all the turn commands for this segment
-                    return new UpcomingTurnState(RiderId, ActivityId, CurrentPosition, CurrentSegment, Route, Direction, x);
+                    return new UpcomingTurnState(RiderId, ActivityId, CurrentPosition, CurrentSegment, Route, Direction, x, ElapsedDistance, ElapsedAscent, ElapsedDescent);
                 }
 
                 // Three-way junctions are somehow screwed because we only get 2 turn
@@ -160,12 +163,13 @@ namespace RoadCaptain.GameStates
                             TurnDirection.Left,
                             TurnDirection.GoStraight,
                             TurnDirection.Right
-                        });
+                        },
+                        ElapsedDistance, ElapsedAscent, ElapsedDescent);
                 }
 
                 // Add the new list of turn directions to
                 // a new state.
-                return new OnRouteState(RiderId, ActivityId, CurrentPosition, CurrentSegment, Route, Direction, x);
+                return new OnRouteState(RiderId, ActivityId, CurrentPosition, CurrentSegment, Route, Direction, x, ElapsedDistance, ElapsedAscent, ElapsedDescent);
             }
 
             return this;

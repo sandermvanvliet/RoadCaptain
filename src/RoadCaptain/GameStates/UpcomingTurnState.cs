@@ -5,15 +5,17 @@ namespace RoadCaptain.GameStates
 {
     public class UpcomingTurnState : OnRouteState
     {
-        public UpcomingTurnState(
-            uint riderId, 
+        public UpcomingTurnState(uint riderId,
             ulong activityId,
             TrackPoint currentPosition,
             Segment segment,
             PlannedRoute plannedRoute,
             SegmentDirection direction,
-            List<TurnDirection> directions)
-            : base(riderId, activityId, currentPosition, segment, plannedRoute, direction, directions)
+            List<TurnDirection> directions, 
+            double elapsedDistance, 
+            double elapsedAscent, 
+            double elapsedDescent)
+            : base(riderId, activityId, currentPosition, segment, plannedRoute, direction, directions, elapsedDistance, elapsedAscent, elapsedDescent)
         {
             Directions = directions;
         }
@@ -35,7 +37,7 @@ namespace RoadCaptain.GameStates
                         return this;
                     }
 
-                    return new UpcomingTurnState(RiderId, ActivityId, routeState.CurrentPosition, routeState.CurrentSegment, plannedRoute, routeState.Direction, Directions);
+                    return new UpcomingTurnState(RiderId, ActivityId, routeState.CurrentPosition, routeState.CurrentSegment, plannedRoute, routeState.Direction, Directions, routeState.ElapsedDistance, routeState.ElapsedAscent, routeState.ElapsedDescent);
                 }
             }
 
