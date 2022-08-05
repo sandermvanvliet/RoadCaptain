@@ -48,7 +48,34 @@ namespace RoadCaptain.UseCases
                 if (CommandsMatchTurnToNextSegment(turnState.Directions, nextTurnDirection))
                 {
                     _monitoringEvents.Information("Executing turn {TurnDirection} onto {SegmentId}", nextTurnDirection, turnState.Route.NextSegmentId);
-                    _gameConnection.SendTurnCommand(nextTurnDirection, _lastSequenceNumber, gameState.RiderId);
+
+                    // Behold: The Zwift Konami Code
+                    //
+                    // Due to a bug in Zwift the GoStraight command was ignored effectively preventing
+                    // routes with a GoStraight turn on them to be followed.
+                    //
+                    // See https://github.com/sandermvanvliet/RoadCaptain/issues/91#issuecomment-1205613709
+                    // for the Zwift dev response as to why this works.
+                    if (nextTurnDirection == TurnDirection.GoStraight &&
+                        turnState.Directions.Contains(TurnDirection.Left))
+                    {
+                        _gameConnection.SendTurnCommand(TurnDirection.Left, _lastSequenceNumber, gameState.RiderId);
+                        _gameConnection.SendTurnCommand(TurnDirection.Left, _lastSequenceNumber, gameState.RiderId);
+                        _gameConnection.SendTurnCommand(TurnDirection.Right, _lastSequenceNumber, gameState.RiderId);
+                        _gameConnection.SendTurnCommand(TurnDirection.GoStraight, _lastSequenceNumber, gameState.RiderId);
+                    }
+                    else if (nextTurnDirection == TurnDirection.GoStraight &&
+                        turnState.Directions.Contains(TurnDirection.Right))
+                    {
+                        _gameConnection.SendTurnCommand(TurnDirection.Right, _lastSequenceNumber, gameState.RiderId);
+                        _gameConnection.SendTurnCommand(TurnDirection.Right, _lastSequenceNumber, gameState.RiderId);
+                        _gameConnection.SendTurnCommand(TurnDirection.Left, _lastSequenceNumber, gameState.RiderId);
+                        _gameConnection.SendTurnCommand(TurnDirection.GoStraight, _lastSequenceNumber, gameState.RiderId);
+                    }
+                    else
+                    {
+                        _gameConnection.SendTurnCommand(nextTurnDirection, _lastSequenceNumber, gameState.RiderId);
+                    }
                 }
                 else
                 {

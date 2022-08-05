@@ -52,25 +52,6 @@ namespace RoadCaptain.Tests.Unit
         }
 
         [Fact]
-        public void GivenStartedRouteOnSegmentThreeAndLeftAndGoStraightCommandsAvailable_GoStraightCommandIsSentBecauseItsMappedFromTurnRight()
-        {
-            _plannedRoute.EnteredSegment("seg-1");
-            _plannedRoute.EnteredSegment("seg-2");
-            _plannedRoute.EnteredSegment("seg-3");
-
-            var state = UpcomingTurnStateWithTurns(TurnDirection.Left, TurnDirection.GoStraight);
-            
-            _gameStateDispatcher.Dispatch(state);
-
-            WhenHandlingNavigation();
-
-            _inMemoryZwiftGameConnection
-                .SentCommands
-                .Should()
-                .ContainSingle(TurnDirection.GoStraight.ToString());
-        }
-
-        [Fact]
         public void GivenStartedRouteOnSegmentThreeAndLeftAndRightCommandsAvailable_TurnRightCommandIsSent()
         {
                 _plannedRoute.EnteredSegment("seg-1");

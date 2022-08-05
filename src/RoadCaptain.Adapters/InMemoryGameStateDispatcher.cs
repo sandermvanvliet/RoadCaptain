@@ -26,13 +26,13 @@ namespace RoadCaptain.Adapters
         private static readonly object SyncRoot = new();
         private bool _working;
 
+        private ulong _lastSequenceNumber;
+
         public InMemoryGameStateDispatcher(MonitoringEvents monitoringEvents)
         {
             _monitoringEvents = monitoringEvents;
             _queue = new ConcurrentQueue<Message>();
         }
-
-        public ulong LastSequenceNumber { get; private set; }
 
         private bool Started
         {
@@ -53,9 +53,9 @@ namespace RoadCaptain.Adapters
 
         public void UpdateLastSequenceNumber(ulong sequenceNumber)
         {
-            if (sequenceNumber > LastSequenceNumber)
+            if (sequenceNumber > _lastSequenceNumber)
             {
-                LastSequenceNumber = sequenceNumber;
+                _lastSequenceNumber = sequenceNumber;
                 Enqueue("lastSequenceNumber", sequenceNumber);
             }
         }

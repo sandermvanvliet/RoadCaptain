@@ -2,6 +2,9 @@
 
 ## 0.6.7.0
 
+### Runner
+
+- Implement the Zwift [Konami Code](https://en.wikipedia.org/wiki/Konami_Code) to fix the issue with not being able to _go straight_ on a route [#91](https://github.com/sandermvanvliet/RoadCaptain/issues/91)
 
 ## 0.6.6.0
 
