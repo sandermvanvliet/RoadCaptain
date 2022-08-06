@@ -90,7 +90,10 @@ namespace RoadCaptain.Tests.Unit
             return new UpcomingTurnState(RiderId, ActivityId, CurrentPoint, _segment,
                 GivenRouteWith(routeNextTurn),
                 SegmentDirection.AtoB,
-                gameTurns);
+                gameTurns, 
+                0, 
+                0,
+                0);
         }
 
         private PlannedRoute GivenRouteWith(TurnDirection turn)
