@@ -136,7 +136,7 @@ namespace RoadCaptain.Tests.Unit.GameState
         [Fact]
         public void GivenOnSegmentStateAndPositionIsUpdatedWhichIsOnSameSegment_ResultingStateIsOnSegmentStateWithSameSegmentid()
         {
-            var state = new OnSegmentState(RiderId, ActivityId, PositionOnSegment, SegmentById("segment-1"));
+            var state = new OnSegmentState(RiderId, ActivityId, PositionOnSegment, SegmentById("segment-1"), SegmentDirection.AtoB, 0, 0, 0);
 
             var result = state.UpdatePosition(OtherOnSegment, _segments, _route);
 
@@ -153,7 +153,7 @@ namespace RoadCaptain.Tests.Unit.GameState
         [Fact]
         public void GivenOnSegmentStateAndPositionIsUpdatedWhichIsOnAnotherSegment_ResultingStateIsOnSegmentStateWithNewSegmentid()
         {
-            var state = new OnSegmentState(RiderId, ActivityId, PositionOnSegment, SegmentById("segment-1"));
+            var state = new OnSegmentState(RiderId, ActivityId, PositionOnSegment, SegmentById("segment-1"), SegmentDirection.AtoB, 0, 0, 0);
 
             var result = state.UpdatePosition(PositionOnAnotherSegment, _segments, _route);
 
@@ -224,7 +224,7 @@ namespace RoadCaptain.Tests.Unit.GameState
         public void GivenOnSegmentStateAndPositionIsUpdatedAndPositionIsOnNextSegmentInRoute_ResultingStateIsOnRouteState()
         {
             _route.EnteredSegment("route-segment-1");
-            var state = new OnSegmentState(RiderId, ActivityId, RoutePosition1, SegmentById("route-segment-1"));
+            var state = new OnSegmentState(RiderId, ActivityId, RoutePosition1, SegmentById("segment-1"), SegmentDirection.AtoB, 0, 0, 0);
 
             var result = state.UpdatePosition(RoutePosition2, _segments, _route);
 
@@ -241,7 +241,7 @@ namespace RoadCaptain.Tests.Unit.GameState
         [Fact]
         public void GivenOnSegmentStateAndPositionIsUpdatedFromOneToTwo_OnSegmentStateIsReturnedWithDirectionAtoB()
         {
-            var state = new OnSegmentState(RiderId, ActivityId, RoutePosition1, SegmentById("route-segment-1"));
+            var state = new OnSegmentState(RiderId, ActivityId, RoutePosition1, SegmentById("segment-1"), SegmentDirection.AtoB, 0, 0, 0);
 
             var result = state.UpdatePosition(RoutePosition1Point2, _segments, _route);
 
@@ -257,7 +257,7 @@ namespace RoadCaptain.Tests.Unit.GameState
         [Fact]
         public void GivenOnSegmentStateWithDirectionAtoBAndNextPositionIsSameAsLast_DirectionRemainsAtoB()
         {
-            GameStates.GameState state = new OnSegmentState(RiderId, ActivityId, RoutePosition1, SegmentById("route-segment-1"));
+            GameStates.GameState state = new OnSegmentState(RiderId, ActivityId, RoutePosition1, SegmentById("segment-1"), SegmentDirection.AtoB, 0, 0, 0);
             state = state.UpdatePosition(RoutePosition1Point2, _segments, _route);
 
             var result = state.UpdatePosition(RoutePosition1Point2, _segments, _route);
@@ -291,7 +291,7 @@ namespace RoadCaptain.Tests.Unit.GameState
             _route.EnteredSegment("route-segment-1");
             _route.EnteredSegment("route-segment-2");
 
-            var state = new OnSegmentState(RiderId, ActivityId, RoutePosition2, SegmentById("segment-1"));
+            var state = new OnSegmentState(RiderId, ActivityId, RoutePosition2, SegmentById("segment-1"), SegmentDirection.AtoB, 0, 0, 0);
 
             var result = state.UpdatePosition(RoutePosition2, _segments, _route);
 
@@ -438,7 +438,7 @@ namespace RoadCaptain.Tests.Unit.GameState
             loopRoute.EnteredSegment("route-segment-2");
             loopRoute.EnteredSegment("route-segment-3");
 
-            GameStates.GameState state = new CompletedRouteState(RiderId, ActivityId, RoutePosition3, loopRoute);
+            var state = new CompletedRouteState(RiderId, ActivityId, RoutePosition3, loopRoute);
             
             // This is called by the Runner engine
             loopRoute.Reset();
@@ -457,11 +457,11 @@ namespace RoadCaptain.Tests.Unit.GameState
         [Fact]
         public void GivenPositionChangesWithinSegment_ElapsedDistanceIsIncreased()
         {
-            var state = new OnSegmentState(RiderId, ActivityId, RoutePosition1, SegmentById("route-segment-1"));
+            var state = new OnSegmentState(RiderId, ActivityId, RoutePosition1, SegmentById("segment-1"), SegmentDirection.AtoB, 0, 0, 0);
 
-            state = state.UpdatePosition(RoutePosition1Point2, _segments, _route) as OnSegmentState;
+            var result = state.UpdatePosition(RoutePosition1Point2, _segments, _route) as OnRouteState;
 
-            state
+            result
                 .ElapsedDistance
                 .Should()
                 .BeApproximately(109.5d, 0.01);
@@ -470,7 +470,7 @@ namespace RoadCaptain.Tests.Unit.GameState
         [Fact]
         public void GivenPositionChangesWithinSegmentAndRiderHasProgress_ElapsedDistanceIsIncreased()
         {
-            GameStates.GameState state = new OnSegmentState(RiderId, ActivityId, RoutePosition1, SegmentById("route-segment-1"));
+            GameStates.GameState state = new OnSegmentState(RiderId, ActivityId, RoutePosition1, SegmentById("segment-1"), SegmentDirection.AtoB, 0, 0, 0);
             state = state.UpdatePosition(RoutePosition1Point2, _segments, _route);
             var result = state.UpdatePosition(RoutePosition1Point3, _segments, _route) as OnSegmentState;
 
@@ -483,7 +483,7 @@ namespace RoadCaptain.Tests.Unit.GameState
         [Fact]
         public void GivenPositionChangesWithinSegmentAndRiderHasProgress_AscentIsIncreased()
         {
-            GameStates.GameState state = new OnSegmentState(RiderId, ActivityId, RoutePosition1, SegmentById("route-segment-1"));
+            GameStates.GameState state = new OnSegmentState(RiderId, ActivityId, RoutePosition1, SegmentById("segment-1"), SegmentDirection.AtoB, 0, 0, 0);
             state = state.UpdatePosition(RoutePosition1Point2, _segments, _route);
             var result = state.UpdatePosition(RoutePosition1Point3, _segments, _route) as OnSegmentState;
 
@@ -496,7 +496,7 @@ namespace RoadCaptain.Tests.Unit.GameState
         [Fact]
         public void GivenPositionChangesWithinSegmentAndRiderHasProgress_DescentIsIncreased()
         {
-            GameStates.GameState state = new OnSegmentState(RiderId, ActivityId, RoutePosition1Point3, SegmentById("route-segment-1"));
+            GameStates.GameState state = new OnSegmentState(RiderId, ActivityId, RoutePosition1Point3, SegmentById("segment-1"), SegmentDirection.AtoB, 0, 0, 0);
             state = state.UpdatePosition(RoutePosition1Point2, _segments, _route);
             var result = state.UpdatePosition(RoutePosition1, _segments, _route) as OnSegmentState;
 
@@ -536,7 +536,11 @@ namespace RoadCaptain.Tests.Unit.GameState
 
             var state = new OnSegmentState(1234, 5678,
                 currentPosition,
-                segment);
+                segment, 
+                SegmentDirection.AtoB,
+                0,
+                0,
+                0);
 
             var newPoint = new GameCoordinate(46673.94000000, -145711.80000000, 10926.55000000, ZwiftWorldId.Watopia).ToTrackPoint();
             

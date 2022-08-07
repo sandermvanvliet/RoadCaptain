@@ -19,7 +19,7 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.InGame
         [Fact]
         public void GivenOnSegmentStateWithElapsedDistanceAscentAndDescent_ElapsedDistanceIsSet()
         {
-            var onSegmentState = new OnSegmentState(1, 2, _positionOne, _segmentOne);
+            var onSegmentState = new OnSegmentState(1, 2, _positionOne, _segmentOne, SegmentDirection.AtoB, 0 ,0, 0);
             var result = onSegmentState.UpdatePosition(_positionTwo,
                 new List<Segment> { _segmentOne }, _route);
 
@@ -31,7 +31,7 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.InGame
         [Fact]
         public void GivenOnSegmentStateWithElapsedDistanceAscentAndDescent_ElapsedAscentIsSet()
         {
-            var onSegmentState = new OnSegmentState(1, 2, _positionOne, _segmentOne);
+            var onSegmentState = new OnSegmentState(1, 2, _positionOne, _segmentOne, SegmentDirection.AtoB, 0 ,0, 0);
             var result = onSegmentState.UpdatePosition(_positionTwo,
                 new List<Segment> { _segmentOne }, _route);
 
@@ -43,7 +43,7 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.InGame
         [Fact]
         public void GivenOnSegmentStateWithElapsedDistanceAscentAndDescent_ElapsedDescentIsSet()
         {
-            var onSegmentState = new OnSegmentState(1, 2, _positionTwo, _segmentOne);
+            var onSegmentState = new OnSegmentState(1, 2, _positionTwo, _segmentOne, SegmentDirection.AtoB, 0 ,0, 0);
             var result = onSegmentState.UpdatePosition(_positionThree,
                 new List<Segment> { _segmentOne }, _route);
 

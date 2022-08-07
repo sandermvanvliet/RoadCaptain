@@ -9,6 +9,7 @@ namespace RoadCaptain.GameStates
             return this;
         }
 
+        // TODO: Set RiderId because we should already know this when we're connected to Zwift
         public sealed override uint RiderId => 0;
 
         public sealed override GameState EnterGame(uint riderId, ulong activityId)

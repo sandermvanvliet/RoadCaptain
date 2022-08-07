@@ -65,7 +65,7 @@ namespace RoadCaptain.App.Runner.ViewModels
                     Model.LostRouteLock = true;
                 }
 
-                if (gameState is PositionedState positionedState and OnSegmentState)
+                if (gameState is OnSegmentState positionedState)
                 {
                     Model.CurrentSegment.PointOnSegment = positionedState.CurrentPosition;
                 }
@@ -90,7 +90,7 @@ namespace RoadCaptain.App.Runner.ViewModels
                         }
                     }
 
-                    if (_previousState is OnSegmentState and not OnRouteState)
+                    if (_previousState is OnSegmentState)
                     {
                         // Back on route again
                         RouteProgression(routeState.Route.SegmentSequenceIndex);

@@ -265,5 +265,24 @@ namespace RoadCaptain
         public static TrackPoint Unknown => new(Double.NaN, Double.NaN, Double.NaN);
 
         public ZwiftWorldId? WorldId { get; }
+
+        public PositionDelta DeltaTo(TrackPoint other)
+        {
+            var distanceFromLast = DistanceTo(other);
+
+            return new PositionDelta
+            {
+                Distance = (distanceFromLast / 1000),
+                Ascent = Altitude < other.Altitude ? 0 : other.Altitude - Altitude,
+                Descent = Altitude < other.Altitude ? other.Altitude - Altitude : 0
+            };
+        }
+    }
+
+    public struct PositionDelta
+    {
+        public double Distance { get; set; }
+        public double Ascent { get; set; }
+        public double Descent { get; set; }
     }
 }

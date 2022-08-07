@@ -1,66 +1,78 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
 
 namespace RoadCaptain.GameStates
 {
-    public class PositionedState : InGameState
+    public class PositionedState : GameState
     {
         [JsonProperty]
-        public TrackPoint CurrentPosition { get; private set; }
+        public sealed override uint RiderId { get; }
+
+        [JsonProperty]
+        public ulong ActivityId { get; }
+        
+        [JsonProperty]
+        public TrackPoint CurrentPosition { get; }
 
         public PositionedState(uint riderId, ulong activityId, TrackPoint currentPosition)
-            : base(riderId, activityId)
         {
+            RiderId = riderId;
+            ActivityId = activityId;
             CurrentPosition = currentPosition;
         }
 
-        protected override (Segment, TrackPoint) GetClosestMatchingSegment(IEnumerable<Segment> segments, TrackPoint position)
+        public override GameState EnterGame(uint riderId, ulong activityId)
         {
-            // For each segment find the closest track point in that segment
-            // in relation to the current position
-            TrackPoint closestPoint = null;
-            double? distanceToClosestPoint = null;
-            Segment closestSegment = null;
+            throw new InvalidStateTransitionException("User is already in-game");
+        }
 
-            foreach (var segment in segments)
+        public override GameState LeaveGame()
+        {
+            return new ConnectedToZwiftState();
+        }
+
+        public override GameState UpdatePosition(TrackPoint position, List<Segment> segments, PlannedRoute plannedRoute)
+        {
+            // Note: We're using an IEnumerable<T> here to prevent
+            //       unnecessary ToList() calls because the foreach
+            //       loop in GetClosestMatchingSegment handles that
+            //       for us.
+            var matchingSegments = segments.Where(s => s.Contains(position));
+            
+            var (segment, closestOnSegment) = matchingSegments.GetClosestMatchingSegment(position, CurrentPosition);
+
+            if (segment == null || closestOnSegment == null)
             {
-                // This is very suboptimal as this needs to traverse
-                // all the points of the segment whereas finding if
-                // the point is on the segment can stop at the first
-                // hit.
-                // The optimization here is to at least exclude points
-                // which we know are too far away using IsCloseToQuick()
-                // however that still enumerates all points in the 
-                // segment.
-                var closestOnSegment = segment
-                    .Points
-                    .Where(p => TrackPoint.IsCloseToQuick(p.Longitude, position))
-                    .Select(p => new { Point = p, Distance = p.DistanceTo(position)})                         
-                    .OrderBy(d => d.Distance)
-                    .First();
-
-                if (closestPoint == null)
-                {
-                    closestPoint = closestOnSegment.Point;
-                    distanceToClosestPoint = closestOnSegment.Distance;
-                    closestSegment = segment;
-                }
-                // This method is called from PositionedState where there _is_ a current position
-                // to check the altitude against for segment overlaps. Because InGameState doesn't
-                // have a position at all we have the null check here to deal with that situation
-                // as I really don't want to duplicate this code.
-                else if (closestOnSegment.Distance < distanceToClosestPoint &&
-                         Math.Abs(closestOnSegment.Point.Altitude - CurrentPosition.Altitude) < 2)
-                {
-                    closestPoint = closestOnSegment.Point;
-                    distanceToClosestPoint = closestOnSegment.Distance;
-                    closestSegment = segment;
-                }
+                return new PositionedState(RiderId, ActivityId, position);
             }
 
-            return (closestSegment, closestPoint);
+            // This is to ensure that we have the segment of the position
+            // for future reference.
+            closestOnSegment.Segment = segment;
+
+            if (!plannedRoute.HasStarted && plannedRoute.StartingSegmentId == segment.Id)
+            {
+                plannedRoute.EnteredSegment(segment.Id);
+                return new OnRouteState(RiderId, ActivityId, closestOnSegment, segment, plannedRoute);
+            }
+
+            if (plannedRoute.HasStarted && !plannedRoute.HasCompleted && plannedRoute.CurrentSegmentId == segment.Id)
+            {
+                return new OnRouteState(RiderId, ActivityId, closestOnSegment, segment, plannedRoute);
+            }
+            
+            if (plannedRoute.HasStarted && plannedRoute.NextSegmentId == segment.Id)
+            {
+                return new OnRouteState(RiderId, ActivityId, closestOnSegment, segment, plannedRoute);
+            }
+
+            return new OnSegmentState(RiderId, ActivityId, closestOnSegment, segment, SegmentDirection.Unknown, 0, 0, 0);
+        }
+
+        public override GameState TurnCommandAvailable(string type)
+        {
+            return this;
         }
     }
 }

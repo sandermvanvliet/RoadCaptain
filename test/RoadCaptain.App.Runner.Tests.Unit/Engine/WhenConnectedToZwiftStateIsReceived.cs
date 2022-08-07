@@ -60,7 +60,7 @@ namespace RoadCaptain.App.Runner.Tests.Unit.Engine
         [Fact]
         public void GivenPreviousStateWasOnSegmentState_MainWindowIsShown()
         {
-            ReceiveGameState(new OnSegmentState(1234, 12345, new TrackPoint(1,2,3), new Segment(new List<TrackPoint>())));
+            ReceiveGameState(new OnSegmentState(1234, 12345, new TrackPoint(1,2,3), new Segment(new List<TrackPoint>()), SegmentDirection.AtoB, 0 ,0, 0));
 
             GivenConnectedToZwiftStateReceived();
 
@@ -72,7 +72,7 @@ namespace RoadCaptain.App.Runner.Tests.Unit.Engine
         {
             WindowService.ShowInGameWindow(new InGameNavigationWindowViewModel(new InGameWindowModel(new List<Segment>()), new List<Segment>(), null));
 
-            ReceiveGameState(new OnSegmentState(1234, 12345, new TrackPoint(1,2,3), new Segment(new List<TrackPoint>())));
+            ReceiveGameState(new OnSegmentState(1234, 12345, new TrackPoint(1,2,3), new Segment(new List<TrackPoint>()), SegmentDirection.AtoB, 0 ,0, 0));
 
             GivenConnectedToZwiftStateReceived();
 

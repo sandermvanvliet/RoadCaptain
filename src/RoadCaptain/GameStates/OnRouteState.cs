@@ -5,20 +5,26 @@ using Newtonsoft.Json;
 
 namespace RoadCaptain.GameStates
 {
-    public class OnRouteState : OnSegmentState
+    public class OnRouteState : GameState
     {
-        public OnRouteState(uint riderId, ulong activityId, TrackPoint currentPosition, Segment segment,
-            PlannedRoute plannedRoute)
-            : base(riderId, activityId, currentPosition, segment)
+        public OnRouteState(uint riderId, ulong activityId, TrackPoint currentPosition, Segment segment, PlannedRoute plannedRoute)
+        : this(riderId, activityId, currentPosition, segment, plannedRoute, SegmentDirection.Unknown, new List<TurnDirection>(), 0, 0, 0)
         {
-            Route = plannedRoute;
         }
 
-        protected OnRouteState(uint riderId, ulong activityId, TrackPoint currentPosition, Segment segment,
+        public OnRouteState(uint riderId, ulong activityId, TrackPoint currentPosition, Segment segment,
             PlannedRoute plannedRoute, SegmentDirection direction, double elapsedDistance, double elapsedAscent, double elapsedDescent)
-            : base(riderId, activityId, currentPosition, segment, direction, elapsedDistance, elapsedAscent, elapsedDescent)
+            
         {
+            RiderId = riderId;
+            ActivityId = activityId;
+            CurrentPosition = currentPosition;
+            CurrentSegment = segment;
             Route = plannedRoute;
+            Direction = direction;
+            ElapsedDistance = elapsedDistance;
+            ElapsedAscent = elapsedAscent;
+            ElapsedDescent = elapsedDescent;
         }
 
         protected OnRouteState(uint riderId, ulong activityId, TrackPoint currentPosition, Segment segment,
@@ -30,13 +36,44 @@ namespace RoadCaptain.GameStates
         }
 
         [JsonProperty]
+        public sealed override uint RiderId { get; }
+
+        [JsonProperty]
+        public ulong ActivityId { get; }
+        
+        [JsonProperty]
+        public TrackPoint CurrentPosition { get; }
+
+        [JsonProperty]
+        public Segment CurrentSegment { get; }
+
+        [JsonProperty]
+        public SegmentDirection Direction { get; private set; } = SegmentDirection.Unknown;
+
+        public double ElapsedDistance { get; private set; }
+
+        public double ElapsedDescent { get; private set; }
+
+        public double ElapsedAscent { get; private set; }
+
+        [JsonProperty]
         public PlannedRoute Route { get; private set; }
 
         private List<TurnDirection> TurnCommands { get; } = new();
+        
+        public override GameState EnterGame(uint riderId, ulong activityId)
+        {
+            throw new InvalidStateTransitionException("User is already in-game");
+        }
+
+        public override GameState LeaveGame()
+        {
+            return new ConnectedToZwiftState();
+        }
 
         public override GameState UpdatePosition(TrackPoint position, List<Segment> segments, PlannedRoute plannedRoute)
         {
-            var result = base.UpdatePosition(position, segments, plannedRoute);
+            var result = BaseUpdatePosition(position, segments, plannedRoute);
 
             if (result is OnSegmentState segmentState)
             {
@@ -119,6 +156,44 @@ namespace RoadCaptain.GameStates
             return result;
         }
 
+        private GameState BaseUpdatePosition(TrackPoint position, List<Segment> segments, PlannedRoute plannedRoute)
+        {
+            // Note: We're using an IEnumerable<T> here to prevent
+            //       unnecessary ToList() calls because the foreach
+            //       loop in GetClosestMatchingSegment handles that
+            //       for us.
+            var matchingSegments = segments.Where(s => s.Contains(position));
+            
+            var (segment, closestOnSegment) = matchingSegments.GetClosestMatchingSegment(position, CurrentPosition);
+
+            if (segment == null || closestOnSegment == null)
+            {
+                return new PositionedState(RiderId, ActivityId, position);
+            }
+
+            // This is to ensure that we have the segment of the position
+            // for future reference.
+            closestOnSegment.Segment = segment;
+
+            if (!plannedRoute.HasStarted && plannedRoute.StartingSegmentId == segment.Id)
+            {
+                plannedRoute.EnteredSegment(segment.Id);
+                return new OnRouteState(RiderId, ActivityId, closestOnSegment, segment, plannedRoute);
+            }
+
+            if (plannedRoute.HasStarted && !plannedRoute.HasCompleted && plannedRoute.CurrentSegmentId == segment.Id)
+            {
+                return new OnRouteState(RiderId, ActivityId, closestOnSegment, segment, plannedRoute);
+            }
+            
+            if (plannedRoute.HasStarted && plannedRoute.NextSegmentId == segment.Id)
+            {
+                return new OnRouteState(RiderId, ActivityId, closestOnSegment, segment, plannedRoute);
+            }
+
+            return new OnSegmentState(RiderId, ActivityId, closestOnSegment, segment, Direction, ElapsedDistance, ElapsedAscent, ElapsedDescent);
+        }
+
         public override GameState TurnCommandAvailable(string type)
         {
             var turnDirection = GetTurnDirectionFor(type);
@@ -185,5 +260,7 @@ namespace RoadCaptain.GameStates
                 _ => TurnDirection.None
             };
         }
+
+        
     }
 }

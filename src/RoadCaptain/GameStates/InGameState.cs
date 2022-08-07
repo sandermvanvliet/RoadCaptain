@@ -26,7 +26,7 @@ namespace RoadCaptain.GameStates
             //       for us.
             var matchingSegments = segments.Where(s => s.Contains(position));
             
-            var (segment, closestOnSegment) = GetClosestMatchingSegment(matchingSegments, position);
+            var (segment, closestOnSegment) = matchingSegments.GetClosestMatchingSegment(position, TrackPoint.Unknown);
 
             if (segment == null)
             {
@@ -53,7 +53,7 @@ namespace RoadCaptain.GameStates
                 return new OnRouteState(RiderId, ActivityId, closestOnSegment, segment, plannedRoute);
             }
 
-            return new OnSegmentState(RiderId, ActivityId, closestOnSegment, segment);
+            return new OnSegmentState(RiderId, ActivityId, closestOnSegment, segment, SegmentDirection.Unknown, 0, 0, 0);
         }
 
         public sealed override GameState EnterGame(uint riderId, ulong activityId)
@@ -74,48 +74,6 @@ namespace RoadCaptain.GameStates
         public override GameState TurnCommandAvailable(string type)
         {
             return this;
-        }
-
-        protected virtual (Segment,TrackPoint) GetClosestMatchingSegment(IEnumerable<Segment> segments, TrackPoint position)
-        {
-            // For each segment find the closest track point in that segment
-            // in relation to the current position
-            TrackPoint closestPoint = null;
-            double? distanceToClosestPoint = null;
-            Segment closestSegment = null;
-
-            foreach (var segment in segments)
-            {
-                // This is very suboptimal as this needs to traverse
-                // all the points of the segment whereas finding if
-                // the point is on the segment can stop at the first
-                // hit.
-                // The optimization here is to at least exclude points
-                // which we know are too far away using IsCloseToQuick()
-                // however that still enumerates all points in the 
-                // segment.
-                var closestOnSegment = segment
-                    .Points
-                    .Where(p => TrackPoint.IsCloseToQuick(p.Longitude, position))
-                    .Select(p => new { Point = p, Distance = p.DistanceTo(position)})                         
-                    .OrderBy(d => d.Distance)
-                    .First();
-
-                if (closestPoint == null)
-                {
-                    closestPoint = closestOnSegment.Point;
-                    distanceToClosestPoint = closestOnSegment.Distance;
-                    closestSegment = segment;
-                }
-                else if (closestOnSegment.Distance < distanceToClosestPoint)
-                {
-                    closestPoint = closestOnSegment.Point;
-                    distanceToClosestPoint = closestOnSegment.Distance;
-                    closestSegment = segment;
-                }
-            }
-
-            return (closestSegment, closestPoint);
         }
     }
 }
