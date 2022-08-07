@@ -88,8 +88,6 @@ Options:
       bless the mount folder (deprecated, needs macOS 12.2.1 or older)
   --codesign <signature>
       codesign the disk image with the specified signature
-  --codesign-verbose
-      enable verbose output for codesign
   --notarize <credentials>
       notarize the disk image (waits and staples) with the keychain stored credentials
   --sandbox-safe
@@ -183,9 +181,6 @@ while [[ "${1:0:1}" = "-" ]]; do
 		--codesign)
 			SIGNATURE="$2"
 			shift; shift;;
-		--codesign-vebose)
-			CODESIGN_VERBOSE="--verbose=4"
-			shift;;
 		--notarize)
 			NOTARIZE="$2"
 			shift; shift;;
@@ -508,7 +503,7 @@ fi
 
 if [[ -n "${SIGNATURE}" && "${SIGNATURE}" != "-null-" ]]; then
 	echo "Codesign started"	
-	codesign -s "${SIGNATURE}" "${DMG_DIR}/${DMG_NAME}" "${CODESIGN_VERBOSE}"
+	codesign --verbose=4 -s "${SIGNATURE}" "${DMG_DIR}/${DMG_NAME}"
 	dmgsignaturecheck="$(codesign --verify --deep --verbose=2 --strict "${DMG_DIR}/${DMG_NAME}" 2>&1 >/dev/null)"
 	if [ $? -eq 0 ]; then
 		echo "The disk image is now codesigned"
