@@ -121,7 +121,7 @@ jobs:
         DISK_IMAGE="$RUNNER_TEMP/RoadCaptain-$VERSION-${{ env.RID }}.dmg"
         PUBLISH_DIR="$RUNNER_TEMP/${{ env.RID }}/Bundles"
         chmod +x ./packaging/create-dmg
-        ./packaging/create-dmg --volname "RoadCaptain $VERSION" --volicon ./src/RoadCaptain.App.Shared/icon.icns --window-pos 200 120 --window-size 800 533 --icon-size 128 --icon "RoadCaptain RouteBuilder.app" 200 40 --icon "RoadCaptain Runner.app" 200 260 --app-drop-link 600 40 --background "./src/RoadCaptain.App.Shared/Assets/installer-background.jpg" --codesign A357F29F30B7179DCBA515D2A6ECE77620951CBD "$DISK_IMAGE" "$PUBLISH_DIR"
+        ./packaging/create-dmg --volname "RoadCaptain $VERSION" --volicon ./src/RoadCaptain.App.Shared/icon.icns --window-pos 200 120 --window-size 800 533 --icon-size 128 --icon "RoadCaptain RouteBuilder.app" 200 40 --icon "RoadCaptain Runner.app" 200 260 --app-drop-link 600 40 --background "./src/RoadCaptain.App.Shared/Assets/installer-background.jpg" --codesign A357F29F30B7179DCBA515D2A6ECE77620951CBD --codesign-verbose "$DISK_IMAGE" "$PUBLISH_DIR"
         # Notarize disk image
         xcrun notarytool submit "$DISK_IMAGE" --keychain-profile "AC_PASSWORD" --wait
         xcrun stapler staple "$DISK_IMAGE"
@@ -190,7 +190,7 @@ jobs:
         DISK_IMAGE="$RUNNER_TEMP/RoadCaptain-$VERSION-${{ env.RID }}.dmg"
         PUBLISH_DIR="$RUNNER_TEMP/${{ env.RID }}/Bundles"
         chmod +x ./packaging/create-dmg
-        ./packaging/create-dmg --volname "RoadCaptain $VERSION" --volicon ./src/RoadCaptain.App.Shared/icon.icns --window-pos 200 120 --window-size 800 533 --icon-size 128 --icon "RoadCaptain RouteBuilder.app" 200 40 --icon "RoadCaptain Runner.app" 200 260 --app-drop-link 600 40 --background "./src/RoadCaptain.App.Shared/Assets/installer-background.jpg" --codesign A357F29F30B7179DCBA515D2A6ECE77620951CBD "$DISK_IMAGE" "$PUBLISH_DIR"
+        ./packaging/create-dmg --volname "RoadCaptain $VERSION" --volicon ./src/RoadCaptain.App.Shared/icon.icns --window-pos 200 120 --window-size 800 533 --icon-size 128 --icon "RoadCaptain RouteBuilder.app" 200 40 --icon "RoadCaptain Runner.app" 200 260 --app-drop-link 600 40 --background "./src/RoadCaptain.App.Shared/Assets/installer-background.jpg" --codesign A357F29F30B7179DCBA515D2A6ECE77620951CBD --codesign-verbose "$DISK_IMAGE" "$PUBLISH_DIR"
         # Notarize disk image
         xcrun notarytool submit "$DISK_IMAGE" --keychain-profile "AC_PASSWORD" --wait
         xcrun stapler staple "$DISK_IMAGE"
