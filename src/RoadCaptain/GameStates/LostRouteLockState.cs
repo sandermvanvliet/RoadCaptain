@@ -53,18 +53,6 @@ namespace RoadCaptain.GameStates
 
         public override GameState UpdatePosition(TrackPoint position, List<Segment> segments, PlannedRoute plannedRoute)
         {
-            var result = BaseUpdatePosition(position, segments, plannedRoute);
-
-            return result;
-        }
-
-        public override GameState TurnCommandAvailable(string type)
-        {
-            throw InvalidStateTransitionException.NotOnARoute(GetType());
-        }
-
-        public GameState BaseUpdatePosition(TrackPoint position, List<Segment> segments, PlannedRoute plannedRoute)
-        {
             // Note: We're using an IEnumerable<T> here to prevent
             //       unnecessary ToList() calls because the foreach
             //       loop in GetClosestMatchingSegment handles that
@@ -186,6 +174,11 @@ namespace RoadCaptain.GameStates
             }
 
             return segmentState;
+        }
+
+        public override GameState TurnCommandAvailable(string type)
+        {
+            throw InvalidStateTransitionException.NotOnARoute(GetType());
         }
 
         private SegmentDirection DetermineSegmentDirection(Segment newSegment, TrackPoint newPosition)
