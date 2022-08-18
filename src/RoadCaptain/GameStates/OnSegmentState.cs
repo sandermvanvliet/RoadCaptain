@@ -7,7 +7,7 @@ namespace RoadCaptain.GameStates
     public sealed class OnSegmentState : GameState
     {
         [JsonProperty]
-        public sealed override uint RiderId { get; }
+        public override uint RiderId { get; }
 
         [JsonProperty]
         public ulong ActivityId { get; }
@@ -87,16 +87,15 @@ namespace RoadCaptain.GameStates
                 return new OnRouteState(RiderId, ActivityId, closestOnSegment, segment, plannedRoute, direction, distance, ascent, descent);
             }
 
-            if (plannedRoute.HasStarted && !plannedRoute.HasCompleted && plannedRoute.CurrentSegmentId == segment.Id)
+            if (plannedRoute.HasStarted)
             {
-                return new OnRouteState(RiderId, ActivityId, closestOnSegment, segment, plannedRoute, direction, distance, ascent, descent);
+                // If a route has been started you can only go to LostRouteLockState,
+                // OnRouteState, CompletedRouteState or UpcomingTurnState. Going back
+                // to OnSegmentState means that something has gone wrong in any of
+                // those states.
+                throw new InvalidStateTransitionException("A started route can never result in a OnSegmentState, only an OnRouteState");
             }
-
-            if (plannedRoute.HasStarted && plannedRoute.NextSegmentId == segment.Id)
-            {
-                return new OnRouteState(RiderId, ActivityId, closestOnSegment, segment, plannedRoute, direction, distance, ascent, descent);
-            }
-
+            
             return new OnSegmentState(RiderId, ActivityId, closestOnSegment, segment, direction, distance, ascent, descent);
         }
 
