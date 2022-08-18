@@ -28,31 +28,11 @@ namespace RoadCaptain.GameStates
             
             var (segment, closestOnSegment) = matchingSegments.GetClosestMatchingSegment(position, TrackPoint.Unknown);
 
-            if (segment == null)
+            if (segment == null || closestOnSegment == null)
             {
                 return new PositionedState(RiderId, ActivityId, position);
             }
-
-            // This is to ensure that we have the segment of the position
-            // for future reference.
-            closestOnSegment.Segment = segment;
-
-            if (!plannedRoute.HasStarted && plannedRoute.StartingSegmentId == segment.Id)
-            {
-                plannedRoute.EnteredSegment(segment.Id);
-                return new OnRouteState(RiderId, ActivityId, closestOnSegment, segment, plannedRoute);
-            }
-
-            if (plannedRoute.HasStarted && !plannedRoute.HasCompleted && plannedRoute.CurrentSegmentId == segment.Id)
-            {
-                return new OnRouteState(RiderId, ActivityId, closestOnSegment, segment, plannedRoute);
-            }
             
-            if (plannedRoute.HasStarted && plannedRoute.NextSegmentId == segment.Id)
-            {
-                return new OnRouteState(RiderId, ActivityId, closestOnSegment, segment, plannedRoute);
-            }
-
             return new OnSegmentState(RiderId, ActivityId, closestOnSegment, segment, SegmentDirection.Unknown, 0, 0, 0);
         }
 
@@ -73,7 +53,7 @@ namespace RoadCaptain.GameStates
 
         public override GameState TurnCommandAvailable(string type)
         {
-            return this;
+            throw new InvalidStateTransitionException(GetType(), typeof(UpcomingTurnState));
         }
     }
 }

@@ -168,7 +168,7 @@ namespace RoadCaptain.Tests.Unit.GameState
         }
 
         [Fact]
-        public void GivenInGameStateAndPositionIsUpdatedAndPositionIsStartOfRoute_ResultingStateIsOnRouteState()
+        public void GivenInGameStateAndPositionIsUpdatedAndPositionIsStartOfRoute_ResultingStateIsOnSegmentState()
         {
             var state = new InGameState(RiderId, ActivityId);
 
@@ -176,7 +176,7 @@ namespace RoadCaptain.Tests.Unit.GameState
 
             result
                 .Should()
-                .BeOfType<OnRouteState>()
+                .BeOfType<OnSegmentState>()
                 .Which
                 .CurrentSegment
                 .Id

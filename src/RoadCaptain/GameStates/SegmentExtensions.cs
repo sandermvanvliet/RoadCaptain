@@ -50,6 +50,13 @@ namespace RoadCaptain.GameStates
                 }
             }
 
+            if (closestPoint != null && closestSegment != null)
+            {
+                // This is to ensure that we have the segment of the position
+                // for future reference.
+                closestPoint.Segment = closestSegment;
+            }
+
             return (closestSegment, closestPoint);
         }
     }

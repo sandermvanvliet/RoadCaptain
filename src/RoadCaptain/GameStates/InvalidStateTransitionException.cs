@@ -8,5 +8,10 @@ namespace RoadCaptain.GameStates
             : base(message)
         {
         }
+
+        public InvalidStateTransitionException(Type fromState, Type toState)
+            : base($"Cannot transition from {fromState.Name} to {toState.Name}")
+        {
+        }
     }
 }

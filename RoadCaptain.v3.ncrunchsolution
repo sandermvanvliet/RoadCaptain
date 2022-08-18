@@ -8,6 +8,7 @@
       <Name>Isolated Test</Name>
       <Settings>
         <ShowCoverageForTests>IsPinned</ShowCoverageForTests>
+        <SpinnerInnerCircleColor>a255, r255, g128, b0</SpinnerInnerCircleColor>
         <TestsToExecuteAutomatically>IsPinned</TestsToExecuteAutomatically>
       </Settings>
     </EngineMode>
