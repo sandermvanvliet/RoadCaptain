@@ -73,7 +73,6 @@ namespace RoadCaptain.GameStates
 
         public override GameState UpdatePosition(TrackPoint position, List<Segment> segments, PlannedRoute plannedRoute)
         {
-            GameState? result;
             // Note: We're using an IEnumerable<T> here to prevent
             //       unnecessary ToList() calls because the foreach
             //       loop in GetClosestMatchingSegment handles that
@@ -97,106 +96,103 @@ namespace RoadCaptain.GameStates
             if (!plannedRoute.HasStarted && plannedRoute.StartingSegmentId == segment.Id)
             {
                 plannedRoute.EnteredSegment(segment.Id);
-                result = new OnRouteState(RiderId, ActivityId, closestOnSegment, segment, plannedRoute, direction, distance1, ascent, descent);
-            }
-            else
-            {
-                if (plannedRoute.HasStarted && !plannedRoute.HasCompleted && plannedRoute.CurrentSegmentId == segment.Id)
-                {
-                    result = new OnRouteState(RiderId, ActivityId, closestOnSegment, segment, plannedRoute, direction, distance1, ascent, descent);
-                }
-                else
-                {
-                    if (plannedRoute.HasStarted && plannedRoute.NextSegmentId == segment.Id)
-                    {
-                        result = new OnRouteState(RiderId, ActivityId, closestOnSegment, segment, plannedRoute, direction, distance1, ascent, descent);
-                    }
-                    else
-                    {
-                        result = new OnSegmentState(RiderId, ActivityId, closestOnSegment, segment, direction, distance1, ascent, descent);
-                    }
-                }
+                return new OnRouteState(RiderId, ActivityId, closestOnSegment, segment, plannedRoute, direction, distance1, ascent, descent);
             }
 
-            if (result is OnSegmentState segmentState)
+            if (plannedRoute.HasStarted && !plannedRoute.HasCompleted && plannedRoute.CurrentSegmentId == segment.Id)
             {
-                if (plannedRoute.IsOnLastSegment)
+                return new OnRouteState(RiderId, ActivityId, closestOnSegment, segment, plannedRoute, direction, distance1, ascent, descent);
+            }
+
+            if (plannedRoute.HasStarted && plannedRoute.NextSegmentId == segment.Id)
+            {
+                return new OnRouteState(RiderId, ActivityId, closestOnSegment, segment, plannedRoute, direction, distance1, ascent, descent);
+            }
+
+            var segmentState = new OnSegmentState(RiderId, ActivityId, closestOnSegment, segment, direction, distance1, ascent, descent);
+
+            if (plannedRoute.IsOnLastSegment)
+            {
+                if (plannedRoute.CurrentSegmentId != segmentState.CurrentSegment.Id)
                 {
-                    if (plannedRoute.CurrentSegmentId != segmentState.CurrentSegment.Id)
+                    var lastOfRoute = plannedRoute.RouteSegmentSequence[plannedRoute.SegmentSequenceIndex];
+                    var lastSegmentOfRoute = segments.Single(s => s.Id == plannedRoute.CurrentSegmentId);
+                    if (lastOfRoute.Direction == SegmentDirection.AtoB)
                     {
-                        var lastOfRoute = plannedRoute.RouteSegmentSequence[plannedRoute.SegmentSequenceIndex];
-                        var lastSegmentOfRoute = segments.Single(s => s.Id == plannedRoute.CurrentSegmentId);
-                        if (lastOfRoute.Direction == SegmentDirection.AtoB)
+                        if (lastSegmentOfRoute.NextSegmentsNodeB.Any(t =>
+                                t.SegmentId == segmentState.CurrentSegment.Id))
                         {
-                            if (lastSegmentOfRoute.NextSegmentsNodeB.Any(t =>
-                                    t.SegmentId == segmentState.CurrentSegment.Id))
-                            {
-                                // Moved from last segment of route to the next segment at the end of that
-                                return new CompletedRouteState(RiderId, ActivityId, segmentState.CurrentPosition,
-                                    plannedRoute);
-                            }
-                            
-                            // TODO reproduce this with the ItalianVillasRepro route
-                            return new LostRouteLockState(RiderId, ActivityId ,segmentState.CurrentPosition, segmentState.CurrentSegment, segmentState.Direction, plannedRoute, segmentState.ElapsedDistance, segmentState.ElapsedAscent, segmentState.ElapsedDescent);
+                            // Moved from last segment of route to the next segment at the end of that
+                            return new CompletedRouteState(RiderId, ActivityId, segmentState.CurrentPosition,
+                                plannedRoute);
                         }
 
-                        if (lastOfRoute.Direction == SegmentDirection.BtoA)
+                        // TODO reproduce this with the ItalianVillasRepro route
+                        return new LostRouteLockState(RiderId, ActivityId, segmentState.CurrentPosition,
+                            segmentState.CurrentSegment, segmentState.Direction, plannedRoute,
+                            segmentState.ElapsedDistance, segmentState.ElapsedAscent, segmentState.ElapsedDescent);
+                    }
+
+                    if (lastOfRoute.Direction == SegmentDirection.BtoA)
+                    {
+                        if (lastSegmentOfRoute.NextSegmentsNodeA.Any(t =>
+                                t.SegmentId == segmentState.CurrentSegment.Id))
                         {
-                            if (lastSegmentOfRoute.NextSegmentsNodeA.Any(t =>
-                                    t.SegmentId == segmentState.CurrentSegment.Id))
-                            {
-                                // Moved from last segment of route to the next segment at the end of that
-                                return new CompletedRouteState(RiderId, ActivityId, segmentState.CurrentPosition,
-                                    plannedRoute);
-                            }
-                            
-                            return new LostRouteLockState(RiderId, ActivityId ,segmentState.CurrentPosition, segmentState.CurrentSegment, segmentState.Direction, plannedRoute, segmentState.ElapsedDistance, segmentState.ElapsedAscent, segmentState.ElapsedDescent);
+                            // Moved from last segment of route to the next segment at the end of that
+                            return new CompletedRouteState(RiderId, ActivityId, segmentState.CurrentPosition,
+                                plannedRoute);
                         }
+
+                        return new LostRouteLockState(RiderId, ActivityId, segmentState.CurrentPosition,
+                            segmentState.CurrentSegment, segmentState.Direction, plannedRoute,
+                            segmentState.ElapsedDistance, segmentState.ElapsedAscent, segmentState.ElapsedDescent);
                     }
-
-                    return new OnRouteState(RiderId, ActivityId, segmentState.CurrentPosition,
-                        segmentState.CurrentSegment, Route, segmentState.Direction, segmentState.ElapsedDistance, segmentState.ElapsedAscent, segmentState.ElapsedDescent);
                 }
 
-                if (segmentState.CurrentSegment.Id == Route.NextSegmentId)
-                {
-                    try
-                    {
-                        Route.EnteredSegment(segmentState.CurrentSegment.Id);
-                    }
-                    catch (ArgumentException)
-                    {
-                        // The segment is not the expected next one so we lost lock somewhere...
-                    }
-
-                    return new OnRouteState(RiderId, ActivityId, segmentState.CurrentPosition, segmentState.CurrentSegment, Route);
-                }
-
-                if (segmentState.CurrentSegment.Id == Route.CurrentSegmentId)
-                {
-                    return new OnRouteState(RiderId, ActivityId, segmentState.CurrentPosition, segmentState.CurrentSegment, Route, segmentState.Direction, segmentState.ElapsedDistance, segmentState.ElapsedAscent, segmentState.ElapsedDescent);
-                }
-
-                var distance = position.DistanceTo(CurrentPosition);
-
-                if (distance < 100)
-                {
-                    return new OnRouteState(
-                        RiderId, 
-                        ActivityId, 
-                        CurrentPosition, // Use the last known position on the segment
-                        CurrentSegment,  // Use the current segment of the route
-                        Route, 
-                        Direction,
-                        ElapsedDistance,
-                        ElapsedAscent,
-                        ElapsedDescent);
-                }
-
-                return segmentState;
+                return new OnRouteState(RiderId, ActivityId, segmentState.CurrentPosition,
+                    segmentState.CurrentSegment, Route, segmentState.Direction, segmentState.ElapsedDistance,
+                    segmentState.ElapsedAscent, segmentState.ElapsedDescent);
             }
 
-            return result;
+            if (segmentState.CurrentSegment.Id == Route.NextSegmentId)
+            {
+                try
+                {
+                    Route.EnteredSegment(segmentState.CurrentSegment.Id);
+                }
+                catch (ArgumentException)
+                {
+                    // The segment is not the expected next one so we lost lock somewhere...
+                }
+
+                return new OnRouteState(RiderId, ActivityId, segmentState.CurrentPosition, segmentState.CurrentSegment,
+                    Route);
+            }
+
+            if (segmentState.CurrentSegment.Id == Route.CurrentSegmentId)
+            {
+                return new OnRouteState(RiderId, ActivityId, segmentState.CurrentPosition, segmentState.CurrentSegment,
+                    Route, segmentState.Direction, segmentState.ElapsedDistance, segmentState.ElapsedAscent,
+                    segmentState.ElapsedDescent);
+            }
+
+            var distance = position.DistanceTo(CurrentPosition);
+
+            if (distance < 100)
+            {
+                return new OnRouteState(
+                    RiderId,
+                    ActivityId,
+                    CurrentPosition, // Use the last known position on the segment
+                    CurrentSegment, // Use the current segment of the route
+                    Route,
+                    Direction,
+                    ElapsedDistance,
+                    ElapsedAscent,
+                    ElapsedDescent);
+            }
+
+            return segmentState;
         }
 
         public override GameState TurnCommandAvailable(string type)

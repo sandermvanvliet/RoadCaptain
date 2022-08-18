@@ -44,7 +44,7 @@ namespace RoadCaptain.GameStates
         
         public override GameState EnterGame(uint riderId, ulong activityId)
         {
-            throw new InvalidStateTransitionException("User is already in-game");
+            throw InvalidStateTransitionException.AlreadyInGame(GetType());
         }
 
         public override GameState LeaveGame()
