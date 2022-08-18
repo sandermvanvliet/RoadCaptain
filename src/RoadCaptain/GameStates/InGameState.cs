@@ -53,7 +53,7 @@ namespace RoadCaptain.GameStates
 
         public override GameState TurnCommandAvailable(string type)
         {
-            throw InvalidStateTransitionException.NotOnARouteYet(GetType());
+            throw InvalidStateTransitionException.NotOnARoute(GetType());
         }
     }
 }

@@ -55,7 +55,7 @@ namespace RoadCaptain.GameStates
 
         public override GameState TurnCommandAvailable(string type)
         {
-            throw InvalidStateTransitionException.NotOnARouteYet(GetType());
+            throw InvalidStateTransitionException.NotOnARoute(GetType());
         }
 
         public override GameState UpdatePosition(TrackPoint position, List<Segment> segments, PlannedRoute plannedRoute)

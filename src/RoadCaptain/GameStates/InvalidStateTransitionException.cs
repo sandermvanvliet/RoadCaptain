@@ -14,11 +14,11 @@ namespace RoadCaptain.GameStates
         {
         }
 
-        public static InvalidStateTransitionException NotOnARouteYet(Type fromState) =>
+        public static InvalidStateTransitionException NotOnARoute(Type fromState) =>
             new(
                 fromState, 
                 typeof(UpcomingTurnState),
-                "the rider is not on a route (yet)");
+                "the rider is not on a route");
 
         public static InvalidStateTransitionException AlreadyInGame(Type fromState) =>
             new(
