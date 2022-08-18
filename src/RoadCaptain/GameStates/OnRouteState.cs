@@ -7,11 +7,6 @@ namespace RoadCaptain.GameStates
 {
     public class OnRouteState : GameState
     {
-        public OnRouteState(uint riderId, ulong activityId, TrackPoint currentPosition, Segment segment, PlannedRoute plannedRoute)
-        : this(riderId, activityId, currentPosition, segment, plannedRoute, SegmentDirection.Unknown, new List<TurnDirection>(), 0, 0, 0)
-        {
-        }
-
         public OnRouteState(uint riderId, ulong activityId, TrackPoint currentPosition, Segment segment,
             PlannedRoute plannedRoute, SegmentDirection direction, double elapsedDistance, double elapsedAscent, double elapsedDescent)
             
@@ -27,7 +22,7 @@ namespace RoadCaptain.GameStates
             ElapsedDescent = elapsedDescent;
         }
 
-        protected OnRouteState(uint riderId, ulong activityId, TrackPoint currentPosition, Segment segment,
+        private OnRouteState(uint riderId, ulong activityId, TrackPoint currentPosition, Segment segment,
             PlannedRoute plannedRoute,
             SegmentDirection direction, List<TurnDirection> turnDirections, double elapsedDistance, double elapsedAscent, double elapsedDescent) 
             : this(riderId, activityId, currentPosition, segment, plannedRoute, direction, elapsedDistance, elapsedAscent, elapsedDescent)

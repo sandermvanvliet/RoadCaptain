@@ -57,11 +57,11 @@ namespace RoadCaptain.App.Runner.Tests.Unit.Views
             Dispatcher.UIThread.InvokeAsync(() => { }, DispatcherPriority.SystemIdle);
 
             route.EnteredSegment("seg-2");
-            viewModel.UpdateGameState(new OnRouteState(1, 2, new TrackPoint(1, 2, 3), segments[1], route));
+            viewModel.UpdateGameState(new OnRouteState(1, 2, new TrackPoint(1, 2, 3), segments[1], route, SegmentDirection.AtoB, 0, 0, 0));
             Dispatcher.UIThread.InvokeAsync(() => { }, DispatcherPriority.SystemIdle);
 
             route.EnteredSegment("seg-3");
-            viewModel.UpdateGameState(new OnRouteState(1, 2, new TrackPoint(1, 2, 3), segments[2], route));
+            viewModel.UpdateGameState(new OnRouteState(1, 2, new TrackPoint(1, 2, 3), segments[2], route, SegmentDirection.AtoB, 0, 0, 0));
             Dispatcher.UIThread.InvokeAsync(() => { }, DispatcherPriority.SystemIdle);
             
             var windowContent = (window.Content as Grid);
@@ -124,11 +124,11 @@ namespace RoadCaptain.App.Runner.Tests.Unit.Views
             Dispatcher.UIThread.InvokeAsync(() => { }, DispatcherPriority.SystemIdle);
 
             route.EnteredSegment("seg-2");
-            viewModel.UpdateGameState(new OnRouteState(1, 2, new TrackPoint(1, 2, 3), segments[1], route));
+            viewModel.UpdateGameState(new OnRouteState(1, 2, new TrackPoint(1, 2, 3), segments[1], route, SegmentDirection.AtoB, 0, 0, 0));
             Dispatcher.UIThread.InvokeAsync(() => { }, DispatcherPriority.SystemIdle);
 
             route.EnteredSegment("seg-3");
-            viewModel.UpdateGameState(new OnRouteState(1, 2, new TrackPoint(1, 2, 3) { DistanceOnSegment = 12}, segments[2], route));
+            viewModel.UpdateGameState(new OnRouteState(1, 2, new TrackPoint(1, 2, 3) { DistanceOnSegment = 12}, segments[2], route, SegmentDirection.AtoB, 0, 0, 0));
             Dispatcher.UIThread.InvokeAsync(() => { }, DispatcherPriority.SystemIdle);
             
             var windowContent = (window.Content as Grid);
@@ -191,11 +191,11 @@ namespace RoadCaptain.App.Runner.Tests.Unit.Views
             Dispatcher.UIThread.InvokeAsync(() => { }, DispatcherPriority.SystemIdle);
 
             route.EnteredSegment("seg-2");
-            viewModel.UpdateGameState(new OnRouteState(1, 2, new TrackPoint(1, 2, 3), segments[1], route));
+            viewModel.UpdateGameState(new OnRouteState(1, 2, new TrackPoint(1, 2, 3), segments[1], route, SegmentDirection.AtoB, 0, 0, 0));
             Dispatcher.UIThread.InvokeAsync(() => { }, DispatcherPriority.SystemIdle);
 
             route.EnteredSegment("seg-3");
-            viewModel.UpdateGameState(new OnRouteState(1, 2, new TrackPoint(1, 2, 3) { DistanceOnSegment = 12}, segments[2], route));
+            viewModel.UpdateGameState(new OnRouteState(1, 2, new TrackPoint(1, 2, 3) { DistanceOnSegment = 12}, segments[2], route, SegmentDirection.AtoB, 0, 0, 0));
             Dispatcher.UIThread.InvokeAsync(() => { }, DispatcherPriority.SystemIdle);
 
             viewModel.UpdateGameState(new CompletedRouteState(1, 2, new TrackPoint(1, 2, 3) { DistanceOnSegment = 12}, route));
@@ -262,11 +262,11 @@ namespace RoadCaptain.App.Runner.Tests.Unit.Views
             Dispatcher.UIThread.InvokeAsync(async () => { }, DispatcherPriority.SystemIdle);
 
             route.EnteredSegment("seg-2");
-            viewModel.UpdateGameState(new OnRouteState(1, 2, new TrackPoint(1, 2, 3), segments[1], route));
+            viewModel.UpdateGameState(new OnRouteState(1, 2, new TrackPoint(1, 2, 3), segments[1], route, SegmentDirection.AtoB, 0, 0, 0));
             Dispatcher.UIThread.InvokeAsync(() => { }, DispatcherPriority.SystemIdle);
 
             route.EnteredSegment("seg-3");
-            viewModel.UpdateGameState(new OnRouteState(1, 2, new TrackPoint(1, 2, 3) { DistanceOnSegment = 12}, segments[2], route));
+            viewModel.UpdateGameState(new OnRouteState(1, 2, new TrackPoint(1, 2, 3) { DistanceOnSegment = 12}, segments[2], route, SegmentDirection.AtoB, 0, 0, 0));
             Dispatcher.UIThread.InvokeAsync(() => { }, DispatcherPriority.SystemIdle);
             
             var windowContent = (window.Content as Grid);

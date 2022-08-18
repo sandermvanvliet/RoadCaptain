@@ -188,7 +188,7 @@ namespace RoadCaptain.Tests.Unit.GameState
         public void GivenOnRouteStateAndPositionIsUpdatedAndPositionIsInSameSegment_ResultingStateIsOnRouteState()
         {
             _route.EnteredSegment("route-segment-1");
-            var state = new OnRouteState(RiderId, ActivityId, RoutePosition1, SegmentById("route-segment-1"), _route);
+            var state = new OnRouteState(RiderId, ActivityId, RoutePosition1, SegmentById("route-segment-1"), _route, SegmentDirection.AtoB, 0, 0, 0);
 
             var result = state.UpdatePosition(RoutePosition1Point2, _segments, _route);
 
@@ -206,7 +206,7 @@ namespace RoadCaptain.Tests.Unit.GameState
         public void GivenOnRouteStateAndPositionIsUpdatedAndPositionIsOnNextSegmentInRoute_ResultingStateIsOnRouteState()
         {
             _route.EnteredSegment("route-segment-1");
-            var state = new OnRouteState(RiderId, ActivityId, RoutePosition1, SegmentById("route-segment-1"), _route);
+            var state = new OnRouteState(RiderId, ActivityId, RoutePosition1, SegmentById("route-segment-1"), _route, SegmentDirection.AtoB, 0, 0, 0);
 
             var result = state.UpdatePosition(RoutePosition2, _segments, _route);
 
@@ -271,7 +271,7 @@ namespace RoadCaptain.Tests.Unit.GameState
         public void GivenOnRouteStateAndLeftTurnAvailable_ResultingStateIsOnRouteState()
         {
             _route.EnteredSegment("route-segment-1");
-            GameStates.GameState state = new OnRouteState(RiderId, ActivityId, RoutePosition1, SegmentById("route-segment-1"), _route);
+            GameStates.GameState state = new OnRouteState(RiderId, ActivityId, RoutePosition1, SegmentById("route-segment-1"), _route, SegmentDirection.AtoB, 0, 0, 0);
             state = state.UpdatePosition(RoutePosition1Point2, _segments, _route);
 
             var result = state.TurnCommandAvailable("TurnLeft");
@@ -345,7 +345,7 @@ namespace RoadCaptain.Tests.Unit.GameState
             _route.EnteredSegment("route-segment-1");
             _route.EnteredSegment("route-segment-2");
             _route.EnteredSegment("route-segment-3");
-            GameStates.GameState state = new OnRouteState(RiderId, ActivityId, RoutePosition3, SegmentById("route-segment-3"), _route);
+            GameStates.GameState state = new OnRouteState(RiderId, ActivityId, RoutePosition3, SegmentById("route-segment-3"), _route, SegmentDirection.AtoB, 0, 0, 0);
 
             var result = state.UpdatePosition(PositionOnSegment, _segments, _route);
 
@@ -364,7 +364,7 @@ namespace RoadCaptain.Tests.Unit.GameState
             _route.EnteredSegment("route-segment-1");
             _route.EnteredSegment("route-segment-2");
             _route.EnteredSegment("route-segment-3");
-            GameStates.GameState state = new OnRouteState(RiderId, ActivityId, RoutePosition3, SegmentById("route-segment-3"), _route);
+            GameStates.GameState state = new OnRouteState(RiderId, ActivityId, RoutePosition3, SegmentById("route-segment-3"), _route, SegmentDirection.AtoB, 0, 0, 0);
             state = state.UpdatePosition(PositionOnSegment, _segments, _route); // Results in an LostRouteLockState on segment-1
 
             var result = state.UpdatePosition(RoutePosition3, _segments, _route);
@@ -383,7 +383,7 @@ namespace RoadCaptain.Tests.Unit.GameState
         {
             _route.EnteredSegment("route-segment-1");
             _route.EnteredSegment("route-segment-2");
-            GameStates.GameState state = new OnRouteState(RiderId, ActivityId, RoutePosition2, SegmentById("route-segment-2"), _route);
+            GameStates.GameState state = new OnRouteState(RiderId, ActivityId, RoutePosition2, SegmentById("route-segment-2"), _route, SegmentDirection.AtoB, 0, 0, 0);
 
             var result = state.UpdatePosition(RoutePosition3, _segments, _route);
 
@@ -402,7 +402,7 @@ namespace RoadCaptain.Tests.Unit.GameState
             _route.EnteredSegment("route-segment-1");
             _route.EnteredSegment("route-segment-2");
             _route.EnteredSegment("route-segment-3");
-            GameStates.GameState state = new OnRouteState(RiderId, ActivityId, RoutePosition3, SegmentById("route-segment-3"), _route);
+            GameStates.GameState state = new OnRouteState(RiderId, ActivityId, RoutePosition3, SegmentById("route-segment-3"), _route, SegmentDirection.AtoB, 0, 0, 0);
 
             var result = state.UpdatePosition(RoutePosition3Point2, _segments, _route);
 
@@ -421,7 +421,7 @@ namespace RoadCaptain.Tests.Unit.GameState
             _route.EnteredSegment("route-segment-1");
             _route.EnteredSegment("route-segment-2");
             _route.EnteredSegment("route-segment-3");
-            GameStates.GameState state = new OnRouteState(RiderId, ActivityId, RoutePosition3, SegmentById("route-segment-3"), _route);
+            GameStates.GameState state = new OnRouteState(RiderId, ActivityId, RoutePosition3, SegmentById("route-segment-3"), _route, SegmentDirection.AtoB, 0, 0, 0);
 
             var result = state.UpdatePosition(Position4, _segments, _route);
 
