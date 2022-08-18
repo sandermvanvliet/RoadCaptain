@@ -7,8 +7,15 @@ namespace RoadCaptain.GameStates
 {
     public class LostRouteLockState : GameState
     {
-        public LostRouteLockState(uint riderId, ulong activityId, TrackPoint currentPosition, Segment segment,
-            SegmentDirection direction, PlannedRoute plannedRoute, double elapsedDistance, double elapsedAscent,
+        public LostRouteLockState(
+            uint riderId, 
+            ulong activityId, 
+            TrackPoint currentPosition, 
+            Segment segment,
+            PlannedRoute plannedRoute,
+            SegmentDirection direction, 
+            double elapsedDistance, 
+            double elapsedAscent,
             double elapsedDescent)
         {
             RiderId = riderId;
@@ -109,8 +116,8 @@ namespace RoadCaptain.GameStates
 
                         // TODO reproduce this with the ItalianVillasRepro route
                         return new LostRouteLockState(RiderId, ActivityId, segmentState.CurrentPosition,
-                            segmentState.CurrentSegment, segmentState.Direction, plannedRoute,
-                            segmentState.ElapsedDistance, segmentState.ElapsedAscent, segmentState.ElapsedDescent);
+                            segmentState.CurrentSegment, plannedRoute,
+                            segmentState.Direction, segmentState.ElapsedDistance, segmentState.ElapsedAscent, segmentState.ElapsedDescent);
                     }
 
                     if (lastOfRoute.Direction == SegmentDirection.BtoA)
@@ -124,8 +131,8 @@ namespace RoadCaptain.GameStates
                         }
 
                         return new LostRouteLockState(RiderId, ActivityId, segmentState.CurrentPosition,
-                            segmentState.CurrentSegment, segmentState.Direction, plannedRoute,
-                            segmentState.ElapsedDistance, segmentState.ElapsedAscent, segmentState.ElapsedDescent);
+                            segmentState.CurrentSegment, plannedRoute,
+                            segmentState.Direction, segmentState.ElapsedDistance, segmentState.ElapsedAscent, segmentState.ElapsedDescent);
                     }
                 }
 
@@ -173,7 +180,12 @@ namespace RoadCaptain.GameStates
                     descent);
             }
 
-            return segmentState;
+            // From LostRouteLockState we can't go to OnSegmentState because that would mean
+            // we've never started a route which we did, otherwise we wouldn't have lost
+            // the lock.
+            return new LostRouteLockState(RiderId, ActivityId, segmentState.CurrentPosition,
+                segmentState.CurrentSegment, Route, segmentState.Direction,
+                segmentState.ElapsedDistance, segmentState.ElapsedAscent, segmentState.ElapsedDescent);
         }
 
         public override GameState TurnCommandAvailable(string type)
