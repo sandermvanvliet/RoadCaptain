@@ -27,5 +27,27 @@ namespace RoadCaptain.Tests.Unit.GameState
                 .Should()
                 .BeEmpty();
         }
+
+        [Fact]
+        public void AllGameStatesAreSealed()
+        {
+            var gameStateType = typeof(GameStates.GameState);
+
+            var gameStateTypes = gameStateType
+                .Assembly
+                .GetTypes()
+                .Where(type => gameStateType.IsAssignableFrom(type) && 
+                               type != gameStateType)
+                .ToList();
+
+            var notSealedStates = gameStateTypes
+                .Where(type => !type.IsSealed)
+                .Select(type => type.Name.Split(".").Last())
+                .ToList();
+
+            notSealedStates
+                .Should()
+                .BeEmpty();
+        }
     }
 }

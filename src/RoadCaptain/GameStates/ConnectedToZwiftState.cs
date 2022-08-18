@@ -2,7 +2,7 @@
 
 namespace RoadCaptain.GameStates
 {
-    public class ConnectedToZwiftState : GameState
+    public sealed class ConnectedToZwiftState : GameState
     {
         public override GameState UpdatePosition(TrackPoint position, List<Segment> segments, PlannedRoute plannedRoute)
         {

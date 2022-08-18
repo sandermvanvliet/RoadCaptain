@@ -5,7 +5,7 @@ using Newtonsoft.Json;
 
 namespace RoadCaptain.GameStates
 {
-    public class LostRouteLockState : GameState
+    public sealed class LostRouteLockState : GameState
     {
         public LostRouteLockState(
             uint riderId, 

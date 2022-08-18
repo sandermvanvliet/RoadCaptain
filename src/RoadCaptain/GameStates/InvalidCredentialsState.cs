@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace RoadCaptain.GameStates
 {
-    public class InvalidCredentialsState : GameState
+    public sealed class InvalidCredentialsState : GameState
     {
         public Exception Exception { get; }
 

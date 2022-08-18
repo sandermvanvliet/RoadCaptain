@@ -2,7 +2,7 @@
 
 namespace RoadCaptain.GameStates
 {
-    public class NotLoggedInState : GameState
+    public sealed class NotLoggedInState : GameState
     {
         public override uint RiderId => 0;
 

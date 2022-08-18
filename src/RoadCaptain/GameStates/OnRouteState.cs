@@ -5,7 +5,7 @@ using Newtonsoft.Json;
 
 namespace RoadCaptain.GameStates
 {
-    public class OnRouteState : GameState
+    public sealed class OnRouteState : GameState
     {
         public OnRouteState(uint riderId, ulong activityId, TrackPoint currentPosition, Segment segment,
             PlannedRoute plannedRoute, SegmentDirection direction, double elapsedDistance, double elapsedAscent, double elapsedDescent)

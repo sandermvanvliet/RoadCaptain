@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 
 namespace RoadCaptain.GameStates
 {
-    public class UpcomingTurnState : GameState
+    public sealed class UpcomingTurnState : GameState
     {
         public UpcomingTurnState(uint riderId,
             ulong activityId,

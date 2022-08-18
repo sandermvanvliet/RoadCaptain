@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 
 namespace RoadCaptain.GameStates
 {
-    public class PositionedState : GameState
+    public sealed class PositionedState : GameState
     {
         [JsonProperty]
         public sealed override uint RiderId { get; }

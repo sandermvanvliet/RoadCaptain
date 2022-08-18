@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace RoadCaptain.GameStates
 {
-    public class LoggedInState : GameState
+    public sealed class LoggedInState : GameState
     {
         public string AccessToken { get; }
 

@@ -2,7 +2,7 @@
 
 namespace RoadCaptain.GameStates
 {
-    public class WaitingForConnectionState : GameState
+    public sealed class WaitingForConnectionState : GameState
     {
         public override uint RiderId => 0;
 

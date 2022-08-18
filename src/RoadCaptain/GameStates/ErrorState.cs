@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 
 namespace RoadCaptain.GameStates
 {
-    public class ErrorState : GameState
+    public sealed class ErrorState : GameState
     {
         public ErrorState(Exception exception)
         {

@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 
 namespace RoadCaptain.GameStates
 {
-    public class CompletedRouteState : GameState
+    public sealed class CompletedRouteState : GameState
     {
         public CompletedRouteState(
             uint riderId, 
