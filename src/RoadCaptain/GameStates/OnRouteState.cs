@@ -166,7 +166,7 @@ namespace RoadCaptain.GameStates
                 }
 
                 return new OnRouteState(RiderId, ActivityId, segmentState.CurrentPosition, segmentState.CurrentSegment,
-                    Route);
+                    Route, direction, distance1, ascent, descent);
             }
 
             if (segmentState.CurrentSegment.Id == Route.CurrentSegmentId)
