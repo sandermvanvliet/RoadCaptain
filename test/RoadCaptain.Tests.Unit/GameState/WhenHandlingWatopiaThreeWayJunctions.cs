@@ -12,7 +12,7 @@ namespace RoadCaptain.Tests.Unit.GameState
         public void GivenCurrentSegmentIsMarinaToEpicAndLeftRightTurnsAreAvailable_ResultingStateIsUpcomingTurnState()
         {
             _route.EnteredSegment("watopia-bambino-fondo-003-before-before");
-            GameStates.GameState state = new OnRouteState(RiderId, ActivityId, RoutePosition1, SegmentById("watopia-bambino-fondo-003-before-before"), _route);
+            GameStates.GameState state = new OnRouteState(RiderId, ActivityId, RoutePosition1, SegmentById("watopia-bambino-fondo-003-before-before"), _route, SegmentDirection.AtoB, 0, 0, 0);
             state = state.UpdatePosition(RoutePosition1Point2, _segments, _route);
             state = state.TurnCommandAvailable("TurnLeft");
             state = state.TurnCommandAvailable("TurnRight");

@@ -129,6 +129,8 @@ namespace RoadCaptain.App.Runner
 
                 // Start handling Zwift messages
                 StartMessageHandler();
+
+                _windowService.ShowMainWindow();
             }
             else if (gameState is InvalidCredentialsState invalidCredentials)
             {

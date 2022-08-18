@@ -3,4 +3,13 @@
     <AllowParallelTestExecution>True</AllowParallelTestExecution>
     <SolutionConfigured>True</SolutionConfigured>
   </Settings>
+  <EngineModes>
+    <EngineMode>
+      <Name>Isolated Test</Name>
+      <Settings>
+        <ShowCoverageForTests>IsPinned</ShowCoverageForTests>
+        <TestsToExecuteAutomatically>IsPinned</TestsToExecuteAutomatically>
+      </Settings>
+    </EngineMode>
+  </EngineModes>
 </SolutionConfiguration>

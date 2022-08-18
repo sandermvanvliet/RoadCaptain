@@ -88,29 +88,30 @@ namespace RoadCaptain.GameStates
             // for future reference.
             closestOnSegment.Segment = segment;
 
+            var positionDelta = CurrentPosition.DeltaTo(closestOnSegment);
+
+            var distance = ElapsedDistance + positionDelta.Distance;
+            var ascent = ElapsedAscent + positionDelta.Ascent;
+            var descent = ElapsedDescent + positionDelta.Descent;
+
             if (!plannedRoute.HasStarted && plannedRoute.StartingSegmentId == segment.Id)
             {
                 plannedRoute.EnteredSegment(segment.Id);
-                var positionDelta = CurrentPosition.DeltaTo(closestOnSegment);
-
-                var distance = ElapsedDistance + positionDelta.Distance;
-                var ascent = ElapsedAscent + positionDelta.Ascent;
-                var descent = ElapsedDescent + positionDelta.Descent;
 
                 return new OnRouteState(RiderId, ActivityId, closestOnSegment, segment, plannedRoute, Direction, distance, ascent, descent);
             }
 
             if (plannedRoute.HasStarted && !plannedRoute.HasCompleted && plannedRoute.CurrentSegmentId == segment.Id)
             {
-                return new OnRouteState(RiderId, ActivityId, closestOnSegment, segment, plannedRoute);
+                return new OnRouteState(RiderId, ActivityId, closestOnSegment, segment, plannedRoute, Direction, distance, ascent, descent);
             }
             
             if (plannedRoute.HasStarted && plannedRoute.NextSegmentId == segment.Id)
             {
-                return new OnRouteState(RiderId, ActivityId, closestOnSegment, segment, plannedRoute);
+                return new OnRouteState(RiderId, ActivityId, closestOnSegment, segment, plannedRoute, Direction, distance, ascent, descent);
             }
 
-            return new OnSegmentState(RiderId, ActivityId, closestOnSegment, segment, Direction, ElapsedDistance, ElapsedAscent, ElapsedDescent);
+            return new OnSegmentState(RiderId, ActivityId, closestOnSegment, segment, Direction, distance, ascent, descent);
         }
 
         public override GameState TurnCommandAvailable(string type)

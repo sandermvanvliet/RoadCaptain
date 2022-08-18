@@ -54,7 +54,7 @@ namespace RoadCaptain.GameStates
 
         public override GameState UpdatePosition(TrackPoint position, List<Segment> segments, PlannedRoute plannedRoute)
         {
-            return this;
+            return new CompletedRouteState(RiderId, ActivityId, position, plannedRoute);
         }
 
         public override GameState TurnCommandAvailable(string type)

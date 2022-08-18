@@ -246,9 +246,7 @@ namespace RoadCaptain.Tests.Unit.GameState
             var result = state.UpdatePosition(RoutePosition1Point2, _segments, _route);
 
             result
-                .Should()
-                .BeAssignableTo<OnSegmentState>()
-                .Which
+                .As<OnRouteState>()
                 .Direction
                 .Should()
                 .Be(SegmentDirection.AtoB);
@@ -262,10 +260,8 @@ namespace RoadCaptain.Tests.Unit.GameState
 
             var result = state.UpdatePosition(RoutePosition1Point2, _segments, _route);
 
-            result
-                .Should()
-                .BeAssignableTo<OnSegmentState>()
-                .Which
+            result            
+                .As<OnRouteState>()
                 .Direction
                 .Should()
                 .Be(SegmentDirection.AtoB);
@@ -311,12 +307,12 @@ namespace RoadCaptain.Tests.Unit.GameState
         {
             _route.EnteredSegment("route-segment-1");
             _route.EnteredSegment("route-segment-2");
-            GameStates.GameState state = new OnRouteState(RiderId, ActivityId, RoutePosition2, SegmentById("route-segment-2"), _route);
-            state = state.UpdatePosition(RoutePosition2Point2, _segments, _route);
-            state = state.TurnCommandAvailable("TurnLeft");
-            state = state.TurnCommandAvailable("TurnRight");
+            GameStates.GameState state = new OnRouteState(RiderId, ActivityId, RoutePosition2, SegmentById("route-segment-2"), _route, SegmentDirection.AtoB, 0, 0, 0);
+            var state2 = state.UpdatePosition(RoutePosition2Point2, _segments, _route) as OnRouteState;
+            var state3 = state2.TurnCommandAvailable("TurnLeft") as OnRouteState;
+            var state4 = state3.TurnCommandAvailable("TurnRight") as UpcomingTurnState;
 
-            var result = state.UpdatePosition(RoutePosition2Point3, _segments, _route);
+            var result = state4.UpdatePosition(RoutePosition2Point3, _segments, _route);
 
             result
                 .Should()
@@ -447,7 +443,7 @@ namespace RoadCaptain.Tests.Unit.GameState
 
             result
                 .Should()
-                .BeOfType<OnRouteState>()
+                .BeOfType<CompletedRouteState>()
                 .Which
                 .CurrentPosition
                 .Should()
@@ -470,9 +466,9 @@ namespace RoadCaptain.Tests.Unit.GameState
         [Fact]
         public void GivenPositionChangesWithinSegmentAndRiderHasProgress_ElapsedDistanceIsIncreased()
         {
-            GameStates.GameState state = new OnSegmentState(RiderId, ActivityId, RoutePosition1, SegmentById("segment-1"), SegmentDirection.AtoB, 0, 0, 0);
-            state = state.UpdatePosition(RoutePosition1Point2, _segments, _route);
-            var result = state.UpdatePosition(RoutePosition1Point3, _segments, _route) as OnSegmentState;
+            var state1 = new OnSegmentState(RiderId, ActivityId, RoutePosition1, SegmentById("segment-1"), SegmentDirection.AtoB, 0, 0, 0);
+            var state2 = state1.UpdatePosition(RoutePosition1Point2, _segments, _route) as OnRouteState;
+            var result = state2.UpdatePosition(RoutePosition1Point3, _segments, _route) as OnRouteState;
 
             result
                 .ElapsedDistance
@@ -485,7 +481,7 @@ namespace RoadCaptain.Tests.Unit.GameState
         {
             GameStates.GameState state = new OnSegmentState(RiderId, ActivityId, RoutePosition1, SegmentById("segment-1"), SegmentDirection.AtoB, 0, 0, 0);
             state = state.UpdatePosition(RoutePosition1Point2, _segments, _route);
-            var result = state.UpdatePosition(RoutePosition1Point3, _segments, _route) as OnSegmentState;
+            var result = state.UpdatePosition(RoutePosition1Point3, _segments, _route) as OnRouteState;
 
             result
                 .ElapsedAscent
@@ -498,7 +494,7 @@ namespace RoadCaptain.Tests.Unit.GameState
         {
             GameStates.GameState state = new OnSegmentState(RiderId, ActivityId, RoutePosition1Point3, SegmentById("segment-1"), SegmentDirection.AtoB, 0, 0, 0);
             state = state.UpdatePosition(RoutePosition1Point2, _segments, _route);
-            var result = state.UpdatePosition(RoutePosition1, _segments, _route) as OnSegmentState;
+            var result = state.UpdatePosition(RoutePosition1, _segments, _route) as OnRouteState;
 
             result
                 .ElapsedDescent

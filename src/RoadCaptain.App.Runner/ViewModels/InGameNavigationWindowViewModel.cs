@@ -79,6 +79,10 @@ namespace RoadCaptain.App.Runner.ViewModels
 
                 if (gameState is OnRouteState routeState)
                 {
+                    Model.ElapsedAscent = routeState.ElapsedAscent;
+                    Model.ElapsedDescent = routeState.ElapsedDescent;
+                    Model.ElapsedDistance = routeState.ElapsedDistance;
+
                     if(_previousRouteSequenceIndex != routeState.Route.SegmentSequenceIndex)
                     {
                         // Moved to next segment on route
@@ -131,6 +135,18 @@ namespace RoadCaptain.App.Runner.ViewModels
 
         private void UpdateUserInGameStatus(GameState gameState)
         {
+            if (gameState is NotLoggedInState || 
+                gameState is LoggedInState || 
+                gameState is WaitingForConnectionState ||
+                gameState is ConnectedToZwiftState)
+            {
+                Model.UserIsInGame = false;
+            }
+            else
+            {
+                Model.UserIsInGame = true;
+            }
+
             if (gameState is InGameState && _previousState is not InGameState)
             {
                 Model.UserIsInGame = true;
@@ -156,6 +172,11 @@ namespace RoadCaptain.App.Runner.ViewModels
                 Model.UserIsInGame = false;
                 Model.WaitingReason = "Waiting for Zwift...";
                 Model.InstructionText = $"Start Zwift and start {sportActivity} in {Model.Route.World.Name} on route:";
+            }
+            else if (gameState is OnRouteState)
+            {
+                Model.WaitingReason = string.Empty;
+                Model.InstructionText = string.Empty;
             }
             else if (gameState is ErrorState)
             {

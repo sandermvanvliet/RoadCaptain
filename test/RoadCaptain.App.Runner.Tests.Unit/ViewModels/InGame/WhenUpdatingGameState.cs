@@ -301,7 +301,7 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.InGame
             plannedRoute.EnteredSegment("seg-2");
             WhenUpdating(new OnRouteState(1, 2, new TrackPoint(1, 2, 3), new Segment(new List<TrackPoint>()) { Id = "seg-1"}, plannedRoute));
 
-            WhenUpdating(new OnSegmentState(1, 2, new TrackPoint(1, 2, 3), new Segment(new List<TrackPoint>()) { Id = "seg-2" }, SegmentDirection.AtoB, 0 ,0, 0));
+            WhenUpdating(new LostRouteLockState(1, 2, new TrackPoint(1, 2, 3), new Segment(new List<TrackPoint>()) { Id = "seg-2" }, SegmentDirection.AtoB, plannedRoute ,0, 0, 0));
 
             WhenUpdating(new OnRouteState(1, 2, new TrackPoint(1, 2, 3), new Segment(new List<TrackPoint>()) { Id = "seg-2"}, plannedRoute));
 

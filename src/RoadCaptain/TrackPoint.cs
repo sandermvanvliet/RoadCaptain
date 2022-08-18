@@ -273,8 +273,8 @@ namespace RoadCaptain
             return new PositionDelta
             {
                 Distance = (distanceFromLast / 1000),
-                Ascent = Altitude < other.Altitude ? 0 : other.Altitude - Altitude,
-                Descent = Altitude < other.Altitude ? other.Altitude - Altitude : 0
+                Ascent = Altitude < other.Altitude ? other.Altitude - Altitude : 0,
+                Descent = Altitude < other.Altitude ? 0 : Altitude - other.Altitude
             };
         }
     }
