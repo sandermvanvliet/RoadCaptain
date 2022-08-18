@@ -24,7 +24,7 @@ namespace RoadCaptain.GameStates
 
         public override GameState EnterGame(uint riderId, ulong activityId)
         {
-            throw new InvalidStateTransitionException("User is already in-game");
+            throw InvalidStateTransitionException.AlreadyInGame(GetType());
         }
 
         public override GameState LeaveGame()
@@ -47,32 +47,12 @@ namespace RoadCaptain.GameStates
                 return new PositionedState(RiderId, ActivityId, position);
             }
 
-            // This is to ensure that we have the segment of the position
-            // for future reference.
-            closestOnSegment.Segment = segment;
-
-            if (!plannedRoute.HasStarted && plannedRoute.StartingSegmentId == segment.Id)
-            {
-                plannedRoute.EnteredSegment(segment.Id);
-                return new OnRouteState(RiderId, ActivityId, closestOnSegment, segment, plannedRoute);
-            }
-
-            if (plannedRoute.HasStarted && !plannedRoute.HasCompleted && plannedRoute.CurrentSegmentId == segment.Id)
-            {
-                return new OnRouteState(RiderId, ActivityId, closestOnSegment, segment, plannedRoute);
-            }
-            
-            if (plannedRoute.HasStarted && plannedRoute.NextSegmentId == segment.Id)
-            {
-                return new OnRouteState(RiderId, ActivityId, closestOnSegment, segment, plannedRoute);
-            }
-
             return new OnSegmentState(RiderId, ActivityId, closestOnSegment, segment, SegmentDirection.Unknown, 0, 0, 0);
         }
 
         public override GameState TurnCommandAvailable(string type)
         {
-            return this;
+            throw InvalidStateTransitionException.NotOnARouteYet(GetType());
         }
     }
 }
