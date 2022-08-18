@@ -12,9 +12,9 @@ namespace RoadCaptain.GameStates
             Segment segment,
             PlannedRoute plannedRoute,
             SegmentDirection direction,
-            List<TurnDirection> directions, 
-            double elapsedDistance, 
-            double elapsedAscent, 
+            List<TurnDirection> directions,
+            double elapsedDistance,
+            double elapsedAscent,
             double elapsedDescent)
         {
             RiderId = riderId;
@@ -35,7 +35,7 @@ namespace RoadCaptain.GameStates
 
         [JsonProperty]
         public ulong ActivityId { get; }
-        
+
         [JsonProperty]
         public TrackPoint CurrentPosition { get; }
 
@@ -66,63 +66,109 @@ namespace RoadCaptain.GameStates
 
         public override GameState UpdatePosition(TrackPoint position, List<Segment> segments, PlannedRoute plannedRoute)
         {
-            var result = BaseUpdatePosition(position, segments, plannedRoute);
-
-            if (result is OnRouteState routeState)
-            {
-                if (routeState.CurrentSegment.Id == CurrentSegment.Id)
-                {
-                    if (routeState.CurrentPosition.Equals(CurrentPosition))
-                    {
-                        // We're still on the same segment
-                        return this;
-                    }
-
-                    return new UpcomingTurnState(RiderId, ActivityId, routeState.CurrentPosition, routeState.CurrentSegment, plannedRoute, routeState.Direction, Directions, routeState.ElapsedDistance, routeState.ElapsedAscent, routeState.ElapsedDescent);
-                }
-            }
-
-            return result;
-        }
-
-        private GameState BaseUpdatePosition(TrackPoint position, List<Segment> segments, PlannedRoute plannedRoute)
-        {
-            
+            OnRouteState routeState;
             // Note: We're using an IEnumerable<T> here to prevent
             //       unnecessary ToList() calls because the foreach
             //       loop in GetClosestMatchingSegment handles that
             //       for us.
             var matchingSegments = segments.Where(s => s.Contains(position));
-            
+
             var (segment, closestOnSegment) = matchingSegments.GetClosestMatchingSegment(position, CurrentPosition);
 
             if (segment == null || closestOnSegment == null)
             {
                 return new PositionedState(RiderId, ActivityId, position);
             }
-            
+
+            var positionDelta = CurrentPosition.DeltaTo(closestOnSegment);
+
+            var distance = ElapsedDistance + positionDelta.Distance;
+            var ascent = ElapsedAscent + positionDelta.Ascent;
+            var descent = ElapsedDescent + positionDelta.Descent;
+            var direction = DetermineSegmentDirection(segment, closestOnSegment);
+
             if (!plannedRoute.HasStarted && plannedRoute.StartingSegmentId == segment.Id)
             {
                 plannedRoute.EnteredSegment(segment.Id);
-                return new OnRouteState(RiderId, ActivityId, closestOnSegment, segment, plannedRoute, Direction, ElapsedDistance, ElapsedAscent, ElapsedDescent);
+                routeState = new OnRouteState(RiderId, ActivityId, closestOnSegment, segment, plannedRoute, direction, distance, ascent, descent);
+            }
+            else
+            {
+                if (plannedRoute.HasStarted && !plannedRoute.HasCompleted && plannedRoute.CurrentSegmentId == segment.Id)
+                {
+                    routeState = new OnRouteState(RiderId, ActivityId, closestOnSegment, segment, plannedRoute, direction, distance, ascent, descent);
+                }
+                else
+                {
+                    if (plannedRoute.HasStarted && plannedRoute.NextSegmentId == segment.Id)
+                    {
+                        routeState = new OnRouteState(RiderId, ActivityId, closestOnSegment, segment, plannedRoute, direction, distance, ascent, descent);
+                    }
+                    else
+                    {
+                        return new OnSegmentState(RiderId, ActivityId, closestOnSegment, segment, direction, distance, ascent, descent);
+                    }
+                }
             }
 
-            if (plannedRoute.HasStarted && !plannedRoute.HasCompleted && plannedRoute.CurrentSegmentId == segment.Id)
+            if (routeState.CurrentSegment.Id == CurrentSegment.Id)
             {
-                return new OnRouteState(RiderId, ActivityId, closestOnSegment, segment, plannedRoute, Direction, ElapsedDistance, ElapsedAscent, ElapsedDescent);
-            }
-            
-            if (plannedRoute.HasStarted && plannedRoute.NextSegmentId == segment.Id)
-            {
-                return new OnRouteState(RiderId, ActivityId, closestOnSegment, segment, plannedRoute, Direction, ElapsedDistance, ElapsedAscent, ElapsedDescent);
+                if (routeState.CurrentPosition.Equals(CurrentPosition))
+                {
+                    // We're still on the same segment
+                    return this;
+                }
+
+                return new UpcomingTurnState(RiderId, ActivityId, routeState.CurrentPosition, routeState.CurrentSegment, plannedRoute, routeState.Direction, Directions, routeState.ElapsedDistance, routeState.ElapsedAscent, routeState.ElapsedDescent);
             }
 
-            return new OnSegmentState(RiderId, ActivityId, closestOnSegment, segment, Direction, ElapsedDistance, ElapsedAscent, ElapsedDescent);
+            return routeState;
         }
 
         public override GameState TurnCommandAvailable(string type)
         {
             return this;
+        }
+
+        private SegmentDirection DetermineSegmentDirection(Segment newSegment, TrackPoint newPosition)
+        {
+            if (newSegment.Id == CurrentSegment.Id)
+            {
+                int previousPositionIndex;
+                int currentPositionIndex;
+
+                if (CurrentPosition.Index.HasValue && newPosition.Index.HasValue)
+                {
+                    previousPositionIndex = CurrentPosition.Index.Value;
+                    currentPositionIndex = newPosition.Index.Value;
+                }
+                else
+                {
+                    previousPositionIndex = newSegment.Points.IndexOf(CurrentPosition);
+                    currentPositionIndex = newSegment.Points.IndexOf(newPosition);
+                }
+
+                if (previousPositionIndex == -1 || currentPositionIndex == -1)
+                {
+                    return SegmentDirection.Unknown;
+                }
+
+                if (previousPositionIndex < currentPositionIndex)
+                {
+                    return SegmentDirection.AtoB;
+                }
+
+                if (previousPositionIndex > currentPositionIndex)
+                {
+                    return SegmentDirection.BtoA;
+                }
+                // If the indexes of the positions are the same then 
+                // keep the same direction as before to ensure we
+                // don't revert to Unknown unnecessarily.
+                return Direction;
+            }
+
+            return SegmentDirection.Unknown;
         }
     }
 }
