@@ -99,7 +99,7 @@ namespace RoadCaptain.GameStates
                         // The segment is not the expected next one so we lost lock somewhere...
                     }
 
-                    return new OnRouteState(RiderId, ActivityId, segmentState.CurrentPosition, segmentState.CurrentSegment, Route);
+                    return new OnRouteState(RiderId, ActivityId, segmentState.CurrentPosition, segmentState.CurrentSegment, Route, segmentState.Direction, segmentState.ElapsedDistance, segmentState.ElapsedAscent, segmentState.ElapsedDescent);
                 }
 
                 if (segmentState.CurrentSegment.Id == Route.CurrentSegmentId)
@@ -145,24 +145,20 @@ namespace RoadCaptain.GameStates
                 return new PositionedState(RiderId, ActivityId, position);
             }
 
-            // This is to ensure that we have the segment of the position
-            // for future reference.
-            closestOnSegment.Segment = segment;
-
             if (!plannedRoute.HasStarted && plannedRoute.StartingSegmentId == segment.Id)
             {
                 plannedRoute.EnteredSegment(segment.Id);
-                return new OnRouteState(RiderId, ActivityId, closestOnSegment, segment, plannedRoute);
+                return new OnRouteState(RiderId, ActivityId, closestOnSegment, segment, plannedRoute, Direction, ElapsedDistance, ElapsedAscent, ElapsedDescent);
             }
 
             if (plannedRoute.HasStarted && !plannedRoute.HasCompleted && plannedRoute.CurrentSegmentId == segment.Id)
             {
-                return new OnRouteState(RiderId, ActivityId, closestOnSegment, segment, plannedRoute);
+                return new OnRouteState(RiderId, ActivityId, closestOnSegment, segment, plannedRoute, Direction, ElapsedDistance, ElapsedAscent, ElapsedDescent);
             }
             
             if (plannedRoute.HasStarted && plannedRoute.NextSegmentId == segment.Id)
             {
-                return new OnRouteState(RiderId, ActivityId, closestOnSegment, segment, plannedRoute);
+                return new OnRouteState(RiderId, ActivityId, closestOnSegment, segment, plannedRoute, Direction, ElapsedDistance, ElapsedAscent, ElapsedDescent);
             }
 
             return new OnSegmentState(RiderId, ActivityId, closestOnSegment, segment, Direction, ElapsedDistance, ElapsedAscent, ElapsedDescent);
