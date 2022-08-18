@@ -73,7 +73,7 @@ namespace RoadCaptain.Tests.Unit.GameState
         {
             var state = new InGameState(RiderId, ActivityId);
 
-            var result = state.UpdatePosition(_positionNotOnSegment, _segments, _route);
+            var result = state.UpdatePosition(PositionNotOnSegment, _segments, _route);
 
             result
                 .Should()
@@ -81,7 +81,7 @@ namespace RoadCaptain.Tests.Unit.GameState
                 .Which
                 .CurrentPosition
                 .Should()
-                .Be(_positionNotOnSegment);
+                .Be(PositionNotOnSegment);
         }
 
         [Fact]
@@ -104,7 +104,7 @@ namespace RoadCaptain.Tests.Unit.GameState
         [Fact]
         public void GivenPositionedStateAndPositionIsUpdatedWhichIsNotOnSegment_ResultingStateIsPositionedState()
         {
-            var state = new PositionedState(RiderId, ActivityId, _positionNotOnSegment);
+            var state = new PositionedState(RiderId, ActivityId, PositionNotOnSegment);
 
             var result = state.UpdatePosition(new TrackPoint(1, 1, 1), _segments, _route);
 
@@ -120,7 +120,7 @@ namespace RoadCaptain.Tests.Unit.GameState
         [Fact]
         public void GivenPositionedStateAndPositionIsUpdatedWhichIsOnSegment_ResultingStateIsOnSegmentState()
         {
-            var state = new PositionedState(RiderId, ActivityId, _positionNotOnSegment);
+            var state = new PositionedState(RiderId, ActivityId, PositionNotOnSegment);
 
             var result = state.UpdatePosition(PositionOnSegment, _segments, _route);
 
@@ -241,7 +241,7 @@ namespace RoadCaptain.Tests.Unit.GameState
         [Fact]
         public void GivenOnSegmentStateAndPositionIsUpdatedFromOneToTwo_OnSegmentStateIsReturnedWithDirectionAtoB()
         {
-            var state = new OnSegmentState(RiderId, ActivityId, RoutePosition1, SegmentById("segment-1"), SegmentDirection.AtoB, 0, 0, 0);
+            var state = new OnSegmentState(RiderId, ActivityId, RoutePosition1, SegmentById("route-segment-1"), SegmentDirection.AtoB, 0, 0, 0);
 
             var result = state.UpdatePosition(RoutePosition1Point2, _segments, _route);
 
@@ -255,7 +255,7 @@ namespace RoadCaptain.Tests.Unit.GameState
         [Fact]
         public void GivenOnSegmentStateWithDirectionAtoBAndNextPositionIsSameAsLast_DirectionRemainsAtoB()
         {
-            GameStates.GameState state = new OnSegmentState(RiderId, ActivityId, RoutePosition1, SegmentById("segment-1"), SegmentDirection.AtoB, 0, 0, 0);
+            GameStates.GameState state = new OnSegmentState(RiderId, ActivityId, RoutePosition1, SegmentById("route-segment-1"), SegmentDirection.AtoB, 0, 0, 0);
             state = state.UpdatePosition(RoutePosition1Point2, _segments, _route);
 
             var result = state.UpdatePosition(RoutePosition1Point2, _segments, _route);
@@ -279,6 +279,22 @@ namespace RoadCaptain.Tests.Unit.GameState
             result
                 .Should()
                 .BeOfType<OnRouteState>();
+        }
+
+        [Fact]
+        public void GivenOnSegmentStateAndNextPositionNotOnSegment_ResultIsPositionedState()
+        {
+            var state = new OnSegmentState(RiderId, ActivityId, RoutePosition1, SegmentById("segment-1"), SegmentDirection.AtoB, 0, 0, 0);
+
+            var result = state.UpdatePosition(PositionNotOnSegment, _segments, _route);
+
+            result
+                .Should()
+                .BeOfType<PositionedState>()
+                .Which
+                .CurrentPosition
+                .Should()
+                .Be(PositionNotOnSegment);
         }
 
         [Fact]
@@ -643,7 +659,7 @@ namespace RoadCaptain.Tests.Unit.GameState
         // Note on the positions: Keep them far away from eachother otherwise you'll
         // get some interesting test failures because they are too close together
         // and you'll end up with the wrong segment....
-        private readonly TrackPoint _positionNotOnSegment = new(2, 2, 0);
+        private static readonly TrackPoint PositionNotOnSegment = new(2, 2, 0);
         private static readonly TrackPoint PositionOnSegment = new(1, 2, 3);
         private static readonly TrackPoint OtherOnSegment = new(3, 2, 3);
         private static readonly TrackPoint PositionOnAnotherSegment = new(4, 2, 3);

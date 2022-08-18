@@ -20,12 +20,15 @@ namespace RoadCaptain.GameStates
 
         [JsonProperty]
         public SegmentDirection Direction { get; private set; }
-
-        public double ElapsedDistance { get; private set; }
-
-        public double ElapsedDescent { get; private set; }
-
-        public double ElapsedAscent { get; private set; }
+        
+        [JsonProperty]
+        public double ElapsedDistance { get; }
+        
+        [JsonProperty]
+        public double ElapsedDescent { get; }
+        
+        [JsonProperty]
+        public double ElapsedAscent { get; }
         
         public OnSegmentState(uint riderId, ulong activityId, TrackPoint currentPosition, Segment segment,
             SegmentDirection direction, double elapsedDistance, double elapsedAscent, double elapsedDescent) 
@@ -42,7 +45,7 @@ namespace RoadCaptain.GameStates
         
         public override GameState EnterGame(uint riderId, ulong activityId)
         {
-            throw new InvalidStateTransitionException("User is already in-game");
+            throw InvalidStateTransitionException.AlreadyInGame(GetType());
         }
 
         public override GameState LeaveGame()
@@ -50,27 +53,13 @@ namespace RoadCaptain.GameStates
             return new ConnectedToZwiftState();
         }
 
-        public override GameState UpdatePosition(TrackPoint position, List<Segment> segments, PlannedRoute plannedRoute)
+        public override GameState TurnCommandAvailable(string type)
         {
-            var result = BaseUpdatePosition(position, segments, plannedRoute);
-            
-            if (result is OnSegmentState segmentState)
-            {
-                var positionDelta = CurrentPosition.DeltaTo(segmentState.CurrentPosition);
-
-                segmentState.ElapsedDistance += positionDelta.Distance;
-                segmentState.ElapsedAscent += positionDelta.Ascent;
-                segmentState.ElapsedDescent += positionDelta.Descent;
-
-                UpdateDirection(segmentState);
-            }
-
-            return result;
+            throw InvalidStateTransitionException.NotOnARouteYet(GetType());
         }
 
-        private GameState BaseUpdatePosition(TrackPoint position, List<Segment> segments, PlannedRoute plannedRoute)
+        public override GameState UpdatePosition(TrackPoint position, List<Segment> segments, PlannedRoute plannedRoute)
         {
-            
             // Note: We're using an IEnumerable<T> here to prevent
             //       unnecessary ToList() calls because the foreach
             //       loop in GetClosestMatchingSegment handles that
@@ -84,86 +73,72 @@ namespace RoadCaptain.GameStates
                 return new PositionedState(RiderId, ActivityId, position);
             }
 
-            // This is to ensure that we have the segment of the position
-            // for future reference.
-            closestOnSegment.Segment = segment;
-
             var positionDelta = CurrentPosition.DeltaTo(closestOnSegment);
 
             var distance = ElapsedDistance + positionDelta.Distance;
             var ascent = ElapsedAscent + positionDelta.Ascent;
             var descent = ElapsedDescent + positionDelta.Descent;
+            var direction = DetermineSegmentDirection(segment, closestOnSegment);
 
             if (!plannedRoute.HasStarted && plannedRoute.StartingSegmentId == segment.Id)
             {
                 plannedRoute.EnteredSegment(segment.Id);
 
-                return new OnRouteState(RiderId, ActivityId, closestOnSegment, segment, plannedRoute, Direction, distance, ascent, descent);
+                return new OnRouteState(RiderId, ActivityId, closestOnSegment, segment, plannedRoute, direction, distance, ascent, descent);
             }
 
             if (plannedRoute.HasStarted && !plannedRoute.HasCompleted && plannedRoute.CurrentSegmentId == segment.Id)
             {
-                return new OnRouteState(RiderId, ActivityId, closestOnSegment, segment, plannedRoute, Direction, distance, ascent, descent);
+                return new OnRouteState(RiderId, ActivityId, closestOnSegment, segment, plannedRoute, direction, distance, ascent, descent);
             }
-            
+
             if (plannedRoute.HasStarted && plannedRoute.NextSegmentId == segment.Id)
             {
-                return new OnRouteState(RiderId, ActivityId, closestOnSegment, segment, plannedRoute, Direction, distance, ascent, descent);
+                return new OnRouteState(RiderId, ActivityId, closestOnSegment, segment, plannedRoute, direction, distance, ascent, descent);
             }
 
-            return new OnSegmentState(RiderId, ActivityId, closestOnSegment, segment, Direction, distance, ascent, descent);
+            return new OnSegmentState(RiderId, ActivityId, closestOnSegment, segment, direction, distance, ascent, descent);
         }
 
-        public override GameState TurnCommandAvailable(string type)
+        private SegmentDirection DetermineSegmentDirection(Segment newSegment, TrackPoint newPosition)
         {
-            return this;
-        }
-
-        private void UpdateDirection(OnSegmentState segmentState)
-        {
-            if (segmentState.CurrentSegment.Id == CurrentSegment.Id)
+            if (newSegment.Id == CurrentSegment.Id)
             {
                 int previousPositionIndex;
                 int currentPositionIndex;
 
-                if (CurrentPosition.Index.HasValue && segmentState.CurrentPosition.Index.HasValue)
+                if (CurrentPosition.Index.HasValue && newPosition.Index.HasValue)
                 {
                     previousPositionIndex = CurrentPosition.Index.Value;
-                    currentPositionIndex = segmentState.CurrentPosition.Index.Value;
+                    currentPositionIndex = newPosition.Index.Value;
                 }
                 else
                 {
-                    previousPositionIndex = segmentState.CurrentSegment.Points.IndexOf(CurrentPosition);
-                    currentPositionIndex = segmentState.CurrentSegment.Points.IndexOf(segmentState.CurrentPosition);
+                    previousPositionIndex = newSegment.Points.IndexOf(CurrentPosition);
+                    currentPositionIndex = newSegment.Points.IndexOf(newPosition);
                 }
 
                 if (previousPositionIndex == -1 || currentPositionIndex == -1)
                 {
-                    segmentState.Direction = SegmentDirection.Unknown;
+                    return SegmentDirection.Unknown;
                 }
-                else
+
+                if (previousPositionIndex < currentPositionIndex)
                 {
-                    if (previousPositionIndex < currentPositionIndex)
-                    {
-                        segmentState.Direction = SegmentDirection.AtoB;
-                    }
-                    else if (previousPositionIndex > currentPositionIndex)
-                    {
-                        segmentState.Direction = SegmentDirection.BtoA;
-                    }
-                    else
-                    {
-                        // If the indexes of the positions are the same then 
-                        // keep the same direction as before to ensure we
-                        // don't revert to Unknown unnecessarily.
-                        segmentState.Direction = Direction;
-                    }
+                    return SegmentDirection.AtoB;
                 }
+
+                if (previousPositionIndex > currentPositionIndex)
+                {
+                    return SegmentDirection.BtoA;
+                }
+                // If the indexes of the positions are the same then 
+                // keep the same direction as before to ensure we
+                // don't revert to Unknown unnecessarily.
+                return Direction;
             }
-            else
-            {
-                segmentState.Direction = SegmentDirection.Unknown;
-            }
+
+            return SegmentDirection.Unknown;
         }
     }
 }
