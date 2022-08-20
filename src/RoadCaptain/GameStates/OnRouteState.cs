@@ -56,7 +56,8 @@ namespace RoadCaptain.GameStates
         [JsonProperty]
         public PlannedRoute Route { get; private set; }
 
-        private List<TurnDirection> TurnCommands { get; } = new();
+        [JsonProperty] 
+        public List<TurnDirection> TurnCommands { get; } = new();
         
         public override GameState EnterGame(uint riderId, ulong activityId)
         {
@@ -150,7 +151,7 @@ namespace RoadCaptain.GameStates
                     }
                 }
 
-                return new OnRouteState(RiderId, ActivityId, closestOnSegment, segment, Route, direction, distance1, ascent, descent);
+                return new OnRouteState(RiderId, ActivityId, closestOnSegment, segment, plannedRoute, direction, distance1, ascent, descent);
             }
 
             if (plannedRoute.CurrentSegmentId == segment.Id)
@@ -160,7 +161,7 @@ namespace RoadCaptain.GameStates
 
             if (plannedRoute.NextSegmentId == segment.Id)
             {
-                Route.EnteredSegment(segment.Id);
+                plannedRoute.EnteredSegment(segment.Id);
                 return new OnRouteState(RiderId, ActivityId, closestOnSegment, segment, plannedRoute, direction, distance1, ascent, descent);
             }
 
@@ -189,7 +190,9 @@ namespace RoadCaptain.GameStates
                 var x = new List<TurnDirection>{ turnDirection};
                 x.AddRange(TurnCommands);
 
-                if (x.Count == CurrentSegment.NextSegments(Direction).Count &&
+                var nextSegments = CurrentSegment.NextSegments(Direction);
+
+                if (x.Count == nextSegments.Count &&
                     x.Count != 1) // If there is only 1 command then it means there are two segments joining without any intersection
                 {
                     // We've got all the turn commands for this segment
@@ -202,7 +205,7 @@ namespace RoadCaptain.GameStates
                 // have three other segments and then return the UpcomingTurnState with
                 // hardcoded turn directions (because all of them apply...)
                 if (x.Count == 2 && 
-                    CurrentSegment.NextSegments(Direction).Count == 3)
+                    nextSegments.Count == 3)
                 {
                     // We've got all the turn commands for this segment
                     return new UpcomingTurnState(RiderId, ActivityId, CurrentPosition, CurrentSegment, Route, Direction, 

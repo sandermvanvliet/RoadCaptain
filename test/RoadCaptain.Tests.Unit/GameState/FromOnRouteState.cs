@@ -9,7 +9,7 @@ namespace RoadCaptain.Tests.Unit.GameState
         [Fact]
         public void GivenPositionNotOnSegment_ResultIsPositionedState()
         {
-            var result = GivenStartingState()
+            var result = GivenStartingState(Route)
                 .UpdatePosition(PointNotOnAnySegment, Segments, Route);
 
             result
@@ -24,7 +24,7 @@ namespace RoadCaptain.Tests.Unit.GameState
         [Fact]
         public void GivenRouteNotStartedAndPositionOnRouteSegment_InvalidStateTransitionExceptionIsThrown()
         {
-            var startingState = GivenStartingState();
+            var startingState = GivenStartingState(Route);
             // Do this here because GivenStartingState() starts the route as well
             Route.Reset();
 
@@ -38,7 +38,7 @@ namespace RoadCaptain.Tests.Unit.GameState
         [Fact]
         public void GivenPositionOnSegmentNotOnRoute_ResultIsLostRouteLockState()
         {
-            var result = GivenStartingState().UpdatePosition(Segment1Point1, Segments, Route);
+            var result = GivenStartingState(Route).UpdatePosition(Segment1Point1, Segments, Route);
 
             result
                 .Should()
@@ -48,7 +48,7 @@ namespace RoadCaptain.Tests.Unit.GameState
         [Fact]
         public void GivenNextPositionOnRouteSegment_ResultIsOnRouteState()
         {
-            var result = GivenStartingState().UpdatePosition(RouteSegment1Point2, Segments, Route);
+            var result = GivenStartingState(Route).UpdatePosition(RouteSegment1Point2, Segments, Route);
 
             result
                 .Should()
@@ -62,7 +62,7 @@ namespace RoadCaptain.Tests.Unit.GameState
         [Fact]
         public void GivenPositionOnNextSegmentOfRoute_ResultIsOnRouteState()
         {
-            var result = GivenStartingState().UpdatePosition(RouteSegment2Point1, Segments, Route);
+            var result = GivenStartingState(Route).UpdatePosition(RouteSegment2Point1, Segments, Route);
 
             result
                 .Should()
@@ -77,7 +77,7 @@ namespace RoadCaptain.Tests.Unit.GameState
         [Fact]
         public void GivenPositionOnNextSegmentOfRoute_CurrentSegmentOnRouteIsChangedToNextSegment()
         {
-            var result = GivenStartingState().UpdatePosition(RouteSegment2Point1, Segments, Route);
+            var result = GivenStartingState(Route).UpdatePosition(RouteSegment2Point1, Segments, Route);
 
             result
                 .Should()
@@ -92,7 +92,7 @@ namespace RoadCaptain.Tests.Unit.GameState
         [Fact]
         public void GivenOnLastSegmentOfRouteAndPositionNextOnLastSegment_ResultIsOnRouteState()
         {
-            var startingState = GivenStartingState();
+            var startingState = GivenStartingState(Route);
             Route.EnteredSegment(RouteSegment2.Id);
             Route.EnteredSegment(RouteSegment3.Id);
 
@@ -106,7 +106,7 @@ namespace RoadCaptain.Tests.Unit.GameState
         [Fact]
         public void GivenOnLastSegmentOfRouteAndPositionOnNextConnectingSegment_ResultIsCompletedRouteState()
         {
-            var startingState = GivenStartingState();
+            var startingState = GivenStartingState(Route);
             Route.EnteredSegment(RouteSegment2.Id);
             Route.EnteredSegment(RouteSegment3.Id);
 
@@ -120,7 +120,7 @@ namespace RoadCaptain.Tests.Unit.GameState
         [Fact]
         public void GivenOnLastSegmentOfRouteAndPositionOnNotConnectingSegment_ResultIsLostRouteLockState()
         {
-            var startingState = GivenStartingState();
+            var startingState = GivenStartingState(Route);
             Route.EnteredSegment(RouteSegment2.Id);
             Route.EnteredSegment(RouteSegment3.Id);
 
@@ -134,7 +134,7 @@ namespace RoadCaptain.Tests.Unit.GameState
         [Fact]
         public void GivenRouteHasCompletedAndPositionIsOnLastSegment_InvalidStateTransitionExceptionIsThrown()
         {
-            var startingState = GivenStartingState();
+            var startingState = GivenStartingState(Route);
             Route.EnteredSegment(RouteSegment2.Id);
             Route.EnteredSegment(RouteSegment3.Id);
             Route.Complete();
@@ -149,7 +149,7 @@ namespace RoadCaptain.Tests.Unit.GameState
         [Fact]
         public void EnteringGameWithSameRiderAndActivityId_InvalidStateTransitionExceptionIsThrown()
         {
-            var action = () => GivenStartingState().EnterGame(1, 2);
+            var action = () => GivenStartingState(Route).EnterGame(1, 2);
 
             action
                 .Should()
@@ -159,7 +159,7 @@ namespace RoadCaptain.Tests.Unit.GameState
         [Fact]
         public void LeavingGame_ConnectedToZwiftStateIsReturned()
         {
-            var result = GivenStartingState().LeaveGame();
+            var result = GivenStartingState(Route).LeaveGame();
 
             result
                 .Should()
@@ -167,26 +167,73 @@ namespace RoadCaptain.Tests.Unit.GameState
         }
 
         [Fact]
-        public void TurnCommandAvailable_InvalidStateTransitionExceptionIsThrown()
+        public void GivenLeftTurnAvailableAndCurrentDirectionIsUnknown_SameStateIsReturned()
         {
-            var action = () => GivenStartingState().TurnCommandAvailable("left");
+            var plannedRoute = GivenPlannedRoute();
+            var nextState = GivenStartingState(plannedRoute)
+                .UpdatePosition(RouteSegment2Point1, Segments, plannedRoute);
 
-            action
+            var result = nextState.TurnCommandAvailable("turnleft");
+
+            result
                 .Should()
-                .Throw<InvalidStateTransitionException>();
+                .Be(nextState);
         }
 
-        private OnRouteState GivenStartingState()
+        [Fact]
+        public void GivenLeftTurnAvailableAndWasAlreadyAvailable_SameStateIsReturned()
+        {
+            var startingState = GivenStartingState(Route).TurnCommandAvailable("turnleft");
+
+            var result = startingState.TurnCommandAvailable("turnleft");
+
+            result
+                .Should()
+                .Be(startingState);
+        }
+
+        [Fact]
+        public void GivenLeftAndGoStraightAvailable_ResultIsUpcomingTurnState()
+        {
+            var plannedRoute = GivenPlannedRoute();
+            var result = GivenStartingState(plannedRoute)
+                .UpdatePosition(RouteSegment1Point1, Segments, plannedRoute)
+                .UpdatePosition(RouteSegment1Point2, Segments, plannedRoute)
+                .TurnCommandAvailable("turnleft")
+                .TurnCommandAvailable("gostraight");
+
+            result
+                .Should()
+                .BeOfType<UpcomingTurnState>();
+        }
+
+        [Fact]
+        public void GivenLeftAndGoStraightAvailableAndSegmentIsAThreeWayJunction_ResultIsUpcomingTurnState()
+        {
+            var plannedRoute = GivenPlannedRoute();
+
+            var result = GivenStartingState(plannedRoute)
+                .UpdatePosition(RouteSegment2Point1, Segments, plannedRoute)
+                .UpdatePosition(RouteSegment2Point2, Segments, plannedRoute)
+                .TurnCommandAvailable("turnleft")
+                .TurnCommandAvailable("turnright");
+
+            result
+                .Should()
+                .BeOfType<UpcomingTurnState>();
+        }
+
+        private OnRouteState GivenStartingState(PlannedRoute plannedRoute)
         {
             // Ensure the route has started and we're on the first route segment
-            Route.EnteredSegment(RouteSegment1.Id);
+            plannedRoute.EnteredSegment(RouteSegment1.Id);
 
             return new OnRouteState(
                 1,
                 2,
                 RouteSegment1Point1,
                 RouteSegment1,
-                Route,
+                plannedRoute,
                 SegmentDirection.AtoB,
                 0,
                 0,

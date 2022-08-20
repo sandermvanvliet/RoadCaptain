@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace RoadCaptain.Tests.Unit.GameState
 {
@@ -124,12 +125,70 @@ namespace RoadCaptain.Tests.Unit.GameState
 
         public StateTransitionTestBase()
         {
-            RouteSegment1.NextSegmentsNodeA.Add(new Turn(TurnDirection.GoStraight, Segment1.Id));
-            RouteSegment1.NextSegmentsNodeB.Add(new Turn(TurnDirection.GoStraight, RouteSegment2.Id));
-            RouteSegment2.NextSegmentsNodeA.Add(new Turn(TurnDirection.GoStraight, RouteSegment1.Id));
-            RouteSegment2.NextSegmentsNodeB.Add(new Turn(TurnDirection.GoStraight, RouteSegment3.Id));
-            RouteSegment3.NextSegmentsNodeA.Add(new Turn(TurnDirection.GoStraight, RouteSegment2.Id));
-            RouteSegment3.NextSegmentsNodeB.Add(new Turn(TurnDirection.GoStraight, Segment2.Id));
+            // Note: Because the segments are static fields we must only
+            //       initialize the turns once.
+            if(!RouteSegment1.NextSegmentsNodeA.Any())
+            {
+                RouteSegment1.NextSegmentsNodeA.Add(new Turn(TurnDirection.GoStraight, Segment1.Id));
+                RouteSegment1.NextSegmentsNodeB.Add(new Turn(TurnDirection.GoStraight, RouteSegment2.Id));
+                RouteSegment1.NextSegmentsNodeB.Add(new Turn(TurnDirection.Left, Segment2.Id));
+            }
+            
+            if(!RouteSegment2.NextSegmentsNodeA.Any())
+            {
+                RouteSegment2.NextSegmentsNodeA.Add(new Turn(TurnDirection.GoStraight, RouteSegment1.Id));
+                RouteSegment2.NextSegmentsNodeB.Add(new Turn(TurnDirection.GoStraight, RouteSegment3.Id));
+                RouteSegment2.NextSegmentsNodeB.Add(new Turn(TurnDirection.Left, Segment1.Id));
+                RouteSegment2.NextSegmentsNodeB.Add(new Turn(TurnDirection.Right, Segment2.Id));
+            }
+
+            if(!RouteSegment3.NextSegmentsNodeA.Any())
+            {
+                RouteSegment3.NextSegmentsNodeA.Add(new Turn(TurnDirection.GoStraight, RouteSegment2.Id));
+                RouteSegment3.NextSegmentsNodeB.Add(new Turn(TurnDirection.GoStraight, Segment2.Id));
+            }
+
+            foreach (var segment in Segments)
+            {
+                segment.CalculateDistances();
+            }
+        }
+
+        protected PlannedRoute GivenPlannedRoute()
+        {
+            return new()
+            {
+                RouteSegmentSequence =
+                {
+                    new SegmentSequence
+                    {
+                        SegmentId = RouteSegment1.Id,
+                        Direction = SegmentDirection.AtoB,
+                        Type = SegmentSequenceType.Regular,
+                        NextSegmentId = RouteSegment2.Id,
+                        TurnToNextSegment = TurnDirection.Left
+                    },
+                    new SegmentSequence
+                    {
+                        SegmentId = RouteSegment2.Id,
+                        Direction = SegmentDirection.AtoB,
+                        Type = SegmentSequenceType.Regular,
+                        NextSegmentId = RouteSegment3.Id,
+                        TurnToNextSegment = TurnDirection.Left
+                    },
+                    new SegmentSequence
+                    {
+                        SegmentId = RouteSegment3.Id,
+                        Direction = SegmentDirection.AtoB,
+                        Type = SegmentSequenceType.Regular
+                    }
+                },
+                Sport = SportType.Cycling,
+                WorldId = "watopia",
+                World = new World { Id = "watopia", ZwiftId = ZwiftWorldId.Watopia },
+                Name = "test",
+                ZwiftRouteName = "zwift test route name"
+            };
         }
     }
 }
