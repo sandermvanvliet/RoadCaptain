@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace RoadCaptain.GameStates
 {
@@ -11,7 +10,9 @@ namespace RoadCaptain.GameStates
         {
             AccessToken = accessToken;
         }
+        
         public override uint RiderId => 0;
+
         public override GameState EnterGame(uint riderId, ulong activityId)
         {
             return new InGameState(riderId, activityId);
@@ -24,12 +25,12 @@ namespace RoadCaptain.GameStates
 
         public override GameState UpdatePosition(TrackPoint position, List<Segment> segments, PlannedRoute plannedRoute)
         {
-            return this;
+            throw InvalidStateTransitionException.NotInGame(GetType());
         }
 
         public override GameState TurnCommandAvailable(string type)
         {
-            return this;
+            throw InvalidStateTransitionException.NotOnARoute(GetType());
         }
     }
 }
