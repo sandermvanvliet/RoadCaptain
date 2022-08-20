@@ -5,26 +5,13 @@ using Xunit;
 
 namespace RoadCaptain.Tests.Unit.GameState
 {
-    public class FromPositionedState
+    public class FromPositionedState : StateTransitionTestBase
     {
-        private readonly PlannedRoute _route;
-        private readonly List<Segment> _segments;
-        private readonly TrackPoint _startingPosition;
-
-        public FromPositionedState()
-        {
-            _segments = new List<Segment>();
-            _route = SegmentSequenceBuilder.TestLoopOne();
-            _startingPosition = new TrackPoint(1, 2, 3, ZwiftWorldId.Watopia);
-        }
-
         [Fact]
         public void GivenPositionNotOnSegment_ResultIsPositionedState()
         {
-            var position = new TrackPoint(2, 3, 4, ZwiftWorldId.Watopia);
-
             var result = GivenStartingState()
-                .UpdatePosition(position, _segments, _route);
+                .UpdatePosition(PointNotOnAnySegment, Segments, Route);
 
             result
                 .Should()
@@ -32,20 +19,14 @@ namespace RoadCaptain.Tests.Unit.GameState
                 .Which
                 .CurrentPosition
                 .Should()
-                .Be(position);
+                .Be(PointNotOnAnySegment);
         }
 
         [Fact]
         public void GivenPositionOnSegment_ResultIsOnSegmentState()
         {
-            var position = new TrackPoint(2, 3, 4, ZwiftWorldId.Watopia);
-            _segments.Add(new Segment(new List<TrackPoint> { position })
-            {
-                Id = "segment-1"
-            });
-
             var result = GivenStartingState()
-                .UpdatePosition(position, _segments, _route);
+                .UpdatePosition(Segment1Point1, Segments, Route);
 
             result
                 .Should()
@@ -55,21 +36,15 @@ namespace RoadCaptain.Tests.Unit.GameState
         [Fact]
         public void GivenPositionOnSegment_ResultIsOnSegmentStateForSegmentOne()
         {
-            var position = new TrackPoint(2, 3, 4, ZwiftWorldId.Watopia);
-            _segments.Add(new Segment(new List<TrackPoint> { position })
-            {
-                Id = "segment-1"
-            });
-
             var result = GivenStartingState()
-                .UpdatePosition(position, _segments, _route);
+                .UpdatePosition(Segment1Point1, Segments, Route);
 
             result
                 .As<OnSegmentState>()
                 .CurrentSegment
                 .Id
                 .Should()
-                .Be("segment-1");
+                .Be(Segment1.Id);
         }
 
         [Fact]
@@ -104,7 +79,7 @@ namespace RoadCaptain.Tests.Unit.GameState
 
         private PositionedState GivenStartingState()
         {
-            return new PositionedState(1, 2, _startingPosition);
+            return new PositionedState(1, 2, PointNotOnAnySegment);
         }
     }
 }
