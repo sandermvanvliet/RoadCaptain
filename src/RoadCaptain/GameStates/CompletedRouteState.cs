@@ -19,25 +19,13 @@ namespace RoadCaptain.GameStates
         }
 
         [JsonProperty]
-        public sealed override uint RiderId { get; }
+        public override uint RiderId { get; }
 
         [JsonProperty]
         public ulong ActivityId { get; }
         
         [JsonProperty]
         public TrackPoint CurrentPosition { get; }
-
-        [JsonProperty]
-        public Segment CurrentSegment { get; }
-
-        [JsonProperty]
-        public SegmentDirection Direction { get; private set; } = SegmentDirection.Unknown;
-
-        public double ElapsedDistance { get; private set; }
-
-        public double ElapsedDescent { get; private set; }
-
-        public double ElapsedAscent { get; private set; }
 
         [JsonProperty]
         public PlannedRoute Route { get; private set; }
