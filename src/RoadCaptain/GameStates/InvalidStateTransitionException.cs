@@ -31,5 +31,11 @@ namespace RoadCaptain.GameStates
                 fromState, 
                 typeof(InGameState),
                 "the rider is not (yet) in game");
+
+        public static InvalidStateTransitionException NotLoggedIn(Type fromState) =>
+            new(
+                fromState, 
+                typeof(InGameState),
+                "the rider is not logged in");
     }
 }
