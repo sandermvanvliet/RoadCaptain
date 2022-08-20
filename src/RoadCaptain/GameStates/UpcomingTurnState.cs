@@ -30,30 +30,26 @@ namespace RoadCaptain.GameStates
         }
 
 
-        [JsonProperty]
-        public sealed override uint RiderId { get; }
+        [JsonProperty] public override uint RiderId { get; }
 
-        [JsonProperty]
-        public ulong ActivityId { get; }
+        [JsonProperty] public ulong ActivityId { get; }
 
-        [JsonProperty]
-        public TrackPoint CurrentPosition { get; }
+        [JsonProperty] public TrackPoint CurrentPosition { get; }
 
-        [JsonProperty]
-        public Segment CurrentSegment { get; }
+        [JsonProperty] public Segment CurrentSegment { get; }
 
-        [JsonProperty]
-        public SegmentDirection Direction { get; private set; }
-        public PlannedRoute Route { get; set; }
+        [JsonProperty] public SegmentDirection Direction { get; private set; }
 
-        public double ElapsedDistance { get; }
+        [JsonProperty] public PlannedRoute Route { get; set; }
 
-        public double ElapsedDescent { get; }
+        [JsonProperty] public double ElapsedDistance { get; }
 
-        public double ElapsedAscent { get; }
+        [JsonProperty] public double ElapsedDescent { get; }
 
-        [JsonProperty]
-        public List<TurnDirection> Directions { get; private set; }
+        [JsonProperty] public double ElapsedAscent { get; }
+
+        [JsonProperty] public List<TurnDirection> Directions { get; private set; }
+
         public override GameState EnterGame(uint riderId, ulong activityId)
         {
             throw InvalidStateTransitionException.AlreadyInGame(GetType());
@@ -90,23 +86,28 @@ namespace RoadCaptain.GameStates
             if (!plannedRoute.HasStarted && plannedRoute.StartingSegmentId == segment.Id)
             {
                 plannedRoute.EnteredSegment(segment.Id);
-                routeState = new OnRouteState(RiderId, ActivityId, closestOnSegment, segment, plannedRoute, direction, distance, ascent, descent);
+                routeState = new OnRouteState(RiderId, ActivityId, closestOnSegment, segment, plannedRoute, direction,
+                    distance, ascent, descent);
             }
             else
             {
-                if (plannedRoute.HasStarted && !plannedRoute.HasCompleted && plannedRoute.CurrentSegmentId == segment.Id)
+                if (plannedRoute.HasStarted && !plannedRoute.HasCompleted &&
+                    plannedRoute.CurrentSegmentId == segment.Id)
                 {
-                    routeState = new OnRouteState(RiderId, ActivityId, closestOnSegment, segment, plannedRoute, direction, distance, ascent, descent);
+                    routeState = new OnRouteState(RiderId, ActivityId, closestOnSegment, segment, plannedRoute,
+                        direction, distance, ascent, descent);
                 }
                 else
                 {
                     if (plannedRoute.HasStarted && plannedRoute.NextSegmentId == segment.Id)
                     {
-                        routeState = new OnRouteState(RiderId, ActivityId, closestOnSegment, segment, plannedRoute, direction, distance, ascent, descent);
+                        routeState = new OnRouteState(RiderId, ActivityId, closestOnSegment, segment, plannedRoute,
+                            direction, distance, ascent, descent);
                     }
                     else
                     {
-                        return new OnSegmentState(RiderId, ActivityId, closestOnSegment, segment, direction, distance, ascent, descent);
+                        return new OnSegmentState(RiderId, ActivityId, closestOnSegment, segment, direction, distance,
+                            ascent, descent);
                     }
                 }
             }
@@ -119,7 +120,9 @@ namespace RoadCaptain.GameStates
                     return this;
                 }
 
-                return new UpcomingTurnState(RiderId, ActivityId, routeState.CurrentPosition, routeState.CurrentSegment, plannedRoute, routeState.Direction, Directions, routeState.ElapsedDistance, routeState.ElapsedAscent, routeState.ElapsedDescent);
+                return new UpcomingTurnState(RiderId, ActivityId, routeState.CurrentPosition, routeState.CurrentSegment,
+                    plannedRoute, routeState.Direction, Directions, routeState.ElapsedDistance,
+                    routeState.ElapsedAscent, routeState.ElapsedDescent);
             }
 
             return routeState;
@@ -162,6 +165,7 @@ namespace RoadCaptain.GameStates
                 {
                     return SegmentDirection.BtoA;
                 }
+
                 // If the indexes of the positions are the same then 
                 // keep the same direction as before to ensure we
                 // don't revert to Unknown unnecessarily.

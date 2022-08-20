@@ -8,13 +8,13 @@ namespace RoadCaptain.GameStates
     public sealed class LostRouteLockState : GameState
     {
         public LostRouteLockState(
-            uint riderId, 
-            ulong activityId, 
-            TrackPoint currentPosition, 
+            uint riderId,
+            ulong activityId,
+            TrackPoint currentPosition,
             Segment segment,
             PlannedRoute plannedRoute,
-            SegmentDirection direction, 
-            double elapsedDistance, 
+            SegmentDirection direction,
+            double elapsedDistance,
             double elapsedAscent,
             double elapsedDescent)
         {
@@ -30,22 +30,14 @@ namespace RoadCaptain.GameStates
             Route = plannedRoute;
         }
 
-        [JsonProperty] public sealed override uint RiderId { get; }
-
+        [JsonProperty] public override uint RiderId { get; }
         [JsonProperty] public ulong ActivityId { get; }
-
         [JsonProperty] public TrackPoint CurrentPosition { get; }
-
         [JsonProperty] public Segment CurrentSegment { get; }
-
         [JsonProperty] public SegmentDirection Direction { get; private set; }
-
-        public double ElapsedDistance { get; }
-
-        public double ElapsedDescent { get; }
-
-        public double ElapsedAscent { get; }
-
+        [JsonProperty] public double ElapsedDistance { get; }
+        [JsonProperty] public double ElapsedDescent { get; }
+        [JsonProperty] public double ElapsedAscent { get; }
         [JsonProperty] public PlannedRoute Route { get; private set; }
 
         public override GameState EnterGame(uint riderId, ulong activityId)
@@ -83,20 +75,24 @@ namespace RoadCaptain.GameStates
             if (!plannedRoute.HasStarted && plannedRoute.StartingSegmentId == segment.Id)
             {
                 plannedRoute.EnteredSegment(segment.Id);
-                return new OnRouteState(RiderId, ActivityId, closestOnSegment, segment, plannedRoute, direction, distance, ascent, descent);
+                return new OnRouteState(RiderId, ActivityId, closestOnSegment, segment, plannedRoute, direction,
+                    distance, ascent, descent);
             }
 
             if (plannedRoute.HasStarted && !plannedRoute.HasCompleted && plannedRoute.CurrentSegmentId == segment.Id)
             {
-                return new OnRouteState(RiderId, ActivityId, closestOnSegment, segment, plannedRoute, direction, distance, ascent, descent);
+                return new OnRouteState(RiderId, ActivityId, closestOnSegment, segment, plannedRoute, direction,
+                    distance, ascent, descent);
             }
 
             if (plannedRoute.HasStarted && plannedRoute.NextSegmentId == segment.Id)
             {
-                return new OnRouteState(RiderId, ActivityId, closestOnSegment, segment, plannedRoute, direction, distance, ascent, descent);
+                return new OnRouteState(RiderId, ActivityId, closestOnSegment, segment, plannedRoute, direction,
+                    distance, ascent, descent);
             }
 
-            var segmentState = new OnSegmentState(RiderId, ActivityId, closestOnSegment, segment, direction, distance, ascent, descent);
+            var segmentState = new OnSegmentState(RiderId, ActivityId, closestOnSegment, segment, direction, distance,
+                ascent, descent);
 
             if (plannedRoute.IsOnLastSegment)
             {
@@ -117,7 +113,8 @@ namespace RoadCaptain.GameStates
                         // TODO reproduce this with the ItalianVillasRepro route
                         return new LostRouteLockState(RiderId, ActivityId, segmentState.CurrentPosition,
                             segmentState.CurrentSegment, plannedRoute,
-                            segmentState.Direction, segmentState.ElapsedDistance, segmentState.ElapsedAscent, segmentState.ElapsedDescent);
+                            segmentState.Direction, segmentState.ElapsedDistance, segmentState.ElapsedAscent,
+                            segmentState.ElapsedDescent);
                     }
 
                     if (lastOfRoute.Direction == SegmentDirection.BtoA)
@@ -132,7 +129,8 @@ namespace RoadCaptain.GameStates
 
                         return new LostRouteLockState(RiderId, ActivityId, segmentState.CurrentPosition,
                             segmentState.CurrentSegment, plannedRoute,
-                            segmentState.Direction, segmentState.ElapsedDistance, segmentState.ElapsedAscent, segmentState.ElapsedDescent);
+                            segmentState.Direction, segmentState.ElapsedDistance, segmentState.ElapsedAscent,
+                            segmentState.ElapsedDescent);
                     }
                 }
 
@@ -225,6 +223,7 @@ namespace RoadCaptain.GameStates
                 {
                     return SegmentDirection.BtoA;
                 }
+
                 // If the indexes of the positions are the same then 
                 // keep the same direction as before to ensure we
                 // don't revert to Unknown unnecessarily.
