@@ -15,22 +15,22 @@ namespace RoadCaptain.GameStates
         public override uint RiderId => 0;
         public override GameState EnterGame(uint riderId, ulong activityId)
         {
-            return this;
+            throw InvalidStateTransitionException.NotLoggedIn(GetType());
         }
 
         public override GameState LeaveGame()
         {
-            return this;
+            throw InvalidStateTransitionException.NotLoggedIn(GetType());
         }
 
         public override GameState UpdatePosition(TrackPoint position, List<Segment> segments, PlannedRoute plannedRoute)
         {
-            return this;
+            throw InvalidStateTransitionException.NotInGame(GetType());
         }
 
         public override GameState TurnCommandAvailable(string type)
         {
-            return this;
+            throw InvalidStateTransitionException.NotOnARoute(GetType());
         }
     }
 }
