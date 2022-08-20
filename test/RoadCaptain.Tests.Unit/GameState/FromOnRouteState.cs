@@ -60,6 +60,50 @@ namespace RoadCaptain.Tests.Unit.GameState
         }
 
         [Fact]
+        public void GivenNextPositionOnRouteSegment_ElapsedDistanceIsIncreased()
+        {
+            var result = GivenStartingState(Route).UpdatePosition(RouteSegment1Point2, Segments, Route);
+
+            result
+                .Should()
+                .BeOfType<OnRouteState>()
+                .Which
+                .ElapsedDistance
+                .Should()
+                .NotBe(0);
+        }
+
+        [Fact]
+        public void GivenNextPositionOnRouteSegment_ElapsedAscentIsIncreased()
+        {
+            var result = GivenStartingState(Route).UpdatePosition(RouteSegment1Point2, Segments, Route);
+
+            result
+                .Should()
+                .BeOfType<OnRouteState>()
+                .Which
+                .ElapsedAscent
+                .Should()
+                .NotBe(0);
+        }
+
+        [Fact]
+        public void GivenNextPositionOnRouteSegment_ElapsedDescentIsIncreased()
+        {
+            var result = GivenStartingState(Route)
+                .UpdatePosition(RouteSegment1Point2, Segments, Route)
+                .UpdatePosition(RouteSegment1Point3, Segments, Route);
+
+            result
+                .Should()
+                .BeOfType<OnRouteState>()
+                .Which
+                .ElapsedDescent
+                .Should()
+                .NotBe(0);
+        }
+
+        [Fact]
         public void GivenPositionOnNextSegmentOfRoute_ResultIsOnRouteState()
         {
             var result = GivenStartingState(Route).UpdatePosition(RouteSegment2Point1, Segments, Route);

@@ -13,7 +13,7 @@ namespace RoadCaptain.Tests.Unit.GameState
         protected static readonly TrackPoint Segment3Point1 = new(6, 1, 0, ZwiftWorldId.Watopia);
         protected static readonly TrackPoint Segment3Point2 = new(6, 2, 0, ZwiftWorldId.Watopia);
         protected static readonly TrackPoint RouteSegment1Point1 = new(3, 1, 0, ZwiftWorldId.Watopia);
-        protected static readonly TrackPoint RouteSegment1Point2 = new(3, 2, 0, ZwiftWorldId.Watopia);
+        protected static readonly TrackPoint RouteSegment1Point2 = new(3, 2, 1, ZwiftWorldId.Watopia);
         protected static readonly TrackPoint RouteSegment1Point3 = new(3, 3, 0, ZwiftWorldId.Watopia);
         protected static readonly TrackPoint RouteSegment2Point1 = new(4, 1, 0, ZwiftWorldId.Watopia);
         protected static readonly TrackPoint RouteSegment2Point2 = new(4, 2, 0, ZwiftWorldId.Watopia);
