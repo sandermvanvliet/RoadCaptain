@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using FluentAssertions;
 using Xunit;
 
@@ -46,6 +47,46 @@ namespace RoadCaptain.Tests.Unit.GameState
                 .ToList();
 
             notSealedStates
+                .Should()
+                .BeEmpty();
+        }
+
+        [Fact]
+        public void AllGameStatesHaveATestClass()
+        {
+            var gameStateType = typeof(GameStates.GameState);
+
+            var gameStateTypes = gameStateType
+                .Assembly
+                .GetTypes()
+                .Where(type => gameStateType.IsAssignableFrom(type) && 
+                               type != gameStateType)
+                .ToList();
+
+            var stateTransitionTestType = typeof(StateTransitionTestBase);
+
+            var testTypes = stateTransitionTestType
+                .Assembly
+                .GetTypes()
+                .Where(type => stateTransitionTestType.IsAssignableFrom(type) && 
+                               type != stateTransitionTestType)
+                .Select(type => type.Name.Split(".").Last())
+                .ToList();
+
+            var missingTestStates = new List<string>();
+
+            foreach (var gameState in gameStateTypes)
+            {
+                var gameStateName = gameState.Name.Split(".").Last();
+                var expectedTestName = $"From{gameStateName}";
+
+                if (!testTypes.Contains(expectedTestName))
+                {
+                    missingTestStates.Add(gameStateName);
+                }
+            }
+
+            missingTestStates
                 .Should()
                 .BeEmpty();
         }
