@@ -193,6 +193,18 @@ namespace RoadCaptain.Tests.Unit.GameState
         }
 
         [Fact]
+        public void GivenTurnCommandIsNone_SameStateIsReturned()
+        {
+            var startingState = GivenStartingState(Route);
+            
+            var result = startingState.TurnCommandAvailable("whatever");
+
+            result
+                .Should()
+                .Be(startingState);
+        }
+
+        [Fact]
         public void GivenLeftAndGoStraightAvailable_ResultIsUpcomingTurnState()
         {
             var plannedRoute = GivenPlannedRoute();
