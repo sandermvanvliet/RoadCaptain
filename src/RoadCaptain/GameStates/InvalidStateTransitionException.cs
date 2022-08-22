@@ -37,5 +37,17 @@ namespace RoadCaptain.GameStates
                 fromState, 
                 typeof(InGameState),
                 "the rider is not logged in");
+
+        public static InvalidStateTransitionException RouteNotStarted(Type fromState) => 
+            new (
+                fromState,
+                typeof(OnRouteState),
+                "Can't be on-route if the route hasn't started");
+
+        public static InvalidStateTransitionException RouteCompleted(Type fromState) =>
+            new(
+                fromState,
+                typeof(OnRouteState),
+                "Can't be on-route if the route has been completed");
     }
 }

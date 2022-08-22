@@ -8,7 +8,7 @@ namespace RoadCaptain.GameStates
     {
         public OnRouteState(uint riderId, ulong activityId, TrackPoint currentPosition, Segment segment,
             PlannedRoute plannedRoute, SegmentDirection direction, double elapsedDistance, double elapsedAscent, double elapsedDescent)
-            
+
         {
             RiderId = riderId;
             ActivityId = activityId;
@@ -23,7 +23,7 @@ namespace RoadCaptain.GameStates
 
         private OnRouteState(uint riderId, ulong activityId, TrackPoint currentPosition, Segment segment,
             PlannedRoute plannedRoute,
-            SegmentDirection direction, List<TurnDirection> turnDirections, double elapsedDistance, double elapsedAscent, double elapsedDescent) 
+            SegmentDirection direction, List<TurnDirection> turnDirections, double elapsedDistance, double elapsedAscent, double elapsedDescent)
             : this(riderId, activityId, currentPosition, segment, plannedRoute, direction, elapsedDistance, elapsedAscent, elapsedDescent)
         {
             TurnCommands = turnDirections;
@@ -34,7 +34,7 @@ namespace RoadCaptain.GameStates
 
         [JsonProperty]
         public ulong ActivityId { get; }
-        
+
         [JsonProperty]
         public TrackPoint CurrentPosition { get; }
 
@@ -43,22 +43,22 @@ namespace RoadCaptain.GameStates
 
         [JsonProperty]
         public SegmentDirection Direction { get; private set; }
-        
+
         [JsonProperty]
         public double ElapsedDistance { get; }
-        
+
         [JsonProperty]
         public double ElapsedDescent { get; }
-        
+
         [JsonProperty]
         public double ElapsedAscent { get; }
 
         [JsonProperty]
         public PlannedRoute Route { get; private set; }
 
-        [JsonProperty] 
+        [JsonProperty]
         public List<TurnDirection> TurnCommands { get; } = new();
-        
+
         public override GameState EnterGame(uint riderId, ulong activityId)
         {
             throw InvalidStateTransitionException.AlreadyInGame(GetType());
@@ -73,12 +73,12 @@ namespace RoadCaptain.GameStates
         {
             if (!plannedRoute.HasStarted)
             {
-                throw new InvalidStateTransitionException("Can't be on-route if the route hasn't started");
+                throw InvalidStateTransitionException.RouteNotStarted(GetType());
             }
 
             if (plannedRoute.HasCompleted)
             {
-                throw new InvalidStateTransitionException("Can't be on-route if the route has been completed");
+                throw InvalidStateTransitionException.RouteCompleted(GetType());
             }
 
             // Note: We're using an IEnumerable<T> here to prevent
@@ -86,7 +86,7 @@ namespace RoadCaptain.GameStates
             //       loop in GetClosestMatchingSegment handles that
             //       for us.
             var matchingSegments = segments.Where(s => s.Contains(position));
-            
+
             var (segment, closestOnSegment) = matchingSegments.GetClosestMatchingSegment(position, CurrentPosition);
 
             if (segment == null || closestOnSegment == null)
@@ -187,7 +187,7 @@ namespace RoadCaptain.GameStates
 
             if (!TurnCommands.Contains(turnDirection))
             {
-                var x = new List<TurnDirection>{ turnDirection};
+                var x = new List<TurnDirection> { turnDirection };
                 x.AddRange(TurnCommands);
 
                 var nextSegments = CurrentSegment.NextSegments(Direction);
@@ -204,11 +204,11 @@ namespace RoadCaptain.GameStates
                 // To work around that we check if the upcoming turns on this segment
                 // have three other segments and then return the UpcomingTurnState with
                 // hardcoded turn directions (because all of them apply...)
-                if (x.Count == 2 && 
+                if (x.Count == 2 &&
                     nextSegments.Count == 3)
                 {
                     // We've got all the turn commands for this segment
-                    return new UpcomingTurnState(RiderId, ActivityId, CurrentPosition, CurrentSegment, Route, Direction, 
+                    return new UpcomingTurnState(RiderId, ActivityId, CurrentPosition, CurrentSegment, Route, Direction,
                         new List<TurnDirection>
                         {
                             TurnDirection.Left,
@@ -278,6 +278,6 @@ namespace RoadCaptain.GameStates
             };
         }
 
-        
+
     }
 }

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
 
@@ -52,6 +51,16 @@ namespace RoadCaptain.GameStates
 
         public override GameState UpdatePosition(TrackPoint position, List<Segment> segments, PlannedRoute plannedRoute)
         {
+            if (!plannedRoute.HasStarted)
+            {
+                throw InvalidStateTransitionException.RouteNotStarted(GetType());
+            }
+
+            if (plannedRoute.HasCompleted)
+            {
+                throw InvalidStateTransitionException.RouteCompleted(GetType());
+            }
+
             // Note: We're using an IEnumerable<T> here to prevent
             //       unnecessary ToList() calls because the foreach
             //       loop in GetClosestMatchingSegment handles that
@@ -72,21 +81,15 @@ namespace RoadCaptain.GameStates
             var descent = ElapsedDescent + positionDelta.Descent;
             var direction = DetermineSegmentDirection(segment, closestOnSegment);
 
-            if (!plannedRoute.HasStarted && plannedRoute.StartingSegmentId == segment.Id)
+            if (plannedRoute.CurrentSegmentId == segment.Id)
+            {
+                return new OnRouteState(RiderId, ActivityId, closestOnSegment, segment, plannedRoute, direction,
+                    distance, ascent, descent);
+            }
+
+            if (plannedRoute.NextSegmentId == segment.Id)
             {
                 plannedRoute.EnteredSegment(segment.Id);
-                return new OnRouteState(RiderId, ActivityId, closestOnSegment, segment, plannedRoute, direction,
-                    distance, ascent, descent);
-            }
-
-            if (plannedRoute.HasStarted && !plannedRoute.HasCompleted && plannedRoute.CurrentSegmentId == segment.Id)
-            {
-                return new OnRouteState(RiderId, ActivityId, closestOnSegment, segment, plannedRoute, direction,
-                    distance, ascent, descent);
-            }
-
-            if (plannedRoute.HasStarted && plannedRoute.NextSegmentId == segment.Id)
-            {
                 return new OnRouteState(RiderId, ActivityId, closestOnSegment, segment, plannedRoute, direction,
                     distance, ascent, descent);
             }
@@ -132,22 +135,6 @@ namespace RoadCaptain.GameStates
                             segmentState.Direction, segmentState.ElapsedDistance, segmentState.ElapsedAscent,
                             segmentState.ElapsedDescent);
                     }
-                }
-
-                return new OnRouteState(RiderId, ActivityId, segmentState.CurrentPosition,
-                    segmentState.CurrentSegment, Route, segmentState.Direction, segmentState.ElapsedDistance,
-                    segmentState.ElapsedAscent, segmentState.ElapsedDescent);
-            }
-
-            if (segmentState.CurrentSegment.Id == Route.NextSegmentId)
-            {
-                try
-                {
-                    Route.EnteredSegment(segmentState.CurrentSegment.Id);
-                }
-                catch (ArgumentException)
-                {
-                    // The segment is not the expected next one so we lost lock somewhere...
                 }
 
                 return new OnRouteState(RiderId, ActivityId, segmentState.CurrentPosition,
