@@ -96,7 +96,7 @@ namespace RoadCaptain.GameStates
 
             var positionDelta = CurrentPosition.DeltaTo(closestOnSegment);
 
-            var distance1 = ElapsedDistance + positionDelta.Distance;
+            var distance = ElapsedDistance + positionDelta.Distance;
             var ascent = ElapsedAscent + positionDelta.Ascent;
             var descent = ElapsedDescent + positionDelta.Descent;
             var direction = DetermineSegmentDirection(segment, closestOnSegment);
@@ -113,56 +113,25 @@ namespace RoadCaptain.GameStates
                     segment,
                     plannedRoute,
                     direction,
-                    distance1,
+                    distance,
                     ascent,
                     descent);
             }
 
             if (plannedRoute.IsOnLastSegment)
             {
-                if (plannedRoute.CurrentSegmentId != segment.Id)
-                {
-                    var lastOfRoute = plannedRoute.RouteSegmentSequence[plannedRoute.SegmentSequenceIndex];
-                    var lastSegmentOfRoute = segments.Single(s => s.Id == plannedRoute.CurrentSegmentId);
-                    if (lastOfRoute.Direction == SegmentDirection.AtoB)
-                    {
-                        if (lastSegmentOfRoute.NextSegmentsNodeB.Any(t =>
-                                t.SegmentId == segment.Id))
-                        {
-                            // Moved from last segment of route to the next segment at the end of that
-                            return new CompletedRouteState(RiderId, ActivityId, closestOnSegment, plannedRoute);
-                        }
-
-                        // TODO reproduce this with the ItalianVillasRepro route
-                        return new LostRouteLockState(RiderId, ActivityId, closestOnSegment, segment, plannedRoute, direction, distance1, ascent, descent);
-                    }
-
-                    if (lastOfRoute.Direction == SegmentDirection.BtoA)
-                    {
-                        if (lastSegmentOfRoute.NextSegmentsNodeA.Any(t =>
-                                t.SegmentId == segment.Id))
-                        {
-                            // Moved from last segment of route to the next segment at the end of that
-                            return new CompletedRouteState(RiderId, ActivityId, closestOnSegment,
-                                plannedRoute);
-                        }
-
-                        return new LostRouteLockState(RiderId, ActivityId, closestOnSegment, segment, plannedRoute, direction, distance1, ascent, descent);
-                    }
-                }
-
-                return new OnRouteState(RiderId, ActivityId, closestOnSegment, segment, plannedRoute, direction, distance1, ascent, descent);
+                return HandleEndOfRoute(segments, plannedRoute, segment, closestOnSegment, direction, distance, ascent, descent, RiderId, ActivityId);
             }
 
             if (plannedRoute.CurrentSegmentId == segment.Id)
             {
-                return new OnRouteState(RiderId, ActivityId, closestOnSegment, segment, plannedRoute, direction, distance1, ascent, descent);
+                return new OnRouteState(RiderId, ActivityId, closestOnSegment, segment, plannedRoute, direction, distance, ascent, descent);
             }
 
             if (plannedRoute.NextSegmentId == segment.Id)
             {
                 plannedRoute.EnteredSegment(segment.Id);
-                return new OnRouteState(RiderId, ActivityId, closestOnSegment, segment, plannedRoute, direction, distance1, ascent, descent);
+                return new OnRouteState(RiderId, ActivityId, closestOnSegment, segment, plannedRoute, direction, distance, ascent, descent);
             }
 
             throw new InvalidStateTransitionException("Impossible to work out which state to transition to");
@@ -279,5 +248,53 @@ namespace RoadCaptain.GameStates
         }
 
 
+        public static GameState HandleEndOfRoute(
+            List<Segment> segments, 
+            PlannedRoute plannedRoute, 
+            Segment segment,
+            TrackPoint closestOnSegment, 
+            SegmentDirection direction, 
+            double distance, 
+            double ascent, 
+            double descent, 
+            uint riderId, 
+            ulong activityId)
+        {
+            if (plannedRoute.CurrentSegmentId != segment.Id)
+            {
+                var lastOfRoute = plannedRoute.RouteSegmentSequence[plannedRoute.SegmentSequenceIndex];
+                var lastSegmentOfRoute = segments.Single(s => s.Id == plannedRoute.CurrentSegmentId);
+                if (lastOfRoute.Direction == SegmentDirection.AtoB)
+                {
+                    if (lastSegmentOfRoute.NextSegmentsNodeB.Any(t =>
+                            t.SegmentId == segment.Id))
+                    {
+                        // Moved from last segment of route to the next segment at the end of that
+                        return new CompletedRouteState(riderId, activityId, closestOnSegment, plannedRoute);
+                    }
+
+                    // TODO reproduce this with the ItalianVillasRepro route
+                    return new LostRouteLockState(riderId, activityId, closestOnSegment, segment, plannedRoute, direction,
+                        distance, ascent, descent);
+                }
+
+                if (lastOfRoute.Direction == SegmentDirection.BtoA)
+                {
+                    if (lastSegmentOfRoute.NextSegmentsNodeA.Any(t =>
+                            t.SegmentId == segment.Id))
+                    {
+                        // Moved from last segment of route to the next segment at the end of that
+                        return new CompletedRouteState(riderId, activityId, closestOnSegment,
+                            plannedRoute);
+                    }
+
+                    return new LostRouteLockState(riderId, activityId, closestOnSegment, segment, plannedRoute, direction,
+                        distance, ascent, descent);
+                }
+            }
+
+            return new OnRouteState(riderId, activityId, closestOnSegment, segment, plannedRoute, direction, distance, ascent,
+                descent);
+        }
     }
 }

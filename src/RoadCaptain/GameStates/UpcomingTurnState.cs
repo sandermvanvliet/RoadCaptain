@@ -159,38 +159,7 @@ namespace RoadCaptain.GameStates
 
             if (plannedRoute.IsOnLastSegment)
             {
-                if (plannedRoute.CurrentSegmentId != segment.Id)
-                {
-                    var lastOfRoute = plannedRoute.RouteSegmentSequence[plannedRoute.SegmentSequenceIndex];
-                    var lastSegmentOfRoute = segments.Single(s => s.Id == plannedRoute.CurrentSegmentId);
-                    if (lastOfRoute.Direction == SegmentDirection.AtoB)
-                    {
-                        if (lastSegmentOfRoute.NextSegmentsNodeB.Any(t =>
-                                t.SegmentId == segment.Id))
-                        {
-                            // Moved from last segment of route to the next segment at the end of that
-                            return new CompletedRouteState(RiderId, ActivityId, closestOnSegment, plannedRoute);
-                        }
-
-                        // TODO reproduce this with the ItalianVillasRepro route
-                        return new LostRouteLockState(RiderId, ActivityId, closestOnSegment, segment, plannedRoute, direction, distance, ascent, descent);
-                    }
-
-                    if (lastOfRoute.Direction == SegmentDirection.BtoA)
-                    {
-                        if (lastSegmentOfRoute.NextSegmentsNodeA.Any(t =>
-                                t.SegmentId == segment.Id))
-                        {
-                            // Moved from last segment of route to the next segment at the end of that
-                            return new CompletedRouteState(RiderId, ActivityId, closestOnSegment,
-                                plannedRoute);
-                        }
-
-                        return new LostRouteLockState(RiderId, ActivityId, closestOnSegment, segment, plannedRoute, direction, distance, ascent, descent);
-                    }
-                }
-
-                return new OnRouteState(RiderId, ActivityId, closestOnSegment, segment, plannedRoute, direction, distance, ascent, descent);
+                return OnRouteState.HandleEndOfRoute(segments, plannedRoute, segment, closestOnSegment, direction, distance, ascent, descent, RiderId, ActivityId);
             }
 
             return new LostRouteLockState(
