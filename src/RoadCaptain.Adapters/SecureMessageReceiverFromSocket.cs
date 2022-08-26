@@ -79,7 +79,7 @@ namespace RoadCaptain.Adapters
          * When Receive() fails with a socket error we clear the established connection
          * so that the next call to ReceiveMessageBytes will block again on Accept()
          */
-        public byte[] ReceiveMessageBytes()
+        public byte[]? ReceiveMessageBytes()
         {
             // Do we have an established connection?
             if (_acceptedSocket == null)

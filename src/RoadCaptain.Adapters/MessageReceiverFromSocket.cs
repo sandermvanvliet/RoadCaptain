@@ -16,8 +16,8 @@ namespace RoadCaptain.Adapters
 {
     internal class MessageReceiverFromSocket : IMessageReceiver, IZwiftGameConnection
     {
-        private Socket _socket;
-        private Socket _acceptedSocket;
+        private Socket? _socket;
+        private Socket? _acceptedSocket;
         private readonly MonitoringEvents _monitoringEvents;
         private readonly IGameStateDispatcher _gameStateDispatcher;
         private uint _commandCounter = 1;
@@ -76,7 +76,7 @@ namespace RoadCaptain.Adapters
          * When Receive() fails with a socket error we clear the established connection
          * so that the next call to ReceiveMessageBytes will block again on Accept()
          */
-        public byte[] ReceiveMessageBytes()
+        public byte[]? ReceiveMessageBytes()
         {
             // Do we have an established connection?
             if (_acceptedSocket == null)
@@ -84,10 +84,7 @@ namespace RoadCaptain.Adapters
                 // No, try to Accept() a new one
                 try
                 {
-                    if (_socket == null)
-                    {
-                        _socket = CreateListeningSocket();
-                    }
+                    _socket ??= CreateListeningSocket();
 
                     if (!_socket.IsBound)
                     {
@@ -229,7 +226,7 @@ namespace RoadCaptain.Adapters
 
             try
             {
-                _socket.Shutdown(SocketShutdown.Both);
+                _socket?.Shutdown(SocketShutdown.Both);
             }
             catch (SocketException)
             {
@@ -238,7 +235,7 @@ namespace RoadCaptain.Adapters
 
             try
             {
-                _socket.Close();
+                _socket?.Close();
             }
             catch (SocketException)
             {

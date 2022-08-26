@@ -109,7 +109,7 @@ namespace RoadCaptain.UseCases
                     // If not, sleep for a while and try again
                     var profile = await _zwift.GetProfileAsync(connectCommand.AccessToken);
 
-                    if (profile != null && profile.Riding)
+                    if (profile.Riding)
                     {
                         _monitoringEvents.UserIsRiding();
                         break;
