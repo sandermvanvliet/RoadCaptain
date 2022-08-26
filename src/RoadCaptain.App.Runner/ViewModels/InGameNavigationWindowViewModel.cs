@@ -14,7 +14,6 @@ namespace RoadCaptain.App.Runner.ViewModels
     public class InGameNavigationWindowViewModel : ViewModelBase
     {
         private GameState? _previousState;
-        private int _previousRouteSequenceIndex;
         private readonly List<Segment> _segments;
         private bool _hasRouteFinished;
         private readonly IZwiftGameConnection _gameConnection;
@@ -50,11 +49,11 @@ namespace RoadCaptain.App.Runner.ViewModels
 
             try
             {
-                if (_previousState is OnRouteState previousRouteState && gameState is LostRouteLockState)
+                if (gameState is LostRouteLockState lostRouteState)
                 {
-                    if (previousRouteState.Route.NextSegmentId != null)
+                    if (lostRouteState.Route.NextSegmentId != null)
                     {
-                        var expectedSegment = GetSegmentById(previousRouteState.Route.NextSegmentId);
+                        var expectedSegment = GetSegmentById(lostRouteState.Route.NextSegmentId);
                         Model.InstructionText = $"Try to make a u-turn and head to segment '{expectedSegment.Name}'";
                     }
                     else
@@ -63,15 +62,16 @@ namespace RoadCaptain.App.Runner.ViewModels
                     }
 
                     Model.LostRouteLock = true;
-                }
-
-                if (gameState is OnSegmentState positionedState)
+                } 
+                else if (_previousState is LostRouteLockState)
                 {
-                    Model.CurrentSegment.PointOnSegment = positionedState.CurrentPosition;
+                    Model.LostRouteLock = false;
+                    Model.InstructionText = string.Empty;
                 }
 
                 if (gameState is OnSegmentState segmentState)
                 {
+                    Model.CurrentSegment.PointOnSegment = segmentState.CurrentPosition;
                     Model.ElapsedAscent = segmentState.ElapsedAscent;
                     Model.ElapsedDescent = segmentState.ElapsedDescent;
                     Model.ElapsedDistance = segmentState.ElapsedDistance;
@@ -79,39 +79,41 @@ namespace RoadCaptain.App.Runner.ViewModels
 
                 if (gameState is OnRouteState routeState)
                 {
+                    Model.CurrentSegment.PointOnSegment = routeState.CurrentPosition;
                     Model.ElapsedAscent = routeState.ElapsedAscent;
                     Model.ElapsedDescent = routeState.ElapsedDescent;
                     Model.ElapsedDistance = routeState.ElapsedDistance;
 
-                    if(_previousRouteSequenceIndex != routeState.Route.SegmentSequenceIndex)
+                    if (Model.CurrentSegment.SegmentId != routeState.Route.CurrentSegmentId)
                     {
                         // Moved to next segment on route
-                        RouteProgression(routeState.Route.SegmentSequenceIndex);
-
-                        if (Model.Route.IsLoop && Model.Route.RouteSegmentSequence[routeState.Route.SegmentSequenceIndex].Type == SegmentSequenceType.LoopStart)
-                        {
-                            Model.LoopCount++;
-                        }
-                    }
-
-                    if (_previousState is OnSegmentState)
-                    {
-                        // Back on route again
-                        RouteProgression(routeState.Route.SegmentSequenceIndex);
-                    }
-
-                    _previousRouteSequenceIndex = routeState.Route.SegmentSequenceIndex;
-
-                    if (Model.LostRouteLock)
-                    {
-                        Model.LostRouteLock = false;
-                        Model.InstructionText = string.Empty;
+                        UpdateRouteModel(routeState.Route);
                     }
                 }
 
-                if (gameState is CompletedRouteState && !Model.Route.IsLoop)
+                if (gameState is UpcomingTurnState upcomingTurnState)
+                {
+                    Model.CurrentSegment.PointOnSegment = upcomingTurnState.CurrentPosition;
+                    Model.ElapsedAscent = upcomingTurnState.ElapsedAscent;
+                    Model.ElapsedDescent = upcomingTurnState.ElapsedDescent;
+                    Model.ElapsedDistance = upcomingTurnState.ElapsedDistance;
+
+                    if (Model.CurrentSegment.SegmentId != upcomingTurnState.Route.CurrentSegmentId)
+                    {
+                        // Moved to next segment on route
+                        UpdateRouteModel(upcomingTurnState.Route);
+                    }
+                }
+
+                if (gameState is CompletedRouteState completedRoute && !Model.Route.IsLoop)
                 {
                     HasRouteFinished = true;
+
+                    if (Model.CurrentSegment.SegmentId != completedRoute.Route.CurrentSegmentId)
+                    {
+                        // Moved to next segment on route
+                        UpdateRouteModel(completedRoute.Route);
+                    }
                 }
             }
             finally
@@ -135,25 +137,20 @@ namespace RoadCaptain.App.Runner.ViewModels
 
         private void UpdateUserInGameStatus(GameState gameState)
         {
-            if (gameState is NotLoggedInState || 
-                gameState is LoggedInState || 
-                gameState is WaitingForConnectionState ||
-                gameState is ConnectedToZwiftState)
-            {
-                Model.UserIsInGame = false;
-            }
-            else
-            {
-                Model.UserIsInGame = true;
-            }
-
-            if (GameState.IsInGame(gameState) && !GameState.IsInGame(_previousState))
+            if (GameState.IsInGame(gameState))
             {
                 Model.UserIsInGame = true;
                 Model.WaitingReason = string.Empty;
                 Model.InstructionText = string.Empty;
             }
-            else if (gameState is ConnectedToZwiftState && _previousState is not ConnectedToZwiftState)
+            else 
+            {
+                Model.UserIsInGame = false;
+                Model.WaitingReason = string.Empty;
+                Model.InstructionText = string.Empty;
+            }
+
+            if (gameState is ConnectedToZwiftState)
             {
                 var sportActivity = GetActivityFromSport();
                 Model.UserIsInGame = false;
@@ -173,11 +170,6 @@ namespace RoadCaptain.App.Runner.ViewModels
                 Model.WaitingReason = "Waiting for Zwift...";
                 Model.InstructionText = $"Start Zwift and start {sportActivity} in {Model.Route.World.Name} on route:";
             }
-            else if (gameState is OnRouteState)
-            {
-                Model.WaitingReason = string.Empty;
-                Model.InstructionText = string.Empty;
-            }
             else if (gameState is ErrorState)
             {
                 Model.UserIsInGame = false;
@@ -196,18 +188,24 @@ namespace RoadCaptain.App.Runner.ViewModels
             };
         }
 
-        private void RouteProgression(int segmentSequenceIndex)
+        private void UpdateRouteModel(PlannedRoute plannedRoute)
         {
             // Set CurrentSegment and NextSegment accordingly
-            Model.CurrentSegment = SegmentSequenceModelFromIndex(segmentSequenceIndex);
+            Model.CurrentSegment = SegmentSequenceModelFromIndex(plannedRoute.SegmentSequenceIndex);
 
-            if (segmentSequenceIndex < Model.Route.RouteSegmentSequence.Count - 1)
+            if (plannedRoute.SegmentSequenceIndex < Model.Route.RouteSegmentSequence.Count - 1)
             {
-                Model.NextSegment = SegmentSequenceModelFromIndex(segmentSequenceIndex + 1);
+                Model.NextSegment = SegmentSequenceModelFromIndex(plannedRoute.SegmentSequenceIndex + 1);
             }
             else
             {
                 Model.NextSegment = null;
+            }
+            
+            if (plannedRoute.IsLoop && 
+                plannedRoute.RouteSegmentSequence[plannedRoute.SegmentSequenceIndex].Type == SegmentSequenceType.LoopStart)
+            {
+                Model.LoopCount++;
             }
         }
 
