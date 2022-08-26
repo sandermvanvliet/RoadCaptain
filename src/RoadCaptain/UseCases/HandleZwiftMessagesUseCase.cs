@@ -14,10 +14,10 @@ namespace RoadCaptain.UseCases
         private bool _pingedBefore;
         private static readonly object SyncRoot = new();
 
-        private GameState _gameState;
-        private List<Segment> _segments;
+        private GameState? _gameState;
+        private List<Segment>? _segments;
         private readonly ISegmentStore _segmentStore;
-        private PlannedRoute _route;
+        private PlannedRoute? _route;
         private readonly IGameStateDispatcher _gameStateDispatcher;
         private static ulong _lastIncomingSequenceNumber;
         private readonly IZwiftGameConnection _gameConnection;
@@ -85,45 +85,52 @@ namespace RoadCaptain.UseCases
                 // Dequeue will block if there are no messages in the queue
                 var message = _emitter.Dequeue(token);
 
-                if (message is ZwiftRiderPositionMessage riderPosition)
+                try
                 {
-                    _monitoringEvents.RiderPositionReceived(riderPosition.Latitude, riderPosition.Longitude, riderPosition.Altitude);
-
-                    // TODO: Figure out how to get the WorldId as quickly as possible and put it in the game state
-                    var worldId = _route?.World.ZwiftId ?? ZwiftWorldId.Unknown;
-
-                    // Convert from Zwift game coordinates to a lat/lon coordinate
-                    var position = new GameCoordinate(riderPosition.Latitude, riderPosition.Longitude, riderPosition.Altitude, worldId).ToTrackPoint();
-
-                    // As long as there is no route loaded we cannot change the
-                    // the state.
-                    if (_route != null)
+                    if (message is ZwiftRiderPositionMessage riderPosition)
                     {
-                        _segments ??= _segmentStore.LoadSegments(_route.World, _route.Sport);
+                        _monitoringEvents.RiderPositionReceived(riderPosition.Latitude, riderPosition.Longitude, riderPosition.Altitude);
 
-                        var newState = State.UpdatePosition(position, _segments, _route);
+                        // TODO: Figure out how to get the WorldId as quickly as possible and put it in the game state
+                        var worldId = _route?.World.ZwiftId ?? ZwiftWorldId.Unknown;
 
-                        State = newState;
+                        // Convert from Zwift game coordinates to a lat/lon coordinate
+                        var position = new GameCoordinate(riderPosition.Latitude, riderPosition.Longitude, riderPosition.Altitude, worldId).ToTrackPoint();
+
+                        // As long as there is no route loaded we cannot change the
+                        // the state.
+                        if (_route != null)
+                        {
+                            _segments ??= _segmentStore.LoadSegments(_route.World, _route.Sport);
+
+                            var newState = State.UpdatePosition(position, _segments, _route);
+
+                            State = newState;
+                        }
+                    }
+                    else if (message is ZwiftPingMessage ping)
+                    {
+                        HandlePingMessage(ping);
+                    }
+                    else if (message is ZwiftCommandAvailableMessage commandAvailable)
+                    {
+                        State = HandleAvailableTurns(commandAvailable, State);
+                    }
+                    else if (message is ZwiftActivityDetailsMessage activityDetails)
+                    {
+                        if (activityDetails.ActivityId != 0)
+                        {
+                            State = State.EnterGame(activityDetails.RiderId, activityDetails.ActivityId);
+                        }
+                        else
+                        {
+                            State = State.LeaveGame();
+                        }
                     }
                 }
-                else if (message is ZwiftPingMessage ping)
+                catch (InvalidStateTransitionException ex)
                 {
-                    HandlePingMessage(ping);
-                }
-                else if (message is ZwiftCommandAvailableMessage commandAvailable)
-                {
-                    State = HandleAvailableTurns(commandAvailable, State);
-                }
-                else if (message is ZwiftActivityDetailsMessage activityDetails)
-                {
-                    if (activityDetails.ActivityId != 0)
-                    {
-                        State = State.EnterGame(activityDetails.RiderId, activityDetails.ActivityId);
-                    }
-                    else
-                    {
-                        State = State.LeaveGame();
-                    }
+                    _monitoringEvents.InvalidStateTransition(ex);
                 }
             }
         }

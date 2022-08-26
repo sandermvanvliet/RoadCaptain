@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Net.Sockets;
+using RoadCaptain.GameStates;
 
 namespace RoadCaptain
 {
@@ -57,6 +58,13 @@ namespace RoadCaptain
         public static void PowerUpAvailable(this MonitoringEvents monitoringEvents, string type)
         {
             monitoringEvents.Debug("Received available power-up {Type}", type);
+        }
+
+        public static void InvalidStateTransition(
+            this MonitoringEvents monitoringEvents,
+            InvalidStateTransitionException ex)
+        {
+            monitoringEvents.Error(ex, ex.Message);
         }
     }
 }
