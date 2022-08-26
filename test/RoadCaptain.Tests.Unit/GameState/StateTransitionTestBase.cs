@@ -145,7 +145,8 @@ namespace RoadCaptain.Tests.Unit.GameState
             if(!RouteSegment3.NextSegmentsNodeA.Any())
             {
                 RouteSegment3.NextSegmentsNodeA.Add(new Turn(TurnDirection.GoStraight, RouteSegment2.Id));
-                RouteSegment3.NextSegmentsNodeB.Add(new Turn(TurnDirection.GoStraight, Segment2.Id));
+                RouteSegment3.NextSegmentsNodeB.Add(new Turn(TurnDirection.Left, Segment2.Id));
+                RouteSegment3.NextSegmentsNodeB.Add(new Turn(TurnDirection.GoStraight, Segment1.Id));
             }
 
             foreach (var segment in Segments)
