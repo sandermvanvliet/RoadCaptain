@@ -4,7 +4,6 @@ using System.Reflection;
 using RoadCaptain.App.Runner.Models;
 using RoadCaptain.App.Runner.ViewModels;
 using RoadCaptain.App.Shared;
-using RoadCaptain.App.Shared.UserPreferences;
 using RoadCaptain.Commands;
 using RoadCaptain.GameStates;
 using RoadCaptain.Ports;
@@ -110,7 +109,7 @@ namespace RoadCaptain.App.Runner
                     _windowService.ShowInGameWindow(CreateInGameViewModel(_loadedRoute));
                 }
             }
-            else if (gameState is ConnectedToZwiftState && _previousGameState is InGameState)
+            else if (gameState is ConnectedToZwiftState && GameState.IsInGame(_previousGameState))
             {
                 _monitoringEvents.Information("User left activity");
 
@@ -146,7 +145,7 @@ namespace RoadCaptain.App.Runner
                 _windowService.ShowMainWindow();
             }
 
-            if (gameState is InGameState && _previousGameState is not InGameState)
+            if (GameState.IsInGame(gameState) && !GameState.IsInGame(_previousGameState))
             {
                 _monitoringEvents.Information("User entered the game");
 

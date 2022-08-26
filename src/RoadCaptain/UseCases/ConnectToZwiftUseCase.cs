@@ -39,7 +39,7 @@ namespace RoadCaptain.UseCases
         private void ReceiveGameState(GameState gameState)
         {
             // TODO: Revisit this
-            if (gameState is InGameState && !_userIsInGame)
+            if (GameState.IsInGame(gameState) && !_userIsInGame)
             {
                 _userIsInGame = true;
             }

@@ -147,7 +147,7 @@ namespace RoadCaptain.App.Runner.ViewModels
                 Model.UserIsInGame = true;
             }
 
-            if (gameState is InGameState && _previousState is not InGameState)
+            if (GameState.IsInGame(gameState) && !GameState.IsInGame(_previousState))
             {
                 Model.UserIsInGame = true;
                 Model.WaitingReason = string.Empty;
@@ -160,7 +160,7 @@ namespace RoadCaptain.App.Runner.ViewModels
                 Model.WaitingReason = "Connected with Zwift";
                 Model.InstructionText = $"Start {sportActivity} in {Model.Route.World.Name} on route:";
             }
-            else if (gameState is WaitingForConnectionState && _previousState is InGameState)
+            else if (gameState is WaitingForConnectionState && GameState.IsInGame(_previousState))
             {
                 Model.UserIsInGame = false;
                 Model.WaitingReason = "Connection with Zwift was lost, waiting for reconnect...";
