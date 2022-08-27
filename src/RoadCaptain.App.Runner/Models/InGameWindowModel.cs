@@ -12,16 +12,16 @@ namespace RoadCaptain.App.Runner.Models
         private double _elapsedDistance;
         private double _elapsedAscent;
         private double _elapsedDescent;
-        private SegmentSequenceModel _currentSegment;
-        private SegmentSequenceModel _nextSegment;
+        private SegmentSequenceModel? _currentSegment;
+        private SegmentSequenceModel? _nextSegment;
         private readonly List<Segment> _segments;
-        private PlannedRoute _route;
+        private PlannedRoute? _route;
         private double _totalAscent;
         private double _totalDescent;
         private double _totalDistance;
         private bool _userIsInGame;
         private string _waitingReason = "Waiting for Zwift connection...";
-        private string _instructionText;
+        private string _instructionText = string.Empty;
         private bool _lostRouteLock;
         private int _loopCount;
 
@@ -68,14 +68,21 @@ namespace RoadCaptain.App.Runner.Models
         }
         
 
-        public PlannedRoute Route
+        public PlannedRoute? Route
         {
             get => _route;
             set
             {
                 if (Equals(value, _route)) return;
                 _route = value;
-                InitializeRoute(value);
+                if (_route != null)
+                {
+                    InitializeRoute(_route);
+                }
+                else
+                {
+                    ClearRoute();
+                }
                 this.RaisePropertyChanged();
             }
         }
@@ -146,7 +153,7 @@ namespace RoadCaptain.App.Runner.Models
             }
         }
 
-        public SegmentSequenceModel CurrentSegment
+        public SegmentSequenceModel? CurrentSegment
         {
             get => _currentSegment;
             set
@@ -232,6 +239,16 @@ namespace RoadCaptain.App.Runner.Models
             ElapsedDistance = 0;
         }
 
+        private void ClearRoute()
+        {
+            CurrentSegment = null;
+            NextSegment = null;
+
+            ElapsedAscent = 0;
+            ElapsedDescent = 0;
+            ElapsedDistance = 0;
+        }
+
         private void CalculateTotalAscentAndDescent(PlannedRoute route)
         {
             double totalAscent = 0;
@@ -263,7 +280,14 @@ namespace RoadCaptain.App.Runner.Models
 
         private Segment GetSegmentById(string segmentId)
         {
-            return _segments.SingleOrDefault(s => s.Id == segmentId);
+            var segment = _segments.SingleOrDefault(s => s.Id == segmentId);
+
+            if (segment == null)
+            {
+                throw new Exception($"Could not find segment with id '{segmentId}'");
+            }
+
+            return segment;
         }
     }
 }
