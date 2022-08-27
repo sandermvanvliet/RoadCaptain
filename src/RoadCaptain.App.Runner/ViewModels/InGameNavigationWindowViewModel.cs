@@ -45,74 +45,105 @@ namespace RoadCaptain.App.Runner.ViewModels
 
         public void UpdateGameState(GameState gameState)
         {
-            UpdateUserInGameStatus(gameState);
-
+            if (GameState.IsInGame(gameState))
+            {
+                Model.UserIsInGame = true;
+                Model.WaitingReason = string.Empty;
+                Model.InstructionText = string.Empty;
+            }
+            else 
+            {
+                Model.UserIsInGame = false;
+                Model.WaitingReason = string.Empty;
+                Model.InstructionText = string.Empty;
+            }
+            
             try
             {
-                if (gameState is LostRouteLockState lostRouteState)
+                switch (gameState)
                 {
-                    if (lostRouteState.Route.NextSegmentId != null)
+                    case ConnectedToZwiftState:
+                        Model.UserIsInGame = false;
+                        Model.WaitingReason = "Connected with Zwift";
+                        Model.InstructionText = $"Start {GetActivityFromSport()} in {Model.Route.World.Name} on route:";
+                        break;
+                    case WaitingForConnectionState when GameState.IsInGame(_previousState):
+                        Model.UserIsInGame = false;
+                        Model.WaitingReason = "Connection with Zwift was lost, waiting for reconnect...";
+                        Model.InstructionText = string.Empty;
+                        break;
+                    case WaitingForConnectionState:
+                        Model.UserIsInGame = false;
+                        Model.WaitingReason = "Waiting for Zwift...";
+                        Model.InstructionText = $"Start Zwift and start {GetActivityFromSport()} in {Model.Route.World.Name} on route:";
+                        break;
+                    case ErrorState:
+                        Model.UserIsInGame = false;
+                        Model.WaitingReason = "Oops! Something went wrong...";
+                        Model.InstructionText = "Please report a bug on Github";
+                        break;
+                    case LostRouteLockState lostRouteState:
                     {
-                        var expectedSegment = GetSegmentById(lostRouteState.Route.NextSegmentId);
-                        Model.InstructionText = $"Try to make a u-turn and head to segment '{expectedSegment.Name}'";
+                        if (lostRouteState.Route.NextSegmentId != null)
+                        {
+                            var expectedSegment = GetSegmentById(lostRouteState.Route.NextSegmentId);
+                            Model.InstructionText = $"Try to make a u-turn and head to segment '{expectedSegment.Name}'";
+                        }
+                        else
+                        {
+                            Model.InstructionText = $"Try to make a u-turn to return to the route";
+                        }
+
+                        Model.LostRouteLock = true;
+                        break;
                     }
-                    else
+                    case OnRouteState routeState:
                     {
-                        Model.InstructionText = $"Try to make a u-turn to return to the route";
+                        Model.CurrentSegment.PointOnSegment = routeState.CurrentPosition;
+                        Model.ElapsedAscent = routeState.ElapsedAscent;
+                        Model.ElapsedDescent = routeState.ElapsedDescent;
+                        Model.ElapsedDistance = routeState.ElapsedDistance;
+                            
+                        Model.LostRouteLock = false;
+                        Model.InstructionText = string.Empty;
+
+                        if (Model.CurrentSegment.SegmentId != routeState.Route.CurrentSegmentId)
+                        {
+                            // Moved to next segment on route
+                            UpdateRouteModel(routeState.Route);
+                        }
+
+                        break;
                     }
-
-                    Model.LostRouteLock = true;
-                } 
-                else if (_previousState is LostRouteLockState)
-                {
-                    Model.LostRouteLock = false;
-                    Model.InstructionText = string.Empty;
-                }
-
-                if (gameState is OnSegmentState segmentState)
-                {
-                    Model.CurrentSegment.PointOnSegment = segmentState.CurrentPosition;
-                    Model.ElapsedAscent = segmentState.ElapsedAscent;
-                    Model.ElapsedDescent = segmentState.ElapsedDescent;
-                    Model.ElapsedDistance = segmentState.ElapsedDistance;
-                }
-
-                if (gameState is OnRouteState routeState)
-                {
-                    Model.CurrentSegment.PointOnSegment = routeState.CurrentPosition;
-                    Model.ElapsedAscent = routeState.ElapsedAscent;
-                    Model.ElapsedDescent = routeState.ElapsedDescent;
-                    Model.ElapsedDistance = routeState.ElapsedDistance;
-
-                    if (Model.CurrentSegment.SegmentId != routeState.Route.CurrentSegmentId)
+                    case UpcomingTurnState upcomingTurnState:
                     {
-                        // Moved to next segment on route
-                        UpdateRouteModel(routeState.Route);
+                        Model.CurrentSegment.PointOnSegment = upcomingTurnState.CurrentPosition;
+                        Model.ElapsedAscent = upcomingTurnState.ElapsedAscent;
+                        Model.ElapsedDescent = upcomingTurnState.ElapsedDescent;
+                        Model.ElapsedDistance = upcomingTurnState.ElapsedDistance;
+                            
+                        Model.LostRouteLock = false;
+                        Model.InstructionText = string.Empty;
+
+                        if (Model.CurrentSegment.SegmentId != upcomingTurnState.Route.CurrentSegmentId)
+                        {
+                            // Moved to next segment on route
+                            UpdateRouteModel(upcomingTurnState.Route);
+                        }
+
+                        break;
                     }
-                }
-
-                if (gameState is UpcomingTurnState upcomingTurnState)
-                {
-                    Model.CurrentSegment.PointOnSegment = upcomingTurnState.CurrentPosition;
-                    Model.ElapsedAscent = upcomingTurnState.ElapsedAscent;
-                    Model.ElapsedDescent = upcomingTurnState.ElapsedDescent;
-                    Model.ElapsedDistance = upcomingTurnState.ElapsedDistance;
-
-                    if (Model.CurrentSegment.SegmentId != upcomingTurnState.Route.CurrentSegmentId)
+                    case CompletedRouteState completedRoute when !Model.Route.IsLoop:
                     {
-                        // Moved to next segment on route
-                        UpdateRouteModel(upcomingTurnState.Route);
-                    }
-                }
+                        HasRouteFinished = true;
 
-                if (gameState is CompletedRouteState completedRoute && !Model.Route.IsLoop)
-                {
-                    HasRouteFinished = true;
+                        if (Model.CurrentSegment.SegmentId != completedRoute.Route.CurrentSegmentId)
+                        {
+                            // Moved to next segment on route
+                            UpdateRouteModel(completedRoute.Route);
+                        }
 
-                    if (Model.CurrentSegment.SegmentId != completedRoute.Route.CurrentSegmentId)
-                    {
-                        // Moved to next segment on route
-                        UpdateRouteModel(completedRoute.Route);
+                        break;
                     }
                 }
             }
@@ -134,49 +165,6 @@ namespace RoadCaptain.App.Runner.ViewModels
         }
 
         public ulong LastSequenceNumber { get; set; }
-
-        private void UpdateUserInGameStatus(GameState gameState)
-        {
-            if (GameState.IsInGame(gameState))
-            {
-                Model.UserIsInGame = true;
-                Model.WaitingReason = string.Empty;
-                Model.InstructionText = string.Empty;
-            }
-            else 
-            {
-                Model.UserIsInGame = false;
-                Model.WaitingReason = string.Empty;
-                Model.InstructionText = string.Empty;
-            }
-
-            if (gameState is ConnectedToZwiftState)
-            {
-                var sportActivity = GetActivityFromSport();
-                Model.UserIsInGame = false;
-                Model.WaitingReason = "Connected with Zwift";
-                Model.InstructionText = $"Start {sportActivity} in {Model.Route.World.Name} on route:";
-            }
-            else if (gameState is WaitingForConnectionState && GameState.IsInGame(_previousState))
-            {
-                Model.UserIsInGame = false;
-                Model.WaitingReason = "Connection with Zwift was lost, waiting for reconnect...";
-                Model.InstructionText = string.Empty;
-            }
-            else if (gameState is WaitingForConnectionState)
-            {
-                var sportActivity = GetActivityFromSport();
-                Model.UserIsInGame = false;
-                Model.WaitingReason = "Waiting for Zwift...";
-                Model.InstructionText = $"Start Zwift and start {sportActivity} in {Model.Route.World.Name} on route:";
-            }
-            else if (gameState is ErrorState)
-            {
-                Model.UserIsInGame = false;
-                Model.WaitingReason = "Oops! Something went wrong...";
-                Model.InstructionText = "Please report a bug on Github";
-            }
-        }
 
         private string GetActivityFromSport()
         {
