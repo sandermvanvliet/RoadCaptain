@@ -99,7 +99,13 @@ namespace RoadCaptain.App.Runner.ViewModels
                     }
                     case OnRouteState routeState:
                     {
-                        Model.CurrentSegment.PointOnSegment = routeState.CurrentPosition;
+                        if (Model.CurrentSegment?.SegmentId != routeState.Route.CurrentSegmentId)
+                        {
+                            // Moved to next segment on route
+                            UpdateRouteModel(routeState.Route);
+                        }
+
+                        Model.CurrentSegment!.PointOnSegment = routeState.CurrentPosition;
                         Model.ElapsedAscent = routeState.ElapsedAscent;
                         Model.ElapsedDescent = routeState.ElapsedDescent;
                         Model.ElapsedDistance = routeState.ElapsedDistance;
@@ -107,17 +113,17 @@ namespace RoadCaptain.App.Runner.ViewModels
                         Model.LostRouteLock = false;
                         Model.InstructionText = string.Empty;
 
-                        if (Model.CurrentSegment.SegmentId != routeState.Route.CurrentSegmentId)
-                        {
-                            // Moved to next segment on route
-                            UpdateRouteModel(routeState.Route);
-                        }
-
                         break;
                     }
                     case UpcomingTurnState upcomingTurnState:
                     {
-                        Model.CurrentSegment.PointOnSegment = upcomingTurnState.CurrentPosition;
+                        if (Model.CurrentSegment?.SegmentId != upcomingTurnState.Route.CurrentSegmentId)
+                        {
+                            // Moved to next segment on route
+                            UpdateRouteModel(upcomingTurnState.Route);
+                        }
+
+                        Model.CurrentSegment!.PointOnSegment = upcomingTurnState.CurrentPosition;
                         Model.ElapsedAscent = upcomingTurnState.ElapsedAscent;
                         Model.ElapsedDescent = upcomingTurnState.ElapsedDescent;
                         Model.ElapsedDistance = upcomingTurnState.ElapsedDistance;
@@ -125,19 +131,13 @@ namespace RoadCaptain.App.Runner.ViewModels
                         Model.LostRouteLock = false;
                         Model.InstructionText = string.Empty;
 
-                        if (Model.CurrentSegment.SegmentId != upcomingTurnState.Route.CurrentSegmentId)
-                        {
-                            // Moved to next segment on route
-                            UpdateRouteModel(upcomingTurnState.Route);
-                        }
-
                         break;
                     }
                     case CompletedRouteState completedRoute when !Model.Route.IsLoop:
                     {
                         HasRouteFinished = true;
 
-                        if (Model.CurrentSegment.SegmentId != completedRoute.Route.CurrentSegmentId)
+                        if (Model.CurrentSegment?.SegmentId != completedRoute.Route.CurrentSegmentId)
                         {
                             // Moved to next segment on route
                             UpdateRouteModel(completedRoute.Route);
@@ -181,7 +181,7 @@ namespace RoadCaptain.App.Runner.ViewModels
             // Set CurrentSegment and NextSegment accordingly
             Model.CurrentSegment = SegmentSequenceModelFromIndex(plannedRoute.SegmentSequenceIndex);
 
-            if (plannedRoute.SegmentSequenceIndex < Model.Route.RouteSegmentSequence.Count - 1)
+            if (plannedRoute.SegmentSequenceIndex < plannedRoute.RouteSegmentSequence.Count - 1)
             {
                 Model.NextSegment = SegmentSequenceModelFromIndex(plannedRoute.SegmentSequenceIndex + 1);
             }
