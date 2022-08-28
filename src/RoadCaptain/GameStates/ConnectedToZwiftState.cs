@@ -19,12 +19,12 @@ namespace RoadCaptain.GameStates
 
         public override GameState UpdatePosition(TrackPoint position, List<Segment> segments, PlannedRoute plannedRoute)
         {
-            throw InvalidStateTransitionException.NotInGame(GetType());
+            return this;
         }
 
         public override GameState TurnCommandAvailable(string type)
         {
-            throw InvalidStateTransitionException.NotOnARoute(GetType());
+            return this;
         }
     }
 }

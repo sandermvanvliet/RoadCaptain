@@ -7,23 +7,27 @@ namespace RoadCaptain.Tests.Unit.GameState
     public class FromConnectedToZwiftState : StateTransitionTestBase
     {
         [Fact]
-        public void GivenPositionNotOnSegment_InvalidStateTransitionExceptionIsThrown()
+        public void GivenPositionNotOnSegment_SameStateIsReturned()
         {
-            var action = () => GivenStartingState().UpdatePosition(PointNotOnAnySegment, Segments, Route);
+            var startingState = GivenStartingState();
 
-            action
+            var result = startingState.UpdatePosition(PointNotOnAnySegment, Segments, Route);
+
+            result
                 .Should()
-                .Throw<InvalidStateTransitionException>();
+                .Be(startingState);
         }
 
         [Fact]
         public void GivenPositionOnSegment_InvalidStateTransitionExceptionIsThrown()
         {
-            var action = () => GivenStartingState().UpdatePosition(Segment1Point1, Segments, Route);
+            var startingState = GivenStartingState();
 
-            action
+            var result = startingState.UpdatePosition(Segment1Point1, Segments, Route);
+
+            result
                 .Should()
-                .Throw<InvalidStateTransitionException>();
+                .Be(startingState);
         }
 
         [Fact]
@@ -51,13 +55,15 @@ namespace RoadCaptain.Tests.Unit.GameState
         }
 
         [Fact]
-        public void TurnCommandAvailable_InvalidStateTransitionExceptionIsThrown()
+        public void TurnCommandAvailable_SameStateIsReturned()
         {
-            var action = () => GivenStartingState().TurnCommandAvailable("left");
+            var startingState = GivenStartingState();
 
-            action
+            var result = startingState.TurnCommandAvailable("turnleft");
+
+            result
                 .Should()
-                .Throw<InvalidStateTransitionException>();
+                .Be(startingState);
         }
 
         private ConnectedToZwiftState GivenStartingState()
