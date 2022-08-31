@@ -1,4 +1,6 @@
-﻿using RoadCaptain.GameStates;
+﻿using System;
+using RoadCaptain.GameStates;
+using System.Collections.Generic;
 
 namespace RoadCaptain.Ports
 {
@@ -27,5 +29,15 @@ namespace RoadCaptain.Ports
         /// </summary>
         /// <param name="gameState"></param>
         void Dispatch(GameState gameState);
+
+        void LoggedIn(string zwiftAccessToken);
+        void WaitingForConnection();
+        void Connected();
+        void EnterGame(uint riderId, ulong activityId);
+        void LeaveGame();
+        void UpdatePosition(TrackPoint position, List<Segment> segments, PlannedRoute plannedRoute);
+        void TurnCommandAvailable(string type);
+        void Error(Exception exception);
+        void Error(string message, Exception exception);
     }
 }

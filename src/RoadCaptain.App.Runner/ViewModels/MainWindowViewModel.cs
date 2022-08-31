@@ -457,7 +457,7 @@ namespace RoadCaptain.App.Runner.ViewModels
 
             _gameStateDispatcher.RouteSelected(Route.PlannedRoute);
 
-            _gameStateDispatcher.Dispatch(new WaitingForConnectionState());
+            _gameStateDispatcher.WaitingForConnection();
 
             return CommandResult.Success();
         }
@@ -488,7 +488,7 @@ namespace RoadCaptain.App.Runner.ViewModels
 
                 LoggedInToZwift = true;
 
-                _gameStateDispatcher.Dispatch(new LoggedInState(ZwiftAccessToken));
+                _gameStateDispatcher.LoggedIn(ZwiftAccessToken);
 
                 return CommandResult.Success();
             }
@@ -557,7 +557,7 @@ namespace RoadCaptain.App.Runner.ViewModels
                 ZwiftAvatar = DownloadAvatarImage(ZwiftAvatarUri);
                 ZwiftName = string.IsNullOrEmpty(credentials.UserProfile?.FirstName) ? "(stored token)" : credentials.UserProfile.FirstName + " " + credentials.UserProfile.LastName;
                 LoggedInToZwift = true;
-                _gameStateDispatcher.Dispatch(new LoggedInState(ZwiftAccessToken));
+                _gameStateDispatcher.LoggedIn(ZwiftAccessToken!);
             }
             
         }

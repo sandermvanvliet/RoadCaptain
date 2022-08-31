@@ -98,7 +98,7 @@ namespace RoadCaptain.UseCases
                         }
                         catch (Exception e)
                         {
-                            _dispatcher.Dispatch(new ErrorState("Failed to decrypt message", e));
+                            _dispatcher.Error("Failed to decrypt message", e);
                             _monitoringEvents.Error(e, "Failed to decrypt message");
                         }
 

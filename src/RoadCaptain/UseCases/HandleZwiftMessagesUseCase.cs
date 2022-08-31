@@ -14,7 +14,6 @@ namespace RoadCaptain.UseCases
         private bool _pingedBefore;
         private static readonly object SyncRoot = new();
 
-        private GameState? _gameState;
         private List<Segment>? _segments;
         private readonly ISegmentStore _segmentStore;
         private PlannedRoute? _route;
@@ -44,34 +43,7 @@ namespace RoadCaptain.UseCases
             _gameStateReceiver.Register(
                 route => _route = route, 
                 null,
-                state =>
-                {
-                    if (_gameState == null)
-                    {
-                        _gameState = state;
-                    }
-                });
-        }
-
-        public GameState State
-        {
-            get => _gameState;
-            set
-            {
-                if (ReferenceEquals(_gameState, value))
-                {
-                    return;
-                }
-
-                if (_gameState != null && _gameState.GetType() != value.GetType())
-                {
-                    _monitoringEvents.Information("Game state changed from {OldState} to {NewState}", _gameState.GetType().Name, value.GetType().Name);
-                }
-
-                _gameState = value;
-
-                _gameStateDispatcher.Dispatch(_gameState);
-            }
+                null);
         }
 
         public void Execute(CancellationToken token)
@@ -103,9 +75,7 @@ namespace RoadCaptain.UseCases
                         {
                             _segments ??= _segmentStore.LoadSegments(_route.World, _route.Sport);
 
-                            var newState = State.UpdatePosition(position, _segments, _route);
-
-                            State = newState;
+                            _gameStateDispatcher.UpdatePosition(position, _segments, _route);
                         }
                     }
                     else if (message is ZwiftPingMessage ping)
@@ -114,17 +84,17 @@ namespace RoadCaptain.UseCases
                     }
                     else if (message is ZwiftCommandAvailableMessage commandAvailable)
                     {
-                        State = HandleAvailableTurns(commandAvailable, State);
+                        HandleAvailableTurns(commandAvailable);
                     }
                     else if (message is ZwiftActivityDetailsMessage activityDetails)
                     {
                         if (activityDetails.ActivityId != 0)
                         {
-                            State = State.EnterGame(activityDetails.RiderId, activityDetails.ActivityId);
+                            _gameStateDispatcher.EnterGame(activityDetails.RiderId, activityDetails.ActivityId);
                         }
                         else
                         {
-                            State = State.LeaveGame();
+                            _gameStateDispatcher.LeaveGame();
                         }
                     }
                 }
@@ -135,22 +105,17 @@ namespace RoadCaptain.UseCases
             }
         }
 
-        private GameState HandleAvailableTurns(ZwiftCommandAvailableMessage commandAvailable, GameState state)
+        private void HandleAvailableTurns(ZwiftCommandAvailableMessage commandAvailable)
         {
             if ("somethingempty".Equals(commandAvailable.Type, StringComparison.InvariantCultureIgnoreCase))
             {
                 DispatchLastSequenceNumber(commandAvailable);
-
-                return state;
             }
-
-            if (state is OnRouteState routeState)
+            else 
             {
                 _monitoringEvents.Debug("Received command type {Type}", commandAvailable.Type);
-                return routeState.TurnCommandAvailable(commandAvailable.Type);
+                _gameStateDispatcher.TurnCommandAvailable(commandAvailable.Type);
             }
-
-            return state;
         }
 
         private void DispatchLastSequenceNumber(ZwiftCommandAvailableMessage commandAvailable)

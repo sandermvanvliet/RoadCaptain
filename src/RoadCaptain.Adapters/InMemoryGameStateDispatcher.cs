@@ -27,6 +27,7 @@ namespace RoadCaptain.Adapters
         private bool _working;
 
         private ulong _lastSequenceNumber;
+        private GameState? _gameState;
 
         public InMemoryGameStateDispatcher(MonitoringEvents monitoringEvents)
         {
@@ -43,6 +44,30 @@ namespace RoadCaptain.Adapters
                 {
                     _started = value;
                 }
+            }
+        }
+
+        private GameState? State
+        {
+            get => _gameState;
+            set
+            {
+                if (ReferenceEquals(_gameState, value))
+                {
+                    return;
+                }
+
+                // If no state is provided then default to the starting state
+                value ??= new NotLoggedInState();
+
+                if (_gameState != null && _gameState.GetType() != value.GetType())
+                {
+                    _monitoringEvents.Information("Game state changed from {OldState} to {NewState}", _gameState.GetType().Name, value.GetType().Name);
+                }
+                
+                _gameState = value;
+
+                Dispatch(_gameState);
             }
         }
 
@@ -63,6 +88,51 @@ namespace RoadCaptain.Adapters
         public void Dispatch(GameState gameState)
         {
             Enqueue("gameState", gameState);
+        }
+
+        public void LoggedIn(string zwiftAccessToken)
+        {
+            State = new LoggedInState(zwiftAccessToken);
+        }
+
+        public void WaitingForConnection()
+        {
+            State = new WaitingForConnectionState();
+        }
+
+        public void Connected()
+        {
+            State = new ConnectedToZwiftState();
+        }
+
+        public void EnterGame(uint riderId, ulong activityId)
+        {
+            State = State?.EnterGame(riderId, activityId);
+        }
+
+        public void LeaveGame()
+        {
+            State = State?.LeaveGame();
+        }
+
+        public void UpdatePosition(TrackPoint position, List<Segment> segments, PlannedRoute plannedRoute)
+        {
+            State = State?.UpdatePosition(position, segments, plannedRoute);
+        }
+
+        public void TurnCommandAvailable(string type)
+        {
+            State = State?.TurnCommandAvailable(type);
+        }
+
+        public void Error(Exception exception)
+        {
+            State = new ErrorState(exception);
+        }
+
+        public void Error(string message, Exception exception)
+        {
+            State = new ErrorState(message, exception);
         }
 
         protected virtual void Enqueue(string topic, object data)
@@ -137,7 +207,8 @@ namespace RoadCaptain.Adapters
             }
         }
 
-        public void Register(Action<PlannedRoute> routeSelected, Action<ulong> lastSequenceNumber, Action<GameState> gameState)
+        public void Register(Action<PlannedRoute>? routeSelected, Action<ulong>? lastSequenceNumber,
+            Action<GameState>? gameState)
         {
             AddHandlerIfNotNull(_routeSelectedHandlers, routeSelected);
             AddHandlerIfNotNull(_lastSequenceNumberHandlers, lastSequenceNumber);
@@ -146,13 +217,16 @@ namespace RoadCaptain.Adapters
 
         public void Drain()
         {
+            // Note: This is a fairly ugly approach to ensure that the queue of
+            //       states waiting to be dispatched is cleared before stopping
+            //       the dispatcher. It is (currently) only used for tests.
             while (_working)
             {
-
+                Thread.Sleep(5);
             }
         }
 
-        private static void AddHandlerIfNotNull<TMessage>(List<Action<TMessage>> collection, Action<TMessage> handler)
+        private static void AddHandlerIfNotNull<TMessage>(List<Action<TMessage>> collection, Action<TMessage>? handler)
         {
             if (handler != null)
             {
@@ -162,11 +236,6 @@ namespace RoadCaptain.Adapters
 
         private void InvokeHandlers(Message message)
         {
-            if (message == null)
-            {
-                return;
-            }
-
             switch (message.Topic)
             {
                 case "routeSelected":

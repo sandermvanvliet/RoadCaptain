@@ -7,8 +7,8 @@ namespace RoadCaptain.Ports
     public interface IGameStateReceiver
     {
         void Start(CancellationToken token);
-        void Register(Action<PlannedRoute> routeSelected,
-            Action<ulong> lastSequenceNumber, Action<GameState> gameState);
+        void Register(Action<PlannedRoute>? routeSelected,
+            Action<ulong>? lastSequenceNumber, Action<GameState>? gameState);
 
         void Drain();
     }

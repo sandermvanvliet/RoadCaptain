@@ -50,7 +50,7 @@ namespace RoadCaptain.Adapters
 
         public byte[]? ReceiveMessageBytes()
         {
-            _gameStateDispatcher.Dispatch(new ConnectedToZwiftState());
+            _gameStateDispatcher.Connected();
 
             if (_receiveTask == null)
             {

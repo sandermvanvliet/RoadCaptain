@@ -104,11 +104,11 @@ namespace RoadCaptain.Adapters
 
                     _monitoringEvents.WaitingForConnection();
 
-                    _gameStateDispatcher.Dispatch(new WaitingForConnectionState());
+                    _gameStateDispatcher.WaitingForConnection();
 
                     _acceptedSocket = _socket.Accept();
 
-                    _gameStateDispatcher.Dispatch(new ConnectedToZwiftState());
+                    _gameStateDispatcher.Connected();
 
                     _monitoringEvents.AcceptedConnection();
                 }
