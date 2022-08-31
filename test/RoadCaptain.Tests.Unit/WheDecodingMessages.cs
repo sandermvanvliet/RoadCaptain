@@ -22,7 +22,7 @@ namespace RoadCaptain.Tests.Unit
         {
             _messageReceiver = new InMemoryMessageReceiver();
             _messageEmitter = new InMemoryMessageEmitter();
-            _useCase = new DecodeIncomingMessagesUseCase(_messageReceiver, _messageEmitter, new NopMonitoringEvents(), null);
+            _useCase = new DecodeIncomingMessagesUseCase(_messageReceiver, _messageEmitter, new NopMonitoringEvents(), null, null);
         }
 
         [Fact]

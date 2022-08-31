@@ -82,10 +82,10 @@ namespace RoadCaptain.App.Runner.ViewModels
                         Model.WaitingReason = "Waiting for Zwift...";
                         Model.InstructionText = $"Start Zwift and start {GetActivityFromSport()} in {Model.Route.World.Name} on route:";
                         break;
-                    case ErrorState:
+                    case ErrorState errorState:
                         Model.UserIsInGame = false;
                         Model.WaitingReason = "Oops! Something went wrong...";
-                        Model.InstructionText = "Please report a bug on Github";
+                        Model.InstructionText = $"{errorState.Message}.\nPlease report a bug on Github";
                         break;
                     case LostRouteLockState lostRouteState:
                     {

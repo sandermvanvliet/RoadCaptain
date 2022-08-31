@@ -6,8 +6,14 @@ namespace RoadCaptain.GameStates
 {
     public sealed class ErrorState : GameState
     {
-        public ErrorState(Exception exception)
+        public ErrorState(Exception exception) 
+            : this(exception.Message, exception)
         {
+        }
+
+        public ErrorState(string message, Exception exception)
+        {
+            Message = message;
             Exception = exception;
         }
 
@@ -18,6 +24,9 @@ namespace RoadCaptain.GameStates
         }
 
         public override uint RiderId { get; }
+
+        [JsonProperty]
+        public string Message { get; set; }
 
         [JsonProperty]
         public Exception Exception { get; private set; }

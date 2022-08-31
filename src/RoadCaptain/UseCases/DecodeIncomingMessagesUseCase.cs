@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Buffers;
-using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
+using RoadCaptain.GameStates;
 using RoadCaptain.Ports;
 
 namespace RoadCaptain.UseCases
@@ -17,17 +17,20 @@ namespace RoadCaptain.UseCases
         private readonly IMessageEmitter _messageEmitter;
         private readonly MonitoringEvents _monitoringEvents;
         private readonly IZwiftCrypto _zwiftCrypto;
+        private readonly IGameStateDispatcher _dispatcher;
 
         public DecodeIncomingMessagesUseCase(
             IMessageReceiver messageReceiver,
             IMessageEmitter messageEmitter,
             MonitoringEvents monitoringEvents, 
-            IZwiftCrypto zwiftCrypto)
+            IZwiftCrypto zwiftCrypto,
+            IGameStateDispatcher dispatcher)
         {
             _messageReceiver = messageReceiver;
             _messageEmitter = messageEmitter;
             _monitoringEvents = monitoringEvents;
             _zwiftCrypto = zwiftCrypto;
+            _dispatcher = dispatcher;
         }
 
         public Task ExecuteAsync(CancellationToken token)
@@ -95,7 +98,7 @@ namespace RoadCaptain.UseCases
                         }
                         catch (Exception e)
                         {
-                            Debugger.Break();
+                            _dispatcher.Dispatch(new ErrorState("Failed to decrypt message", e));
                             _monitoringEvents.Error(e, "Failed to decrypt message");
                         }
 
