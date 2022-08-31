@@ -10,7 +10,7 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.InGame
 {
     public class WhenUpdatingGameState
     {
-        private World World = new World { Id = "testworld", Name = "TestWorld" };
+        private World World = new() { Id = "testworld", Name = "TestWorld" };
 
         [Fact]
         public void GivenWaitingForConnectionState_UserInGameIsFalse()
@@ -237,7 +237,7 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.InGame
         {
             WhenUpdating(new ErrorState(new Exception("BANG")));
 
-            _viewModel.Model.InstructionText.Should().Be("Please report a bug on Github");
+            _viewModel.Model.InstructionText.Should().Be("BANG.\nPlease report a bug on Github");
         }
 
         [Fact]
