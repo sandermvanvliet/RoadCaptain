@@ -29,7 +29,6 @@ namespace RoadCaptain.Adapters
             builder
                 .RegisterAssemblyTypes(ThisAssembly)
                 .AsImplementedInterfaces()
-                .Except<MessageReceiverFromSocket>()
                 .Except<SecureMessageReceiverFromSocket>()
                 .Except<MessageReceiverFromCaptureFile>()
                 .Except<MessageEmitterToQueue>()
