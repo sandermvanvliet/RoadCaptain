@@ -1,5 +1,4 @@
 ﻿using System;
-using RoadCaptain.GameStates;
 using System.Collections.Generic;
 
 namespace RoadCaptain.Ports
@@ -23,12 +22,6 @@ namespace RoadCaptain.Ports
         /// </summary>
         /// <param name="sequenceNumber"></param>
         void UpdateLastSequenceNumber(ulong sequenceNumber);
-
-        /// <summary>
-        /// The state of the game has changed
-        /// </summary>
-        /// <param name="gameState"></param>
-        void Dispatch(GameState gameState);
 
         void LoggedIn(string zwiftAccessToken);
         void WaitingForConnection();
