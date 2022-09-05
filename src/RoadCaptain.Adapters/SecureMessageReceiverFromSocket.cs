@@ -86,10 +86,7 @@ namespace RoadCaptain.Adapters
                 // No, try to Accept() a new one
                 try
                 {
-                    if (_socket == null)
-                    {
-                        _socket = CreateListeningSocket();
-                    }
+                    _socket ??= CreateListeningSocket();
 
                     if (!_socket.IsBound)
                     {
@@ -315,7 +312,7 @@ namespace RoadCaptain.Adapters
                     Tag5 = 0,
                     Tag7 = 0
                 },
-                Sequence = (uint)sequenceNumber // This value is provided via the SomethingEmpty synchronisation command
+                Sequence = (uint)sequenceNumber // This value is provided via the SomethingEmpty synchronization command
             };
 
             SendMessageBytes(message.ToByteArray());
@@ -344,7 +341,7 @@ namespace RoadCaptain.Adapters
                         }
                     }
                 },
-                Sequence = (uint)sequenceNumber // This value is provided via the SomethingEmpty synchronisation command
+                Sequence = (uint)sequenceNumber // This value is provided via the SomethingEmpty synchronization command
             };
 
             SendMessageBytes(message.ToByteArray());
