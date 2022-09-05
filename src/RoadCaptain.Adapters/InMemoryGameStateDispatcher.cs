@@ -97,13 +97,18 @@ namespace RoadCaptain.Adapters
                 // Can only transition to LoggedInState from not-logged in state
                 State = new LoggedInState(zwiftAccessToken);
             }
+            else
+            {
+                throw new InvalidStateTransitionException(
+                    $"Can only transition to {nameof(LoggedInState)} from empty or not logged in state");
+            }
         }
 
         public void WaitingForConnection()
         {
             if (State is not LoggedInState)
             {
-                throw new InvalidStateTransitionException("Can only transition to waiting for connection state from logged in state");
+                throw new InvalidStateTransitionException($"Can only transition to {nameof(WaitingForConnectionState)} state from logged in state");
             }
 
             State = new WaitingForConnectionState();
