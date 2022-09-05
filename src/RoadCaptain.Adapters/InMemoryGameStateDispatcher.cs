@@ -108,7 +108,7 @@ namespace RoadCaptain.Adapters
         {
             if (State is not LoggedInState)
             {
-                throw new InvalidStateTransitionException($"Can only transition to {nameof(WaitingForConnectionState)} state from logged in state");
+                throw new InvalidStateTransitionException($"Can only transition to {nameof(WaitingForConnectionState)} state from {nameof(LoggedInState)}");
             }
 
             State = new WaitingForConnectionState();
@@ -116,6 +116,11 @@ namespace RoadCaptain.Adapters
 
         public void Connected()
         {
+            if (State is not WaitingForConnectionState)
+            {
+                throw new InvalidStateTransitionException($"Can only transition to {nameof(ConnectedToZwiftState)} state from {nameof(WaitingForConnectionState)}");
+            }
+
             State = new ConnectedToZwiftState();
         }
 
