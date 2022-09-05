@@ -86,7 +86,7 @@ namespace RoadCaptain.UseCases
             }
             catch (Exception e)
             {
-                _gameStateDispatcher.Error("Invalid credentials", e);
+                _gameStateDispatcher.InvalidCredentials(e);
                 return;
             }
 

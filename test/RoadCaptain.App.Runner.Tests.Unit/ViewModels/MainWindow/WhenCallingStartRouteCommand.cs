@@ -18,6 +18,7 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.MainWindow
         public WhenCallingStartRouteCommand()
         {
             _gameStateDispatcher = new InMemoryGameStateDispatcher(new NopMonitoringEvents());
+            _gameStateDispatcher.LoggedIn("NOTIMPORTANT");
             var windowService = new StubWindowService();
 
             _appSettings = new DummyUserPreferences();
@@ -112,6 +113,12 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.MainWindow
                 null,
                 gameState =>
                 {
+                    // Ignore this because it's needed for test setup
+                    if (gameState is LoggedInState)
+                    {
+                        return;
+                    }
+
                     lastState = gameState;
 
                     // Cancel after the first state is dispatched.

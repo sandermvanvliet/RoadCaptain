@@ -92,11 +92,20 @@ namespace RoadCaptain.Adapters
 
         public void LoggedIn(string zwiftAccessToken)
         {
-            State = new LoggedInState(zwiftAccessToken);
+            if (State == null || State is NotLoggedInState)
+            {
+                // Can only transition to LoggedInState from not-logged in state
+                State = new LoggedInState(zwiftAccessToken);
+            }
         }
 
         public void WaitingForConnection()
         {
+            if (State is not LoggedInState)
+            {
+                throw new InvalidStateTransitionException("Can only transition to waiting for connection state from logged in state");
+            }
+
             State = new WaitingForConnectionState();
         }
 
@@ -112,7 +121,10 @@ namespace RoadCaptain.Adapters
 
         public void LeaveGame()
         {
-            State = State?.LeaveGame();
+            if (GameState.IsInGame(State))
+            {
+                State = State?.LeaveGame();
+            }
         }
 
         public void UpdatePosition(TrackPoint position, List<Segment> segments, PlannedRoute plannedRoute)
@@ -133,6 +145,11 @@ namespace RoadCaptain.Adapters
         public void Error(string message, Exception exception)
         {
             State = new ErrorState(message, exception);
+        }
+
+        public void InvalidCredentials(Exception exception)
+        {
+            State = new InvalidCredentialsState(exception);
         }
 
         protected virtual void Enqueue(string topic, object data)

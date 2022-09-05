@@ -81,11 +81,7 @@ namespace RoadCaptain.Tests.Unit
 
             GetFirstDispatchedGameState()
                 .Should()
-                .BeOfType<ErrorState>()
-                .Which
-                .Message
-                .Should()
-                .Be("Invalid credentials");
+                .BeOfType<InvalidCredentialsState>();
         }
 
         private GameStates.GameState GetFirstDispatchedGameState()

@@ -73,6 +73,11 @@ namespace RoadCaptain.Tests.Unit
             Dispatch(new ErrorState(message, exception));
         }
 
+        public void InvalidCredentials(Exception exception)
+        {
+            Dispatch(new InvalidCredentialsState(exception));
+        }
+
         public void Start(CancellationToken token)
         {
         }

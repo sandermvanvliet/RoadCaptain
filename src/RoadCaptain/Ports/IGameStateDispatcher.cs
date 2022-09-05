@@ -32,5 +32,6 @@ namespace RoadCaptain.Ports
         void TurnCommandAvailable(string type);
         void Error(Exception exception);
         void Error(string message, Exception exception);
+        void InvalidCredentials(Exception exception);
     }
 }
