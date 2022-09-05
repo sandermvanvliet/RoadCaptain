@@ -9,15 +9,14 @@ using System.Net;
 using System.Net.Sockets;
 using Google.Protobuf;
 using RoadCaptain.Adapters.Protobuf;
-using RoadCaptain.GameStates;
 using RoadCaptain.Ports;
 
 namespace RoadCaptain.Adapters
 {
     internal class SecureMessageReceiverFromSocket : IMessageReceiver, IZwiftGameConnection
     {
-        private Socket _socket;
-        private Socket _acceptedSocket;
+        private Socket? _socket;
+        private Socket? _acceptedSocket;
         private readonly MonitoringEvents _monitoringEvents;
         private readonly IGameStateDispatcher _gameStateDispatcher;
         private uint _commandCounter = 1;
@@ -240,7 +239,7 @@ namespace RoadCaptain.Adapters
 
             try
             {
-                _socket.Shutdown(SocketShutdown.Both);
+                _socket?.Shutdown(SocketShutdown.Both);
             }
             catch (SocketException)
             {
@@ -249,7 +248,7 @@ namespace RoadCaptain.Adapters
 
             try
             {
-                _socket.Close();
+                _socket?.Close();
             }
             catch (SocketException)
             {
