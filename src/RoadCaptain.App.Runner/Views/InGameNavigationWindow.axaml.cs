@@ -18,6 +18,7 @@ namespace RoadCaptain.App.Runner.Views
         private readonly MonitoringEvents _monitoringEvents;
         private readonly IUserPreferences _userPreferences;
         private InGameNavigationWindowViewModel? _viewModel;
+        private bool _isFirstTimeActivation = true;
 
         // ReSharper disable once UnusedMember.Global this is only used for the Avalonia UI designer
         public InGameNavigationWindow()
@@ -65,13 +66,19 @@ namespace RoadCaptain.App.Runner.Views
 
         private void InGameNavigationWindow_OnActivated(object? sender, EventArgs e)
         {
-            _viewModel = DataContext as InGameNavigationWindowViewModel ?? throw new Exception("");
-            
-            var modifier = RuntimeInformation.IsOSPlatform(OSPlatform.OSX)
-                ? KeyModifiers.Meta
-                : KeyModifiers.Control;
+            if (_isFirstTimeActivation)
+            {
+                _isFirstTimeActivation = false;
 
-            KeyBindings.Add(new KeyBinding { Command = _viewModel.EndActivityCommand, Gesture = new KeyGesture(Key.X, modifier)});
+                _viewModel = DataContext as InGameNavigationWindowViewModel ?? throw new Exception("");
+
+                var modifier = RuntimeInformation.IsOSPlatform(OSPlatform.OSX)
+                    ? KeyModifiers.Meta
+                    : KeyModifiers.Control;
+
+                KeyBindings.Add(new KeyBinding
+                    { Command = _viewModel.EndActivityCommand, Gesture = new KeyGesture(Key.X, modifier) });
+            }
         }
 
         private void WindowBase_OnPositionChanged(object? sender, PixelPointEventArgs e)

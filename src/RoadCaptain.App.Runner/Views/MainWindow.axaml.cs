@@ -14,6 +14,7 @@ namespace RoadCaptain.App.Runner.Views
     {
         private readonly MainWindowViewModel _viewModel;
         private readonly ISegmentStore _segmentStore;
+        private bool _isFirstTimeActivation = true;
 
         // ReSharper disable once UnusedMember.Global because this constructor only exists for the Avalonia designer
 #pragma warning disable CS8618
@@ -72,9 +73,14 @@ namespace RoadCaptain.App.Runner.Views
 
         private void WindowBase_OnActivated(object? sender, EventArgs e)
         {
-            Dispatcher.UIThread.InvokeAsync(() => _viewModel.Initialize());
-            Dispatcher.UIThread.InvokeAsync(() => _viewModel.CheckForNewVersion());
-            Dispatcher.UIThread.InvokeAsync(() => _viewModel.CheckLastOpenedVersion());
+            if(_isFirstTimeActivation)
+            {
+                _isFirstTimeActivation = false;
+
+                Dispatcher.UIThread.InvokeAsync(() => _viewModel.Initialize());
+                Dispatcher.UIThread.InvokeAsync(() => _viewModel.CheckForNewVersion());
+                Dispatcher.UIThread.InvokeAsync(() => _viewModel.CheckLastOpenedVersion());
+            }
         }
 
         private void InputElement_OnPointerPressed(object? sender, PointerPressedEventArgs e)
