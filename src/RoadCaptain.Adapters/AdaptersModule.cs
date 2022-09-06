@@ -29,7 +29,7 @@ namespace RoadCaptain.Adapters
             builder
                 .RegisterAssemblyTypes(ThisAssembly)
                 .AsImplementedInterfaces()
-                .Except<SecureMessageReceiverFromSocket>()
+                .Except<SecureZwiftConnection>()
                 .Except<MessageReceiverFromCaptureFile>()
                 .Except<MessageEmitterToQueue>()
                 .Except<IGameStateDispatcher>()
@@ -43,7 +43,7 @@ namespace RoadCaptain.Adapters
             if ("socket".Equals(MessageReceiverSource, StringComparison.InvariantCultureIgnoreCase))
             {
                 builder
-                    .RegisterType<SecureMessageReceiverFromSocket>()
+                    .RegisterType<SecureZwiftConnection>()
                     .As<IMessageReceiver>()
                     .As<IZwiftGameConnection>()
                     .SingleInstance();

@@ -13,7 +13,7 @@ using RoadCaptain.Ports;
 
 namespace RoadCaptain.Adapters
 {
-    internal class SecureMessageReceiverFromSocket : IMessageReceiver, IZwiftGameConnection
+    internal class SecureZwiftConnection : IMessageReceiver, IZwiftGameConnection
     {
         private Socket? _socket;
         private Socket? _acceptedSocket;
@@ -23,7 +23,7 @@ namespace RoadCaptain.Adapters
         private static readonly object SyncRoot = new();
         private readonly IZwiftCrypto _zwiftCrypto;
 
-        public SecureMessageReceiverFromSocket(
+        public SecureZwiftConnection(
             MonitoringEvents monitoringEvents,
             IGameStateDispatcher gameStateDispatcher, 
             IZwiftCrypto zwiftCrypto)
