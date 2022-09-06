@@ -2,7 +2,6 @@
 using System.Buffers;
 using System.Threading;
 using System.Threading.Tasks;
-using RoadCaptain.GameStates;
 using RoadCaptain.Ports;
 
 namespace RoadCaptain.UseCases
@@ -98,6 +97,7 @@ namespace RoadCaptain.UseCases
                         }
                         catch (Exception e)
                         {
+                            // TODO: Change this so it closes the connection and initiates the relay again because that will reset the shared secret
                             _dispatcher.Error("Failed to decrypt message", e);
                             _monitoringEvents.Error(e, "Failed to decrypt message");
                         }
