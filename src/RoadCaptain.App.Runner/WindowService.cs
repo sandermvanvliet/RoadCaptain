@@ -31,6 +31,12 @@ namespace RoadCaptain.App.Runner
 
         public void ShowMainWindow()
         {
+            if (CurrentWindow is MainWindow)
+            {
+                CurrentWindow.Activate();
+                return;
+            }
+
             var mainWindow = Resolve<MainWindow>();
             
             _applicationLifetime.MainWindow = mainWindow;
@@ -50,6 +56,12 @@ namespace RoadCaptain.App.Runner
 
         public void ShowInGameWindow(InGameNavigationWindowViewModel viewModel)
         {
+            if (CurrentWindow is InGameNavigationWindow)
+            {
+                CurrentWindow.Activate();
+                return;
+            }
+
             var inGameWindow = Resolve<InGameNavigationWindow>();
 
             inGameWindow.DataContext = viewModel;
