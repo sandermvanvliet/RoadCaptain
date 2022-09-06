@@ -457,8 +457,6 @@ namespace RoadCaptain.App.Runner.ViewModels
 
             _gameStateDispatcher.RouteSelected(Route.PlannedRoute);
 
-            _gameStateDispatcher.WaitingForConnection();
-
             return CommandResult.Success();
         }
 
