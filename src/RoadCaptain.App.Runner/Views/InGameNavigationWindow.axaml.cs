@@ -5,7 +5,6 @@ using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Markup.Xaml;
 using RoadCaptain.App.Runner.ViewModels;
-using RoadCaptain.App.Shared.UserPreferences;
 using RoadCaptain.GameStates;
 using RoadCaptain.Ports;
 using Serilog;
