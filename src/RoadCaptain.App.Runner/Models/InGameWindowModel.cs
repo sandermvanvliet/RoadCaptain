@@ -224,7 +224,7 @@ namespace RoadCaptain.App.Runner.Models
                 var nextSegmentSequence = route.RouteSegmentSequence[route.SegmentSequenceIndex + 1];
                 NextSegment = new SegmentSequenceModel(
                     nextSegmentSequence,
-                    GetSegmentById(currentSegmentSequence.SegmentId), 
+                    GetSegmentById(nextSegmentSequence.SegmentId), 
                     route.SegmentSequenceIndex + 1);
             }
             else

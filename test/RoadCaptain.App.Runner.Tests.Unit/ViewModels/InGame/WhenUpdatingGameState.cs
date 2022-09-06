@@ -308,6 +308,19 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.InGame
             _viewModel.Model.InstructionText.Should().BeEmpty();
         }
 
+        [Fact]
+        public void GivenOnRouteStateIsReceived_NextSegmentIsTheSecondSegmentOfTheRoute()
+        {
+            var plannedRoute = new PlannedRoute();
+            plannedRoute.RouteSegmentSequence.Add(new SegmentSequence { SegmentId = "seg-1", NextSegmentId = "seg-2"});
+            plannedRoute.RouteSegmentSequence.Add(new SegmentSequence { SegmentId = "seg-2", NextSegmentId = "seg-3"});
+            plannedRoute.RouteSegmentSequence.Add(new SegmentSequence { SegmentId = "seg-3", });
+            plannedRoute.EnteredSegment("seg-1");
+            WhenUpdating(new OnRouteState(1, 2, new TrackPoint(1, 2, 3), new Segment(new List<TrackPoint>()) { Id = "seg-1"}, plannedRoute, SegmentDirection.AtoB, 0, 0, 0));
+
+            _viewModel.Model.NextSegment.SegmentId.Should().Be("seg-2");
+        }
+
         private readonly InGameNavigationWindowViewModel _viewModel;
 
         public WhenUpdatingGameState()
