@@ -64,7 +64,14 @@ namespace RoadCaptain.App.Runner
             _userPreferences = userPreferences;
 
             _gameStateReceiver.Register(
-                route => _loadedRoute = route,
+                route =>
+                {
+                    _loadedRoute = route;
+                    if (_previousGameState is WaitingForConnectionState or ConnectedToZwiftState && _loadedRoute != null)
+                    {
+                        _windowService.ShowInGameWindow(CreateInGameViewModel(_loadedRoute));
+                    }
+                },
                 sequenceNumber => _lastSequenceNumber = sequenceNumber,
                 GameStateReceived);
         }
