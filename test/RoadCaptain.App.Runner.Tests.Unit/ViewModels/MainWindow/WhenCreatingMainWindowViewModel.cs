@@ -8,7 +8,6 @@ using Newtonsoft.Json;
 using RoadCaptain.Adapters;
 using RoadCaptain.App.Runner.ViewModels;
 using RoadCaptain.App.Shared.Models;
-using RoadCaptain.App.Shared.UserPreferences;
 using RoadCaptain.GameStates;
 using Xunit;
 using TokenResponse = RoadCaptain.App.Shared.Models.TokenResponse;
@@ -27,7 +26,7 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.MainWindow
         }
 
         [Fact]
-        public void GivenConfigurationContainsPathToRoute_RoutePathIsSet()
+        public void GivenConfigurationContainsPathToRouteAndFileDoesNotExist_RoutePathIsNotSet()
         {
             var routePath = "Some route path";
             var configuration = new Configuration(null)
@@ -38,22 +37,52 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.MainWindow
             CreateViewModel(configuration)
                 .RoutePath
                 .Should()
-                .Be(routePath);
+                .BeNullOrEmpty();
         }
 
         [Fact]
-        public void GivenConfigurationDoesNotHaveRoutePathAndAppSettingsHasRoutePath_RoutePathIsSet()
+        public void GivenConfigurationDoesNotHaveRoutePathAndAppSettingsHasRoutePathAndFileDoesNotExist_RoutePathIsNotSet()
         {
             var appSettings = new DummyUserPreferences
             {
                 Route = "Some route path"
             };
             var configuration = new Configuration(null);
-            
+
             CreateViewModel(configuration, appSettings)
                 .RoutePath
                 .Should()
-                .Be("Some route path");
+                .BeNullOrEmpty();
+        }
+
+        [Fact]
+        public void GivenConfigurationContainsPathToRouteAndFileExists_RoutePathIsSet()
+        {
+            var routePath = "someroute.json";
+            var configuration = new Configuration(null)
+            {
+                Route = routePath
+            };
+
+            CreateViewModel(configuration)
+                .RoutePath
+                .Should()
+                .Be("someroute.json");
+        }
+
+        [Fact]
+        public void GivenConfigurationDoesNotHaveRoutePathAndAppSettingsHasRoutePathAndFileExists_RoutePathIsSet()
+        {
+            var appSettings = new DummyUserPreferences
+            {
+                Route = "someroute.json"
+            };
+            var configuration = new Configuration(null);
+
+            CreateViewModel(configuration, appSettings)
+                .RoutePath
+                .Should()
+                .Be("someroute.json");
         }
 
         [Fact]
@@ -142,7 +171,7 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.MainWindow
             });
         }
 
-        private MainWindowViewModel CreateViewModel(Configuration configuration, IUserPreferences appSettings = null)
+        private MainWindowViewModel CreateViewModel(Configuration configuration, IUserPreferences? appSettings = null)
         {
             var routeStore = new StubRouteStore();
 

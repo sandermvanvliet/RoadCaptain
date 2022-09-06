@@ -14,8 +14,6 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.MainWindow
         {
             _windowService = new StubWindowService();
 
-            var gameStateDispatcher = new InMemoryGameStateDispatcher(new NopMonitoringEvents());
-
             var routeStore = new StubRouteStore();
             _viewModel = new MainWindowViewModel(
                 new Configuration(null),
@@ -58,14 +56,14 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.MainWindow
         public void GivenUserSelectedFile_RoutePathIsSet()
         {
             _viewModel.RoutePath = null;
-            _windowService.OpenFileDialogResult = "some path";
+            _windowService.OpenFileDialogResult = "someroute.json";
 
             LoadRoute();
 
             _viewModel
                 .RoutePath
                 .Should()
-                .Be("some path");
+                .Be("someroute.json");
         }
 
         [Fact]
@@ -83,14 +81,14 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.MainWindow
         public void GivenUserSelectedFile_WindowTitleIsUpdatedWithRouteFileName()
         {
             _viewModel.RoutePath = null;
-            _windowService.OpenFileDialogResult = "c:\\some\\route.json";
+            _windowService.OpenFileDialogResult = "someroute.json";
 
             LoadRoute();
 
             _viewModel
                 .WindowTitle
                 .Should()
-                .Be("RoadCaptain - route.json");
+                .Be("RoadCaptain - someroute.json");
         }
 
         private void LoadRoute()

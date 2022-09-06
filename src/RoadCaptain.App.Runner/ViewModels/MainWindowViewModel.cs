@@ -15,7 +15,6 @@ using Microsoft.IdentityModel.JsonWebTokens;
 using ReactiveUI;
 using RoadCaptain.App.Runner.Models;
 using RoadCaptain.App.Shared.Commands;
-using RoadCaptain.App.Shared.UserPreferences;
 using RoadCaptain.GameStates;
 using RoadCaptain.Ports;
 
@@ -63,31 +62,14 @@ namespace RoadCaptain.App.Runner.ViewModels
             _segmentStore = segmentStore;
             _credentialCache = credentialCache;
 
+            
             if (!string.IsNullOrEmpty(configuration.Route))
             {
-                RoutePath = configuration.Route;
-                var plannedRoute = _routeStore.LoadFrom(RoutePath);
-                if (plannedRoute != null)
-                {
-                    Route = RouteModel.From(plannedRoute, _segmentStore.LoadSegments(plannedRoute.World, plannedRoute.Sport));
-                }
-                else
-                {
-                    Route = new RouteModel();
-                }
+                LoadRouteFromPath(configuration.Route);
             }
             else if (!string.IsNullOrEmpty(userPreferences.Route))
             {
-                RoutePath = userPreferences.Route;
-                var plannedRoute = _routeStore.LoadFrom(RoutePath);
-                if (plannedRoute != null)
-                {
-                    Route = RouteModel.From(plannedRoute, _segmentStore.LoadSegments(plannedRoute.World, plannedRoute.Sport));
-                }
-                else
-                {
-                    Route = new RouteModel();
-                }
+                LoadRouteFromPath(userPreferences.Route);
             }
 
             StartRouteCommand = new RelayCommand(
@@ -117,6 +99,30 @@ namespace RoadCaptain.App.Runner.ViewModels
             Version = GetType().Assembly.GetName().Version?.ToString(4) ?? "0.0.0.0";
 
             RebelRoutes = LoadRebelRoutes();
+        }
+
+        private void LoadRouteFromPath(string? routePath)
+        {
+            if (string.IsNullOrEmpty(routePath))
+            {
+                return;
+            }
+
+            try
+            {
+                var plannedRoute = _routeStore.LoadFrom(routePath);
+
+                RoutePath = routePath;
+                
+                Route = RouteModel.From(
+                    plannedRoute,
+                    _segmentStore.LoadSegments(
+                        plannedRoute.World,
+                        plannedRoute.Sport));
+            }
+            catch (FileNotFoundException)
+            {
+            }
         }
 
         private List<PlannedRoute> LoadRebelRoutes()
@@ -326,7 +332,7 @@ namespace RoadCaptain.App.Runner.ViewModels
             var currentVersion = System.Version.Parse(Version);
             var latestRelease = _versionChecker.GetLatestRelease();
 
-            if (latestRelease != null && latestRelease.Version > currentVersion)
+            if (latestRelease.Version > currentVersion)
             {
                 await _windowService.ShowNewVersionDialog(latestRelease);
             }
@@ -346,14 +352,14 @@ namespace RoadCaptain.App.Runner.ViewModels
             var latestRelease = _versionChecker.GetLatestRelease();
 
             // If there is a newer version available don't display anything
-            if (latestRelease != null && latestRelease.Version > thisVersion)
+            if (latestRelease.Version > thisVersion)
             {
                 return;
             }
 
             // If this version is newer than the previous one shown and it's
             // the latest version then show the what is new dialog
-            if (latestRelease != null && thisVersion > previousVersion && thisVersion == latestRelease.Version)
+            if (thisVersion > previousVersion && thisVersion == latestRelease.Version)
             {
                 // Update the current version so that the next time this won't be shown
                 _userPreferences.Save();
@@ -407,14 +413,12 @@ namespace RoadCaptain.App.Runner.ViewModels
                 WindowTitle = $"RoadCaptain - {routeFileName}";
 
                 var plannedRoute = _routeStore.LoadFrom(RoutePath);
-                if (plannedRoute != null)
-                {
-                    Route = RouteModel.From(plannedRoute, _segmentStore.LoadSegments(plannedRoute.World, plannedRoute.Sport));
-                }
-                else
-                {
-                    Route = new RouteModel();
-                }
+
+                Route = RouteModel.From(
+                    plannedRoute, 
+                    _segmentStore.LoadSegments(
+                        plannedRoute.World, 
+                        plannedRoute.Sport));
             }
 
             return CommandResult.Success();
@@ -449,13 +453,16 @@ namespace RoadCaptain.App.Runner.ViewModels
             _userPreferences.Route = RoutePath;
             _userPreferences.Save();
 
-            if (Route.PlannedRoute == null)
+            if (Route.PlannedRoute == null && !string.IsNullOrEmpty(RoutePath))
             {
                 var plannedRoute = _routeStore.LoadFrom(RoutePath);
                 Route = RouteModel.From(plannedRoute, _segmentStore.LoadSegments(plannedRoute.World, plannedRoute.Sport));
             }
 
-            _gameStateDispatcher.RouteSelected(Route.PlannedRoute);
+            if (Route.PlannedRoute != null)
+            {
+                _gameStateDispatcher.RouteSelected(Route.PlannedRoute);
+            }
 
             return CommandResult.Success();
         }

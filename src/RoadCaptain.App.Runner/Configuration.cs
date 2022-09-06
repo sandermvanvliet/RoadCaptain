@@ -8,7 +8,7 @@ namespace RoadCaptain.App.Runner
 {
     public class Configuration
     {
-        public Configuration(IConfiguration configuration)
+        public Configuration(IConfiguration? configuration)
         {
             configuration?.GetSection("Zwift").Bind(this);
         }

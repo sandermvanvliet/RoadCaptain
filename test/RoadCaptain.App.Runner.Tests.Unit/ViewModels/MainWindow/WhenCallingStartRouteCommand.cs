@@ -76,18 +76,6 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.MainWindow
                 .NotBeNull();
         }
 
-        [Fact]
-        public void WaitingForConnectionStateIsDispatched()
-        {
-            _viewModel.RoutePath = "someroute.json";
-
-            StartRoute();
-
-            GetFirstDispatchedGameState()
-                .Should()
-                .BeOfType<WaitingForConnectionState>();
-        }
-
         private void StartRoute()
         {
             _viewModel.StartRouteCommand.Execute(null);

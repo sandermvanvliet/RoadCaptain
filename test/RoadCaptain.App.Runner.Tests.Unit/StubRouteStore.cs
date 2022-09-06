@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using RoadCaptain.Ports;
 
 namespace RoadCaptain.App.Runner.Tests.Unit
@@ -16,7 +17,17 @@ namespace RoadCaptain.App.Runner.Tests.Unit
                 };
             }
 
-            return null;
+            if (path.Contains("RebelRoute-"))
+            {
+                return new PlannedRoute
+                {
+                    Name = "rebel-route-stub",
+                    World = new World { Id = "watopia"},
+                    Sport = SportType.Cycling
+                };
+            }
+
+            throw new FileNotFoundException();
         }
 
         public void Store(PlannedRoute route, string path)
