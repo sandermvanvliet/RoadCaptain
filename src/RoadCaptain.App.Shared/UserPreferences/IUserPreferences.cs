@@ -56,11 +56,14 @@ namespace RoadCaptain.App.Shared.UserPreferences
             {
                 var storageObject = JsonConvert.DeserializeObject<UserPreferencesStorageObject>(serializedContents, _serializerSettings);
 
-                DefaultSport = storageObject.DefaultSport;
-                LastUsedFolder = storageObject.LastUsedFolder;
-                Route = storageObject.Route;
-                InGameWindowLocation = storageObject.InGameWindowLocation;
-                LastOpenedVersion = storageObject.LastOpenedVersion ?? new Version(0, 0, 0, 0);
+                if(storageObject != null)
+                {
+                    DefaultSport = storageObject.DefaultSport;
+                    LastUsedFolder = storageObject.LastUsedFolder;
+                    Route = storageObject.Route;
+                    InGameWindowLocation = storageObject.InGameWindowLocation;
+                    LastOpenedVersion = storageObject.LastOpenedVersion ?? new Version(0, 0, 0, 0);
+                }
             }
             catch
             {

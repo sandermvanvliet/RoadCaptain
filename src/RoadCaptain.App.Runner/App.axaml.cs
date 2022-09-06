@@ -25,6 +25,7 @@ namespace RoadCaptain.App.Runner
         private readonly IWindowService _windowService;
         private readonly Engine _engine;
         private readonly MonitoringEvents _monitoringEvents;
+        private readonly IUserPreferences _userPreferences;
 
         public App()
         {
@@ -32,7 +33,7 @@ namespace RoadCaptain.App.Runner
             // To make sure nothing else blows up we need to initialize it with a default logger.
             _logger = Program.Logger ?? new LoggerConfiguration().WriteTo.Debug().CreateLogger();
 
-            AppDomain.CurrentDomain.UnhandledException += (sender, args) =>
+            AppDomain.CurrentDomain.UnhandledException += (_, args) =>
             {
                 _logger.Fatal(args.ExceptionObject as Exception, "Unhandled exception occurred");
             };
@@ -44,6 +45,10 @@ namespace RoadCaptain.App.Runner
             var container = InversionOfControl
                 .ConfigureContainer(configuration, _logger, Dispatcher.UIThread)
                 .Build();
+
+            // Ensure user preferences are loaded
+            _userPreferences = container.Resolve<IUserPreferences>();
+            _userPreferences.Load();
 
             _engine = container.Resolve<Engine>();
             _monitoringEvents = container.Resolve<MonitoringEvents>();
@@ -103,6 +108,8 @@ namespace RoadCaptain.App.Runner
         private void App_OnExit(object? sender, ControlledApplicationLifetimeExitEventArgs e)
         {
             _monitoringEvents.ApplicationStopping();
+
+            _userPreferences.Save();
 
             _engine.Stop();
 

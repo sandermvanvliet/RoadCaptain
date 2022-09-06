@@ -49,9 +49,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             _versionChecker = versionChecker;
             _windowService = windowService;
             _worldStore = worldStore;
-
             _userPreferences = userPreferences;
-            _userPreferences.Load();
 
             Model = new MainWindowModel();
             _worlds = worldStore.LoadWorlds().Select(world => new WorldViewModel(world)).ToArray();
