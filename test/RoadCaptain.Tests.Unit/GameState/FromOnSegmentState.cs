@@ -105,13 +105,14 @@ namespace RoadCaptain.Tests.Unit.GameState
         }
 
         [Fact]
-        public void EnteringGameWithSameRiderAndActivityId_InvalidStateTransitionExceptionIsThrown()
+        public void EnteringGameWithSameRiderAndActivityId_SameStateIsReturned()
         {
-            var action = () => GivenStartingState().EnterGame(1, 2);
+            var startingState = GivenStartingState();
+            var result = startingState.EnterGame(1, 2);
 
-            action
+            result
                 .Should()
-                .Throw<InvalidStateTransitionException>();
+                .Be(startingState);
         }
 
         [Fact]

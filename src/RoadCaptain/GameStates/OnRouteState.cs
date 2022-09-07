@@ -61,6 +61,13 @@ namespace RoadCaptain.GameStates
 
         public override GameState EnterGame(uint riderId, ulong activityId)
         {
+            // There are cases where Zwift sends this for an ongoing activity
+            // so there we remain in the same state.
+            if (RiderId == riderId && ActivityId == activityId)
+            {
+                return this;
+            }
+
             throw InvalidStateTransitionException.AlreadyInGame(GetType());
         }
 
