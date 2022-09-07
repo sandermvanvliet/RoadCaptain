@@ -28,7 +28,7 @@ namespace RoadCaptain.Tests.Unit
             _gameStateHandlers.ToList().ForEach(handler => handler(gameState));
         }
 
-        public void LoggedIn(string zwiftAccessToken)
+        public void LoggedIn()
         {
             throw new NotImplementedException();
         }

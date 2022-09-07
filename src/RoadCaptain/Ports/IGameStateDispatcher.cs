@@ -23,7 +23,7 @@ namespace RoadCaptain.Ports
         /// <param name="sequenceNumber"></param>
         void UpdateLastSequenceNumber(ulong sequenceNumber);
 
-        void LoggedIn(string zwiftAccessToken);
+        void LoggedIn();
         void WaitingForConnection();
         void Connected();
         void EnterGame(uint riderId, ulong activityId);

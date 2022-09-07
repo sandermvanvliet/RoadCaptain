@@ -42,7 +42,7 @@ namespace RoadCaptain.App.Runner.Tests.Unit.Engine
         [Fact]
         public void PreviousGameStateIsSetToLoggedInState()
         {
-            var loggedInState = new LoggedInState("token");
+            var loggedInState = new LoggedInState();
 
             ReceiveGameState(loggedInState);
 
@@ -53,7 +53,7 @@ namespace RoadCaptain.App.Runner.Tests.Unit.Engine
 
         private void GivenLoggedInStateIsReceived()
         {
-            ReceiveGameState(new LoggedInState("token"));
+            ReceiveGameState(new LoggedInState());
         }
     }
 }

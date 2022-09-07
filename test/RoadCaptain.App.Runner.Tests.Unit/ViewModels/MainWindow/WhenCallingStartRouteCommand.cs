@@ -18,7 +18,7 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.MainWindow
         public WhenCallingStartRouteCommand()
         {
             _gameStateDispatcher = new InMemoryGameStateDispatcher(new NopMonitoringEvents());
-            _gameStateDispatcher.LoggedIn("NOTIMPORTANT");
+            _gameStateDispatcher.LoggedIn();
             var windowService = new StubWindowService();
 
             _appSettings = new DummyUserPreferences();

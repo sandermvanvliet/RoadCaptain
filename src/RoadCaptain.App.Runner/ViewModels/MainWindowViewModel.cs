@@ -493,7 +493,7 @@ namespace RoadCaptain.App.Runner.ViewModels
 
                 LoggedInToZwift = true;
 
-                _gameStateDispatcher.LoggedIn(ZwiftAccessToken);
+                _gameStateDispatcher.LoggedIn();
 
                 return CommandResult.Success();
             }
@@ -562,8 +562,8 @@ namespace RoadCaptain.App.Runner.ViewModels
                 ZwiftAvatar = DownloadAvatarImage(ZwiftAvatarUri);
                 ZwiftName = string.IsNullOrEmpty(credentials.UserProfile?.FirstName) ? "(stored token)" : credentials.UserProfile.FirstName + " " + credentials.UserProfile.LastName;
                 LoggedInToZwift = true;
-                // TODO: Handle the situation where we call this but it's from leaving a game so we were logged in before...
-                _gameStateDispatcher.LoggedIn(ZwiftAccessToken!);
+                
+                _gameStateDispatcher.LoggedIn();
             }
             
         }

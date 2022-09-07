@@ -7,6 +7,7 @@ using Avalonia.Threading;
 using Microsoft.Extensions.Configuration;
 using RoadCaptain.App.Runner.Tests.Unit.ViewModels;
 using RoadCaptain.App.Shared;
+using RoadCaptain.App.Shared.Models;
 using RoadCaptain.App.Shared.UserPreferences;
 using RoadCaptain.GameStates;
 using RoadCaptain.Ports;
@@ -61,6 +62,13 @@ namespace RoadCaptain.App.Runner.Tests.Unit.Engine
             _receiverTask = TaskWithCancellation.Start(token => _gameStateReceiver.Start(token));
 
             _zwiftGameConnection = container.Resolve<IZwiftGameConnection>() as InMemoryZwiftGameConnection;
+            
+            // Ensure some credentials are available
+            container
+                .Resolve<IZwiftCredentialCache>()
+                .StoreAsync(new TokenResponse { AccessToken = "NOTIMPORTANT", UserProfile = new UserProfile { FirstName = "Test", LastName = "User"}})
+                .GetAwaiter()
+                .GetResult();
 
             Engine = container.Resolve<TestableEngine>();
             WindowService = container.Resolve<StubWindowService>();

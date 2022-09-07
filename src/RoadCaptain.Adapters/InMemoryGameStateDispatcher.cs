@@ -90,12 +90,16 @@ namespace RoadCaptain.Adapters
             Enqueue("gameState", gameState);
         }
 
-        public void LoggedIn(string zwiftAccessToken)
+        public void LoggedIn()
         {
-            if (State == null || State is NotLoggedInState)
+            if (State is null or NotLoggedInState)
             {
                 // Can only transition to LoggedInState from not-logged in state
-                State = new LoggedInState(zwiftAccessToken);
+                State = new LoggedInState();
+            }
+            else if (State is ConnectedToZwiftState or WaitingForConnectionState)
+            {
+                // Keep the existing state because these two states have valid credentials already
             }
             else
             {

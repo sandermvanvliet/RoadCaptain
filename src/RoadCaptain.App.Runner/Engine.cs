@@ -35,6 +35,7 @@ namespace RoadCaptain.App.Runner
         private readonly IZwiftGameConnection _zwiftGameConnection;
         private ulong _lastSequenceNumber;
         private readonly IUserPreferences _userPreferences;
+        private readonly IZwiftCredentialCache _credentialCache;
 
         public Engine(
             MonitoringEvents monitoringEvents,
@@ -48,7 +49,8 @@ namespace RoadCaptain.App.Runner
             IGameStateReceiver gameStateReceiver, 
             ISegmentStore segmentStore, 
             IZwiftGameConnection zwiftGameConnection, 
-            IUserPreferences userPreferences)
+            IUserPreferences userPreferences, 
+            IZwiftCredentialCache credentialCache)
         {
             _monitoringEvents = monitoringEvents;
             _loadRouteUseCase = loadRouteUseCase;
@@ -62,6 +64,7 @@ namespace RoadCaptain.App.Runner
             _segmentStore = segmentStore;
             _zwiftGameConnection = zwiftGameConnection;
             _userPreferences = userPreferences;
+            _credentialCache = credentialCache;
 
             _gameStateReceiver.Register(
                 route =>
@@ -84,7 +87,7 @@ namespace RoadCaptain.App.Runner
                 _monitoringEvents.StateTransition(_previousGameState, gameState);
             }
 
-            if (gameState is LoggedInState loggedInState)
+            if (gameState is LoggedInState)
             {
                 _monitoringEvents.Information("User logged in");
 
@@ -94,7 +97,16 @@ namespace RoadCaptain.App.Runner
                 // When the listener picks up a new connection it will
                 // dispatch the ConnectedToZwift state.
                 StartZwiftConnectionListener();
-                StartZwiftConnectionInitiator(loggedInState.AccessToken);
+
+                var credentials = _credentialCache.LoadAsync().GetAwaiter().GetResult();
+                if (credentials == null || string.IsNullOrEmpty(credentials.AccessToken))
+                {
+                    _monitoringEvents.Error("No Zwift credentials available, cannot initiate Zwift connection");
+                }
+                else
+                {
+                    StartZwiftConnectionInitiator(credentials.AccessToken);
+                }
             }
             else if (gameState is NotLoggedInState)
             {

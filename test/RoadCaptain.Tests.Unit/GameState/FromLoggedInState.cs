@@ -60,7 +60,7 @@ namespace RoadCaptain.Tests.Unit.GameState
 
         private LoggedInState GivenStartingState()
         {
-            return new LoggedInState("derp");
+            return new LoggedInState();
         }
     }
 }
