@@ -148,7 +148,10 @@ namespace RoadCaptain.Adapters
 
         public void TurnCommandAvailable(string type)
         {
-            State = State?.TurnCommandAvailable(type);
+            if (State is OnRouteState or UpcomingTurnState)
+            {
+                State = State?.TurnCommandAvailable(type);
+            }
         }
 
         public void Error(Exception exception)
