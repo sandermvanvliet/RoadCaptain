@@ -23,6 +23,7 @@ namespace RoadCaptain.App.Runner.Tests.Unit.Engine
         private readonly ClassicDesktopStyleApplicationLifetime _lifetime;
         private readonly InMemoryZwiftGameConnection _zwiftGameConnection;
         protected IUserPreferences UserPreferences;
+        private readonly IGameStateDispatcher _gameStateDispatcher;
 
         public EngineTest()
         {
@@ -48,6 +49,8 @@ namespace RoadCaptain.App.Runner.Tests.Unit.Engine
             container.Resolve<Configuration>().Route = "someroute.json";
             
             UserPreferences = container.Resolve<IUserPreferences>();
+
+            _gameStateDispatcher = container.Resolve<IGameStateDispatcher>();
 
             _gameStateReceiver = container.Resolve<IGameStateReceiver>();
             _gameStateReceiver
@@ -108,6 +111,11 @@ namespace RoadCaptain.App.Runner.Tests.Unit.Engine
             // Ensure that the dispatcher processed
             // all messages.
             _gameStateReceiver.Drain();
+        }
+
+        protected void LoadRoute(PlannedRoute plannedRoute)
+        {
+            _gameStateDispatcher.RouteSelected(plannedRoute);
         }
 
         protected TaskWithCancellation TheTaskWithName(string fieldName)

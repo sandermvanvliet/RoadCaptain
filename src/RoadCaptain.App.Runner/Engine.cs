@@ -136,6 +136,23 @@ namespace RoadCaptain.App.Runner
 
                 _windowService.ShowMainWindow();
             }
+            else if (gameState is ConnectedToZwiftState && _previousGameState is WaitingForConnectionState)
+            {
+                _monitoringEvents.Information("Connected to Zwift");
+
+                if (_loadedRoute == null && !string.IsNullOrEmpty(_configuration.Route))
+                {
+                    _loadRouteUseCase.Execute(new LoadRouteCommand { Path = _configuration.Route });
+                }
+
+                // Start handling Zwift messages
+                StartMessageHandler();
+
+                if (_loadedRoute != null)
+                {
+                    _windowService.ShowInGameWindow(CreateInGameViewModel(_loadedRoute));
+                }
+            }
             else if (gameState is ConnectedToZwiftState)
             {
                 _monitoringEvents.Information("Connected to Zwift");

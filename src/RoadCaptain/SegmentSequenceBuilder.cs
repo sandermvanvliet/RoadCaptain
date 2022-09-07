@@ -13,7 +13,11 @@ namespace RoadCaptain
 
         public SegmentSequenceBuilder()
         {
-            _route = new PlannedRoute();
+            _route = new PlannedRoute
+            {
+                World = new World { Id = "watopia", ZwiftId = ZwiftWorldId.Watopia },
+                Sport = SportType.Cycling
+            };
         }
 
         private SegmentSequence Last => _route.RouteSegmentSequence.Last();
@@ -41,7 +45,7 @@ namespace RoadCaptain
             };
 
             _route.RouteSegmentSequence.Add(step);
-            
+
             return this;
         }
 
@@ -85,7 +89,7 @@ namespace RoadCaptain
 
             Last.NextSegmentId = null;
             Last.TurnToNextSegment = TurnDirection.None;
-            
+
             return this;
         }
 

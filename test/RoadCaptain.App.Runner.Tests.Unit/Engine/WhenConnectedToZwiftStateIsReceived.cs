@@ -79,6 +79,23 @@ namespace RoadCaptain.App.Runner.Tests.Unit.Engine
             WindowService.ClosedWindows.Should().Contain(typeof(InGameNavigationWindow));
         }
 
+        [Fact]
+        public void GivenPreviousStateWasWaitingForConnection_InGameWindowRemainsOpen()
+        {
+            
+            LoadRoute(new SegmentSequenceBuilder()
+                .StartingAt("watopia-beach-island-loop-001")
+                .Build());
+
+            WindowService.ShowInGameWindow(new InGameNavigationWindowViewModel(new InGameWindowModel(new List<Segment>()), new List<Segment>(), null));
+
+            ReceiveGameState(new WaitingForConnectionState());
+
+            GivenConnectedToZwiftStateReceived();
+
+            WindowService.ClosedWindows.Should().NotContain(typeof(InGameNavigationWindow));
+        }
+
         private void GivenConnectedToZwiftStateReceived()
         {
             ReceiveGameState(new ConnectedToZwiftState());
