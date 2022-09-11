@@ -87,11 +87,16 @@ namespace RoadCaptain.GameStates
             var descent = ElapsedDescent + positionDelta.Descent;
             var direction = DetermineSegmentDirection(segment, closestOnSegment);
 
-            if (!plannedRoute.HasStarted && plannedRoute.StartingSegmentId == segment.Id)
+            if (!plannedRoute.HasStarted && plannedRoute.StartingSegmentId == segment.Id && direction == plannedRoute.RouteSegmentSequence[0].Direction)
             {
                 plannedRoute.EnteredSegment(segment.Id);
 
                 return new OnRouteState(RiderId, ActivityId, closestOnSegment, segment, plannedRoute, direction, distance, ascent, descent);
+            }
+
+            if (!plannedRoute.HasStarted && plannedRoute.StartingSegmentId == segment.Id && direction != SegmentDirection.Unknown && direction != plannedRoute.RouteSegmentSequence[0].Direction)
+            {
+                return new LostRouteLockState(RiderId, ActivityId, closestOnSegment, segment, plannedRoute, direction, distance, ascent, descent);
             }
 
             if (plannedRoute.HasStarted)

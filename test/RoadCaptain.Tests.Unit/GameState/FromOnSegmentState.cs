@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using FluentAssertions;
+﻿using FluentAssertions;
 using RoadCaptain.GameStates;
 using Xunit;
 
@@ -65,21 +63,37 @@ namespace RoadCaptain.Tests.Unit.GameState
         }
 
         [Fact]
-        public void GivenPositionOnSegmentAndFirstSegmentOfRoute_ResultIsOnRouteState()
+        public void GivenPositionOnSegmentAndFirstSegmentOfRoute_ResultIsOnSegmentState()
         {
             var result = GivenStartingState()
                 .UpdatePosition(RouteSegment1Point1, Segments, Route);
 
             result
                 .Should()
-                .BeOfType<OnRouteState>();
+                .BeOfType<OnSegmentState>();
+        }
+
+        [Fact]
+        public void GivenPositionOnSegmentAndFirstSegmentOfRouteButInWrongDirection_ResultIsLostRouteLockState()
+        {
+            GameStates.GameState state = GivenStartingState();
+            state = state.UpdatePosition(RouteSegment1Point2, Segments, Route);
+
+            var result = state
+                .UpdatePosition(RouteSegment1Point1, Segments, Route);
+
+            result
+                .Should()
+                .BeOfType<LostRouteLockState>();
         }
 
         [Fact]
         public void GivenPositionOnSegmentAndFirstSegmentOfRouteRouteIsStarted()
         {
-            GivenStartingState()
-                .UpdatePosition(RouteSegment1Point1, Segments, Route);
+            GameStates.GameState state = GivenStartingState();
+            state = state.UpdatePosition(RouteSegment1Point1, Segments, Route);
+
+            state = state.UpdatePosition(RouteSegment1Point2, Segments, Route);
 
             Route
                 .HasStarted

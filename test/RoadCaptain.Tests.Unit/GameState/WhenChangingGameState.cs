@@ -433,7 +433,7 @@ namespace RoadCaptain.Tests.Unit.GameState
         {
             var state = new OnSegmentState(RiderId, ActivityId, RoutePosition1, SegmentById("segment-1"), SegmentDirection.AtoB, 0, 0, 0);
 
-            var result = state.UpdatePosition(RoutePosition1Point2, _segments, _route) as OnRouteState;
+            var result = state.UpdatePosition(RoutePosition1Point2, _segments, _route) as OnSegmentState;
 
             result
                 .ElapsedDistance
@@ -445,7 +445,7 @@ namespace RoadCaptain.Tests.Unit.GameState
         public void GivenPositionChangesWithinSegmentAndRiderHasProgress_ElapsedDistanceIsIncreased()
         {
             var state1 = new OnSegmentState(RiderId, ActivityId, RoutePosition1, SegmentById("segment-1"), SegmentDirection.AtoB, 0, 0, 0);
-            var state2 = state1.UpdatePosition(RoutePosition1Point2, _segments, _route) as OnRouteState;
+            var state2 = state1.UpdatePosition(RoutePosition1Point2, _segments, _route);
             var result = state2.UpdatePosition(RoutePosition1Point3, _segments, _route) as OnRouteState;
 
             result
@@ -463,19 +463,6 @@ namespace RoadCaptain.Tests.Unit.GameState
 
             result
                 .ElapsedAscent
-                .Should()
-                .Be(2);
-        }
-
-        [Fact]
-        public void GivenPositionChangesWithinSegmentAndRiderHasProgress_DescentIsIncreased()
-        {
-            GameStates.GameState state = new OnSegmentState(RiderId, ActivityId, RoutePosition1Point3, SegmentById("segment-1"), SegmentDirection.AtoB, 0, 0, 0);
-            state = state.UpdatePosition(RoutePosition1Point2, _segments, _route);
-            var result = state.UpdatePosition(RoutePosition1, _segments, _route) as OnRouteState;
-
-            result
-                .ElapsedDescent
                 .Should()
                 .Be(2);
         }
