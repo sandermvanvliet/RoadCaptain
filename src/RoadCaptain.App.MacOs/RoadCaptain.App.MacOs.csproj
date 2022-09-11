@@ -13,7 +13,7 @@
 
 	<ItemGroup>
 		<PackageReference Include="Autofac" Version="6.3.0" />
-		<PackageReference Include="WebViewControl-Avalonia" Version="2.91.23" />
+		<PackageReference Include="WebViewControl-Avalonia" Version="2.91.28" />
 	</ItemGroup>
 
 	<ItemGroup>

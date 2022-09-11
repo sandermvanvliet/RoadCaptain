@@ -14,7 +14,7 @@
 
 	<ItemGroup>
 		<PackageReference Include="Autofac" Version="6.3.0" />
-		<PackageReference Include="Microsoft.Web.WebView2" Version="1.0.1210.39" />
+		<PackageReference Include="Microsoft.Web.WebView2" Version="1.0.1343.22" />
 	</ItemGroup>
 
 	<ItemGroup>
