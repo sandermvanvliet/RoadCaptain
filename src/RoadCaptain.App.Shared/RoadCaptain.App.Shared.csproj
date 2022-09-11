@@ -15,7 +15,7 @@
 		<PackageReference Include="Markdown.Avalonia" Version="0.10.11" />
 		<PackageReference Include="ReactiveUI" Version="18.3.1" />
 		<PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="6.0.0" />
-		<PackageReference Include="Autofac" Version="6.3.0" />
+		<PackageReference Include="Autofac" Version="6.4.0" />
 	</ItemGroup>
 
 	<ItemGroup>
