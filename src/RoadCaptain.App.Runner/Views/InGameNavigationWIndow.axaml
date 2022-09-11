@@ -153,10 +153,10 @@
 				<ColumnDefinition />
 			</Grid.ColumnDefinitions>
 
-			<TextBlock Margin="2,0,0,0" Grid.Column="0" Grid.Row="0" Text="{Binding Path=SequenceNumber}" HorizontalAlignment="Center" />
-			<TextBlock Grid.Column="0" Grid.Row="1" Text="{Binding Path=TurnGlyph}"  FontSize="16" Foreground="#1192CC" Padding="0" Margin="0,-4,0,0" FontWeight="ExtraBold" HorizontalAlignment="Center" VerticalAlignment="Center" />
+			<TextBlock Name="CurrentSegmentSequenceNumber" Margin="2,0,0,0" Grid.Column="0" Grid.Row="0" Text="{Binding Path=SequenceNumber}" HorizontalAlignment="Center" />
+			<TextBlock Name="CurrentSegmentTurnGylph" Grid.Column="0" Grid.Row="1" Text="{Binding Path=TurnGlyph}"  FontSize="16" Foreground="#1192CC" Padding="0" Margin="0,-4,0,0" FontWeight="ExtraBold" HorizontalAlignment="Center" VerticalAlignment="Center" />
 
-			<TextBlock Grid.Column="1" Grid.Row="0" Text="{Binding Path=SegmentName}" ToolTip.Tip="{Binding Path=SegmentName}" Margin="4,0,0,0" />
+			<TextBlock Name="CurrentSegmentName" Grid.Column="1" Grid.Row="0" Text="{Binding Path=SegmentName}" ToolTip.Tip="{Binding Path=SegmentName}" Margin="4,0,0,0" />
 
 			<StackPanel Grid.Column="1" Grid.Row="1" Orientation="Horizontal" Margin="4,0,0,0">
 				<StackPanel Orientation="Horizontal" Height="18">
@@ -173,7 +173,8 @@
 				</StackPanel>
 			</StackPanel>
 
-			<ProgressBar Grid.Row="2" Grid.Column="1"
+			<ProgressBar Name="CurrentSegmentProgress"
+                         Grid.Row="2" Grid.Column="1"
                          Margin="4,0,10,0"
                          HorizontalAlignment="Stretch"
                          Height="18"
@@ -217,10 +218,10 @@
 				<ColumnDefinition />
 			</Grid.ColumnDefinitions>
 
-			<TextBlock Grid.Column="0" Grid.Row="0" Margin="2,0,0,0" Text="{Binding Path=SequenceNumber}" HorizontalAlignment="Center" />
-			<TextBlock Grid.Column="0" Grid.Row="1" Text="{Binding Path=TurnGlyph}"  FontSize="16" Foreground="#1192CC" Padding="0" Margin="0,-4,0,0" FontWeight="ExtraBold" HorizontalAlignment="Center" VerticalAlignment="Center" />
+			<TextBlock Name="NextSegmentSequenceNumber" Grid.Column="0" Grid.Row="0" Margin="2,0,0,0" Text="{Binding Path=SequenceNumber}" HorizontalAlignment="Center" />
+			<TextBlock Name="NextSegmentTurnGlyph" Grid.Column="0" Grid.Row="1" Text="{Binding Path=TurnGlyph}"  FontSize="16" Foreground="#1192CC" Padding="0" Margin="0,-4,0,0" FontWeight="ExtraBold" HorizontalAlignment="Center" VerticalAlignment="Center" />
 
-			<TextBlock Grid.Column="1" Grid.Row="0" Text="{Binding Path=SegmentName}" ToolTip.Tip="{Binding Path=SegmentName}" Margin="4,0,0,0" />
+			<TextBlock Name="NextSegmentName" Grid.Column="1" Grid.Row="0" Text="{Binding Path=SegmentName}" ToolTip.Tip="{Binding Path=SegmentName}" Margin="4,0,0,0" />
 
 			<StackPanel Grid.Column="1" Grid.Row="1" Orientation="Horizontal" Margin="4,0,0,0">
 				<StackPanel Orientation="Horizontal" Height="18">
