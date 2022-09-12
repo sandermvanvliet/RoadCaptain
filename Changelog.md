@@ -1,5 +1,15 @@
 ﻿# Changelog
 
+## 0.6.8.0
+
+With this release a lot of work has been done behind the scenes to keep the app running smoothly and to remove some of the quirks that were added while RoadCaptain was initially built. The sad thing is you won't see most of that but it does mean that things like exiting from an activity is now handled a lot smoother as well as the initial connection with Zwift (where it says "Waiting for Zwift" for example).
+
+Ultimately you _should_ notice less quirky behaviour at times which means you can keep focusing on riding instead of checking whether the app still works!
+
+### Route Builder
+
+- Show the segment id when hovering over the segment name in the route list
+
 ## 0.6.7.0
 
 ### Runner
