@@ -366,7 +366,7 @@
 								<TextBlock Grid.Column="0" Grid.Row="1" Text="{Binding Path=TurnGlyph}"  FontSize="14" Foreground="#1192CC"  Margin="4,-2,0,0" 
                                            Padding="0" FontWeight="ExtraBold" HorizontalAlignment="Left" VerticalAlignment="Center" />
 
-								<TextBlock Grid.Column="1" Grid.Row="0" Text="{Binding Path=SegmentName}" Margin="4,4,0,0" TextTrimming="CharacterEllipsis" />
+								<TextBlock Grid.Column="1" Grid.Row="0" Text="{Binding Path=SegmentName}" Margin="4,4,0,0" TextTrimming="CharacterEllipsis" ToolTip.Tip="{Binding Path=SegmentId}" />
 
 								<StackPanel Grid.Column="1" Grid.Row="1" Orientation="Horizontal" Margin="4,0,0,0" Grid.ColumnSpan="{Binding Path=ColumnSpan}">
 									<StackPanel Orientation="Horizontal" Height="18">
