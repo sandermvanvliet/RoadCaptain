@@ -91,7 +91,7 @@ namespace RoadCaptain.UseCases
                 if (routeState.Route.SegmentSequenceIndex != _lastRouteSequenceIndex)
                 {
                     _monitoringEvents.Information(
-                        "Moved to {CurrentSegment} ({CurrentIndex})",
+                        "Entered route segment {CurrentSegment} ({CurrentIndex})",
                         routeState.Route.CurrentSegmentId,
                         routeState.Route.SegmentSequenceIndex);
                 }
