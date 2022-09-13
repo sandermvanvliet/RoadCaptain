@@ -29,4 +29,10 @@
     <ProjectReference Include="..\..\src\RoadCaptain\RoadCaptain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="GameState\Repro\VolcanoClimbJunction.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>
