@@ -35,6 +35,11 @@ namespace RoadCaptain.App.Runner
                 gameState.GetType().Name);
         }
 
+        public static void RouteLoaded(this MonitoringEvents monitoringEvents, PlannedRoute route)
+        {
+            monitoringEvents.Information("Loaded route {RouteName}, Zwift route: {ZwiftRoute} ({ZwiftWorld})", route.Name, route.ZwiftRouteName, route.World.Name);
+        }
+
         private static string GetApplicationVersion()
         {
             var executingAssembly = Assembly.GetExecutingAssembly();

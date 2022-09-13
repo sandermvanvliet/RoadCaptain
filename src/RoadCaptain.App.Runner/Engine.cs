@@ -70,6 +70,7 @@ namespace RoadCaptain.App.Runner
                 route =>
                 {
                     _loadedRoute = route;
+                    _monitoringEvents.RouteLoaded(route);
                     if (_previousGameState is WaitingForConnectionState or ConnectedToZwiftState && _loadedRoute != null)
                     {
                         _windowService.ShowInGameWindow(CreateInGameViewModel(_loadedRoute));
