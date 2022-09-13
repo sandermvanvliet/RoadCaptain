@@ -5,14 +5,16 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading;
+using Newtonsoft.Json;
 using RoadCaptain.GameStates;
 using RoadCaptain.Ports;
 
 namespace RoadCaptain.Adapters
 {
-    internal class InMemoryGameStateDispatcher : IGameStateDispatcher, IGameStateReceiver
+    internal class InMemoryGameStateDispatcher : IGameStateDispatcher, IGameStateReceiver, IDisposable
     {
         private readonly MonitoringEvents _monitoringEvents;
         private readonly ConcurrentQueue<Message> _queue;
@@ -28,6 +30,7 @@ namespace RoadCaptain.Adapters
 
         private ulong _lastSequenceNumber;
         private GameState? _gameState;
+        private StreamWriter? _output;
 
         public InMemoryGameStateDispatcher(MonitoringEvents monitoringEvents)
         {
@@ -131,6 +134,7 @@ namespace RoadCaptain.Adapters
         public void EnterGame(uint riderId, ulong activityId)
         {
             State = State?.EnterGame(riderId, activityId);
+            _output = new StreamWriter(File.OpenWrite($@"positions-{DateTime.UtcNow:yyyy-MM-dd_HHmmss}.log"));
         }
 
         public void LeaveGame()
@@ -139,11 +143,24 @@ namespace RoadCaptain.Adapters
             {
                 State = State?.LeaveGame();
             }
+
+            _output?.Flush();
+            _output?.Close();
         }
 
         public void UpdatePosition(TrackPoint position, List<Segment> segments, PlannedRoute plannedRoute)
         {
+            LogPosition(position);
             State = State?.UpdatePosition(position, segments, plannedRoute);
+        }
+
+        private void LogPosition(TrackPoint position)
+        {
+            if(_output != null)
+            {
+                var serialized = JsonConvert.SerializeObject(position, Formatting.None);
+                _output.WriteLine(serialized);
+            }
         }
 
         public void TurnCommandAvailable(string type)
@@ -294,6 +311,12 @@ namespace RoadCaptain.Adapters
             {
                 _monitoringEvents.Error(e, "Failed to invoke handler");
             }
+        }
+
+        public void Dispose()
+        {
+            _autoResetEvent.Dispose();
+            _output.Dispose();
         }
     }
 }
