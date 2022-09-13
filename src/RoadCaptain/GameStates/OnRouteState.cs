@@ -89,7 +89,6 @@ namespace RoadCaptain.GameStates
                 throw InvalidStateTransitionException.RouteCompleted(GetType());
             }
 
-            
             if (!CurrentPosition.Index.HasValue)
             {
                 throw new InvalidOperationException(
@@ -104,11 +103,12 @@ namespace RoadCaptain.GameStates
             var startIndex = Math.Max(0, CurrentPosition.Index.Value - 10);
             var nextFewPoints = CurrentSegment.Points.Skip(startIndex).Take(20).ToList();
 
-            // Include the next 10 positions on the next segment, but
-            // only if we're not at the end of the route yet. If that
-            // is the case we'll drop into the branch where we find
-            // a match based on all segments rather than the current one.
-            if (plannedRoute.NextSegmentId != null)
+            // When approaching the end of a segment, include the next
+            // 10 positions on the next segment but only if we're not
+            // at the end of the route yet. If that is the case we'll
+            // drop into the branch where we find a match based on all
+            // segments rather than the current one.
+            if (IsNearingEndOfSegment() && plannedRoute.NextSegmentId != null)
             {
                 var nextSegmentOnRoute = segments.Single(segment => segment.Id == plannedRoute.NextSegmentId);
                 var directionOnNextSegment =
@@ -164,6 +164,11 @@ namespace RoadCaptain.GameStates
             {
                 var distanceToLast = CurrentPosition.DistanceTo(position);
 
+                // To prevent situations at intersections where we go from one segment
+                // to the next on the route but briefly touch an unrelated segment we'll
+                // use a window in relation to the last known position. Only after
+                // the current position is on an unrelated segment and it's more than
+                // 25 meters away, then we consider the route lock as lost.
                 if (distanceToLast < 25)
                 {
                     return this;
@@ -218,6 +223,17 @@ namespace RoadCaptain.GameStates
             }
 
             throw new InvalidStateTransitionException("Impossible to work out which state to transition to");
+        }
+
+        private bool IsNearingEndOfSegment()
+        {
+            if (!CurrentPosition.Index.HasValue)
+            {
+                throw new InvalidOperationException(
+                    "Current position doesn't have an index value, did you forget to initialize it properly?");
+            }
+            return (CurrentPosition.Index.Value < 10 ||
+                    CurrentPosition.Index.Value > CurrentSegment.Points.Count - 10);
         }
 
         public override GameState TurnCommandAvailable(string type)
