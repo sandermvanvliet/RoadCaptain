@@ -1,6 +1,7 @@
 using System;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Threading.Tasks;
 using RoadCaptain.App.Runner.Models;
 using RoadCaptain.App.Runner.ViewModels;
 using RoadCaptain.App.Shared;
@@ -92,13 +93,6 @@ namespace RoadCaptain.App.Runner
             {
                 _monitoringEvents.Information("User logged in");
 
-                // Once the user has logged in we need to do two things:
-                // 1. Start the connection listener (DecodeIncomingMessagesUseCase)
-                // 2. Start the connection initiator (ConnectToZwiftUseCase)
-                // When the listener picks up a new connection it will
-                // dispatch the ConnectedToZwift state.
-                StartZwiftConnectionListener();
-
                 var credentials = _credentialCache.LoadAsync().GetAwaiter().GetResult();
                 if (credentials == null || string.IsNullOrEmpty(credentials.AccessToken))
                 {
@@ -107,6 +101,13 @@ namespace RoadCaptain.App.Runner
                 else
                 {
                     StartZwiftConnectionInitiator(credentials.AccessToken);
+                    
+                    // Once the user has logged in we need to do two things:
+                    // 1. Start the connection listener (DecodeIncomingMessagesUseCase)
+                    // 2. Start the connection initiator (ConnectToZwiftUseCase)
+                    // When the listener picks up a new connection it will
+                    // dispatch the ConnectedToZwift state.
+                    StartZwiftConnectionListener();
                 }
             }
             else if (gameState is NotLoggedInState)
@@ -238,11 +239,29 @@ namespace RoadCaptain.App.Runner
 
             _monitoringEvents.Information("Starting connection listener");
 
-            _listenerTask =
-                TaskWithCancellation.Start(cancellationToken => _listenerUseCase.ExecuteAsync(cancellationToken));
+            if (_initiatorTask != null)
+            {
+                _listenerTask = _initiatorTask
+                    .StartLinkedTask(
+                        async cancellationToken =>
+                        {
+                            await Task.Delay(2000);
+                            await _listenerUseCase.ExecuteAsync(cancellationToken);
+                        });
+            }
+            else
+            {
+                _listenerTask =
+                    TaskWithCancellation.Start(
+                        async cancellationToken =>
+                        {
+                            await Task.Delay(2000);
+                            await _listenerUseCase.ExecuteAsync(cancellationToken);
+                        });
+            }
         }
 
-        private void StartZwiftConnectionInitiator(string accessToken)
+            private void StartZwiftConnectionInitiator(string accessToken)
         {
             if (_initiatorTask.IsRunning())
             {
@@ -251,15 +270,34 @@ namespace RoadCaptain.App.Runner
 
             _monitoringEvents.Information("Starting connection initiator");
 
-#pragma warning disable CS8602 // This method is always called after StartZwiftConnectionListener()
-            _initiatorTask = _listenerTask.StartLinkedTask(
-#pragma warning restore CS8602
-                token => _connectUseCase
-                    .ExecuteAsync(
-                        new ConnectCommand { AccessToken = accessToken, ConnectionEncryptionSecret = _userPreferences.ConnectionSecret },
-                        token)
-                    .GetAwaiter()
-                    .GetResult());
+            if (_listenerTask != null)
+            {
+                _initiatorTask = _listenerTask.StartLinkedTask(
+                    token => _connectUseCase
+                        .ExecuteAsync(
+                            new ConnectCommand
+                            {
+                                AccessToken = accessToken,
+                                ConnectionEncryptionSecret = _userPreferences.ConnectionSecret
+                            },
+                            token)
+                        .GetAwaiter()
+                        .GetResult());
+            }
+            else
+            {
+                _initiatorTask = TaskWithCancellation.Start(
+                    cancellationToken => _connectUseCase
+                        .ExecuteAsync(
+                            new ConnectCommand
+                            {
+                                AccessToken = accessToken,
+                                ConnectionEncryptionSecret = _userPreferences.ConnectionSecret
+                            },
+                            cancellationToken)
+                        .GetAwaiter()
+                        .GetResult());
+            }
         }
 
         private void StartMessageHandler()
