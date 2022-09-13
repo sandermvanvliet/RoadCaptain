@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
 
@@ -79,13 +80,64 @@ namespace RoadCaptain.GameStates
                 throw InvalidStateTransitionException.RouteCompleted(GetType());
             }
 
-            // Note: We're using an IEnumerable<T> here to prevent
-            //       unnecessary ToList() calls because the foreach
-            //       loop in GetClosestMatchingSegment handles that
-            //       for us.
-            var matchingSegments = segments.Where(s => s.Contains(position));
+            if (!CurrentPosition.Index.HasValue)
+            {
+                throw new InvalidOperationException(
+                    "Current position doesn't have an index value, did you forget to initialize it properly?");
+            }
 
-            var (segment, closestOnSegment) = matchingSegments.GetClosestMatchingSegment(position, CurrentPosition);
+            // No need to worry about segment direction, just take
+            // (at max) 10 positions before and 10 after the current
+            // position. If the current position is at the start or
+            // end of the current segment we'll end up with the next
+            // 10 positions which is enough.
+            var startIndex = Math.Max(0, CurrentPosition.Index.Value - 10);
+            var nextFewPoints = CurrentSegment.Points.Skip(startIndex).Take(20).ToList();
+
+            // When approaching the end of a segment, include the next
+            // 10 positions on the next segment but only if we're not
+            // at the end of the route yet. If that is the case we'll
+            // drop into the branch where we find a match based on all
+            // segments rather than the current one.
+            if (IsNearingEndOfSegment() && plannedRoute.NextSegmentId != null)
+            {
+                var nextSegmentOnRoute = segments.Single(segment => segment.Id == plannedRoute.NextSegmentId);
+                var directionOnNextSegment =
+                    plannedRoute.RouteSegmentSequence[plannedRoute.SegmentSequenceIndex + 1].Direction;
+
+                if (directionOnNextSegment == SegmentDirection.AtoB)
+                {
+                    nextFewPoints.AddRange(nextSegmentOnRoute.Points.Take(10).ToList());
+                }
+                else
+                {
+                    nextFewPoints.AddRange(nextSegmentOnRoute.Points.Skip(nextSegmentOnRoute.Points.Count - 10).Take(10).ToList());
+                }
+            }
+
+            Segment? segment;
+
+            var closestOnSegment = nextFewPoints
+                .Where(trackPoint => trackPoint.IsCloseTo(position))
+                .MinBy(trackPoint => trackPoint.DistanceTo(position));
+
+            if (closestOnSegment != null)
+            {
+                segment = closestOnSegment.Segment;
+            }
+            else
+            {
+                // This means that the current position isn't on any of the route
+                // segments. Instead of immediately going to LostRouteLock state
+                // first check if we can match any position at all.
+
+                // Note: We're using an IEnumerable<T> here to prevent
+                //       unnecessary ToList() calls because the foreach
+                //       loop in GetClosestMatchingSegment handles that
+                //       for us.
+                var matchingSegments = segments.Where(s => s.Contains(position));
+                (segment, closestOnSegment) = matchingSegments.GetClosestMatchingSegment(position, CurrentPosition);
+            }
 
             if (segment == null || closestOnSegment == null)
             {
@@ -179,6 +231,17 @@ namespace RoadCaptain.GameStates
                 distance,
                 ascent, 
                 descent);
+        }
+
+        private bool IsNearingEndOfSegment()
+        {
+            if (!CurrentPosition.Index.HasValue)
+            {
+                throw new InvalidOperationException(
+                    "Current position doesn't have an index value, did you forget to initialize it properly?");
+            }
+            return (CurrentPosition.Index.Value < 10 ||
+                    CurrentPosition.Index.Value > CurrentSegment.Points.Count - 10);
         }
 
         public override GameState TurnCommandAvailable(string type)
