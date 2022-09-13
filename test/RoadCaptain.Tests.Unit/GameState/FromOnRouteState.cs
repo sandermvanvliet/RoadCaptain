@@ -212,7 +212,7 @@ namespace RoadCaptain.Tests.Unit.GameState
         }
 
         [Fact]
-        public void GivenLeftTurnAvailableAndCurrentDirectionIsUnknown_SameStateIsReturned()
+        public void GivenLeftTurnAvailableAndCurrentDirectionIsAtoB_RouteStateWithLeftTurnIsReturned()
         {
             var plannedRoute = GivenPlannedRoute();
             var nextState = GivenStartingState(plannedRoute)
@@ -222,7 +222,11 @@ namespace RoadCaptain.Tests.Unit.GameState
 
             result
                 .Should()
-                .Be(nextState);
+                .BeOfType<OnRouteState>()
+                .Which
+                .TurnCommands
+                .Should()
+                .OnlyContain(turn => turn == TurnDirection.Left);
         }
 
         [Fact]

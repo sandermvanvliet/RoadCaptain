@@ -140,5 +140,19 @@ namespace RoadCaptain.Tests.Unit.GameState
                 new SegmentSequence { SegmentId = "watopia-bambino-fondo-003-before-after", Direction = SegmentDirection.AtoB },
             }
         };
+
+        public WhenHandlingWatopiaThreeWayJunctions()
+        {
+            // We need valid indexes on all points
+            foreach (var segment in _segments)
+            {
+                for (var index = 0; index < segment.Points.Count; index++)
+                {
+                    var point = segment.Points[index];
+                    point.Index = index;
+                    point.Segment = segment;
+                }
+            }
+        }
     }
 }
