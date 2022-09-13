@@ -141,6 +141,16 @@ namespace RoadCaptain.GameStates
 
             if (segment == null || closestOnSegment == null)
             {
+                // To prevent situations at intersections where we go from one segment
+                // to the next on the route but briefly touch an unrelated segment we'll
+                // use a window in relation to the last known position. Only after
+                // the current position is on an unrelated segment and it's more than
+                // 25 meters away, then we consider the route lock as lost.
+                if (CurrentPosition.DistanceTo(position) < 25)
+                {
+                    return this;
+                }
+
                 return new PositionedState(RiderId, ActivityId, position);
             }
 
