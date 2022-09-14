@@ -1695,47 +1695,6 @@
     "nextSegmentsNodeB": [],
     "points": [
       {
-        "latitude": -11.64718,
-        "longitude": 166.93963,
-        "altitude": 2.2,
-        "index": 0,
-        "distanceOnSegment": 0.0,
-        "distanceFromLast": 0.0,
-        "coordinatesDecimal": "S11.64718° E166.93963°"
-      },
-      {
-        "latitude": -11.64721,
-        "longitude": 166.93944,
-        "altitude": 2.4,
-        "index": 1,
-        "distanceOnSegment": 20.1992403165453,
-        "distanceFromLast": 20.1992403165453,
-        "coordinatesDecimal": "S11.64721° E166.93944°"
-      },
-      {
-        "latitude": -11.64721,
-        "longitude": 166.93926,
-        "altitude": 2.4,
-        "index": 2,
-        "distanceOnSegment": 40.1366706658287,
-        "distanceFromLast": 19.9374303492834,
-        "coordinatesDecimal": "S11.64721° E166.93926°"
-      }
-    ],
-    "id": "watopia-gran-fondo-002",
-    "boundingBox": {},
-    "sport": "Both",
-    "name": "gran-fondo-002",
-    "noSelectReason": null,
-    "distance": 40.1366706658287,
-    "ascent": 0.19999999999999973,
-    "descent": 0.0
-  },
-  {
-    "nextSegmentsNodeA": [],
-    "nextSegmentsNodeB": [],
-    "points": [
-      {
         "latitude": -11.66554,
         "longitude": 166.95141,
         "altitude": 79.0,

@@ -13,6 +13,7 @@ Ultimately you _should_ notice less quirky behaviour at times which means you ca
 ### Routing
 
 - Fixed an incorrect turn from Volcano Climb to Volcano Circuit 1, this also introduces version 3 of the stored route files.
+- Remove segment watopia-gran-fondo-002 because it's not routable
 
 ## 0.6.7.0
 
