@@ -7,6 +7,7 @@ namespace RoadCaptain.GameStates
 {
     public sealed class OnRouteState : GameState
     {
+        public const int RouteLockPositionRadius = 25;
         public OnRouteState(uint riderId, ulong activityId, TrackPoint currentPosition, Segment segment,
             PlannedRoute plannedRoute, SegmentDirection direction, double elapsedDistance, double elapsedAscent, double elapsedDescent)
 
@@ -155,12 +156,46 @@ namespace RoadCaptain.GameStates
                 // use a window in relation to the last known position. Only after
                 // the current position is on an unrelated segment and it's more than
                 // 25 meters away, then we consider the route lock as lost.
-                if (CurrentPosition.DistanceTo(position) < 25)
+                if (CurrentPosition.DistanceTo(position) < RouteLockPositionRadius)
                 {
                     return this;
                 }
 
-                return new PositionedState(RiderId, ActivityId, position);
+                // When we get to the end of a segment it can happen that the segment
+                // doesn't follow the exact route of the rider. For example the triangle
+                // like junctions where we've only mapped the segment going in one
+                // direction but don't have anything for the other leg.
+                // This is something that usually only happens in Watopia as the segment
+                // splitter is now a lot better at aligning junctions.
+                if (IsNearingEndOfSegment())
+                {
+                    // Basically what happens here is that we try to find a point
+                    // on the next segment that is within the 25m radius and assume
+                    // we're on our way to that one.
+                    var closest = nextFewPoints
+                        .Select(point =>
+                            new
+                            {
+                                Point = point,
+                                Distance = point.DistanceTo(position)
+                            })
+                        .OrderBy(x => x.Distance)
+                        .First();
+
+                    if (closest.Distance < RouteLockPositionRadius)
+                    {
+                        segment = closest.Point.Segment;
+                        closestOnSegment = closest.Point;
+                    }
+                    else
+                    {
+                        return new PositionedState(RiderId, ActivityId, position);
+                    }
+                }
+                else
+                {
+                    return new PositionedState(RiderId, ActivityId, position);
+                }
             }
 
             var positionDelta = CurrentPosition.DeltaTo(closestOnSegment);
@@ -179,7 +214,7 @@ namespace RoadCaptain.GameStates
                 // use a window in relation to the last known position. Only after
                 // the current position is on an unrelated segment and it's more than
                 // 25 meters away, then we consider the route lock as lost.
-                if (distanceToLast < 25)
+                if (distanceToLast < RouteLockPositionRadius)
                 {
                     return this;
                 }

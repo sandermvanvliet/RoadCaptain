@@ -1,0 +1,55 @@
+{
+  "version": "2",
+  "roadCaptainVersion": "0.6.8.0",
+  "route": {
+    "name": "VolcanoClimbRepro",
+    "zwiftRouteName": "Tour of Fire and Ice",
+    "isLoop": false,
+    "routeSegmentSequence": [
+      {
+        "segmentId": "watopia-bambino-fondo-004-before-after",
+        "turnToNextSegment": "right",
+        "nextSegmentId": "watopia-beach-island-loop-002",
+        "direction": "btoA",
+        "type": "regular"
+      },
+      {
+        "segmentId": "watopia-beach-island-loop-002",
+        "turnToNextSegment": "goStraight",
+        "nextSegmentId": "watopia-bambino-fondo-004-after-after",
+        "direction": "btoA",
+        "type": "regular"
+      },
+      {
+        "segmentId": "watopia-bambino-fondo-004-after-after",
+        "turnToNextSegment": "goStraight",
+        "nextSegmentId": "watopia-big-foot-hills-002",
+        "direction": "atoB",
+        "type": "regular"
+      },
+      {
+        "segmentId": "watopia-big-foot-hills-002",
+        "turnToNextSegment": "goStraight",
+        "nextSegmentId": "watopia-bambino-fondo-004-after-after",
+        "direction": "atoB",
+        "type": "regular"
+      },
+      {
+        "segmentId": "watopia-bambino-fondo-004-after-after",
+        "turnToNextSegment": "right",
+        "nextSegmentId": "watopia-bambino-fondo-004-after-before",
+        "direction": "btoA",
+        "type": "regular"
+      },
+      {
+        "segmentId": "watopia-bambino-fondo-004-after-before",
+        "turnToNextSegment": "none",
+        "nextSegmentId": null,
+        "direction": "btoA",
+        "type": "regular"
+      }
+    ],
+    "world": "watopia",
+    "sport": "cycling"
+  }
+}

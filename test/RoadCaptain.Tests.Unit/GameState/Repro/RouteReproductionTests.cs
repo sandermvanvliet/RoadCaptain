@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Text;
 using FluentAssertions;
 using Newtonsoft.Json;
 using RoadCaptain.Adapters;
@@ -85,7 +84,7 @@ namespace RoadCaptain.Tests.Unit.GameState.Repro
                     new World { Id = "watopia", ZwiftId = ZwiftWorldId.Watopia },
                     SportType.Cycling);
 
-            var plannedRoute = routeStore.LoadFrom(@"C:\git\temp\zwift\RoadCaptain-troubleshoot\101-volcano-climb\VolcanoClimbRepro.json");
+            var plannedRoute = routeStore.LoadFrom(@"GameState\Repro\VolcanoClimbRepro-2.json");
 
             plannedRoute.EnteredSegment(plannedRoute.RouteSegmentSequence[0].SegmentId);
             plannedRoute.EnteredSegment(plannedRoute.RouteSegmentSequence[1].SegmentId);
@@ -134,49 +133,60 @@ namespace RoadCaptain.Tests.Unit.GameState.Repro
         }
 
         [Fact]
-        public void RouteJsonToSegmentSequenceBuilder()
+        public void VolcanoClimbLostRouteLockRepro()
         {
+            // This test is to verify that for the Volcano Climb route, the route lock is
+            // never lost. This used to happen because there was a non-routable segment
+            // at the junction on the Volcano circuit and the land bridge towards the
+            // Italian villas.
+            // What would happen was that RoadCaptain flipped quickly between on/off route
+            // states.
             var fileRoot = @"c:\git\RoadCaptain\src\RoadCaptain.Adapters";
-            var routeStore = new RouteStoreToDisk(new SegmentStore(fileRoot), new WorldStoreToDisk(fileRoot));
+            var segmentStore = new SegmentStore(fileRoot);
+            var routeStore = new RouteStoreToDisk(segmentStore, new WorldStoreToDisk(fileRoot));
+            var segments = segmentStore
+                .LoadSegments(
+                    new World { Id = "watopia", ZwiftId = ZwiftWorldId.Watopia },
+                    SportType.Cycling);
 
-            var plannedRoute = routeStore.LoadFrom(@"C:\git\temp\zwift\RoadCaptain-troubleshoot\101-volcano-climb\VolcanoClimbRepro.json");
+            var plannedRoute = routeStore.LoadFrom(@"GameState\Repro\VolcanoClimbRepro-2.json");
+            
+            var positions = File
+                .ReadAllLines("GameState\\Repro\\VolcanoClimbLostRouteLock-positions.json")
+                .Select(JsonConvert.DeserializeObject<TrackPoint>)
+                .ToList();
+            
+            GameStates.GameState state = new PositionedState(1, 2, positions[0]);
+            var isOnRoute = false;
 
-            var output = new StringBuilder();
-
-            output.AppendLine("new SegmentSequenceBuilder()");
-            output.AppendLine($"\t.StartingAt(\"{plannedRoute.StartingSegmentId}\")");
-
-            foreach (var segmentSequence in plannedRoute.RouteSegmentSequence)
+            for (var index = 1; index < positions.Count; index++)
             {
-                string methodName;
-                string? nextSegment;
+                var currentPosition = positions[index];
 
-                switch (segmentSequence.TurnToNextSegment)
+                var newState = state.UpdatePosition(currentPosition, segments, plannedRoute);
+
+                // We start with PositionedState and OnSegmentState
+                // before we enter the route and transition to OnRouteState
+                if (newState is OnRouteState && !isOnRoute)
                 {
-                    case TurnDirection.GoStraight:
-                        methodName = "GoingStraightTo";
-                        nextSegment = segmentSequence.NextSegmentId;
-                        break;
-                    case TurnDirection.Left:
-                        methodName = "TurningLeftTo";
-                        nextSegment = segmentSequence.NextSegmentId;
-                        break;
-                    case TurnDirection.Right:
-                        methodName = "TurningRightTo";
-                        nextSegment = segmentSequence.NextSegmentId;
-                        break;
-                    default:
-                        methodName = "EndingAt";
-                        nextSegment = segmentSequence.SegmentId;
-                        break;
+                    isOnRoute = true;
                 }
-                
-                output.AppendLine($"\t.{methodName}(\"{nextSegment}\")");
+
+                if (isOnRoute)
+                {
+                    // Once on the route we always expect OnRouteState
+                    newState
+                        .Should()
+                        .BeOfType<OnRouteState>();
+                }
+
+                // We don't ever want to see LostRouteLockState
+                newState
+                    .Should()
+                    .NotBeOfType<LostRouteLockState>();
+
+                state = newState;
             }
-
-            output.AppendLine("\t.Build();");
-
-            Debug.WriteLine(output.ToString());
         }
     }
 }
