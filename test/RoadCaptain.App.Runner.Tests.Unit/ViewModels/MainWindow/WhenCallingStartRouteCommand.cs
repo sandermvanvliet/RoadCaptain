@@ -3,7 +3,6 @@ using System.Threading;
 using FluentAssertions;
 using RoadCaptain.Adapters;
 using RoadCaptain.App.Runner.ViewModels;
-using RoadCaptain.GameStates;
 using Xunit;
 
 namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.MainWindow
@@ -12,8 +11,8 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.MainWindow
     {
         private readonly MainWindowViewModel _viewModel;
         private readonly InMemoryGameStateDispatcher _gameStateDispatcher;
-        private DummyUserPreferences _appSettings;
-        private Configuration _configuration;
+        private readonly DummyUserPreferences _userPreferences;
+        private readonly Configuration _configuration;
 
         public WhenCallingStartRouteCommand()
         {
@@ -21,13 +20,13 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.MainWindow
             _gameStateDispatcher.LoggedIn();
             var windowService = new StubWindowService();
 
-            _appSettings = new DummyUserPreferences();
+            _userPreferences = new DummyUserPreferences();
             _configuration = new Configuration(null);
 
-            StubRouteStore routeStore = new StubRouteStore();
+            StubRouteStore routeStore = new();
             _viewModel = new MainWindowViewModel(
                 _configuration,
-                _appSettings,
+                _userPreferences,
                 windowService,
                 _gameStateDispatcher,
                 routeStore,
@@ -38,13 +37,13 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.MainWindow
 
 
         [Fact]
-        public void RoutePathIsStoredInAppSettings()
+        public void RoutePathIsStoredInUserPreferences()
         {
             _viewModel.RoutePath = "someroute.json";
 
             StartRoute();
 
-            _appSettings
+            _userPreferences
                 .Route
                 .Should()
                 .BeEquivalentTo(_viewModel.RoutePath);
@@ -65,9 +64,10 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.MainWindow
         }
 
         [Fact]
-        public void RouteIsDispatched()
+        public void StartRouteIsDispatched()
         {
             _viewModel.RoutePath = "someroute.json";
+            _viewModel.LoadRouteCommand.Execute(null);
 
             StartRoute();
 
@@ -81,7 +81,7 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.MainWindow
             _viewModel.StartRouteCommand.Execute(null);
         }
 
-        private GameState GetFirstDispatchedGameState()
+        private string? GetDispatchedRoute()
         {
             // This method is meant to collect the first game
             // state update that is sent through the dispatcher.
@@ -90,67 +90,23 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.MainWindow
             // that first game state dispatch call without having
             // to do Thread.Sleep() calls.
 
-            GameState lastState = null;
+            string? result = null;
 
             // Use a cancellation token with a time-out so that
             // the test fails if no game state is dispatched.
             var tokenSource = new CancellationTokenSource(TimeSpan.FromMilliseconds(100));
-
-            _gameStateDispatcher.Register(
-                null,
-                null,
-                gameState =>
+            
+            _gameStateDispatcher.ReceiveStartRoute(
+                startRoute =>
                 {
-                    // Ignore this because it's needed for test setup
-                    if (gameState is LoggedInState)
-                    {
-                        return;
-                    }
-
-                    lastState = gameState;
-
-                    // Cancel after the first state is dispatched.
-                    tokenSource.Cancel();
+                    result = startRoute;
                 });
 
             // This call blocks until the callback is invoked or
             // the cancellation token expires automatically.
             _gameStateDispatcher.Start(tokenSource.Token);
 
-            return lastState;
-        }
-
-        private PlannedRoute GetDispatchedRoute()
-        {
-            // This method is meant to collect the first game
-            // state update that is sent through the dispatcher.
-            // By using the cancellation token in the callback
-            // we can ensure that we can block while waiting for
-            // that first game state dispatch call without having
-            // to do Thread.Sleep() calls.
-
-            PlannedRoute plannedRoute = null;
-
-            // Use a cancellation token with a time-out so that
-            // the test fails if no game state is dispatched.
-            var tokenSource = new CancellationTokenSource(TimeSpan.FromMilliseconds(100));
-
-            _gameStateDispatcher.Register(
-                route =>
-                {
-                    plannedRoute = route;
-
-                    // Cancel after the first state is dispatched.
-                    tokenSource.Cancel();
-                },
-                null,
-                null);
-
-            // This call blocks until the callback is invoked or
-            // the cancellation token expires automatically.
-            _gameStateDispatcher.Start(tokenSource.Token);
-
-            return plannedRoute;
+            return result;
         }
     }
 }

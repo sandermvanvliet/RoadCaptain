@@ -446,7 +446,7 @@ namespace RoadCaptain.App.Runner.ViewModels
         private CommandResult StartRoute()
         {
             _configuration.Route = RoutePath;
-
+            
             _userPreferences.Route = RoutePath;
             _userPreferences.Save();
 
@@ -460,6 +460,8 @@ namespace RoadCaptain.App.Runner.ViewModels
             {
                 _gameStateDispatcher.RouteSelected(Route.PlannedRoute);
             }
+            
+            _gameStateDispatcher.StartRoute();
 
             return CommandResult.Success();
         }

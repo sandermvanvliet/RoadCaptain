@@ -58,7 +58,7 @@ namespace RoadCaptain.App.Runner
         {
             if (CurrentWindow is InGameNavigationWindow)
             {
-                CurrentWindow.Activate();
+                //CurrentWindow.Activate();
                 return;
             }
 

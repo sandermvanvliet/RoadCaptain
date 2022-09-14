@@ -265,16 +265,6 @@ namespace RoadCaptain.Adapters
             }
         }
 
-        public void Register(
-            Action<PlannedRoute>? routeSelected, 
-            Action<ulong>? lastSequenceNumber,
-            Action<GameState>? gameState)
-        {
-            AddHandlerIfNotNull(_routeSelectedHandlers, routeSelected);
-            AddHandlerIfNotNull(_lastSequenceNumberHandlers, lastSequenceNumber);
-            AddHandlerIfNotNull(_gameStateHandlers, gameState);
-        }
-
         public void ReceiveRoute(Action<PlannedRoute> routeSelected)
         {
             AddHandlerIfNotNull(_routeSelectedHandlers, routeSelected);
@@ -326,6 +316,9 @@ namespace RoadCaptain.Adapters
                     break;
                 case "gameState":
                     _gameStateHandlers.ToList().ForEach(h => InvokeHandler(h, message.Data));
+                    break;
+                case "startRoute":
+                    _startRouteHandlers.ToList().ForEach(h => InvokeHandler(h, message.Data));
                     break;
             }
         }

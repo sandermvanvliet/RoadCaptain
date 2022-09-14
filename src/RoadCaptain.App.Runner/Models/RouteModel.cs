@@ -46,7 +46,6 @@ namespace RoadCaptain.App.Runner.Models
         public SportType Sport => PlannedRoute?.Sport ?? SportType.Unknown;
 
         public World? World => PlannedRoute?.World;
-
         public string? Name => PlannedRoute?.Name;
         public string TotalDistance { get; private set; }
         public string TotalAscent { get; private set; }

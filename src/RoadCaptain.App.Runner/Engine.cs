@@ -37,6 +37,7 @@ namespace RoadCaptain.App.Runner
         private ulong _lastSequenceNumber;
         private readonly IUserPreferences _userPreferences;
         private readonly IZwiftCredentialCache _credentialCache;
+        private bool _routeStarted;
 
         public Engine(
             MonitoringEvents monitoringEvents,
@@ -74,6 +75,26 @@ namespace RoadCaptain.App.Runner
                 });
             _gameStateReceiver.ReceiveLastSequenceNumber(sequenceNumber => _lastSequenceNumber = sequenceNumber);
             _gameStateReceiver.ReceiveGameState(GameStateReceived);
+            _gameStateReceiver.ReceiveStartRoute(StartedRoute);
+        }
+
+        private void StartedRoute(string value)
+        {
+            _routeStarted = true;
+
+            if (_previousGameState is ConnectedToZwiftState)
+            {
+                // Start handling Zwift messages
+                StartMessageHandler();
+            }
+
+            if (_previousGameState is ConnectedToZwiftState or WaitingForConnectionState)
+            {
+                if (_loadedRoute != null && _routeStarted)
+                {
+                    _windowService.ShowInGameWindow(CreateInGameViewModel(_loadedRoute));
+                }
+            }
         }
 
         protected void GameStateReceived(GameState gameState)
@@ -132,6 +153,7 @@ namespace RoadCaptain.App.Runner
                 StartMessageHandler();
 
                 _windowService.ShowMainWindow();
+                _routeStarted = false;
             }
             else if (gameState is ConnectedToZwiftState && _previousGameState is WaitingForConnectionState)
             {
@@ -145,7 +167,7 @@ namespace RoadCaptain.App.Runner
                 // Start handling Zwift messages
                 StartMessageHandler();
 
-                if (_loadedRoute != null)
+                if (_loadedRoute != null && _routeStarted)
                 {
                     _windowService.ShowInGameWindow(CreateInGameViewModel(_loadedRoute));
                 }
@@ -163,6 +185,7 @@ namespace RoadCaptain.App.Runner
                 StartMessageHandler();
 
                 _windowService.ShowMainWindow();
+                _routeStarted = false;
             }
             else if (gameState is InvalidCredentialsState invalidCredentials)
             {
@@ -176,6 +199,7 @@ namespace RoadCaptain.App.Runner
                 // and show main window
                 _windowService.ShowErrorDialog(invalidCredentials.Exception.Message);
                 _windowService.ShowMainWindow();
+                _routeStarted = false;
             }
 
             if (GameState.IsInGame(gameState) && !GameState.IsInGame(_previousGameState))
@@ -184,6 +208,11 @@ namespace RoadCaptain.App.Runner
                 
                 // Start navigation if it is not running
                 StartNavigation();
+            }
+
+            if (GameState.IsInGame(gameState) && _routeStarted && _loadedRoute != null)
+            {
+                _windowService.ShowInGameWindow(CreateInGameViewModel(_loadedRoute));
             }
 
             if (gameState is CompletedRouteState completed)

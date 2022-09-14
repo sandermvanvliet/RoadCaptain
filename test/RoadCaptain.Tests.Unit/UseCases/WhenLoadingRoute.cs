@@ -66,16 +66,14 @@ namespace RoadCaptain.Tests.Unit.UseCases
             // the test fails if no route is dispatched.
             var tokenSource = new CancellationTokenSource(TimeSpan.FromMilliseconds(100));
 
-            _gameStateDispatcher.Register(
+            _gameStateDispatcher.ReceiveRoute(
                 route =>
                 {
                     lastRoute = route;
 
                     // Cancel after the first route is dispatched.
                     tokenSource.Cancel();
-                },
-                null,
-                null);
+                });
 
             // This call blocks until the callback is invoked or
             // the cancellation token expires automatically.

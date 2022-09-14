@@ -204,9 +204,7 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.MainWindow
             // the test fails if no game state is dispatched.
             var tokenSource = new CancellationTokenSource(TimeSpan.FromMilliseconds(100));
 
-            _gameStateDispatcher.Register(
-                null,
-                null,
+            _gameStateDispatcher.ReceiveGameState(
                 gameState =>
                 {
                     lastState = gameState;
