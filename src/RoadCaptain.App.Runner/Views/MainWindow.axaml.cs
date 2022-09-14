@@ -36,7 +36,8 @@ namespace RoadCaptain.App.Runner.Views
                 }
             };
 
-            gameStateReceiver.Register(route => viewModel.Route = RouteModel.From(route, _segmentStore.LoadSegments(route.World, route.Sport)), null, viewModel.UpdateGameState);
+            gameStateReceiver.ReceiveRoute(route => viewModel.Route = RouteModel.From(route, _segmentStore.LoadSegments(route.World, route.Sport)));
+            gameStateReceiver.ReceiveGameState(viewModel.UpdateGameState);
 
             DataContext = viewModel;
 

@@ -12,7 +12,8 @@ namespace RoadCaptain.Tests.Unit
         private readonly List<Action<PlannedRoute>> _routeSelectedHandlers = new();
         private readonly List<Action<ulong>> _lastSequenceNumberHandlers = new();
         private readonly List<Action<GameStates.GameState>> _gameStateHandlers = new();
-
+        private readonly List<Action<string>> _startRouteHandlers = new();
+        
         public void RouteSelected(PlannedRoute route)
         {
             _routeSelectedHandlers.ToList().ForEach(handler => handler(route));
@@ -78,16 +79,33 @@ namespace RoadCaptain.Tests.Unit
             Dispatch(new InvalidCredentialsState(exception));
         }
 
+        public void StartRoute()
+        {
+            _startRouteHandlers.ToList().ForEach(handler => handler(""));
+        }
+
         public void Start(CancellationToken token)
         {
         }
 
-        public void Register(Action<PlannedRoute>? routeSelected, Action<ulong>? lastSequenceNumber,
-            Action<GameStates.GameState>? gameState)
+        public void ReceiveRoute(Action<PlannedRoute> routeSelected)
         {
             AddHandlerIfNotNull(_routeSelectedHandlers, routeSelected);
+        }
+
+        public void ReceiveLastSequenceNumber(Action<ulong> lastSequenceNumber)
+        {
             AddHandlerIfNotNull(_lastSequenceNumberHandlers, lastSequenceNumber);
+        }
+
+        public void ReceiveGameState(Action<GameStates.GameState> gameState)
+        {
             AddHandlerIfNotNull(_gameStateHandlers, gameState);
+        }
+
+        public void ReceiveStartRoute(Action<string> action)
+        {
+            AddHandlerIfNotNull(_startRouteHandlers, action);
         }
 
         public void Drain()

@@ -53,14 +53,11 @@ namespace RoadCaptain.App.Runner.Tests.Unit.Engine
             _gameStateDispatcher = container.Resolve<IGameStateDispatcher>();
 
             _gameStateReceiver = container.Resolve<IGameStateReceiver>();
-            _gameStateReceiver
-                .Register(
-                    route =>
-                    {
-                        LoadedRoute = route;
-                    },
-                    null,
-                    state => States.Add(state));
+            _gameStateReceiver.ReceiveRoute(route =>
+            {
+                LoadedRoute = route;
+            });
+            _gameStateReceiver.ReceiveGameState(state => States.Add(state));
 
             _receiverTask = TaskWithCancellation.Start(async token => _gameStateReceiver.Start(token));
 

@@ -27,11 +27,8 @@ namespace RoadCaptain.UseCases
         public void Execute(CancellationToken token)
         {
             // Set up handlers
-            _gameStateReceiver
-                .Register(
-                    null,
-                    LastSequenceNumberUpdated,
-                    GameStateUpdated);
+            _gameStateReceiver.ReceiveGameState(GameStateUpdated);
+            _gameStateReceiver.ReceiveLastSequenceNumber(LastSequenceNumberUpdated);
 
             // Start listening for game state updates,
             // the Start() method will block until token

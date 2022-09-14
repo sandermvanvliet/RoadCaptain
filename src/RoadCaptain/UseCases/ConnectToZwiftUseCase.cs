@@ -30,10 +30,7 @@ namespace RoadCaptain.UseCases
             _monitoringEvents = monitoringEvents;
             _gameStateReceiver = gameStateReceiver;
             _gameStateDispatcher = gameStateDispatcher;
-            _gameStateReceiver.Register(
-                null,
-                null,
-                ReceiveGameState);
+            _gameStateReceiver.ReceiveGameState(ReceiveGameState);
         }
 
         private void ReceiveGameState(GameState gameState)

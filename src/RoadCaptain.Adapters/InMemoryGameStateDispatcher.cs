@@ -31,6 +31,7 @@ namespace RoadCaptain.Adapters
         private ulong _lastSequenceNumber;
         private GameState? _gameState;
         private StreamWriter? _output;
+        private readonly List<Action<string>> _startRouteHandlers = new();
 
         public InMemoryGameStateDispatcher(MonitoringEvents monitoringEvents)
         {
@@ -187,6 +188,11 @@ namespace RoadCaptain.Adapters
             State = new InvalidCredentialsState(exception);
         }
 
+        public void StartRoute()
+        {
+            Enqueue("startRoute", "");
+        }
+
         protected virtual void Enqueue(string topic, object data)
         {
             try
@@ -259,12 +265,34 @@ namespace RoadCaptain.Adapters
             }
         }
 
-        public void Register(Action<PlannedRoute>? routeSelected, Action<ulong>? lastSequenceNumber,
+        public void Register(
+            Action<PlannedRoute>? routeSelected, 
+            Action<ulong>? lastSequenceNumber,
             Action<GameState>? gameState)
         {
             AddHandlerIfNotNull(_routeSelectedHandlers, routeSelected);
             AddHandlerIfNotNull(_lastSequenceNumberHandlers, lastSequenceNumber);
             AddHandlerIfNotNull(_gameStateHandlers, gameState);
+        }
+
+        public void ReceiveRoute(Action<PlannedRoute> routeSelected)
+        {
+            AddHandlerIfNotNull(_routeSelectedHandlers, routeSelected);
+        }
+
+        public void ReceiveLastSequenceNumber(Action<ulong> lastSequenceNumber)
+        {
+            AddHandlerIfNotNull(_lastSequenceNumberHandlers, lastSequenceNumber);
+        }
+
+        public void ReceiveGameState(Action<GameState> gameState)
+        {
+            AddHandlerIfNotNull(_gameStateHandlers, gameState);
+        }
+
+        public void ReceiveStartRoute(Action<string> action)
+        {
+            AddHandlerIfNotNull(_startRouteHandlers, action);
         }
 
         public void Drain()
@@ -317,7 +345,7 @@ namespace RoadCaptain.Adapters
         public void Dispose()
         {
             _autoResetEvent.Dispose();
-            _output.Dispose();
+            _output?.Dispose();
         }
     }
 }

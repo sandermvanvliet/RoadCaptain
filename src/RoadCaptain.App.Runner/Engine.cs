@@ -67,14 +67,13 @@ namespace RoadCaptain.App.Runner
             _userPreferences = userPreferences;
             _credentialCache = credentialCache;
 
-            _gameStateReceiver.Register(
-                route =>
+            _gameStateReceiver.ReceiveRoute(route =>
                 {
                     _loadedRoute = route;
                     _monitoringEvents.RouteLoaded(route);
-                },
-                sequenceNumber => _lastSequenceNumber = sequenceNumber,
-                GameStateReceived);
+                });
+            _gameStateReceiver.ReceiveLastSequenceNumber(sequenceNumber => _lastSequenceNumber = sequenceNumber);
+            _gameStateReceiver.ReceiveGameState(GameStateReceived);
         }
 
         protected void GameStateReceived(GameState gameState)

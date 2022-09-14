@@ -44,10 +44,8 @@ namespace RoadCaptain.App.Runner.Views
             this.AttachDevTools();
 #endif
 
-            gameStateReceiver.Register(
-                null,
-                sequenceNumber => _viewModel.LastSequenceNumber = sequenceNumber,
-                GameStateReceived);
+            gameStateReceiver.ReceiveGameState(GameStateReceived);
+            gameStateReceiver.ReceiveLastSequenceNumber(sequenceNumber => _viewModel.LastSequenceNumber = sequenceNumber);
         }
 
         private void InitializeComponent()

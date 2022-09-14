@@ -40,10 +40,7 @@ namespace RoadCaptain.UseCases
             // The route is needed to update game state,
             // so this use case needs to listen to RouteSelected
             // updates.
-            _gameStateReceiver.Register(
-                route => _route = route, 
-                null,
-                null);
+            _gameStateReceiver.ReceiveRoute(route => _route = route);
         }
 
         public void Execute(CancellationToken token)
