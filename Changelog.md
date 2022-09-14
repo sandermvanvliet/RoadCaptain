@@ -10,6 +10,10 @@ Ultimately you _should_ notice less quirky behaviour at times which means you ca
 
 - Show the segment id when hovering over the segment name in the route list
 
+### Routing
+
+- Fixed an incorrect turn from Volcano Climb to Volcano Circuit 1, this also introduces version 3 of the stored route files.
+
 ## 0.6.7.0
 
 ### Runner

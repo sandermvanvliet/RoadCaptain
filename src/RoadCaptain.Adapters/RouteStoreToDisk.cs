@@ -104,6 +104,59 @@ namespace RoadCaptain.Adapters
                     {
                         SetSegmentSequenceType(plannedRoute);
                     }
+
+                    // If the route contains a turn from:
+                    // watopia-bambino-fondo-004-after-after
+                    // to:
+                    // watopia-bambino-fondo-004-after-before
+                    // we need to fix the direction because it was wrong in the
+                    // turn file for Watopia
+                    var matchingSequences = plannedRoute
+                        .RouteSegmentSequence
+                        .Where(seq => seq.SegmentId == "watopia-bambino-fondo-004-after-after" &&
+                                      seq.NextSegmentId == "watopia-bambino-fondo-004-after-before")
+                        .ToList();
+
+                    foreach (var sequuence in matchingSequences)
+                    {
+                        sequuence.TurnToNextSegment = TurnDirection.Right;
+                    }
+                }
+                else if (schemaVersion == PersistedRouteVersion3.Version)
+                {
+                    var deserialized = JsonConvert.DeserializeObject<PersistedRouteVersion2>(
+                        serialized,
+                        RouteSerializationSettings);
+
+                    if (Version.Parse(deserialized.RoadCaptainVersion) > _currentVersion)
+                    {
+                        throw new InvalidOperationException(
+                            "Route was created with a newer version of RoadCaptain and that won't work");
+                    }
+
+                    if (Version.Parse(deserialized.RoadCaptainVersion) < new Version(0, 6, 8, 0))
+                    {
+                        throw new InvalidOperationException(
+                            "The route file has version 3 but was created with a version of RoadCaptain that does not support version 3, did you manually change the file?");
+                    }
+
+                    deserialized.Route.World = _worldStore.LoadWorldById(deserialized.Route.WorldId);
+                    
+                    // For routes that were created before sport was known
+                    // set it to Cycling because we only supported bike rides.
+                    if (deserialized.Route.Sport == SportType.Unknown)
+                    {
+                        deserialized.Route.Sport = SportType.Cycling;
+                    }
+
+                    // ReSharper disable once PossibleNullReferenceException
+                    plannedRoute = deserialized.Route;
+
+                    // Routes created before 0.6.6.0 did not have a segment sequence type
+                    if (Version.Parse(deserialized.RoadCaptainVersion) < new Version(0, 6, 6, 0))
+                    {
+                        SetSegmentSequenceType(plannedRoute);
+                    }
                 }
                 else
                 {

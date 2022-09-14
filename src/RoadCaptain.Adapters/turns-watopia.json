@@ -491,8 +491,8 @@
   {
     "segmentId": "watopia-bambino-fondo-004-after-after",
     "turnsA": {
-      "left": "watopia-beach-island-loop-002",
-      "goStraight": "watopia-bambino-fondo-004-after-before"
+      "goStraight": "watopia-beach-island-loop-002",
+      "right": "watopia-bambino-fondo-004-after-before"
     },
     "turnsB": {
       "goStraight": "watopia-big-foot-hills-002"
