@@ -62,7 +62,7 @@ namespace RoadCaptain.App.Runner.Tests.Unit.Engine
                     null,
                     state => States.Add(state));
 
-            _receiverTask = TaskWithCancellation.Start(token => _gameStateReceiver.Start(token));
+            _receiverTask = TaskWithCancellation.Start(async token => _gameStateReceiver.Start(token));
 
             _zwiftGameConnection = container.Resolve<IZwiftGameConnection>() as InMemoryZwiftGameConnection;
             
@@ -143,7 +143,7 @@ namespace RoadCaptain.App.Runner.Tests.Unit.Engine
 
         protected TaskWithCancellation GivenTaskIsRunning(string fieldName)
         {
-            var taskWithCancellation = TaskWithCancellation.Start(token => token.WaitHandle.WaitOne());
+            var taskWithCancellation = TaskWithCancellation.Start(async token => token.WaitHandle.WaitOne());
 
             SetFieldValueByName(fieldName, taskWithCancellation);
 

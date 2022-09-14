@@ -8,12 +8,12 @@ namespace RoadCaptain.App.Shared
     {
         private readonly CancellationTokenSource _tokenSource;
 
-        private TaskWithCancellation(Action<CancellationToken> action)
+        private TaskWithCancellation(Func<CancellationToken, Task> action)
             : this(new CancellationTokenSource(), action)
         {
         }
 
-        private TaskWithCancellation(CancellationTokenSource tokenSource, Action<CancellationToken> action)
+        private TaskWithCancellation(CancellationTokenSource tokenSource, Func<CancellationToken, Task> action)
         {
             _tokenSource = tokenSource;
 
@@ -34,12 +34,12 @@ namespace RoadCaptain.App.Shared
             Task.SafeWaitForCancellation();
         }
 
-        public TaskWithCancellation StartLinkedTask(Action<CancellationToken> action)
+        public TaskWithCancellation StartLinkedTask(Func<CancellationToken, Task> action)
         {
             return new TaskWithCancellation(_tokenSource, action);
         }
 
-        public static TaskWithCancellation Start(Action<CancellationToken> action)
+        public static TaskWithCancellation Start(Func<CancellationToken, Task> action)
         {
             return new TaskWithCancellation(action);
         }

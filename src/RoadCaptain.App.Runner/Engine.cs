@@ -72,10 +72,6 @@ namespace RoadCaptain.App.Runner
                 {
                     _loadedRoute = route;
                     _monitoringEvents.RouteLoaded(route);
-                    if (_previousGameState is WaitingForConnectionState or ConnectedToZwiftState && _loadedRoute != null)
-                    {
-                        _windowService.ShowInGameWindow(CreateInGameViewModel(_loadedRoute));
-                    }
                 },
                 sequenceNumber => _lastSequenceNumber = sequenceNumber,
                 GameStateReceived);
@@ -158,7 +154,7 @@ namespace RoadCaptain.App.Runner
             else if (gameState is ConnectedToZwiftState)
             {
                 _monitoringEvents.Information("Connected to Zwift");
-
+                
                 if (!string.IsNullOrEmpty(_configuration.Route))
                 {
                     _loadRouteUseCase.Execute(new LoadRouteCommand { Path = _configuration.Route });
@@ -186,7 +182,7 @@ namespace RoadCaptain.App.Runner
             if (GameState.IsInGame(gameState) && !GameState.IsInGame(_previousGameState))
             {
                 _monitoringEvents.Information("User entered the game");
-
+                
                 // Start navigation if it is not running
                 StartNavigation();
             }
@@ -245,7 +241,7 @@ namespace RoadCaptain.App.Runner
                     .StartLinkedTask(
                         async cancellationToken =>
                         {
-                            await Task.Delay(2000);
+                            await Task.Delay(2000, cancellationToken);
                             await _listenerUseCase.ExecuteAsync(cancellationToken);
                         });
             }
@@ -255,7 +251,7 @@ namespace RoadCaptain.App.Runner
                     TaskWithCancellation.Start(
                         async cancellationToken =>
                         {
-                            await Task.Delay(2000);
+                            await Task.Delay(2000, cancellationToken);
                             await _listenerUseCase.ExecuteAsync(cancellationToken);
                         });
             }
@@ -273,30 +269,26 @@ namespace RoadCaptain.App.Runner
             if (_listenerTask != null)
             {
                 _initiatorTask = _listenerTask.StartLinkedTask(
-                    token => _connectUseCase
+                    async token => await _connectUseCase
                         .ExecuteAsync(
                             new ConnectCommand
                             {
                                 AccessToken = accessToken,
                                 ConnectionEncryptionSecret = _userPreferences.ConnectionSecret
                             },
-                            token)
-                        .GetAwaiter()
-                        .GetResult());
+                            token));
             }
             else
             {
                 _initiatorTask = TaskWithCancellation.Start(
-                    cancellationToken => _connectUseCase
+                    async cancellationToken => await _connectUseCase
                         .ExecuteAsync(
                             new ConnectCommand
                             {
                                 AccessToken = accessToken,
                                 ConnectionEncryptionSecret = _userPreferences.ConnectionSecret
                             },
-                            cancellationToken)
-                        .GetAwaiter()
-                        .GetResult());
+                            cancellationToken));
             }
         }
 
@@ -309,7 +301,11 @@ namespace RoadCaptain.App.Runner
 
             _monitoringEvents.Information("Starting message handler");
 
-            _messageHandlingTask = TaskWithCancellation.Start(token => _handleMessageUseCase.Execute(token));
+            _messageHandlingTask = TaskWithCancellation.Start(cancellationToken =>
+            {
+                _handleMessageUseCase.Execute(cancellationToken);
+                return Task.CompletedTask;
+            });
         }
 
         private void StartNavigation()
@@ -321,7 +317,11 @@ namespace RoadCaptain.App.Runner
 
             _monitoringEvents.Information("Starting navigation");
 
-            _navigationTask = TaskWithCancellation.Start(token => _navigationUseCase.Execute(token));
+            _navigationTask = TaskWithCancellation.Start(cancellationToken =>
+            {
+                _navigationUseCase.Execute(cancellationToken);
+                return Task.CompletedTask;
+            });
         }
 
         private void CancelAndCleanUp(Expression<Func<TaskWithCancellation?>> func)
@@ -356,7 +356,11 @@ namespace RoadCaptain.App.Runner
 
         public void Start()
         {
-            _gameStateReceiverTask = TaskWithCancellation.Start(token => _gameStateReceiver.Start(token));
+            _gameStateReceiverTask = TaskWithCancellation.Start(cancellationToken =>
+            {
+                _gameStateReceiver.Start(cancellationToken);
+                return Task.CompletedTask;
+            });
         }
     }
 }
