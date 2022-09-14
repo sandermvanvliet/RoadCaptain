@@ -146,6 +146,7 @@ namespace RoadCaptain.Adapters
 
             _output?.Flush();
             _output?.Close();
+            _output = null;
         }
 
         public void UpdatePosition(TrackPoint position, List<Segment> segments, PlannedRoute plannedRoute)
@@ -156,7 +157,7 @@ namespace RoadCaptain.Adapters
 
         private void LogPosition(TrackPoint position)
         {
-            if(_output != null)
+            if(_output != null && _output.BaseStream.CanWrite)
             {
                 var serialized = JsonConvert.SerializeObject(position, Formatting.None);
                 _output.WriteLine(serialized);
