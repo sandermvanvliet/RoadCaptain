@@ -113,12 +113,33 @@ namespace RoadCaptain.App.Runner.ViewModels
                 var plannedRoute = _routeStore.LoadFrom(routePath);
 
                 RoutePath = routePath;
-                
+
+                _userPreferences.LastUsedFolder = Path.GetDirectoryName(RoutePath);
+                _userPreferences.Save();
+
+                var routeFileName = RoutePath;
+
+                try
+                {
+                    routeFileName = Path.GetFileName(routeFileName);
+                }
+                catch
+                {
+                    /* nop */
+                }
+
+                WindowTitle = $"RoadCaptain - {routeFileName}";
+
                 Route = RouteModel.From(
                     plannedRoute,
                     _segmentStore.LoadSegments(
                         plannedRoute.World,
                         plannedRoute.Sport));
+
+                if (Route.PlannedRoute != null)
+                {
+                    _gameStateDispatcher.RouteSelected(Route.PlannedRoute);
+                }
             }
             catch (FileNotFoundException)
             {
@@ -394,31 +415,7 @@ namespace RoadCaptain.App.Runner.ViewModels
 
             if (!string.IsNullOrEmpty(fileName))
             {
-                RoutePath = fileName;
-
-                _userPreferences.LastUsedFolder = Path.GetDirectoryName(RoutePath);
-                _userPreferences.Save();
-
-                var routeFileName = RoutePath;
-
-                try
-                {
-                    routeFileName = Path.GetFileName(routeFileName);
-                }
-                catch
-                {
-                    /* nop */
-                }
-
-                WindowTitle = $"RoadCaptain - {routeFileName}";
-
-                var plannedRoute = _routeStore.LoadFrom(RoutePath);
-
-                Route = RouteModel.From(
-                    plannedRoute, 
-                    _segmentStore.LoadSegments(
-                        plannedRoute.World, 
-                        plannedRoute.Sport));
+                LoadRouteFromPath(fileName);
             }
 
             return CommandResult.Success();

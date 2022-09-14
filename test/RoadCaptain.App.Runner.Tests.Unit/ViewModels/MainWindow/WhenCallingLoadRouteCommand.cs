@@ -19,7 +19,7 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.MainWindow
                 new Configuration(null),
                 new DummyUserPreferences(),
                 _windowService,
-                null,
+                new InMemoryGameStateDispatcher(new NopMonitoringEvents()),
                 routeStore,
                 null,
                 new SegmentStore(),
