@@ -191,13 +191,20 @@ namespace RoadCaptain.Adapters
                     input.Position = position2;
                     additionalAuthenticationData.Flip();
 
-                    var cipher = CipherUtilities.GetCipher("AES/GCM/NoPadding");
+                    try
+                    {
+                        var cipher = CipherUtilities.GetCipher("AES/GCM/NoPadding");
 
-                    cipher.Init(false,
-                        new AeadParameters(new KeyParameter(_key), 32, _gameToClientInitializationVector.GetBytes(),
-                            additionalAuthenticationData.ToArray()));
+                        cipher.Init(false,
+                            new AeadParameters(new KeyParameter(_key), 32, _gameToClientInitializationVector.GetBytes(),
+                                additionalAuthenticationData.ToArray()));
 
-                    cipher.DoFinal(input.ToArray(), decryptedOutput, 0);
+                        cipher.DoFinal(input.ToArray(), decryptedOutput, 0);
+                    }
+                    catch (Org.BouncyCastle.Crypto.InvalidCipherTextException e)
+                    {
+                        throw new CryptographyException(e);
+                    }
                 }
                 else
                 {

@@ -21,7 +21,7 @@ namespace RoadCaptain.UseCases
         public DecodeIncomingMessagesUseCase(
             IMessageReceiver messageReceiver,
             IMessageEmitter messageEmitter,
-            MonitoringEvents monitoringEvents, 
+            MonitoringEvents monitoringEvents,
             IZwiftCrypto zwiftCrypto,
             IGameStateDispatcher dispatcher)
         {
@@ -94,17 +94,19 @@ namespace RoadCaptain.UseCases
                             {
                                 messageBytes = _zwiftCrypto.Decrypt(messageBytes);
                             }
-                        }
-                        catch (Exception e)
-                        {
-                            // TODO: Change this so it closes the connection and initiates the relay again because that will reset the shared secret
-                            _dispatcher.Error("Failed to decrypt message", e);
-                            _monitoringEvents.Error(e, "Failed to decrypt message");
-                        }
 
-                        _messageEmitter.EmitMessageFromBytes(messageBytes);
+                            // Have this inside the try/catch so that when decryption fails
+                            // this doesn't attempt to emit encrypted message bytes because
+                            // that will just fail down the line.
+                            _messageEmitter.EmitMessageFromBytes(messageBytes);
+                        }
+                        catch (CryptographyException e)
+                        {
+                            _monitoringEvents.Error(e, "Failed to decrypt message");
+                            _dispatcher.IncorrectConnectionSecret();
+                        }
                     }
-                
+
                     offset += (MessageLengthPrefix + (int)toSend.Length);
                 }
             } while (!token.IsCancellationRequested);

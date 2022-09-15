@@ -232,6 +232,22 @@ namespace RoadCaptain.App.Runner
                 _windowService.ShowErrorDialog(errorState.Exception.Message);
             }
 
+            if (gameState is IncorrectConnectionSecretState && _previousGameState is not IncorrectConnectionSecretState)
+            {
+                _monitoringEvents.Information("Connection secret got out of whack, initiating relay again");
+                
+                var credentials = _credentialCache.LoadAsync().GetAwaiter().GetResult();
+
+                if (credentials == null || string.IsNullOrEmpty(credentials.AccessToken))
+                {
+                    _monitoringEvents.Error("No Zwift credentials available, cannot initiate Zwift connection");
+                }
+                else
+                {
+                    StartZwiftConnectionInitiator(credentials.AccessToken);
+                }
+            }
+
             _previousGameState = gameState;
         }
 

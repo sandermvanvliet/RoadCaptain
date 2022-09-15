@@ -13,6 +13,7 @@ Ultimately you _should_ notice less quirky behaviour at times which means you ca
 ### Runner
 
 - Fix an issue where RoadCaptain would flip between on/off route very quickly many times
+- Automatically re-initialize the Zwift connection when the connection secret doesn't match
 
 ### Routing
 

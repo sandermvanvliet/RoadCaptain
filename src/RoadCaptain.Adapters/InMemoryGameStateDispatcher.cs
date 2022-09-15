@@ -193,6 +193,11 @@ namespace RoadCaptain.Adapters
             Enqueue("startRoute", "");
         }
 
+        public void IncorrectConnectionSecret()
+        {
+            State = new IncorrectConnectionSecretState();
+        }
+
         protected virtual void Enqueue(string topic, object data)
         {
             try

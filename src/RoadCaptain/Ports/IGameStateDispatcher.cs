@@ -34,5 +34,6 @@ namespace RoadCaptain.Ports
         void Error(string message, Exception exception);
         void InvalidCredentials(Exception exception);
         void StartRoute();
+        void IncorrectConnectionSecret();
     }
 }

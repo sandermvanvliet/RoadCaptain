@@ -84,6 +84,11 @@ namespace RoadCaptain.Tests.Unit
             _startRouteHandlers.ToList().ForEach(handler => handler(""));
         }
 
+        public void IncorrectConnectionSecret()
+        {
+            throw new NotImplementedException();
+        }
+
         public void Start(CancellationToken token)
         {
         }
