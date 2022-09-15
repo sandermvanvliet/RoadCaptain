@@ -188,5 +188,62 @@ namespace RoadCaptain.Tests.Unit.GameState.Repro
                 state = newState;
             }
         }
+
+        [Fact]
+        public void VolcanoClimbLostRouteLockReproNumber2()
+        {
+            // This test is to verify that for the Volcano Climb route, the route lock is
+            // never lost. This used to happen because there was a non-routable segment
+            // at the junction on the Volcano circuit and the land bridge towards the
+            // Italian villas.
+            // What would happen was that RoadCaptain flipped quickly between on/off route
+            // states.
+            var fileRoot = @"c:\git\RoadCaptain\src\RoadCaptain.Adapters";
+            var segmentStore = new SegmentStore(fileRoot);
+            var routeStore = new RouteStoreToDisk(segmentStore, new WorldStoreToDisk(fileRoot));
+            var segments = segmentStore
+                .LoadSegments(
+                    new World { Id = "watopia", ZwiftId = ZwiftWorldId.Watopia },
+                    SportType.Cycling);
+
+            var plannedRoute = routeStore.LoadFrom(@"GameState\Repro\VolcanoClimbRepro-2.json");
+            
+            var positions = File
+                .ReadAllLines("GameState\\Repro\\VolcanoClimbUpcomingTurnToPositioned-positions.json")
+                .Select(JsonConvert.DeserializeObject<TrackPoint>)
+                .ToList();
+            
+            GameStates.GameState state = new PositionedState(1, 2, positions[0]);
+            var isOnRoute = false;
+
+            for (var index = 1; index < positions.Count; index++)
+            {
+                var currentPosition = positions[index];
+
+                var newState = state.UpdatePosition(currentPosition, segments, plannedRoute);
+
+                // We start with PositionedState and OnSegmentState
+                // before we enter the route and transition to OnRouteState
+                if (newState is OnRouteState && !isOnRoute)
+                {
+                    isOnRoute = true;
+                }
+
+                if (isOnRoute)
+                {
+                    // Once on the route we always expect OnRouteState
+                    newState
+                        .Should()
+                        .BeOfType<OnRouteState>();
+                }
+
+                // We don't ever want to see LostRouteLockState
+                newState
+                    .Should()
+                    .NotBeOfType<LostRouteLockState>();
+
+                state = newState;
+            }
+        }
     }
 }

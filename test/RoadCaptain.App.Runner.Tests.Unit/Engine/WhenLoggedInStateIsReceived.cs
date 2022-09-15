@@ -20,26 +20,6 @@ namespace RoadCaptain.App.Runner.Tests.Unit.Engine
         }
 
         [Fact]
-        public void ZwiftConnectionListenerIsStarted()
-        {
-            GivenLoggedInStateIsReceived();
-
-            TheTaskWithName("_listenerTask")
-                .Should()
-                .NotBeNull();
-        }
-
-        [Fact]
-        public void ZwiftConnectionInitiatorIsStarted()
-        {
-            GivenLoggedInStateIsReceived();
-
-            TheTaskWithName("_initiatorTask")
-                .Should()
-                .NotBeNull();
-        }
-
-        [Fact]
         public void PreviousGameStateIsSetToLoggedInState()
         {
             var loggedInState = new LoggedInState();

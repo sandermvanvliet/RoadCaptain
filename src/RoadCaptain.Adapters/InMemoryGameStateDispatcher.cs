@@ -31,7 +31,6 @@ namespace RoadCaptain.Adapters
         private ulong _lastSequenceNumber;
         private GameState? _gameState;
         private StreamWriter? _output;
-        private readonly List<Action<string>> _startRouteHandlers = new();
 
         public InMemoryGameStateDispatcher(MonitoringEvents monitoringEvents)
         {
@@ -114,7 +113,7 @@ namespace RoadCaptain.Adapters
 
         public void WaitingForConnection()
         {
-            if (State is not LoggedInState and not ConnectedToZwiftState)
+            if (State is not ReadyToGoState and not LoggedInState and not ConnectedToZwiftState)
             {
                 throw new InvalidStateTransitionException($"Can only transition to {nameof(WaitingForConnectionState)} state from {nameof(LoggedInState)} or {nameof(ConnectedToZwiftState)}");
             }
@@ -190,7 +189,12 @@ namespace RoadCaptain.Adapters
 
         public void StartRoute()
         {
-            Enqueue("startRoute", "");
+            if (State is not LoggedInState and not ConnectedToZwiftState)
+            {
+                throw new InvalidStateTransitionException($"Can only transition to {nameof(ReadyToGoState)} state from {nameof(LoggedInState)}");
+            }
+
+            State = new ReadyToGoState();
         }
 
         public void IncorrectConnectionSecret()
@@ -285,11 +289,6 @@ namespace RoadCaptain.Adapters
             AddHandlerIfNotNull(_gameStateHandlers, gameState);
         }
 
-        public void ReceiveStartRoute(Action<string> action)
-        {
-            AddHandlerIfNotNull(_startRouteHandlers, action);
-        }
-
         public void Drain()
         {
             // Note: This is a fairly ugly approach to ensure that the queue of
@@ -321,9 +320,6 @@ namespace RoadCaptain.Adapters
                     break;
                 case "gameState":
                     _gameStateHandlers.ToList().ForEach(h => InvokeHandler(h, message.Data));
-                    break;
-                case "startRoute":
-                    _startRouteHandlers.ToList().ForEach(h => InvokeHandler(h, message.Data));
                     break;
             }
         }

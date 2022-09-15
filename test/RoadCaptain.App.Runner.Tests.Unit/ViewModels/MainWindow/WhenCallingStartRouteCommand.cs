@@ -3,6 +3,7 @@ using System.Threading;
 using FluentAssertions;
 using RoadCaptain.Adapters;
 using RoadCaptain.App.Runner.ViewModels;
+using RoadCaptain.GameStates;
 using Xunit;
 
 namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.MainWindow
@@ -18,6 +19,7 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.MainWindow
         {
             _gameStateDispatcher = new InMemoryGameStateDispatcher(new NopMonitoringEvents());
             _gameStateDispatcher.LoggedIn();
+            
             var windowService = new StubWindowService();
 
             _userPreferences = new DummyUserPreferences();
@@ -71,9 +73,9 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.MainWindow
 
             StartRoute();
 
-            GetDispatchedRoute()
+            GetLastDispatchedGameState()
                 .Should()
-                .NotBeNull();
+                .BeOfType<ReadyToGoState>();
         }
 
         private void StartRoute()
@@ -81,7 +83,7 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.MainWindow
             _viewModel.StartRouteCommand.Execute(null);
         }
 
-        private string? GetDispatchedRoute()
+        private GameState? GetLastDispatchedGameState()
         {
             // This method is meant to collect the first game
             // state update that is sent through the dispatcher.
@@ -90,16 +92,16 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.MainWindow
             // that first game state dispatch call without having
             // to do Thread.Sleep() calls.
 
-            string? result = null;
+            GameState? result = null;
 
             // Use a cancellation token with a time-out so that
             // the test fails if no game state is dispatched.
             var tokenSource = new CancellationTokenSource(TimeSpan.FromMilliseconds(100));
             
-            _gameStateDispatcher.ReceiveStartRoute(
-                startRoute =>
+            _gameStateDispatcher.ReceiveGameState(
+                gameState =>
                 {
-                    result = startRoute;
+                    result = gameState;
                 });
 
             // This call blocks until the callback is invoked or

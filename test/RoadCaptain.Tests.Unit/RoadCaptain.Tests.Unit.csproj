@@ -39,6 +39,9 @@
     <None Update="GameState\Repro\VolcanoClimbRepro-2.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="GameState\Repro\VolcanoClimbUpcomingTurnToPositioned-positions.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

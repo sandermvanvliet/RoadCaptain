@@ -108,11 +108,6 @@ namespace RoadCaptain.Tests.Unit
             AddHandlerIfNotNull(_gameStateHandlers, gameState);
         }
 
-        public void ReceiveStartRoute(Action<string> action)
-        {
-            AddHandlerIfNotNull(_startRouteHandlers, action);
-        }
-
         public void Drain()
         {
         }

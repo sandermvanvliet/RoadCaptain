@@ -37,7 +37,6 @@ namespace RoadCaptain.App.Runner
         private ulong _lastSequenceNumber;
         private readonly IUserPreferences _userPreferences;
         private readonly IZwiftCredentialCache _credentialCache;
-        private bool _routeStarted;
 
         public Engine(
             MonitoringEvents monitoringEvents,
@@ -75,26 +74,6 @@ namespace RoadCaptain.App.Runner
                 });
             _gameStateReceiver.ReceiveLastSequenceNumber(sequenceNumber => _lastSequenceNumber = sequenceNumber);
             _gameStateReceiver.ReceiveGameState(GameStateReceived);
-            _gameStateReceiver.ReceiveStartRoute(StartedRoute);
-        }
-
-        private void StartedRoute(string value)
-        {
-            _routeStarted = true;
-
-            if (_previousGameState is ConnectedToZwiftState)
-            {
-                // Start handling Zwift messages
-                StartMessageHandler();
-            }
-
-            if (_previousGameState is ConnectedToZwiftState or WaitingForConnectionState)
-            {
-                if (_loadedRoute != null && _routeStarted)
-                {
-                    _windowService.ShowInGameWindow(CreateInGameViewModel(_loadedRoute));
-                }
-            }
         }
 
         protected void GameStateReceived(GameState gameState)
@@ -108,22 +87,37 @@ namespace RoadCaptain.App.Runner
             if (gameState is LoggedInState)
             {
                 _monitoringEvents.Information("User logged in");
+            }
+            else if(gameState is ReadyToGoState)
+            {
+                _monitoringEvents.Information("User is ready to go and start the route");
 
-                var credentials = _credentialCache.LoadAsync().GetAwaiter().GetResult();
-                if (credentials == null || string.IsNullOrEmpty(credentials.AccessToken))
+                // Only hit this branch when we are not yet connected.
+                // This situation happens when the user ends an activity
+                // and then wants to start another route.
+                if (_previousGameState is not ConnectedToZwiftState)
                 {
-                    _monitoringEvents.Error("No Zwift credentials available, cannot initiate Zwift connection");
+                    var credentials = _credentialCache.LoadAsync().GetAwaiter().GetResult();
+                    if (credentials == null || string.IsNullOrEmpty(credentials.AccessToken))
+                    {
+                        _monitoringEvents.Error("No Zwift credentials available, cannot initiate Zwift connection");
+                    }
+                    else
+                    {
+                        StartZwiftConnectionInitiator(credentials.AccessToken);
+
+                        // Once the user has logged in we need to do two things:
+                        // 1. Start the connection listener (DecodeIncomingMessagesUseCase)
+                        // 2. Start the connection initiator (ConnectToZwiftUseCase)
+                        // When the listener picks up a new connection it will
+                        // dispatch the ConnectedToZwift state.
+                        StartZwiftConnectionListener();
+                    }
                 }
-                else
+
+                if (_loadedRoute != null)
                 {
-                    StartZwiftConnectionInitiator(credentials.AccessToken);
-                    
-                    // Once the user has logged in we need to do two things:
-                    // 1. Start the connection listener (DecodeIncomingMessagesUseCase)
-                    // 2. Start the connection initiator (ConnectToZwiftUseCase)
-                    // When the listener picks up a new connection it will
-                    // dispatch the ConnectedToZwift state.
-                    StartZwiftConnectionListener();
+                    _windowService.ShowInGameWindow(CreateInGameViewModel(_loadedRoute, gameState));
                 }
             }
             else if (gameState is NotLoggedInState)
@@ -143,7 +137,7 @@ namespace RoadCaptain.App.Runner
 
                 if (_loadedRoute != null)
                 {
-                    _windowService.ShowInGameWindow(CreateInGameViewModel(_loadedRoute));
+                    _windowService.ShowInGameWindow(CreateInGameViewModel(_loadedRoute, gameState));
                 }
             }
             else if (gameState is ConnectedToZwiftState && GameState.IsInGame(_previousGameState))
@@ -153,7 +147,6 @@ namespace RoadCaptain.App.Runner
                 StartMessageHandler();
 
                 _windowService.ShowMainWindow();
-                _routeStarted = false;
             }
             else if (gameState is ConnectedToZwiftState && _previousGameState is WaitingForConnectionState)
             {
@@ -167,9 +160,9 @@ namespace RoadCaptain.App.Runner
                 // Start handling Zwift messages
                 StartMessageHandler();
 
-                if (_loadedRoute != null && _routeStarted)
+                if (_loadedRoute != null)
                 {
-                    _windowService.ShowInGameWindow(CreateInGameViewModel(_loadedRoute));
+                    _windowService.ShowInGameWindow(CreateInGameViewModel(_loadedRoute, gameState));
                 }
             }
             else if (gameState is ConnectedToZwiftState)
@@ -185,7 +178,6 @@ namespace RoadCaptain.App.Runner
                 StartMessageHandler();
 
                 _windowService.ShowMainWindow();
-                _routeStarted = false;
             }
             else if (gameState is InvalidCredentialsState invalidCredentials)
             {
@@ -199,7 +191,6 @@ namespace RoadCaptain.App.Runner
                 // and show main window
                 _windowService.ShowErrorDialog(invalidCredentials.Exception.Message);
                 _windowService.ShowMainWindow();
-                _routeStarted = false;
             }
 
             if (GameState.IsInGame(gameState) && !GameState.IsInGame(_previousGameState))
@@ -210,9 +201,9 @@ namespace RoadCaptain.App.Runner
                 StartNavigation();
             }
 
-            if (GameState.IsInGame(gameState) && _routeStarted && _loadedRoute != null)
+            if (GameState.IsInGame(gameState) && _loadedRoute != null)
             {
-                _windowService.ShowInGameWindow(CreateInGameViewModel(_loadedRoute));
+                _windowService.ShowInGameWindow(CreateInGameViewModel(_loadedRoute, gameState));
             }
 
             if (gameState is CompletedRouteState completed)
@@ -251,7 +242,7 @@ namespace RoadCaptain.App.Runner
             _previousGameState = gameState;
         }
 
-        private InGameNavigationWindowViewModel CreateInGameViewModel(PlannedRoute plannedRoute)
+        private InGameNavigationWindowViewModel CreateInGameViewModel(PlannedRoute plannedRoute, GameState gameState)
         {
             var segments = _segmentStore.LoadSegments(plannedRoute.World, plannedRoute.Sport);
 
@@ -262,10 +253,7 @@ namespace RoadCaptain.App.Runner
 
             var viewModel = new InGameNavigationWindowViewModel(inGameWindowModel, segments, _zwiftGameConnection);
 
-            if (_previousGameState != null)
-            {
-                viewModel.UpdateGameState(_previousGameState);
-            }
+            viewModel.UpdateGameState(gameState);
 
             return viewModel;
         }

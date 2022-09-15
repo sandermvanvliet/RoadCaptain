@@ -10,7 +10,6 @@ namespace RoadCaptain.Ports
         void ReceiveRoute(Action<PlannedRoute> routeSelected);
         void ReceiveLastSequenceNumber(Action<ulong> lastSequenceNumber);
         void ReceiveGameState(Action<GameState> gameState);
-        void ReceiveStartRoute(Action<string> action);
         void Drain();
     }
 }

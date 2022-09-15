@@ -27,25 +27,23 @@ namespace RoadCaptain.Tests.Unit.GameState
         }
 
         [Fact]
-        public void EnteringGameWithRiderAndActivityId_ResultIsInGameState()
+        public void EnteringGameWithRiderAndActivityId_InvalidStateTransitionExceptionIsThrown()
         {
-            var startingState = GivenStartingState();
+            var action = () => GivenStartingState().EnterGame(1, 2);
 
-            var result = startingState.EnterGame(1, 2);
-
-            result
+            action
                 .Should()
-                .BeOfType<InGameState>();
+                .Throw<InvalidStateTransitionException>();
         }
 
         [Fact]
-        public void LeavingGame_ConnectedToZwiftStateIsReturned()
+        public void LeavingGame_InvalidStateTransitionExceptionIsThrown()
         {
-            var result = GivenStartingState().LeaveGame();
+            var action = () => GivenStartingState().LeaveGame();
 
-            result
+            action
                 .Should()
-                .BeOfType<ConnectedToZwiftState>();
+                .Throw<InvalidStateTransitionException>();
         }
 
         [Fact]

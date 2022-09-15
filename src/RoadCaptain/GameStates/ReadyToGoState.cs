@@ -1,29 +1,29 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 
 namespace RoadCaptain.GameStates
 {
-    public sealed class LoggedInState : GameState
+    public sealed class ReadyToGoState : GameState
     {
         public override uint RiderId => 0;
 
         public override GameState EnterGame(uint riderId, ulong activityId)
         {
-            throw InvalidStateTransitionException.NotInGame(GetType());
+            return new InGameState(riderId, activityId);
         }
 
         public override GameState LeaveGame()
         {
-            throw InvalidStateTransitionException.NotInGame(GetType());
+            return new ConnectedToZwiftState();
         }
 
         public override GameState UpdatePosition(TrackPoint position, List<Segment> segments, PlannedRoute plannedRoute)
         {
-            throw InvalidStateTransitionException.NotInGame(GetType());
+            return this;
         }
 
         public override GameState TurnCommandAvailable(string type)
         {
-            throw InvalidStateTransitionException.NotOnARoute(GetType());
+            return this;
         }
     }
 }
