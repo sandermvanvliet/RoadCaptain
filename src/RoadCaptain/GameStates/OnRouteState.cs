@@ -7,7 +7,7 @@ namespace RoadCaptain.GameStates
 {
     public sealed class OnRouteState : GameState
     {
-        public const int RouteLockPositionRadius = 25;
+        public const int RouteLockPositionRadius = 35;
         public OnRouteState(uint riderId, ulong activityId, TrackPoint currentPosition, Segment segment,
             PlannedRoute plannedRoute, SegmentDirection direction, double elapsedDistance, double elapsedAscent, double elapsedDescent)
 
