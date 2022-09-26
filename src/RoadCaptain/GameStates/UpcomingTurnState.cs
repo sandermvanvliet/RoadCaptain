@@ -102,8 +102,13 @@ namespace RoadCaptain.GameStates
             if (IsNearingEndOfSegment() && plannedRoute.NextSegmentId != null)
             {
                 var nextSegmentOnRoute = segments.Single(segment => segment.Id == plannedRoute.NextSegmentId);
-                var directionOnNextSegment =
-                    plannedRoute.RouteSegmentSequence[plannedRoute.SegmentSequenceIndex + 1].Direction;
+
+                // Handle looped routes
+                var nextSegmentSequenceOnRoute = plannedRoute.IsOnLastSegment
+                    ? plannedRoute.RouteSegmentSequence[0]
+                    : plannedRoute.RouteSegmentSequence[plannedRoute.SegmentSequenceIndex + 1];
+
+                var directionOnNextSegment = nextSegmentSequenceOnRoute.Direction;
 
                 if (directionOnNextSegment == SegmentDirection.AtoB)
                 {
