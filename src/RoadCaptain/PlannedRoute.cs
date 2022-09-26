@@ -74,7 +74,14 @@ namespace RoadCaptain
 
             if (CurrentSegmentId != null && NextSegmentId == segmentId)
             {
-                SegmentSequenceIndex++;
+                if (IsLoop && SegmentSequenceIndex == RouteSegmentSequence.Count - 1)
+                {
+                    SegmentSequenceIndex = 0;
+                }
+                else
+                {
+                    SegmentSequenceIndex++;
+                }
 
                 return RouteMoveResult.EnteredNextSegment;
             }
