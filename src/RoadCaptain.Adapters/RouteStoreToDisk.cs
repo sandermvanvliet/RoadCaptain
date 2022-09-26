@@ -105,6 +105,26 @@ namespace RoadCaptain.Adapters
                         SetSegmentSequenceType(plannedRoute);
                     }
 
+                    // If the route is a loop then we need to ensure that the
+                    // turn to the next segment on the last segment is set 
+                    // correctly as all version 2 routes don't have that set.
+                    if (plannedRoute.IsLoop)
+                    {
+                        var firstSegmentSequence = plannedRoute.RouteSegmentSequence.First(seg => seg.Type == SegmentSequenceType.LoopStart || seg.Type == SegmentSequenceType.Loop);
+                        var lastSegmentSequence = plannedRoute.RouteSegmentSequence.Last();
+
+                        var segments = _segmentStore.LoadSegments(plannedRoute.World, plannedRoute.Sport);
+                        var lastSegment = segments.Single(s => s.Id == lastSegmentSequence.SegmentId);
+
+                        var turns = lastSegmentSequence.Direction == SegmentDirection.AtoB
+                            ? lastSegment.NextSegmentsNodeB
+                            : lastSegment.NextSegmentsNodeA;
+
+                        var turnToNext = turns.Single(t => t.SegmentId == firstSegmentSequence.SegmentId);
+
+                        lastSegmentSequence.TurnToNextSegment = turnToNext.Direction;
+                    }
+
                     // If the route contains a turn from:
                     // watopia-bambino-fondo-004-after-after
                     // to:
@@ -157,6 +177,26 @@ namespace RoadCaptain.Adapters
                     {
                         SetSegmentSequenceType(plannedRoute);
                     }
+
+                    // If the route is a loop then we need to ensure that the
+                    // turn to the next segment on the last segment is set 
+                    // correctly as all version 2 routes don't have that set.
+                    if (plannedRoute.IsLoop)
+                    {
+                        var firstSegmentSequence = plannedRoute.RouteSegmentSequence.First(seg => seg.Type == SegmentSequenceType.LoopStart || seg.Type == SegmentSequenceType.Loop);
+                        var lastSegmentSequence = plannedRoute.RouteSegmentSequence.Last();
+
+                        var segments = _segmentStore.LoadSegments(plannedRoute.World, plannedRoute.Sport);
+                        var lastSegment = segments.Single(s => s.Id == lastSegmentSequence.SegmentId);
+
+                        var turns = lastSegmentSequence.Direction == SegmentDirection.AtoB
+                            ? lastSegment.NextSegmentsNodeB
+                            : lastSegment.NextSegmentsNodeA;
+
+                        var turnToNext = turns.Single(t => t.SegmentId == firstSegmentSequence.SegmentId);
+
+                        lastSegmentSequence.TurnToNextSegment = turnToNext.Direction;
+                    }
                 }
                 else
                 {
@@ -202,16 +242,22 @@ namespace RoadCaptain.Adapters
         /// <param name="route"></param>
         private static void SetSegmentSequenceType(PlannedRoute route)
         {
-            var type = SegmentSequenceType.Regular;
-
             if (RouteIsALoop(route))
             {
-                type = SegmentSequenceType.Loop;
-            }
+                foreach (var sequence in route.RouteSegmentSequence)
+                {
+                    sequence.Type = SegmentSequenceType.Loop;
+                }
 
-            foreach (var sequence in route.RouteSegmentSequence)
+                route.RouteSegmentSequence.First().Type = SegmentSequenceType.LoopStart;
+                route.RouteSegmentSequence.Last().Type = SegmentSequenceType.LoopEnd;
+            }
+            else
             {
-                sequence.Type = type;
+                foreach (var sequence in route.RouteSegmentSequence)
+                {
+                    sequence.Type = SegmentSequenceType.Regular;
+                }
             }
         }
 
