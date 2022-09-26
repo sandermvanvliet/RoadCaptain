@@ -201,7 +201,7 @@ namespace RoadCaptain.App.Runner
                 StartNavigation();
             }
 
-            if (GameState.IsInGame(gameState) && _loadedRoute != null)
+            if (GameState.IsInGame(gameState) && _loadedRoute != null && !GameState.IsInGame(_previousGameState))
             {
                 _windowService.ShowInGameWindow(CreateInGameViewModel(_loadedRoute, gameState));
             }
