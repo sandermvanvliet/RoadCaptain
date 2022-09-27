@@ -13,6 +13,7 @@ namespace RoadCaptain
     {
         private World? _world;
         private string? _worldId;
+        private int _segmentSequenceIndex;
         public string Name { get; set; }
         public string ZwiftRouteName { get; set; }
         [JsonIgnore]
@@ -21,8 +22,31 @@ namespace RoadCaptain
         public bool HasStarted { get; private set; }
         [JsonIgnore]
         public bool IsOnLastSegment => SegmentSequenceIndex == RouteSegmentSequence.Count - 1;
+
         [JsonIgnore]
-        public int SegmentSequenceIndex { get; private set; }
+        public int SegmentSequenceIndex
+        {
+            get => _segmentSequenceIndex;
+            private set
+            {
+                if (value < 0)
+                {
+                    throw new ArgumentOutOfRangeException(
+                        nameof(SegmentSequenceIndex),
+                        "Segment sequence index can't be less than zero");
+                }
+
+                if (value > RouteSegmentSequence.Count - 1)
+                {
+                    throw new ArgumentOutOfRangeException(
+                        nameof(SegmentSequenceIndex),
+                        "Segment sequence index can't be greater than the number of segments of the route");
+                }
+
+                _segmentSequenceIndex = value;
+            }
+        }
+
         [JsonIgnore]
         public string StartingSegmentId => RouteSegmentSequence[SegmentSequenceIndex].SegmentId;
         [JsonIgnore]
