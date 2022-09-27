@@ -10,7 +10,6 @@ namespace RoadCaptain.App.Runner
         public string? Route { get; set; }
         public Point? InGameWindowLocation { get; set; }
         public bool EndActivityAtEndOfRoute { get; set; }
-        public bool LoopRouteAtEndOfRoute { get; set; }
         public Version LastOpenedVersion { get; set; } = typeof(DummyUserPreferences).Assembly.GetName().Version;
         public byte[]? ConnectionSecret { get; }
 

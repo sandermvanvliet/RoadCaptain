@@ -11,8 +11,8 @@ namespace RoadCaptain
 {
     public class PlannedRoute
     {
-        private World _world;
-        private string _worldId;
+        private World? _world;
+        private string? _worldId;
         public string Name { get; set; }
         public string ZwiftRouteName { get; set; }
         [JsonIgnore]
@@ -31,26 +31,23 @@ namespace RoadCaptain
         public TurnDirection TurnToNextSegment => HasStarted ? RouteSegmentSequence[SegmentSequenceIndex].TurnToNextSegment : TurnDirection.None;
         [JsonIgnore]
         public string? CurrentSegmentId => HasStarted ? RouteSegmentSequence[SegmentSequenceIndex].SegmentId : null;
-
         public bool IsLoop =>
             RouteSegmentSequence.Count(seq => seq.Type == SegmentSequenceType.Regular) == 0 &&
             RouteSegmentSequence.Count >= 2;
-
         public List<SegmentSequence> RouteSegmentSequence { get; } = new();
-
         [JsonIgnore]
-        public World World
+        public World? World
         {
             get => _world;
             set
             {
                 _world = value;
-                _worldId = value.Id;
+                _worldId = value?.Id;
             }
         }
 
         [JsonProperty("world")]
-        public string WorldId
+        public string? WorldId
         {
             get => _world?.Id ?? _worldId;
             set => _worldId = value;
@@ -105,20 +102,6 @@ namespace RoadCaptain
         public void Complete()
         {
             HasCompleted = true;
-        }
-
-        public void EnterNextLoop()
-        {
-            for (var index = 0; index < RouteSegmentSequence.Count; index++)
-            {
-                if (RouteSegmentSequence[index].Type == SegmentSequenceType.LoopStart)
-                {
-                    HasStarted = true;
-                    HasCompleted = false;
-                    SegmentSequenceIndex = index;
-                    return;
-                }
-            }
         }
     }
 

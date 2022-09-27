@@ -191,12 +191,7 @@
                            VerticalAlignment="Center" Margin="0,2,0,0" />
 				<CheckBox Content="End Zwift activity at end of route" Margin="4,0,0,0"
                           Grid.Row="4" Grid.Column="1"
-                          IsChecked="{Binding Path=EndActivityAtEndOfRoute}"
-                          IsEnabled="{Binding Path=LoopRouteAtEndOfRoute,Converter={StaticResource BooleanConverter},ConverterParameter=invert}"/>
-				<CheckBox Content="Start another loop at end of route" Margin="4,0,0,0"
-						  Grid.Row="5" Grid.Column="1"
-                          IsChecked="{Binding Path=LoopRouteAtEndOfRoute}"
-                          IsEnabled="{Binding Path=Route.IsLoop,FallbackValue=False}"/>
+                          IsChecked="{Binding Path=EndActivityAtEndOfRoute}" />
 			</Grid>
 			<Grid Grid.Row="2">
 				<Grid.ColumnDefinitions>

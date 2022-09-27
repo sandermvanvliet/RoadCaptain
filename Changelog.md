@@ -15,6 +15,7 @@ Ultimately you _should_ notice less quirky behaviour at times which means you ca
 - Fix an issue where RoadCaptain would flip between on/off route very quickly many times
 - Automatically re-initialize the Zwift connection when the connection secret doesn't match
 - Fix an issue where the in-game window would only show the Zwift route to start without any other instruction when clicking "Let's go" and Zwift is not yet started
+- Removed the "Start new loop at end of route" as that is now handled by actual looped routes built with RouteBuilder
 
 ### Routing
 

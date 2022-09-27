@@ -30,28 +30,6 @@ namespace RoadCaptain.App.Runner.Tests.Unit.Engine
                 .NotContain($"ENDACTIVITY;RoadCaptain: {_route.Name}");
         }
 
-        [Fact]
-        public void GivenLoopedRouteAndUserWantsToLoop_SequenceIndexIsSetToLoopStartSegment1()
-        {
-            UserPreferences.LoopRouteAtEndOfRoute = true;
-
-            _route = new SegmentSequenceBuilder()
-                .StartingAt("seg-1")
-                .GoingStraightTo("seg-2")
-                .GoingStraightTo("seg-3")
-                .EndingAt("seg-3")
-                .Loop()
-                .Build();
-            
-            _route.EnteredSegment("seg-1");
-            _route.EnteredSegment("seg-2");
-            _route.EnteredSegment("seg-3");
-
-            GivenCompletedRouteStateReceived();
-
-            _route.SegmentSequenceIndex.Should().Be(0);
-        }
-
         private PlannedRoute _route = new PlannedRoute { Name = "Test Route" };
 
         private void GivenCompletedRouteStateReceived()

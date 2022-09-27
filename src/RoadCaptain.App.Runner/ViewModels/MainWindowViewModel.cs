@@ -307,20 +307,6 @@ namespace RoadCaptain.App.Runner.ViewModels
             }
         }
 
-        public bool LoopRouteAtEndOfRoute
-        {
-            get => _loopRouteAtEndOfRoute;
-            set
-            {
-                if (value == _loopRouteAtEndOfRoute) return;
-                _loopRouteAtEndOfRoute = value;
-                // When doing a loop we can't automatically end the activity...
-                EndActivityAtEndOfRoute = false;
-                _userPreferences.LoopRouteAtEndOfRoute = value;
-                this.RaisePropertyChanged();
-            }
-        }
-
         public List<PlannedRoute> RebelRoutes
         {
             get;

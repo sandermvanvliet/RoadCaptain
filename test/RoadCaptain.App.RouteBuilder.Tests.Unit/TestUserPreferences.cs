@@ -11,7 +11,6 @@ namespace RoadCaptain.App.RouteBuilder.Tests.Unit
         public string? Route { get; set; }
         public Point? InGameWindowLocation { get; set; }
         public bool EndActivityAtEndOfRoute { get; set; }
-        public bool LoopRouteAtEndOfRoute { get; set; }
         public Version LastOpenedVersion { get; set; }
         public byte[] ConnectionSecret { get; }
 

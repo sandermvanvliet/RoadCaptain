@@ -212,10 +212,6 @@ namespace RoadCaptain.App.Runner
                 {
                     _zwiftGameConnection.EndActivity(_lastSequenceNumber, "RoadCaptain: " + completed.Route.Name, completed.RiderId);
                 }
-                else if (completed.Route.IsLoop && _userPreferences.LoopRouteAtEndOfRoute)
-                {
-                    completed.Route.EnterNextLoop();
-                }
             }
 
             if (gameState is ErrorState errorState)

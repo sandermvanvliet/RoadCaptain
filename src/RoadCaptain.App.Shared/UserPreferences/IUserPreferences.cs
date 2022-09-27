@@ -38,7 +38,6 @@ namespace RoadCaptain.App.Shared.UserPreferences
         // This preference is transient and will not be stored
         public bool EndActivityAtEndOfRoute { get; set; }
         // This preference is transient and will not be stored
-        public bool LoopRouteAtEndOfRoute { get; set; }
         public Version LastOpenedVersion { get; set; } = new Version(0, 0, 0, 0);
         public byte[]? ConnectionSecret { get; }
         public void Load()
