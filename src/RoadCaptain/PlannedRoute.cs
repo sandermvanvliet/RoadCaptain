@@ -47,18 +47,43 @@ namespace RoadCaptain
             }
         }
 
+        [JsonIgnore] public string StartingSegmentId => RouteSegmentSequence[0].SegmentId;
+        [JsonIgnore] public string? CurrentSegmentId => CurrentSegmentSequence?.SegmentId;
+        [JsonIgnore] public string? NextSegmentId => NextSegmentSequence?.SegmentId;
+        [JsonIgnore] public TurnDirection TurnToNextSegment => CurrentSegmentSequence?.TurnToNextSegment ?? TurnDirection.None;
+        [JsonIgnore] public SegmentSequence? CurrentSegmentSequence => HasStarted ? RouteSegmentSequence[SegmentSequenceIndex] : null;
         [JsonIgnore]
-        public string StartingSegmentId => RouteSegmentSequence[SegmentSequenceIndex].SegmentId;
-        [JsonIgnore]
-        public string? NextSegmentId => HasStarted ? RouteSegmentSequence[SegmentSequenceIndex].NextSegmentId : null;
-        [JsonIgnore]
-        public TurnDirection TurnToNextSegment => HasStarted ? RouteSegmentSequence[SegmentSequenceIndex].TurnToNextSegment : TurnDirection.None;
-        [JsonIgnore]
-        public string? CurrentSegmentId => HasStarted ? RouteSegmentSequence[SegmentSequenceIndex].SegmentId : null;
+        public SegmentSequence? NextSegmentSequence
+        {
+            get
+            {
+                if (!HasStarted || HasCompleted)
+                {
+                    return null;
+                }
+
+                if (SegmentSequenceIndex == RouteSegmentSequence.Count - 1 && IsLoop)
+                {
+                    return RouteSegmentSequence.First(seq => seq.Type == SegmentSequenceType.LoopStart);
+                }
+
+                if (SegmentSequenceIndex < RouteSegmentSequence.Count - 1)
+                {
+                    return RouteSegmentSequence[SegmentSequenceIndex + 1];
+                }
+
+                return null;
+            }
+        }
+
         public bool IsLoop =>
             RouteSegmentSequence.Count(seq => seq.Type == SegmentSequenceType.Regular) == 0 &&
             RouteSegmentSequence.Count >= 2;
-        public List<SegmentSequence> RouteSegmentSequence { get; } = new();
+        [JsonIgnore] public int LoopCount { get; private set; } = 1;
+        [JsonIgnore] public bool OnLeadIn => HasStarted && CurrentSegmentSequence!.Type == SegmentSequenceType.LeadIn;
+
+        public List<SegmentSequence> RouteSegmentSequence { get; init; } = new();
+
         [JsonIgnore]
         public World? World
         {
@@ -81,6 +106,17 @@ namespace RoadCaptain
 
         public RouteMoveResult EnteredSegment(string segmentId)
         {
+            if (!HasStarted && RouteSegmentSequence.Last().Index == 0)
+            {
+                // Set the index of each segment sequence entry so
+                // that we don't have to rely on SegmentSequenceIndex
+                // to keep track of that in the views later.
+                for (var index = 0; index < RouteSegmentSequence.Count; index++)
+                {
+                    RouteSegmentSequence[index].Index = index;
+                }
+            }
+
             if (HasCompleted)
             {
                 throw new ArgumentException("Route has already completed, can't enter new segment");
@@ -95,9 +131,10 @@ namespace RoadCaptain
 
             if (CurrentSegmentId != null && NextSegmentId == segmentId)
             {
-                if (IsLoop && SegmentSequenceIndex == RouteSegmentSequence.Count - 1)
+                if (IsLoop && CurrentSegmentSequence!.Type == SegmentSequenceType.LoopEnd)
                 {
-                    SegmentSequenceIndex = 0;
+                    SegmentSequenceIndex = NextSegmentSequence.Index;
+                    LoopCount++;
                 }
                 else
                 {

@@ -66,7 +66,7 @@ namespace RoadCaptain.App.Runner.Models
                 this.RaisePropertyChanged();
             }
         }
-        
+
 
         public PlannedRoute? Route
         {
@@ -197,7 +197,7 @@ namespace RoadCaptain.App.Runner.Models
             }
         }
 
-        public string LoopText => LoopCount == 0 ? "Lead-in to loop" : $"On loop: {LoopCount}";
+        public string LoopText => (Route?.OnLeadIn ?? false) ? "Lead-in to loop" : $"On loop: {LoopCount}";
 
         public int LoopCount
         {
@@ -213,19 +213,24 @@ namespace RoadCaptain.App.Runner.Models
 
         private void InitializeRoute(PlannedRoute route)
         {
-            var currentSegmentSequence = route.RouteSegmentSequence[route.SegmentSequenceIndex];
-            CurrentSegment = new SegmentSequenceModel(
-                currentSegmentSequence, 
-                GetSegmentById(currentSegmentSequence.SegmentId), 
-                route.SegmentSequenceIndex);
-
-            if (route.SegmentSequenceIndex < route.RouteSegmentSequence.Count - 1)
+            if (route.CurrentSegmentSequence != null)
             {
-                var nextSegmentSequence = route.RouteSegmentSequence[route.SegmentSequenceIndex + 1];
+                CurrentSegment = new SegmentSequenceModel(
+                route.CurrentSegmentSequence,
+                GetSegmentById(route.CurrentSegmentSequence.SegmentId),
+                route.CurrentSegmentSequence.Index);
+            }
+            else
+            {
+                CurrentSegment = null;
+            }
+
+            if (route.NextSegmentSequence != null)
+            {
                 NextSegment = new SegmentSequenceModel(
-                    nextSegmentSequence,
-                    GetSegmentById(nextSegmentSequence.SegmentId), 
-                    route.SegmentSequenceIndex + 1);
+                    route.NextSegmentSequence,
+                    GetSegmentById(route.NextSegmentSequence.SegmentId),
+                    route.NextSegmentSequence.Index);
             }
             else
             {

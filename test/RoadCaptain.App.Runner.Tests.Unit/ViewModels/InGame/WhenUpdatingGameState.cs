@@ -201,7 +201,8 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.InGame
         {
             WhenUpdating(new WaitingForConnectionState());
 
-            WhenUpdating(new OnRouteState(1, 2, new TrackPoint(1, 2, 3), new Segment(new List<TrackPoint>()), new PlannedRoute(), SegmentDirection.AtoB, 0, 0, 0));
+            var plannedRoute = new PlannedRoute();
+            WhenUpdating(new OnRouteState(1, 2, new TrackPoint(1, 2, 3), new Segment(new List<TrackPoint>()), plannedRoute, SegmentDirection.AtoB, 0, 0, 0));
 
             _viewModel.Model.UserIsInGame.Should().BeTrue();
         }

@@ -11,5 +11,6 @@ namespace RoadCaptain
         public string? NextSegmentId { get; set; }
         public SegmentDirection Direction { get; set; } = SegmentDirection.Unknown;
         public SegmentSequenceType Type { get; set; } = SegmentSequenceType.Unknown;
+        public int Index { get; set; }
     }
 }

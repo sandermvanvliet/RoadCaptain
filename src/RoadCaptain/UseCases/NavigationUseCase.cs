@@ -85,15 +85,15 @@ namespace RoadCaptain.UseCases
 
             if (gameState is OnRouteState routeState)
             {
-                if (routeState.Route.SegmentSequenceIndex != _lastRouteSequenceIndex)
+                if (routeState.Route.CurrentSegmentSequence.Index != _lastRouteSequenceIndex)
                 {
                     _monitoringEvents.Information(
                         "Entered route segment {CurrentSegment} ({CurrentIndex})",
-                        routeState.Route.CurrentSegmentId,
-                        routeState.Route.SegmentSequenceIndex);
+                        routeState.Route.CurrentSegmentSequence.SegmentId,
+                        routeState.Route.CurrentSegmentSequence.Index);
                 }
 
-                _lastRouteSequenceIndex = routeState.Route.SegmentSequenceIndex;
+                _lastRouteSequenceIndex = routeState.Route.CurrentSegmentSequence.Index;
             }
 
             _previousState = gameState;

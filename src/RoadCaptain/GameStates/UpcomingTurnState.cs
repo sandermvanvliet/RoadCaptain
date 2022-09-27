@@ -105,8 +105,8 @@ namespace RoadCaptain.GameStates
 
                 // Handle looped routes
                 var nextSegmentSequenceOnRoute = plannedRoute.IsOnLastSegment
-                    ? plannedRoute.RouteSegmentSequence[0]
-                    : plannedRoute.RouteSegmentSequence[plannedRoute.SegmentSequenceIndex + 1];
+                    ? plannedRoute.CurrentSegmentSequence
+                    : plannedRoute.NextSegmentSequence;
 
                 var directionOnNextSegment = nextSegmentSequenceOnRoute.Direction;
 

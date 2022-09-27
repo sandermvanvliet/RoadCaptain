@@ -111,7 +111,11 @@ namespace RoadCaptain.App.Runner.ViewModels
                             UpdateRouteModel(routeState.Route);
                         }
 
-                        Model.CurrentSegment!.PointOnSegment = routeState.CurrentPosition;
+                        if (Model.CurrentSegment != null)
+                        {
+                            Model.CurrentSegment.PointOnSegment = routeState.CurrentPosition;
+                        }
+
                         Model.ElapsedAscent = routeState.ElapsedAscent;
                         Model.ElapsedDescent = routeState.ElapsedDescent;
                         Model.ElapsedDistance = routeState.ElapsedDistance;
@@ -185,31 +189,28 @@ namespace RoadCaptain.App.Runner.ViewModels
         private void UpdateRouteModel(PlannedRoute plannedRoute)
         {
             // Set CurrentSegment and NextSegment accordingly
-            Model.CurrentSegment = SegmentSequenceModelFromIndex(plannedRoute.SegmentSequenceIndex);
-
-            if (plannedRoute.SegmentSequenceIndex < plannedRoute.RouteSegmentSequence.Count - 1)
+            if (plannedRoute.CurrentSegmentSequence != null)
             {
-                Model.NextSegment = SegmentSequenceModelFromIndex(plannedRoute.SegmentSequenceIndex + 1);
+                Model.CurrentSegment = new SegmentSequenceModel(plannedRoute.CurrentSegmentSequence, GetSegmentById(plannedRoute.CurrentSegmentSequence.SegmentId), plannedRoute.CurrentSegmentSequence.Index);
+            }
+            else
+            {
+                Model.CurrentSegment = null;
+            }
+
+            if (plannedRoute.NextSegmentSequence != null)
+            {
+                Model.NextSegment = new SegmentSequenceModel(plannedRoute.NextSegmentSequence, GetSegmentById(plannedRoute.NextSegmentSequence.SegmentId), plannedRoute.NextSegmentSequence.Index);
             }
             else
             {
                 Model.NextSegment = null;
             }
             
-            if (plannedRoute.IsLoop && 
-                plannedRoute.RouteSegmentSequence[plannedRoute.SegmentSequenceIndex].Type == SegmentSequenceType.LoopStart)
+            if (plannedRoute.IsLoop)
             {
-                Model.LoopCount++;
+                Model.LoopCount = plannedRoute.LoopCount;
             }
-        }
-
-        private SegmentSequenceModel SegmentSequenceModelFromIndex(int index)
-        {
-            var currentSegmentSequence = Model.Route.RouteSegmentSequence[index];
-            return new SegmentSequenceModel(
-                currentSegmentSequence,
-                GetSegmentById(currentSegmentSequence.SegmentId),
-                index);
         }
 
         private Segment GetSegmentById(string segmentId)
