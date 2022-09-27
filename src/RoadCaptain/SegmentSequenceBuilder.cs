@@ -26,7 +26,8 @@ namespace RoadCaptain
         {
             var step = new SegmentSequence
             {
-                SegmentId = segmentId
+                SegmentId = segmentId,
+                Type = SegmentSequenceType.Regular
             };
 
             _route.RouteSegmentSequence.Add(step);
@@ -41,7 +42,8 @@ namespace RoadCaptain
 
             var step = new SegmentSequence
             {
-                SegmentId = segmentId
+                SegmentId = segmentId,
+                Type = SegmentSequenceType.Regular
             };
 
             _route.RouteSegmentSequence.Add(step);
@@ -56,7 +58,8 @@ namespace RoadCaptain
 
             var step = new SegmentSequence
             {
-                SegmentId = segmentId
+                SegmentId = segmentId,
+                Type = SegmentSequenceType.Regular
             };
 
             _route.RouteSegmentSequence.Add(step);
@@ -71,7 +74,8 @@ namespace RoadCaptain
 
             var step = new SegmentSequence
             {
-                SegmentId = segmentId
+                SegmentId = segmentId,
+                Type = SegmentSequenceType.Regular
             };
 
             _route.RouteSegmentSequence.Add(step);

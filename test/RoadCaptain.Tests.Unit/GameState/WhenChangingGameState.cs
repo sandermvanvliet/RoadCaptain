@@ -627,9 +627,9 @@ namespace RoadCaptain.Tests.Unit.GameState
         {
             RouteSegmentSequence =
             {
-                new SegmentSequence { SegmentId = "route-segment-1", NextSegmentId = "route-segment-2", TurnToNextSegment = TurnDirection.Left, Direction = SegmentDirection.AtoB},
-                new SegmentSequence { SegmentId = "route-segment-2", NextSegmentId = "route-segment-3", TurnToNextSegment = TurnDirection.Right, Direction = SegmentDirection.AtoB },
-                new SegmentSequence { SegmentId = "route-segment-3", Direction = SegmentDirection.AtoB },
+                new SegmentSequence { SegmentId = "route-segment-1", NextSegmentId = "route-segment-2", TurnToNextSegment = TurnDirection.Left, Direction = SegmentDirection.AtoB, Type = SegmentSequenceType.Regular},
+                new SegmentSequence { SegmentId = "route-segment-2", NextSegmentId = "route-segment-3", TurnToNextSegment = TurnDirection.Right, Direction = SegmentDirection.AtoB, Type = SegmentSequenceType.Regular },
+                new SegmentSequence { SegmentId = "route-segment-3", Direction = SegmentDirection.AtoB, Type = SegmentSequenceType.Regular },
             }
         };
 
