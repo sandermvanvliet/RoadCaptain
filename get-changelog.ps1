@@ -22,4 +22,4 @@ for($index = 0; $index -lt $lines.Length; $index++)
     }
 }
 
-::set-output name=changelog::$output
+Write-Host "::set-output name=changelog::$output"
