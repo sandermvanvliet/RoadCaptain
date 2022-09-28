@@ -22,4 +22,4 @@ for($index = 0; $index -lt $lines.Length; $index++)
     }
 }
 
-Write-Host "::set-output name=changelog::$output"
+$output > version-changelog.md
