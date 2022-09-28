@@ -135,7 +135,8 @@
 		<Grid
               Grid.Row="1"
               DataContext="{Binding Path=Model.CurrentSegment}"
-              Background="White">
+              Background="White"
+              IsVisible="{Binding Path=Model.CurrentSegment,Converter={StaticResource NullabilityConverter},ConverterParameter=invert}">
 			<Grid.Styles>
 				<Style Selector="TextBlock">
 					<Setter Property="Foreground" Value="Black" />
