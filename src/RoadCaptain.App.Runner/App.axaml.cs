@@ -5,6 +5,7 @@
 using System;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading.Tasks;
 using Autofac;
 using Avalonia;
 using Avalonia.Controls;
@@ -36,6 +37,11 @@ namespace RoadCaptain.App.Runner
             AppDomain.CurrentDomain.UnhandledException += (_, args) =>
             {
                 _logger.Fatal(args.ExceptionObject as Exception, "Unhandled exception occurred");
+            };
+
+            TaskScheduler.UnobservedTaskException += (sender, args) =>
+            {
+                _logger.Fatal(args.Exception, "Unhandled exception occurred in task");
             };
 
             var configuration = new ConfigurationBuilder()
