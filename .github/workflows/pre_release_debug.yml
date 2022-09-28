@@ -14,6 +14,11 @@ jobs:
       with:
         xml-file: './Directory.Build.props'
         xpath: '//Version'
+    - name: Get changelog
+      id: get_changelog
+      run: |
+          ./get-changelog.ps1
+      shell: pwsh
     - name: Create Release
       id: create_release
       uses: actions/create-release@v1
@@ -24,6 +29,7 @@ jobs:
         release_name: ${{ steps.get_version.outputs.info }}
         draft: true
         prerelease: true
+        body: ${{ steps.get_changelog.outputs.changelog }}
     outputs:
       upload_url: ${{ steps.create_release.outputs.upload_url }}
       version: ${{ steps.get_version.outputs.info }}
