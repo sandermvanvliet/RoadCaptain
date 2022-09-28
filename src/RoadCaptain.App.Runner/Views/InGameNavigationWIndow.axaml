@@ -153,22 +153,22 @@
 				<ColumnDefinition />
 			</Grid.ColumnDefinitions>
 
-			<TextBlock Name="CurrentSegmentSequenceNumber" Margin="2,0,0,0" Grid.Column="0" Grid.Row="0" Text="{Binding Path=SequenceNumber}" HorizontalAlignment="Center" />
-			<TextBlock Name="CurrentSegmentTurnGylph" Grid.Column="0" Grid.Row="1" Text="{Binding Path=TurnGlyph}"  FontSize="16" Foreground="#1192CC" Padding="0" Margin="0,-4,0,0" FontWeight="ExtraBold" HorizontalAlignment="Center" VerticalAlignment="Center" />
+			<TextBlock Name="CurrentSegmentSequenceNumber" Margin="2,0,0,0" Grid.Column="0" Grid.Row="0" Text="{Binding Path=SequenceNumber,Mode=OneWay}" HorizontalAlignment="Center" />
+			<TextBlock Name="CurrentSegmentTurnGylph" Grid.Column="0" Grid.Row="1" Text="{Binding Path=TurnGlyph,Mode=OneWay}"  FontSize="16" Foreground="#1192CC" Padding="0" Margin="0,-4,0,0" FontWeight="ExtraBold" HorizontalAlignment="Center" VerticalAlignment="Center" />
 
-			<TextBlock Name="CurrentSegmentName" Grid.Column="1" Grid.Row="0" Text="{Binding Path=SegmentName}" ToolTip.Tip="{Binding Path=SegmentName}" Margin="4,0,0,0" />
+			<TextBlock Name="CurrentSegmentName" Grid.Column="1" Grid.Row="0" Text="{Binding Path=SegmentName,Mode=OneWay}" ToolTip.Tip="{Binding Path=SegmentName,Mode=OneWay}" Margin="4,0,0,0" />
 
 			<StackPanel Grid.Column="1" Grid.Row="1" Orientation="Horizontal" Margin="4,0,0,0">
 				<StackPanel Orientation="Horizontal" Height="18">
-					<TextBlock Text="{Binding Path=Distance,StringFormat=\{0:0.0\}}" FontSize="16" FontWeight="Bold" VerticalAlignment="Bottom" />
+					<TextBlock Text="{Binding Path=Distance,StringFormat=\{0:0.0\},Mode=OneWay}" FontSize="16" FontWeight="Bold" VerticalAlignment="Bottom" />
 					<TextBlock Text="km" FontSize="10" FontWeight="Bold" VerticalAlignment="Bottom" Padding="0,0,0,1.5"/>
 
 					<TextBlock Text="⬈" FontSize="15" Margin="0,-2,0,0" Padding="0" FontWeight="ExtraBold" />
-					<TextBlock Text="{Binding Path=Ascent,StringFormat=\{0:0.0\}}" FontSize="16" FontWeight="Bold" VerticalAlignment="Bottom" />
+					<TextBlock Text="{Binding Path=Ascent,StringFormat=\{0:0.0\},Mode=OneWay}" FontSize="16" FontWeight="Bold" VerticalAlignment="Bottom" />
 					<TextBlock Text="m" FontSize="10" FontWeight="Bold" VerticalAlignment="Bottom" Padding="0,0,0,1.5"/>
 
 					<TextBlock Text="⬊" FontSize="15" Margin="0,-2,0,0" Padding="0" FontWeight="ExtraBold" />
-					<TextBlock Text="{Binding Path=Descent,StringFormat=\{0:0.0\}}" FontSize="16" FontWeight="Bold" VerticalAlignment="Bottom" />
+					<TextBlock Text="{Binding Path=Descent,StringFormat=\{0:0.0\},Mode=OneWay}" FontSize="16" FontWeight="Bold" VerticalAlignment="Bottom" />
 					<TextBlock Text="m" FontSize="10" FontWeight="Bold" VerticalAlignment="Bottom" Padding="0,0,0,1.5"/>
 				</StackPanel>
 			</StackPanel>
@@ -218,22 +218,22 @@
 				<ColumnDefinition />
 			</Grid.ColumnDefinitions>
 
-			<TextBlock Name="NextSegmentSequenceNumber" Grid.Column="0" Grid.Row="0" Margin="2,0,0,0" Text="{Binding Path=SequenceNumber}" HorizontalAlignment="Center" />
-			<TextBlock Name="NextSegmentTurnGlyph" Grid.Column="0" Grid.Row="1" Text="{Binding Path=TurnGlyph}"  FontSize="16" Foreground="#1192CC" Padding="0" Margin="0,-4,0,0" FontWeight="ExtraBold" HorizontalAlignment="Center" VerticalAlignment="Center" />
+			<TextBlock Name="NextSegmentSequenceNumber" Grid.Column="0" Grid.Row="0" Margin="2,0,0,0" Text="{Binding Path=SequenceNumber,Mode=OneWay}" HorizontalAlignment="Center" />
+			<TextBlock Name="NextSegmentTurnGlyph" Grid.Column="0" Grid.Row="1" Text="{Binding Path=TurnGlyph,Mode=OneWay}"  FontSize="16" Foreground="#1192CC" Padding="0" Margin="0,-4,0,0" FontWeight="ExtraBold" HorizontalAlignment="Center" VerticalAlignment="Center" />
 
-			<TextBlock Name="NextSegmentName" Grid.Column="1" Grid.Row="0" Text="{Binding Path=SegmentName}" ToolTip.Tip="{Binding Path=SegmentName}" Margin="4,0,0,0" />
+			<TextBlock Name="NextSegmentName" Grid.Column="1" Grid.Row="0" Text="{Binding Path=SegmentName,Mode=OneWay}" ToolTip.Tip="{Binding Path=SegmentName,Mode=OneWay}" Margin="4,0,0,0" />
 
 			<StackPanel Grid.Column="1" Grid.Row="1" Orientation="Horizontal" Margin="4,0,0,0">
 				<StackPanel Orientation="Horizontal" Height="18">
-					<TextBlock Text="{Binding Path=Distance,StringFormat=\{0:0.0\}}" FontSize="16" FontWeight="Bold" VerticalAlignment="Bottom" />
+					<TextBlock Text="{Binding Path=Distance,StringFormat=\{0:0.0\},Mode=OneWay}" FontSize="16" FontWeight="Bold" VerticalAlignment="Bottom" />
 					<TextBlock Text="km" FontSize="10" FontWeight="Bold" VerticalAlignment="Bottom" Padding="0,0,0,1.5"/>
 
 					<TextBlock Text="⬈" FontSize="15" Margin="0,-2,0,0" Padding="0" FontWeight="ExtraBold" />
-					<TextBlock Text="{Binding Path=Ascent,StringFormat=\{0:0.0\}}" FontSize="16" FontWeight="Bold" VerticalAlignment="Bottom" />
+					<TextBlock Text="{Binding Path=Ascent,StringFormat=\{0:0.0\},Mode=OneWay}" FontSize="16" FontWeight="Bold" VerticalAlignment="Bottom" />
 					<TextBlock Text="m" FontSize="10" FontWeight="Bold" VerticalAlignment="Bottom" Padding="0,0,0,1.5"/>
 
 					<TextBlock Text="⬊" FontSize="15" Margin="0,-2,0,0" Padding="0" FontWeight="ExtraBold" />
-					<TextBlock Text="{Binding Path=Descent,StringFormat=\{0:0.0\}}" FontSize="16" FontWeight="Bold" VerticalAlignment="Bottom" />
+					<TextBlock Text="{Binding Path=Descent,StringFormat=\{0:0.0\},Mode=OneWay}" FontSize="16" FontWeight="Bold" VerticalAlignment="Bottom" />
 					<TextBlock Text="m" FontSize="10" FontWeight="Bold" VerticalAlignment="Bottom" Padding="0,0,0,1.5"/>
 				</StackPanel>
 			</StackPanel>
@@ -250,10 +250,12 @@
 					</Style>
 				</StackPanel.Styles>
 				<TextBlock Text="Segment" Margin="15,0,0,0" />
-				<TextBlock Text="{Binding Path=Model.CurrentSegment.SequenceNumber,FallbackValue=0, TargetNullValue=0}" />
+				<TextBlock Text="{Binding Path=Model.CurrentSegment.SequenceNumber,FallbackValue=0, TargetNullValue=0,Mode=OneWay}" />
 				<TextBlock Text="of"  />
-				<TextBlock Text="{Binding Path=Model.Route.RouteSegmentSequence.Count,FallbackValue=0, TargetNullValue=0}" />
-				<TextBlock Text="{Binding Path=Model.LoopText}" IsVisible="{Binding Path=Model.Route.IsLoop}" Margin="8,0,0,0" />
+				<TextBlock Text="{Binding Path=Model.Route.RouteSegmentSequence.Count,FallbackValue=0, TargetNullValue=0,Mode=OneWay}" />
+				<TextBlock Text="{Binding Path=Model.LoopText,Mode=OneWay}" 
+                           IsVisible="{Binding Path=Model.Route.IsLoop,FallbackValue=False,Mode=OneWay}" 
+                           Margin="8,0,0,0" />
 			</StackPanel>
 		</Border>
 	</Grid>
