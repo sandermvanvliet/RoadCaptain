@@ -5,6 +5,7 @@ VERSION=$2
 APPNAME=$3
 SIGNING_IDENTITY=$4
 RID=$5
+CONFIGURATION=$6
 
 if [ -z "$RID" ]
 then
@@ -27,7 +28,7 @@ echo "ENTITLEMENTS: $ENTITLEMENTS"
 echo "NOTARY_ZIP: $NOTARY_ZIP"
 
 echo "[INFO] Publishing $APPNAME"
-dotnet publish -c Release -r "$RID" --self-contained -o "$PUBLISH_DIR/$BUNDLE_NAME/Contents/MacOS" "src/RoadCaptain.App.$APPNAME/RoadCaptain.App.$APPNAME.csproj"
+dotnet publish -c "${CONFIGURATION}" -r "$RID" --self-contained -o "$PUBLISH_DIR/$BUNDLE_NAME/Contents/MacOS" "src/RoadCaptain.App.$APPNAME/RoadCaptain.App.$APPNAME.csproj"
 
 sed -e "s/##VERSION##/$VERSION/g" < "src/RoadCaptain.App.$APPNAME/Info.plist" > "$PUBLISH_DIR/$BUNDLE_NAME/Contents/Info.plist"
 

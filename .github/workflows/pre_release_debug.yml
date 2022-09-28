@@ -46,12 +46,12 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore -r ${{ env.RID }}
     - name: Test
-      run: dotnet test --verbosity normal -c Release -r ${{ env.RID }}
+      run: dotnet test --verbosity normal -c Debug -r ${{ env.RID }}
     - name: Publish Runner
       # Because of reasons we need to explicitly set RuntimeIdentifiers to only win-x64 because MSBuild sets it to osx-x64;win-x64
-      run: dotnet publish --self-contained -c Release -r ${{ env.RID }} -p:RuntimeIdentifiers=${{ env.RID }} src\RoadCaptain.App.Runner\RoadCaptain.App.Runner.csproj
+      run: dotnet publish --self-contained -c Debug -r ${{ env.RID }} -p:RuntimeIdentifiers=${{ env.RID }} src\RoadCaptain.App.Runner\RoadCaptain.App.Runner.csproj
     - name: Publish RouteBuilder
-      run: dotnet publish --self-contained -c Release -r ${{ env.RID }} -p:RuntimeIdentifiers=${{ env.RID }} src\RoadCaptain.App.RouteBuilder\RoadCaptain.App.RouteBuilder.csproj
+      run: dotnet publish --self-contained -c Debug -r ${{ env.RID }} -p:RuntimeIdentifiers=${{ env.RID }} src\RoadCaptain.App.RouteBuilder\RoadCaptain.App.RouteBuilder.csproj
     - name: Update Wix components file
       run: dotnet run --project .\packaging\RoadCaptain.WixComponentFileGenerator\RoadCaptain.WixComponentFileGenerator.csproj src\RoadCaptain.App.Runner\bin\Release\net6.0-windows\${{ env.RID }}\publish src\RoadCaptain.App.RouteBuilder\bin\Release\net6.0-windows\${{ env.RID }}\publish .\packaging\RoadCaptain.Installer\Components.wxi
     - name: Add msbuild to PATH
@@ -107,13 +107,13 @@ jobs:
       run: |
         PUBLISH_DIR="$RUNNER_TEMP/${{ env.RID }}/Bundles"
         VERSION=$(grep Version Directory.Build.props | sed -e 's/<Version>//g' -e 's/<\/Version>//g' | tr -d '\t ')
-        ./packaging/build-macos-app "$PUBLISH_DIR" "$VERSION" "Runner" "${{ env.SIGNING_IDENTITY }}" "${{ env.RID }}" "Release"
+        ./packaging/build-macos-app "$PUBLISH_DIR" "$VERSION" "Runner" "${{ env.SIGNING_IDENTITY }}" "${{ env.RID }}" "Debug"
 
     - name: Build and package RouteBuilder
       run: |
         PUBLISH_DIR="$RUNNER_TEMP/${{ env.RID }}/Bundles"
         VERSION=$(grep Version Directory.Build.props | sed -e 's/<Version>//g' -e 's/<\/Version>//g' | tr -d '\t ')
-        ./packaging/build-macos-app "$PUBLISH_DIR" "$VERSION" "RouteBuilder" "${{ env.SIGNING_IDENTITY }}" "${{ env.RID }}" "Release"
+        ./packaging/build-macos-app "$PUBLISH_DIR" "$VERSION" "RouteBuilder" "${{ env.SIGNING_IDENTITY }}" "${{ env.RID }}" "Debug"
 
     - name: Create DMG
       run: |
@@ -176,13 +176,13 @@ jobs:
       run: |
         PUBLISH_DIR="$RUNNER_TEMP/${{ env.RID }}/Bundles"
         VERSION=$(grep Version Directory.Build.props | sed -e 's/<Version>//g' -e 's/<\/Version>//g' | tr -d '\t ')
-        ./packaging/build-macos-app "$PUBLISH_DIR" "$VERSION" "Runner" "${{ env.SIGNING_IDENTITY }}" "${{ env.RID }}" "Release"
+        ./packaging/build-macos-app "$PUBLISH_DIR" "$VERSION" "Runner" "${{ env.SIGNING_IDENTITY }}" "${{ env.RID }}" "Debug"
 
     - name: Build and package RouteBuilder
       run: |
         PUBLISH_DIR="$RUNNER_TEMP/${{ env.RID }}/Bundles"
         VERSION=$(grep Version Directory.Build.props | sed -e 's/<Version>//g' -e 's/<\/Version>//g' | tr -d '\t ')
-        ./packaging/build-macos-app "$PUBLISH_DIR" "$VERSION" "RouteBuilder" "${{ env.SIGNING_IDENTITY }}" "${{ env.RID }}" "Release"
+        ./packaging/build-macos-app "$PUBLISH_DIR" "$VERSION" "RouteBuilder" "${{ env.SIGNING_IDENTITY }}" "${{ env.RID }}" "Debug"
 
     - name: Create DMG
       run: |
