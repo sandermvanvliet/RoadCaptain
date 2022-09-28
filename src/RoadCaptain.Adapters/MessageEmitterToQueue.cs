@@ -115,7 +115,7 @@ namespace RoadCaptain.Adapters
                         }
                         else
                         {
-                            _monitoringEvents.Warning("Received type {Type} message, but it will be ignored", (GameToPhoneCommandType)item.Type);
+                            _monitoringEvents.Debug("Received type {Type} message, but it will be ignored", (GameToPhoneCommandType)item.Type);
                         }
 
                         break;
