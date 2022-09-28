@@ -16,7 +16,7 @@ namespace RoadCaptain.Tests.Unit.GameState.Repro
         [Fact]
         public void HillyKOMBypassRebelRoute_DoesNotSkipSegment()
         {
-            var segments = new SegmentStore(@"c:\git\RoadCaptain\src\RoadCaptain.Adapters")
+            var segments = new SegmentStore()
                 .LoadSegments(
                     new World { Id = "watopia", ZwiftId = ZwiftWorldId.Watopia },
                     SportType.Cycling);
@@ -76,9 +76,8 @@ namespace RoadCaptain.Tests.Unit.GameState.Repro
         [Fact]
         public void StartingVolcanoClimb()
         {
-            var fileRoot = @"c:\git\RoadCaptain\src\RoadCaptain.Adapters";
-            var segmentStore = new SegmentStore(fileRoot);
-            var routeStore = new RouteStoreToDisk(segmentStore, new WorldStoreToDisk(fileRoot));
+            var segmentStore = new SegmentStore();
+            var routeStore = new RouteStoreToDisk(segmentStore, new WorldStoreToDisk());
             var segments = segmentStore
                 .LoadSegments(
                     new World { Id = "watopia", ZwiftId = ZwiftWorldId.Watopia },
@@ -141,9 +140,8 @@ namespace RoadCaptain.Tests.Unit.GameState.Repro
             // Italian villas.
             // What would happen was that RoadCaptain flipped quickly between on/off route
             // states.
-            var fileRoot = @"c:\git\RoadCaptain\src\RoadCaptain.Adapters";
-            var segmentStore = new SegmentStore(fileRoot);
-            var routeStore = new RouteStoreToDisk(segmentStore, new WorldStoreToDisk(fileRoot));
+            var segmentStore = new SegmentStore();
+            var routeStore = new RouteStoreToDisk(segmentStore, new WorldStoreToDisk());
             var segments = segmentStore
                 .LoadSegments(
                     new World { Id = "watopia", ZwiftId = ZwiftWorldId.Watopia },
@@ -198,9 +196,8 @@ namespace RoadCaptain.Tests.Unit.GameState.Repro
             // Italian villas.
             // What would happen was that RoadCaptain flipped quickly between on/off route
             // states.
-            var fileRoot = @"c:\git\RoadCaptain\src\RoadCaptain.Adapters";
-            var segmentStore = new SegmentStore(fileRoot);
-            var routeStore = new RouteStoreToDisk(segmentStore, new WorldStoreToDisk(fileRoot));
+            var segmentStore = new SegmentStore();
+            var routeStore = new RouteStoreToDisk(segmentStore, new WorldStoreToDisk());
             var segments = segmentStore
                 .LoadSegments(
                     new World { Id = "watopia", ZwiftId = ZwiftWorldId.Watopia },
