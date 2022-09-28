@@ -62,8 +62,12 @@ namespace RoadCaptain
                     return null;
                 }
 
-                if (SegmentSequenceIndex == RouteSegmentSequence.Count - 1 && IsLoop)
+                if (CurrentSegmentSequence!.Type == SegmentSequenceType.LoopEnd)
                 {
+                    // The next segment is the start of the loop.
+                    // It _can_ be that it's the very first segment sequence
+                    // however if you have a looped route with a lead-in 
+                    // that won't be the case.
                     return RouteSegmentSequence.First(seq => seq.Type == SegmentSequenceType.LoopStart);
                 }
 
@@ -133,7 +137,7 @@ namespace RoadCaptain
             {
                 if (IsLoop && CurrentSegmentSequence!.Type == SegmentSequenceType.LoopEnd)
                 {
-                    SegmentSequenceIndex = NextSegmentSequence.Index;
+                    SegmentSequenceIndex = NextSegmentSequence!.Index;
                     LoopCount++;
                 }
                 else
