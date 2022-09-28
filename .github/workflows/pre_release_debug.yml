@@ -1,4 +1,4 @@
-name: pre_release
+name: pre_release_debug
 
 on: workflow_dispatch
 
