@@ -209,7 +209,11 @@ namespace RoadCaptain.App.Runner.ViewModels
             
             if (plannedRoute.IsLoop)
             {
-                Model.LoopCount = plannedRoute.LoopCount;
+                Model.LoopText = plannedRoute.OnLeadIn ? "Lead-in to loop" : $"On loop: {plannedRoute.LoopCount}";
+            }
+            else
+            {
+                Model.LoopText = string.Empty;
             }
         }
 
