@@ -7,20 +7,19 @@ namespace RoadCaptain.App.Runner.Models
 {
     public class SegmentSequenceModel : INotifyPropertyChanged
     {
-        private readonly string _turnGlyph;
         private SegmentDirection _direction;
         private readonly double _ascent;
         private readonly double _descent;
-        private TrackPoint _pointOnSegment;
+        private TrackPoint? _pointOnSegment;
 
-        public SegmentSequenceModel(SegmentSequence segmentSequence, Segment segment, int sequenceNumber)
+        public SegmentSequenceModel(SegmentSequence segmentSequence, Segment segment)
         {
             Model = segmentSequence;
             TurnGlyph = GlyphFromTurn(segmentSequence.TurnToNextSegment);
             _ascent = Math.Round(segment.Ascent, 1);
             _descent = Math.Round(segment.Descent, 1);
             Distance = Math.Round(segment.Distance / 1000, 1);
-            SequenceNumber = sequenceNumber + 1; // Indexes are zero based...
+            SequenceNumber = segmentSequence.Index + 1; // Indexes are zero based...
             Direction = segmentSequence.Direction;
             SegmentName = segment.Name;
         }
@@ -40,20 +39,12 @@ namespace RoadCaptain.App.Runner.Models
 
         public int SequenceNumber { get; }
 
-        public string TurnGlyph
-        {
-            get => _turnGlyph;
-            private init
-            {
-                _turnGlyph = value;
-                OnPropertyChanged();
-            }
-        }
+        public string TurnGlyph { get; }
 
         public string SegmentId => Model.SegmentId;
         public double Distance { get; }
 
-        public TrackPoint PointOnSegment
+        public TrackPoint? PointOnSegment
         {
             get => _pointOnSegment;
             set
@@ -121,12 +112,12 @@ namespace RoadCaptain.App.Runner.Models
             }
         }
 
-        public string SegmentName { get; private set; }
+        public string SegmentName { get; }
 
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler? PropertyChanged;
 
         [NotifyPropertyChangedInvocator]
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }

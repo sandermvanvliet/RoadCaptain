@@ -191,7 +191,7 @@ namespace RoadCaptain.App.Runner.ViewModels
             // Set CurrentSegment and NextSegment accordingly
             if (plannedRoute.CurrentSegmentSequence != null)
             {
-                Model.CurrentSegment = new SegmentSequenceModel(plannedRoute.CurrentSegmentSequence, GetSegmentById(plannedRoute.CurrentSegmentSequence.SegmentId), plannedRoute.CurrentSegmentSequence.Index);
+                Model.CurrentSegment = new SegmentSequenceModel(plannedRoute.CurrentSegmentSequence, GetSegmentById(plannedRoute.CurrentSegmentSequence.SegmentId));
             }
             else
             {
@@ -200,7 +200,7 @@ namespace RoadCaptain.App.Runner.ViewModels
 
             if (plannedRoute.NextSegmentSequence != null)
             {
-                Model.NextSegment = new SegmentSequenceModel(plannedRoute.NextSegmentSequence, GetSegmentById(plannedRoute.NextSegmentSequence.SegmentId), plannedRoute.NextSegmentSequence.Index);
+                Model.NextSegment = new SegmentSequenceModel(plannedRoute.NextSegmentSequence, GetSegmentById(plannedRoute.NextSegmentSequence.SegmentId));
             }
             else
             {

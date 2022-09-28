@@ -217,8 +217,7 @@ namespace RoadCaptain.App.Runner.Models
             {
                 CurrentSegment = new SegmentSequenceModel(
                 route.CurrentSegmentSequence,
-                GetSegmentById(route.CurrentSegmentSequence.SegmentId),
-                route.CurrentSegmentSequence.Index);
+                GetSegmentById(route.CurrentSegmentSequence.SegmentId));
             }
             else
             {
@@ -229,8 +228,7 @@ namespace RoadCaptain.App.Runner.Models
             {
                 NextSegment = new SegmentSequenceModel(
                     route.NextSegmentSequence,
-                    GetSegmentById(route.NextSegmentSequence.SegmentId),
-                    route.NextSegmentSequence.Index);
+                    GetSegmentById(route.NextSegmentSequence.SegmentId));
             }
             else
             {
