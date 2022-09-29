@@ -83,6 +83,11 @@ namespace RoadCaptain.App.Runner.ViewModels
                         Model.WaitingReason = "Waiting for Zwift...";
                         Model.InstructionText = $"Start Zwift and start {GetActivityFromSport()} in {Model.Route.World.Name} on route:";
                         break;
+                    case InGameState:
+                        Model.UserIsInGame = true;
+                        Model.WaitingReason = "Entered the game";
+                        Model.InstructionText = "Start pedaling!";
+                        break;
                     case ErrorState errorState:
                         Model.UserIsInGame = false;
                         Model.WaitingReason = "Oops! Something went wrong...";

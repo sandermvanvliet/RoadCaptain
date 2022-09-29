@@ -55,7 +55,7 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.InGame
         }
 
         [Fact]
-        public void GivenWaitingForConnectionAndInGameStateIsReceived_WaitReasonIsEmptyString()
+        public void GivenWaitingForConnectionAndInGameStateIsReceived_WaitReasonIsEnteredGame()
         {
             WhenUpdating(new WaitingForConnectionState());
 
@@ -65,21 +65,17 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.InGame
                 .Model
                 .WaitingReason
                 .Should()
-                .BeEmpty();
+                .Be("Entered the game");
         }
 
         [Fact]
-        public void GivenWaitingForConnectionAndInGameStateIsReceived_InstructionIsEmptyString()
+        public void GivenWaitingForConnectionAndInGameStateIsReceived_InstructionIsStartPedaling()
         {
             WhenUpdating(new WaitingForConnectionState());
 
             WhenUpdating(new InGameState(1, 2));
-
-            _viewModel
-                .Model
-                .InstructionText
-                .Should()
-                .BeEmpty();
+            
+            _viewModel.Model.InstructionText.Should().Be("Start pedaling!");
         }
 
         [Fact]
