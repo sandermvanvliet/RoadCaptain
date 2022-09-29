@@ -231,6 +231,7 @@ namespace RoadCaptain.App.Runner
                 }
                 else
                 {
+                    CancelAndCleanUp(() => _listenerTask);
                     StartZwiftConnectionInitiator(credentials.AccessToken);
                 }
             }
