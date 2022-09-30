@@ -45,19 +45,6 @@ namespace RoadCaptain.App.Runner.ViewModels
 
         public void UpdateGameState(GameState gameState)
         {
-            if (GameState.IsInGame(gameState))
-            {
-                Model.UserIsInGame = true;
-                Model.WaitingReason = string.Empty;
-                Model.InstructionText = string.Empty;
-            }
-            else 
-            {
-                Model.UserIsInGame = false;
-                Model.WaitingReason = string.Empty;
-                Model.InstructionText = string.Empty;
-            }
-            
             try
             {
                 switch (gameState)
@@ -88,78 +75,93 @@ namespace RoadCaptain.App.Runner.ViewModels
                         Model.WaitingReason = "Entered the game";
                         Model.InstructionText = "Start pedaling!";
                         break;
+                    case PositionedState:
+                    case OnSegmentState:
+                        Model.UserIsInGame = true;
+                        Model.WaitingReason = "Riding to start of route";
+                        Model.InstructionText = "Keep pedaling!";
+                        break;
                     case ErrorState errorState:
                         Model.UserIsInGame = false;
                         Model.WaitingReason = "Oops! Something went wrong...";
                         Model.InstructionText = $"{errorState.Message}.\nPlease report a bug on Github";
                         break;
                     case LostRouteLockState lostRouteState:
-                    {
-                        if (lostRouteState.Route.NextSegmentId != null)
                         {
-                            var expectedSegment = GetSegmentById(lostRouteState.Route.NextSegmentId);
-                            Model.InstructionText = $"Try to make a u-turn and head to segment '{expectedSegment.Name}'";
-                        }
-                        else
-                        {
-                            Model.InstructionText = $"Try to make a u-turn to return to the route";
-                        }
+                            if (lostRouteState.Route.NextSegmentId != null)
+                            {
+                                var expectedSegment = GetSegmentById(lostRouteState.Route.NextSegmentId);
+                                Model.InstructionText = $"Try to make a u-turn and head to segment '{expectedSegment.Name}'";
+                            }
+                            else
+                            {
+                                Model.InstructionText = $"Try to make a u-turn to return to the route";
+                            }
 
-                        Model.LostRouteLock = true;
-                        break;
-                    }
+                            Model.LostRouteLock = true;
+                            break;
+                        }
                     case OnRouteState routeState:
-                    {
-                        if (Model.CurrentSegment?.SegmentId != routeState.Route.CurrentSegmentId)
                         {
-                            // Moved to next segment on route
-                            UpdateRouteModel(routeState.Route);
+                            if (Model.CurrentSegment?.SegmentId != routeState.Route.CurrentSegmentId)
+                            {
+                                // Moved to next segment on route
+                                UpdateRouteModel(routeState.Route);
+                            }
+
+                            if (Model.CurrentSegment != null)
+                            {
+                                Model.CurrentSegment.PointOnSegment = routeState.CurrentPosition;
+                            }
+
+                            Model.ElapsedAscent = routeState.ElapsedAscent;
+                            Model.ElapsedDescent = routeState.ElapsedDescent;
+                            Model.ElapsedDistance = routeState.ElapsedDistance;
+
+                            Model.UserIsInGame = true;
+                            Model.WaitingReason = string.Empty;
+                            Model.InstructionText = string.Empty;
+                            Model.LostRouteLock = false;
+
+                            break;
                         }
-
-                        if (Model.CurrentSegment != null)
-                        {
-                            Model.CurrentSegment.PointOnSegment = routeState.CurrentPosition;
-                        }
-
-                        Model.ElapsedAscent = routeState.ElapsedAscent;
-                        Model.ElapsedDescent = routeState.ElapsedDescent;
-                        Model.ElapsedDistance = routeState.ElapsedDistance;
-                            
-                        Model.LostRouteLock = false;
-                        Model.InstructionText = string.Empty;
-
-                        break;
-                    }
                     case UpcomingTurnState upcomingTurnState:
-                    {
-                        if (Model.CurrentSegment?.SegmentId != upcomingTurnState.Route.CurrentSegmentId)
                         {
-                            // Moved to next segment on route
-                            UpdateRouteModel(upcomingTurnState.Route);
+                            if (Model.CurrentSegment?.SegmentId != upcomingTurnState.Route.CurrentSegmentId)
+                            {
+                                // Moved to next segment on route
+                                UpdateRouteModel(upcomingTurnState.Route);
+                            }
+
+                            Model.CurrentSegment!.PointOnSegment = upcomingTurnState.CurrentPosition;
+                            Model.ElapsedAscent = upcomingTurnState.ElapsedAscent;
+                            Model.ElapsedDescent = upcomingTurnState.ElapsedDescent;
+                            Model.ElapsedDistance = upcomingTurnState.ElapsedDistance;
+
+                            Model.UserIsInGame = true;
+                            Model.WaitingReason = string.Empty;
+                            Model.InstructionText = string.Empty;
+                            Model.LostRouteLock = false;
+
+                            break;
                         }
-
-                        Model.CurrentSegment!.PointOnSegment = upcomingTurnState.CurrentPosition;
-                        Model.ElapsedAscent = upcomingTurnState.ElapsedAscent;
-                        Model.ElapsedDescent = upcomingTurnState.ElapsedDescent;
-                        Model.ElapsedDistance = upcomingTurnState.ElapsedDistance;
-                            
-                        Model.LostRouteLock = false;
-                        Model.InstructionText = string.Empty;
-
-                        break;
-                    }
                     case CompletedRouteState completedRoute when !Model.Route.IsLoop:
-                    {
-                        HasRouteFinished = true;
-
-                        if (Model.CurrentSegment?.SegmentId != completedRoute.Route.CurrentSegmentId)
                         {
-                            // Moved to next segment on route
-                            UpdateRouteModel(completedRoute.Route);
-                        }
+                            HasRouteFinished = true;
 
-                        break;
-                    }
+                            Model.UserIsInGame = true;
+                            Model.WaitingReason = string.Empty;
+                            Model.InstructionText = string.Empty;
+                            Model.LostRouteLock = false;
+
+                            if (Model.CurrentSegment?.SegmentId != completedRoute.Route.CurrentSegmentId)
+                            {
+                                // Moved to next segment on route
+                                UpdateRouteModel(completedRoute.Route);
+                            }
+
+                            break;
+                        }
                 }
             }
             finally
@@ -211,7 +213,7 @@ namespace RoadCaptain.App.Runner.ViewModels
             {
                 Model.NextSegment = null;
             }
-            
+
             if (plannedRoute.IsLoop)
             {
                 Model.LoopText = plannedRoute.OnLeadIn ? "Lead-in to loop" : $"On loop: {plannedRoute.LoopCount}";

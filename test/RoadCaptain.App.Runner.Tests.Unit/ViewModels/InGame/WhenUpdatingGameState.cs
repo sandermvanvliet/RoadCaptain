@@ -238,6 +238,54 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.InGame
         }
 
         [Fact]
+        public void GivenPositionedStateIsReceived_UserInGameIsTrue()
+        {
+            WhenUpdating(new PositionedState(1,2, TrackPoint.Unknown));
+
+            _viewModel.Model.UserIsInGame.Should().BeTrue();
+        }
+
+        [Fact]
+        public void GivenPositionedStateIsReceived_WaitReasonIsRidingToStartOfRoute()
+        {
+            WhenUpdating(new PositionedState(1,2, TrackPoint.Unknown));
+
+            _viewModel.Model.WaitingReason.Should().Be("Riding to start of route");
+        }
+
+        [Fact]
+        public void GivenPositionedStateIsReceived_InstructionIsKeepPedaling()
+        {
+            WhenUpdating(new PositionedState(1,2, TrackPoint.Unknown));
+
+            _viewModel.Model.InstructionText.Should().Be("Keep pedaling!");
+        }
+
+        [Fact]
+        public void GivenOnSegmentStateIsReceived_UserInGameIsTrue()
+        {
+            WhenUpdating(new OnSegmentState(1, 2, TrackPoint.Unknown, new Segment(new List<TrackPoint>()), SegmentDirection.AtoB, 0, 0, 0));
+
+            _viewModel.Model.UserIsInGame.Should().BeTrue();
+        }
+
+        [Fact]
+        public void GivenOnSegmentStateIsReceived_WaitReasonIsRidingToStartOfRoute()
+        {
+            WhenUpdating(new OnSegmentState(1, 2, TrackPoint.Unknown, new Segment(new List<TrackPoint>()), SegmentDirection.AtoB, 0, 0, 0));
+
+            _viewModel.Model.WaitingReason.Should().Be("Riding to start of route");
+        }
+
+        [Fact]
+        public void GivenOnSegmentStateIsReceived_InstructionIsKeepPedaling()
+        {
+            WhenUpdating(new OnSegmentState(1, 2, TrackPoint.Unknown, new Segment(new List<TrackPoint>()), SegmentDirection.AtoB, 0, 0, 0));
+
+            _viewModel.Model.InstructionText.Should().Be("Keep pedaling!");
+        }
+
+        [Fact]
         public void GivenOnRouteStateAndRouteLockIsLost_LostRouteLockIsTrue()
         {
             var plannedRoute = new PlannedRoute();

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using RoadCaptain.App.Runner.Models;
+using RoadCaptain.GameStates;
 
 namespace RoadCaptain.App.Runner.ViewModels
 {
@@ -11,9 +12,7 @@ namespace RoadCaptain.App.Runner.ViewModels
             : base(
                 new InGameWindowModel(DefaultSegments), DefaultSegments, null)
         {
-            Model.UserIsInGame = true;
-            Model.LostRouteLock = true;
-            Model.InstructionText = "Try to make a u-turn and head to segment 'Epic to Marina'";
+            UpdateGameState(new OnSegmentState(1, 2, TrackPoint.Unknown, new Segment(new List<TrackPoint>()), SegmentDirection.AtoB, 0, 0, 0));
         }
     }
 }
