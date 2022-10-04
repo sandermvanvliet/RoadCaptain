@@ -419,3 +419,5 @@ test/RoadCaptain.Tests.Benchmark/Results/
 
 *.drawio.bkp
 *.drawio.dtmp
+
+vendor/
