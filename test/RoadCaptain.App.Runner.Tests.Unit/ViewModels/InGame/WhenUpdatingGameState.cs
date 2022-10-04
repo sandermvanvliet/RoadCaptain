@@ -10,15 +10,7 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.InGame
 {
     public class WhenUpdatingGameState
     {
-        private World World = new() { Id = "testworld", Name = "TestWorld" };
-
-        [Fact]
-        public void GivenWaitingForConnectionState_UserInGameIsFalse()
-        {
-            WhenUpdating(new WaitingForConnectionState());
-
-            _viewModel.Model.UserIsInGame.Should().BeFalse();
-        }
+        private readonly World _world = new() { Id = "testworld", Name = "TestWorld" };
 
         [Fact]
         public void GivenWaitingForConnectionState_WaitReasonIsWaitingForConnection()
@@ -26,7 +18,7 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.InGame
             WhenUpdating(new WaitingForConnectionState());
 
             _viewModel
-                .Model
+                .CallToAction
                 .WaitingReason
                 .Should()
                 .Be("Waiting for Zwift...");
@@ -38,20 +30,10 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.InGame
             WhenUpdating(new WaitingForConnectionState());
 
             _viewModel
-                .Model
+                .CallToAction
                 .InstructionText
                 .Should()
-                .Be($"Start Zwift and start cycling in {World.Name} on route:");
-        }
-
-        [Fact]
-        public void GivenWaitingForConnectionAndInGameStateIsReceived_UserInGameIsTrue()
-        {
-            WhenUpdating(new WaitingForConnectionState());
-
-            WhenUpdating(new InGameState(1, 2));
-
-            _viewModel.Model.UserIsInGame.Should().BeTrue();
+                .Be($"Start Zwift and start cycling in {_world.Name} on route: ");
         }
 
         [Fact]
@@ -62,7 +44,7 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.InGame
             WhenUpdating(new InGameState(1, 2));
 
             _viewModel
-                .Model
+                .CallToAction
                 .WaitingReason
                 .Should()
                 .Be("Entered the game");
@@ -75,17 +57,7 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.InGame
 
             WhenUpdating(new InGameState(1, 2));
             
-            _viewModel.Model.InstructionText.Should().Be("Start pedaling!");
-        }
-
-        [Fact]
-        public void GivenInGameAndWaitingForConnectionStateIsReceived_UserInGameIsFalse()
-        {
-            WhenUpdating(new InGameState(1, 2));
-
-            WhenUpdating(new WaitingForConnectionState());
-
-            _viewModel.Model.UserIsInGame.Should().BeFalse();
+            _viewModel.CallToAction.InstructionText.Should().Be("Start pedaling!");
         }
 
         [Fact]
@@ -96,7 +68,7 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.InGame
             WhenUpdating(new WaitingForConnectionState());
 
             _viewModel
-                .Model
+                .CallToAction
                 .WaitingReason
                 .Should()
                 .Be("Connection with Zwift was lost, waiting for reconnect...");
@@ -110,20 +82,10 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.InGame
             WhenUpdating(new WaitingForConnectionState());
 
             _viewModel
-                .Model
+                .CallToAction
                 .InstructionText
                 .Should()
                 .BeEmpty();
-        }
-
-        [Fact]
-        public void GivenInGameAndConnectedStateIsReceived_UserInGameIsFalse()
-        {
-            WhenUpdating(new InGameState(1, 2));
-
-            WhenUpdating(new ConnectedToZwiftState());
-
-            _viewModel.Model.UserIsInGame.Should().BeFalse();
         }
 
         [Fact]
@@ -134,7 +96,7 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.InGame
             WhenUpdating(new ConnectedToZwiftState());
 
             _viewModel
-                .Model
+                .CallToAction
                 .WaitingReason
                 .Should()
                 .Be("Connected with Zwift");
@@ -148,20 +110,10 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.InGame
             WhenUpdating(new ConnectedToZwiftState());
 
             _viewModel
-                .Model
+                .CallToAction
                 .InstructionText
                 .Should()
-                .Be($"Start cycling in {World.Name} on route:");
-        }
-
-        [Fact]
-        public void GivenWaitingForConnectionAndConnectedStateIsReceived_UserInGameIsFalse()
-        {
-            WhenUpdating(new WaitingForConnectionState());
-
-            WhenUpdating(new ConnectedToZwiftState());
-
-            _viewModel.Model.UserIsInGame.Should().BeFalse();
+                .Be($"Start cycling in {_world.Name} on route: ");
         }
 
         [Fact]
@@ -172,7 +124,7 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.InGame
             WhenUpdating(new ConnectedToZwiftState());
 
             _viewModel
-                .Model
+                .CallToAction
                 .WaitingReason
                 .Should()
                 .Be("Connected with Zwift");
@@ -186,21 +138,10 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.InGame
             WhenUpdating(new ConnectedToZwiftState());
 
             _viewModel
-                .Model
+                .CallToAction
                 .InstructionText
                 .Should()
-                .Be($"Start cycling in {World.Name} on route:");
-        }
-
-        [Fact]
-        public void GivenWaitingForConnectionAndOnRouteStateIsReceived_UserInGameIsTrue()
-        {
-            WhenUpdating(new WaitingForConnectionState());
-
-            var plannedRoute = new PlannedRoute();
-            WhenUpdating(new OnRouteState(1, 2, new TrackPoint(1, 2, 3), new Segment(new List<TrackPoint>()), plannedRoute, SegmentDirection.AtoB, 0, 0, 0));
-
-            _viewModel.Model.UserIsInGame.Should().BeTrue();
+                .Be($"Start cycling in {_world.Name} on route: ");
         }
 
         [Fact]
@@ -210,15 +151,7 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.InGame
 
             WhenUpdating(new OnRouteState(1, 2, new TrackPoint(1, 2, 3), new Segment(new List<TrackPoint>()), new PlannedRoute(), SegmentDirection.AtoB, 0, 0, 0));
 
-            _viewModel.Model.WaitingReason.Should().BeEmpty();
-        }
-
-        [Fact]
-        public void GivenErrorStateIsReceived_UserInGameIsFalse()
-        {
-            WhenUpdating(new ErrorState(new Exception("BANG")));
-
-            _viewModel.Model.UserIsInGame.Should().BeFalse();
+            _viewModel.CallToAction?.WaitingReason.Should().BeNullOrEmpty();
         }
 
         [Fact]
@@ -226,7 +159,7 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.InGame
         {
             WhenUpdating(new ErrorState(new Exception("BANG")));
 
-            _viewModel.Model.WaitingReason.Should().Be("Oops! Something went wrong...");
+            _viewModel.CallToAction.WaitingReason.Should().Be("Oops! Something went wrong...");
         }
 
         [Fact]
@@ -234,15 +167,7 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.InGame
         {
             WhenUpdating(new ErrorState(new Exception("BANG")));
 
-            _viewModel.Model.InstructionText.Should().Be("BANG.\nPlease report a bug on Github");
-        }
-
-        [Fact]
-        public void GivenPositionedStateIsReceived_UserInGameIsTrue()
-        {
-            WhenUpdating(new PositionedState(1,2, TrackPoint.Unknown));
-
-            _viewModel.Model.UserIsInGame.Should().BeTrue();
+            _viewModel.CallToAction.InstructionText.Should().Be("BANG.\nPlease report a bug on Github");
         }
 
         [Fact]
@@ -250,7 +175,7 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.InGame
         {
             WhenUpdating(new PositionedState(1,2, TrackPoint.Unknown));
 
-            _viewModel.Model.WaitingReason.Should().Be("Riding to start of route");
+            _viewModel.CallToAction.WaitingReason.Should().Be("Riding to start of route");
         }
 
         [Fact]
@@ -258,15 +183,7 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.InGame
         {
             WhenUpdating(new PositionedState(1,2, TrackPoint.Unknown));
 
-            _viewModel.Model.InstructionText.Should().Be("Keep pedaling!");
-        }
-
-        [Fact]
-        public void GivenOnSegmentStateIsReceived_UserInGameIsTrue()
-        {
-            WhenUpdating(new OnSegmentState(1, 2, TrackPoint.Unknown, new Segment(new List<TrackPoint>()), SegmentDirection.AtoB, 0, 0, 0));
-
-            _viewModel.Model.UserIsInGame.Should().BeTrue();
+            _viewModel.CallToAction.InstructionText.Should().Be("Keep pedaling!");
         }
 
         [Fact]
@@ -274,7 +191,7 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.InGame
         {
             WhenUpdating(new OnSegmentState(1, 2, TrackPoint.Unknown, new Segment(new List<TrackPoint>()), SegmentDirection.AtoB, 0, 0, 0));
 
-            _viewModel.Model.WaitingReason.Should().Be("Riding to start of route");
+            _viewModel.CallToAction.WaitingReason.Should().Be("Riding to start of route");
         }
 
         [Fact]
@@ -282,23 +199,7 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.InGame
         {
             WhenUpdating(new OnSegmentState(1, 2, TrackPoint.Unknown, new Segment(new List<TrackPoint>()), SegmentDirection.AtoB, 0, 0, 0));
 
-            _viewModel.Model.InstructionText.Should().Be("Keep pedaling!");
-        }
-
-        [Fact]
-        public void GivenOnRouteStateAndRouteLockIsLost_LostRouteLockIsTrue()
-        {
-            var plannedRoute = new PlannedRoute();
-            plannedRoute.RouteSegmentSequence.Add(new SegmentSequence { SegmentId = "seg-1", NextSegmentId = "seg-2"});
-            plannedRoute.RouteSegmentSequence.Add(new SegmentSequence { SegmentId = "seg-2", NextSegmentId = "seg-3"});
-            plannedRoute.RouteSegmentSequence.Add(new SegmentSequence { SegmentId = "seg-3", });
-            plannedRoute.EnteredSegment("seg-1");
-            plannedRoute.EnteredSegment("seg-2");
-            WhenUpdating(new OnRouteState(1, 2, new TrackPoint(1, 2, 3), new Segment(new List<TrackPoint>()) { Id = "seg-1"}, plannedRoute, SegmentDirection.AtoB, 0, 0, 0));
-            
-            WhenUpdating(new LostRouteLockState(1, 2, new TrackPoint(1, 2, 3), new Segment(new List<TrackPoint>()) { Id = "seg-2" }, plannedRoute, SegmentDirection.AtoB, 0, 0, 0));
-
-            _viewModel.Model.LostRouteLock.Should().BeTrue();
+            _viewModel.CallToAction.InstructionText.Should().Be("Keep pedaling!");
         }
 
         [Fact]
@@ -314,25 +215,7 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.InGame
 
             WhenUpdating(new LostRouteLockState(1, 2, new TrackPoint(1, 2, 3), new Segment(new List<TrackPoint>()) { Id = "seg-2" }, plannedRoute, SegmentDirection.AtoB, 0, 0, 0));
             
-            _viewModel.Model.InstructionText.Should().Be("Try to make a u-turn and head to segment 'Segment 3'");
-        }
-
-        [Fact]
-        public void GivenRouteLockWasLostAndUserReturnsToRoute_LostRouteLockIsFalse()
-        {
-            var plannedRoute = new PlannedRoute();
-            plannedRoute.RouteSegmentSequence.Add(new SegmentSequence { SegmentId = "seg-1", NextSegmentId = "seg-2"});
-            plannedRoute.RouteSegmentSequence.Add(new SegmentSequence { SegmentId = "seg-2", NextSegmentId = "seg-3"});
-            plannedRoute.RouteSegmentSequence.Add(new SegmentSequence { SegmentId = "seg-3", });
-            plannedRoute.EnteredSegment("seg-1");
-            plannedRoute.EnteredSegment("seg-2");
-            WhenUpdating(new OnRouteState(1, 2, new TrackPoint(1, 2, 3), new Segment(new List<TrackPoint>()) { Id = "seg-1"}, plannedRoute, SegmentDirection.AtoB, 0, 0, 0));
-            
-            WhenUpdating(new LostRouteLockState(1, 2, new TrackPoint(1, 2, 3), new Segment(new List<TrackPoint>()) { Id = "seg-2" }, plannedRoute, SegmentDirection.AtoB, 0, 0, 0));
-
-            WhenUpdating(new OnRouteState(1, 2, new TrackPoint(1, 2, 3), new Segment(new List<TrackPoint>()) { Id = "seg-2"}, plannedRoute, SegmentDirection.AtoB, 0, 0, 0));
-
-            _viewModel.Model.LostRouteLock.Should().BeFalse();
+            _viewModel.CallToAction.InstructionText.Should().Be("Try to make a u-turn and head to segment 'Segment 3'");
         }
 
         [Fact]
@@ -350,7 +233,7 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.InGame
 
             WhenUpdating(new OnRouteState(1, 2, new TrackPoint(1, 2, 3), new Segment(new List<TrackPoint>()) { Id = "seg-2"}, plannedRoute, SegmentDirection.AtoB, 0, 0, 0));
 
-            _viewModel.Model.InstructionText.Should().BeEmpty();
+            _viewModel.CallToAction?.InstructionText.Should().BeNullOrEmpty();
         }
 
         [Fact]
@@ -381,7 +264,7 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.InGame
             {
                 Route = new PlannedRoute
                 {
-                    World = World,
+                    World = _world,
                     RouteSegmentSequence =
                     {
                         new SegmentSequence
@@ -403,7 +286,7 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.InGame
                 }
             };
 
-            _viewModel = new InGameNavigationWindowViewModel(inGameWindowModel, segments, null);
+            _viewModel = new InGameNavigationWindowViewModel(inGameWindowModel, segments, null, new NopMonitoringEvents());
         }
 
 

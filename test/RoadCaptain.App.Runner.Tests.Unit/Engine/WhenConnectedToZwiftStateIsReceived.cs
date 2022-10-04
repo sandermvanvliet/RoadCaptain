@@ -70,7 +70,7 @@ namespace RoadCaptain.App.Runner.Tests.Unit.Engine
         [Fact]
         public void GivenPreviousStateWasOnSegmentState_InGameWindowIsClosed()
         {
-            WindowService.ShowInGameWindow(new InGameNavigationWindowViewModel(new InGameWindowModel(new List<Segment>()), new List<Segment>(), null));
+            WindowService.ShowInGameWindow(new InGameNavigationWindowViewModel(new InGameWindowModel(new List<Segment>()), new List<Segment>(), null, null));
 
             ReceiveGameState(new OnSegmentState(1234, 12345, new TrackPoint(1,2,3), new Segment(new List<TrackPoint>()), SegmentDirection.AtoB, 0 ,0, 0));
 
@@ -87,7 +87,7 @@ namespace RoadCaptain.App.Runner.Tests.Unit.Engine
                 .StartingAt("watopia-beach-island-loop-001")
                 .Build());
 
-            WindowService.ShowInGameWindow(new InGameNavigationWindowViewModel(new InGameWindowModel(new List<Segment>()), new List<Segment>(), null));
+            WindowService.ShowInGameWindow(new InGameNavigationWindowViewModel(new InGameWindowModel(new List<Segment>()), new List<Segment>(), null, null));
 
             ReceiveGameState(new WaitingForConnectionState());
 

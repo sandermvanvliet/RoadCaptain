@@ -17,8 +17,10 @@ namespace RoadCaptain.App.Runner.ViewModels
         private readonly List<Segment> _segments;
         private bool _hasRouteFinished;
         private readonly IZwiftGameConnection _gameConnection;
+        private CallToActionViewModel? _callToAction;
+        private readonly MonitoringEvents _monitoringEvents;
 
-        public InGameNavigationWindowViewModel(InGameWindowModel inGameWindowModel, List<Segment> segments, IZwiftGameConnection gameConnection)
+        public InGameNavigationWindowViewModel(InGameWindowModel inGameWindowModel, List<Segment> segments, IZwiftGameConnection gameConnection, MonitoringEvents monitoringEvents)
         {
             Model = inGameWindowModel;
             Model.PropertyChanged += (_, args) =>
@@ -34,6 +36,7 @@ namespace RoadCaptain.App.Runner.ViewModels
 
             _segments = segments;
             _gameConnection = gameConnection;
+            _monitoringEvents = monitoringEvents;
 
             EndActivityCommand = new AsyncRelayCommand(
                 _ => EndActivity(),
@@ -45,62 +48,63 @@ namespace RoadCaptain.App.Runner.ViewModels
 
         public void UpdateGameState(GameState gameState)
         {
+            _monitoringEvents.Information($"ViewModel state transition from {(_previousState == null ? "none" : _previousState.GetType().Name)} to {gameState.GetType().Name}");
+
             try
             {
                 switch (gameState)
                 {
                     case LoggedInState:
                     case ReadyToGoState:
-                        Model.UserIsInGame = false;
-                        Model.WaitingReason = "Waiting for Zwift...";
-                        Model.InstructionText = $"Start Zwift and start {GetActivityFromSport()} in {Model.Route.World.Name} on route:";
+                        CallToAction = new CallToActionViewModel(
+                                "Waiting for Zwift...",
+                                $"Start Zwift and start {GetActivityFromSport()} in {Model.Route.World.Name} on route: {Model.Route.ZwiftRouteName}");
                         break;
                     case ConnectedToZwiftState:
-                        Model.UserIsInGame = false;
-                        Model.WaitingReason = "Connected with Zwift";
-                        Model.InstructionText = $"Start {GetActivityFromSport()} in {Model.Route.World.Name} on route:";
+                        CallToAction = new CallToActionViewModel(
+                                "Connected with Zwift",
+                                $"Start {GetActivityFromSport()} in {Model.Route.World.Name} on route: {Model.Route.ZwiftRouteName}");
                         break;
                     case WaitingForConnectionState when GameState.IsInGame(_previousState):
-                        Model.UserIsInGame = false;
-                        Model.WaitingReason = "Connection with Zwift was lost, waiting for reconnect...";
-                        Model.InstructionText = string.Empty;
+                        CallToAction = new CallToActionViewModel(
+                                "Connection with Zwift was lost, waiting for reconnect...",
+                                string.Empty);
                         break;
                     case WaitingForConnectionState:
-                        Model.UserIsInGame = false;
-                        Model.WaitingReason = "Waiting for Zwift...";
-                        Model.InstructionText = $"Start Zwift and start {GetActivityFromSport()} in {Model.Route.World.Name} on route:";
+                        CallToAction = new CallToActionViewModel(
+                                "Waiting for Zwift...",
+                                $"Start Zwift and start {GetActivityFromSport()} in {Model.Route.World.Name} on route: {Model.Route.ZwiftRouteName}");
                         break;
                     case InGameState:
-                        Model.UserIsInGame = true;
-                        Model.WaitingReason = "Entered the game";
-                        Model.InstructionText = "Start pedaling!";
+                        CallToAction = new CallToActionViewModel(
+                                "Entered the game",
+                                "Start pedaling!");
                         break;
                     case PositionedState:
                     case OnSegmentState:
-                        Model.UserIsInGame = true;
-                        Model.WaitingReason = "Riding to start of route";
-                        Model.InstructionText = "Keep pedaling!";
+                        CallToAction = new CallToActionViewModel(
+                                "Riding to start of route",
+                                "Keep pedaling!");
                         break;
                     case ErrorState errorState:
-                        Model.UserIsInGame = false;
-                        Model.WaitingReason = "Oops! Something went wrong...";
-                        Model.InstructionText = $"{errorState.Message}.\nPlease report a bug on Github";
+                        CallToAction = new CallToActionViewModel(
+                                "Oops! Something went wrong...",
+                                $"{errorState.Message}.\nPlease report a bug on Github",
+                                "#FF0000");
                         break;
                     case LostRouteLockState lostRouteState:
+                        var instructionText = "Try to make a u-turn to return to the route";
+                        if (lostRouteState.Route.NextSegmentId != null)
                         {
-                            if (lostRouteState.Route.NextSegmentId != null)
-                            {
-                                var expectedSegment = GetSegmentById(lostRouteState.Route.NextSegmentId);
-                                Model.InstructionText = $"Try to make a u-turn and head to segment '{expectedSegment.Name}'";
-                            }
-                            else
-                            {
-                                Model.InstructionText = $"Try to make a u-turn to return to the route";
-                            }
-
-                            Model.LostRouteLock = true;
-                            break;
+                            var expectedSegment = GetSegmentById(lostRouteState.Route.NextSegmentId);
+                            instructionText =
+                                $"Try to make a u-turn and head to segment '{expectedSegment.Name}'";
                         }
+                        CallToAction = new CallToActionViewModel(
+                                "Lost route lock",
+                                instructionText);
+
+                        break;
                     case OnRouteState routeState:
                         {
                             if (Model.CurrentSegment?.SegmentId != routeState.Route.CurrentSegmentId)
@@ -118,10 +122,7 @@ namespace RoadCaptain.App.Runner.ViewModels
                             Model.ElapsedDescent = routeState.ElapsedDescent;
                             Model.ElapsedDistance = routeState.ElapsedDistance;
 
-                            Model.UserIsInGame = true;
-                            Model.WaitingReason = string.Empty;
-                            Model.InstructionText = string.Empty;
-                            Model.LostRouteLock = false;
+                            CallToAction = null;
 
                             break;
                         }
@@ -138,21 +139,15 @@ namespace RoadCaptain.App.Runner.ViewModels
                             Model.ElapsedDescent = upcomingTurnState.ElapsedDescent;
                             Model.ElapsedDistance = upcomingTurnState.ElapsedDistance;
 
-                            Model.UserIsInGame = true;
-                            Model.WaitingReason = string.Empty;
-                            Model.InstructionText = string.Empty;
-                            Model.LostRouteLock = false;
+                            CallToAction = null;
 
                             break;
                         }
-                    case CompletedRouteState completedRoute when !Model.Route.IsLoop:
+                    case CompletedRouteState completedRoute when !completedRoute.Route.IsLoop:
                         {
                             HasRouteFinished = true;
 
-                            Model.UserIsInGame = true;
-                            Model.WaitingReason = string.Empty;
-                            Model.InstructionText = string.Empty;
-                            Model.LostRouteLock = false;
+                            CallToAction = null;
 
                             if (Model.CurrentSegment?.SegmentId != completedRoute.Route.CurrentSegmentId)
                             {
@@ -183,9 +178,20 @@ namespace RoadCaptain.App.Runner.ViewModels
 
         public ulong LastSequenceNumber { get; set; }
 
+        public CallToActionViewModel? CallToAction
+        {
+            get => _callToAction;
+            set
+            {
+                if (value == _callToAction) return;
+                _callToAction = value;
+                this.RaisePropertyChanged();
+            }
+        }
+
         private string GetActivityFromSport()
         {
-            return Model.Route.Sport switch
+            return Model.Route?.Sport switch
             {
                 SportType.Cycling => "cycling",
                 SportType.Running => "running",

@@ -1,0 +1,27 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:viewModels="clr-namespace:RoadCaptain.App.Runner.ViewModels"
+             mc:Ignorable="d" 
+             Height="234" 
+             Width="400"
+             Background="Transparent"
+             x:Class="RoadCaptain.App.Runner.Controls.CallToAction">
+    <Design.DataContext><viewModels:DesignTimeCallToActionViewModel /></Design.DataContext>
+    <Border 
+            CornerRadius="20"
+            Background="{Binding Path=BackgroundColor}" BorderBrush="#cccccc"
+            Padding="20">
+        <StackPanel Orientation="Vertical">
+            <TextBlock Text="{Binding Path=WaitingReason}"
+                       Foreground="White"
+                       FontWeight="ExtraBold"
+                       FontSize="32"
+                       TextWrapping="Wrap" />
+            <TextBlock Text="{Binding Path=InstructionText}"
+                       Foreground="White" FontWeight="Bold" FontSize="22" TextWrapping="Wrap"
+                       Margin="0,12,0,0" />
+        </StackPanel>
+    </Border>
+</UserControl>

@@ -19,10 +19,6 @@ namespace RoadCaptain.App.Runner.Models
         private double _totalAscent;
         private double _totalDescent;
         private double _totalDistance;
-        private bool _userIsInGame;
-        private string _waitingReason = "Waiting for Zwift connection...";
-        private string _instructionText = string.Empty;
-        private bool _lostRouteLock;
         private string _loopText = string.Empty;
 
         public InGameWindowModel(List<Segment> segments)
@@ -41,28 +37,6 @@ namespace RoadCaptain.App.Runner.Models
                 }
 
                 _windowTitle = value;
-                this.RaisePropertyChanged();
-            }
-        }
-
-        public bool UserIsInGame
-        {
-            get => _userIsInGame;
-            set
-            {
-                if (value == _userIsInGame) return;
-                _userIsInGame = value;
-                this.RaisePropertyChanged();
-            }
-        }
-
-        public bool LostRouteLock
-        {
-            get => _lostRouteLock;
-            set
-            {
-                if (value == _lostRouteLock) return;
-                _lostRouteLock = value;
                 this.RaisePropertyChanged();
             }
         }
@@ -171,28 +145,6 @@ namespace RoadCaptain.App.Runner.Models
             {
                 if (Equals(value, _nextSegment)) return;
                 _nextSegment = value;
-                this.RaisePropertyChanged();
-            }
-        }
-
-        public string WaitingReason
-        {
-            get => _waitingReason;
-            set
-            {
-                if (value == _waitingReason) return;
-                _waitingReason = value;
-                this.RaisePropertyChanged();
-            }
-        }
-
-        public string InstructionText
-        {
-            get => _instructionText;
-            set
-            {
-                if (value == _instructionText) return;
-                _instructionText = value;
                 this.RaisePropertyChanged();
             }
         }
