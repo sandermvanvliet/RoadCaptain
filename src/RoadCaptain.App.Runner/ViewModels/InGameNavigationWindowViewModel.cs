@@ -48,7 +48,10 @@ namespace RoadCaptain.App.Runner.ViewModels
 
         public void UpdateGameState(GameState gameState)
         {
-            _monitoringEvents.Information($"ViewModel state transition from {(_previousState == null ? "none" : _previousState.GetType().Name)} to {gameState.GetType().Name}");
+            if (_previousState == null || gameState.GetType() != _previousState.GetType())
+            {
+                _monitoringEvents.Information($"ViewModel state transition from {(_previousState == null ? "none" : _previousState.GetType().Name)} to {gameState.GetType().Name}");
+            }
 
             try
             {
@@ -85,6 +88,12 @@ namespace RoadCaptain.App.Runner.ViewModels
                         CallToAction = new CallToActionViewModel(
                                 "Riding to start of route",
                                 "Keep pedaling!");
+                        break;
+                    case IncorrectConnectionSecretState:
+                        CallToAction = new CallToActionViewModel(
+                            "Zwift connection failed",
+                            "Retrying connection...",
+                            "#FF0000");
                         break;
                     case ErrorState errorState:
                         CallToAction = new CallToActionViewModel(

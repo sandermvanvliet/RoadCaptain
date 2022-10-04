@@ -171,6 +171,22 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.InGame
         }
 
         [Fact]
+        public void GivenIncorrectConnectionSecretStateIsReceived_WaitReasonIsOopsSomethingWentWrong()
+        {
+            WhenUpdating(new IncorrectConnectionSecretState());
+
+            _viewModel.CallToAction.WaitingReason.Should().Be("Zwift connection failed");
+        }
+
+        [Fact]
+        public void GivenIncorrectConnectionSecretStateIsReceived_InstructionIsPleaseReportBug()
+        {
+            WhenUpdating(new IncorrectConnectionSecretState());
+
+            _viewModel.CallToAction.InstructionText.Should().Be("Retrying connection...");
+        }
+
+        [Fact]
         public void GivenPositionedStateIsReceived_WaitReasonIsRidingToStartOfRoute()
         {
             WhenUpdating(new PositionedState(1,2, TrackPoint.Unknown));
