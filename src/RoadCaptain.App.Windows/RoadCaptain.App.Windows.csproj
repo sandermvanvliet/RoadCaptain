@@ -8,6 +8,8 @@
 		<UseWindowsForms>true</UseWindowsForms>
 	</PropertyGroup>
 
+	<Import Project="..\..\AvaloniaReferences.props" />
+
 	<ItemGroup>
 		<ProjectReference Include="..\RoadCaptain.App.Shared\RoadCaptain.App.Shared.csproj" />
 	</ItemGroup>

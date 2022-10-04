@@ -1,5 +1,16 @@
 <Project>
-	<!--<Import Project="vendor\AvaloniaUI\Avalonia.props" Condition="Exists('vendor\AvaloniaUI\Avalonia.props')" />-->
+	<!--<Import Project="vendor\AvaloniaUI\AvaloniaLocal.props" Condition="Exists('vendor\AvaloniaUI\AvaloniaLocal.props')" />
+	<Import Project="vendor\AvaloniaUI\Avalonia.targets" Condition="Exists('vendor\AvaloniaUI\Avalonia.targets')" />
+	<Import Project="vendor\AvaloniaUI\Avalonia.props" Condition="Exists('vendor\AvaloniaUI\Avalonia.props')" />
+	<PropertyGroup>
+		<AvaloniaBuildTasksLocation>Avalonia.Build.Tasks.dll</AvaloniaBuildTasksLocation>
+	</PropertyGroup>
+
+	<Target Name="CopyAvaloniaNativeLibs" AfterTargets="Build">
+		<Copy SourceFiles="$(SolutionDir)vendor\AvaloniaUI\libSkiaSharp.dll" DestinationFolder="$(OutDir)" />
+		<Copy SourceFiles="$(SolutionDir)vendor\AvaloniaUI\libHarfBuzzSharp.dll" DestinationFolder="$(OutDir)" />
+	</Target>-->
+	
 	<ItemGroup>
 		<PackageReference Include="Avalonia" Version="0.10.18" Condition="!Exists('vendor\AvaloniaUI\Avalonia.props')" />
 		<PackageReference Include="Avalonia.Desktop" Version="0.10.18" Condition="!Exists('vendor\AvaloniaUI\Avalonia.props')" />

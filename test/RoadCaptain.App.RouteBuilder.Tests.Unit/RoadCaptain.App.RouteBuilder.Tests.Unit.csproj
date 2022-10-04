@@ -25,6 +25,9 @@
 		<PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.16.0" />
 		<PackageReference Include="Xunit.StaFact" Version="1.1.11" />
 	</ItemGroup>
+	
+	<Import Project="..\..\AvaloniaReferences.props" />
+
 
 	<ItemGroup>
 		<ProjectReference Include="..\..\src\RoadCaptain.Adapters\RoadCaptain.Adapters.csproj" />
