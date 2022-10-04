@@ -1,0 +1,9 @@
+<Project>
+	<!--<Import Project="vendor\AvaloniaUI\Avalonia.props" Condition="Exists('vendor\AvaloniaUI\Avalonia.props')" />-->
+	<ItemGroup>
+		<PackageReference Include="Avalonia" Version="0.10.18" Condition="!Exists('vendor\AvaloniaUI\Avalonia.props')" />
+		<PackageReference Include="Avalonia.Desktop" Version="0.10.18" Condition="!Exists('vendor\AvaloniaUI\Avalonia.props')" />
+		<PackageReference Condition="'$(Configuration)' == 'Debug' And !Exists('vendor\AvaloniaUI\Avalonia.props')" Include="Avalonia.Diagnostics" Version="0.10.18" />
+		<PackageReference Include="Avalonia.ReactiveUI" Version="0.10.18" Condition="!Exists('vendor\AvaloniaUI\Avalonia.props')" />
+	</ItemGroup>
+</Project>

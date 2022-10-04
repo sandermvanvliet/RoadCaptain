@@ -6,6 +6,7 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{0408CC06-0F00-4C4D-A341-ACB26E2809A2}"
 	ProjectSection(SolutionItems) = preProject
 		Architecture.md = Architecture.md
+		AvaloniaReferences.props = AvaloniaReferences.props
 		Changelog.md = Changelog.md
 		Directory.Build.props = Directory.Build.props
 		icon.png = icon.png
@@ -55,7 +56,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RoadCaptain.App.Shared.Test
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RoadCaptain.App.RouteBuilder.Tests.Unit", "test\RoadCaptain.App.RouteBuilder.Tests.Unit\RoadCaptain.App.RouteBuilder.Tests.Unit.csproj", "{8D794FEF-E77E-4812-A0C8-F285578C3AD4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RoadCaptain.Tests.Benchmark", "test\RoadCaptain.Tests.Benchmark\RoadCaptain.Tests.Benchmark.csproj", "{7C276ECC-83F3-4C80-AB34-86DB82E7F8B4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RoadCaptain.Tests.Benchmark", "test\RoadCaptain.Tests.Benchmark\RoadCaptain.Tests.Benchmark.csproj", "{7C276ECC-83F3-4C80-AB34-86DB82E7F8B4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -253,7 +254,6 @@ Global
 		{A00865F7-B19B-43F6-9710-55A247588729}.ReleaseFull|x86.ActiveCfg = Release|Any CPU
 		{A00865F7-B19B-43F6-9710-55A247588729}.ReleaseFull|x86.Build.0 = Release|Any CPU
 		{8F2FBE3A-4381-4673-B8A8-1B03D44D0886}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8F2FBE3A-4381-4673-B8A8-1B03D44D0886}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8F2FBE3A-4381-4673-B8A8-1B03D44D0886}.Debug|x64.ActiveCfg = Debug|Any CPU
 		{8F2FBE3A-4381-4673-B8A8-1B03D44D0886}.Debug|x64.Build.0 = Debug|Any CPU
 		{8F2FBE3A-4381-4673-B8A8-1B03D44D0886}.Debug|x86.ActiveCfg = Debug|Any CPU
@@ -271,7 +271,6 @@ Global
 		{8F2FBE3A-4381-4673-B8A8-1B03D44D0886}.ReleaseFull|x86.ActiveCfg = Release|Any CPU
 		{8F2FBE3A-4381-4673-B8A8-1B03D44D0886}.ReleaseFull|x86.Build.0 = Release|Any CPU
 		{2811B499-EA37-4560-952F-361E9410EB09}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2811B499-EA37-4560-952F-361E9410EB09}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2811B499-EA37-4560-952F-361E9410EB09}.Debug|x64.ActiveCfg = Debug|Any CPU
 		{2811B499-EA37-4560-952F-361E9410EB09}.Debug|x64.Build.0 = Debug|Any CPU
 		{2811B499-EA37-4560-952F-361E9410EB09}.Debug|x86.ActiveCfg = Debug|Any CPU
