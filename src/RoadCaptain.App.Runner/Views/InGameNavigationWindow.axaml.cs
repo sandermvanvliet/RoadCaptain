@@ -52,13 +52,21 @@ namespace RoadCaptain.App.Runner.Views
         {
             AvaloniaXamlLoader.Load(this);
 
-            if (_userPreferences.InGameWindowLocation != null &&
-                _userPreferences.InGameWindowLocation != new Point(0, 0))
+            if (_userPreferences.InGameWindowLocation is { } &&
+                HasSensibleLocation(_userPreferences.InGameWindowLocation.Value.X, _userPreferences.InGameWindowLocation.Value.Y))
             {
                 Position = new PixelPoint(
                     _userPreferences.InGameWindowLocation.Value.X,
                     _userPreferences.InGameWindowLocation.Value.Y);
             }
+        }
+
+        private bool HasSensibleLocation(int x, int y)
+        {
+            return x >= 0 &&
+                   x <= Screens.Primary.Bounds.Width &&
+                   y >= 0 &&
+                   y <= Screens.Primary.Bounds.Height;
         }
 
         private void InGameNavigationWindow_OnActivated(object? sender, EventArgs e)
@@ -80,8 +88,11 @@ namespace RoadCaptain.App.Runner.Views
 
         private void WindowBase_OnPositionChanged(object? sender, PixelPointEventArgs e)
         {
-            _userPreferences.InGameWindowLocation = new Point(Position.X, Position.Y);
-            _userPreferences.Save();
+            if (HasSensibleLocation(Position.X, Position.Y))
+            {
+                _userPreferences.InGameWindowLocation = new Point(Position.X, Position.Y);
+                _userPreferences.Save();
+            }
         }
 
         private void GameStateReceived(GameState gameState)
