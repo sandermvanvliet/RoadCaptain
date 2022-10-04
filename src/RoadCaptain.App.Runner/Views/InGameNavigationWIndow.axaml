@@ -94,7 +94,7 @@
 								 HorizontalAlignment="Stretch"
 								 Height="18"
 								 Background="#C0C0C0" Foreground="#FF6141"
-								 Value="{Binding Path=Model.CurrentSegment.SequenceNumber,FallbackValue=0, TargetNullValue=0,Mode=OneWay}"
+								 Value="{Binding Path=Model.Route.SegmentSequenceIndex,FallbackValue=0, TargetNullValue=0,Mode=OneWay}"
 								 Minimum="0"
 								 Maximum="{Binding Path=Model.Route.RouteSegmentSequence.Count,FallbackValue=0, TargetNullValue=0,Mode=OneWay}"
 								 Grid.Row="1"
@@ -107,7 +107,8 @@
 			<Grid
 				  Grid.Row="1"
 				  DataContext="{Binding Path=Model.CurrentSegment}"
-				  Background="White">
+				  Background="White"
+                  Name="CurrentSegmentGrid">
 				<Grid.Styles>
 					<Style Selector="TextBlock">
 						<Setter Property="Foreground" Value="Black" />
@@ -226,7 +227,7 @@
 						</Style>
 					</StackPanel.Styles>
 					<TextBlock Text="Segment" Margin="15,0,0,0" />
-					<TextBlock Text="{Binding Path=Model.CurrentSegment.SequenceNumber,FallbackValue=0, TargetNullValue=0,Mode=OneWay}" />
+					<TextBlock Text="{Binding Path=Model.Route.SegmentSequenceIndex,FallbackValue=0, TargetNullValue=0,Mode=OneWay}" />
 					<TextBlock Text="of"  />
 					<TextBlock Text="{Binding Path=Model.Route.RouteSegmentSequence.Count,FallbackValue=0, TargetNullValue=0,Mode=OneWay}" />
 					<TextBlock Text="{Binding Path=Model.LoopText,Mode=OneWay}"
