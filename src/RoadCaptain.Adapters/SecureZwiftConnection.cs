@@ -236,7 +236,10 @@ namespace RoadCaptain.Adapters
 
             try
             {
-                _socket?.Shutdown(SocketShutdown.Both);
+                if (_socket is { Connected: true })
+                {
+                    _socket.Shutdown(SocketShutdown.Both);
+                }
             }
             catch (SocketException)
             {
