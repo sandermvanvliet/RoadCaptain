@@ -168,7 +168,7 @@ namespace RoadCaptain.Adapters
         {
             if(_output != null && _output.BaseStream.CanWrite)
             {
-                var serialized = JsonConvert.SerializeObject(new { position.Latitude, position.Longitude, position.CoordinatesDecimal}, Formatting.None);
+                var serialized = JsonConvert.SerializeObject(new { Timestamp = DateTime.Now, position.Latitude, position.Longitude, position.CoordinatesDecimal}, Formatting.None);
                 _output.WriteLine(serialized);
             }
         }
