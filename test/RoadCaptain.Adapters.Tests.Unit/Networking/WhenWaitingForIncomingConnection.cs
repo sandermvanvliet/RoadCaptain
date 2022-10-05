@@ -11,20 +11,22 @@ namespace RoadCaptain.Adapters.Tests.Unit.Networking
     public class WhenWaitingForIncomingConnection
     {
         private const int TestTimeoutMilliseconds = 250;
-        private readonly NetworkConnection _networkConnection;
-        private bool _noConnectionWatchdogRaised;
-        private bool _connectionAcceptedRaised;
-        private readonly int _port;
-        private bool _noDataReceived;
-        private bool _connectionLostRaised;
-        private readonly List<byte> _receivedData = new();
+        private const int AcceptTimeoutMilliseconds = 100;
+        private const int DataTimeoutMilliseconds = 100;
         private readonly AutoResetEvent _autoResetEvent = new(false);
+        private readonly NetworkConnection _networkConnection;
+        private readonly int _port;
+        private readonly List<byte> _receivedData = new();
+        private bool _connectionAcceptedRaised;
+        private bool _connectionLostRaised;
+        private bool _noConnectionWatchdogRaised;
+        private bool _noDataReceived;
 
         public WhenWaitingForIncomingConnection()
         {
             var random = new Random();
             _port = random.Next(1025, 10025);
-            _networkConnection = new NetworkConnection(_port, 100, 100);
+            _networkConnection = new NetworkConnection(_port, AcceptTimeoutMilliseconds, DataTimeoutMilliseconds);
             _networkConnection.IncomingConnectionWatchdog += (_, _) => _noConnectionWatchdogRaised = true;
             _networkConnection.IncomingDataWatchdog += (_, _) => _noDataReceived = true;
             _networkConnection.Data += (_, args) => _receivedData.AddRange(args.Data);
@@ -35,21 +37,13 @@ namespace RoadCaptain.Adapters.Tests.Unit.Networking
         [Fact]
         public void GivenNoConnectionAfterTimeout_NoConnectionEventIsRaised()
         {
-            var closeTask = Task.Factory.StartNew(() =>
+            WhenTestingConnection(_ =>
             {
-                _autoResetEvent.WaitOne(TestTimeoutMilliseconds);
-                _networkConnection.Stop();
-            });
+                WaitForConnectionToListen();
 
-            try
-            {
-                _networkConnection.StartAsync().GetAwaiter().GetResult();
-            }
-            finally
-            {
-                _autoResetEvent.Set();
-                closeTask.Wait();
-            }
+                // Wait for the accept timeout to expire
+                Thread.Sleep(AcceptTimeoutMilliseconds);
+            });
 
             _noConnectionWatchdogRaised.Should().BeTrue();
         }
@@ -57,37 +51,14 @@ namespace RoadCaptain.Adapters.Tests.Unit.Networking
         [Fact]
         public void GivenConnectionWithinTimeout_ConnectionAcceptedEventIsRaised()
         {
-            var clientSocket = GivenClientSocket();
-
-            var closeTask = Task.Factory.StartNew(() =>
+            WhenTestingConnection(clientSocket =>
             {
-                _autoResetEvent.WaitOne(TestTimeoutMilliseconds);
-                _networkConnection.Stop();
+                WaitForConnectionToListen();
+
+                clientSocket.Connect(new IPEndPoint(IPAddress.Loopback, _port));
+
+                WaitForProcessingToHappen();
             });
-
-            try
-            {
-                var testTask = Task.Factory.StartNew(() =>
-                {
-                    WaitForConnectionToListen();
-
-                    clientSocket.Connect(new IPEndPoint(IPAddress.Loopback, _port));
-
-                    clientSocket.Close();
-                    clientSocket.Dispose();
-
-                    WaitForProcessingToHappen();
-                });
-
-                var startTask = Task.Factory.StartNew(() => _networkConnection.StartAsync());
-
-                Task.WhenAll(startTask, testTask).GetAwaiter().GetResult();
-            }
-            finally
-            {
-                _autoResetEvent.Set();
-                closeTask.Wait();
-            }
 
             _connectionAcceptedRaised.Should().BeTrue();
         }
@@ -95,38 +66,15 @@ namespace RoadCaptain.Adapters.Tests.Unit.Networking
         [Fact]
         public void GivenConnectionButNoDataWithinTimeout_NoDataEventIsRaised()
         {
-            var clientSocket = GivenClientSocket();
-
-            var closeTask = Task.Factory.StartNew(() =>
+            WhenTestingConnection(clientSocket =>
             {
-                _autoResetEvent.WaitOne(TestTimeoutMilliseconds);
-                _networkConnection.Stop();
+                WaitForConnectionToListen();
+
+                clientSocket.Connect(new IPEndPoint(IPAddress.Loopback, _port));
+
+                // Receive timeout is 100ms so wait longer than that
+                Thread.Sleep(DataTimeoutMilliseconds + 10);
             });
-
-            try
-            {
-                var testTask = Task.Factory.StartNew(() =>
-                {
-                    WaitForConnectionToListen();
-
-                    clientSocket.Connect(new IPEndPoint(IPAddress.Loopback, _port));
-
-                    // Receive timeout is 100ms so wait longer than that
-                    Thread.Sleep(100);
-
-                    clientSocket.Close();
-                    clientSocket.Dispose();
-                });
-
-                var startTask = Task.Factory.StartNew(() => _networkConnection.StartAsync());
-
-                Task.WhenAll(startTask, testTask).GetAwaiter().GetResult();
-            }
-            finally
-            {
-                _autoResetEvent.Set();
-                closeTask.Wait();
-            }
 
             _noDataReceived.Should().BeTrue();
         }
@@ -134,39 +82,16 @@ namespace RoadCaptain.Adapters.Tests.Unit.Networking
         [Fact]
         public void GivenConnectionAndDataWithinTimeout_DataEventIsRaised()
         {
-            var clientSocket = GivenClientSocket();
-
-            var closeTask = Task.Factory.StartNew(() =>
+            WhenTestingConnection(clientSocket =>
             {
-                _autoResetEvent.WaitOne(TestTimeoutMilliseconds);
-                _networkConnection.Stop();
+                WaitForConnectionToListen();
+
+                clientSocket.Connect(new IPEndPoint(IPAddress.Loopback, _port));
+
+                clientSocket.Send(new byte[] { 0x1, 0x2, 0x3 });
+
+                WaitForProcessingToHappen();
             });
-
-            try
-            {
-                var testTask = Task.Factory.StartNew(() =>
-                {
-                    WaitForConnectionToListen();
-
-                    clientSocket.Connect(new IPEndPoint(IPAddress.Loopback, _port));
-
-                    clientSocket.Send(new byte[] { 0x1, 0x2, 0x3 });
-
-                    clientSocket.Close();
-                    clientSocket.Dispose();
-
-                    WaitForProcessingToHappen();
-                });
-
-                var startTask = Task.Factory.StartNew(() => _networkConnection.StartAsync());
-
-                Task.WhenAll(startTask, testTask).GetAwaiter().GetResult();
-            }
-            finally
-            {
-                _autoResetEvent.Set();
-                closeTask.Wait();
-            }
 
             _receivedData
                 .Should()
@@ -176,43 +101,20 @@ namespace RoadCaptain.Adapters.Tests.Unit.Networking
         [Fact]
         public void GivenConnectionAndDataWithinTimeoutInMultipleSends_DataEventIsRaised()
         {
-            var clientSocket = GivenClientSocket();
-
-            var closeTask = Task.Factory.StartNew(() =>
+            WhenTestingConnection(clientSocket =>
             {
-                _autoResetEvent.WaitOne(TestTimeoutMilliseconds);
-                _networkConnection.Stop();
+                WaitForConnectionToListen();
+
+                clientSocket.Connect(new IPEndPoint(IPAddress.Loopback, _port));
+
+                clientSocket.Send(new byte[] { 0x1, 0x2, 0x3 });
+
+                clientSocket.Send(new byte[] { 0x4 });
+
+                clientSocket.Send(new byte[] { 0x5, 0x6, 0x7 });
+
+                WaitForProcessingToHappen();
             });
-
-            try
-            {
-                var testTask = Task.Factory.StartNew(() =>
-                {
-                    WaitForConnectionToListen();
-
-                    clientSocket.Connect(new IPEndPoint(IPAddress.Loopback, _port));
-
-                    clientSocket.Send(new byte[] { 0x1, 0x2, 0x3 });
-
-                    clientSocket.Send(new byte[] { 0x4 });
-
-                    clientSocket.Send(new byte[] { 0x5, 0x6, 0x7 });
-
-                    clientSocket.Close();
-                    clientSocket.Dispose();
-
-                    WaitForProcessingToHappen();
-                });
-
-                var startTask = Task.Factory.StartNew(() => _networkConnection.StartAsync());
-
-                Task.WhenAll(startTask, testTask).GetAwaiter().GetResult();
-            }
-            finally
-            {
-                _autoResetEvent.Set();
-                closeTask.Wait();
-            }
 
             _receivedData
                 .Should()
@@ -222,52 +124,28 @@ namespace RoadCaptain.Adapters.Tests.Unit.Networking
         [Fact]
         public void GivenConnectionAndDataThenClientClosesConnectionReconnectsAndSendsMoreData()
         {
-            var clientSocket = GivenClientSocket();
-            var secondClientSocket = GivenClientSocket();
-
-            var closeTask = Task.Factory.StartNew(() =>
+            WhenTestingConnection((clientSocket, secondClientSocket) =>
             {
-                _autoResetEvent.WaitOne(TestTimeoutMilliseconds);
-                _networkConnection.Stop();
+                WaitForConnectionToListen();
+
+                clientSocket.Connect(new IPEndPoint(IPAddress.Loopback, _port));
+
+                clientSocket.Send(new byte[] { 0x1, 0x2, 0x3 });
+
+                clientSocket.Shutdown(SocketShutdown.Both);
+                clientSocket.Close();
+
+                WaitForProcessingToHappen();
+
+                secondClientSocket.Connect(new IPEndPoint(IPAddress.Loopback, _port));
+
+                secondClientSocket.Send(new byte[] { 0x4, 0x5, 0x6 });
+
+                secondClientSocket.Shutdown(SocketShutdown.Both);
+                secondClientSocket.Close();
+
+                WaitForProcessingToHappen();
             });
-
-            try
-            {
-                var testTask = Task.Factory.StartNew(() =>
-                {
-                    WaitForConnectionToListen();
-
-                    clientSocket.Connect(new IPEndPoint(IPAddress.Loopback, _port));
-
-                    clientSocket.Send(new byte[] { 0x1, 0x2, 0x3 });
-                    
-                    clientSocket.Shutdown(SocketShutdown.Both);
-                    clientSocket.Close();
-
-                    WaitForProcessingToHappen();
-
-                    secondClientSocket.Connect(new IPEndPoint(IPAddress.Loopback, _port));
-
-                    secondClientSocket.Send(new byte[] { 0x4, 0x5, 0x6 });
-                    
-                    secondClientSocket.Shutdown(SocketShutdown.Both);
-                    secondClientSocket.Close();
-
-                    clientSocket.Dispose();
-                    secondClientSocket.Dispose();
-
-                    WaitForProcessingToHappen();
-                });
-
-                var startTask = Task.Factory.StartNew(() => _networkConnection.StartAsync());
-
-                Task.WhenAll(startTask, testTask).GetAwaiter().GetResult();
-            }
-            finally
-            {
-                _autoResetEvent.Set();
-                closeTask.Wait();
-            }
 
             _receivedData
                 .Should()
@@ -277,40 +155,19 @@ namespace RoadCaptain.Adapters.Tests.Unit.Networking
         [Fact]
         public void GivenConnectionAndDataThenClientClosesConnection_ConnectionLostEventIsRaised()
         {
-            var clientSocket = GivenClientSocket();
-
-            var closeTask = Task.Factory.StartNew(() =>
+            WhenTestingConnection(clientSocket =>
             {
-                _autoResetEvent.WaitOne(TestTimeoutMilliseconds);
-                _networkConnection.Stop();
+                WaitForConnectionToListen();
+
+                clientSocket.Connect(new IPEndPoint(IPAddress.Loopback, _port));
+
+                clientSocket.Send(new byte[] { 0x1, 0x2, 0x3 });
+
+                clientSocket.Shutdown(SocketShutdown.Both);
+                clientSocket.Close();
+
+                WaitForProcessingToHappen();
             });
-
-            try
-            {
-                var testTask = Task.Factory.StartNew(() =>
-                {
-                    WaitForConnectionToListen();
-
-                    clientSocket.Connect(new IPEndPoint(IPAddress.Loopback, _port));
-                    
-                    clientSocket.Send(new byte[] { 0x1, 0x2, 0x3 });
-                    
-                    clientSocket.Shutdown(SocketShutdown.Both);
-                    clientSocket.Close();
-                    clientSocket.Dispose();
-
-                    WaitForProcessingToHappen();
-                });
-
-                var startTask = Task.Factory.StartNew(() => _networkConnection.StartAsync());
-
-                Task.WhenAll(startTask, testTask).GetAwaiter().GetResult();
-            }
-            finally
-            {
-                _autoResetEvent.Set();
-                closeTask.Wait();
-            }
 
             _connectionLostRaised.Should().BeTrue();
         }
@@ -331,6 +188,62 @@ namespace RoadCaptain.Adapters.Tests.Unit.Networking
         {
             // Wait a short bit for the processing to happen
             Thread.Sleep(10);
+        }
+
+        private void WhenTestingConnection(Action<Socket> when)
+        {
+            var clientSocket = GivenClientSocket();
+
+            var closeTask = Task.Factory.StartNew(() =>
+            {
+                _autoResetEvent.WaitOne(TestTimeoutMilliseconds);
+                _networkConnection.Stop();
+            });
+
+            try
+            {
+                var testTask = Task.Factory.StartNew(() => { when(clientSocket); });
+
+                var startTask = Task.Factory.StartNew(() => _networkConnection.StartAsync());
+
+                Task.WhenAll(startTask, testTask).GetAwaiter().GetResult();
+            }
+            finally
+            {
+                _autoResetEvent.Set();
+                closeTask.Wait();
+            }
+
+            clientSocket.Dispose();
+        }
+
+        private void WhenTestingConnection(Action<Socket, Socket> testAction)
+        {
+            var clientSocket = GivenClientSocket();
+            var secondClientSocket = GivenClientSocket();
+
+            var closeTask = Task.Factory.StartNew(() =>
+            {
+                _autoResetEvent.WaitOne(TestTimeoutMilliseconds);
+                _networkConnection.Stop();
+            });
+
+            try
+            {
+                var testTask = Task.Factory.StartNew(() => { testAction(clientSocket, secondClientSocket); });
+
+                var startTask = Task.Factory.StartNew(() => _networkConnection.StartAsync());
+
+                Task.WhenAll(startTask, testTask).GetAwaiter().GetResult();
+            }
+            finally
+            {
+                _autoResetEvent.Set();
+                closeTask.Wait();
+            }
+
+            clientSocket.Dispose();
+            secondClientSocket.Dispose();
         }
     }
 }
