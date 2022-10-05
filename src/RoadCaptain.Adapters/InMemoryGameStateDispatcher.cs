@@ -7,6 +7,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading;
 using Newtonsoft.Json;
 using RoadCaptain.GameStates;
@@ -134,7 +135,15 @@ namespace RoadCaptain.Adapters
         public void EnterGame(uint riderId, ulong activityId)
         {
             State = State?.EnterGame(riderId, activityId);
-            _output = new StreamWriter(File.OpenWrite($@"positions-{DateTime.UtcNow:yyyy-MM-dd_HHmmss}.log"));
+            _output = new StreamWriter(File.Open(
+                    $@"positions-{DateTime.UtcNow:yyyy-MM-dd_HHmmss}.log",
+                    FileMode.CreateNew,
+                    FileAccess.ReadWrite,
+                    FileShare.Read),
+                Encoding.UTF8)
+            {
+                AutoFlush = true
+            };
         }
 
         public void LeaveGame()
