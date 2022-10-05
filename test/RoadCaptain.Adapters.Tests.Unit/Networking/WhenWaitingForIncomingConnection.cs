@@ -26,7 +26,7 @@ namespace RoadCaptain.Adapters.Tests.Unit.Networking
         {
             var random = new Random();
             _port = random.Next(1025, 10025);
-            _networkConnection = new NetworkConnection(_port, AcceptTimeoutMilliseconds, DataTimeoutMilliseconds);
+            _networkConnection = new NetworkConnection(_port, TimeSpan.FromMilliseconds(AcceptTimeoutMilliseconds), TimeSpan.FromMilliseconds(DataTimeoutMilliseconds));
             _networkConnection.AcceptTimeoutExpired += (_, _) => _acceptTimeoutRaised = true;
             _networkConnection.DataTimeoutExpired += (_, _) => _dataTimeoutRaised = true;
             _networkConnection.Data += (_, args) => _receivedData.AddRange(args.Data);

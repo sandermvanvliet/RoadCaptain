@@ -16,12 +16,17 @@ namespace RoadCaptain.Adapters.Tests.Unit.Networking
         private readonly TimeSpan _dataTimeout;
         private Socket? _clientSocket;
 
-        public NetworkConnection(int port, int acceptTimeout, int dataTimeout)
+        public NetworkConnection(int port, TimeSpan acceptTimeout, TimeSpan dataTimeout)
         {
+            if (port < 0 || port > UInt16.MaxValue)
+            {
+                throw new ArgumentOutOfRangeException(nameof(port));
+            }
+
             _port = port;
             _tokenSource = new CancellationTokenSource();
-            _acceptTimeout = TimeSpan.FromMilliseconds(acceptTimeout);
-            _dataTimeout = TimeSpan.FromMilliseconds(dataTimeout);
+            _acceptTimeout =acceptTimeout;
+            _dataTimeout = dataTimeout;
         }
 
         public event EventHandler? AcceptTimeoutExpired;
