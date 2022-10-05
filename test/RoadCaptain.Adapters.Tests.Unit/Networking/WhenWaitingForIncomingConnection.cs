@@ -202,7 +202,9 @@ namespace RoadCaptain.Adapters.Tests.Unit.Networking
 
             try
             {
+                // ReSharper disable AccessToDisposedClosure
                 var testTask = Task.Factory.StartNew(() => { when(clientSocket); });
+                // ReSharper restore AccessToDisposedClosure
 
                 var startTask = Task.Factory.StartNew(() => _networkConnection.StartAsync());
 
@@ -230,7 +232,9 @@ namespace RoadCaptain.Adapters.Tests.Unit.Networking
 
             try
             {
+                // ReSharper disable AccessToDisposedClosure
                 var testTask = Task.Factory.StartNew(() => { testAction(clientSocket, secondClientSocket); });
+                // ReSharper restore AccessToDisposedClosure
 
                 var startTask = Task.Factory.StartNew(() => _networkConnection.StartAsync());
 
