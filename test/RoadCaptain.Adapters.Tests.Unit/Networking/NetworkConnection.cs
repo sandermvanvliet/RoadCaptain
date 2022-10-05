@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RoadCaptain.Ports;
+using System;
 using System.Diagnostics;
 using System.Net;
 using System.Net.Sockets;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace RoadCaptain.Adapters.Tests.Unit.Networking
 {
-    internal class NetworkConnection
+    internal class NetworkConnection : IZwiftGameConnection, IMessageReceiver
     {
         private readonly int _port;
         private Socket? _listeningSocket;
@@ -207,7 +208,7 @@ namespace RoadCaptain.Adapters.Tests.Unit.Networking
             ConnectionLost?.Invoke(this, EventArgs.Empty);
         }
 
-        public void Stop()
+        public void Shutdown()
         {
             _tokenSource.Cancel();
 
@@ -239,6 +240,25 @@ namespace RoadCaptain.Adapters.Tests.Unit.Networking
             }
         }
 
+        public byte[]? ReceiveMessageBytes()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void SendInitialPairingMessage(uint riderId, uint sequenceNumber)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void SendTurnCommand(TurnDirection direction, ulong sequenceNumber, uint riderId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void EndActivity(ulong sequenceNumber, string activityName, uint riderId)
+        {
+            throw new NotImplementedException();
+        }
     }
 
     public class DataEventArgs : EventArgs

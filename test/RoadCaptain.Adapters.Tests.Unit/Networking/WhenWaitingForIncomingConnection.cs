@@ -197,7 +197,7 @@ namespace RoadCaptain.Adapters.Tests.Unit.Networking
             var closeTask = Task.Factory.StartNew(() =>
             {
                 _autoResetEvent.WaitOne(TestTimeoutMilliseconds);
-                _networkConnection.Stop();
+                _networkConnection.Shutdown();
             });
 
             try
@@ -227,7 +227,7 @@ namespace RoadCaptain.Adapters.Tests.Unit.Networking
             var closeTask = Task.Factory.StartNew(() =>
             {
                 _autoResetEvent.WaitOne(TestTimeoutMilliseconds);
-                _networkConnection.Stop();
+                _networkConnection.Shutdown();
             });
 
             try
