@@ -7,6 +7,7 @@ namespace RoadCaptain.App.Shared
 {
     public class ApplicationDiagnosticInformation
     {
+        public string Name { get; private init; }
         public string TargetFramework { get; private init; }
 
         public DateTime StartTime { get; private init; }
@@ -19,15 +20,16 @@ namespace RoadCaptain.App.Shared
 
         public string BuildConfiguration { get; private init; }
 
-        public static ApplicationDiagnosticInformation GetFrom(Assembly applicationAssembly)
+        public static ApplicationDiagnosticInformation GetFrom(Assembly assembly)
         {
             var applicationDiagnosticInformation = new ApplicationDiagnosticInformation
             {
-                Version = GetVersionFrom(applicationAssembly),
-                BuildConfiguration = GetAttributeOf<AssemblyConfigurationAttribute>(applicationAssembly)?.Configuration ?? "(unknown)",
-                TargetFramework = GetAttributeOf<TargetFrameworkAttribute>(applicationAssembly)?.FrameworkName ?? "(unknown)",
-                TargetPlatform = GetAttributeOf<TargetPlatformAttribute>(applicationAssembly)?.PlatformName ?? "(unknown)",
-                SupportedPlatform = GetAttributeOf<SupportedOSPlatformAttribute>(applicationAssembly)?.PlatformName ?? "(unknown)",
+                Name = assembly.GetName().Name ?? "(unknown)",
+                Version = GetVersionFrom(assembly),
+                BuildConfiguration = GetAttributeOf<AssemblyConfigurationAttribute>(assembly)?.Configuration ?? "(unknown)",
+                TargetFramework = GetAttributeOf<TargetFrameworkAttribute>(assembly)?.FrameworkName ?? "(unknown)",
+                TargetPlatform = GetAttributeOf<TargetPlatformAttribute>(assembly)?.PlatformName ?? "(unknown)",
+                SupportedPlatform = GetAttributeOf<SupportedOSPlatformAttribute>(assembly)?.PlatformName ?? "(unknown)",
                 StartTime = DateTime.UtcNow
             };
 
