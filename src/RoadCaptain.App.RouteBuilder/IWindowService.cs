@@ -19,5 +19,8 @@ namespace RoadCaptain.App.RouteBuilder
         Task<MessageBoxResult> ShowClearRouteDialog();
         Task<bool> ShowRouteLoopDialog();
         Task<string?> ShowSaveRouteDialog(string? lastUsedFolder, RouteViewModel routeViewModel);
+        void Shutdown(int exitCode);
+        Task ShowAlreadyRunningDialog();
+        void SetLifetime(IApplicationLifetime applicationLifetime);
     }
 }

@@ -74,6 +74,21 @@ namespace RoadCaptain.App.RouteBuilder
             return await InvokeIfNeededAsync(() => _decorated.ShowSaveRouteDialog(lastUsedFolder, routeViewModel));
         }
 
+        public void Shutdown(int exitCode)
+        {
+            InvokeIfNeeded(() => _decorated.Shutdown(exitCode));
+        }
+
+        public async Task ShowAlreadyRunningDialog()
+        {
+            await InvokeIfNeededAsync(() => _decorated.ShowAlreadyRunningDialog());
+        }
+
+        public void SetLifetime(IApplicationLifetime applicationLifetime)
+        {
+            InvokeIfNeeded(() => _decorated.SetLifetime(applicationLifetime));
+        }
+
         private async Task<TResult> InvokeIfNeededAsync<TResult>(Func<Task<TResult>> action)
         {
             if (!_dispatcher.CheckAccess())

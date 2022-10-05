@@ -3,6 +3,7 @@
 // See LICENSE or https://choosealicense.com/licenses/artistic-2.0/
 
 using System.Reflection;
+using RoadCaptain.App.Shared;
 using RoadCaptain.GameStates;
 
 namespace RoadCaptain.App.Runner
@@ -11,19 +12,17 @@ namespace RoadCaptain.App.Runner
     {
         public static void ApplicationStarted(this MonitoringEvents monitoringEvents)
         {
-            var version = GetApplicationVersion();
-
-            monitoringEvents.Information("RoadCaptain version {Version}", version);
+            monitoringEvents.Information("RoadCaptain Runner version {@Version}", ApplicationDiagnosticInformation.GetFrom(Assembly.GetExecutingAssembly()));
         }
 
         public static void ApplicationStopping(this MonitoringEvents monitoringEvents)
         {
-            monitoringEvents.Information("RoadCaptain stopping...");
+            monitoringEvents.Information("RoadCaptain Runner stopping...");
         }
 
         public static void ApplicationStopped(this MonitoringEvents monitoringEvents)
         {
-            monitoringEvents.Information("RoadCaptain stopped");
+            monitoringEvents.Information("RoadCaptain Runner stopped");
         }
 
         public static void StateTransition(this MonitoringEvents monitoringEvents, GameState previousGameState,
@@ -38,20 +37,6 @@ namespace RoadCaptain.App.Runner
         public static void RouteLoaded(this MonitoringEvents monitoringEvents, PlannedRoute route)
         {
             monitoringEvents.Information("Loaded route {RouteName}, Zwift route: {ZwiftRoute} ({ZwiftWorld})", route.Name, route.ZwiftRouteName, route.World.Name);
-        }
-
-        private static string GetApplicationVersion()
-        {
-            var executingAssembly = Assembly.GetExecutingAssembly();
-
-            var assemblyName = executingAssembly.GetName();
-
-            if (assemblyName.Version == null)
-            {
-                return "0.0.0.1";
-            }
-
-            return assemblyName.Version.ToString(4);
         }
     }
 }

@@ -1,4 +1,7 @@
 using System;
+using System.Linq;
+using System.Diagnostics;
+using System.Threading.Tasks;
 using Autofac;
 using Avalonia;
 using Avalonia.Controls;
@@ -17,6 +20,9 @@ namespace RoadCaptain.App.RouteBuilder
     {
         private readonly Logger _logger;
         private readonly IContainer _container;
+        private readonly IUserPreferences _userPreferences;
+        private readonly MonitoringEvents _monitoringEvents;
+        private readonly IWindowService _windowService;
 
         public App()
         {
@@ -28,6 +34,11 @@ namespace RoadCaptain.App.RouteBuilder
             {
                 _logger.Fatal(args.ExceptionObject as Exception, "Unhandled exception occurred");
             };
+
+            TaskScheduler.UnobservedTaskException += (sender, args) =>
+            {
+                _logger.Fatal(args.Exception, "Unhandled exception occurred in task");
+            };
             
             var configuration = new ConfigurationBuilder()
                 .AddJsonFile("appsettings.json", true)
@@ -36,6 +47,13 @@ namespace RoadCaptain.App.RouteBuilder
             _container = InversionOfControl
                 .ConfigureContainer(configuration, _logger, Dispatcher.UIThread)
                 .Build();
+
+            // Ensure user preferences are loaded
+            _userPreferences = _container.Resolve<IUserPreferences>();
+            _userPreferences.Load();
+            
+            _monitoringEvents = _container.Resolve<MonitoringEvents>();
+            _windowService = _container.Resolve<IWindowService>();
         }
 
         public override void Initialize()
@@ -47,6 +65,10 @@ namespace RoadCaptain.App.RouteBuilder
         {
             if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop && desktop.MainWindow == null)
             {
+                _windowService.SetLifetime(desktop);
+                desktop.Startup += App_OnStartup;
+                desktop.Exit += App_OnExit;
+
                 if (Design.IsDesignMode)
                 {
                     desktop.MainWindow = new MainWindow();
@@ -65,6 +87,43 @@ namespace RoadCaptain.App.RouteBuilder
         protected override void LogBindingError(AvaloniaProperty property, Exception e)
         {
             _logger.Error(e, "Binding error on {PropertyName}", property.Name);
+        }
+
+        private void App_OnStartup(object? sender, ControlledApplicationLifetimeStartupEventArgs e)
+        {
+            _monitoringEvents.ApplicationStarted();
+
+            Dispatcher.UIThread.InvokeAsync(async () =>
+            {
+                if (IsRouteBuilderRunning())
+                {
+                    await _windowService.ShowAlreadyRunningDialog();
+
+                    _monitoringEvents.Warning("Another instance of RoadCaptain is already running");
+
+                    _windowService.Shutdown(-1);
+                }
+            });
+        }
+
+        private void App_OnExit(object? sender, ControlledApplicationLifetimeExitEventArgs e)
+        {
+            _monitoringEvents.ApplicationStopping();
+
+            _userPreferences.Save();
+
+            _monitoringEvents.ApplicationStopped();
+
+            // Flush the logger
+            _logger.Dispose();
+        }
+
+        private static bool IsRouteBuilderRunning()
+        {
+            var processName = Process.GetCurrentProcess().ProcessName;
+
+            var processes = Process.GetProcesses();
+            return processes.Count(p => p.ProcessName == processName) > 1;
         }
 
         private async void AboutRoadCaptainMenuItem_OnClick(object? sender, EventArgs e)

@@ -9,14 +9,31 @@ using RoadCaptain.App.RouteBuilder.ViewModels;
 using RoadCaptain.App.RouteBuilder.Views;
 using RoadCaptain.App.Shared.Dialogs;
 using RoadCaptain.App.Shared.Dialogs.ViewModels;
-using RoadCaptain.App.Shared.UserPreferences;
+using IApplicationLifetime = Avalonia.Controls.ApplicationLifetimes.IApplicationLifetime;
 
 namespace RoadCaptain.App.RouteBuilder
 {
     public class WindowService : BaseWindowService, IWindowService
     {
+        private IClassicDesktopStyleApplicationLifetime _applicationLifetime;
+
         public WindowService(IComponentContext componentContext, MonitoringEvents monitoringEvents) : base(componentContext, monitoringEvents)
         {
+        }
+
+        public async Task ShowAlreadyRunningDialog()
+        {
+            await MessageBox.ShowAsync(
+                "Only one instance of RoadCaptain Route Builder can be active",
+                "Already running",
+                MessageBoxButton.Ok,
+                CurrentWindow,
+                MessageBoxIcon.Warning);
+        }
+
+        public void SetLifetime(IApplicationLifetime applicationLifetime)
+        {
+            _applicationLifetime = applicationLifetime as IClassicDesktopStyleApplicationLifetime;
         }
 
         public async Task<string?> ShowSaveFileDialog(string? previousLocation, string? suggestedFileName = null)
@@ -101,6 +118,11 @@ namespace RoadCaptain.App.RouteBuilder
             await saveRouteDialog.ShowDialog(CurrentWindow);
 
             return viewModel.Path;
+        }
+
+        public void Shutdown(int exitCode)
+        {
+            _applicationLifetime.Shutdown(exitCode);
         }
 
         public void ShowMainWindow(IApplicationLifetime applicationLifetime)
