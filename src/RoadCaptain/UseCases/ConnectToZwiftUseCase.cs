@@ -54,6 +54,11 @@ namespace RoadCaptain.UseCases
 
         public async Task ExecuteAsync(ConnectCommand connectCommand, CancellationToken cancellationToken)
         {
+            if (connectCommand.ConnectionEncryptionSecret == null || connectCommand.ConnectionEncryptionSecret.Length == 0)
+            {
+                throw new ArgumentException("Connection secret must be provided");
+            }
+
             // Listen for game state updates
 #pragma warning disable CS4014
             // ReSharper disable once MethodSupportsCancellation
@@ -67,11 +72,14 @@ namespace RoadCaptain.UseCases
             cancellationToken.Register(() => _userDisconnected.Set());
 
             // TODO: Work out what the correct IP address should be
-            var ipAddress = GetMostLikelyAddress().ToString();
+            var ipAddress = GetMostLikelyAddress()?.ToString();
 
-            var zwiftConnectionPort = connectCommand.ConnectionEncryptionSecret == null ? 21587 : 21588;
+            if (string.IsNullOrEmpty(ipAddress))
+            {
+                throw new Exception("Unable to determine an IP address to listen on");
+            }
 
-            _monitoringEvents.Information("Telling Zwift to connect to {IPAddress}:{Port}", ipAddress, zwiftConnectionPort);
+            _monitoringEvents.Information("Telling Zwift to connect to {IPAddress}", ipAddress);
 
             Uri relayUri;
 
@@ -116,7 +124,7 @@ namespace RoadCaptain.UseCases
 
                     if (remainingAttempts <= 0 && !_userIsInGame)
                     {
-                        _monitoringEvents.Warning("Zwift did not connect, attempting link again on {IPAddress}:{Port}", ipAddress, zwiftConnectionPort);
+                        _monitoringEvents.Warning("Zwift did not connect, attempting link again on {IPAddress}", ipAddress);
 
                         await _zwift.InitiateRelayAsync(connectCommand.AccessToken, relayUri, ipAddress, connectCommand.ConnectionEncryptionSecret);
 
@@ -132,7 +140,7 @@ namespace RoadCaptain.UseCases
             }
         }
 
-        private static IPAddress GetMostLikelyAddress()
+        private static IPAddress? GetMostLikelyAddress()
         {
             // Only look at network interfaces that are either Ethernet or WiFi
             var networkInterfaces = NetworkInterface

@@ -37,12 +37,48 @@ namespace RoadCaptain.Tests.Unit
         }
 
         [Fact]
+        public void GivenConnectionSecretIsNull_ArgumentExceptionIsThrown()
+        {
+            Action action = () => _useCase.ExecuteAsync(new ConnectCommand
+                    {
+                        AccessToken = "supersecret",
+                        ConnectionEncryptionSecret = null
+                    },
+                    CancellationToken.None)
+                .GetAwaiter()
+                .GetResult();
+
+            action
+                .Should()
+                .Throw<ArgumentException>()
+                .WithMessage("Connection secret must be provided");
+        }
+
+        [Fact]
+        public void GivenConnectionSecretIsEmptyArray_ArgumentExceptionIsThrown()
+        {
+            Action action = () => _useCase.ExecuteAsync(new ConnectCommand
+                    {
+                        AccessToken = "supersecret",
+                        ConnectionEncryptionSecret = Array.Empty<byte>()
+                    },
+                    CancellationToken.None)
+                .GetAwaiter()
+                .GetResult();
+
+            action
+                .Should()
+                .Throw<ArgumentException>()
+                .WithMessage("Connection secret must be provided");
+        }
+
+        [Fact]
         public void GivenAccessToken_RelayRequestIsSent()
         {
             _useCase.ExecuteAsync(new ConnectCommand
                     {
                         AccessToken = "supersecret",
-                        ConnectionEncryptionSecret = new byte[0]
+                        ConnectionEncryptionSecret = new byte[] { 0x1 }
                     },
                     CancellationToken.None)
                 .GetAwaiter()
@@ -68,7 +104,8 @@ namespace RoadCaptain.Tests.Unit
                 _useCase
                     .ExecuteAsync(new ConnectCommand
                         {
-                            AccessToken = "supersecret"
+                            AccessToken = "supersecret",
+                            ConnectionEncryptionSecret = new byte[] { 0x1 }
                         },
                         CancellationToken.None)
                     .GetAwaiter()
