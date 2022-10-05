@@ -24,8 +24,8 @@ namespace RoadCaptain.Adapters.Tests.Unit.Networking
             _dataTimeout = TimeSpan.FromMilliseconds(dataTimeout);
         }
 
-        public event EventHandler? IncomingConnectionWatchdog;
-        public event EventHandler? IncomingDataWatchdog;
+        public event EventHandler? AcceptTimeoutExpired;
+        public event EventHandler? DataTimeoutExpired;
         public event EventHandler? ConnectionLost;
         public event EventHandler? ConnectionAccepted;
         public event EventHandler<DataEventArgs>? Data;
@@ -53,7 +53,7 @@ namespace RoadCaptain.Adapters.Tests.Unit.Networking
 
                     if (completedTask == timeoutTask)
                     {
-                        IncomingConnectionWatchdog?.Invoke(this, EventArgs.Empty);
+                        AcceptTimeoutExpired?.Invoke(this, EventArgs.Empty);
                     }
                     else
                     {
@@ -84,7 +84,7 @@ namespace RoadCaptain.Adapters.Tests.Unit.Networking
 
                     if (completedTask == timeoutTask)
                     {
-                        IncomingDataWatchdog?.Invoke(this, EventArgs.Empty);
+                        DataTimeoutExpired?.Invoke(this, EventArgs.Empty);
                     }
                     else
                     {

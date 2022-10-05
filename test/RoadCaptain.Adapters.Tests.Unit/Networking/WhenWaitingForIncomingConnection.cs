@@ -19,23 +19,23 @@ namespace RoadCaptain.Adapters.Tests.Unit.Networking
         private readonly List<byte> _receivedData = new();
         private bool _connectionAcceptedRaised;
         private bool _connectionLostRaised;
-        private bool _noConnectionWatchdogRaised;
-        private bool _noDataReceived;
+        private bool _acceptTimeoutRaised;
+        private bool _dataTimeoutRaised;
 
         public WhenWaitingForIncomingConnection()
         {
             var random = new Random();
             _port = random.Next(1025, 10025);
             _networkConnection = new NetworkConnection(_port, AcceptTimeoutMilliseconds, DataTimeoutMilliseconds);
-            _networkConnection.IncomingConnectionWatchdog += (_, _) => _noConnectionWatchdogRaised = true;
-            _networkConnection.IncomingDataWatchdog += (_, _) => _noDataReceived = true;
+            _networkConnection.AcceptTimeoutExpired += (_, _) => _acceptTimeoutRaised = true;
+            _networkConnection.DataTimeoutExpired += (_, _) => _dataTimeoutRaised = true;
             _networkConnection.Data += (_, args) => _receivedData.AddRange(args.Data);
             _networkConnection.ConnectionAccepted += (_, _) => _connectionAcceptedRaised = true;
             _networkConnection.ConnectionLost += (_, _) => _connectionLostRaised = true;
         }
 
         [Fact]
-        public void GivenNoConnectionAfterTimeout_NoConnectionEventIsRaised()
+        public void GivenNoConnectionAfterTimeout_AcceptTimeoutExpiredEventIsRaised()
         {
             WhenTestingConnection(_ =>
             {
@@ -45,7 +45,7 @@ namespace RoadCaptain.Adapters.Tests.Unit.Networking
                 Thread.Sleep(AcceptTimeoutMilliseconds);
             });
 
-            _noConnectionWatchdogRaised.Should().BeTrue();
+            _acceptTimeoutRaised.Should().BeTrue();
         }
 
         [Fact]
@@ -64,7 +64,7 @@ namespace RoadCaptain.Adapters.Tests.Unit.Networking
         }
 
         [Fact]
-        public void GivenConnectionButNoDataWithinTimeout_NoDataEventIsRaised()
+        public void GivenConnectionButNoDataWithinTimeout_DataTimeoutEventIsRaised()
         {
             WhenTestingConnection(clientSocket =>
             {
@@ -73,10 +73,10 @@ namespace RoadCaptain.Adapters.Tests.Unit.Networking
                 clientSocket.Connect(new IPEndPoint(IPAddress.Loopback, _port));
 
                 // Receive timeout is 100ms so wait longer than that
-                Thread.Sleep(DataTimeoutMilliseconds + 10);
+                Thread.Sleep(DataTimeoutMilliseconds + 20);
             });
 
-            _noDataReceived.Should().BeTrue();
+            _dataTimeoutRaised.Should().BeTrue();
         }
 
         [Fact]
