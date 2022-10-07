@@ -1,12 +1,12 @@
-﻿using RoadCaptain.Ports;
-using System;
+﻿using System;
 using System.Collections.Concurrent;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
+using RoadCaptain.Ports;
 
-namespace RoadCaptain.Adapters.Tests.Unit.Networking
+namespace RoadCaptain.Adapters
 {
     internal class NetworkConnection : IZwiftGameConnection, IMessageReceiver
     {
@@ -291,16 +291,6 @@ namespace RoadCaptain.Adapters.Tests.Unit.Networking
         public void EndActivity(ulong sequenceNumber, string activityName, uint riderId)
         {
             throw new NotImplementedException();
-        }
-    }
-
-    public class DataEventArgs : EventArgs
-    {
-        public byte[] Data { get; }
-
-        public DataEventArgs(byte[] data)
-        {
-            Data = data;
         }
     }
 }

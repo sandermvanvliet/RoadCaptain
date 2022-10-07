@@ -76,6 +76,11 @@ namespace RoadCaptain.Adapters
             return null;
         }
 
+        public Task StartAsync()
+        {
+            return Task.CompletedTask;
+        }
+
         public void Shutdown()
         {
             _tokenSource.Cancel();
