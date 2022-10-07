@@ -166,37 +166,7 @@ namespace RoadCaptain.Adapters
                         _monitoringEvents.ReceiveFailed(socketError);
                     }
 
-                    try
-                    {
-                        _acceptedSocket?.Shutdown(SocketShutdown.Both);
-                    }
-                    catch (SocketException)
-                    {
-                        // Don't care
-                    }
-                    catch (ObjectDisposedException)
-                    {
-                        _acceptedSocket = null;
-                    }
-
-                    try
-                    {
-                        _acceptedSocket?.Close();
-                    }
-                    catch (SocketException)
-                    {
-                        // Don't care
-                    }
-                    catch (ObjectDisposedException)
-                    {
-                        // Don't care
-                    }
-                    finally
-                    {
-                        // Clear this so that the next call to ReceiveMessageBytes() will block
-                        // on accepting a new connection.
-                        _acceptedSocket = null;
-                    }
+                    CloseClientSocket();
 
                     return null;
                 }
@@ -204,6 +174,9 @@ namespace RoadCaptain.Adapters
                 if (received == 0)
                 {
                     // Nothing more in the buffer
+                    // Also, connection was closed by client
+                    CloseClientSocket();
+
                     break;
                 }
 
@@ -224,6 +197,41 @@ namespace RoadCaptain.Adapters
             }
 
             return total.ToArray();
+        }
+
+        private void CloseClientSocket()
+        {
+            try
+            {
+                _acceptedSocket?.Shutdown(SocketShutdown.Both);
+            }
+            catch (SocketException)
+            {
+                // Don't care
+            }
+            catch (ObjectDisposedException)
+            {
+                _acceptedSocket = null;
+            }
+
+            try
+            {
+                _acceptedSocket?.Close();
+            }
+            catch (SocketException)
+            {
+                // Don't care
+            }
+            catch (ObjectDisposedException)
+            {
+                // Don't care
+            }
+            finally
+            {
+                // Clear this so that the next call to ReceiveMessageBytes() will block
+                // on accepting a new connection.
+                _acceptedSocket = null;
+            }
         }
 
         public Task StartAsync()
