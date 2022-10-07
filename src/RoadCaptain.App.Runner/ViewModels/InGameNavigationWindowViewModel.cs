@@ -84,10 +84,24 @@ namespace RoadCaptain.App.Runner.ViewModels
                                 "Start pedaling!");
                         break;
                     case PositionedState:
-                    case OnSegmentState:
                         CallToAction = new CallToActionViewModel(
+                            "Riding to start of route",
+                            "Keep pedaling!");
+                        break;
+                    case OnSegmentState segmentState:
+                        if (!Model.Route.HasStarted && Model.Route.RouteSegmentSequence[0].Direction != segmentState.Direction)
+                        {
+                            CallToAction = new CallToActionViewModel(
+                                "Riding to start of route",
+                                "Heading the wrong way! Make a U-turn!");
+                        }
+                        else
+                        {
+                            CallToAction = new CallToActionViewModel(
                                 "Riding to start of route",
                                 "Keep pedaling!");
+                        }
+
                         break;
                     case IncorrectConnectionSecretState:
                         CallToAction = new CallToActionViewModel(

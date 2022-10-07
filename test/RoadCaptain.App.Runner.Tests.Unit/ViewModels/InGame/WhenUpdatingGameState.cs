@@ -219,6 +219,14 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.InGame
         }
 
         [Fact]
+        public void GivenOnSegmentStateIsReceivedAndRiderOnFirstSegmentOfRouteButWrongDirection_InstructionIsMakeAUTurn()
+        {
+            WhenUpdating(new OnSegmentState(1, 2, TrackPoint.Unknown, new Segment(new List<TrackPoint>()), SegmentDirection.BtoA, 0, 0, 0));
+
+            _viewModel.CallToAction.InstructionText.Should().Be("Heading the wrong way! Make a U-turn!");
+        }
+
+        [Fact]
         public void GivenOnRouteStateAndRouteLockIsLost_InstructionIsMakeUTurn()
         {
             var plannedRoute = new PlannedRoute();
