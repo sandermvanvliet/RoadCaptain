@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
+using RoadCaptain.GameStates;
 
 namespace RoadCaptain.Adapters.Tests.Unit.Networking
 {
@@ -16,8 +18,10 @@ namespace RoadCaptain.Adapters.Tests.Unit.Networking
         private const int DataTimeoutMilliseconds = 100;
         private readonly AutoResetEvent _autoResetEvent = new(false);
         private readonly NetworkConnection _networkConnection;
+        private readonly InMemoryGameStateDispatcher _gameStateDispatcher;
         private readonly int _port;
         private readonly List<byte> _receivedData = new();
+        private readonly List<GameState> _receivedGameStates = new();
         private bool _connectionAcceptedRaised;
         private bool _connectionLostRaised;
         private bool _acceptTimeoutRaised;
@@ -27,11 +31,22 @@ namespace RoadCaptain.Adapters.Tests.Unit.Networking
         {
             var random = new Random();
             _port = random.Next(1025, 10025);
+
+            var monitoringEvents = new NopMonitoringEvents();
+
+            _gameStateDispatcher = new InMemoryGameStateDispatcher(monitoringEvents);
+            _gameStateDispatcher.LoggedIn();
+            _gameStateDispatcher.Dispatch(new ReadyToGoState());
+            _gameStateDispatcher.ReceiveGameState(gameState => _receivedGameStates.Add(gameState));
+
             _networkConnection = new NetworkConnection(
                 _port, 
                 TimeSpan.FromMilliseconds(AcceptTimeoutMilliseconds), 
                 TimeSpan.FromMilliseconds(DataTimeoutMilliseconds),
-                16);
+                16,
+                _gameStateDispatcher,
+                monitoringEvents);
+
             _networkConnection.AcceptTimeoutExpired += (_, _) => _acceptTimeoutRaised = true;
             _networkConnection.DataTimeoutExpired += (_, _) => _dataTimeoutRaised = true;
             _networkConnection.Data += (_, args) => _receivedData.AddRange(args.Data);
@@ -66,6 +81,88 @@ namespace RoadCaptain.Adapters.Tests.Unit.Networking
             });
 
             _connectionAcceptedRaised.Should().BeTrue();
+        }
+
+        [Fact]
+        public void GivenNetworkConnectionStartsAndListens_WaitingForConnectionStateIsDispatched()
+        {
+            using var tokenSource = new CancellationTokenSource();
+            
+            Task.Factory.StartNew(() => _gameStateDispatcher.Start(tokenSource.Token), tokenSource.Token);
+
+            WhenTestingConnection(
+                _ =>
+                {
+                    WaitForConnectionToListen();
+
+                    WaitForProcessingToHappen();
+                });
+
+            _gameStateDispatcher.Drain();
+
+            tokenSource.Cancel();
+
+            _receivedGameStates
+                .Should()
+                .Contain(gameState => gameState is WaitingForConnectionState);
+        }
+
+        [Fact]
+        public void GivenConnectionAccepted_ConnectedToZwiftStateIsDispatched()
+        {
+            using var tokenSource = new CancellationTokenSource();
+            
+            Task.Factory.StartNew(() => _gameStateDispatcher.Start(tokenSource.Token), tokenSource.Token);
+
+            WhenTestingConnection(
+                clientSocket =>
+                {
+                    WaitForConnectionToListen();
+
+                    clientSocket.Connect(new IPEndPoint(IPAddress.Loopback, _port));
+
+                    WaitForProcessingToHappen();
+                });
+
+            _gameStateDispatcher.Drain();
+
+            tokenSource.Cancel();
+
+            _receivedGameStates
+                .Should()
+                .Contain(gameState => gameState is ConnectedToZwiftState);
+        }
+
+        [Fact]
+        public void GivenConnectedClientDisconnects_WaitingForConnectionStateIsDispatched()
+        {
+            using var tokenSource = new CancellationTokenSource();
+            
+            Task.Factory.StartNew(() => _gameStateDispatcher.Start(tokenSource.Token), tokenSource.Token);
+
+            WhenTestingConnection(
+                clientSocket =>
+                {
+                    WaitForConnectionToListen();
+
+                    clientSocket.Connect(new IPEndPoint(IPAddress.Loopback, _port));
+
+                    WaitForProcessingToHappen();
+
+                    clientSocket.Shutdown(SocketShutdown.Both);
+                    clientSocket.Disconnect(false);
+
+                    WaitForProcessingToHappen();
+                });
+
+            _gameStateDispatcher.Drain();
+
+            tokenSource.Cancel();
+
+            _receivedGameStates
+                .OfType<WaitingForConnectionState>()
+                .Should()
+                .HaveCount(2);
         }
 
         [Fact]

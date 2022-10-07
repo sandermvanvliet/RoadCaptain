@@ -107,7 +107,7 @@ namespace RoadCaptain.Adapters
 
                     _gameStateDispatcher.Connected();
 
-                    _monitoringEvents.AcceptedConnection();
+                    _monitoringEvents.AcceptedConnection(_acceptedSocket.RemoteEndPoint as IPEndPoint);
                 }
                 catch (ObjectDisposedException)
                 {

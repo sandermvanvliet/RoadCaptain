@@ -3,8 +3,8 @@
 // See LICENSE or https://choosealicense.com/licenses/artistic-2.0/
 
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
+using System.Net;
 using System.Net.Sockets;
 using RoadCaptain.GameStates;
 
@@ -22,9 +22,18 @@ namespace RoadCaptain
             monitoringEvents.Information("Received a message from Zwift. Sequence no {SequenceNumber}, size {Size}", sequenceNumber, size);
         }
 
-        public static void AcceptedConnection(this MonitoringEvents monitoringEvents)
+        public static void AcceptedConnection(this MonitoringEvents monitoringEvents,
+            IPEndPoint? remoteEndPoint)
         {
-            monitoringEvents.Information("Accepted a inbound TCP connection from Zwift");
+            if (remoteEndPoint == null)
+            {
+                monitoringEvents.Information("Accepted a inbound TCP connection from Zwift");
+            }
+            else
+            {
+                monitoringEvents.Information("Accepted a inbound TCP connection from Zwift at {IPAddress}:{Port}",
+                    remoteEndPoint.Address.ToString(), remoteEndPoint.Port);
+            }
         }
 
         public static void ReceiveFailed(this MonitoringEvents monitoringEvents, SocketError socketError)

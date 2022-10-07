@@ -21,12 +21,28 @@ namespace RoadCaptain.Adapters
         private readonly TimeSpan _dataTimeout;
         // TODO: Figure out what a decent size is for the receive buffer, maybe dynamically even?
         private readonly int _receiveBufferSize;
+        private readonly IGameStateDispatcher _gameStateDispatcher;
+        private readonly MonitoringEvents _monitoringEvents;
         private Socket? _clientSocket;
         private readonly AutoResetEvent _dataResetEvent = new(false);
         private readonly ConcurrentQueue<byte[]> _dataBuffer = new();
         private Thread? _thread;
 
-        public NetworkConnection(int port, TimeSpan acceptTimeout, TimeSpan dataTimeout, int receiveBufferSize = 512)
+        public NetworkConnection(
+            IGameStateDispatcher gameStateDispatcher,
+            MonitoringEvents monitoringEvents)
+            : this(
+                25518,
+                TimeSpan.FromSeconds(5),
+                TimeSpan.FromSeconds(5),
+                512,
+                gameStateDispatcher,
+                monitoringEvents)
+        {
+        }
+
+        internal NetworkConnection(int port, TimeSpan acceptTimeout, TimeSpan dataTimeout, int receiveBufferSize,
+            IGameStateDispatcher gameStateDispatcher, MonitoringEvents monitoringEvents)
         {
             if (port < 0 || port > UInt16.MaxValue)
             {
@@ -38,6 +54,8 @@ namespace RoadCaptain.Adapters
             _acceptTimeout =acceptTimeout;
             _dataTimeout = dataTimeout;
             _receiveBufferSize = receiveBufferSize;
+            _gameStateDispatcher = gameStateDispatcher;
+            _monitoringEvents = monitoringEvents;
         }
 
         public event EventHandler? AcceptTimeoutExpired;
@@ -82,6 +100,9 @@ namespace RoadCaptain.Adapters
 
             while (!_tokenSource.IsCancellationRequested)
             {
+                _monitoringEvents.WaitingForConnection();
+                _gameStateDispatcher.WaitingForConnection();
+
                 var acceptTask = _listeningSocket.AcceptAsync(_tokenSource.Token).AsTask();
 
                 while (!acceptTask.IsCompleted)
@@ -106,6 +127,9 @@ namespace RoadCaptain.Adapters
                         }
 
                         _clientSocket = acceptTask.Result;
+
+                        _monitoringEvents.AcceptedConnection(_clientSocket.RemoteEndPoint as IPEndPoint);
+                        _gameStateDispatcher.Connected();
 
                         ConnectionAccepted?.Invoke(this, EventArgs.Empty);
 
