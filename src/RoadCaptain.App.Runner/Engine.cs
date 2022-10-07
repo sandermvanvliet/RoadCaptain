@@ -41,7 +41,7 @@ namespace RoadCaptain.App.Runner
         private DateTime _dataWatchdogTimer;
         private TaskWithCancellation? _connectionWatchdog;
         private TaskWithCancellation? _dataWatchdog;
-        private readonly TimeSpan _connectionWatchdogTimeout = TimeSpan.FromSeconds(15);
+        private readonly TimeSpan _watchdogTimeout = TimeSpan.FromSeconds(15);
 
         public Engine(
             MonitoringEvents monitoringEvents,
@@ -418,7 +418,7 @@ namespace RoadCaptain.App.Runner
                 {
                     if (_previousGameState is WaitingForConnectionState)
                     {
-                        if (DateTime.UtcNow.Subtract(_connectionWatchdogTimer) > _connectionWatchdogTimeout)
+                        if (DateTime.UtcNow.Subtract(_connectionWatchdogTimer) > _watchdogTimeout)
                         {
                             _monitoringEvents.Warning("No connection was made by Zwift since {Timestamp}, re-initiating the connection", _connectionWatchdogTimer);
                             _connectionWatchdogTimer = DateTime.UtcNow;
@@ -449,7 +449,7 @@ namespace RoadCaptain.App.Runner
                 {
                     if (GameState.IsInGame(_previousGameState))
                     {
-                        if (DateTime.UtcNow.Subtract(_dataWatchdogTimer) > _connectionWatchdogTimeout)
+                        if (DateTime.UtcNow.Subtract(_dataWatchdogTimer) > _watchdogTimeout)
                         {
                             _monitoringEvents.Warning("Did not receive any game state update since {Timestamp}, re-initiating the connection", _dataWatchdogTimer);
                             _dataWatchdogTimer = DateTime.UtcNow;
