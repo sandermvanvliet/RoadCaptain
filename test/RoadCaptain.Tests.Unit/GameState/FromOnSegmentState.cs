@@ -84,7 +84,7 @@ namespace RoadCaptain.Tests.Unit.GameState
 
             result
                 .Should()
-                .BeOfType<LostRouteLockState>();
+                .BeOfType<OnSegmentState>();
         }
 
         [Fact]

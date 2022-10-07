@@ -96,7 +96,7 @@ namespace RoadCaptain.GameStates
 
             if (!plannedRoute.HasStarted && plannedRoute.StartingSegmentId == segment.Id && direction != SegmentDirection.Unknown && direction != plannedRoute.RouteSegmentSequence[0].Direction)
             {
-                return new LostRouteLockState(RiderId, ActivityId, closestOnSegment, segment, plannedRoute, direction, distance, ascent, descent);
+                return new OnSegmentState(RiderId, ActivityId, closestOnSegment, segment,direction, distance, ascent, descent);
             }
 
             if (plannedRoute.HasStarted)
