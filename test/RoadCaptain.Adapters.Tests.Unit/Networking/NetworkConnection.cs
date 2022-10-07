@@ -1,7 +1,6 @@
 ﻿using RoadCaptain.Ports;
 using System;
 using System.Collections.Concurrent;
-using System.Diagnostics;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
@@ -144,8 +143,6 @@ namespace RoadCaptain.Adapters.Tests.Unit.Networking
 
                     if (socketError != SocketError.Success || read == 0)
                     {
-                        Debug.WriteLine("Socket error: " + socketError);
-
                         CloseAndCleanupClientSocket();
 
                         return null;
