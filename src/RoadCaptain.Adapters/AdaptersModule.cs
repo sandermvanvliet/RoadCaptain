@@ -43,7 +43,7 @@ namespace RoadCaptain.Adapters
             if ("socket".Equals(MessageReceiverSource, StringComparison.InvariantCultureIgnoreCase))
             {
                 builder
-                    .RegisterType<SecureZwiftConnection>()
+                    .RegisterType<NetworkConnection>()
                     .As<IMessageReceiver>()
                     .As<IZwiftGameConnection>()
                     .SingleInstance();
