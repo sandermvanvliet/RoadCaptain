@@ -172,6 +172,69 @@ namespace RoadCaptain.Adapters.Tests.Unit.Networking
             _connectionLostRaised.Should().BeTrue();
         }
 
+        [Fact]
+        public void GivenConnectedClientButNoData_ReceiveMessageBytesBlocks()
+        {
+            var receiveTask = Task.Factory.StartNew(() => _networkConnection.ReceiveMessageBytes());
+
+            WhenTestingConnection(clientSocket =>
+            {
+                WaitForConnectionToListen();
+
+                clientSocket.Connect(new IPEndPoint(IPAddress.Loopback, _port));
+                
+                // Don't send new data
+                Thread.Sleep(DataTimeoutMilliseconds + 25);
+            });
+
+            receiveTask
+                .Status
+                .Should()
+                .Be(TaskStatus.Running);
+        }
+
+        [Fact]
+        public void GivenNoConnectedClient_ReceiveMessageBytesBlocks()
+        {
+            var receiveTask = Task.Factory.StartNew(() => _networkConnection.ReceiveMessageBytes());
+
+            WhenTestingConnection(clientSocket =>
+            {
+                WaitForConnectionToListen();
+
+                // Don't connect
+                Thread.Sleep(DataTimeoutMilliseconds + 25);
+            });
+
+            receiveTask
+                .Status
+                .Should()
+                .Be(TaskStatus.Running);
+        }
+
+        [Fact]
+        public void GivenConnectedClientAndDataIsSent_ReceiveMessageBytesReturnsData()
+        {
+            var receiveTask = Task.Factory.StartNew(() => _networkConnection.ReceiveMessageBytes());
+
+            WhenTestingConnection(clientSocket =>
+            {
+                WaitForConnectionToListen();
+
+                clientSocket.Connect(new IPEndPoint(IPAddress.Loopback, _port));
+
+                clientSocket.Send(new byte[] { 0x1, 0x2, 0x3 });
+                
+                WaitForProcessingToHappen();
+
+                receiveTask
+                    .GetAwaiter()
+                    .GetResult()
+                    .Should()
+                    .BeEquivalentTo(new byte[] { 0x1, 0x2, 0x3 });
+            });
+        }
+
         private static Socket GivenClientSocket()
         {
             return new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);

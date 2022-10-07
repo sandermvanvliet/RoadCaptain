@@ -1,5 +1,6 @@
 ﻿using RoadCaptain.Ports;
 using System;
+using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.Net;
 using System.Net.Sockets;
@@ -16,6 +17,8 @@ namespace RoadCaptain.Adapters.Tests.Unit.Networking
         private readonly TimeSpan _acceptTimeout;
         private readonly TimeSpan _dataTimeout;
         private Socket? _clientSocket;
+        private readonly AutoResetEvent _dataResetEvent = new(false);
+        private readonly ConcurrentQueue<byte[]> _dataBuffer = new();
 
         public NetworkConnection(int port, TimeSpan acceptTimeout, TimeSpan dataTimeout)
         {
@@ -105,6 +108,8 @@ namespace RoadCaptain.Adapters.Tests.Unit.Networking
 
                         if (dataReadTask.Result is { Length: > 0 })
                         {
+                            _dataBuffer.Enqueue(dataReadTask.Result);
+                            _dataResetEvent.Set();
                             Data?.Invoke(this, new DataEventArgs(dataReadTask.Result));
                         }
 
@@ -242,7 +247,17 @@ namespace RoadCaptain.Adapters.Tests.Unit.Networking
 
         public byte[]? ReceiveMessageBytes()
         {
-            throw new NotImplementedException();
+            while (!_tokenSource.IsCancellationRequested)
+            {
+                if (_dataBuffer.TryDequeue(out var dataBuffer))
+                {
+                    return dataBuffer;
+                }
+
+                _dataResetEvent.WaitOne(250);
+            }
+
+            return null;
         }
 
         public void SendInitialPairingMessage(uint riderId, uint sequenceNumber)
