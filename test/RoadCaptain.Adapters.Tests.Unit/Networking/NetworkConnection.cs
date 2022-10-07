@@ -11,6 +11,7 @@ namespace RoadCaptain.Adapters.Tests.Unit.Networking
     internal class NetworkConnection : IZwiftGameConnection, IMessageReceiver
     {
         private static readonly TimeSpan ReceiveMessageBytesTimeout = TimeSpan.FromMilliseconds(250);
+        private static readonly object SyncRoot = new();
         private readonly int _port;
         private Socket? _listeningSocket;
         private readonly CancellationTokenSource _tokenSource;
@@ -19,6 +20,7 @@ namespace RoadCaptain.Adapters.Tests.Unit.Networking
         private Socket? _clientSocket;
         private readonly AutoResetEvent _dataResetEvent = new(false);
         private readonly ConcurrentQueue<byte[]> _dataBuffer = new();
+        private Thread? _thread;
 
         public NetworkConnection(int port, TimeSpan acceptTimeout, TimeSpan dataTimeout)
         {
@@ -39,7 +41,25 @@ namespace RoadCaptain.Adapters.Tests.Unit.Networking
         public event EventHandler? ConnectionAccepted;
         public event EventHandler<DataEventArgs>? Data;
 
-        public async Task StartAsync()
+        public Task StartAsync()
+        {
+            // Only start the thread once
+            lock (SyncRoot)
+            {
+                if (_thread is { IsAlive: true })
+                {
+                    return Task.CompletedTask;
+                }
+
+                _thread = new Thread(() => StartAsyncOnThread().GetAwaiter().GetResult());
+
+                _thread.Start();
+            }
+
+            return Task.CompletedTask;
+        }
+
+        public async Task StartAsyncOnThread()
         {
             _listeningSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp)
             {

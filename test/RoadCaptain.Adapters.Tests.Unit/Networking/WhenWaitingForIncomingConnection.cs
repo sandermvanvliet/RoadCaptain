@@ -198,7 +198,7 @@ namespace RoadCaptain.Adapters.Tests.Unit.Networking
         {
             var receiveTask = Task.Factory.StartNew(() => _networkConnection.ReceiveMessageBytes());
 
-            WhenTestingConnection(clientSocket =>
+            WhenTestingConnection(_ =>
             {
                 WaitForConnectionToListen();
 
@@ -269,9 +269,9 @@ namespace RoadCaptain.Adapters.Tests.Unit.Networking
                 var testTask = Task.Factory.StartNew(() => { when(clientSocket); });
                 // ReSharper restore AccessToDisposedClosure
 
-                var startTask = Task.Factory.StartNew(() => _networkConnection.StartAsync());
+                _networkConnection.StartAsync().GetAwaiter().GetResult();
 
-                Task.WhenAll(startTask, testTask).GetAwaiter().GetResult();
+                testTask.GetAwaiter().GetResult();
             }
             finally
             {
