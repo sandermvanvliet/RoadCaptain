@@ -37,6 +37,11 @@ namespace RoadCaptain.App.Runner
         private ulong _lastSequenceNumber;
         private readonly IUserPreferences _userPreferences;
         private readonly IZwiftCredentialCache _credentialCache;
+        private DateTime _connectionWatchdogTimer;
+        private DateTime _dataWatchdogTimer;
+        private TaskWithCancellation? _connectionWatchdog;
+        private TaskWithCancellation? _dataWatchdog;
+        private readonly TimeSpan _connectionWatchdogTimeout = TimeSpan.FromSeconds(15);
 
         public Engine(
             MonitoringEvents monitoringEvents,
@@ -78,6 +83,8 @@ namespace RoadCaptain.App.Runner
 
         protected void GameStateReceived(GameState gameState)
         {
+            _dataWatchdogTimer = DateTime.UtcNow;
+            
             // Only log actual transitions
             if (_previousGameState != null && _previousGameState.GetType() != gameState.GetType())
             {
@@ -135,6 +142,9 @@ namespace RoadCaptain.App.Runner
             {
                 _monitoringEvents.Information("Waiting for connection from Zwift");
 
+                // Reset the watchdog timer for new connections
+                _connectionWatchdogTimer = DateTime.UtcNow;
+
                 if (_loadedRoute != null)
                 {
                     _windowService.ShowInGameWindow(CreateInGameViewModel(_loadedRoute, gameState));
@@ -151,6 +161,9 @@ namespace RoadCaptain.App.Runner
             else if (gameState is ConnectedToZwiftState && _previousGameState is WaitingForConnectionState)
             {
                 _monitoringEvents.Information("Connected to Zwift");
+
+                // Reset the watchdog timer for new data (== new game states)
+                _dataWatchdogTimer = DateTime.UtcNow;
 
                 if (_loadedRoute == null && !string.IsNullOrEmpty(_configuration.Route))
                 {
@@ -232,7 +245,15 @@ namespace RoadCaptain.App.Runner
                 else
                 {
                     CancelAndCleanUp(() => _listenerTask);
+
                     StartZwiftConnectionInitiator(credentials.AccessToken);
+
+                    // Once the user has logged in we need to do two things:
+                    // 1. Start the connection listener (DecodeIncomingMessagesUseCase)
+                    // 2. Start the connection initiator (ConnectToZwiftUseCase)
+                    // When the listener picks up a new connection it will
+                    // dispatch the ConnectedToZwift state.
+                    StartZwiftConnectionListener();
                 }
             }
 
@@ -298,7 +319,7 @@ namespace RoadCaptain.App.Runner
             if (_listenerTask != null)
             {
                 _initiatorTask = _listenerTask.StartLinkedTask(
-                    async token => await _connectUseCase
+                    async _ => await _connectUseCase
                         .ExecuteAsync(
                             new ConnectCommand
                             {
@@ -309,7 +330,7 @@ namespace RoadCaptain.App.Runner
             else
             {
                 _initiatorTask = TaskWithCancellation.Start(
-                    async cancellationToken => await _connectUseCase
+                    async _ => await _connectUseCase
                         .ExecuteAsync(
                             new ConnectCommand
                             {
@@ -379,6 +400,8 @@ namespace RoadCaptain.App.Runner
             CancelAndCleanUp(() => _listenerTask);
             CancelAndCleanUp(() => _initiatorTask);
             CancelAndCleanUp(() => _navigationTask);
+            CancelAndCleanUp(() => _connectionWatchdog);
+            CancelAndCleanUp(() => _dataWatchdog);
         }
 
         public void Start()
@@ -387,6 +410,68 @@ namespace RoadCaptain.App.Runner
             {
                 _gameStateReceiver.Start(cancellationToken);
                 return Task.CompletedTask;
+            });
+
+            _connectionWatchdog = TaskWithCancellation.Start(async cancellationToken =>
+            {
+                while (!cancellationToken.IsCancellationRequested)
+                {
+                    if (_previousGameState is WaitingForConnectionState)
+                    {
+                        if (DateTime.UtcNow.Subtract(_connectionWatchdogTimer) > _connectionWatchdogTimeout)
+                        {
+                            _monitoringEvents.Warning("No connection was made by Zwift since {Timestamp}, re-initiating the connection", _connectionWatchdogTimer);
+                            _connectionWatchdogTimer = DateTime.UtcNow;
+
+                            var credentials = _credentialCache.LoadAsync().GetAwaiter().GetResult();
+                            if (credentials == null || string.IsNullOrEmpty(credentials.AccessToken))
+                            {
+                                _monitoringEvents.Error("No Zwift credentials available, cannot initiate Zwift connection");
+                                break;
+                            }
+
+                            await _connectUseCase
+                                .ExecuteAsync(new ConnectCommand
+                                {
+                                    ConnectionEncryptionSecret = _userPreferences.ConnectionSecret,
+                                    AccessToken = credentials.AccessToken!
+                                });
+                        }
+                    }
+
+                    await Task.Delay(TimeSpan.FromSeconds(5), cancellationToken);
+                }
+            });
+
+            _dataWatchdog = TaskWithCancellation.Start(async cancellationToken =>
+            {
+                while (!cancellationToken.IsCancellationRequested)
+                {
+                    if (GameState.IsInGame(_previousGameState))
+                    {
+                        if (DateTime.UtcNow.Subtract(_dataWatchdogTimer) > _connectionWatchdogTimeout)
+                        {
+                            _monitoringEvents.Warning("Did not receive any game state update since {Timestamp}, re-initiating the connection", _dataWatchdogTimer);
+                            _dataWatchdogTimer = DateTime.UtcNow;
+
+                            var credentials = _credentialCache.LoadAsync().GetAwaiter().GetResult();
+                            if (credentials == null || string.IsNullOrEmpty(credentials.AccessToken))
+                            {
+                                _monitoringEvents.Error("No Zwift credentials available, cannot initiate Zwift connection");
+                                break;
+                            }
+
+                            await _connectUseCase
+                                .ExecuteAsync(new ConnectCommand
+                                {
+                                    ConnectionEncryptionSecret = _userPreferences.ConnectionSecret,
+                                    AccessToken = credentials.AccessToken!
+                                });
+                        }
+                    }
+
+                    await Task.Delay(TimeSpan.FromSeconds(5), cancellationToken);
+                }
             });
         }
     }
