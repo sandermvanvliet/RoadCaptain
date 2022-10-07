@@ -239,7 +239,7 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.InGame
 
             WhenUpdating(new LostRouteLockState(1, 2, new TrackPoint(1, 2, 3), new Segment(new List<TrackPoint>()) { Id = "seg-2" }, plannedRoute, SegmentDirection.AtoB, 0, 0, 0));
             
-            _viewModel.CallToAction.InstructionText.Should().Be("Try to make a u-turn and head to segment 'Segment 3'");
+            _viewModel.CallToAction.InstructionText.Should().Be("Heading the wrong way! Make a U-turn to resume the route!");
         }
 
         [Fact]

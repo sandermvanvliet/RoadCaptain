@@ -89,7 +89,7 @@ namespace RoadCaptain.App.Runner.ViewModels
                             "Keep pedaling!");
                         break;
                     case OnSegmentState segmentState:
-                        if (!Model.Route.HasStarted && Model.Route.RouteSegmentSequence[0].Direction != segmentState.Direction)
+                        if (!Model.Route.HasStarted && Model.Route.RouteSegmentSequence[0].Direction != segmentState.Direction && segmentState.Direction != SegmentDirection.Unknown)
                         {
                             CallToAction = new CallToActionViewModel(
                                 "Riding to start of route",
@@ -117,12 +117,18 @@ namespace RoadCaptain.App.Runner.ViewModels
                         break;
                     case LostRouteLockState lostRouteState:
                         var instructionText = "Try to make a u-turn to return to the route";
-                        if (lostRouteState.Route.NextSegmentId != null)
+                        
+                        if (lostRouteState.Route.CurrentSegmentSequence.Direction != lostRouteState.Direction)
+                        {
+                            instructionText = "Heading the wrong way! Make a U-turn to resume the route!";
+                        }
+                        else if (lostRouteState.Route.NextSegmentId != null)
                         {
                             var expectedSegment = GetSegmentById(lostRouteState.Route.NextSegmentId);
                             instructionText =
-                                $"Try to make a u-turn and head to segment '{expectedSegment.Name}'";
+                                $"Try to head to segment '{expectedSegment.Name}'";
                         }
+
                         CallToAction = new CallToActionViewModel(
                                 "Lost route lock",
                                 instructionText);
