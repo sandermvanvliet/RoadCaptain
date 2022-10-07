@@ -304,8 +304,7 @@ namespace RoadCaptain.App.Runner
                             {
                                 AccessToken = accessToken,
                                 ConnectionEncryptionSecret = _userPreferences.ConnectionSecret
-                            },
-                            token));
+                            }));
             }
             else
             {
@@ -316,8 +315,7 @@ namespace RoadCaptain.App.Runner
                             {
                                 AccessToken = accessToken,
                                 ConnectionEncryptionSecret = _userPreferences.ConnectionSecret
-                            },
-                            cancellationToken));
+                            }));
             }
         }
 

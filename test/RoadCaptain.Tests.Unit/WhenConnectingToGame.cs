@@ -29,8 +29,7 @@ namespace RoadCaptain.Tests.Unit
 
             _gameStateDispatcher = new InMemoryGameStateDispatcher(monitoringEvents);
             _useCase = new ConnectToZwiftUseCase(new Zwift(new HttpClient(_handler)),
-                monitoringEvents,
-                new InMemoryGameStateDispatcher(monitoringEvents), // Use a different receiver than dispatcher
+                monitoringEvents, // Use a different receiver than dispatcher
                 _gameStateDispatcher);
 
             ConfigureSuccessfulResponses();
@@ -43,8 +42,7 @@ namespace RoadCaptain.Tests.Unit
                     {
                         AccessToken = "supersecret",
                         ConnectionEncryptionSecret = null
-                    },
-                    CancellationToken.None)
+                    })
                 .GetAwaiter()
                 .GetResult();
 
@@ -61,8 +59,7 @@ namespace RoadCaptain.Tests.Unit
                     {
                         AccessToken = "supersecret",
                         ConnectionEncryptionSecret = Array.Empty<byte>()
-                    },
-                    CancellationToken.None)
+                    })
                 .GetAwaiter()
                 .GetResult();
 
@@ -79,8 +76,7 @@ namespace RoadCaptain.Tests.Unit
                     {
                         AccessToken = "supersecret",
                         ConnectionEncryptionSecret = new byte[] { 0x1 }
-                    },
-                    CancellationToken.None)
+                    })
                 .GetAwaiter()
                 .GetResult();
 
@@ -106,8 +102,7 @@ namespace RoadCaptain.Tests.Unit
                         {
                             AccessToken = "supersecret",
                             ConnectionEncryptionSecret = new byte[] { 0x1 }
-                        },
-                        CancellationToken.None)
+                        })
                     .GetAwaiter()
                     .GetResult();
             }

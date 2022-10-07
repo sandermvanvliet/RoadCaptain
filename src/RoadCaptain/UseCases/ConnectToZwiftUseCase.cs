@@ -4,10 +4,8 @@ using System.Linq;
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
-using System.Threading;
 using System.Threading.Tasks;
 using RoadCaptain.Commands;
-using RoadCaptain.GameStates;
 using RoadCaptain.Ports;
 
 namespace RoadCaptain.UseCases
@@ -16,61 +14,24 @@ namespace RoadCaptain.UseCases
     {
         private readonly IZwift _zwift;
         private readonly MonitoringEvents _monitoringEvents;
-        private readonly IGameStateReceiver _gameStateReceiver;
         private readonly IGameStateDispatcher _gameStateDispatcher;
-        private bool _userIsInGame;
-        private readonly AutoResetEvent _userDisconnected = new(false);
 
         public ConnectToZwiftUseCase(IZwift zwift,
-            MonitoringEvents monitoringEvents, 
-            IGameStateReceiver gameStateReceiver,
+            MonitoringEvents monitoringEvents,
             IGameStateDispatcher gameStateDispatcher)
         {
             _zwift = zwift;
             _monitoringEvents = monitoringEvents;
-            _gameStateReceiver = gameStateReceiver;
             _gameStateDispatcher = gameStateDispatcher;
-            _gameStateReceiver.ReceiveGameState(ReceiveGameState);
         }
 
-        private void ReceiveGameState(GameState gameState)
-        {
-            // TODO: Revisit this
-            if (GameState.IsInGame(gameState) && !_userIsInGame)
-            {
-                _userIsInGame = true;
-            }
-            else if (gameState is ConnectedToZwiftState && _userIsInGame)
-            {
-                _userIsInGame = false;
-                _userDisconnected.Set();
-            }
-            else if (gameState is WaitingForConnectionState && _userIsInGame)
-            {
-                _userIsInGame = false;
-                _userDisconnected.Set();
-            }
-        }
-
-        public async Task ExecuteAsync(ConnectCommand connectCommand, CancellationToken cancellationToken)
+        public async Task ExecuteAsync(ConnectCommand connectCommand)
         {
             if (connectCommand.ConnectionEncryptionSecret == null || connectCommand.ConnectionEncryptionSecret.Length == 0)
             {
                 throw new ArgumentException("Connection secret must be provided");
             }
-
-            // Listen for game state updates
-#pragma warning disable CS4014
-            // ReSharper disable once MethodSupportsCancellation
-            Task.Factory.StartNew(() => _gameStateReceiver.Start(cancellationToken));
-#pragma warning restore CS4014
-
-            // To ensure that we don't block a long time 
-            // when there are no items in the queue we
-            // need to trigger the auto reset event when
-            // the token is cancelled.
-            cancellationToken.Register(() => _userDisconnected.Set());
-
+            
             // TODO: Work out what the correct IP address should be
             var ipAddress = GetMostLikelyAddress()?.ToString();
 
@@ -81,62 +42,15 @@ namespace RoadCaptain.UseCases
 
             _monitoringEvents.Information("Telling Zwift to connect to {IPAddress}", ipAddress);
 
-            Uri relayUri;
-
             try
             {
-                relayUri = await _zwift.RetrieveRelayUrl(connectCommand.AccessToken);
+                var relayUri = await _zwift.RetrieveRelayUrl(connectCommand.AccessToken);
 
                 await _zwift.InitiateRelayAsync(connectCommand.AccessToken, relayUri, ipAddress, connectCommand.ConnectionEncryptionSecret);
             }
             catch (Exception e)
             {
                 _gameStateDispatcher.InvalidCredentials(e);
-                return;
-            }
-
-            var remainingAttempts = 5;
-
-            try
-            {
-                while (!cancellationToken.IsCancellationRequested)
-                {
-                    // _userIsInGame is set through a game state update
-                    // which we receive directly on a connection with Zwift.
-                    // That means that if it is set we can exit.
-                    if (_userIsInGame)
-                    {
-                        _monitoringEvents.UserIsRiding();
-                        break;
-                    }
-
-                    // Check whether user is currently in-game
-                    // If not, sleep for a while and try again
-                    var profile = await _zwift.GetProfileAsync(connectCommand.AccessToken);
-
-                    if (profile.Riding)
-                    {
-                        _monitoringEvents.UserIsRiding();
-                        break;
-                    }
-
-                    remainingAttempts--;
-
-                    if (remainingAttempts <= 0 && !_userIsInGame)
-                    {
-                        _monitoringEvents.Warning("Zwift did not connect, attempting link again on {IPAddress}", ipAddress);
-
-                        await _zwift.InitiateRelayAsync(connectCommand.AccessToken, relayUri, ipAddress, connectCommand.ConnectionEncryptionSecret);
-
-                        remainingAttempts = 5;
-                    }
-                    
-                    _userDisconnected.WaitOne(5 * 1000);
-                }
-            }
-            catch (Exception e)
-            {
-                _gameStateDispatcher.Error(e);
             }
         }
 
