@@ -173,6 +173,8 @@ namespace RoadCaptain.Adapters
 
                 if (received == 0)
                 {
+                    _monitoringEvents.Information("Remote party disconnected");
+
                     // Nothing more in the buffer
                     // Also, connection was closed by client
                     CloseClientSocket();
@@ -201,6 +203,8 @@ namespace RoadCaptain.Adapters
 
         private void CloseClientSocket()
         {
+            _monitoringEvents.Information("Closing client socket");
+
             try
             {
                 _acceptedSocket?.Shutdown(SocketShutdown.Both);
