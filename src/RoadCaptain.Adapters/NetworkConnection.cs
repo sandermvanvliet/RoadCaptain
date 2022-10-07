@@ -6,6 +6,8 @@ using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
+using Google.Protobuf;
+using RoadCaptain.Adapters.Protobuf;
 using RoadCaptain.Ports;
 
 namespace RoadCaptain.Adapters
@@ -27,22 +29,26 @@ namespace RoadCaptain.Adapters
         private readonly AutoResetEvent _dataResetEvent = new(false);
         private readonly ConcurrentQueue<byte[]> _dataBuffer = new();
         private Thread? _thread;
+        private readonly IZwiftCrypto _zwiftCrypto;
+        private uint _commandCounter;
 
         public NetworkConnection(
             IGameStateDispatcher gameStateDispatcher,
-            MonitoringEvents monitoringEvents)
+            MonitoringEvents monitoringEvents, 
+            IZwiftCrypto zwiftCrypto)
             : this(
                 25518,
                 TimeSpan.FromSeconds(5),
                 TimeSpan.FromSeconds(5),
                 512,
                 gameStateDispatcher,
-                monitoringEvents)
+                monitoringEvents, 
+                zwiftCrypto)
         {
         }
 
         internal NetworkConnection(int port, TimeSpan acceptTimeout, TimeSpan dataTimeout, int receiveBufferSize,
-            IGameStateDispatcher gameStateDispatcher, MonitoringEvents monitoringEvents)
+            IGameStateDispatcher gameStateDispatcher, MonitoringEvents monitoringEvents, IZwiftCrypto zwiftCrypto)
         {
             if (port < 0 || port > UInt16.MaxValue)
             {
@@ -56,6 +62,7 @@ namespace RoadCaptain.Adapters
             _receiveBufferSize = receiveBufferSize;
             _gameStateDispatcher = gameStateDispatcher;
             _monitoringEvents = monitoringEvents;
+            _zwiftCrypto = zwiftCrypto;
         }
 
         public event EventHandler? AcceptTimeoutExpired;
@@ -336,19 +343,123 @@ namespace RoadCaptain.Adapters
             return null;
         }
 
+        private void SendMessageBytes(byte[] payload)
+        {
+            if (_clientSocket == null)
+            {
+                _monitoringEvents.Error("Tried to send data to Zwift but there is no active connection");
+                return;
+            }
+
+            // Note: For messages to the Zwift app we need to have a 4-byte length prefix instead
+            // of the 2-byte one we see on incoming messages...
+            var payloadToSend = WrapWithLength(_zwiftCrypto.Encrypt(payload));
+
+            var offset = 0;
+
+            while (offset < payloadToSend.Length)
+            {
+                var sent = _clientSocket.Send(payloadToSend, offset, payloadToSend.Length - offset, SocketFlags.None);
+                
+                _monitoringEvents.Debug("Sent {Count} bytes, {Sent} sent so far of {Total} total payload size", sent, offset + sent, payloadToSend.Length);
+
+                offset += sent;
+            }
+        }
+
         public void SendInitialPairingMessage(uint riderId, uint sequenceNumber)
         {
-            throw new NotImplementedException();
+            var message = new ZwiftCompanionToAppRiderMessage
+            {
+                MyId = riderId,
+                Details = new ZwiftCompanionToAppRiderMessage.Types.RiderMessage
+                {
+                    RiderId = riderId,
+                    Tag1 = _commandCounter++,
+                    Type = (uint)PhoneToGameCommandType.PairingAs
+                },
+                Sequence = sequenceNumber
+            };
+            
+            SendMessageBytes(message.ToByteArray());
         }
 
         public void SendTurnCommand(TurnDirection direction, ulong sequenceNumber, uint riderId)
         {
-            throw new NotImplementedException();
+            var message = new ZwiftCompanionToAppRiderMessage
+            {
+                MyId = riderId,
+                Details = new ZwiftCompanionToAppRiderMessage.Types.RiderMessage
+                {
+                    CommandType = (uint)GetCommandTypeForTurnDirection(direction),
+                    Tag1 = _commandCounter++, // This is a sequence of the number of commands we've sent to the game
+                    Type = (uint)PhoneToGameCommandType.CustomAction, // Tag2
+                    Tag3 = 0,
+                    Tag5 = 0,
+                    Tag7 = 0
+                },
+                Sequence = (uint)sequenceNumber // This value is provided via the SomethingEmpty synchronization command
+            };
+
+            SendMessageBytes(message.ToByteArray());
         }
 
         public void EndActivity(ulong sequenceNumber, string activityName, uint riderId)
         {
-            throw new NotImplementedException();
+            var message = new ZwiftCompanionToAppRiderMessage
+            {
+                MyId = riderId,
+                Details = new ZwiftCompanionToAppRiderMessage.Types.RiderMessage
+                {
+                    Tag1 = _commandCounter++, // This is a sequence of the number of commands we've sent to the game
+                    Type = (uint)PhoneToGameCommandType.DoneRiding, // Tag2
+                    Tag3 = 0,
+                    Tag5 = 0,
+                    Tag7 = 0,
+                    Data = new ZwiftCompanionToAppRiderMessage.Types.RiderMessage.Types.RiderMessageData
+                    {
+                        Tag1 = 15,
+                        SubData = new ZwiftCompanionToAppRiderMessage.Types.RiderMessage.Types.RiderMessageData.Types.RiderMessageSubData
+                        {
+                            Tag1 = 3,
+                            WorldName = activityName,
+                            Tag4 = 0
+                        }
+                    }
+                },
+                Sequence = (uint)sequenceNumber // This value is provided via the SomethingEmpty synchronization command
+            };
+
+            SendMessageBytes(message.ToByteArray());
+        }
+
+        private static CommandType GetCommandTypeForTurnDirection(TurnDirection direction)
+        {
+            switch (direction)
+            {
+                case TurnDirection.Left:
+                    return CommandType.TurnLeft;
+                case TurnDirection.GoStraight:
+                    return CommandType.GoStraight;
+                case TurnDirection.Right:
+                    return CommandType.TurnRight;
+                default:
+                    return CommandType.Unknown;
+            }
+        }
+
+        private static byte[] WrapWithLength(byte[] payload)
+        {
+            var prefix = BitConverter.GetBytes(payload.Length);
+
+            if (BitConverter.IsLittleEndian)
+            {
+                prefix = prefix.Reverse().ToArray();
+            }
+
+            return prefix
+                .Concat(payload)
+                .ToArray();
         }
     }
 }

@@ -45,7 +45,8 @@ namespace RoadCaptain.Adapters.Tests.Unit.Networking
                 TimeSpan.FromMilliseconds(DataTimeoutMilliseconds),
                 16,
                 _gameStateDispatcher,
-                monitoringEvents);
+                monitoringEvents,
+                null);
 
             _networkConnection.AcceptTimeoutExpired += (_, _) => _acceptTimeoutRaised = true;
             _networkConnection.DataTimeoutExpired += (_, _) => _dataTimeoutRaised = true;
