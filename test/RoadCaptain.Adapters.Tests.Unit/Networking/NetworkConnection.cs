@@ -10,6 +10,7 @@ namespace RoadCaptain.Adapters.Tests.Unit.Networking
 {
     internal class NetworkConnection : IZwiftGameConnection, IMessageReceiver
     {
+        private static readonly TimeSpan ReceiveMessageBytesTimeout = TimeSpan.FromMilliseconds(250);
         private readonly int _port;
         private Socket? _listeningSocket;
         private readonly CancellationTokenSource _tokenSource;
@@ -251,7 +252,7 @@ namespace RoadCaptain.Adapters.Tests.Unit.Networking
                     return dataBuffer;
                 }
 
-                _dataResetEvent.WaitOne(250);
+                _dataResetEvent.WaitOne(ReceiveMessageBytesTimeout);
             }
 
             return null;
