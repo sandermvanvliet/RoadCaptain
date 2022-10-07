@@ -21,6 +21,7 @@ namespace RoadCaptain.UseCases
         private static ulong _lastIncomingSequenceNumber;
         private readonly IZwiftGameConnection _gameConnection;
         private readonly IGameStateReceiver _gameStateReceiver;
+        private GameState? _previousGameState;
 
         public HandleZwiftMessagesUseCase(
             IMessageEmitter emitter,
@@ -41,6 +42,19 @@ namespace RoadCaptain.UseCases
             // so this use case needs to listen to RouteSelected
             // updates.
             _gameStateReceiver.ReceiveRoute(route => _route = route);
+
+            _gameStateReceiver.ReceiveGameState(gameState =>
+            {
+                if(_previousGameState is WaitingForConnectionState && gameState is ConnectedToZwiftState && _pingedBefore)
+                {
+                    // This resets the pingedBefore flag so that when
+                    // we lose the connection and regain it, the pairing
+                    // message is sent again.
+                    _pingedBefore = false;
+                }
+
+                _previousGameState = gameState;
+            });
         }
 
         public void Execute(CancellationToken token)

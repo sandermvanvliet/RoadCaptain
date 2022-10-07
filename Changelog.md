@@ -17,6 +17,7 @@ Ultimately you _should_ notice less quirky behaviour at times which means you ca
 - Fix an issue where the in-game window would only show the Zwift route to start without any other instruction when clicking "Let's go" and Zwift is not yet started
 - Removed the "Start new loop at end of route" as that is now handled by actual looped routes built with RouteBuilder
 - Fix issue where the in-game window would appear off-screen
+- Fix an issue where the Zwift connection would not be initialized properly after a disconnect and subsequent re-connect
 
 ### Routing
 
