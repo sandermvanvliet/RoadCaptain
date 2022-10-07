@@ -124,7 +124,7 @@ namespace RoadCaptain.Tests.Unit.GameState.Repro
                 if (newState is not UpcomingTurnState and not OnRouteState)
                 {
                     Debugger.Break();
-                    throw new Exception($"Expected either {nameof(UpcomingTurnState)} or {nameof(OnRouteState)} but got {state.GetType().Name}");
+                    throw new Exception($"Expected either {nameof(UpcomingTurnState)} or {nameof(OnRouteState)} but got {newState.GetType().Name}");
                 }
 
                 state = newState;

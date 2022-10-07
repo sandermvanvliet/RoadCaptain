@@ -60,9 +60,25 @@ namespace RoadCaptain.Tests.Unit.GameState
         }
 
         [Fact]
-        public void GivenNextPositionOnRouteSegment_ResultIsOnRouteState()
+        public void GivenNextPositionOnRouteSegment_ResultIsLostRouteLockState()
         {
             var result = GivenStartingState(Route).UpdatePosition(RouteSegment1Point2, Segments, Route);
+
+            result
+                .Should()
+                .BeOfType<LostRouteLockState>()
+                .Which
+                .Direction
+                .Should()
+                .Be(SegmentDirection.Unknown);
+        }
+
+        [Fact]
+        public void GivenNextPositionOnSameRouteSegment_ResultIsOnRouteState()
+        {
+            var result = GivenStartingState(Route)
+                .UpdatePosition(RouteSegment1Point2, Segments, Route)
+                .UpdatePosition(RouteSegment1Point3, Segments, Route);
 
             result
                 .Should()
@@ -70,13 +86,31 @@ namespace RoadCaptain.Tests.Unit.GameState
                 .Which
                 .CurrentPosition
                 .Should()
-                .Be(RouteSegment1Point2);
+                .Be(RouteSegment1Point3);
+        }
+
+        [Fact]
+        public void GivenNextPositionOnRouteSegmentInOppositeDirection_ResultIsLostRouteLockState()
+        {
+            var result = GivenStartingState(Route).UpdatePosition(RouteSegment1Point3, Segments, Route);
+            result = result.UpdatePosition(RouteSegment1Point2, Segments, Route);
+            result = result.UpdatePosition(RouteSegment1Point1, Segments, Route);
+
+            result
+                .Should()
+                .BeOfType<LostRouteLockState>()
+                .Which
+                .CurrentPosition
+                .Should()
+                .Be(RouteSegment1Point1);
         }
 
         [Fact]
         public void GivenNextPositionOnRouteSegment_ElapsedDistanceIsIncreased()
         {
-            var result = GivenStartingState(Route).UpdatePosition(RouteSegment1Point2, Segments, Route);
+            var result = GivenStartingState(Route)
+                .UpdatePosition(RouteSegment1Point2, Segments, Route)
+                .UpdatePosition(RouteSegment1Point3, Segments, Route);
 
             result
                 .Should()
@@ -90,7 +124,9 @@ namespace RoadCaptain.Tests.Unit.GameState
         [Fact]
         public void GivenNextPositionOnRouteSegment_ElapsedAscentIsIncreased()
         {
-            var result = GivenStartingState(Route).UpdatePosition(RouteSegment1Point2, Segments, Route);
+            var result = GivenStartingState(Route)
+                .UpdatePosition(RouteSegment1Point2, Segments, Route)
+                .UpdatePosition(RouteSegment1Point3, Segments, Route);
 
             result
                 .Should()
@@ -154,7 +190,9 @@ namespace RoadCaptain.Tests.Unit.GameState
             Route.EnteredSegment(RouteSegment2.Id);
             Route.EnteredSegment(RouteSegment3.Id);
 
-            var result = startingState.UpdatePosition(RouteSegment3Point3, Segments, Route);
+            var result = startingState
+                .UpdatePosition(RouteSegment3Point2, Segments, Route)
+                .UpdatePosition(RouteSegment3Point3, Segments, Route);
 
             result
                 .Should()

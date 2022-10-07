@@ -90,8 +90,14 @@ namespace RoadCaptain.GameStates
 
             if (plannedRoute.CurrentSegmentId == segment.Id)
             {
-                return new OnRouteState(RiderId, ActivityId, closestOnSegment, segment, plannedRoute, direction,
+                if(plannedRoute.CurrentSegmentSequence.Direction == direction)
+                {
+                    return new OnRouteState(RiderId, ActivityId, closestOnSegment, segment, plannedRoute, direction,
                     distance, ascent, descent);
+                }
+
+                return new LostRouteLockState(RiderId, ActivityId, closestOnSegment,
+                    segment, Route, direction, distance, ascent, descent);
             }
 
             if (plannedRoute.NextSegmentId == segment.Id)

@@ -329,7 +329,9 @@ namespace RoadCaptain.Tests.Unit.GameState
             GameStates.GameState state = new OnRouteState(RiderId, ActivityId, RoutePosition3, SegmentById("route-segment-3"), _route, SegmentDirection.AtoB, 0, 0, 0);
             state = state.UpdatePosition(PositionOnSegment, _segments, _route); // Results in an LostRouteLockState on segment-1
 
-            var result = state.UpdatePosition(RoutePosition3, _segments, _route);
+            var result = state
+                .UpdatePosition(RoutePosition3, _segments, _route)
+                .UpdatePosition(RoutePosition3Point2, _segments, _route);
 
             result
                 .Should()
@@ -337,7 +339,7 @@ namespace RoadCaptain.Tests.Unit.GameState
                 .Which
                 .CurrentPosition
                 .Should()
-                .Be(RoutePosition3);
+                .Be(RoutePosition3Point2);
         }
 
         [Fact]

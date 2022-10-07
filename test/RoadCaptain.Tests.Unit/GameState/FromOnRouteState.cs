@@ -119,6 +119,19 @@ namespace RoadCaptain.Tests.Unit.GameState
         }
 
         [Fact]
+        public void GivenNextPositionOnSameSegmentButOtherDirection_ResultIsLostRouteLockState()
+        {
+            var startingState = GivenStartingState(Route);
+            var result = startingState.UpdatePosition(RouteSegment1Point2, Segments, Route);
+            result = result.UpdatePosition(RouteSegment1Point3, Segments, Route);
+            result = result.UpdatePosition(RouteSegment1Point2, Segments, Route);
+
+            result
+                .Should()
+                .BeOfType<LostRouteLockState>();
+        }
+
+        [Fact]
         public void GivenPositionOnNextSegmentOfRoute_CurrentSegmentOnRouteIsChangedToNextSegment()
         {
             var result = GivenStartingState(Route).UpdatePosition(RouteSegment2Point1, Segments, Route);
