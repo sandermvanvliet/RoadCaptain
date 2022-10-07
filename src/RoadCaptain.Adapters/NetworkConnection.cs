@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
@@ -17,12 +19,13 @@ namespace RoadCaptain.Adapters
         private readonly CancellationTokenSource _tokenSource;
         private readonly TimeSpan _acceptTimeout;
         private readonly TimeSpan _dataTimeout;
+        private readonly int _receiveBufferSize;
         private Socket? _clientSocket;
         private readonly AutoResetEvent _dataResetEvent = new(false);
         private readonly ConcurrentQueue<byte[]> _dataBuffer = new();
         private Thread? _thread;
 
-        public NetworkConnection(int port, TimeSpan acceptTimeout, TimeSpan dataTimeout)
+        public NetworkConnection(int port, TimeSpan acceptTimeout, TimeSpan dataTimeout, int receiveBufferSize = 512)
         {
             if (port < 0 || port > UInt16.MaxValue)
             {
@@ -33,6 +36,7 @@ namespace RoadCaptain.Adapters
             _tokenSource = new CancellationTokenSource();
             _acceptTimeout =acceptTimeout;
             _dataTimeout = dataTimeout;
+            _receiveBufferSize = receiveBufferSize;
         }
 
         public event EventHandler? AcceptTimeoutExpired;
@@ -152,10 +156,11 @@ namespace RoadCaptain.Adapters
 
         private byte[]? ReadDataFromClientSocket()
         {
+            List<byte> result = new();
+            var buffer = new byte[_receiveBufferSize];
+
             while (!_tokenSource.IsCancellationRequested)
             {
-                var buffer = new byte[512];
-
                 int read;
 
                 try
@@ -180,15 +185,18 @@ namespace RoadCaptain.Adapters
 
                 if (read > 0)
                 {
-                    var result = new byte[read];
-                    
-                    for (var i = 0; i < read; i++)
-                    {
-                        result[i] = buffer[i];
-                    }
+                    result.AddRange(buffer.Take(read));
 
-                    return result;
+                    if (read < buffer.Length - 1)
+                    {
+                        break;
+                    }
                 }
+            }
+
+            if (result.Any())
+            {
+                return result.ToArray();
             }
 
             return null;

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
@@ -26,7 +27,11 @@ namespace RoadCaptain.Adapters.Tests.Unit.Networking
         {
             var random = new Random();
             _port = random.Next(1025, 10025);
-            _networkConnection = new NetworkConnection(_port, TimeSpan.FromMilliseconds(AcceptTimeoutMilliseconds), TimeSpan.FromMilliseconds(DataTimeoutMilliseconds));
+            _networkConnection = new NetworkConnection(
+                _port, 
+                TimeSpan.FromMilliseconds(AcceptTimeoutMilliseconds), 
+                TimeSpan.FromMilliseconds(DataTimeoutMilliseconds),
+                16);
             _networkConnection.AcceptTimeoutExpired += (_, _) => _acceptTimeoutRaised = true;
             _networkConnection.DataTimeoutExpired += (_, _) => _dataTimeoutRaised = true;
             _networkConnection.Data += (_, args) => _receivedData.AddRange(args.Data);
@@ -119,6 +124,26 @@ namespace RoadCaptain.Adapters.Tests.Unit.Networking
             _receivedData
                 .Should()
                 .BeEquivalentTo(new byte[] { 0x1, 0x2, 0x3, 0x4, 0x5, 0x6, 0x7 });
+        }
+
+        [Fact]
+        public void GivenConnectionAndDataSentInOneGoIsLargerThanReceiveBuffer_AllDataIsReceived()
+        {
+            var data = new byte[] { 0x1, 0x2, 0x3, 0x4, 0x5, 0x6, 0x7, 0x8, 0x9, 0xA, 0xB, 0xC, 0xD, 0xE, 0xF, 0x10, 0x11, 0x12, 0x13, 0x14 };
+            WhenTestingConnection(clientSocket =>
+            {
+                WaitForConnectionToListen();
+
+                clientSocket.Connect(new IPEndPoint(IPAddress.Loopback, _port));
+
+                clientSocket.Send(data);
+
+                WaitForProcessingToHappen();
+            });
+
+            _receivedData
+                .Should()
+                .BeEquivalentTo(data);
         }
 
         [Fact]
@@ -260,7 +285,10 @@ namespace RoadCaptain.Adapters.Tests.Unit.Networking
             var closeTask = Task.Factory.StartNew(() =>
             {
                 _autoResetEvent.WaitOne(TestTimeoutMilliseconds);
-                _networkConnection.Shutdown();
+                if (!Debugger.IsAttached)
+                {
+                    _networkConnection.Shutdown();
+                }
             });
 
             try
