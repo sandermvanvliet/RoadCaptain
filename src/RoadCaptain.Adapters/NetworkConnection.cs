@@ -37,7 +37,7 @@ namespace RoadCaptain.Adapters
             MonitoringEvents monitoringEvents, 
             IZwiftCrypto zwiftCrypto)
             : this(
-                25518,
+                21588,
                 TimeSpan.FromSeconds(5),
                 TimeSpan.FromSeconds(5),
                 512,
