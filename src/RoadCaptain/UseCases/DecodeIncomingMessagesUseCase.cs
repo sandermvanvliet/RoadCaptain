@@ -42,6 +42,8 @@ namespace RoadCaptain.UseCases
             // which in turn ensures that Accept() is terminated.
             token.Register(() => _messageReceiver.Shutdown());
 
+            _messageReceiver.StartAsync().GetAwaiter().GetResult();
+
             // do-while to at least attempt one receive action
             do
             {

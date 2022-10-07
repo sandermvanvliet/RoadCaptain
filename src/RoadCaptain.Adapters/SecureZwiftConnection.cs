@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
+using System.Threading.Tasks;
 using Google.Protobuf;
 using RoadCaptain.Adapters.Protobuf;
 using RoadCaptain.Ports;
@@ -210,6 +211,11 @@ namespace RoadCaptain.Adapters
             }
 
             return total.ToArray();
+        }
+
+        public Task StartAsync()
+        {
+            return Task.CompletedTask;
         }
 
         public void Shutdown()

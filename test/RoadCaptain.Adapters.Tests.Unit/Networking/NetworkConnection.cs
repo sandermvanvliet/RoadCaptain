@@ -59,7 +59,7 @@ namespace RoadCaptain.Adapters.Tests.Unit.Networking
             return Task.CompletedTask;
         }
 
-        public async Task StartAsyncOnThread()
+        private async Task StartAsyncOnThread()
         {
             _listeningSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp)
             {
