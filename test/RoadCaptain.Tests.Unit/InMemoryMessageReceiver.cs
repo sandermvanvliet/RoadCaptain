@@ -2,6 +2,7 @@
 // Licensed under Artistic License 2.0
 // See LICENSE or https://choosealicense.com/licenses/artistic-2.0/
 
+using System;
 using System.Threading.Tasks;
 using RoadCaptain.Ports;
 
@@ -38,6 +39,11 @@ namespace RoadCaptain.Tests.Unit
         public void Shutdown()
         {
         }
+
+        public event EventHandler? AcceptTimeoutExpired;
+        public event EventHandler? DataTimeoutExpired;
+        public event EventHandler? ConnectionLost;
+        public event EventHandler? ConnectionAccepted;
 
         public byte[]? AvailableBytes { get; set; }
     }

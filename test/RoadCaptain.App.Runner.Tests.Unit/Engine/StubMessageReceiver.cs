@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using RoadCaptain.Ports;
 
 namespace RoadCaptain.App.Runner.Tests.Unit.Engine
@@ -18,5 +19,10 @@ namespace RoadCaptain.App.Runner.Tests.Unit.Engine
         public void Shutdown()
         {
         }
+
+        public event EventHandler? AcceptTimeoutExpired;
+        public event EventHandler? DataTimeoutExpired;
+        public event EventHandler? ConnectionLost;
+        public event EventHandler? ConnectionAccepted;
     }
 }

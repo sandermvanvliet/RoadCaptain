@@ -95,6 +95,11 @@ namespace RoadCaptain.Adapters
             }
         }
 
+        public event EventHandler? AcceptTimeoutExpired;
+        public event EventHandler? DataTimeoutExpired;
+        public event EventHandler? ConnectionLost;
+        public event EventHandler? ConnectionAccepted;
+
         private void EnqueueForReceive(byte[] payload)
         {
             // Put the payload on a queue and signal ReceiveMessageBytes() that it can unblock
