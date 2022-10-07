@@ -19,6 +19,7 @@ namespace RoadCaptain.Adapters
         private readonly CancellationTokenSource _tokenSource;
         private readonly TimeSpan _acceptTimeout;
         private readonly TimeSpan _dataTimeout;
+        // TODO: Figure out what a decent size is for the receive buffer, maybe dynamically even?
         private readonly int _receiveBufferSize;
         private Socket? _clientSocket;
         private readonly AutoResetEvent _dataResetEvent = new(false);
@@ -55,7 +56,12 @@ namespace RoadCaptain.Adapters
                     return Task.CompletedTask;
                 }
 
-                _thread = new Thread(() => StartAsyncOnThread().GetAwaiter().GetResult());
+                _thread = new Thread(
+                    () => ConnectionLoop().GetAwaiter().GetResult())
+                {
+                    IsBackground = true,
+                    Name = "NetworkConnection"
+                };
 
                 _thread.Start();
             }
@@ -63,7 +69,7 @@ namespace RoadCaptain.Adapters
             return Task.CompletedTask;
         }
 
-        private async Task StartAsyncOnThread()
+        private async Task ConnectionLoop()
         {
             _listeningSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp)
             {
@@ -157,6 +163,10 @@ namespace RoadCaptain.Adapters
         private byte[]? ReadDataFromClientSocket()
         {
             List<byte> result = new();
+
+            // I suspect this buffer could even be allocated just once
+            // as this class is thread-safe(ish).
+            // TODO: Investigate if this can be allocated once instead of every call to this method
             var buffer = new byte[_receiveBufferSize];
 
             while (!_tokenSource.IsCancellationRequested)
@@ -167,6 +177,11 @@ namespace RoadCaptain.Adapters
                 {
                     read = _clientSocket!.Receive(buffer, 0, buffer.Length, SocketFlags.None, out var socketError);
 
+                    // If a client closes the socket then the number of bytes read
+                    // becomes zero. That's a bit unfortunate but alas nothing we
+                    // can do anything about. Therefore if either there is a socket
+                    // error _or_ the number of bytes received is zero we will
+                    // consider the client connection to be closed.
                     if (socketError != SocketError.Success || read == 0)
                     {
                         CloseAndCleanupClientSocket();
@@ -176,19 +191,26 @@ namespace RoadCaptain.Adapters
                 }
                 catch (SocketException)
                 {
+                    CloseAndCleanupClientSocket();
                     return null;
                 }
                 catch (ObjectDisposedException)
                 {
+                    CloseAndCleanupClientSocket();
                     return null;
                 }
 
                 if (read > 0)
                 {
+                    // This is annoying because it allocates these bytes again
+                    // TODO: Optimize allocations when reading data from socket
                     result.AddRange(buffer.Take(read));
 
                     if (read < buffer.Length - 1)
                     {
+                        // At this point there isn't any more data
+                        // in the socket receive buffer and we can
+                        // stop.
                         break;
                     }
                 }
@@ -242,6 +264,10 @@ namespace RoadCaptain.Adapters
         public void Shutdown()
         {
             _tokenSource.Cancel();
+
+            // Also close the client socket so that the counter party
+            // is informed we're shutting down.
+            CloseAndCleanupClientSocket();
 
             try
             {
