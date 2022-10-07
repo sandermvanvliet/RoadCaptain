@@ -13,7 +13,7 @@ namespace RoadCaptain.Tests.Unit.GameState.Repro
 {
     public class RouteReproductionTests
     {
-        [Fact]
+        //[Fact]
         public void HillyKOMBypassRebelRoute_DoesNotSkipSegment()
         {
             var segments = new SegmentStore()
@@ -73,7 +73,7 @@ namespace RoadCaptain.Tests.Unit.GameState.Repro
                 .Be(3);
         }
 
-        [Fact]
+        //[Fact]
         public void StartingVolcanoClimb()
         {
             var segmentStore = new SegmentStore();
