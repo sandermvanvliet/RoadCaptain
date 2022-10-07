@@ -26,7 +26,7 @@ namespace RoadCaptain.Adapters
 
         public SecureZwiftConnection(
             MonitoringEvents monitoringEvents,
-            IGameStateDispatcher gameStateDispatcher, 
+            IGameStateDispatcher gameStateDispatcher,
             IZwiftCrypto zwiftCrypto)
         {
             _monitoringEvents = monitoringEvents;
@@ -42,7 +42,7 @@ namespace RoadCaptain.Adapters
             {
                 lock (SyncRoot)
                 {
-                    _socket  = new Socket(
+                    _socket = new Socket(
                         AddressFamily.InterNetwork,
                         SocketType.Stream,
                         ProtocolType.Tcp)
@@ -81,6 +81,19 @@ namespace RoadCaptain.Adapters
          */
         public byte[]? ReceiveMessageBytes()
         {
+            try
+            {
+                return ReceiveMessageBytesCore();
+            }
+            catch (Exception ex)
+            {
+                _monitoringEvents.Error(ex, "Tried to receive data but it failed");
+                return null;
+            }
+        }
+
+        private byte[]? ReceiveMessageBytesCore()
+        {
             // Do we have an established connection?
             if (_acceptedSocket == null)
             {
@@ -102,7 +115,7 @@ namespace RoadCaptain.Adapters
                     _monitoringEvents.WaitingForConnection();
 
                     _gameStateDispatcher.WaitingForConnection();
-                    
+
                     _acceptedSocket = _socket.Accept();
 
                     _gameStateDispatcher.Connected();
@@ -135,10 +148,10 @@ namespace RoadCaptain.Adapters
                 // Receive will block until bytes are available to read.
                 var received = _acceptedSocket
                     .Receive(
-                        buffer, 
-                        0, 
-                        buffer.Length, 
-                        SocketFlags.None, 
+                        buffer,
+                        0,
+                        buffer.Length,
+                        SocketFlags.None,
                         out var socketError);
 
                 if (socketError != SocketError.Success)
@@ -288,7 +301,7 @@ namespace RoadCaptain.Adapters
             while (offset < payloadToSend.Length)
             {
                 var sent = _acceptedSocket.Send(payloadToSend, offset, payloadToSend.Length - offset, SocketFlags.None);
-                
+
                 _monitoringEvents.Debug("Sent {Count} bytes, {Sent} sent so far of {Total} total payload size", sent, offset + sent, payloadToSend.Length);
 
                 offset += sent;
@@ -308,7 +321,7 @@ namespace RoadCaptain.Adapters
                 },
                 Sequence = sequenceNumber
             };
-            
+
             SendMessageBytes(message.ToByteArray());
         }
 
