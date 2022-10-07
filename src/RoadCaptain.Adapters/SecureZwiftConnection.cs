@@ -102,7 +102,7 @@ namespace RoadCaptain.Adapters
                     _monitoringEvents.WaitingForConnection();
 
                     _gameStateDispatcher.WaitingForConnection();
-
+                    
                     _acceptedSocket = _socket.Accept();
 
                     _gameStateDispatcher.Connected();
