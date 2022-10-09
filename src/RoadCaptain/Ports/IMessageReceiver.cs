@@ -1,5 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
 namespace RoadCaptain.Ports
 {
@@ -25,10 +24,5 @@ namespace RoadCaptain.Ports
         /// Stop the message receiver from accepting data from a Zwift connection
         /// </summary>
         void Shutdown();
-        
-        event EventHandler? AcceptTimeoutExpired;
-        event EventHandler? DataTimeoutExpired;
-        event EventHandler? ConnectionLost;
-        event EventHandler? ConnectionAccepted;
     }
 }
