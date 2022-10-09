@@ -421,3 +421,5 @@ test/RoadCaptain.Tests.Benchmark/Results/
 *.drawio.dtmp
 
 vendor/
+
+version-changelog.md
