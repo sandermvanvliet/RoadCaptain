@@ -134,7 +134,7 @@ namespace RoadCaptain.UseCases
         {
             if (_lastDataReceived == null || DateTime.UtcNow.Subtract(_lastDataReceived.Value).TotalSeconds > 10)
             {
-                _monitoringEvents.Warning("Did not receive any data in the last 10 seconds");
+                _monitoringEvents.Debug("Did not receive any data in the last 10 seconds");
             }
         }
 
