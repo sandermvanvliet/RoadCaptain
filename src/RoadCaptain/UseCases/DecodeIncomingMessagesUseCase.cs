@@ -17,6 +17,8 @@ namespace RoadCaptain.UseCases
         private readonly MonitoringEvents _monitoringEvents;
         private readonly IZwiftCrypto _zwiftCrypto;
         private readonly IGameStateDispatcher _dispatcher;
+        private DateTime? _lastDataReceived;
+        private Timer? _watchdogTimer;
 
         public DecodeIncomingMessagesUseCase(
             IMessageReceiver messageReceiver,
@@ -30,6 +32,7 @@ namespace RoadCaptain.UseCases
             _monitoringEvents = monitoringEvents;
             _zwiftCrypto = zwiftCrypto;
             _dispatcher = dispatcher;
+            _watchdogTimer = new Timer(_ => DataReceivedWatchdog());
         }
 
         public Task ExecuteAsync(CancellationToken token)
@@ -40,9 +43,18 @@ namespace RoadCaptain.UseCases
             // Register a handler on the cancellation token which
             // effectively calls Shutdown() which calls Socket.Close()
             // which in turn ensures that Accept() is terminated.
-            token.Register(() => _messageReceiver.Shutdown());
+            token.Register(() =>
+            {
+                _watchdogTimer?.Change(Timeout.InfiniteTimeSpan, Timeout.InfiniteTimeSpan);
+                _watchdogTimer?.Dispose();
+                _watchdogTimer = null;
+                _messageReceiver.Shutdown();
+            });
 
             _messageReceiver.StartAsync().GetAwaiter().GetResult();
+
+            // Check every 5 seconds, starting 5 seconds from now
+            _watchdogTimer!.Change(TimeSpan.FromSeconds(5), TimeSpan.FromSeconds(5));
 
             // do-while to at least attempt one receive action
             do
@@ -54,6 +66,8 @@ namespace RoadCaptain.UseCases
                     // Nothing to do, wrap around and expect ReceiveMessageBytes to block
                     continue;
                 }
+
+                _lastDataReceived = DateTime.UtcNow;
 
                 var offset = 0;
                 var readOnlySequence = new ReadOnlySequence<byte>(bytes);
@@ -114,6 +128,14 @@ namespace RoadCaptain.UseCases
             } while (!token.IsCancellationRequested);
 
             return Task.CompletedTask;
+        }
+
+        private void DataReceivedWatchdog()
+        {
+            if (_lastDataReceived == null || DateTime.UtcNow.Subtract(_lastDataReceived.Value).TotalSeconds > 10)
+            {
+                _monitoringEvents.Warning("Did not receive any data in the last 10 seconds");
+            }
         }
 
         private static int ToUInt16(ReadOnlySequence<byte> buffer, int start, int count)
