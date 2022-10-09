@@ -127,26 +127,34 @@ namespace RoadCaptain.Tests.Unit.GameState
         {
             // Note: Because the segments are static fields we must only
             //       initialize the turns once.
-            if(!RouteSegment1.NextSegmentsNodeA.Any())
+            lock (RouteSegment1)
             {
-                RouteSegment1.NextSegmentsNodeA.Add(new Turn(TurnDirection.GoStraight, Segment1.Id));
-                RouteSegment1.NextSegmentsNodeB.Add(new Turn(TurnDirection.GoStraight, RouteSegment2.Id));
-                RouteSegment1.NextSegmentsNodeB.Add(new Turn(TurnDirection.Left, Segment2.Id));
+                if (!RouteSegment1.NextSegmentsNodeA.Any())
+                {
+                    RouteSegment1.NextSegmentsNodeA.Add(new Turn(TurnDirection.GoStraight, Segment1.Id));
+                    RouteSegment1.NextSegmentsNodeB.Add(new Turn(TurnDirection.GoStraight, RouteSegment2.Id));
+                    RouteSegment1.NextSegmentsNodeB.Add(new Turn(TurnDirection.Left, Segment2.Id));
+                }
             }
-            
-            if(!RouteSegment2.NextSegmentsNodeA.Any())
+            lock (RouteSegment2)
             {
-                RouteSegment2.NextSegmentsNodeA.Add(new Turn(TurnDirection.GoStraight, RouteSegment1.Id));
-                RouteSegment2.NextSegmentsNodeB.Add(new Turn(TurnDirection.GoStraight, RouteSegment3.Id));
-                RouteSegment2.NextSegmentsNodeB.Add(new Turn(TurnDirection.Left, Segment1.Id));
-                RouteSegment2.NextSegmentsNodeB.Add(new Turn(TurnDirection.Right, Segment2.Id));
+                if (!RouteSegment2.NextSegmentsNodeA.Any())
+                {
+                    RouteSegment2.NextSegmentsNodeA.Add(new Turn(TurnDirection.GoStraight, RouteSegment1.Id));
+                    RouteSegment2.NextSegmentsNodeB.Add(new Turn(TurnDirection.GoStraight, RouteSegment3.Id));
+                    RouteSegment2.NextSegmentsNodeB.Add(new Turn(TurnDirection.Left, Segment1.Id));
+                    RouteSegment2.NextSegmentsNodeB.Add(new Turn(TurnDirection.Right, Segment2.Id));
+                }
             }
 
-            if(!RouteSegment3.NextSegmentsNodeA.Any())
+            lock (RouteSegment3)
             {
-                RouteSegment3.NextSegmentsNodeA.Add(new Turn(TurnDirection.GoStraight, RouteSegment2.Id));
-                RouteSegment3.NextSegmentsNodeB.Add(new Turn(TurnDirection.Left, Segment2.Id));
-                RouteSegment3.NextSegmentsNodeB.Add(new Turn(TurnDirection.GoStraight, Segment1.Id));
+                if (!RouteSegment3.NextSegmentsNodeA.Any())
+                {
+                    RouteSegment3.NextSegmentsNodeA.Add(new Turn(TurnDirection.GoStraight, RouteSegment2.Id));
+                    RouteSegment3.NextSegmentsNodeB.Add(new Turn(TurnDirection.Left, Segment2.Id));
+                    RouteSegment3.NextSegmentsNodeB.Add(new Turn(TurnDirection.GoStraight, Segment1.Id));
+                }
             }
 
             foreach (var segment in Segments)
