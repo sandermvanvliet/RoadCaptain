@@ -42,6 +42,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<None Update="GameState\Repro\Rebel.Route-Italian.Villa.Sprint.Loop.json">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
 		<None Update="GameState\Repro\VolcanoClimbJunction.json">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</None>

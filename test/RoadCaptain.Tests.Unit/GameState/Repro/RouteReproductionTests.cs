@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -261,6 +262,108 @@ namespace RoadCaptain.Tests.Unit.GameState.Repro
                 newState
                     .Should()
                     .NotBeOfType<LostRouteLockState>();
+
+                state = newState;
+            }
+        }
+
+        [Fact]
+        public void ItalianVillaSprintLoopLostRouteLock()
+        {
+            // This test is to verify that for the Volcano Climb route, the route lock is
+            // never lost. This used to happen because there was a non-routable segment
+            // at the junction on the Volcano circuit and the land bridge towards the
+            // Italian villas.
+            // What would happen was that RoadCaptain flipped quickly between on/off route
+            // states.
+            var segmentStore = new SegmentStore();
+            var routeStore = new RouteStoreToDisk(segmentStore, new WorldStoreToDisk());
+            var segments = segmentStore
+                .LoadSegments(
+                    new World { Id = "watopia", ZwiftId = ZwiftWorldId.Watopia },
+                    SportType.Cycling);
+
+            var plannedRoute = routeStore.LoadFrom(@"GameState\Repro\Rebel.Route-Italian.Villa.Sprint.Loop.json");
+
+            plannedRoute.EnteredSegment(plannedRoute.RouteSegmentSequence[0].SegmentId);
+            plannedRoute.EnteredSegment(plannedRoute.RouteSegmentSequence[1].SegmentId);
+            var secondSegment = segments.Single(s => s.Id == plannedRoute.RouteSegmentSequence[1].SegmentId);
+            var wrongSegment = segments.Single(s => s.Id == plannedRoute.RouteSegmentSequence.Last().SegmentId);
+
+            GameStates.GameState state = new OnRouteState(1, 2, secondSegment.Points[4], secondSegment, plannedRoute, SegmentDirection.AtoB, 0, 0, 0);
+
+            var positions = new List<TrackPoint>();
+
+            positions.AddRange(secondSegment.Points.Take(5).Reverse().ToList());
+            positions.AddRange(wrongSegment.Points.AsEnumerable().Reverse().Take(20).ToList());
+
+            for (var index = 1; index < positions.Count; index++)
+            {
+                var newState = state.UpdatePosition(positions[index], segments, plannedRoute);
+
+                // We only expect OnRouteState on this sequence of TrackPoints
+                if (newState is not LostRouteLockState)
+                {
+                    Debugger.Break();
+                    throw new Exception($"Expected {nameof(LostRouteLockState)} but got {newState.GetType().Name}");
+                }
+
+                state = newState;
+            }
+        }
+
+        [Fact]
+        public void ItalianVillaSprintLoopLostRouteLockRecovery()
+        {
+            // This test is to verify that for the Volcano Climb route, the route lock is
+            // never lost. This used to happen because there was a non-routable segment
+            // at the junction on the Volcano circuit and the land bridge towards the
+            // Italian villas.
+            // What would happen was that RoadCaptain flipped quickly between on/off route
+            // states.
+            var segmentStore = new SegmentStore();
+            var routeStore = new RouteStoreToDisk(segmentStore, new WorldStoreToDisk());
+            var segments = segmentStore
+                .LoadSegments(
+                    new World { Id = "watopia", ZwiftId = ZwiftWorldId.Watopia },
+                    SportType.Cycling);
+
+            var plannedRoute = routeStore.LoadFrom(@"GameState\Repro\Rebel.Route-Italian.Villa.Sprint.Loop.json");
+
+            plannedRoute.EnteredSegment(plannedRoute.RouteSegmentSequence[0].SegmentId);
+            plannedRoute.EnteredSegment(plannedRoute.RouteSegmentSequence[1].SegmentId);
+            var secondSegment = segments.Single(s => s.Id == plannedRoute.RouteSegmentSequence[1].SegmentId);
+            
+            var positions = new List<TrackPoint>();
+
+            positions.AddRange(secondSegment.Points.Take(25));
+            positions.AddRange(secondSegment.Points.Skip(20).Take(5).Reverse().ToList());
+            positions.AddRange(secondSegment.Points.Skip(20).Take(5).ToList());
+
+            GameStates.GameState state = new OnRouteState(1, 2, positions[0], secondSegment, plannedRoute, SegmentDirection.AtoB, 0, 0, 0);
+
+            for (var index = 1; index < positions.Count; index++)
+            {
+                var newState = state.UpdatePosition(positions[index], segments, plannedRoute);
+
+                // We only expect OnRouteState on this sequence of TrackPoints
+                if (index is > 25 and < 31)
+                {
+                    if (newState is not LostRouteLockState)
+                    {
+                        Debugger.Break();
+                        throw new Exception($"Expected {nameof(LostRouteLockState)} but got {newState.GetType().Name}");
+                    }
+                }
+                else
+                {
+                    if (newState is not OnRouteState)
+                    {
+                        Debugger.Break();
+                        throw new Exception($"Expected {nameof(OnRouteState)} but got {newState.GetType().Name}");
+                    }
+                }
+
 
                 state = newState;
             }

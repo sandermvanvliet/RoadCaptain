@@ -122,22 +122,6 @@ namespace RoadCaptain.GameStates
                     segmentState.ElapsedAscent, segmentState.ElapsedDescent);
             }
 
-            var distanceTo = position.DistanceTo(CurrentPosition);
-
-            if (distanceTo < 100)
-            {
-                return new OnRouteState(
-                    RiderId,
-                    ActivityId,
-                    CurrentPosition, // Use the last known position on the segment
-                    CurrentSegment, // Use the current segment of the route
-                    Route,
-                    direction,
-                    distance,
-                    ascent,
-                    descent);
-            }
-
             // From LostRouteLockState we can't go to OnSegmentState because that would mean
             // we've never started a route which we did, otherwise we wouldn't have lost
             // the lock.

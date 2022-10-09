@@ -1,0 +1,48 @@
+{
+  "version": "2",
+  "roadCaptainVersion": "0.6.7.0",
+  "route": {
+    "name": "Italian Villa Sprint Loop",
+    "zwiftRouteName": "The Mega Pretzel",
+    "isLoop": true,
+    "routeSegmentSequence": [
+      {
+        "segmentId": "watopia-bambino-fondo-004-before-before",
+        "turnToNextSegment": "left",
+        "nextSegmentId": "watopia-bambino-fondo-001-after-after-after-after-before-before",
+        "direction": "btoA",
+        "type": "leadIn"
+      },
+      {
+        "segmentId": "watopia-bambino-fondo-001-after-after-after-after-before-before",
+        "turnToNextSegment": "right",
+        "nextSegmentId": "watopia-beach-island-loop-004",
+        "direction": "atoB",
+        "type": "loopStart"
+      },
+      {
+        "segmentId": "watopia-beach-island-loop-004",
+        "turnToNextSegment": "right",
+        "nextSegmentId": "watopia-bambino-fondo-002-after",
+        "direction": "atoB",
+        "type": "loop"
+      },
+      {
+        "segmentId": "watopia-bambino-fondo-002-after",
+        "turnToNextSegment": "goStraight",
+        "nextSegmentId": "watopia-bambino-fondo-001-after-after-after-before",
+        "direction": "atoB",
+        "type": "loop"
+      },
+      {
+        "segmentId": "watopia-bambino-fondo-001-after-after-after-before",
+        "turnToNextSegment": "none",
+        "nextSegmentId": "watopia-bambino-fondo-001-after-after-after-after-before-before",
+        "direction": "atoB",
+        "type": "loopEnd"
+      }
+    ],
+    "world": "watopia",
+    "sport": "cycling"
+  }
+}

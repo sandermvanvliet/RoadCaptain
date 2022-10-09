@@ -26,6 +26,7 @@ Ultimately you _should_ notice less quirky behaviour at times which means you ca
 - Fix an issue where the in-game window would appear off-screen
 - Fix an issue where the Zwift connection would not be initialized properly after a disconnect and subsequent re-connect
 - Fix an issue where RoadCaptain would suddenly crash [#97](https://github.com/sandermvanvliet/RoadCaptain/issues/97)
+- Fix an issue where RoadCaptain would go from _lost route lock_ back to _on route_ even though you're not on the route
 
 ### Routing
 
