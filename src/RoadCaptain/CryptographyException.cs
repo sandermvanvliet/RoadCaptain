@@ -8,5 +8,10 @@ namespace RoadCaptain
             : base((string?)inner.Message, (Exception?)inner)
         {
         }
+
+        public CryptographyException(string message)
+            : base(message)
+        {   
+        }
     }
 }

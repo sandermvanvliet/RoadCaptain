@@ -41,7 +41,7 @@ namespace RoadCaptain.Adapters
             {
                 if (_isEncryptedConnection && !_hasConnectionId)
                 {
-                    throw new Exception("Connection id expected but missing");
+                    throw new CryptographyException("Connection id expected but missing");
                 }
 
                 var i = 0;
@@ -130,12 +130,12 @@ namespace RoadCaptain.Adapters
                     {
                         if (input.GetInt() != _relayId)
                         {
-                            throw new Exception("Relay id does not match");
+                            throw new CryptographyException("Relay id does not match");
                         }
                     }
                     else
                     {
-                        throw new Exception("Relay id announced but missing");
+                        throw new CryptographyException("Relay id announced but missing");
                     }
                 }
 
@@ -153,12 +153,12 @@ namespace RoadCaptain.Adapters
                     }
                     else
                     {
-                        throw new Exception("Connection id announced but missing");
+                        throw new CryptographyException("Connection id announced but missing");
                     }
                 }
                 else if (_isEncryptedConnection && !_hasConnectionId)
                 {
-                    throw new Exception("Connection id expected but missing");
+                    throw new CryptographyException("Connection id expected but missing");
                 }
 
                 if (HasCounter(firstByte))
@@ -169,7 +169,7 @@ namespace RoadCaptain.Adapters
                     }
                     else
                     {
-                        throw new Exception("Sequence number announced but missing");
+                        throw new CryptographyException("Sequence number announced but missing");
                     }
                 }
 
@@ -216,7 +216,7 @@ namespace RoadCaptain.Adapters
                 return decryptedOutput;
             }
 
-            throw new Exception($"Unsupported protocol version {FBitTwiddle(firstByte)}");
+            throw new CryptographyException($"Unsupported protocol version {FBitTwiddle(firstByte)}");
         }
 
         private void InitInitializationVectors(short connectionId)
