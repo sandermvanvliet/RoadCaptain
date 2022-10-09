@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using ReactiveUI;
 using RoadCaptain.App.Shared.Commands;
-using RoadCaptain.App.Shared.UserPreferences;
 
 namespace RoadCaptain.App.RouteBuilder.ViewModels
 {

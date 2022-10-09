@@ -1,6 +1,5 @@
 using System;
 using System.Drawing;
-using RoadCaptain.App.Shared.UserPreferences;
 
 namespace RoadCaptain.App.RouteBuilder
 {

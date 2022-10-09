@@ -1,9 +1,4 @@
-﻿using System;
-using System.Diagnostics;
-using System.Runtime.InteropServices;
-using System.Windows.Input;
-using ReactiveUI;
-using RoadCaptain.App.Shared.Commands;
+﻿using ReactiveUI;
 
 namespace RoadCaptain.App.Shared.Dialogs.ViewModels
 {

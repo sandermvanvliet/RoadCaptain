@@ -1,5 +1,4 @@
 ﻿using Autofac;
-using RoadCaptain.App.Shared.UserPreferences;
 using RoadCaptain.App.Shared.Views;
 using RoadCaptain.App.Windows.UserPreferences;
 using RoadCaptain.App.Windows.Views;

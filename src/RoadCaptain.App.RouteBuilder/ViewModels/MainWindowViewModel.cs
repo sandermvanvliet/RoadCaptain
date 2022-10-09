@@ -11,7 +11,6 @@ using ReactiveUI;
 using RoadCaptain.App.RouteBuilder.Models;
 using RoadCaptain.App.Shared.Commands;
 using RoadCaptain.App.Shared.Dialogs;
-using RoadCaptain.App.Shared.UserPreferences;
 using CommandResult = RoadCaptain.App.Shared.Commands.CommandResult;
 using RelayCommand = RoadCaptain.App.Shared.Commands.RelayCommand;
 using Result = RoadCaptain.App.Shared.Commands.Result;

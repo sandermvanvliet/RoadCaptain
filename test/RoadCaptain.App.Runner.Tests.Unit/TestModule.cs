@@ -1,7 +1,6 @@
 ﻿using Autofac;
 using RoadCaptain.App.Runner.Tests.Unit.Engine;
 using RoadCaptain.App.Runner.Tests.Unit.ViewModels;
-using RoadCaptain.App.Shared.UserPreferences;
 using RoadCaptain.Ports;
 
 namespace RoadCaptain.App.Runner.Tests.Unit

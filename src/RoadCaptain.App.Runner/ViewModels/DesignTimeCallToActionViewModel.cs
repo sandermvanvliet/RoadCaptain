@@ -1,6 +1,4 @@
-﻿using Avalonia.Media;
-
-namespace RoadCaptain.App.Runner.ViewModels
+﻿namespace RoadCaptain.App.Runner.ViewModels
 {
     public class DesignTimeCallToActionViewModel : CallToActionViewModel
     {

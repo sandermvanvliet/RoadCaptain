@@ -1,7 +1,6 @@
 ﻿using Autofac;
 using RoadCaptain.App.MacOs.UserPreferences;
 using RoadCaptain.App.MacOs.Views;
-using RoadCaptain.App.Shared.UserPreferences;
 using RoadCaptain.App.Shared.Views;
 
 namespace RoadCaptain.App.MacOs

@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using RoadCaptain.App.RouteBuilder.ViewModels;
 using RoadCaptain.App.Shared.Commands;
-using RoadCaptain.App.Shared.UserPreferences;
 using RoadCaptain.Ports;
 
 namespace RoadCaptain.App.RouteBuilder.Tests.Unit

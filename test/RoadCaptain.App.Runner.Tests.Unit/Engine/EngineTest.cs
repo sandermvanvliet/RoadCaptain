@@ -8,7 +8,6 @@ using Microsoft.Extensions.Configuration;
 using RoadCaptain.App.Runner.Tests.Unit.ViewModels;
 using RoadCaptain.App.Shared;
 using RoadCaptain.App.Shared.Models;
-using RoadCaptain.App.Shared.UserPreferences;
 using RoadCaptain.GameStates;
 using RoadCaptain.Ports;
 using Serilog;
