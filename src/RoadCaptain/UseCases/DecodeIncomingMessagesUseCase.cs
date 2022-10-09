@@ -32,7 +32,6 @@ namespace RoadCaptain.UseCases
             _monitoringEvents = monitoringEvents;
             _zwiftCrypto = zwiftCrypto;
             _dispatcher = dispatcher;
-            _watchdogTimer = new Timer(_ => DataReceivedWatchdog());
         }
 
         public Task ExecuteAsync(CancellationToken token)
@@ -54,7 +53,8 @@ namespace RoadCaptain.UseCases
             _messageReceiver.StartAsync().GetAwaiter().GetResult();
 
             // Check every 5 seconds, starting 5 seconds from now
-            _watchdogTimer!.Change(TimeSpan.FromSeconds(5), TimeSpan.FromSeconds(5));
+            _watchdogTimer = new Timer(_ => DataReceivedWatchdog());
+            _watchdogTimer.Change(TimeSpan.FromSeconds(5), TimeSpan.FromSeconds(5));
 
             // do-while to at least attempt one receive action
             do
