@@ -13,7 +13,7 @@ namespace RoadCaptain.Tests.Unit.GameState.Repro
 {
     public class RouteReproductionTests
     {
-        //[Fact]
+        [Fact]
         public void HillyKOMBypassRebelRoute_DoesNotSkipSegment()
         {
             var segments = new SegmentStore()
@@ -30,6 +30,25 @@ namespace RoadCaptain.Tests.Unit.GameState.Repro
                 .TurningRightTo("watopia-bambino-fondo-002-before-before-after")
                 .EndingAt("watopia-bambino-fondo-002-before-before-after")
                 .Build();
+
+            foreach (var seq in hillyKomRoute.RouteSegmentSequence)
+            {
+                if (seq.NextSegmentId == null)
+                {
+                    continue;
+                }
+
+                var current = segments.Single(s => s.Id == seq.SegmentId);
+
+                if (current.NextSegmentsNodeB.Any(n => n.SegmentId == seq.NextSegmentId))
+                {
+                    seq.Direction = SegmentDirection.AtoB;
+                }
+                else if (current.NextSegmentsNodeA.Any(n => n.SegmentId == seq.NextSegmentId))
+                {
+                    seq.Direction = SegmentDirection.BtoA;
+                }
+            }
 
             hillyKomRoute.EnteredSegment(hillyKomRoute.RouteSegmentSequence[0].SegmentId);
             hillyKomRoute.EnteredSegment(hillyKomRoute.RouteSegmentSequence[1].SegmentId);
@@ -62,7 +81,11 @@ namespace RoadCaptain.Tests.Unit.GameState.Repro
                 var newState = state.UpdatePosition(positions[index], segments, hillyKomRoute);
 
                 // We only expect OnRouteState on this sequence of TrackPoints
-                newState.Should().BeOfType<OnRouteState>();
+                if (newState is not UpcomingTurnState and not OnRouteState)
+                {
+                    Debugger.Break();
+                    throw new Exception($"Expected either {nameof(UpcomingTurnState)} or {nameof(OnRouteState)} but got {newState.GetType().Name}");
+                }
 
                 state = newState;
             }
@@ -73,7 +96,7 @@ namespace RoadCaptain.Tests.Unit.GameState.Repro
                 .Be(3);
         }
 
-        //[Fact]
+        [Fact]
         public void StartingVolcanoClimb()
         {
             var segmentStore = new SegmentStore();
