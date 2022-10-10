@@ -1,3 +1,9 @@
+<!--
+// Copyright (c) 2022 Sander van Vliet
+// Licensed under Artistic License 2.0
+// See LICENSE or https://choosealicense.com/licenses/artistic-2.0/
+-->
+
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -14,3 +20,4 @@
         WindowStartupLocation="CenterOwner">
 	<controls:WebView Name="WebViewMain" Width="800" Height="800" Margin="0"/>
 </Window>
+
