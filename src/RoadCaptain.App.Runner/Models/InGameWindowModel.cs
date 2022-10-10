@@ -20,6 +20,7 @@ namespace RoadCaptain.App.Runner.Models
         private double _totalDescent;
         private double _totalDistance;
         private string _loopText = string.Empty;
+        private int _currentSegmentIndex;
 
         public InGameWindowModel(List<Segment> segments)
         {
@@ -159,6 +160,19 @@ namespace RoadCaptain.App.Runner.Models
                 this.RaisePropertyChanged();
             }
         }
+
+        public int CurrentSegmentIndex
+        {
+            get => _currentSegmentIndex;
+            set
+            {
+                if (value == _currentSegmentIndex) return;
+                _currentSegmentIndex = value;
+                this.RaisePropertyChanged();
+            }
+        }
+
+        public int SegmentCount => Route?.RouteSegmentSequence.Count ?? 0;
 
         private void InitializeRoute(PlannedRoute route)
         {

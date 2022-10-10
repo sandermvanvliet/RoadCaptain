@@ -150,6 +150,7 @@ namespace RoadCaptain.App.Runner.ViewModels
                             Model.ElapsedAscent = routeState.ElapsedAscent;
                             Model.ElapsedDescent = routeState.ElapsedDescent;
                             Model.ElapsedDistance = routeState.ElapsedDistance;
+                            Model.CurrentSegmentIndex = routeState.Route.SegmentSequenceIndex + 1;
 
                             CallToAction = null;
 
@@ -167,6 +168,7 @@ namespace RoadCaptain.App.Runner.ViewModels
                             Model.ElapsedAscent = upcomingTurnState.ElapsedAscent;
                             Model.ElapsedDescent = upcomingTurnState.ElapsedDescent;
                             Model.ElapsedDistance = upcomingTurnState.ElapsedDistance;
+                            Model.CurrentSegmentIndex = upcomingTurnState.Route.SegmentSequenceIndex + 1;
 
                             CallToAction = null;
 

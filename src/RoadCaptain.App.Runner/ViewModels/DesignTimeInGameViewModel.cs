@@ -79,10 +79,10 @@ namespace RoadCaptain.App.Runner.ViewModels
                 null,
                 new MonitoringEventsWithSerilog(Logger.None))
         {
-            //var onRouteState = new OnRouteState(1, 2, TrackPoint.Unknown, DefaultSegments[0], Model.Route, SegmentDirection.AtoB, 0, 0, 0);
-            //Model.Route.EnteredSegment("seg-1");
-            //UpdateGameState(onRouteState);
-            UpdateGameState(new ReadyToGoState());
+            var onRouteState = new OnRouteState(1, 2, TrackPoint.Unknown, DefaultSegments[0], Model.Route, SegmentDirection.AtoB, 0, 0, 0);
+            Model.Route.EnteredSegment("seg-1");
+            UpdateGameState(onRouteState);
+            //UpdateGameState(new ReadyToGoState());B
         }
     }
 }

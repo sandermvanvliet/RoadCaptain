@@ -227,9 +227,9 @@
 						</Style>
 					</StackPanel.Styles>
 					<TextBlock Text="Segment" Margin="15,0,0,0" />
-					<TextBlock Text="{Binding Path=Model.Route.SegmentSequenceIndex,FallbackValue=0, TargetNullValue=0,Mode=OneWay}" />
+					<TextBlock Text="{Binding Path=Model.CurrentSegmentIndex,FallbackValue=0, TargetNullValue=0,Mode=OneWay}" />
 					<TextBlock Text="of"  />
-					<TextBlock Text="{Binding Path=Model.Route.RouteSegmentSequence.Count,FallbackValue=0, TargetNullValue=0,Mode=OneWay}" />
+					<TextBlock Text="{Binding Path=Model.SegmentCount,FallbackValue=0, TargetNullValue=0,Mode=OneWay}" />
 					<TextBlock Text="{Binding Path=Model.LoopText,Mode=OneWay}"
 							   IsVisible="{Binding Path=Model.Route.IsLoop,FallbackValue=False,Mode=OneWay}"
 							   Margin="8,0,0,0" />
