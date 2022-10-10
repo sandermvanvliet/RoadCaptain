@@ -14,7 +14,6 @@
         CanResize="False"
         Background="Transparent"
         TransparencyLevelHint="Transparent"
-        PositionChanged="WindowBase_OnPositionChanged"
         Activated="InGameNavigationWindow_OnActivated"
         Icon="avares://RoadCaptain.App.Shared/icon.png">
 	<Design.DataContext>

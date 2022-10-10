@@ -1,18 +1,18 @@
 ﻿using System;
-using System.Drawing;
 
 namespace RoadCaptain
 {
     public interface IUserPreferences
     {
-        public string? DefaultSport { get; set; }
-        public string? LastUsedFolder { get; set; }
-        public string? Route { get; set; }
-        Point? InGameWindowLocation { get; set; }
-        public bool EndActivityAtEndOfRoute { get; set; }
+        string? DefaultSport { get; set; }
+        string? LastUsedFolder { get; set; }
+        string? Route { get; set; }
+        CapturedWindowLocation? InGameWindowLocation { get; set; }
+        bool EndActivityAtEndOfRoute { get; set; }
         Version LastOpenedVersion { get; set; }
-        public byte[]? ConnectionSecret { get; }
-        public void Load();
-        public void Save();
+        byte[]? ConnectionSecret { get; }
+        CapturedWindowLocation? RouteBuilderLocation { get; set; }
+        void Load();
+        void Save();
     }
 }

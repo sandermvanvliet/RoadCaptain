@@ -1,5 +1,5 @@
 using System;
-using System.Diagnostics.CodeAnalysis;
+using System.ComponentModel;
 using System.Linq;
 using System.Runtime.InteropServices;
 using Avalonia;
@@ -8,6 +8,7 @@ using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Threading;
 using RoadCaptain.App.RouteBuilder.ViewModels;
+using RoadCaptain.App.Shared;
 
 namespace RoadCaptain.App.RouteBuilder.Views
 {
@@ -20,8 +21,16 @@ namespace RoadCaptain.App.RouteBuilder.Views
         {
         }
 
-        public MainWindow(MainWindowViewModel viewModel)
+        public MainWindow(MainWindowViewModel viewModel, IUserPreferences userPreferences)
         {
+            this.UseWindowStateTracking(
+                userPreferences.RouteBuilderLocation,
+                newWindowLocation =>
+                {
+                    userPreferences.RouteBuilderLocation = newWindowLocation;
+                    userPreferences.Save();
+                });
+
             ViewModel = viewModel;
             ViewModel.PropertyChanged += WindowViewModelPropertyChanged;
             DataContext = viewModel;
@@ -40,11 +49,12 @@ namespace RoadCaptain.App.RouteBuilder.Views
             KeyBindings.Add(new KeyBinding{ Command = ViewModel.SaveRouteCommand, Gesture = new KeyGesture(Key.S, modifier)});
             KeyBindings.Add(new KeyBinding{ Command = ViewModel.ClearRouteCommand, Gesture = new KeyGesture(Key.R, modifier)});
             KeyBindings.Add(new KeyBinding{ Command = ViewModel.RemoveLastSegmentCommand, Gesture = new KeyGesture(Key.Z, modifier)});
+
         }
 
         private MainWindowViewModel ViewModel { get; }
 
-        private void WindowViewModelPropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+        private void WindowViewModelPropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
             switch (e.PropertyName)
             {
@@ -66,8 +76,20 @@ namespace RoadCaptain.App.RouteBuilder.Views
             }
         }
         
-        // ReSharper disable once UnusedMember.Local
-        // ReSharper disable once UnusedParameter.Local
+        private void MainWindow_OnActivated(object? sender, EventArgs e)
+        {
+            // Remove event handler to ensure this is only called once
+            Activated -= MainWindow_OnActivated;
+
+            Dispatcher.UIThread.InvokeAsync(() => ViewModel.CheckForNewVersion());
+            Dispatcher.UIThread.InvokeAsync(() => ViewModel.CheckLastOpenedVersion());
+        }
+        
+        // Bunch of event handlers referenced by the XAML that
+        // ReSharper doesn't detect here (generated code might
+        // not yet exist)
+        // ReSharper disable UnusedMember.Local
+        // ReSharper disable UnusedParameter.Local
         private void RouteListView_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (e.AddedItems.Count == 1 && e.AddedItems[0] is SegmentSequenceViewModel viewModel)
@@ -80,7 +102,6 @@ namespace RoadCaptain.App.RouteBuilder.Views
             }
         }
 
-        // ReSharper disable once UnusedMember.Local
         private void RouteListView_KeyUp(object sender, KeyEventArgs e)
         {
             if (sender is ListBox { SelectedItem: SegmentSequenceViewModel viewModel } && e.Key == Key.Delete)
@@ -95,33 +116,21 @@ namespace RoadCaptain.App.RouteBuilder.Views
                 }
             }
         }
-        
-        [SuppressMessage("ReSharper", "UnusedParameter.Local")]
-        private void MainWindow_OnActivated(object sender, EventArgs e)
-        {
-            Dispatcher.UIThread.InvokeAsync(() => ViewModel.CheckForNewVersion());
-            Dispatcher.UIThread.InvokeAsync(() => ViewModel.CheckLastOpenedVersion());
-        }
-
-        // ReSharper disable once UnusedMember.Local
-        [SuppressMessage("ReSharper", "UnusedParameter.Local")]
         private void ZoomIn_Click(object sender, RoutedEventArgs e)
         {
             SkElement.ZoomIn(new Point(SkElement.Bounds.Width / 2, SkElement.Bounds.Height / 2));
         }
         
-        // ReSharper disable once UnusedMember.Local
-        [SuppressMessage("ReSharper", "UnusedParameter.Local")]
         private void ZoomOut_Click(object sender, RoutedEventArgs e)
         {
             SkElement.ZoomOut(new Point(SkElement.Bounds.Width / 2, SkElement.Bounds.Height / 2));
         }
-
-        // ReSharper disable once UnusedMember.Local
-        [SuppressMessage("ReSharper", "UnusedParameter.Local")]
+        
         private void ResetZoom_Click(object sender, RoutedEventArgs e)
         {
             SkElement.ResetZoom();
         }
+        // ReSharper restore UnusedParameter.Local
+        // ReSharper restore UnusedMember.Local
     }
 }

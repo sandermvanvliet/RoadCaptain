@@ -8,10 +8,11 @@ namespace RoadCaptain.App.RouteBuilder.Tests.Unit
         public string? DefaultSport { get; set; } = "Cycling";
         public string? LastUsedFolder { get; set; }
         public string? Route { get; set; }
-        public Point? InGameWindowLocation { get; set; }
+        public CapturedWindowLocation InGameWindowLocation { get; set; }
         public bool EndActivityAtEndOfRoute { get; set; }
         public Version LastOpenedVersion { get; set; }
         public byte[] ConnectionSecret { get; }
+        public CapturedWindowLocation? RouteBuilderLocation { get; set; }
 
         public void Load()
         {

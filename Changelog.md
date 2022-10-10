@@ -9,6 +9,7 @@ Ultimately you _should_ notice less quirky behaviour at times which means you ca
 ### Route Builder
 
 - Show the segment id when hovering over the segment name in the route list
+- The window state (size and position) are now stored in the user preferences
 
 ### Runner
 

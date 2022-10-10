@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Drawing;
 using System.IO;
 using System.Security.Cryptography;
 using System.Text;
@@ -34,22 +33,24 @@ namespace RoadCaptain.App.Shared.UserPreferences
         public string? DefaultSport { get; set; }
         public string? LastUsedFolder { get; set; }
         public string? Route { get; set; }
-        public Point? InGameWindowLocation { get; set; }
+        public CapturedWindowLocation? InGameWindowLocation { get; set; }
         // This preference is transient and will not be stored
         public bool EndActivityAtEndOfRoute { get; set; }
         // This preference is transient and will not be stored
-        public Version LastOpenedVersion { get; set; } = new Version(0, 0, 0, 0);
+        public Version LastOpenedVersion { get; set; } = new(0, 0, 0, 0);
         public byte[]? ConnectionSecret { get; }
+        public CapturedWindowLocation? RouteBuilderLocation { get; set; }
+
         public void Load()
         {
             var preferencesPath = GetPreferencesPath();
 
-            if (!File.Exists(preferencesPath))
+            var serializedContents = GetFileContents(preferencesPath);
+
+            if (serializedContents == null)
             {
                 return;
             }
-
-            var serializedContents = File.ReadAllText(preferencesPath, Encoding.UTF8);
 
             try
             {
@@ -61,6 +62,7 @@ namespace RoadCaptain.App.Shared.UserPreferences
                     LastUsedFolder = storageObject.LastUsedFolder;
                     Route = storageObject.Route;
                     InGameWindowLocation = storageObject.InGameWindowLocation;
+                    RouteBuilderLocation = storageObject.RouteBuilderWindowLocation;
                     LastOpenedVersion = storageObject.LastOpenedVersion ?? new Version(0, 0, 0, 0);
                 }
             }
@@ -70,12 +72,23 @@ namespace RoadCaptain.App.Shared.UserPreferences
             }
         }
 
+        protected virtual string? GetFileContents(string preferencesPath)
+        {
+            if (!File.Exists(preferencesPath))
+            {
+                return null;
+            }
+
+            return File.ReadAllText(preferencesPath, Encoding.UTF8);
+        }
+
         public void Save()
         {
             var storageObject = new UserPreferencesStorageObject
             {
                 DefaultSport = DefaultSport,
                 InGameWindowLocation = InGameWindowLocation,
+                RouteBuilderWindowLocation = RouteBuilderLocation,
                 LastUsedFolder = LastUsedFolder,
                 Route = Route,
                 LastOpenedVersion = GetType().Assembly.GetName().Version ?? new Version(0, 0, 0, 0)
@@ -93,14 +106,5 @@ namespace RoadCaptain.App.Shared.UserPreferences
         protected abstract void EnsureConfigDirectoryExists();
 
         protected abstract string GetPreferencesPath();
-    }
-
-    internal class UserPreferencesStorageObject
-    {
-        public string? DefaultSport { get; set; }
-        public string? LastUsedFolder { get; set; }
-        public string? Route { get; set; }
-        public Point? InGameWindowLocation { get; set; }
-        public Version? LastOpenedVersion { get; set; }
     }
 }

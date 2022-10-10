@@ -3,43 +3,42 @@ using System.Runtime.InteropServices;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
-using Avalonia.Markup.Xaml;
 using RoadCaptain.App.Runner.ViewModels;
+using RoadCaptain.App.Shared;
 using RoadCaptain.GameStates;
 using RoadCaptain.Ports;
 using Serilog;
-using Point = System.Drawing.Point;
 
 namespace RoadCaptain.App.Runner.Views
 {
     public partial class InGameNavigationWindow : Window
     {
         private readonly MonitoringEvents _monitoringEvents;
-        private readonly IUserPreferences _userPreferences;
         private InGameNavigationWindowViewModel? _viewModel;
-        private bool _isFirstTimeActivation = true;
 
         // ReSharper disable once UnusedMember.Global this is only used for the Avalonia UI designer
         public InGameNavigationWindow()
         {
-            _userPreferences = new DummyUserPreferences();
             _monitoringEvents = new MonitoringEventsWithSerilog(new LoggerConfiguration().WriteTo.Debug().CreateLogger());
 
             InitializeComponent();
-            
-#if DEBUG
-            this.AttachDevTools();
-#endif
         }
-        
-        public InGameNavigationWindow(IGameStateReceiver gameStateReceiver, 
+
+        public InGameNavigationWindow(IGameStateReceiver gameStateReceiver,
             MonitoringEvents monitoringEvents, IUserPreferences userPreferences)
         {
+            this.UseWindowStateTracking(
+                userPreferences.InGameWindowLocation,
+                newWindowLocation =>
+                {
+                    userPreferences.InGameWindowLocation = newWindowLocation;
+                    userPreferences.Save();
+                });
+
             _monitoringEvents = monitoringEvents;
-            _userPreferences = userPreferences;
 
             InitializeComponent();
-            
+
 #if DEBUG
             this.AttachDevTools();
 #endif
@@ -48,51 +47,18 @@ namespace RoadCaptain.App.Runner.Views
             gameStateReceiver.ReceiveLastSequenceNumber(sequenceNumber => _viewModel.LastSequenceNumber = sequenceNumber);
         }
 
-        private void InitializeComponent()
-        {
-            AvaloniaXamlLoader.Load(this);
-
-            if (_userPreferences.InGameWindowLocation is { } &&
-                HasSensibleLocation(_userPreferences.InGameWindowLocation.Value.X, _userPreferences.InGameWindowLocation.Value.Y))
-            {
-                Position = new PixelPoint(
-                    _userPreferences.InGameWindowLocation.Value.X,
-                    _userPreferences.InGameWindowLocation.Value.Y);
-            }
-        }
-
-        private bool HasSensibleLocation(int x, int y)
-        {
-            return x >= 0 &&
-                   x <= Screens.Primary.Bounds.Width &&
-                   y >= 0 &&
-                   y <= Screens.Primary.Bounds.Height;
-        }
-
         private void InGameNavigationWindow_OnActivated(object? sender, EventArgs e)
         {
-            if (_isFirstTimeActivation)
-            {
-                _isFirstTimeActivation = false;
+            // Remove event handler to ensure this is only called once
+            Activated -= InGameNavigationWindow_OnActivated;
+            
+            _viewModel = DataContext as InGameNavigationWindowViewModel ?? throw new Exception("");
 
-                _viewModel = DataContext as InGameNavigationWindowViewModel ?? throw new Exception("");
+            var modifier = RuntimeInformation.IsOSPlatform(OSPlatform.OSX)
+                ? KeyModifiers.Meta
+                : KeyModifiers.Control;
 
-                var modifier = RuntimeInformation.IsOSPlatform(OSPlatform.OSX)
-                    ? KeyModifiers.Meta
-                    : KeyModifiers.Control;
-
-                KeyBindings.Add(new KeyBinding
-                    { Command = _viewModel.EndActivityCommand, Gesture = new KeyGesture(Key.X, modifier) });
-            }
-        }
-
-        private void WindowBase_OnPositionChanged(object? sender, PixelPointEventArgs e)
-        {
-            if (HasSensibleLocation(Position.X, Position.Y))
-            {
-                _userPreferences.InGameWindowLocation = new Point(Position.X, Position.Y);
-                _userPreferences.Save();
-            }
+            KeyBindings.Add(new KeyBinding { Command = _viewModel.EndActivityCommand, Gesture = new KeyGesture(Key.X, modifier) });
         }
 
         private void GameStateReceived(GameState gameState)
