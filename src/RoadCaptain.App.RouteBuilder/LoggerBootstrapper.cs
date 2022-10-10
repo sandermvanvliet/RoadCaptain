@@ -3,6 +3,7 @@
 // See LICENSE or https://choosealicense.com/licenses/artistic-2.0/
 
 using System;
+using System.Diagnostics;
 using System.IO;
 using Serilog;
 using Serilog.Core;
@@ -25,15 +26,16 @@ namespace RoadCaptain.App.RouteBuilder
             // as that makes the log file easier to pick up from bin\Debug
             var logFilePath = $"roadcaptain-routebuilder-log-{DateTime.UtcNow:yyyy-MM-ddTHHmmss}.log";
             
-#if !DEBUG
             logFilePath = CreateLoggerForReleaseMode(logFilePath);
 
             loggerConfiguration = loggerConfiguration
                 .MinimumLevel.Information();
-#else
-            loggerConfiguration = loggerConfiguration
-                .WriteTo.Debug(LogEventLevel.Debug);
-#endif
+
+            if (Debugger.IsAttached)
+            {
+                loggerConfiguration = loggerConfiguration
+                    .WriteTo.Debug(LogEventLevel.Debug);
+            }
 
             return loggerConfiguration
                 .WriteTo.File(logFilePath, LogEventLevel.Debug)

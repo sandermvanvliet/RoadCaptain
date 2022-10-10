@@ -3,6 +3,7 @@
 // See LICENSE or https://choosealicense.com/licenses/artistic-2.0/
 
 using System;
+using System.Diagnostics;
 using System.IO;
 using Serilog;
 using Serilog.Core;
@@ -20,20 +21,21 @@ namespace RoadCaptain.App.Runner
             var loggerConfiguration = new LoggerConfiguration()
                 .Enrich.FromLogContext()
                 .MinimumLevel.Debug();
-            
+
             // In debug builds always write to the current directory for simplicity sake
             // as that makes the log file easier to pick up from bin\Debug
             var logFilePath = $"roadcaptain-runner-log-{DateTime.UtcNow:yyyy-MM-ddTHHmmss}.log";
-            
-#if !DEBUG
+
             logFilePath = CreateLoggerForReleaseMode(logFilePath);
 
             loggerConfiguration = loggerConfiguration
                 .MinimumLevel.Information();
-#else
-            loggerConfiguration = loggerConfiguration
-                .WriteTo.Debug(LogEventLevel.Debug);
-#endif
+
+            if (Debugger.IsAttached)
+            {
+                loggerConfiguration = loggerConfiguration
+                    .WriteTo.Debug(LogEventLevel.Debug);
+            }
 
             return loggerConfiguration
                 .WriteTo.File(logFilePath, LogEventLevel.Debug)
@@ -47,33 +49,33 @@ namespace RoadCaptain.App.Runner
             // there when running as a regular user. Good Windows citizenship also
             // means we should write data to the right place which is in the user
             // AppData folder.
-            #if WIN
+#if WIN
             var localAppDataFolder = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
             CreateDirectoryIfNotExists(Path.Combine(localAppDataFolder, CompanyName));
             CreateDirectoryIfNotExists(Path.Combine(localAppDataFolder, CompanyName, ApplicationName));
             var logDirectory = Path.Combine(localAppDataFolder, CompanyName, ApplicationName);
-            #elif MACOS
+#elif MACOS
             var localAppDataFolder = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
             CreateDirectoryIfNotExists(Path.Combine(localAppDataFolder, ApplicationName));
             var logDirectory = Path.Combine(localAppDataFolder, ApplicationName);
-            #elif LINUX
+#elif LINUX
             var localAppDataFolder = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
             CreateDirectoryIfNotExists(Path.Combine(localAppDataFolder, ApplicationName));
             var logDirectory = Path.Combine(localAppDataFolder, ApplicationName);
-            #else
+#else
             var localAppDataFolder = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
             CreateDirectoryIfNotExists(Path.Combine(localAppDataFolder, CompanyName));
             CreateDirectoryIfNotExists(Path.Combine(localAppDataFolder, CompanyName, ApplicationName));
             var logDirectory = Path.Combine(localAppDataFolder, CompanyName, ApplicationName);
-            #endif
-            
+#endif
+
             var logFilePath = Path.Combine(
-                logDirectory, 
+                logDirectory,
                 logFileName);
 
             return logFilePath;
         }
-        
+
         private static void CreateDirectoryIfNotExists(string directory)
         {
             if (string.IsNullOrEmpty(directory))
