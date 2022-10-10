@@ -14,9 +14,6 @@
             <NativeMenuItem Header="About RoadCaptain" Click="AboutRoadCaptainMenuItem_OnClick" />
         </NativeMenu>
     </NativeMenu.Menu>
-    <Application.DataTemplates>
-        <local:ViewLocator />
-    </Application.DataTemplates>
 
     <Application.Styles>
         <FluentTheme Mode="Light" />
