@@ -1,4 +1,8 @@
-﻿using System;
+// Copyright (c) 2022 Sander van Vliet
+// Licensed under Artistic License 2.0
+// See LICENSE or https://choosealicense.com/licenses/artistic-2.0/
+
+using System;
 using FluentAssertions;
 using RoadCaptain.App.Runner.Views;
 using RoadCaptain.GameStates;
@@ -86,3 +90,4 @@ namespace RoadCaptain.App.Runner.Tests.Unit.Engine
         }
     }
 }
+

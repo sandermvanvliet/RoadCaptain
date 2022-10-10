@@ -1,4 +1,8 @@
-﻿using Avalonia.Controls;
+// Copyright (c) 2022 Sander van Vliet
+// Licensed under Artistic License 2.0
+// See LICENSE or https://choosealicense.com/licenses/artistic-2.0/
+
+using Avalonia.Controls;
 using Avalonia.Platform;
 using Microsoft.Web.WebView2.Core;
 using Microsoft.Web.WebView2.WinForms;
@@ -60,3 +64,4 @@ namespace RoadCaptain.App.Runner.Controls
         }
     }
 }
+

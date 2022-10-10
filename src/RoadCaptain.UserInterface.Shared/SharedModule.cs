@@ -1,4 +1,8 @@
-﻿using System.Windows;
+// Copyright (c) 2022 Sander van Vliet
+// Licensed under Artistic License 2.0
+// See LICENSE or https://choosealicense.com/licenses/artistic-2.0/
+
+using System.Windows;
 using Autofac;
 
 namespace RoadCaptain.UserInterface.Shared
@@ -15,3 +19,4 @@ namespace RoadCaptain.UserInterface.Shared
         }
     }
 }
+

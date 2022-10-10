@@ -1,4 +1,8 @@
-﻿using System.Diagnostics;
+// Copyright (c) 2022 Sander van Vliet
+// Licensed under Artistic License 2.0
+// See LICENSE or https://choosealicense.com/licenses/artistic-2.0/
+
+using System.Diagnostics;
 using System.Threading.Tasks;
 using RoadCaptain.App.RouteBuilder.ViewModels;
 using RoadCaptain.App.Shared.Commands;

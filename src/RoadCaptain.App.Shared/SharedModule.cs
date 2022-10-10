@@ -1,4 +1,8 @@
-﻿using Autofac;
+// Copyright (c) 2022 Sander van Vliet
+// Licensed under Artistic License 2.0
+// See LICENSE or https://choosealicense.com/licenses/artistic-2.0/
+
+using Autofac;
 using RoadCaptain.App.Shared.Dialogs;
 
 namespace RoadCaptain.App.Shared
@@ -12,3 +16,4 @@ namespace RoadCaptain.App.Shared
         }
     }
 }
+

@@ -1,4 +1,8 @@
-﻿using System.Globalization;
+// Copyright (c) 2022 Sander van Vliet
+// Licensed under Artistic License 2.0
+// See LICENSE or https://choosealicense.com/licenses/artistic-2.0/
+
+using System.Globalization;
 using FluentAssertions;
 using RoadCaptain.App.Shared.Converters;
 using Xunit;
@@ -60,3 +64,4 @@ namespace RoadCaptain.App.Shared.Tests.Unit.Converters
         }
     }
 }
+

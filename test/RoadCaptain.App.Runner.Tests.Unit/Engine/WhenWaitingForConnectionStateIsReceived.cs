@@ -1,4 +1,8 @@
-﻿using FluentAssertions;
+// Copyright (c) 2022 Sander van Vliet
+// Licensed under Artistic License 2.0
+// See LICENSE or https://choosealicense.com/licenses/artistic-2.0/
+
+using FluentAssertions;
 using RoadCaptain.App.Runner.Views;
 using RoadCaptain.GameStates;
 using Serilog.Events;
@@ -93,3 +97,4 @@ namespace RoadCaptain.App.Runner.Tests.Unit.Engine
         }
     }
 }
+
