@@ -23,12 +23,12 @@ namespace RoadCaptain.Adapters
             writer.Write(segment.Points.Count);
 
             // Write all the points
-            foreach (var point in segment.Points)
+            for (var index = 0; index < segment.Points.Count; index++)
             {
+                var point = segment.Points[index];
                 writer.Write(point.Latitude);
                 writer.Write(point.Longitude);
                 writer.Write(point.Altitude);
-                writer.Write(point.Index.GetValueOrDefault(0));
                 writer.Write(point.DistanceOnSegment);
                 writer.Write(point.DistanceFromLast);
             }
@@ -55,13 +55,12 @@ namespace RoadCaptain.Adapters
                 var latitude = reader.ReadDouble();
                 var longitude = reader.ReadDouble();
                 var altitude = reader.ReadDouble();
-                var index = reader.ReadInt32();
                 var distanceOnSegment = reader.ReadDouble();
                 var distanceFromLast = reader.ReadDouble();
 
                 points.Add(new TrackPoint(latitude, longitude, altitude)
                 {
-                    DistanceFromLast = distanceFromLast, DistanceOnSegment = distanceOnSegment, Index = index
+                    DistanceFromLast = distanceFromLast, DistanceOnSegment = distanceOnSegment, Index = i
                 });
             }
 

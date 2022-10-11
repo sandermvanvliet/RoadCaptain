@@ -148,6 +148,28 @@ namespace RoadCaptain.Adapters
         {
             return $"{world.Id}-{sport}";
         }
+
+        internal void SerializeToBinary()
+        {
+            var files = Directory.GetFiles(_fileRoot, "segments-*.json");
+
+            foreach (var file in files)
+            {
+                var outputPath = Path.ChangeExtension(file, "bin");
+                
+                if (!File.Exists(outputPath) || IsJsonNewer(file, outputPath))
+                {
+                    var segments = JsonConvert.DeserializeObject<List<Segment>>(File.ReadAllText(file));
+                    using var writer = new BinaryWriter(File.OpenWrite(outputPath));
+                    BinarySegmentSerializer.SerializeSegments(writer, segments);
+                }
+            }
+        }
+
+        private bool IsJsonNewer(string inputPath, string outputPath)
+        {
+            return File.GetLastWriteTimeUtc(inputPath) > File.GetLastWriteTimeUtc(outputPath);
+        }
     }
 
     internal class SegmentTurns
