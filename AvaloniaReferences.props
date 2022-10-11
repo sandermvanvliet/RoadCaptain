@@ -1,17 +1,21 @@
 <Project>
-	<!--<Import Project="vendor\AvaloniaUI\AvaloniaLocal.props" Condition="Exists('vendor\AvaloniaUI\AvaloniaLocal.props')" />
-	<Import Project="vendor\AvaloniaUI\Avalonia.targets" Condition="Exists('vendor\AvaloniaUI\Avalonia.targets')" />
-	<Import Project="vendor\AvaloniaUI\Avalonia.props" Condition="Exists('vendor\AvaloniaUI\Avalonia.props')" />
 	<PropertyGroup>
-		<AvaloniaBuildTasksLocation>Avalonia.Build.Tasks.dll</AvaloniaBuildTasksLocation>
+		<!-- Use this to toggle between the vendored vs NuGet Avalonia assemblies -->
+		<UseVendoredAvalonia>False</UseVendoredAvalonia>
 	</PropertyGroup>
 
-	<Target Name="CopyAvaloniaNativeLibs" AfterTargets="Build">
+	<Import Project="vendor\AvaloniaUI\AvaloniaLocal.props" Condition="Exists('vendor\AvaloniaUI\AvaloniaLocal.props') And '$(UseVendoredAvalonia)'=='True'" />
+	<Import Project="vendor\AvaloniaUI\Avalonia.targets" Condition="Exists('vendor\AvaloniaUI\Avalonia.targets') And '$(UseVendoredAvalonia)'=='True'" />
+	<PropertyGroup>
+		<AvaloniaBuildTasksLocation Condition="'$(UseVendoredAvalonia)'=='True'">Avalonia.Build.Tasks.dll</AvaloniaBuildTasksLocation>
+	</PropertyGroup>
+
+	<Target Name="CopyAvaloniaNativeLibs" AfterTargets="Build" Condition="'$(UseVendoredAvalonia)'=='True'">
 		<Copy SourceFiles="$(SolutionDir)vendor\AvaloniaUI\libSkiaSharp.dll" DestinationFolder="$(OutDir)" />
 		<Copy SourceFiles="$(SolutionDir)vendor\AvaloniaUI\libHarfBuzzSharp.dll" DestinationFolder="$(OutDir)" />
-	</Target>-->
+	</Target>
 	
-	<ItemGroup>
+	<ItemGroup Condition="'$(UseVendoredAvalonia)'!='True'">
 		<PackageReference Include="Avalonia" Version="0.10.18" Condition="!Exists('vendor\AvaloniaUI\Avalonia.props')" />
 		<PackageReference Include="Avalonia.Desktop" Version="0.10.18" Condition="!Exists('vendor\AvaloniaUI\Avalonia.props')" />
 		<PackageReference Condition="'$(Configuration)' == 'Debug' And !Exists('vendor\AvaloniaUI\Avalonia.props')" Include="Avalonia.Diagnostics" Version="0.10.18" />
