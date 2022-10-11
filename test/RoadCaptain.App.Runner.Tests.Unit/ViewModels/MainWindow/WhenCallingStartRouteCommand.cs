@@ -106,6 +106,11 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.MainWindow
                 gameState =>
                 {
                     result = gameState;
+
+                    if (result is ReadyToGoState)
+                    {
+                        tokenSource.Cancel();
+                    }
                 });
 
             // This call blocks until the callback is invoked or
