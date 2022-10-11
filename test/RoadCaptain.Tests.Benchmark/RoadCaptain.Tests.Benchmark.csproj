@@ -15,4 +15,16 @@
     <ProjectReference Include="..\..\src\RoadCaptain\RoadCaptain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="binary-segments-watopia.bin">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="optimized-segments-watopia.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="original-segments-watopia.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

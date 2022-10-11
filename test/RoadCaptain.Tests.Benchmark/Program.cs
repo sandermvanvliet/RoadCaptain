@@ -2,7 +2,11 @@
 // Licensed under Artistic License 2.0
 // See LICENSE or https://choosealicense.com/licenses/artistic-2.0/
 
+using System.Runtime.Serialization.Formatters.Binary;
 using BenchmarkDotNet.Running;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using Newtonsoft.Json.Serialization;
 
 namespace RoadCaptain.Tests.Benchmark
 {
@@ -10,7 +14,7 @@ namespace RoadCaptain.Tests.Benchmark
     {
         public static void Main(string[] args)
         {
-            BenchmarkRunner.Run<TrackPointBenchmarks>();
+            BenchmarkRunner.Run<SegmentLoadingBenchmarkNewtonsoftJson>();
         }
     }
 }
