@@ -7,6 +7,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
@@ -43,19 +44,30 @@ namespace RoadCaptain.Adapters
                 return cachedSegments;
             }
 
+            var binarySegmentsPathForWorld = Path.Combine(_fileRoot, $"segments-{world.Id}.bin");
             var segmentsPathForWorld = Path.Combine(_fileRoot, $"segments-{world.Id}.json");
             var turnsPathForWorld = Path.Combine(_fileRoot, $"turns-{world.Id}.json");
 
             var emptyListOfSegments = new List<Segment>();
 
-            if (!File.Exists(segmentsPathForWorld) || !File.Exists(turnsPathForWorld))
+            if ((!File.Exists(binarySegmentsPathForWorld) && !File.Exists(segmentsPathForWorld)) || !File.Exists(turnsPathForWorld))
             {
                 LoadedSegments.TryAdd(CacheKey(sport, world), emptyListOfSegments);
                 return emptyListOfSegments;
             }
-
-            var segments = JsonConvert.DeserializeObject<List<Segment>>(File.ReadAllText(segmentsPathForWorld), _serializerSettings) ?? emptyListOfSegments;
             
+            List<Segment> segments;
+
+            if (File.Exists(binarySegmentsPathForWorld))
+            {
+                using var reader = new BinaryReader(File.OpenRead(binarySegmentsPathForWorld), Encoding.UTF8, false);
+                segments = BinarySegmentSerializer.DeserializeSegments(reader);
+            }
+            else
+            {
+                segments = JsonConvert.DeserializeObject<List<Segment>>(File.ReadAllText(segmentsPathForWorld), _serializerSettings) ?? emptyListOfSegments;
+            }
+
             segments = segments
                 .Where(segment => sport == SportType.Both || (segment.Sport == SportType.Both || segment.Sport == sport))
                 .ToList();

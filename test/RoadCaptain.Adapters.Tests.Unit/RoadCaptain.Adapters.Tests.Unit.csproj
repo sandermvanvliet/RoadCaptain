@@ -27,4 +27,16 @@
 		<ProjectReference Include="..\..\src\RoadCaptain\RoadCaptain.csproj" />
 	</ItemGroup>
 
+	<ItemGroup>
+		<Content Include="..\..\src\RoadCaptain.Adapters\segments-watopia.json" Link="segments-watopia.json">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Include="..\..\src\RoadCaptain.Adapters\turns-watopia.json" Link="turns-watopia.json">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Include="..\..\src\RoadCaptain.Adapters\segments-watopia.bin" Link="segments-watopia.bin">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+	</ItemGroup>
+
 </Project>

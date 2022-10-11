@@ -24,6 +24,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="segments-watopia.bin">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="markers-france.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

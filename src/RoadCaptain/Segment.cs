@@ -37,7 +37,7 @@ namespace RoadCaptain
             set => _name = value;
         }
 
-        public string NoSelectReason { get; set; }
+        public string? NoSelectReason { get; set; }
         [JsonIgnore] public TrackPoint A => Points.First();
         [JsonIgnore] public TrackPoint B => Points.Last();
         [JsonIgnore] public List<Turn> NextSegmentsNodeA { get; } = new();

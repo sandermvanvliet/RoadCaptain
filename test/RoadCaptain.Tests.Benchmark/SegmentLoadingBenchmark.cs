@@ -1,3 +1,7 @@
+// Copyright (c) 2022 Sander van Vliet
+// Licensed under Artistic License 2.0
+// See LICENSE or https://choosealicense.com/licenses/artistic-2.0/
+
 using System.Collections.Generic;
 using System.IO;
 using BenchmarkDotNet.Attributes;
@@ -5,11 +9,12 @@ using BenchmarkDotNet.Engines;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
+using RoadCaptain.Adapters;
 
 namespace RoadCaptain.Tests.Benchmark
 {
     [SimpleJob(RunStrategy.Throughput, warmupCount:1)]
-    public class SegmentLoadingBenchmarkNewtonsoftJson
+    public class SegmentLoadingBenchmark
     {
         private readonly string _fileContentsOriginal;
         private readonly string _fileContentsOptimized;
@@ -24,7 +29,7 @@ namespace RoadCaptain.Tests.Benchmark
             }
         };
 
-        public SegmentLoadingBenchmarkNewtonsoftJson()
+        public SegmentLoadingBenchmark()
         {
             _fileContentsOriginal = File.ReadAllText("original-segments-watopia.json");
             _fileContentsOptimized = File.ReadAllText("optimized-segments-watopia.json");
@@ -52,7 +57,7 @@ namespace RoadCaptain.Tests.Benchmark
         {
             using var reader = new BinaryReader(new MemoryStream(_binaryBytes));
 
-            var readSegments = BinarySegmentSerializer.DeserializeSegment(reader);
+            var readSegments = BinarySegmentSerializer.DeserializeSegments(reader);
         }
     }
 }
