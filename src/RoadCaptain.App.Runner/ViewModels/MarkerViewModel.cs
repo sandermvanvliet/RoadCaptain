@@ -1,4 +1,4 @@
-namespace RoadCaptain.App.Runner.ViewModels
+﻿namespace RoadCaptain.App.Runner.ViewModels
 {
     public class MarkerViewModel : ViewModelBase
     {
@@ -10,5 +10,19 @@ namespace RoadCaptain.App.Runner.ViewModels
 
         public string Name { get; set; }
         public SegmentType Type { get; set; }
+
+        public string TypeGlyph
+        {
+            get
+            {
+                return Type switch
+                {
+                    SegmentType.Climb => "⛰",
+                    SegmentType.Sprint => "⏱",
+                    SegmentType.StravaSegment => "S",
+                    _ => ""
+                };
+            }
+        }
     }
 }

@@ -22,6 +22,8 @@ Ultimately you _should_ notice less quirky behaviour at times which means you ca
   - Show "Entered the game" when the activity starts
   - Show "Riding to start of route" when the activity started but you are not yet on the starting segment of the route
   - Show "Heading the wrong way" when you're on the starting segment of a route but heading in the wrong direction
+- Show sprints, KOMs and Strava segments along the route on the main screen [#51](https://github.com/sandermvanvliet/RoadCaptain/issues/51)
+![Screenshot of Road Captain runner showing special segments](./images/runner-markers.png)
 - Fix an issue where RoadCaptain would flip between on/off route very quickly many times
 - Fix an issue where the in-game window would only show the Zwift route to start without any other instruction when clicking "Let's go" and Zwift is not yet started
 - Fix an issue where the in-game window would appear off-screen
