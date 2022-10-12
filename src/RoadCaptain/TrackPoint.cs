@@ -47,7 +47,13 @@ namespace RoadCaptain
 
         public TrackPoint Clone()
         {
-            return new TrackPoint(Latitude, Longitude, Altitude);
+            return new TrackPoint(Latitude, Longitude, Altitude)
+            {
+                Index = Index,
+                Segment = Segment,
+                DistanceFromLast = DistanceFromLast,
+                DistanceOnSegment = DistanceOnSegment
+            };
         }
 
         public bool IsCloseTo(TrackPoint point)

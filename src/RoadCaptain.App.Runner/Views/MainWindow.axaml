@@ -13,7 +13,7 @@
         mc:Ignorable="d"
         x:Class="RoadCaptain.App.Runner.Views.MainWindow"
         Title="{Binding Path=WindowTitle}"
-        Height="470" Width="632"
+        Height="600" Width="740"
         CanResize="False"
         WindowState="Normal"
         SystemDecorations="None"
@@ -114,7 +114,7 @@
 					<RowDefinition Height="38" />
 					<RowDefinition Height="38" />
 					<RowDefinition Height="38" />
-					<RowDefinition Height="174" />
+					<RowDefinition Height="344" />
 					<RowDefinition Height="32" />
 					<RowDefinition Height="32" />
 				</Grid.RowDefinitions>
@@ -162,6 +162,7 @@
 							<RowDefinition Height="24" />
 							<RowDefinition Height="24" />
 							<RowDefinition Height="24" />
+							<RowDefinition Height="100" />
 						</Grid.RowDefinitions>
 						<Grid.ColumnDefinitions>
 							<ColumnDefinition Width="80" />
@@ -175,6 +176,7 @@
 						<TextBlock Grid.Column="0" Grid.Row="4" HorizontalAlignment="Right" FontWeight="Bold" Text="Distance:"/>
 						<TextBlock Grid.Column="0" Grid.Row="5" HorizontalAlignment="Right" FontWeight="Bold" Text="Ascent:"/>
 						<TextBlock Grid.Column="0" Grid.Row="6" HorizontalAlignment="Right" FontWeight="Bold" Text="Descent:"/>
+						<TextBlock Grid.Column="0" Grid.Row="7" HorizontalAlignment="Right" FontWeight="Bold" Text="Segments:"/>
 
 						<TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding Path=Route.Name}" Classes="routeDetails"/>
 						<TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding Path=Route.Sport}"  Classes="routeDetails" />
@@ -183,6 +185,28 @@
 						<TextBlock Grid.Row="4" Grid.Column="1" Text="{Binding Path=Route.TotalDistance}" Classes="routeDetails" />
 						<TextBlock Grid.Row="5" Grid.Column="1" Text="{Binding Path=Route.TotalAscent}" Classes="routeDetails" />
 						<TextBlock Grid.Row="6" Grid.Column="1" Text="{Binding Path=Route.TotalDescent}" Classes="routeDetails" />
+
+
+						<ListBox Grid.Row="7" Grid.Column="1"
+								 BorderBrush="Black" BorderThickness="1"
+								 Margin="4,0,0,0"
+                                 Items="{Binding Path=Route.Markers}"
+                                 Background="Transparent">
+                            <ListBox.Styles>
+                                <Style Selector="ListBoxItem">
+                                    <Setter Property="Margin" Value="0" />
+                                    <Setter Property="Padding" Value="8,0,8,0" />
+                                </Style>
+                            </ListBox.Styles>
+							<ListBox.ItemTemplate>
+								<DataTemplate DataType="viewModels:MarkerViewModel">
+									<StackPanel Orientation="Horizontal" Margin="0">
+                                        <TextBlock Text="{Binding Path=Type}" />
+										<TextBlock Text="{Binding Path=Name}" Margin="4,0,0,0" />
+									</StackPanel>
+								</DataTemplate>
+							</ListBox.ItemTemplate>
+						</ListBox>
 					</Grid>
 				</Border>
 

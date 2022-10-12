@@ -35,6 +35,14 @@ namespace RoadCaptain
                    point.Longitude <= _maxLongitude;
         }
 
+        public bool Contains(BoundingBox other)
+        {
+            return other._minLatitude >= _minLatitude &&
+                   other._maxLatitude <= _maxLatitude &&
+                   other._minLongitude >= _minLongitude &&
+                   other._maxLongitude <= _maxLongitude;
+        }
+
         public static BoundingBox From(List<TrackPoint> points)
         {
             double? minLongitude = null;

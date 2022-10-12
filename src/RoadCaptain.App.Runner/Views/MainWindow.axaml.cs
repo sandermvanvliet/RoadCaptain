@@ -40,7 +40,7 @@ namespace RoadCaptain.App.Runner.Views
                 }
             };
 
-            gameStateReceiver.ReceiveRoute(route => viewModel.Route = RouteModel.From(route, _segmentStore.LoadSegments(route.World, route.Sport)));
+            gameStateReceiver.ReceiveRoute(route => viewModel.Route = RouteModel.From(route, _segmentStore.LoadSegments(route.World, route.Sport), _segmentStore.LoadMarkers(route.World)));
             gameStateReceiver.ReceiveGameState(viewModel.UpdateGameState);
 
             DataContext = viewModel;
@@ -67,7 +67,7 @@ namespace RoadCaptain.App.Runner.Views
 
                 if (comboBox.SelectedItem is PlannedRoute selectedRoute)
                 {
-                    _viewModel.Route = RouteModel.From(selectedRoute, _segmentStore.LoadSegments(selectedRoute.World, selectedRoute.Sport));
+                    _viewModel.Route = RouteModel.From(selectedRoute, _segmentStore.LoadSegments(selectedRoute.World, selectedRoute.Sport), _segmentStore.LoadMarkers(selectedRoute.World));
                 }
                 else
                 {

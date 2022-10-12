@@ -168,6 +168,38 @@ namespace RoadCaptain
         {
             HasCompleted = true;
         }
+
+        public List<TrackPoint> GetTrackPoints(List<Segment> segments)
+        {
+            var trackPointsForRoute = new List<TrackPoint>();
+            var routeTrackPointIndex = 0;
+
+            foreach (var seq in RouteSegmentSequence)
+            {
+                var segment = segments.Single(s => s.Id == seq.SegmentId);
+                
+                if (seq.Direction == SegmentDirection.AtoB)
+                {
+                    for (var index = 0; index < segment.Points.Count; index++)
+                    {
+                        var segmentPoint = segment.Points[index].Clone();
+                        segmentPoint.Index = routeTrackPointIndex++;
+                        trackPointsForRoute.Add(segmentPoint);
+                    }
+                }
+                else
+                {
+                    for (var index = segment.Points.Count - 1; index >= 0; index--)
+                    {
+                        var segmentPoint = segment.Points[index].Clone();
+                        segmentPoint.Index = routeTrackPointIndex++;
+                        trackPointsForRoute.Add(segmentPoint);
+                    }
+                }
+            }
+            
+            return trackPointsForRoute;
+        }
     }
 
     public enum RouteMoveResult

@@ -44,7 +44,6 @@ namespace RoadCaptain.App.Runner.ViewModels
         private bool _haveCheckedVersion;
         private IImage? _zwiftAvatar;
         private bool _endActivityAtEndOfRoute;
-        private bool _loopRouteAtEndOfRoute;
         private readonly IZwiftCredentialCache _credentialCache;
         private bool _haveCheckedLastOpenedVersion;
 
@@ -138,12 +137,10 @@ namespace RoadCaptain.App.Runner.ViewModels
                     plannedRoute,
                     _segmentStore.LoadSegments(
                         plannedRoute.World,
-                        plannedRoute.Sport));
+                        plannedRoute.Sport), 
+                    _segmentStore.LoadMarkers(plannedRoute.World));
 
-                if (Route.PlannedRoute != null)
-                {
-                    _gameStateDispatcher.RouteSelected(Route.PlannedRoute);
-                }
+                _gameStateDispatcher.RouteSelected(Route.PlannedRoute);
             }
             catch (FileNotFoundException)
             {
@@ -443,7 +440,7 @@ namespace RoadCaptain.App.Runner.ViewModels
             if (Route.PlannedRoute == null && !string.IsNullOrEmpty(RoutePath))
             {
                 var plannedRoute = _routeStore.LoadFrom(RoutePath);
-                Route = RouteModel.From(plannedRoute, _segmentStore.LoadSegments(plannedRoute.World, plannedRoute.Sport));
+                Route = RouteModel.From(plannedRoute, _segmentStore.LoadSegments(plannedRoute.World, plannedRoute.Sport), _segmentStore.LoadMarkers(plannedRoute.World));
             }
 
             if (Route.PlannedRoute != null)
