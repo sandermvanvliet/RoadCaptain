@@ -165,18 +165,6 @@
 													</Style>
 												</Border.Styles>
 												<Grid>
-													<!-- TODO: Figure out OpacityMask with drawing -->
-													<!--<Grid.OpacityMask>
-                                    <DrawingBrush>
-                                        <DrawingBrush.Drawing>
-                                            <GeometryDrawing Brush="Black">
-                                                <GeometryDrawing.Geometry>
-                                                    <RectangleGeometry RadiusX="5" RadiusY="5" Rect="0,0,180,100" />
-                                                </GeometryDrawing.Geometry>
-                                            </GeometryDrawing>
-                                        </DrawingBrush.Drawing>
-                                    </DrawingBrush>
-                                </Grid.OpacityMask>-->
 													<Image Source="{Binding Path=Image,Converter={StaticResource BitmapConverter}}" Height="100" Stretch="Uniform" ClipToBounds="True" Margin="0"
 														   Classes.isSelected="{Binding Path=IsSelected}">
 														<Image.Styles>
@@ -309,6 +297,7 @@
 				<Grid.RowDefinitions>
 					<RowDefinition Height="56" />
 					<RowDefinition Height="*" />
+					<RowDefinition Height="100" />
 				</Grid.RowDefinitions>
 
 				<Border
@@ -402,6 +391,35 @@
 						</DataTemplate>
 					</ListBox.ItemTemplate>
 				</ListBox>
+				<Grid Grid.Row="2" Background="#F2F2F2">
+					<Grid.RowDefinitions>
+						<RowDefinition Height="18" />
+						<RowDefinition />
+                    </Grid.RowDefinitions>
+                    <TextBlock Grid.Row="0" Text="Segments on route:" FontWeight="Bold" Margin="4,0,0,0" />
+                    <ListBox Grid.Row="1"
+                             Margin="4,0,0,0"
+                             ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                             ScrollViewer.VerticalScrollBarVisibility="Auto"
+                             VerticalAlignment="Stretch"
+							 BorderThickness="0"
+                             Items="{Binding Path=Route.Markers}">
+                        <ListBox.Styles>
+                            <Style Selector="ListBoxItem">
+                                <Setter Property="Margin" Value="0" />
+                                <Setter Property="Padding" Value="8,0,8,0" />
+                            </Style>
+                        </ListBox.Styles>
+                        <ListBox.ItemTemplate>
+                            <DataTemplate DataType="viewModels:MarkerViewModel">
+                                <StackPanel Orientation="Horizontal" Margin="0" VerticalAlignment="Center">
+                                    <TextBlock Text="{Binding Path=TypeGlyph}" Width="20" TextAlignment="Center" />
+                                    <TextBlock Text="{Binding Path=Name}" Margin="4,2,0,0" />
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </Grid>
 			</Grid>
 		</Grid>
 	</DockPanel>

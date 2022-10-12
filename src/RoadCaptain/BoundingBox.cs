@@ -43,6 +43,12 @@ namespace RoadCaptain
                    other._maxLongitude <= _maxLongitude;
         }
 
+        public bool Overlaps(BoundingBox other)
+        {
+            return other._minLatitude < _maxLatitude && other._maxLatitude > _minLatitude &&
+                   other._minLongitude < _maxLongitude && other._maxLongitude > _minLatitude;
+        }
+
         public static BoundingBox From(List<TrackPoint> points)
         {
             double? minLongitude = null;

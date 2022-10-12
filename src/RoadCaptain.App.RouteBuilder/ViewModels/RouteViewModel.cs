@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using ReactiveUI;
 using CommandResult = RoadCaptain.App.Shared.Commands.CommandResult;
@@ -21,6 +22,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
         private string? _name;
         private World? _world;
         private SportType _sport = SportType.Unknown;
+        private List<MarkerViewModel> _markers = new();
 
         public RouteViewModel(IRouteStore routeStore, ISegmentStore segmentStore)
         {
@@ -87,6 +89,17 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
 
         public bool ReadyToBuild => World != null && Sport != SportType.Unknown;
 
+        public List<MarkerViewModel> Markers
+        {
+            get => _markers;
+            private set
+            {
+                if (Equals(value, _markers)) return;
+                _markers = value;
+                this.RaisePropertyChanged();
+            }
+        }
+
         public void StartOn(Segment segment)
         {
             if (_world == null)
@@ -123,6 +136,8 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             });
 
             IsTainted = true;
+
+            DetermineMarkersForRoute();
 
             this.RaisePropertyChanged(nameof(Sequence));
             this.RaisePropertyChanged(nameof(TotalDistance));
@@ -161,6 +176,8 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             _sequence.Add(segmentSequenceViewModel);
 
             IsTainted = true;
+
+            DetermineMarkersForRoute();
 
             this.RaisePropertyChanged(nameof(Sequence));
             this.RaisePropertyChanged(nameof(TotalDistance));
@@ -238,11 +255,13 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             OutputFilePath = null;
             IsTainted = false;
             Name = string.Empty;
+            Markers.Clear();
 
             this.RaisePropertyChanged(nameof(Sequence));
             this.RaisePropertyChanged(nameof(TotalDistance));
             this.RaisePropertyChanged(nameof(TotalAscent));
             this.RaisePropertyChanged(nameof(TotalDescent));
+            this.RaisePropertyChanged(nameof(Markers));
 
             return CommandResult.Success();
         }
@@ -277,6 +296,8 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             }
 
             IsTainted = false;
+
+            DetermineMarkersForRoute();
 
             // Don't use the properties because we don't
             // want PropertyChanged to fire just yet.
@@ -323,6 +344,8 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
                 }
 
                 IsTainted = _sequence.Any();
+
+                DetermineMarkersForRoute();
 
                 this.RaisePropertyChanged(nameof(Sequence));
                 this.RaisePropertyChanged(nameof(TotalDistance));
@@ -392,6 +415,121 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             }
 
             seqList[endIndex].Model.NextSegmentId = seqList[startIndex].SegmentId;
+        }
+        
+        private void DetermineMarkersForRoute()
+        {
+            if (World == null || Sport == null)
+            {
+                Markers = new List<MarkerViewModel>();
+                return;
+            }
+
+            var segments = _segmentStore.LoadSegments(World, Sport);
+            var markers = _segmentStore.LoadMarkers(World);
+
+            var markersForRoute = new List<MarkerViewModel>();
+            
+            var routePoints = GetTrackPoints(segments);
+
+            // Determine bounding box of the route
+            var routeBoundingBox = BoundingBox.From(routePoints);
+
+            // Find markers that fall exactly inside the route bounding box
+            var markersOnRoute = markers
+                .Where(marker => routeBoundingBox.Overlaps(marker.BoundingBox))
+                .ToList();
+
+            foreach (var marker in markersOnRoute)
+            {
+                // For each marker try to follow the track
+                // along the planned route from the starting
+                // point of the marker. If it deviates more
+                // than 25m at any point it doesn't match
+                // with the route
+                var fullMatch = true;
+
+                int? previousRoutePointIndex = null;
+
+                foreach (var markerTrackPoint in marker.Points)
+                {
+                    var point = markerTrackPoint;
+
+                    var closestOnRoute = routePoints
+                        .Where(trackPoint => trackPoint.IsCloseTo(point))
+                        .Select(trackPoint => new
+                        {
+                            TrackPoint = trackPoint,
+                            Distance = trackPoint.DistanceTo(markerTrackPoint)
+                        })
+                        .MinBy(x => x.Distance);
+
+                    if (closestOnRoute == null)
+                    {
+                        fullMatch = false;
+                        break;
+                    }
+
+                    if (closestOnRoute.Distance > 25)
+                    {
+                        fullMatch = false;
+                        break;
+                    }
+
+                    if (previousRoutePointIndex == null)
+                    {
+                        previousRoutePointIndex = closestOnRoute.TrackPoint.Index;
+                    }
+                    else if (closestOnRoute.TrackPoint.Index < previousRoutePointIndex.Value)
+                    {
+                        fullMatch = false;
+                        break;
+                    }
+                    else
+                    {
+                        previousRoutePointIndex = closestOnRoute.TrackPoint.Index;
+                    }
+                }
+
+                if (fullMatch)
+                {
+                    markersForRoute.Add(new MarkerViewModel(marker));
+                }
+            }
+
+            Markers = markersForRoute;
+        }
+
+        private List<TrackPoint> GetTrackPoints(List<Segment> segments)
+        {
+            var trackPointsForRoute = new List<TrackPoint>();
+            var routeTrackPointIndex = 0;
+
+            foreach (var seq in Sequence)
+            {
+                var segment = segments.Single(s => s.Id == seq.SegmentId);
+                
+                if (seq.Direction == SegmentDirection.AtoB)
+                {
+                    for (var index = 0; index < segment.Points.Count; index++)
+                    {
+                        var segmentPoint = segment.Points[index].Clone();
+                        segmentPoint.Index = routeTrackPointIndex++;
+                        trackPointsForRoute.Add(segmentPoint);
+                    }
+                }
+                else if(seq.Direction == SegmentDirection.BtoA)
+                {
+                    for (var index = segment.Points.Count - 1; index >= 0; index--)
+                    {
+                        var segmentPoint = segment.Points[index].Clone();
+                        segmentPoint.Index = routeTrackPointIndex++;
+                        trackPointsForRoute.Add(segmentPoint);
+                    }
+                }
+            }
+            
+            return trackPointsForRoute;
         }
     }
 }
