@@ -23,6 +23,9 @@ namespace RoadCaptain.App.RouteBuilder.Views
         public MainWindow()
 #pragma warning restore CS8618
         {
+            ViewModel = DataContext as MainWindowViewModel;
+
+            InitializeComponent();
         }
 
         public MainWindow(MainWindowViewModel viewModel, IUserPreferences userPreferences)

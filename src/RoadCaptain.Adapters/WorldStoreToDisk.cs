@@ -28,7 +28,7 @@ namespace RoadCaptain.Adapters
             NullValueHandling = NullValueHandling.Ignore
         };
 
-        public WorldStoreToDisk() : this(Environment.CurrentDirectory)
+        public WorldStoreToDisk() : this(Path.GetDirectoryName(typeof(WorldStoreToDisk).Assembly.Location))
         {
         }
 

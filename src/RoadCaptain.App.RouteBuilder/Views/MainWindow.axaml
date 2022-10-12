@@ -15,12 +15,14 @@
         x:Class="RoadCaptain.App.RouteBuilder.Views.MainWindow"
         Icon="avares://RoadCaptain.App.Shared/icon.png"
         Title="{Binding Path=Model.WindowTitle}"
-        Height="465" Width="867"
-        d:DesignHeight="465" d:DesignWidth="867"
+        Height="768" Width="1024"
         Activated="MainWindow_OnActivated"
         WindowState="Maximized"
         x:DataType="viewModels:MainWindowViewModel">
-	<Window.Styles>
+	<Design.DataContext>
+		<viewModels:DesignTimeMainWindowViewModel />
+    </Design.DataContext>
+    <Window.Styles>
 		<Style Selector="Button.toolbar">
 			<Setter Property="Background" Value="#FF6141" />
 			<Setter Property="Foreground" Value="White" />

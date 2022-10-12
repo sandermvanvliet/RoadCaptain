@@ -28,7 +28,7 @@ namespace RoadCaptain.Adapters
             }
         };
 
-        public SegmentStore() : this(Environment.CurrentDirectory)
+        public SegmentStore() : this(Path.GetDirectoryName(typeof(WorldStoreToDisk).Assembly.Location))
         {
         }
 
