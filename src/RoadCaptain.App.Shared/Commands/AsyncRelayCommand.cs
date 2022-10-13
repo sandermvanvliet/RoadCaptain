@@ -41,7 +41,15 @@ namespace RoadCaptain.App.Shared.Commands
 
         public async void Execute(object? parameter)
         {
-            var result = await _execute(parameter);
+            CommandResult result;
+            try
+            {
+                result = await _execute(parameter);
+            }
+            catch (Exception e)
+            {
+                result = CommandResult.Failure(e.Message);
+            }
 
             if (result.Result == Result.Success)
             {
