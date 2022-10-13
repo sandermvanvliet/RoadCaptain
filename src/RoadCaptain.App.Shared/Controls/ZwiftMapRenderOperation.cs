@@ -108,6 +108,7 @@ namespace RoadCaptain.App.Shared.Controls
             foreach (var (segmentId, skiaPath) in SegmentPaths)
             {
                 SKPaint segmentPaint;
+                var isRouteSegment = false;
 
                 // Use a different color for the selected segment
                 if (segmentId == SelectedSegmentId)
@@ -124,10 +125,12 @@ namespace RoadCaptain.App.Shared.Controls
                 }
                 else if (Sequence != null && Sequence.Any(s => s.SegmentId == segmentId && s.IsLeadIn))
                 {
+                    isRouteSegment = true;
                     segmentPaint = SkiaPaints.LeadInPaint;
                 }
                 else if (Sequence != null && Sequence.Any(s => s.SegmentId == segmentId))
                 {
+                    isRouteSegment = true;
                     segmentPaint = SkiaPaints.RoutePathPaint;
                 }
                 else
@@ -135,7 +138,10 @@ namespace RoadCaptain.App.Shared.Controls
                     segmentPaint = SkiaPaints.SegmentPathPaint;
                 }
 
-                canvas.DrawPath(skiaPath, segmentPaint);
+                if ((OnlyShowRoute && isRouteSegment) || !OnlyShowRoute)
+                {
+                    canvas.DrawPath(skiaPath, segmentPaint);
+                }
             }
 
             if (ShowClimbs || ShowSprints)
@@ -253,6 +259,7 @@ namespace RoadCaptain.App.Shared.Controls
         }
 
         public List<RouteSegmentSequence>? Sequence { get; set; }
+        public bool OnlyShowRoute { get; set; }
 
         private void RenderZwiftMap(SKCanvas canvas, World world)
         {

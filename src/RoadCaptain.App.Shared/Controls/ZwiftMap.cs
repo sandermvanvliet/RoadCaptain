@@ -31,6 +31,7 @@ namespace RoadCaptain.App.Shared.Controls
 
         public static readonly DirectProperty<ZwiftMap, bool> ShowClimbsProperty = AvaloniaProperty.RegisterDirect<ZwiftMap, bool>(nameof(ShowClimbs), map => map.ShowClimbs, (map, value) => map.ShowClimbs = value);
         public static readonly DirectProperty<ZwiftMap, bool> ShowSprintsProperty = AvaloniaProperty.RegisterDirect<ZwiftMap, bool>(nameof(ShowSprints), map => map.ShowSprints, (map, value) => map.ShowSprints = value);
+        public static readonly DirectProperty<ZwiftMap, bool> OnlyShowRouteProperty = AvaloniaProperty.RegisterDirect<ZwiftMap, bool>(nameof(OnlyShowRoute), map => map.OnlyShowRoute, (map, value) => map.OnlyShowRoute = value);
         public static readonly DirectProperty<ZwiftMap, Segment?> HighlightedSegmentProperty = AvaloniaProperty.RegisterDirect<ZwiftMap, Segment?>(nameof(HighlightedSegment), map => map.HighlightedSegment, (map, value) => map.HighlightedSegment = value);
         public static readonly DirectProperty<ZwiftMap, Segment?> SelectedSegmentProperty = AvaloniaProperty.RegisterDirect<ZwiftMap, Segment?>(nameof(SelectedSegment), map => map.SelectedSegment, (map, value) => map.SelectedSegment = value);
         public static readonly DirectProperty<ZwiftMap, Segment?> HighlightedMarkerProperty = AvaloniaProperty.RegisterDirect<ZwiftMap, Segment?>(nameof(HighlightedMarker), map => map.HighlightedMarker, (map, value) => map.HighlightedMarker = value);
@@ -184,6 +185,17 @@ namespace RoadCaptain.App.Shared.Controls
             set
             {
                 _renderOperation.ShowSprints = value;
+
+                InvalidateVisual();
+            }
+        }
+
+        public bool OnlyShowRoute
+        {
+            get => _renderOperation.OnlyShowRoute;
+            set
+            {
+                _renderOperation.OnlyShowRoute = value;
 
                 InvalidateVisual();
             }
