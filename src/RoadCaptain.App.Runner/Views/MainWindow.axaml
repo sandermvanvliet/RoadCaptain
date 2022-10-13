@@ -10,10 +10,12 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:converters="clr-namespace:RoadCaptain.App.Shared.Converters;assembly=RoadCaptain.App.Shared"
+        xmlns:controls="clr-namespace:RoadCaptain.App.Shared.Controls;assembly=RoadCaptain.App.Shared"
+        xmlns:appConverters="clr-namespace:RoadCaptain.App.Runner.Converters"
         mc:Ignorable="d"
         x:Class="RoadCaptain.App.Runner.Views.MainWindow"
         Title="{Binding Path=WindowTitle}"
-        Height="600" Width="740"
+        Height="600" Width="900"
         CanResize="False"
         WindowState="Normal"
         SystemDecorations="None"
@@ -64,7 +66,8 @@
 	<Window.Resources>
 		<converters:BooleanConverter x:Key="BooleanConverter" />
 		<converters:NullabilityConverter x:Key="NullabilityConverter" />
-	</Window.Resources>
+        <appConverters:RouteSequenceConverter x:Key="RouteSequenceConverter" />
+    </Window.Resources>
 	<Border BorderBrush="DarkGray" BorderThickness="1" CornerRadius="8" Opacity="1" Background="White">
 		<Grid Margin="4">
 			<Grid.RowDefinitions>
@@ -151,8 +154,15 @@
 				<Button Content="Select" HorizontalAlignment="Right" Grid.Column="2" Grid.Row="2" Margin="0,2,4,0" VerticalAlignment="Center" Command="{Binding Path=LoadRouteCommand}" Width="72" />
 
 				<!-- row 4 -->
-				<Border Grid.Row="3" Grid.Column="1" Margin="4,4,4,0" Background="White" Opacity="0.75"
-                        BorderBrush="Black" BorderThickness="1" CornerRadius="3">
+				<Border Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" 
+                        Width="300" 
+						HorizontalAlignment="Left"
+                        Margin="4,4,4,0" 
+                        Background="White" 
+                        Opacity="0.75"
+                        BorderBrush="Black" 
+                        BorderThickness="1" 
+                        CornerRadius="3">
 					<Grid Margin="4" ClipToBounds="True">
 						<Grid.RowDefinitions>
 							<RowDefinition Height="24" />
@@ -208,6 +218,17 @@
 						</ListBox>
 					</Grid>
 				</Border>
+                <controls:ZwiftMap Grid.Row="3" Grid.Column="1"
+                                   Name="ZwiftMap"
+                                   Margin="180,4,4,0"
+                                   BorderThickness="1"
+                                   BorderBrush="Black"
+                                   World="{Binding Path=Route.World}"
+                                   ShowClimbs="False"
+                                   ShowSprints="False"
+                                   Segments="{Binding Path=Segments}"
+                                   Sequence="{Binding Path=Route.PlannedRoute.RouteSegmentSequence,Converter={StaticResource RouteSequenceConverter}}"
+                                   />
 
 				<!-- row 5 -->
 				<TextBlock Text="Route options:" Grid.Row="4" Grid.Column="0" HorizontalAlignment="Right" FontWeight="Bold" FontSize="16"

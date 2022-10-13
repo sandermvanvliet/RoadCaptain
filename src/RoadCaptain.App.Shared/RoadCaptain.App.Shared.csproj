@@ -22,6 +22,12 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <None Remove="Assets\map-france.png" />
+	  <None Remove="Assets\map-makuri_islands.png" />
+	  <None Remove="Assets\map-watopia.png" />
+	</ItemGroup>
+
+	<ItemGroup>
 	  <ProjectReference Include="..\RoadCaptain\RoadCaptain.csproj" />
 	</ItemGroup>
 

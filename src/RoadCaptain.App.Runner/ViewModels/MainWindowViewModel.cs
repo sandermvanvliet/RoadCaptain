@@ -38,7 +38,7 @@ namespace RoadCaptain.App.Runner.ViewModels
         private readonly IRouteStore _routeStore;
         private string _version = "0.0.0.0";
         private string? _changelogUri;
-        private RouteModel _route = new();
+        private RouteModel? _route = new();
         private readonly IVersionChecker _versionChecker;
         private readonly ISegmentStore _segmentStore;
         private bool _haveCheckedVersion;
@@ -46,6 +46,7 @@ namespace RoadCaptain.App.Runner.ViewModels
         private bool _endActivityAtEndOfRoute;
         private readonly IZwiftCredentialCache _credentialCache;
         private bool _haveCheckedLastOpenedVersion;
+        private List<Segment> _segments;
 
         public MainWindowViewModel(Configuration configuration,
             IUserPreferences userPreferences,
@@ -284,13 +285,23 @@ namespace RoadCaptain.App.Runner.ViewModels
             }
         }
 
-        public RouteModel Route
+        public RouteModel? Route
         {
             get => _route;
             set
             {
                 if (Equals(value, _route)) return;
                 _route = value;
+                
+                if (_route != null)
+                {
+                    Segments = _segmentStore.LoadSegments(_route.World, _route.Sport);
+                }
+                else
+                {
+                    Segments = new();
+                }
+
                 this.RaisePropertyChanged();
                 this.RaisePropertyChanged(nameof(CanStartRoute));
             }
@@ -304,6 +315,17 @@ namespace RoadCaptain.App.Runner.ViewModels
                 if (value == _endActivityAtEndOfRoute) return;
                 _endActivityAtEndOfRoute = value;
                 _userPreferences.EndActivityAtEndOfRoute = value;
+                this.RaisePropertyChanged();
+            }
+        }
+
+        public List<Segment> Segments
+        {
+            get => _segments;
+            set
+            {
+                if (Equals(value, _segments)) return;
+                _segments = value;
                 this.RaisePropertyChanged();
             }
         }
