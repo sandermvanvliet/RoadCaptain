@@ -117,8 +117,7 @@
 					<RowDefinition Height="38" />
 					<RowDefinition Height="38" />
 					<RowDefinition Height="38" />
-					<RowDefinition Height="344" />
-					<RowDefinition Height="32" />
+					<RowDefinition />
 					<RowDefinition Height="32" />
 				</Grid.RowDefinitions>
 
@@ -154,15 +153,20 @@
 				<Button Content="Select" HorizontalAlignment="Right" Grid.Column="2" Grid.Row="2" Margin="0,2,4,0" VerticalAlignment="Center" Command="{Binding Path=LoadRouteCommand}" Width="72" />
 
 				<!-- row 4 -->
-				<Border Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" 
-                        Width="300" 
-						HorizontalAlignment="Left"
-                        Margin="4,4,4,0" 
-                        Background="White" 
-                        Opacity="0.75"
-                        BorderBrush="Black" 
-                        BorderThickness="1" 
-                        CornerRadius="3">
+				<Grid Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="3"
+                      Margin="4,16,4,0">
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="300" />
+						<ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <Border Grid.Column="0" 
+                            Width="300" 
+                            HorizontalAlignment="Left"
+                            Background="White" 
+                            Opacity="0.75"
+                            BorderBrush="Black" 
+                            BorderThickness="1" 
+                            CornerRadius="3">
 					<Grid Margin="4" ClipToBounds="True">
 						<Grid.RowDefinitions>
 							<RowDefinition Height="24" />
@@ -196,7 +200,6 @@
 						<TextBlock Grid.Row="5" Grid.Column="1" Text="{Binding Path=Route.TotalAscent}" Classes="routeDetails" />
 						<TextBlock Grid.Row="6" Grid.Column="1" Text="{Binding Path=Route.TotalDescent}" Classes="routeDetails" />
 
-
 						<ListBox Grid.Row="7" Grid.Column="1"
 								 Margin="4,0,0,0"
                                  Items="{Binding Path=Route.Markers}"
@@ -218,9 +221,9 @@
 						</ListBox>
 					</Grid>
 				</Border>
-                <controls:ZwiftMap Grid.Row="3" Grid.Column="1"
+                <controls:ZwiftMap Grid.Column="1"
                                    Name="ZwiftMap"
-                                   Margin="180,4,4,0"
+                                   Margin="4,0,0,0"
                                    BorderThickness="1"
                                    BorderBrush="Black"
                                    World="{Binding Path=Route.World}"
@@ -228,7 +231,9 @@
                                    ShowSprints="False"
                                    Segments="{Binding Path=Segments}"
                                    Sequence="{Binding Path=Route.PlannedRoute.RouteSegmentSequence,Converter={StaticResource RouteSequenceConverter}}"
+								   RiderPosition="{Binding Path=RiderPosition}"
                                    />
+                </Grid>
 
 				<!-- row 5 -->
 				<TextBlock Text="Route options:" Grid.Row="4" Grid.Column="0" HorizontalAlignment="Right" FontWeight="Bold" FontSize="16"
