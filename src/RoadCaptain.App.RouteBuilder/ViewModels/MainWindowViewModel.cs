@@ -45,6 +45,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
         private Segment? _highlightedSegment;
         private bool _haveCheckedLastOpenedVersion;
         private bool _showElevationPlot;
+        private Segment? _highlightedMarker;
 
         public MainWindowViewModel(IRouteStore routeStore, ISegmentStore segmentStore, IVersionChecker versionChecker, IWindowService windowService, IWorldStore worldStore, IUserPreferences userPreferences)
         {
@@ -158,6 +159,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
 
             SelectedSegment = null;
             HighlightedSegment = null;
+            HighlightedMarker = null;
 
             SimulationState = SimulationState.NotStarted;
 
@@ -265,7 +267,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
 
                 _markers = value;
 
-                this.RaisePropertyChanged(nameof(Markers));
+                this.RaisePropertyChanged();
             }
         }
 
@@ -288,7 +290,18 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             {
                 if (value == _selectedSegment) return;
                 _selectedSegment = value;
-                this.RaisePropertyChanged(nameof(SelectedSegment));
+                this.RaisePropertyChanged();
+            }
+        }
+
+        public Segment? HighlightedMarker
+        {
+            get => _highlightedMarker;
+            private set
+            {
+                if (value == _highlightedMarker) return;
+                _highlightedMarker = value;
+                this.RaisePropertyChanged();
             }
         }
 
@@ -302,7 +315,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
                 _userPreferences.DefaultSport = value;
                 _userPreferences.Save();
 
-                this.RaisePropertyChanged(nameof(DefaultSport));
+                this.RaisePropertyChanged();
                 this.RaisePropertyChanged(nameof(HasDefaultSport));
             }
         }
@@ -314,7 +327,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             {
                 if (value == _showClimbs) return;
                 _showClimbs = value;
-                this.RaisePropertyChanged(nameof(ShowClimbs));
+                this.RaisePropertyChanged();
             }
         }
 
@@ -325,7 +338,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             {
                 if (value == _showSprints) return;
                 _showSprints = value;
-                this.RaisePropertyChanged(nameof(ShowSprints));
+                this.RaisePropertyChanged();
             }
         }
 
@@ -336,7 +349,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             {
                 if (value == _showElevationPlot) return;
                 _showElevationPlot = value;
-                this.RaisePropertyChanged(nameof(ShowElevationPlot));
+                this.RaisePropertyChanged();
             }
         }
 
@@ -546,6 +559,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
 
             SelectedSegment = null;
             HighlightedSegment = null;
+            HighlightedMarker = null;
 
             SimulationState = SimulationState.NotStarted;
 
@@ -728,7 +742,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             set
             {
                 _riderPosition = value;
-                this.RaisePropertyChanged(nameof(RiderPosition));
+                this.RaisePropertyChanged();
             }
         }
 
@@ -738,7 +752,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             set
             {
                 _simulationState = value;
-                this.RaisePropertyChanged(nameof(SimulationState));
+                this.RaisePropertyChanged();
             }
         }
 
@@ -750,7 +764,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
                 if (value == _version) return;
                 _version = value;
                 ChangelogUri = $"https://github.com/sandermvanvliet/RoadCaptain/blob/main/Changelog.md/#{Version.Replace(".", "")}";
-                this.RaisePropertyChanged(nameof(Version));
+                this.RaisePropertyChanged();
             }
         }
 
@@ -761,7 +775,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             {
                 if (value == _changelogUri) return;
                 _changelogUri = value;
-                this.RaisePropertyChanged(nameof(ChangelogUri));
+                this.RaisePropertyChanged();
             }
         }
 
@@ -772,7 +786,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             {
                 if (value == _worlds) return;
                 _worlds = value;
-                this.RaisePropertyChanged(nameof(Worlds));
+                this.RaisePropertyChanged();
             }
         }
 
@@ -783,7 +797,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             {
                 if (value == _sports) return;
                 _sports = value;
-                this.RaisePropertyChanged(nameof(Sports));
+                this.RaisePropertyChanged();
             }
         }
 
@@ -797,7 +811,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
                     return;
                 }
                 _highlightedSegment = value;
-                this.RaisePropertyChanged(nameof(HighlightedSegment));
+                this.RaisePropertyChanged();
             }
         }
 
@@ -812,7 +826,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
                 }
 
                 _segments = value;
-                this.RaisePropertyChanged(nameof(Segments));
+                this.RaisePropertyChanged();
             }
         }
 
@@ -875,9 +889,26 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             }
         }
 
+        public void HighlightMarker(string markerId)
+        {
+            if (string.IsNullOrEmpty(markerId))
+            {
+                HighlightedSegment = null;
+            }
+            else
+            {
+                HighlightedMarker = Markers.SingleOrDefault(s => s.Id == markerId);
+            }
+        }
+
         public void ClearSegmentHighlight()
         {
             HighlightedSegment = null;
+        }
+
+        public void ClearMarkerHighlight()
+        {
+            HighlightedMarker = null;
         }
     }
 }

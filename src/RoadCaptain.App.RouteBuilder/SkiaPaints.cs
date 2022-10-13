@@ -44,6 +44,9 @@ namespace RoadCaptain.App.RouteBuilder
         public static readonly SKPaint MarkerSegmentEndPaint = new()
             { Color = SKColor.Parse("#14c817"), Style = SKPaintStyle.Fill, IsAntialias = true };
 
+        public static readonly SKPaint MarkerHighlightPaint = new()
+            { Color = SKColor.Parse("#4CFF00"), Style = SKPaintStyle.Stroke, StrokeWidth = 6, IsAntialias = true };
+
         public static readonly SKPaint SprintSegmentPaint = new()
             { Color = SKColor.Parse("#B200FF"), Style = SKPaintStyle.Stroke, StrokeWidth = 4, IsAntialias = true };
 
@@ -67,6 +70,5 @@ namespace RoadCaptain.App.RouteBuilder
 
         public static readonly SKPaint ElevationLineTextPaint = new()
             { Color = SKColor.Parse("#000000"), Style = SKPaintStyle.Stroke, StrokeWidth = 1, IsAntialias = true };
-        
     }
 }

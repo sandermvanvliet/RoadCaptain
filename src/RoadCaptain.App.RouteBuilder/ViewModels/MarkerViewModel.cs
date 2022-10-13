@@ -4,10 +4,12 @@
     {
         public MarkerViewModel(Segment marker)
         {
+            Id = marker.Id;
             Name = marker.Name;
             Type = marker.Type;
         }
 
+        public string Id { get; set; }
         public string Name { get; set; }
         public SegmentType Type { get; set; }
 

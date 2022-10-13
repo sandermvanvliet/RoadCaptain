@@ -109,6 +109,18 @@ namespace RoadCaptain.App.RouteBuilder.Views
             }
         }
 
+        private void MarkersOnRouteListBox_OnSelectionChanged(object? sender, SelectionChangedEventArgs e)
+        {
+            if (e.AddedItems.Count == 1 && e.AddedItems[0] is MarkerViewModel viewModel)
+            {
+                ViewModel.HighlightMarker(viewModel.Id);
+            }
+            else
+            {
+                ViewModel.ClearMarkerHighlight();
+            }
+        }
+
         private void RouteListView_KeyUp(object sender, KeyEventArgs e)
         {
             if (sender is ListBox { SelectedItem: SegmentSequenceViewModel viewModel } && e.Key == Key.Delete)

@@ -35,6 +35,7 @@ namespace RoadCaptain.App.RouteBuilder.Controls
         public static readonly DirectProperty<ZwiftMap, bool> ShowSprintsProperty = AvaloniaProperty.RegisterDirect<ZwiftMap, bool>(nameof(ShowSprints), map => map.ShowSprints, (map, value) => map.ShowSprints = value);
         public static readonly DirectProperty<ZwiftMap, Segment?> HighlightedSegmentProperty = AvaloniaProperty.RegisterDirect<ZwiftMap, Segment?>(nameof(HighlightedSegment), map => map.HighlightedSegment, (map, value) => map.HighlightedSegment = value);
         public static readonly DirectProperty<ZwiftMap, Segment?> SelectedSegmentProperty = AvaloniaProperty.RegisterDirect<ZwiftMap, Segment?>(nameof(SelectedSegment), map => map.SelectedSegment, (map, value) => map.SelectedSegment = value);
+        public static readonly DirectProperty<ZwiftMap, Segment?> HighlightedMarkerProperty = AvaloniaProperty.RegisterDirect<ZwiftMap, Segment?>(nameof(HighlightedMarker), map => map.HighlightedMarker, (map, value) => map.HighlightedMarker = value);
         public static readonly DirectProperty<ZwiftMap, TrackPoint?> RiderPositionProperty = AvaloniaProperty.RegisterDirect<ZwiftMap, TrackPoint?>(nameof(RiderPosition), map => map.RiderPosition, (map, value) => map.RiderPosition = value);
         public static readonly DirectProperty<ZwiftMap, List<Segment>?> SegmentsProperty = AvaloniaProperty.RegisterDirect<ZwiftMap, List<Segment>?>(nameof(Segments), map => map.Segments, (map, value) => map.Segments = value);
         public static readonly DirectProperty<ZwiftMap, List<Segment>?> MarkersProperty = AvaloniaProperty.RegisterDirect<ZwiftMap, List<Segment>?>(nameof(Markers), map => map.Markers, (map, value) => map.Markers = value);
@@ -48,6 +49,7 @@ namespace RoadCaptain.App.RouteBuilder.Controls
         private List<Segment> _markers = new();
         private readonly Timer _closeTimer;
         private string? _toolTipIdentity;
+        private Segment? _highlightedMarker;
 
         public ZwiftMap()
         {
@@ -137,6 +139,29 @@ namespace RoadCaptain.App.RouteBuilder.Controls
             {
                 _selectedSegment = value;
                 _renderOperation.SelectedSegmentId = value?.Id;
+
+                InvalidateVisual();
+            }
+        }
+
+        public Segment? HighlightedMarker
+        {
+            get
+            {
+                if (_highlightedMarker?.Id != _renderOperation.HighlightedMarkerId)
+                {
+                    _renderOperation.HighlightedMarkerId = null;
+                    _highlightedMarker = null;
+
+                    InvalidateVisual();
+                }
+
+                return null;
+            }
+            set
+            {
+                _selectedSegment = value;
+                _renderOperation.HighlightedMarkerId = value?.Id;
 
                 InvalidateVisual();
             }

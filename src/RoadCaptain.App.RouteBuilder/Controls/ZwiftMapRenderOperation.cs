@@ -30,6 +30,7 @@ namespace RoadCaptain.App.RouteBuilder.Controls
         public SKMatrix LogicalMatrix { get; private set; }
         public string? HighlightedSegmentId { get; set; }
         public string? SelectedSegmentId { get; set; }
+        public string? HighlightedMarkerId { get; set; }
         public Point Pan { get; set; } = new(0, 0);
         public float ZoomLevel { get; set; } = 1;
         public Point ZoomCenter { get; set; } = new(0, 0);
@@ -148,7 +149,14 @@ namespace RoadCaptain.App.RouteBuilder.Controls
                 {
                     if (marker.Type == SegmentType.Climb && ShowClimbs)
                     {
-                        canvas.DrawPath(marker.Path, SkiaPaints.ClimbSegmentPaint);
+                        var climbSegmentPaint = SkiaPaints.ClimbSegmentPaint;
+
+                        if (HighlightedMarkerId == marker.Id)
+                        {
+                            climbSegmentPaint = SkiaPaints.MarkerHighlightPaint;
+                        }
+
+                        canvas.DrawPath(marker.Path, climbSegmentPaint);
 
                         using (new SKAutoCanvasRestore(canvas))
                         {
@@ -172,7 +180,14 @@ namespace RoadCaptain.App.RouteBuilder.Controls
                     }
                     else if (marker.Type == SegmentType.Sprint && ShowSprints)
                     {
-                        canvas.DrawPath(marker.Path, SkiaPaints.SprintSegmentPaint);
+                        var sprintSegmentPaint = SkiaPaints.SprintSegmentPaint;
+
+                        if (HighlightedMarkerId == marker.Id)
+                        {
+                            sprintSegmentPaint = SkiaPaints.MarkerHighlightPaint;
+                        }
+
+                        canvas.DrawPath(marker.Path, sprintSegmentPaint);
 
                         using (new SKAutoCanvasRestore(canvas))
                         {
