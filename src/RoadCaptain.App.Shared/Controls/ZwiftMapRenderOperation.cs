@@ -262,7 +262,7 @@ namespace RoadCaptain.App.Shared.Controls
 
                 if (assets != null)
                 {
-                    var stream = assets.Open(new Uri($"avares://RoadCaptain.App.RouteBuilder/Assets/map-{world.Id}.png"));
+                    var stream = assets.Open(new Uri($"avares://RoadCaptain.App.Shared/Assets/map-{world.Id}.png"));
                     _worldImage = SKImage.FromEncodedData(stream);
                     _worldImageId = world.ZwiftId;
                 }
