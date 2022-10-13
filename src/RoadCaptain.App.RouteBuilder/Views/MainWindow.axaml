@@ -11,6 +11,8 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:controls="clr-namespace:RoadCaptain.App.RouteBuilder.Controls"
+        xmlns:sharedControls="clr-namespace:RoadCaptain.App.Shared.Controls;assembly=RoadCaptain.App.Shared"
+        xmlns:appConverters="clr-namespace:RoadCaptain.App.RouteBuilder.Converters"
         mc:Ignorable="d"
         x:Class="RoadCaptain.App.RouteBuilder.Views.MainWindow"
         Icon="avares://RoadCaptain.App.Shared/icon.png"
@@ -68,7 +70,8 @@
 		<converters:ValueToBooleanConverter x:Key="ValueToBooleanConverter" />
 		<converters:BitmapConverter x:Key="BitmapConverter" />
 		<converters:NullabilityConverter x:Key="NullabilityConverter" />
-	</Window.Resources>
+        <appConverters:RouteSequenceConverter x:Key="RouteSequenceConverter" />
+    </Window.Resources>
 	<DockPanel>
 		<Grid
                             Background="{Binding Path=Model.StatusBarBackground,FallbackValue={x:Static Brushes.DodgerBlue}}"
@@ -99,7 +102,7 @@
 				<RowDefinition Height="*" />
 			</Grid.RowDefinitions>
 
-            <controls:ZwiftMap
+            <sharedControls:ZwiftMap
                 Grid.Row="1" Grid.Column="1" 
                 Name="SkElement"
                 Cursor="Hand"
@@ -111,8 +114,9 @@
 				SelectedSegment="{Binding Path=SelectedSegment}"
 				RiderPosition="{Binding Path=RiderPosition}"
 				Segments="{Binding Path=Segments}"
-				Route="{Binding Path=Route}"
+				World="{Binding Path=Route.World}"
 				Markers="{Binding Path=Markers}"
+				Sequence="{Binding Path=Route.Sequence,Converter={StaticResource RouteSequenceConverter}}"
 				SelectSegmentCommand="{Binding Path=SelectSegmentCommand}"
                  />
 

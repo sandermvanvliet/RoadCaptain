@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 
-namespace RoadCaptain.App.RouteBuilder.Models
+namespace RoadCaptain.App.Shared.Controls
 {
     /// <summary>
     /// Calculate the offsets for segments of a world for use in coordinate conversions to the Zwift map

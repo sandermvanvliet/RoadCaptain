@@ -4,7 +4,7 @@
 
 using SkiaSharp;
 
-namespace RoadCaptain.App.RouteBuilder
+namespace RoadCaptain.App.Shared.Controls
 {
     public class SkiaPaints
     {

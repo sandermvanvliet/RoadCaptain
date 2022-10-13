@@ -5,7 +5,7 @@
 using System.Collections.Generic;
 using SkiaSharp;
 
-namespace RoadCaptain.App.RouteBuilder
+namespace RoadCaptain.App.Shared.Controls
 {
     internal class SkRectComparer : IComparer<SKRect>
     {

@@ -51,7 +51,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
                 }
 
                 _name = value;
-                this.RaisePropertyChanged(nameof(Name));
+                this.RaisePropertyChanged();
             }
         }
 
@@ -66,7 +66,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
                 }
 
                 _world = value;
-                this.RaisePropertyChanged(nameof(World));
+                this.RaisePropertyChanged();
                 this.RaisePropertyChanged(nameof(ReadyToBuild));
             }
         }
@@ -82,7 +82,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
                 }
 
                 _sport = value;
-                this.RaisePropertyChanged(nameof(Sport));
+                this.RaisePropertyChanged();
                 this.RaisePropertyChanged(nameof(ReadyToBuild));
             }
         }

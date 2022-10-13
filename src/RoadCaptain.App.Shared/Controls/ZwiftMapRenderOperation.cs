@@ -9,11 +9,9 @@ using Avalonia;
 using Avalonia.Platform;
 using Avalonia.Rendering.SceneGraph;
 using Avalonia.Skia;
-using RoadCaptain.App.RouteBuilder.Models;
-using RoadCaptain.App.RouteBuilder.ViewModels;
 using SkiaSharp;
 
-namespace RoadCaptain.App.RouteBuilder.Controls
+namespace RoadCaptain.App.Shared.Controls
 {
     internal class ZwiftMapRenderOperation : ICustomDrawOperation
     {
@@ -40,7 +38,6 @@ namespace RoadCaptain.App.RouteBuilder.Controls
         public Dictionary<string, SKPath> SegmentPaths { get; set; } = new();
         public Dictionary<string, Marker> Markers { get; set; } = new();
         public SKPath RoutePath { get; set; } = new();
-        public RouteViewModel? Route { get; set; }
 
         public void Dispose()
         {
@@ -102,9 +99,9 @@ namespace RoadCaptain.App.RouteBuilder.Controls
 
             ScaleAndTranslate(canvas);
 
-            if (Route?.World != null)
+            if (World != null)
             {
-                RenderZwiftMap(canvas, Route.World);
+                RenderZwiftMap(canvas, World);
             }
 
             // Lowest layer are the segments
@@ -121,15 +118,15 @@ namespace RoadCaptain.App.RouteBuilder.Controls
                 {
                     segmentPaint = SkiaPaints.SegmentHighlightPaint;
                 }
-                else if (Route is { Last: null } && Route.IsSpawnPointSegment(segmentId))
+                else if (Sequence != null && !Sequence.Any() && IsSpawnPointSegment(segmentId))
                 {
                     segmentPaint = SkiaPaints.SpawnPointSegmentPathPaint;
                 }
-                else if (Route != null && Route.Sequence.Any(s => s.SegmentId == segmentId && s.IsLeadIn))
+                else if (Sequence != null && Sequence.Any(s => s.SegmentId == segmentId && s.IsLeadIn))
                 {
                     segmentPaint = SkiaPaints.LeadInPaint;
                 }
-                else if (Route != null && Route.Sequence.Any(s => s.SegmentId == segmentId))
+                else if (Sequence != null && Sequence.Any(s => s.SegmentId == segmentId))
                 {
                     segmentPaint = SkiaPaints.RoutePathPaint;
                 }
@@ -213,10 +210,10 @@ namespace RoadCaptain.App.RouteBuilder.Controls
             }
 
             // Route markers
-            if (Route != null && RoutePath.Points.Any())
+            if (Sequence != null && Sequence.Any() && RoutePath.Points.Any())
             {
-                var startSegment = Route.Sequence.First();
-                var endSegment = Route.Sequence.Last();
+                var startSegment = Sequence.First();
+                var endSegment = Sequence.Last();
 
                 var routeStartPoint = startSegment.Direction == SegmentDirection.AtoB
                     ? SegmentPaths[startSegment.SegmentId].Points[0]
@@ -242,6 +239,20 @@ namespace RoadCaptain.App.RouteBuilder.Controls
 
             canvas.Flush();
         }
+
+        public World? World { get; set; }
+
+        private bool IsSpawnPointSegment(string segmentId)
+        {
+            if (World == null)
+            {
+                return false;
+            }
+
+            return World.SpawnPoints.Any(s => s.SegmentId == segmentId);
+        }
+
+        public List<RouteSegmentSequence>? Sequence { get; set; }
 
         private void RenderZwiftMap(SKCanvas canvas, World world)
         {

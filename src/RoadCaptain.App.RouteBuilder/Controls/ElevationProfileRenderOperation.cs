@@ -11,6 +11,7 @@ using Avalonia.Platform;
 using Avalonia.Rendering.SceneGraph;
 using Avalonia.Skia;
 using RoadCaptain.App.RouteBuilder.ViewModels;
+using RoadCaptain.App.Shared.Controls;
 using SkiaSharp;
 
 namespace RoadCaptain.App.RouteBuilder.Controls

@@ -13,13 +13,11 @@ using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Media;
 using Avalonia.Threading;
-using RoadCaptain.App.RouteBuilder.Models;
-using RoadCaptain.App.RouteBuilder.ViewModels;
 using SkiaSharp;
 using Point = Avalonia.Point;
 using Size = Avalonia.Size;
 
-namespace RoadCaptain.App.RouteBuilder.Controls
+namespace RoadCaptain.App.Shared.Controls
 {
     public class ZwiftMap : UserControl
     {
@@ -39,17 +37,19 @@ namespace RoadCaptain.App.RouteBuilder.Controls
         public static readonly DirectProperty<ZwiftMap, TrackPoint?> RiderPositionProperty = AvaloniaProperty.RegisterDirect<ZwiftMap, TrackPoint?>(nameof(RiderPosition), map => map.RiderPosition, (map, value) => map.RiderPosition = value);
         public static readonly DirectProperty<ZwiftMap, List<Segment>?> SegmentsProperty = AvaloniaProperty.RegisterDirect<ZwiftMap, List<Segment>?>(nameof(Segments), map => map.Segments, (map, value) => map.Segments = value);
         public static readonly DirectProperty<ZwiftMap, List<Segment>?> MarkersProperty = AvaloniaProperty.RegisterDirect<ZwiftMap, List<Segment>?>(nameof(Markers), map => map.Markers, (map, value) => map.Markers = value);
-        public static readonly DirectProperty<ZwiftMap, RouteViewModel?> RouteProperty = AvaloniaProperty.RegisterDirect<ZwiftMap, RouteViewModel?>(nameof(Route), map => map.Route, (map, value) => map.Route = value);
+        public static readonly DirectProperty<ZwiftMap, List<RouteSegmentSequence>?> SequenceProperty = AvaloniaProperty.RegisterDirect<ZwiftMap, List<RouteSegmentSequence>?>(nameof(Sequence), map => map.Sequence, (map, value) => map.Sequence = value);
         public static readonly DirectProperty<ZwiftMap, ICommand?> SelectSegmentCommandProperty = AvaloniaProperty.RegisterDirect<ZwiftMap, ICommand?>(nameof(SelectSegmentCommand), map => map.SelectSegmentCommand, (map, value) => map.SelectSegmentCommand = value);
+        public static readonly DirectProperty<ZwiftMap, World?> WorldProperty = AvaloniaProperty.RegisterDirect<ZwiftMap, World?>(nameof(World), map => map.World, (map, value) => map.World = value);
 
         private Offsets? _overallOffsets;
         private readonly Dictionary<string, SKRect> _segmentPathBounds = new();
         private readonly Dictionary<string, SKPath> _segmentPaths = new();
-        private RouteViewModel? _route;
         private List<Segment> _markers = new();
         private readonly Timer _closeTimer;
         private string? _toolTipIdentity;
         private Segment? _highlightedMarker;
+        private List<RouteSegmentSequence> _sequence;
+        private World? _world;
 
         public ZwiftMap()
         {
@@ -236,21 +236,40 @@ namespace RoadCaptain.App.RouteBuilder.Controls
             }
         }
 
-        public RouteViewModel? Route
+        public List<RouteSegmentSequence>? Sequence
         {
-            get => _route;
+            get => _sequence;
             set
             {
-                _route = value;
-                _renderOperation.Route = value;
+                _sequence = value;
 
-                CreateRoutePath();
+                _renderOperation.Sequence = Sequence;
 
                 InvalidateVisual();
             }
         }
-
+        
         public ICommand? SelectSegmentCommand { get; set; }
+
+        public World? World
+        {
+            get => _world;
+            set
+            {
+                if (Equals(value, _world)) return;
+
+                _world = value;
+
+                _renderOperation.World = value;
+
+                if (_segments != null)
+                {
+                    CreatePathsForSegments(_segments, _renderOperation.Bounds);
+                }
+
+                InvalidateVisual();
+            }
+        }
 
         protected override void OnPointerMoved(PointerEventArgs e)
         {
@@ -352,7 +371,7 @@ namespace RoadCaptain.App.RouteBuilder.Controls
             // Find SKPath that contains this coordinate (or close enough)
             var pathsInBounds = _segmentPathBounds
                 .Where(p => p.Value.Contains((float)scaledPoint.X, (float)scaledPoint.Y))
-                .OrderBy(x => x.Value, new SkRectComparer()) // Sort by bounds area, good enough for now
+                .OrderBy<KeyValuePair<string, SKRect>, SKRect>(x => x.Value, new SkRectComparer()) // Sort by bounds area, good enough for now
                 .ToList();
 
             if (!pathsInBounds.Any())
@@ -485,7 +504,7 @@ namespace RoadCaptain.App.RouteBuilder.Controls
                 {
                     x.Segment,
                     x.GameCoordinates,
-                    Offsets = new Offsets((float)size.Width, (float)size.Height, x.GameCoordinates, Route?.World?.ZwiftId ?? ZwiftWorldId.Unknown)
+                    Offsets = new Offsets((float)size.Width, (float)size.Height, x.GameCoordinates, World?.ZwiftId ?? ZwiftWorldId.Unknown)
                 })
                 .ToList();
 
@@ -504,9 +523,9 @@ namespace RoadCaptain.App.RouteBuilder.Controls
 
             _renderOperation.SegmentPaths = _segmentPaths;
 
-            if (Route?.World != null)
+            if (World != null)
             {
-                CalculateZwiftMapScaleAndTransform(Route.World, _overallOffsets);
+                CalculateZwiftMapScaleAndTransform(World, _overallOffsets);
             }
         }
 
@@ -525,8 +544,8 @@ namespace RoadCaptain.App.RouteBuilder.Controls
 
             var mostLeftScaled = overallOffsets.ScaleAndTranslate(mostLeft);
             var mostRightScaled = overallOffsets.ScaleAndTranslate(mostRight);
-            var deltaX = Math.Abs(mostRightScaled.X - mostLeftScaled.X);
-            var deltaY = Math.Abs(mostRightScaled.Y - mostLeftScaled.Y);
+            var deltaX = Math.Abs((float)(mostRightScaled.X - mostLeftScaled.X));
+            var deltaY = Math.Abs((float)(mostRightScaled.Y - mostLeftScaled.Y));
 
             var mapDeltaX = Math.Abs(world.MapMostRight.Value.X - world.MapMostLeft.Value.X);
             var mapDeltaY = Math.Abs(world.MapMostRight.Value.Y - world.MapMostLeft.Value.Y);
@@ -602,7 +621,7 @@ namespace RoadCaptain.App.RouteBuilder.Controls
             path.AddPoly(
                 data
                     .Select(offsets.ScaleAndTranslate)
-                    .Select(point => new SKPoint(point.X, point.Y))
+                    .Select<PointF, SKPoint>(point => new SKPoint(point.X, point.Y))
                     .ToArray(),
                 false);
 
@@ -613,7 +632,7 @@ namespace RoadCaptain.App.RouteBuilder.Controls
         {
             var routePath = new SKPath();
 
-            if (Route == null)
+            if (_renderOperation.Sequence == null || !_renderOperation.Sequence.Any())
             {
                 _renderOperation.RoutePath = routePath;
                 return;
@@ -625,7 +644,7 @@ namespace RoadCaptain.App.RouteBuilder.Controls
             if (_segmentPaths.Any())
             {
                 // RoutePath needs to be set to the total route we just loaded
-                foreach (var segment in Route.Sequence)
+                foreach (var segment in _renderOperation.Sequence)
                 {
                     var points = _segmentPaths[segment.SegmentId].Points;
 

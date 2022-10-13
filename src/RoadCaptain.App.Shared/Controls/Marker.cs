@@ -4,9 +4,9 @@
 
 using SkiaSharp;
 
-namespace RoadCaptain.App.RouteBuilder.Models
+namespace RoadCaptain.App.Shared.Controls
 {
-    public class Marker
+    internal class Marker
     {
         public string Id { get; set; }
         public SKPoint StartDrawPoint { get; set; }

@@ -25,4 +25,8 @@
     <ProjectReference Include="..\..\src\RoadCaptain.App.Shared\RoadCaptain.App.Shared.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Controls\" />
+  </ItemGroup>
+
 </Project>

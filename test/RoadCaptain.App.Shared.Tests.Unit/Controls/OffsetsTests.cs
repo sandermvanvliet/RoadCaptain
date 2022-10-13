@@ -5,10 +5,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
-using RoadCaptain.App.RouteBuilder.Models;
+using RoadCaptain.App.Shared.Controls;
 using Xunit;
 
-namespace RoadCaptain.App.RouteBuilder.Tests.Unit
+namespace RoadCaptain.App.Shared.Tests.Unit.Controls
 {
     public class OffsetsTests
     {
