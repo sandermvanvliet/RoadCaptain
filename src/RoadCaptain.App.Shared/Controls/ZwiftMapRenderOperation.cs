@@ -19,7 +19,7 @@ namespace RoadCaptain.App.Shared.Controls
         private const int KomMarkerWidth = 6;
         private const int KomMarkerCenterX = 3;
         private protected const int KomMarkerCenterY = 16;
-        private const int CircleMarkerRadius = 10;
+        private const int CircleMarkerRadius = 8;
         private static readonly SKColor CanvasBackgroundColor = SKColor.Parse("#FFFFFF");
         private SKBitmap? _bitmap;
         private Rect _bounds;
@@ -49,7 +49,7 @@ namespace RoadCaptain.App.Shared.Controls
             set
             {
                 _bounds = value;
-                
+
                 InitializeBitmap();
             }
         }
@@ -88,7 +88,7 @@ namespace RoadCaptain.App.Shared.Controls
                 {
                     RenderCanvas(mapCanvas);
                 }
-                
+
                 canvas.DrawBitmap(_bitmap, 0, 0);
             }
         }
@@ -96,6 +96,8 @@ namespace RoadCaptain.App.Shared.Controls
         private void RenderCanvas(SKCanvas canvas)
         {
             canvas.Clear(CanvasBackgroundColor);
+
+            canvas.Save();
 
             ScaleAndTranslate(canvas);
 
@@ -215,6 +217,8 @@ namespace RoadCaptain.App.Shared.Controls
                 }
             }
 
+            canvas.Restore();
+
             // Route markers
             if (Sequence != null && Sequence.Any() && RoutePath.Points.Any())
             {
@@ -224,23 +228,27 @@ namespace RoadCaptain.App.Shared.Controls
                 var routeStartPoint = startSegment.Direction == SegmentDirection.AtoB
                     ? SegmentPaths[startSegment.SegmentId].Points[0]
                     : SegmentPaths[startSegment.SegmentId].Points[^1];
-                
+
                 var routeEndPoint = endSegment.Direction == SegmentDirection.AtoB
                     ? SegmentPaths[endSegment.SegmentId].Points[^1]
                     : SegmentPaths[endSegment.SegmentId].Points[0];
 
+                var mappedRouteStartPoint = LogicalMatrix.MapPoint(routeStartPoint);
+                var mappedRouteEndPoint = LogicalMatrix.MapPoint(routeEndPoint);
+
                 // Route end marker
-                DrawCircleMarker(canvas, routeEndPoint, SkiaPaints.EndMarkerFillPaint);
+                DrawCircleMarker(canvas, mappedRouteEndPoint, SkiaPaints.EndMarkerFillPaint);
 
                 // Route start marker, needs to be after the end marker to
                 // ensure the start is always visible if the route starts and
                 // ends at the same location.
-                DrawCircleMarker(canvas, routeStartPoint, SkiaPaints.StartMarkerFillPaint);
+                DrawCircleMarker(canvas, mappedRouteStartPoint, SkiaPaints.StartMarkerFillPaint);
             }
 
             if (RiderPosition != null)
             {
-                DrawCircleMarker(canvas, RiderPosition.Value, SkiaPaints.RiderPositionFillPaint);
+                var mappedRiderPosition = LogicalMatrix.MapPoint(RiderPosition.Value);
+                DrawCircleMarker(canvas, mappedRiderPosition, SkiaPaints.RiderPositionFillPaint);
             }
 
             canvas.Flush();
@@ -280,7 +288,7 @@ namespace RoadCaptain.App.Shared.Controls
                 canvas.Save();
                 canvas.Scale(ZwiftMapScaleX, ZwiftMapScaleY, 0, 0);
                 canvas.Translate(ZwiftMapTranslateX, ZwiftMapTranslateY);
-                canvas.DrawImage(_worldImage, 0,0);
+                canvas.DrawImage(_worldImage, 0, 0);
                 canvas.Restore();
             }
         }
