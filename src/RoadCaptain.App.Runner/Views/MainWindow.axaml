@@ -233,6 +233,7 @@
                                    Sequence="{Binding Path=Route.PlannedRoute.RouteSegmentSequence,Converter={StaticResource RouteSequenceConverter}}"
 								   RiderPosition="{Binding Path=RiderPosition}"
 								   OnlyShowRoute="True"
+								   ZoomExtents="True"
                                    />
                 </Grid>
 

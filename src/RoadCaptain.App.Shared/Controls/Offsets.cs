@@ -71,6 +71,8 @@ namespace RoadCaptain.App.Shared.Controls
         public float OffsetY => -MinY;
         public float ScaleFactor { get; }
 
+        public MapCoordinate Center => new(MinX + RangeX / 2, MinY + RangeY / 2, 0, _worldId);
+
         private float CalculateScaleFactor()
         {
             if (RangeY > RangeX)

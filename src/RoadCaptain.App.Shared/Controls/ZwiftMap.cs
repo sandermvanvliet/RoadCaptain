@@ -32,6 +32,7 @@ namespace RoadCaptain.App.Shared.Controls
         public static readonly DirectProperty<ZwiftMap, bool> ShowClimbsProperty = AvaloniaProperty.RegisterDirect<ZwiftMap, bool>(nameof(ShowClimbs), map => map.ShowClimbs, (map, value) => map.ShowClimbs = value);
         public static readonly DirectProperty<ZwiftMap, bool> ShowSprintsProperty = AvaloniaProperty.RegisterDirect<ZwiftMap, bool>(nameof(ShowSprints), map => map.ShowSprints, (map, value) => map.ShowSprints = value);
         public static readonly DirectProperty<ZwiftMap, bool> OnlyShowRouteProperty = AvaloniaProperty.RegisterDirect<ZwiftMap, bool>(nameof(OnlyShowRoute), map => map.OnlyShowRoute, (map, value) => map.OnlyShowRoute = value);
+        public static readonly DirectProperty<ZwiftMap, bool> ZoomExtentsProperty = AvaloniaProperty.RegisterDirect<ZwiftMap, bool>(nameof(ZoomExtents), map => map.ZoomExtents, (map, value) => map.ZoomExtents = value);
         public static readonly DirectProperty<ZwiftMap, Segment?> HighlightedSegmentProperty = AvaloniaProperty.RegisterDirect<ZwiftMap, Segment?>(nameof(HighlightedSegment), map => map.HighlightedSegment, (map, value) => map.HighlightedSegment = value);
         public static readonly DirectProperty<ZwiftMap, Segment?> SelectedSegmentProperty = AvaloniaProperty.RegisterDirect<ZwiftMap, Segment?>(nameof(SelectedSegment), map => map.SelectedSegment, (map, value) => map.SelectedSegment = value);
         public static readonly DirectProperty<ZwiftMap, Segment?> HighlightedMarkerProperty = AvaloniaProperty.RegisterDirect<ZwiftMap, Segment?>(nameof(HighlightedMarker), map => map.HighlightedMarker, (map, value) => map.HighlightedMarker = value);
@@ -45,13 +46,14 @@ namespace RoadCaptain.App.Shared.Controls
         private Offsets? _overallOffsets;
         private readonly Dictionary<string, SKRect> _segmentPathBounds = new();
         private readonly Dictionary<string, SKPath> _segmentPaths = new();
+        private readonly Dictionary<string, Offsets> _segmentOffsets = new();
         private List<Segment> _markers = new();
         private readonly Timer _closeTimer;
         private string? _toolTipIdentity;
         private Segment? _highlightedMarker;
         private List<RouteSegmentSequence> _sequence;
         private World? _world;
-
+        private bool _zoomExtents;
         public ZwiftMap()
         {
             Background = new SolidColorBrush(Colors.Transparent);
@@ -201,6 +203,19 @@ namespace RoadCaptain.App.Shared.Controls
             }
         }
 
+        public bool ZoomExtents
+        {
+            get => _zoomExtents;
+            set
+            {
+                if (value == _zoomExtents) return;
+                
+                _zoomExtents = value;
+
+                InvalidateVisual();
+            }
+        }
+
         public TrackPoint? RiderPosition
         {
             get => null;
@@ -257,10 +272,49 @@ namespace RoadCaptain.App.Shared.Controls
 
                 _renderOperation.Sequence = Sequence;
 
+                if (ZoomExtents)
+                {
+                    ZoomToExtents();
+                }
+
                 InvalidateVisual();
             }
         }
-        
+
+        private void ZoomToExtents()
+        {
+            if (Sequence.Any())
+            {
+                // Determine bounding box of route
+                // Determine center of bounding box to set ZoomCenter
+                // Calculate zoom level
+
+                var routeSegmentOffsets = Sequence
+                    .Select(seq => _segmentOffsets[seq.SegmentId])
+                    .ToList();
+
+                var routeBoundingBox = Offsets.From(routeSegmentOffsets).Pad(45);
+
+                var scaleFactorX = OverallOffsets.RangeX / routeBoundingBox.RangeX;
+
+                if (routeBoundingBox.RangeY * scaleFactorX > OverallOffsets.RangeY)
+                {
+                    scaleFactorX = OverallOffsets.RangeY / routeBoundingBox.RangeY;
+                }
+                
+                var newPoint = OverallOffsets.ScaleAndTranslate(routeBoundingBox.Center);
+                var mapCenter = OverallOffsets.ScaleAndTranslate(OverallOffsets.Center);
+
+                // Cap at zoom level
+                var maximumZoomLevel = 3;
+                var zoomLevel = Math.Min((float)Math.Round(scaleFactorX, 1, MidpointRounding.AwayFromZero), maximumZoomLevel);
+
+                _renderOperation.ZoomLevel = zoomLevel;
+                _renderOperation.ZoomCenter = new Point(newPoint.X, newPoint.Y);
+                
+            }
+        }
+
         public ICommand? SelectSegmentCommand { get; set; }
 
         public World? World
@@ -281,6 +335,12 @@ namespace RoadCaptain.App.Shared.Controls
 
                 InvalidateVisual();
             }
+        }
+
+        public Offsets? OverallOffsets
+        {
+            get => _overallOffsets;
+            set => _overallOffsets = value;
         }
 
         protected override void OnPointerMoved(PointerEventArgs e)
@@ -375,7 +435,7 @@ namespace RoadCaptain.App.Shared.Controls
         private void SelectSegment(Point scaledPoint)
         {
             // Initialization apparently did not complete so we cannot map any point at all
-            if (_overallOffsets == null || Segments == null)
+            if (OverallOffsets == null || Segments == null)
             {
                 return;
             }
@@ -383,7 +443,7 @@ namespace RoadCaptain.App.Shared.Controls
             // Find SKPath that contains this coordinate (or close enough)
             var pathsInBounds = _segmentPathBounds
                 .Where(p => p.Value.Contains((float)scaledPoint.X, (float)scaledPoint.Y))
-                .OrderBy<KeyValuePair<string, SKRect>, SKRect>(x => x.Value, new SkRectComparer()) // Sort by bounds area, good enough for now
+                .OrderBy(x => x.Value, new SkRectComparer()) // Sort by bounds area, good enough for now
                 .ToList();
 
             if (!pathsInBounds.Any())
@@ -394,7 +454,7 @@ namespace RoadCaptain.App.Shared.Controls
             // Do expensive point to segment matching now that we've narrowed down the set
             var boundedSegments = pathsInBounds.Select(kv => Segments.Single(s => s.Id == kv.Key)).ToList();
 
-            var reverseScaled = _overallOffsets.ReverseScaleAndTranslate(scaledPoint.X, scaledPoint.Y);
+            var reverseScaled = OverallOffsets.ReverseScaleAndTranslate(scaledPoint.X, scaledPoint.Y);
             
             var scaledPointToPositionIntermediate = reverseScaled
                 .ToGameCoordinate()
@@ -520,13 +580,17 @@ namespace RoadCaptain.App.Shared.Controls
                 })
                 .ToList();
 
-            _overallOffsets = Offsets
+            OverallOffsets = Offsets
                 .From(segmentsWithOffsets.Select(s => s.Offsets).ToList())
                 .Pad(15);
             
+            _segmentOffsets.Clear();
+
             foreach (var segment in segmentsWithOffsets)
             {
-                var skiaPathFromSegment = SkiaPathFromSegment(_overallOffsets, segment.GameCoordinates);
+                _segmentOffsets.Add(segment.Segment.Id, segment.Offsets);
+
+                var skiaPathFromSegment = SkiaPathFromSegment(OverallOffsets, segment.GameCoordinates);
                 skiaPathFromSegment.GetTightBounds(out var bounds);
 
                 _segmentPaths.Add(segment.Segment.Id, skiaPathFromSegment);
@@ -537,7 +601,7 @@ namespace RoadCaptain.App.Shared.Controls
 
             if (World != null)
             {
-                CalculateZwiftMapScaleAndTransform(World, _overallOffsets);
+                CalculateZwiftMapScaleAndTransform(World, OverallOffsets);
             }
         }
 
@@ -578,7 +642,7 @@ namespace RoadCaptain.App.Shared.Controls
         private void CreateMarkers()
         {
             // Initialization apparently did not complete so we cannot map any point at all
-            if (_overallOffsets == null)
+            if (OverallOffsets == null)
             {
                 return;
             }
@@ -599,10 +663,10 @@ namespace RoadCaptain.App.Shared.Controls
                     .Select(point => point.ToMapCoordinate())
                     .ToList();
 
-                var startPoint = _overallOffsets.ScaleAndTranslate(gameCoordinates.First());
-                var endPoint = _overallOffsets.ScaleAndTranslate(gameCoordinates.Last());
+                var startPoint = OverallOffsets.ScaleAndTranslate(gameCoordinates.First());
+                var endPoint = OverallOffsets.ScaleAndTranslate(gameCoordinates.Last());
 
-                var skiaPathFromSegment = SkiaPathFromSegment(_overallOffsets, gameCoordinates);
+                var skiaPathFromSegment = SkiaPathFromSegment(OverallOffsets, gameCoordinates);
                 skiaPathFromSegment.GetTightBounds(out var bounds);
 
                 var marker = new Marker
