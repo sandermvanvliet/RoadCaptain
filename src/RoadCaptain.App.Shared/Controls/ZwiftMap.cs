@@ -272,6 +272,8 @@ namespace RoadCaptain.App.Shared.Controls
 
                 _renderOperation.Sequence = Sequence;
 
+                CreateRoutePath();
+
                 if (ZoomExtents)
                 {
                     ZoomToExtents();
