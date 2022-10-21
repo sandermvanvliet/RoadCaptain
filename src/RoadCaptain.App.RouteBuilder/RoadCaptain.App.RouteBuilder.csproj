@@ -38,6 +38,7 @@
 		<None Remove=".gitignore" />
 	</ItemGroup>
 	<ItemGroup>
+		<PackageReference Include="Codenizer.Avalonia.Map" Version="1.0.0" />
 		<PackageReference Include="JetBrains.Annotations" Version="10.3.0" />
 		<PackageReference Include="Serilog.Sinks.Debug" Version="2.0.0" />
 		<PackageReference Include="XamlNameReferenceGenerator" Version="1.3.4" />

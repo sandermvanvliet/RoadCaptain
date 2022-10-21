@@ -13,6 +13,7 @@
         xmlns:controls="clr-namespace:RoadCaptain.App.RouteBuilder.Controls"
         xmlns:sharedControls="clr-namespace:RoadCaptain.App.Shared.Controls;assembly=RoadCaptain.App.Shared"
         xmlns:appConverters="clr-namespace:RoadCaptain.App.RouteBuilder.Converters"
+        xmlns:map="clr-namespace:Codenizer.Avalonia.Map;assembly=Codenizer.Avalonia.Map"
         mc:Ignorable="d"
         x:Class="RoadCaptain.App.RouteBuilder.Views.MainWindow"
         Icon="avares://RoadCaptain.App.Shared/icon.png"
@@ -102,7 +103,7 @@
 				<RowDefinition Height="*" />
 			</Grid.RowDefinitions>
 
-            <sharedControls:ZwiftMap
+            <!--<sharedControls:ZwiftMap
                 Grid.Row="1" Grid.Column="1" 
                 Name="SkElement"
                 Cursor="Hand"
@@ -118,7 +119,12 @@
 				Markers="{Binding Path=Markers}"
 				Sequence="{Binding Path=Route.Sequence,Converter={StaticResource RouteSequenceConverter}}"
 				SelectSegmentCommand="{Binding Path=SelectSegmentCommand}"
-                 />
+                 />-->
+			<map:Map
+                Name="ZwiftMap"
+                Grid.Row="1" Grid.Column="1" 
+                Cursor="Hand"
+                MapObjectSelected="ZwiftMap_OnMapObjectSelected"/>
 
 			<controls:ElevationProfile
                 Grid.Row="1" Grid.Column="1"
