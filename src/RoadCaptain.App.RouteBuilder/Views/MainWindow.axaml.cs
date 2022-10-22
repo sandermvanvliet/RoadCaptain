@@ -5,7 +5,6 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices;
 using Avalonia;
@@ -393,8 +392,6 @@ namespace RoadCaptain.App.RouteBuilder.Views
 
         private void ZwiftMap_OnMapObjectSelected(object? sender, MapObjectSelectedEventArgs e)
         {
-            Debug.WriteLine($"Selected map object: {e.MapObject.GetType().Name} {e.MapObject.Name}");
-
             if (e.MapObject is MapSegment mapSegment)
             {
                 var segment = ViewModel.Segments.SingleOrDefault(s => s.Id == mapSegment.SegmentId);
