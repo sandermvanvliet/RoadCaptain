@@ -709,7 +709,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
                 while (SimulationState == SimulationState.Running && simulationIndex < routePoints.Count)
                 {
                     RiderPosition = routePoints[simulationIndex++];
-                    Thread.Sleep(15);
+                    Thread.Sleep(40);
                 }
 
                 SimulationState = SimulationState.Completed;
