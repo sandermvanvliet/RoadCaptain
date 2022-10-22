@@ -81,10 +81,45 @@ namespace RoadCaptain.App.RouteBuilder.Views
 
                     // Redraw when the route changes so that the
                     // route path is painted correctly
+                    SetZwiftMap();
+
+                    break;
+                case nameof(ViewModel.Route.World) when ViewModel.Route.World != null:
+                    SetZwiftMap();
                     break;
             }
         }
-        
+
+        private void SetZwiftMap()
+        {
+            var currentMap = ZwiftMap.MapObjects.SingleOrDefault(mo => mo is WorldMap && mo.Name.StartsWith("worldMap-"));
+
+            var worldId = ViewModel.Route.World?.Id;
+
+            if (string.IsNullOrEmpty(worldId) && currentMap != null)
+            {
+                ZwiftMap.MapObjects.Remove(currentMap);
+            }
+            
+            if(!string.IsNullOrEmpty(worldId))
+            {
+                var newMap = new WorldMap(worldId);
+
+                if (currentMap != null && !currentMap.Name.EndsWith($"-{worldId}"))
+                {
+                    ZwiftMap.MapObjects.Remove(currentMap);
+
+                    // Insert because we want it to be at the lowest level
+                    ZwiftMap.MapObjects.Insert(0, newMap);
+                }
+                else if(currentMap == null)
+                {
+                    // Insert because we want it to be at the lowest level
+                    ZwiftMap.MapObjects.Insert(0, newMap);
+                }
+            }
+        }
+
         private void MainWindow_OnActivated(object? sender, EventArgs e)
         {
             // Remove event handler to ensure this is only called once
