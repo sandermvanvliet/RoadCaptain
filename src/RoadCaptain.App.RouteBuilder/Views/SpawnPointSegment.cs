@@ -28,6 +28,8 @@ namespace RoadCaptain.App.RouteBuilder.Views
             if (IsVisible)
             {
                 canvas.DrawPath(_path, SkiaPaints.SpawnPointSegmentPathPaint);
+                
+                // TODO: draw direction arrow
             }
         }
     }
