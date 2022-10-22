@@ -47,7 +47,8 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
         private bool _showElevationPlot;
         private Segment? _highlightedMarker;
 
-        public MainWindowViewModel(IRouteStore routeStore, ISegmentStore segmentStore, IVersionChecker versionChecker, IWindowService windowService, IWorldStore worldStore, IUserPreferences userPreferences)
+        public MainWindowViewModel(IRouteStore routeStore, ISegmentStore segmentStore, IVersionChecker versionChecker,
+            IWindowService windowService, IWorldStore worldStore, IUserPreferences userPreferences)
         {
             _segments = new List<Segment>();
             _versionChecker = versionChecker;
@@ -89,7 +90,8 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
                 .OnFailure(_ => Model.StatusBarError("Failed to clear route because: {0}", _.Message));
 
             SelectSegmentCommand = new AsyncRelayCommand(
-                    _ => SelectSegment(_ as Segment ?? throw new ArgumentNullException(nameof(RelayCommand.CommandParameter))),
+                    _ => SelectSegment(_ as Segment ??
+                                       throw new ArgumentNullException(nameof(RelayCommand.CommandParameter))),
                     _ => true)
                 .OnSuccess(_ => Model.StatusBarInfo("Added segment"))
                 .OnSuccessWithMessage(_ => Model.StatusBarInfo("Added segment {0}", _.Message))
@@ -99,14 +101,8 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
                     _ => RemoveLastSegment(),
                     _ => Route.Sequence.Any())
                 .SubscribeTo(this, () => Route.Sequence)
-                .OnSuccess(_ =>
-                {
-                    Model.StatusBarInfo("Removed segment");
-                })
-                .OnSuccessWithMessage(_ =>
-                {
-                    Model.StatusBarInfo("Removed segment {0}", _.Message);
-                })
+                .OnSuccess(_ => { Model.StatusBarInfo("Removed segment"); })
+                .OnSuccessWithMessage(_ => { Model.StatusBarInfo("Removed segment {0}", _.Message); })
                 .OnFailure(_ => Model.StatusBarWarning(_.Message));
 
             SimulateCommand = new RelayCommand(
@@ -119,11 +115,13 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
                 _ => !string.IsNullOrEmpty(_ as string));
 
             SelectWorldCommand = new RelayCommand(
-                _ => SelectWorld(_ as WorldViewModel ?? throw new ArgumentNullException(nameof(RelayCommand.CommandParameter))),
+                _ => SelectWorld(_ as WorldViewModel ??
+                                 throw new ArgumentNullException(nameof(RelayCommand.CommandParameter))),
                 _ => (_ as WorldViewModel)?.CanSelect ?? false);
 
             SelectSportCommand = new AsyncRelayCommand(
-                _ => SelectSport(_ as SportViewModel ?? throw new ArgumentNullException(nameof(RelayCommand.CommandParameter))),
+                _ => SelectSport(_ as SportViewModel ??
+                                 throw new ArgumentNullException(nameof(RelayCommand.CommandParameter))),
                 _ => _ is SportViewModel);
 
             ResetDefaultSportCommand = new RelayCommand(
@@ -131,8 +129,8 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
                 _ => true);
 
             ResetWorldCommand = new AsyncRelayCommand(
-                _ => ResetWorldAndSport(),
-                _ => Route.World != null)
+                    _ => ResetWorldAndSport(),
+                    _ => Route.World != null)
                 .SubscribeTo(this, () => Route.World);
 
             Version = GetType().Assembly.GetName().Version?.ToString(4) ?? "0.0.0.0";
@@ -206,7 +204,8 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             {
                 var sport = Sports
                     .SingleOrDefault(s =>
-                        (_userPreferences.DefaultSport ?? "").Equals(s.Sport.ToString(), StringComparison.InvariantCultureIgnoreCase));
+                        (_userPreferences.DefaultSport ?? "").Equals(s.Sport.ToString(),
+                            StringComparison.InvariantCultureIgnoreCase));
 
                 if (sport != null)
                 {
@@ -763,7 +762,8 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             {
                 if (value == _version) return;
                 _version = value;
-                ChangelogUri = $"https://github.com/sandermvanvliet/RoadCaptain/blob/main/Changelog.md/#{Version.Replace(".", "")}";
+                ChangelogUri =
+                    $"https://github.com/sandermvanvliet/RoadCaptain/blob/main/Changelog.md/#{Version.Replace(".", "")}";
                 this.RaisePropertyChanged();
             }
         }
@@ -810,6 +810,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
                 {
                     return;
                 }
+
                 _highlightedSegment = value;
                 this.RaisePropertyChanged();
             }
@@ -912,4 +913,3 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
         }
     }
 }
-

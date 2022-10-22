@@ -8,8 +8,8 @@ namespace RoadCaptain.App.RouteBuilder.Views
     public class RoutePath : MapObject
     {
         private readonly SKPath _path;
-        private int _currentPosition;
-        private const int CircleMarkerRadius = 8;
+        private int _currentPosition = -1;
+        private const int CircleMarkerRadius = 16;
 
         public RoutePath(SKPoint[] points)
         {
