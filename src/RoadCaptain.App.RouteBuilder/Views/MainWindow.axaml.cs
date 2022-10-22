@@ -265,19 +265,16 @@ namespace RoadCaptain.App.RouteBuilder.Views
         }
         private void ZoomIn_Click(object sender, RoutedEventArgs e)
         {
-            //SkElement.ZoomIn(new Point(SkElement.Bounds.Width / 2, SkElement.Bounds.Height / 2));
             ZwiftMap.Zoom(ZwiftMap.ZoomLevel+0.1f, new Point(Bounds.Width / 2, Bounds.Height / 2));
         }
         
         private void ZoomOut_Click(object sender, RoutedEventArgs e)
         {
-            //SkElement.ZoomOut(new Point(SkElement.Bounds.Width / 2, SkElement.Bounds.Height / 2));
             ZwiftMap.Zoom(ZwiftMap.ZoomLevel-0.1f, new Point(Bounds.Width / 2, Bounds.Height / 2));
         }
         
         private void ResetZoom_Click(object sender, RoutedEventArgs e)
         {
-            //SkElement.ResetZoom();
             ZwiftMap.ZoomAll();
         }
         // ReSharper restore UnusedParameter.Local
