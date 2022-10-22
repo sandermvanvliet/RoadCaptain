@@ -3,6 +3,7 @@
 // See LICENSE or https://choosealicense.com/licenses/artistic-2.0/
 
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -14,6 +15,10 @@ using Avalonia.Threading;
 using Codenizer.Avalonia.Map;
 using RoadCaptain.App.RouteBuilder.ViewModels;
 using RoadCaptain.App.Shared;
+using RoadCaptain.App.Shared.Controls;
+using SkiaSharp;
+using KeyEventArgs = Avalonia.Input.KeyEventArgs;
+using ListBox = Avalonia.Controls.ListBox;
 using Point = Avalonia.Point;
 
 namespace RoadCaptain.App.RouteBuilder.Views
@@ -84,10 +89,86 @@ namespace RoadCaptain.App.RouteBuilder.Views
                     SetZwiftMap();
 
                     break;
-                case nameof(ViewModel.Route.World) when ViewModel.Route.World != null:
-                    SetZwiftMap();
-                    break;
             }
+        }
+
+        private void AddPathsToMap()
+        {
+            if (!ViewModel.Segments.Any())
+            {
+                return;
+            }
+            
+            var map = ZwiftMap.MapObjects.SingleOrDefault(mo => mo is WorldMap);
+            
+            if (map == null)
+            {
+                return;
+            }
+            
+            // Watopia bounding box
+            var size = new Rect(
+                new Point(531, 461),
+                new Point(6618, 3586));
+            
+            CreatePathsForSegments(ViewModel.Segments, size);
+        }
+        
+        private void CreatePathsForSegments(List<Segment> segments, Rect size)
+        {
+            var segmentPaths = new Dictionary<string, SKPath>();
+
+            if (!segments.Any())
+            {
+                return;
+            }
+
+            var world = ViewModel.Route.World;
+            
+            var segmentsWithOffsets = segments
+                .Select(seg => new
+                {
+                    Segment = seg,
+                    GameCoordinates = seg.Points.Select(point => point.ToMapCoordinate()).ToList()
+                })
+                .Select(x => new
+                {
+                    x.Segment,
+                    x.GameCoordinates,
+                    Offsets = new Offsets((float)size.Width, (float)size.Height, x.GameCoordinates, world?.ZwiftId ?? ZwiftWorldId.Unknown)
+                })
+                .ToList();
+
+            var overallOffsets = Offsets
+                .From(segmentsWithOffsets.Select(s => s.Offsets).ToList())
+                .Translate((int)size.Left, (int)size.Top);
+            
+            foreach (var segment in segmentsWithOffsets)
+            {
+                var skiaPathFromSegment = SkiaPathFromSegment(overallOffsets, segment.GameCoordinates);
+                
+                segmentPaths.Add(segment.Segment.Id, skiaPathFromSegment);
+            }
+
+            foreach (var segmentPath in segmentPaths)
+            {
+                var path = new Path("segment-" + segmentPath.Key, segmentPath.Value.Points, "#0000FF", 4);
+                ZwiftMap.MapObjects.Add(path);
+            }
+        }
+
+        private static SKPath SkiaPathFromSegment(Offsets offsets, List<MapCoordinate> data)
+        {
+            var path = new SKPath();
+
+            path.AddPoly(
+                data
+                    .Select(offsets.ScaleAndTranslate)
+                    .Select(point => new SKPoint(point.X, point.Y))
+                    .ToArray(),
+                false);
+
+            return path;
         }
 
         private void SetZwiftMap()
@@ -98,7 +179,7 @@ namespace RoadCaptain.App.RouteBuilder.Views
 
             if (string.IsNullOrEmpty(worldId) && currentMap != null)
             {
-                ZwiftMap.MapObjects.Remove(currentMap);
+                ZwiftMap.MapObjects.Clear();
             }
             
             if(!string.IsNullOrEmpty(worldId))
@@ -107,15 +188,18 @@ namespace RoadCaptain.App.RouteBuilder.Views
 
                 if (currentMap != null && !currentMap.Name.EndsWith($"-{worldId}"))
                 {
-                    ZwiftMap.MapObjects.Remove(currentMap);
+                    ZwiftMap.MapObjects.Clear();
 
                     // Insert because we want it to be at the lowest level
                     ZwiftMap.MapObjects.Insert(0, newMap);
+                    
+                    AddPathsToMap();
                 }
                 else if(currentMap == null)
                 {
                     // Insert because we want it to be at the lowest level
                     ZwiftMap.MapObjects.Insert(0, newMap);
+                    AddPathsToMap();
                 }
             }
         }

@@ -15,7 +15,8 @@ namespace RoadCaptain.App.Shared.Controls
     public class Offsets
     {
         private readonly ZwiftWorldId _worldId;
-        private readonly int _offset;
+        private readonly int _translateX;
+        private readonly int _translateY;
 
         public Offsets(float imageWidth, float imageHeight, List<MapCoordinate> data, ZwiftWorldId worldId)
         {
@@ -34,10 +35,12 @@ namespace RoadCaptain.App.Shared.Controls
             MinY = (float)data.Min(p => p.Y);
             MaxY = (float)data.Max(p => p.Y);
 
-            ScaleFactor = CalculateScaleFactor();
+            ScaleFactorX = ImageWidth / RangeX;
+            ScaleFactorY = ImageHeight / RangeY;
         }
 
-        private Offsets(float minX, float maxX, float minY, float maxY, float imageWidth, float imageHeight, ZwiftWorldId worldId, int offset = 0)
+        private Offsets(float minX, float maxX, float minY, float maxY, float imageWidth, float imageHeight,
+            ZwiftWorldId worldId, int translateX = 0, int translateY = 0)
         {
             if (worldId == ZwiftWorldId.Unknown)
             {
@@ -45,7 +48,8 @@ namespace RoadCaptain.App.Shared.Controls
             }
 
             _worldId = worldId;
-            _offset = offset;
+            _translateX = translateX;
+            _translateY = translateY;
             ImageWidth = imageWidth;
             ImageHeight = imageHeight;
             MinX = minX;
@@ -53,7 +57,8 @@ namespace RoadCaptain.App.Shared.Controls
             MinY = minY;
             MaxY = maxY;
 
-            ScaleFactor = CalculateScaleFactor();
+            ScaleFactorX = ImageWidth / RangeX;
+            ScaleFactorY = ImageHeight / RangeY;
         }
 
         public float ImageWidth { get; }
@@ -69,25 +74,17 @@ namespace RoadCaptain.App.Shared.Controls
         // If minX is negative the offset is positive because we shift everything to the right, if it is positive the offset is negative because we shift to the left
         public float OffsetX => -MinX;
         public float OffsetY => -MinY;
-        public float ScaleFactor { get; }
+        public float ScaleFactorX { get; }
+        public float ScaleFactorY { get; }
+
 
         public MapCoordinate Center => new(MinX + RangeX / 2, MinY + RangeY / 2, 0, _worldId);
-
-        private float CalculateScaleFactor()
-        {
-            if (RangeY > RangeX)
-            {
-                return (ImageHeight - 1) / RangeY;
-            }
-
-            return (ImageWidth - 1) / RangeX;
-        }
 
         public PointF ScaleAndTranslate(MapCoordinate point)
         {
             return new PointF(
-                _offset + (OffsetX + (float)point.X) * ScaleFactor, 
-                _offset + (OffsetY + (float)point.Y) * ScaleFactor);
+                _translateX + (OffsetX + (float)point.X) * ScaleFactorX, 
+                _translateY + (OffsetY + (float)point.Y) * ScaleFactorY);
         }
 
         public static Offsets From(List<Offsets> offsets)
@@ -105,8 +102,8 @@ namespace RoadCaptain.App.Shared.Controls
         public MapCoordinate ReverseScaleAndTranslate(double x, double y)
         {
             return new MapCoordinate(
-                (x - _offset) / ScaleFactor - OffsetX,
-                (y - _offset) / ScaleFactor - OffsetY,
+                (x - _translateX) / ScaleFactorX - OffsetX,
+                (y - _translateY) / ScaleFactorY - OffsetY,
                 0,
                 _worldId);
         }
@@ -114,7 +111,12 @@ namespace RoadCaptain.App.Shared.Controls
         public Offsets Pad(int offset)
         {
             var doubleOffset = 2 * offset;
-            return new Offsets(MinX, MaxX, MinY, MaxY, ImageWidth - doubleOffset, ImageHeight - doubleOffset, _worldId, offset);
+            return new Offsets(MinX, MaxX, MinY, MaxY, ImageWidth - doubleOffset, ImageHeight - doubleOffset, _worldId, offset, offset);
+        }
+
+        public Offsets Translate(int translateX, int translateY)
+        {
+            return new Offsets(MinX, MaxX, MinY, MaxY, ImageWidth, ImageHeight, _worldId, translateX, translateY);
         }
     }
 }
