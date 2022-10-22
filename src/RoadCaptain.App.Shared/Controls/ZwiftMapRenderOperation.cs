@@ -18,7 +18,7 @@ namespace RoadCaptain.App.Shared.Controls
         private const int KomMarkerHeight = 32;
         private const int KomMarkerWidth = 6;
         private const int KomMarkerCenterX = 3;
-        private protected const int KomMarkerCenterY = 16;
+        private const int KomMarkerCenterY = 16;
         private const int CircleMarkerRadius = 8;
         private static readonly SKColor CanvasBackgroundColor = SKColor.Parse("#FFFFFF");
         private SKBitmap? _bitmap;

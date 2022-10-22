@@ -10,7 +10,6 @@ namespace RoadCaptain.App.RouteBuilder.Views
         public bool IsSpawnPoint { get; set; }
         public bool IsSelected { get; set; }
         public bool IsHighlighted { get; set; }
-        public bool IsOnRoute { get; set; }
         public bool IsLeadIn { get; set; }
         public bool IsLeadOut { get; set; }
 
@@ -28,19 +27,15 @@ namespace RoadCaptain.App.RouteBuilder.Views
         public override string Name { get; }
         public override SKRect Bounds { get; }
         public string SegmentId { get; }
+        public SKPoint[] Points => _path.Points;
 
         public override void Render(SKCanvas canvas)
         {
             var currentPaint = SkiaPaints.SegmentPathPaint;
 
-            if (IsSpawnPoint && !IsOnRoute) // Also check if it's on a route because it can't be both
+            if (IsSpawnPoint)
             {
                 currentPaint = SkiaPaints.SpawnPointSegmentPathPaint;
-            }
-
-            if (IsOnRoute)
-            {
-                currentPaint = SkiaPaints.RoutePathPaint;
             }
 
             if (IsLeadIn || IsLeadOut)

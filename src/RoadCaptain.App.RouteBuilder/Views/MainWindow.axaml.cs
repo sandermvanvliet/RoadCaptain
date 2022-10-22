@@ -8,12 +8,14 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Windows.Forms;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Threading;
 using Codenizer.Avalonia.Map;
+using ReactiveUI;
 using RoadCaptain.App.RouteBuilder.ViewModels;
 using RoadCaptain.App.Shared;
 using RoadCaptain.App.Shared.Controls;
@@ -95,35 +97,83 @@ namespace RoadCaptain.App.RouteBuilder.Views
                     // route path is painted correctly
                     SetZwiftMap();
 
-                    MarkSegmentOnRouteOnZwiftMap();
+                    SynchronizeRouteSegmentsOnZwiftMap();
 
+                    break;
+                case nameof(ViewModel.RiderPosition):
+                    var routePath = ZwiftMap.MapObjects.OfType<RoutePath>().SingleOrDefault();
+                    
+                    if (ViewModel.RiderPosition == null && routePath != null)
+                    {
+                        routePath.Reset();
+                    }
+
+                    if (routePath != null)
+                    {
+                        routePath.MoveNext();
+                    }
+                    
+                    ZwiftMap.InvalidateVisual();
+                    
                     break;
             }
         }
 
-        private void MarkSegmentOnRouteOnZwiftMap()
+        private void SynchronizeRouteSegmentsOnZwiftMap()
         {
-            var highlightedSegments = ZwiftMap
+            var mapSegments = ZwiftMap
                 .MapObjects
                 .OfType<MapSegment>()
                 .ToList();
 
-            var routeSegmentIds = ViewModel.Route.Sequence.Select(s => s.SegmentId).ToList();
-
-            foreach (var segment in highlightedSegments)
+            var routeHasSegments = ViewModel.Route.Sequence.Any();
+            
+            // Toggle the spawn point flag
+            foreach (var segment in mapSegments)
             {
-                segment.IsOnRoute = routeSegmentIds.Contains(segment.SegmentId);
-
-                if (segment.IsOnRoute)
-                {
-                    // TODO: Set segment type
-                }
-
-                segment.IsSpawnPoint = !routeSegmentIds.Any() && ViewModel.Route.World.SpawnPoints.Any(s => s.SegmentId == segment.SegmentId);
+                segment.IsSpawnPoint = !routeHasSegments && ViewModel.Route.World.SpawnPoints.Any(s => s.SegmentId == segment.SegmentId);
             }
+            
+            // Synchronize the route path with the route
+            var routePath = ZwiftMap.MapObjects.SingleOrDefault(mo => mo is RoutePath);
+
+            var routePathPoints = RoutePathPointsFrom(ViewModel.Route.Sequence, mapSegments);
+
+            if (routePath != null)
+            {
+                ZwiftMap.MapObjects.Remove(routePath);
+            }
+
+            routePath = new RoutePath(routePathPoints);
+            ZwiftMap.MapObjects.Add(routePath);
             
             // Force re-render
             ZwiftMap.InvalidateVisual();
+        }
+
+        private SKPoint[] RoutePathPointsFrom(IEnumerable<SegmentSequenceViewModel> routeSequence, List<MapSegment> mapSegments)
+        {
+            var routePoints = new List<SKPoint>();
+            
+            foreach (var seq in routeSequence)
+            {
+                var points = mapSegments.Single(s => s.SegmentId == seq.SegmentId).Points;
+
+                if (seq.Direction == SegmentDirection.BtoA)
+                {
+                    // Don't call Reverse() because that does an
+                    // in-place reverse and given that we're 
+                    // _referencing_ the list of points of the
+                    // segment that means that the actual segment
+                    // is modified. Reverse() does not return a
+                    // new IEnumerable<T>
+                    points = points.AsEnumerable().Reverse().ToArray();
+                }
+
+                routePoints.AddRange(points);
+            }
+
+            return routePoints.ToArray();
         }
 
         private void HighlightOnZwiftMap()
