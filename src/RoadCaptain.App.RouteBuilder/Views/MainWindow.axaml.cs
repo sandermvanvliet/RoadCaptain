@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices;
 using Avalonia;
@@ -101,21 +102,29 @@ namespace RoadCaptain.App.RouteBuilder.Views
             
             var map = ZwiftMap.MapObjects.SingleOrDefault(mo => mo is WorldMap);
             
-            if (map == null)
+            if (map == null || ViewModel.Route.World == null)
             {
                 return;
             }
-            
-            // Watopia bounding box
-            var size = new Rect(
-                new Point(531, 461),
-                new Point(6618, 3586));
-            
-            CreatePathsForSegments(ViewModel.Segments, size);
+
+            CreatePathsForSegments(ViewModel.Segments, ViewModel.Route.World);
         }
         
-        private void CreatePathsForSegments(List<Segment> segments, Rect size)
+        private void CreatePathsForSegments(List<Segment> segments, World world)
         {
+            if (!world.MapMostLeft.HasValue || !world.MapMostRight.HasValue)
+            {
+                throw new ArgumentException("Can't create paths if the bounding box for the world is missing");
+            }
+            
+            var size = new Rect(
+                new Point(
+                    world.MapMostLeft.Value.X,
+                    world.MapMostLeft.Value.Y),
+                new Point(
+                    world.MapMostRight.Value.X,
+                    world.MapMostRight.Value.Y));
+            
             var segmentPaths = new Dictionary<string, SKPath>();
 
             if (!segments.Any())
@@ -123,8 +132,6 @@ namespace RoadCaptain.App.RouteBuilder.Views
                 return;
             }
 
-            var world = ViewModel.Route.World;
-            
             var segmentsWithOffsets = segments
                 .Select(seg => new
                 {
@@ -135,7 +142,7 @@ namespace RoadCaptain.App.RouteBuilder.Views
                 {
                     x.Segment,
                     x.GameCoordinates,
-                    Offsets = new Offsets((float)size.Width, (float)size.Height, x.GameCoordinates, world?.ZwiftId ?? ZwiftWorldId.Unknown)
+                    Offsets = new Offsets((float)size.Width, (float)size.Height, x.GameCoordinates, world.ZwiftId)
                 })
                 .ToList();
 
@@ -278,7 +285,7 @@ namespace RoadCaptain.App.RouteBuilder.Views
 
         private void ZwiftMap_OnMapObjectSelected(object? sender, MapObjectSelectedEventArgs e)
         {
-
+            Debug.WriteLine($"Selected map object: {e.MapObject.Name}");
         }
     }
 }

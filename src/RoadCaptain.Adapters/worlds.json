@@ -121,13 +121,13 @@
     },
     "mapMostLeft": {
       "isEmpty": false,
-      "x": 822.0,
-      "y": 3105.0
+      "x": 531.0,
+      "y": 461.0
     },
     "mapMostRight": {
       "isEmpty": false,
       "x": 6618.0,
-      "y": 1067.0
+      "y": 3586.0
     }
   },
   {
@@ -210,13 +210,13 @@
     },
     "mapMostLeft": {
       "isEmpty": false,
-      "x": 1704.0,
-      "y": 3632.0
+      "x": 1330.0,
+      "y": 334.0
     },
     "mapMostRight": {
       "isEmpty": false,
-      "x": 2721.0,
-      "y": 334.0
+      "x": 2878.0,
+      "y": 3644.0
     }
   },
   {
@@ -357,13 +357,13 @@
     },
     "mapMostLeft": {
       "isEmpty": true,
-      "x": 610.0,
-      "y": 5494.0
+      "x": 492.0,
+      "y": 562.0
     },
     "mapMostRight": {
       "isEmpty": true,
-      "x": 5307.0,
-      "y": 665.0
+      "x": 5650.0,
+      "y": 5528.0
     }
   },
   {
