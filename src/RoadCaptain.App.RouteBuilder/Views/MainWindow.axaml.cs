@@ -8,14 +8,12 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices;
-using System.Windows.Forms;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Threading;
 using Codenizer.Avalonia.Map;
-using ReactiveUI;
 using RoadCaptain.App.RouteBuilder.ViewModels;
 using RoadCaptain.App.Shared;
 using RoadCaptain.App.Shared.Controls;
@@ -108,11 +106,8 @@ namespace RoadCaptain.App.RouteBuilder.Views
                         routePath.Reset();
                     }
 
-                    if (routePath != null)
-                    {
-                        routePath.MoveNext();
-                    }
-                    
+                    routePath?.MoveNext();
+
                     ZwiftMap.InvalidateVisual();
                     
                     break;
