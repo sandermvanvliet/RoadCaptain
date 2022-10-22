@@ -383,6 +383,11 @@ namespace RoadCaptain.App.RouteBuilder.Views
         {
             ZwiftMap.ZoomAll();
         }
+
+        private void ZoomRoute_Click(object? sender, RoutedEventArgs e)
+        {
+            ZwiftMap.ZoomExtent("route");
+        }
         // ReSharper restore UnusedParameter.Local
         // ReSharper restore UnusedMember.Local
 
