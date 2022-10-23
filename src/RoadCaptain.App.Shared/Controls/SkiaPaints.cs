@@ -25,6 +25,9 @@ namespace RoadCaptain.App.Shared.Controls
 
         public static readonly SKPaint LeadInPaint = new()
             { Color = SKColor.Parse("#0000ff"), Style = SKPaintStyle.Stroke, StrokeWidth = 4, PathEffect = SKPathEffect.CreateDash(new [] { 4f, 2f}, 4) ,IsAntialias = true };
+        
+        public static readonly SKPaint LoopPaint = new()
+            { Color = SKColor.Parse("#ffcc00"), Style = SKPaintStyle.Stroke, StrokeWidth = 4 ,IsAntialias = true };
 
         public static readonly SKPaint RiderPositionFillPaint = new()
             { Color = SKColor.Parse("#FF6141"), Style = SKPaintStyle.Fill, IsAntialias = true };
