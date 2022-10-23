@@ -5,7 +5,6 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.Linq;
 using ReactiveUI;
 using CommandResult = RoadCaptain.App.Shared.Commands.CommandResult;
@@ -157,6 +156,14 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             }
 
             Last.SetTurn(direction, ontoSegmentId, segmentDirection);
+            var lastType = Last.Type;
+
+            var newType = SegmentSequenceType.Regular;
+
+            if (lastType == SegmentSequenceType.LoopEnd || lastType == SegmentSequenceType.LeadOut)
+            {
+                newType = SegmentSequenceType.LeadOut;
+            }
 
             var segmentSequenceViewModel = new SegmentSequenceViewModel(
                 new SegmentSequence
@@ -165,7 +172,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
                     TurnToNextSegment = TurnDirection.None,
                     NextSegmentId = null,
                     Direction = newSegmentDirection,
-                    Type = SegmentSequenceType.Regular
+                    Type = newType
                 },
                 segment,
                 _sequence.Count + 1)
@@ -243,7 +250,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
         {
             World = null;
             Sport = SportType.Unknown;
-            
+
             this.RaisePropertyChanged(nameof(ReadyToBuild));
 
             return Clear();
@@ -282,7 +289,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             var segments = _segmentStore.LoadSegments(plannedRoute.World, plannedRoute.Sport);
 
             _sequence.Clear();
-            
+
             foreach (var seq in plannedRoute.RouteSegmentSequence)
             {
                 _sequence.Add(
@@ -335,11 +342,11 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
                 // If the last segment of a loop is removed then reset
                 // the segment sequence type to regular because the
                 // loop has been broken.
-                if (lastSegment.Type == SegmentSequenceType.Loop || lastSegment.Type == SegmentSequenceType.LeadIn)
+                if (IsLoopTypeSegment(lastSegment))
                 {
                     foreach (var seq in Sequence)
                     {
-                        seq.Model.Type = SegmentSequenceType.Regular;
+                        seq.Type = SegmentSequenceType.Regular;
                     }
                 }
 
@@ -358,7 +365,22 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             return null;
         }
 
-        public (bool,int?, int?) IsPossibleLoop()
+        private static bool IsLoopTypeSegment(SegmentSequenceViewModel lastSegment)
+        {
+            switch (lastSegment.Type)
+            {
+                case SegmentSequenceType.LeadIn:
+                case SegmentSequenceType.LeadOut:
+                case SegmentSequenceType.Loop:
+                case SegmentSequenceType.LoopStart:
+                case SegmentSequenceType.LoopEnd:
+                    return true;
+                default:
+                    return false;
+            }
+        }
+
+        public (bool, int?, int?) IsPossibleLoop()
         {
             if (Last == null || Sequence.Count() == 1)
             {
@@ -378,7 +400,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
                         Seq = seq
                     })
                 .ToList();
-            
+
             foreach (var seq in startNodes)
             {
                 if (seq.StartNode.Any(n => n.SegmentId == Last.SegmentId))
@@ -394,10 +416,10 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
         {
             var seqList = Sequence.ToList();
 
-            for(var index = 0; index <= endIndex; index++)
+            for (var index = 0; index <= endIndex; index++)
             {
                 var type = SegmentSequenceType.Loop;
-                
+
                 if (index < startIndex)
                 {
                     type = SegmentSequenceType.LeadIn;
@@ -416,7 +438,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
 
             seqList[endIndex].Model.NextSegmentId = seqList[startIndex].SegmentId;
         }
-        
+
         private void DetermineMarkersForRoute()
         {
             if (World == null || Sport == null)
@@ -429,7 +451,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             var markers = _segmentStore.LoadMarkers(World);
 
             var markersForRoute = new List<MarkerViewModel>();
-            
+
             var routePoints = GetTrackPoints(segments);
 
             // Determine bounding box of the route
@@ -508,7 +530,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             foreach (var seq in Sequence)
             {
                 var segment = segments.Single(s => s.Id == seq.SegmentId);
-                
+
                 if (seq.Direction == SegmentDirection.AtoB)
                 {
                     for (var index = 0; index < segment.Points.Count; index++)
@@ -518,7 +540,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
                         trackPointsForRoute.Add(segmentPoint);
                     }
                 }
-                else if(seq.Direction == SegmentDirection.BtoA)
+                else if (seq.Direction == SegmentDirection.BtoA)
                 {
                     for (var index = segment.Points.Count - 1; index >= 0; index--)
                     {
@@ -528,7 +550,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
                     }
                 }
             }
-            
+
             return trackPointsForRoute;
         }
     }
