@@ -475,15 +475,15 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
 
         private async Task CheckForPossibleLoop()
         {
-            var result = Route.IsPossibleLoop();
+            var (isLoop, startIndex, endIndex) = Route.IsPossibleLoop();
 
-            if (result.Item1)
+            if (isLoop)
             {
                 var shouldCreateLoop = await _windowService.ShowRouteLoopDialog();
 
                 if (shouldCreateLoop)
                 {
-                    Route.MakeLoop(result.Item2.Value, result.Item3.Value);
+                    Route.MakeLoop(startIndex.Value, endIndex.Value);
                     this.RaisePropertyChanged(nameof(Route));
                 }
             }
