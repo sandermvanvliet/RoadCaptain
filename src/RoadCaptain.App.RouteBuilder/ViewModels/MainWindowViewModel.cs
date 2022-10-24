@@ -484,6 +484,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
                 if (shouldCreateLoop)
                 {
                     Route.MakeLoop(result.Item2.Value, result.Item3.Value);
+                    this.RaisePropertyChanged(nameof(Route));
                 }
             }
         }
