@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using Codenizer.Avalonia.Map;
 using RoadCaptain.App.Shared.Controls;
 using SkiaSharp;
@@ -27,6 +28,7 @@ namespace RoadCaptain.App.RouteBuilder.Views
         {
             if (IsVisible)
             {
+                //Debug.WriteLine($"{SegmentId} is a spawn-point");
                 canvas.DrawPath(_path, SkiaPaints.SpawnPointSegmentPathPaint);
                 
                 // TODO: draw direction arrow

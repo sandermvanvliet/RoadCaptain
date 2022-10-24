@@ -5,7 +5,9 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using Avalonia;
 using Avalonia.Controls;
@@ -55,6 +57,8 @@ namespace RoadCaptain.App.RouteBuilder.Views
             this.AttachDevTools();
 #endif
 
+            ZwiftMap.RenderPriority = new ZwiftMapRenderPriority();
+
             var modifier = RuntimeInformation.IsOSPlatform(OSPlatform.OSX)
                 ? KeyModifiers.Meta
                 : KeyModifiers.Control;
@@ -78,7 +82,12 @@ namespace RoadCaptain.App.RouteBuilder.Views
                 case nameof(ViewModel.SelectedSegment):
                 case nameof(ViewModel.SegmentPaths):
                     // Reset any manually selected item in the list
-                    ViewModel.ClearSegmentHighlight();
+                    using (ZwiftMap.BeginUpdate())
+                    {
+                        ViewModel.ClearSegmentHighlight();
+
+                        SynchronizeRouteSegmentsOnZwiftMap();
+                    }
                     break;
                 case nameof(ViewModel.HighlightedSegment):
                     HighlightOnZwiftMap();
@@ -92,29 +101,46 @@ namespace RoadCaptain.App.RouteBuilder.Views
 
                     // Redraw when the route changes so that the
                     // route path is painted correctly
-                    SetZwiftMap();
-
-                    SynchronizeRouteSegmentsOnZwiftMap();
+                    using (ZwiftMap.BeginUpdate())
+                    {
+                        SetZwiftMap();
+                        SynchronizeRouteSegmentsOnZwiftMap();
+                    }
 
                     break;
                 case nameof(ViewModel.RiderPosition):
                     var routePath = ZwiftMap.MapObjects.OfType<RoutePath>().SingleOrDefault();
 
-                    if (ViewModel.RiderPosition == null && routePath != null)
+                    if (routePath != null)
                     {
-                        routePath.Reset();
+                        if (ViewModel.RiderPosition == null)
+                        {
+                            routePath.Reset();
+                            routePath.IsVisible = false;
+                        }
+                        else
+                        {
+                            routePath.IsVisible = true;
+                            routePath.MoveNext();
+                        }
                     }
 
-                    routePath?.MoveNext();
-
-                    ZwiftMap.InvalidateVisual();
+                    InvalidateZwiftMap();
 
                     break;
             }
         }
 
+        private void InvalidateZwiftMap([CallerMemberName]string? caller = null)
+        {
+            Debug.WriteLine($"[InvalidateZwiftMap] {caller}");
+            ZwiftMap.InvalidateVisual();
+        }
+
         private void SynchronizeRouteSegmentsOnZwiftMap()
         {
+            using var updateScope = ZwiftMap.BeginUpdate();
+
             var mapSegments = ZwiftMap
                 .MapObjects
                 .OfType<MapSegment>()
@@ -127,7 +153,29 @@ namespace RoadCaptain.App.RouteBuilder.Views
                 spawnPoint.IsVisible = !routeHasSegments;
             }
 
+            foreach (var segment in mapSegments)
+            {
+                var seq = ViewModel.Route.Sequence.FirstOrDefault(s => s.SegmentId == segment.SegmentId);
+
+                if (seq != null)
+                {
+                    segment.IsLeadIn = seq.Type == SegmentSequenceType.LeadIn;
+                    segment.IsLeadOut = seq.Type == SegmentSequenceType.LeadOut;
+                    segment.IsLoop = seq.Type == SegmentSequenceType.Loop || seq.Type == SegmentSequenceType.LoopEnd || seq.Type == SegmentSequenceType.LoopStart;
+                    segment.IsOnRoute = true;
+                }
+                else if(segment.IsOnRoute)
+                {
+                    segment.IsOnRoute = false;
+                }
+            }
+            
             // Synchronize the route path with the route
+            SynchronizeRoutePath(mapSegments);
+        }
+
+        private void SynchronizeRoutePath(List<MapSegment> mapSegments)
+        {
             var routePath = ZwiftMap.MapObjects.SingleOrDefault(mo => mo is RoutePath);
 
             var routePathPoints = RoutePathPointsFrom(ViewModel.Route.Sequence, mapSegments);
@@ -139,12 +187,9 @@ namespace RoadCaptain.App.RouteBuilder.Views
 
             routePath = new RoutePath(routePathPoints);
             ZwiftMap.MapObjects.Add(routePath);
-
-            // Force re-render
-            ZwiftMap.InvalidateVisual();
         }
 
-        private SKPoint[] RoutePathPointsFrom(IEnumerable<SegmentSequenceViewModel> routeSequence,
+        private static SKPoint[] RoutePathPointsFrom(IEnumerable<SegmentSequenceViewModel> routeSequence,
             List<MapSegment> mapSegments)
         {
             var routePoints = new List<SKPoint>();
@@ -192,7 +237,7 @@ namespace RoadCaptain.App.RouteBuilder.Views
             }
 
             // Force re-render
-            ZwiftMap.InvalidateVisual();
+            InvalidateZwiftMap();
         }
 
         private void AddPathsToMap(World world)
@@ -227,8 +272,6 @@ namespace RoadCaptain.App.RouteBuilder.Views
                     world.MapMostRight.Value.X,
                     world.MapMostRight.Value.Y));
 
-            var segmentPaths = new Dictionary<string, SKPath>();
-
             if (!segments.Any())
             {
                 return;
@@ -254,19 +297,21 @@ namespace RoadCaptain.App.RouteBuilder.Views
 
             foreach (var segment in segmentsWithOffsets)
             {
-                var skiaPathFromSegment = SkiaPathFromSegment(overallOffsets, segment.GameCoordinates);
+                var segmentPath = SkiaPathFromSegment(overallOffsets, segment.GameCoordinates);
 
-                segmentPaths.Add(segment.Segment.Id, skiaPathFromSegment);
+                var path = new MapSegment(segment.Segment.Id, segmentPath.Points);
+                ZwiftMap.MapObjects.Add(path);
             }
 
-            foreach (var segmentPath in segmentPaths)
+            var spawnPointIds = world.SpawnPoints.Select(s => s.SegmentId).Distinct().ToList();
+            foreach (var spawnPoint in spawnPointIds)
             {
-                var path = new MapSegment(segmentPath.Key, segmentPath.Value.Points);
-                ZwiftMap.MapObjects.Add(path);
-
-                if (world.SpawnPoints.Any(s => s.SegmentId == segmentPath.Key))
+                var segmentPath = ZwiftMap.MapObjects.OfType<MapSegment>()
+                    .SingleOrDefault(mo => mo.SegmentId == spawnPoint);
+                
+                if (segmentPath != null)
                 {
-                    ZwiftMap.MapObjects.Add(new SpawnPointSegment(segmentPath.Key, segmentPath.Value.Points));
+                    ZwiftMap.MapObjects.Add(new SpawnPointSegment(segmentPath.SegmentId, segmentPath.Points));
                 }
             }
         }
@@ -287,8 +332,10 @@ namespace RoadCaptain.App.RouteBuilder.Views
 
         private void SetZwiftMap()
         {
+            var stopwatch = Stopwatch.StartNew();
+
             var currentMap =
-                ZwiftMap.MapObjects.SingleOrDefault(mo => mo is WorldMap && mo.Name.StartsWith("worldMap-"));
+                ZwiftMap.MapObjects.SingleOrDefault(mo => mo is WorldMap);
 
             var worldId = ViewModel.Route.World?.Id;
 
@@ -299,24 +346,21 @@ namespace RoadCaptain.App.RouteBuilder.Views
 
             if (!string.IsNullOrEmpty(worldId))
             {
-                var newMap = new WorldMap(worldId);
-
                 if (currentMap != null && !currentMap.Name.EndsWith($"-{worldId}"))
                 {
+                    Debug.WriteLine("Clearing objects from map because a different world was selected");
                     ZwiftMap.MapObjects.Clear();
-
-                    // Insert because we want it to be at the lowest level
-                    ZwiftMap.MapObjects.Insert(0, newMap);
-
-                    AddPathsToMap(ViewModel.Route.World!);
                 }
-                else if (currentMap == null)
+
+                if (currentMap == null)
                 {
-                    // Insert because we want it to be at the lowest level
-                    ZwiftMap.MapObjects.Insert(0, newMap);
+                    ZwiftMap.MapObjects.Add(new WorldMap(worldId));
                     AddPathsToMap(ViewModel.Route.World!);
                 }
             }
+
+            stopwatch.Stop();
+            Debug.WriteLine($"SetZwiftMap(): {stopwatch.ElapsedMilliseconds}ms");
         }
 
         private void MainWindow_OnActivated(object? sender, EventArgs e)
@@ -386,6 +430,7 @@ namespace RoadCaptain.App.RouteBuilder.Views
         {
             ZwiftMap.ZoomAll();
         }
+
 
         private void ZoomRoute_Click(object? sender, RoutedEventArgs e)
         {

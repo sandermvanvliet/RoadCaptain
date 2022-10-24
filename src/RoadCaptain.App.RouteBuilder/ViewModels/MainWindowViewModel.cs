@@ -676,6 +676,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             if (_simulationTask != null && SimulationState == SimulationState.Running)
             {
                 SimulationState = SimulationState.Completed;
+                RiderPosition = null;
                 return CommandResult.Success();
             }
 

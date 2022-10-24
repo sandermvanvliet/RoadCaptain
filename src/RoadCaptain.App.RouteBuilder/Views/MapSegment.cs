@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using Codenizer.Avalonia.Map;
 using RoadCaptain.App.Shared.Controls;
 using SkiaSharp;
@@ -7,10 +8,28 @@ namespace RoadCaptain.App.RouteBuilder.Views
     public class MapSegment : MapObject
     {
         private readonly SKPath _path;
+        private bool _isOnRoute;
         public bool IsSelected { get; set; }
         public bool IsHighlighted { get; set; }
         public bool IsLeadIn { get; set; }
         public bool IsLeadOut { get; set; }
+        public bool IsLoop { get; set; }
+
+        public bool IsOnRoute
+        {
+            get => _isOnRoute;
+            set
+            {
+                _isOnRoute = value;
+
+                if (!_isOnRoute)
+                {
+                    IsLeadIn = false;
+                    IsLeadOut = false;
+                    IsLoop = false;
+                }
+            }
+        }
 
         public MapSegment(string segmentId, SKPoint[] points)
         {
@@ -35,19 +54,29 @@ namespace RoadCaptain.App.RouteBuilder.Views
             {
                 currentPaint = SkiaPaints.LeadInPaint;
             }
-
-            if (IsSelected)
+            else if (IsLoop)
+            {
+                currentPaint = SkiaPaints.LoopPaint;
+            }
+            else if (IsSelected)
             {
                 currentPaint = SkiaPaints.SelectedSegmentPathPaint;
             }
-
-            if (IsHighlighted)
+            else if (IsHighlighted)
             {
                 currentPaint = SkiaPaints.SegmentHighlightPaint;
             }
-
+            else if (IsOnRoute)
+            {
+                currentPaint = SkiaPaints.RoutePathPaint;
+            }
 
             canvas.DrawPath(_path, currentPaint);
+        }
+
+        private void Log(string message)
+        {
+            Debug.WriteLine(message);
         }
     }
 }

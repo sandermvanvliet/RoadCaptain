@@ -22,7 +22,7 @@ namespace RoadCaptain.App.RouteBuilder.Views
         
         public override void Render(SKCanvas canvas)
         {
-            if (!_path.Points.Any())
+            if (!_path.Points.Any() || !IsVisible)
             {
                 return;
             }
@@ -42,6 +42,7 @@ namespace RoadCaptain.App.RouteBuilder.Views
             }
         }
 
+        public bool IsVisible { get; set; }
         public override string Name { get; }
         public override SKRect Bounds { get; }
 
