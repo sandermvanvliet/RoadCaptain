@@ -2,11 +2,11 @@ using System;
 using System.Linq;
 using Codenizer.Avalonia.Map;
 using FluentAssertions;
-using RoadCaptain.App.RouteBuilder.Views;
+using RoadCaptain.App.Shared.Controls;
 using SkiaSharp;
 using Xunit;
 
-namespace RoadCaptain.App.RouteBuilder.Tests.Unit
+namespace RoadCaptain.App.Shared.Tests.Unit
 {
     public class RenderPriorityTests
     {
@@ -45,9 +45,8 @@ namespace RoadCaptain.App.RouteBuilder.Tests.Unit
 
             var output = input.OrderBy(mo => mo, new ZwiftMapRenderPriority()).ToList();
 
-            output
-                .Select(x => x.GetType())
-                .ToList()
+            Enumerable.ToList<Type>(output
+                    .Select(x => x.GetType()))
                 .Should()
                 .ContainInOrder(typeof(MapSegment), typeof(RoutePath));
         }
@@ -61,7 +60,7 @@ namespace RoadCaptain.App.RouteBuilder.Tests.Unit
 
             output
                 .Select(x => x.GetType())
-                .ToList()
+                .ToList<Type>()
                 .Should()
                 .ContainInOrder(typeof(MapSegment), typeof(SpawnPointSegment));
         }

@@ -103,23 +103,6 @@
 				<RowDefinition Height="*" />
 			</Grid.RowDefinitions>
 
-            <!--<sharedControls:ZwiftMap
-                Grid.Row="1" Grid.Column="1" 
-                Name="SkElement"
-                Cursor="Hand"
-                DataContext="{Binding Path=ViewModel,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=Window}}"
-                ShowClimbs="{Binding Path=ShowClimbs}"
-                ShowSprints="{Binding Path=ShowSprints}"
-                HighlightedSegment="{Binding Path=HighlightedSegment}"
-                HighlightedMarker="{Binding Path=HighlightedMarker}"
-				SelectedSegment="{Binding Path=SelectedSegment}"
-				RiderPosition="{Binding Path=RiderPosition}"
-				Segments="{Binding Path=Segments}"
-				World="{Binding Path=Route.World}"
-				Markers="{Binding Path=Markers}"
-				Sequence="{Binding Path=Route.Sequence,Converter={StaticResource RouteSequenceConverter}}"
-				SelectSegmentCommand="{Binding Path=SelectSegmentCommand}"
-                 />-->
 			<map:Map
                 Name="ZwiftMap"
                 Grid.Row="1" Grid.Column="1" 

@@ -1,9 +1,8 @@
 using System.Linq;
 using Codenizer.Avalonia.Map;
-using RoadCaptain.App.Shared.Controls;
 using SkiaSharp;
 
-namespace RoadCaptain.App.RouteBuilder.Views
+namespace RoadCaptain.App.Shared.Controls
 {
     public class RoutePath : MapObject
     {

@@ -5,7 +5,7 @@ using Avalonia.Platform;
 using Codenizer.Avalonia.Map;
 using SkiaSharp;
 
-namespace RoadCaptain.App.RouteBuilder.Views
+namespace RoadCaptain.App.Shared.Controls
 {
     public class WorldMap : MapObject
     {

@@ -29,4 +29,10 @@
     <Folder Include="Controls\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Reference Include="Codenizer.Avalonia.Map">
+      <HintPath>..\..\..\MapTest\Codenizer.Avalonia.Map\bin\Debug\net6.0\Codenizer.Avalonia.Map.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
 </Project>

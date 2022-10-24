@@ -1,6 +1,6 @@
 using Codenizer.Avalonia.Map;
 
-namespace RoadCaptain.App.RouteBuilder.Views
+namespace RoadCaptain.App.Shared.Controls
 {
     public class ZwiftMapRenderPriority : RenderPriority
     {
