@@ -79,19 +79,22 @@ namespace RoadCaptain.App.Shared
                         windowLocation.X,
                         windowLocation.Y);
 
-                if (windowLocation.Width.HasValue)
+                if (window.CanResize)
                 {
-                    window.Width = windowLocation.Width.Value;
-                }
+                    if (windowLocation.Width.HasValue)
+                    {
+                        window.Width = windowLocation.Width.Value;
+                    }
 
-                if (windowLocation.Height.HasValue)
-                {
-                    window.Height = windowLocation.Height.Value;
-                }
+                    if (windowLocation.Height.HasValue)
+                    {
+                        window.Height = windowLocation.Height.Value;
+                    }
 
-                if (windowLocation.IsMaximized)
-                {
-                    window.WindowState = WindowState.Maximized;
+                    if (windowLocation.IsMaximized)
+                    {
+                        window.WindowState = WindowState.Maximized;
+                    }
                 }
             }
         }
