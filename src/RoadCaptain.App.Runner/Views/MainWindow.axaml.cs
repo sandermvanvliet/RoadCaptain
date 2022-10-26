@@ -115,7 +115,7 @@ namespace RoadCaptain.App.Runner.Views
             e.Handled = true;
         }
 
-        private void ShowRouteOnMap(RouteModel route)
+        private void ShowRouteOnMap(RouteModel? route)
         {
             _cancellationTokenSource?.Cancel();
 
@@ -123,7 +123,7 @@ namespace RoadCaptain.App.Runner.Views
 
             ZwiftMap.MapObjects.Clear();
 
-            if (route.World == null || route.PlannedRoute == null)
+            if (route?.World == null || route.PlannedRoute == null)
             {
                 return;
             }
