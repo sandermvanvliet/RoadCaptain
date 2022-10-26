@@ -24,7 +24,6 @@ namespace RoadCaptain.App.Runner.Views
     {
         private readonly MainWindowViewModel _viewModel;
         private readonly ISegmentStore _segmentStore;
-        private bool _isFirstTimeActivation = true;
         private CancellationTokenSource? _cancellationTokenSource;
 
         // ReSharper disable once UnusedMember.Global because this constructor only exists for the Avalonia designer
@@ -90,14 +89,12 @@ namespace RoadCaptain.App.Runner.Views
 
         private void WindowBase_OnActivated(object? sender, EventArgs e)
         {
-            if(_isFirstTimeActivation)
-            {
-                _isFirstTimeActivation = false;
+            // Remove event handler to ensure this is only called once
+            Activated -= WindowBase_OnActivated;
 
-                Dispatcher.UIThread.InvokeAsync(() => _viewModel.Initialize());
-                Dispatcher.UIThread.InvokeAsync(() => _viewModel.CheckForNewVersion());
-                Dispatcher.UIThread.InvokeAsync(() => _viewModel.CheckLastOpenedVersion());
-            }
+            Dispatcher.UIThread.InvokeAsync(() => _viewModel.Initialize());
+            Dispatcher.UIThread.InvokeAsync(() => _viewModel.CheckForNewVersion());
+            Dispatcher.UIThread.InvokeAsync(() => _viewModel.CheckLastOpenedVersion());
         }
 
         private void InputElement_OnPointerPressed(object? sender, PointerPressedEventArgs e)
@@ -123,10 +120,10 @@ namespace RoadCaptain.App.Runner.Views
             _cancellationTokenSource?.Cancel();
 
             using var updateScope = ZwiftMap.BeginUpdate();
-            
+
             ZwiftMap.MapObjects.Clear();
 
-            if (route.World == null)
+            if (route.World == null || route.PlannedRoute == null)
             {
                 return;
             }
@@ -143,7 +140,7 @@ namespace RoadCaptain.App.Runner.Views
             ZwiftMap.MapObjects.Add(routePath);
 
             ZwiftMap.ZoomExtent("route");
-            
+
             _cancellationTokenSource = new CancellationTokenSource();
 
             Task.Factory.StartNew(() =>
@@ -165,7 +162,7 @@ namespace RoadCaptain.App.Runner.Views
                 },
                 _cancellationTokenSource.Token);
         }
-        
+
         private static SKPoint[] RoutePathPointsFrom(IEnumerable<SegmentSequence> routeSequence, List<MapSegment> mapSegments)
         {
             var routePoints = new List<SKPoint>();
@@ -190,7 +187,7 @@ namespace RoadCaptain.App.Runner.Views
 
             return routePoints.ToArray();
         }
-        
+
         private List<MapSegment> CreatePathsForSegments(List<Segment> segments, World world)
         {
             var segmentPaths = new List<MapSegment>();
