@@ -150,7 +150,6 @@ namespace RoadCaptain.App.Runner.Views
             {
             }
 
-            var elementBounds = SKRect.Empty;
             var elementBoundsMappedToViewport = SKRect.Empty;
             
             using (var updateScope = ZwiftMap.BeginUpdate())
@@ -173,7 +172,7 @@ namespace RoadCaptain.App.Runner.Views
                 var routePath = new RoutePath(routePoints) { IsVisible = true };
                 ZwiftMap.MapObjects.Add(routePath);
 
-                (elementBounds, elementBoundsMappedToViewport) = ZwiftMap.ZoomExtent("route");
+                (_, elementBoundsMappedToViewport) = ZwiftMap.ZoomExtent("route");
             }
 
             _cancellationTokenSource = new CancellationTokenSource();
