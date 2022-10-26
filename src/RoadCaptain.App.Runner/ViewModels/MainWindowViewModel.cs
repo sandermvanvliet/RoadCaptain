@@ -57,8 +57,9 @@ namespace RoadCaptain.App.Runner.ViewModels
             IGameStateDispatcher gameStateDispatcher,
             IRouteStore routeStore,
             IVersionChecker versionChecker,
-            ISegmentStore segmentStore, 
-            IZwiftCredentialCache credentialCache)
+            ISegmentStore segmentStore,
+            IZwiftCredentialCache credentialCache, 
+            MonitoringEvents monitoringEvents)
         {
             _configuration = configuration;
             _userPreferences = userPreferences;
@@ -69,14 +70,21 @@ namespace RoadCaptain.App.Runner.ViewModels
             _segmentStore = segmentStore;
             _credentialCache = credentialCache;
 
-            
-            if (!string.IsNullOrEmpty(configuration.Route))
+
+            try
             {
-                LoadRouteFromPath(configuration.Route);
+                if (!string.IsNullOrEmpty(configuration.Route))
+                {
+                    LoadRouteFromPath(configuration.Route);
+                }
+                else if (!string.IsNullOrEmpty(userPreferences.Route))
+                {
+                    LoadRouteFromPath(userPreferences.Route);
+                }
             }
-            else if (!string.IsNullOrEmpty(userPreferences.Route))
+            catch (MissingSegmentException ex)
             {
-                LoadRouteFromPath(userPreferences.Route);
+                monitoringEvents.Error(ex, "Failed to load route");
             }
 
             StartRouteCommand = new RelayCommand(
@@ -87,7 +95,13 @@ namespace RoadCaptain.App.Runner.ViewModels
 
             LoadRouteCommand = new AsyncRelayCommand(
                 _ => LoadRoute(),
-                _ => true);
+                _ => true)
+                .OnFailure(async result =>
+                {
+                    await _windowService.ShowErrorDialog(result.Message);
+                    // Clear the current route
+                    Route = new RouteModel();
+                });
 
             LogInCommand = new AsyncRelayCommand(
                     _ => LogInToZwift(_ as Window ?? throw new ArgumentNullException(nameof(AsyncRelayCommand.CommandParameter))),
@@ -296,17 +310,6 @@ namespace RoadCaptain.App.Runner.ViewModels
                 if (Equals(value, _route)) return;
 
                 _route = value;
-                
-                if (_route != null)
-                {
-                    Segments = _segmentStore.LoadSegments(_route.World, _route.Sport);
-                }
-                else
-                {
-                    Segments = new();
-                }
-
-                SimulateRoute();
 
                 this.RaisePropertyChanged();
                 this.RaisePropertyChanged(nameof(CanStartRoute));
@@ -321,17 +324,6 @@ namespace RoadCaptain.App.Runner.ViewModels
                 if (value == _endActivityAtEndOfRoute) return;
                 _endActivityAtEndOfRoute = value;
                 _userPreferences.EndActivityAtEndOfRoute = value;
-                this.RaisePropertyChanged();
-            }
-        }
-
-        public List<Segment> Segments
-        {
-            get => _segments;
-            set
-            {
-                if (Equals(value, _segments)) return;
-                _segments = value;
                 this.RaisePropertyChanged();
             }
         }
@@ -597,49 +589,49 @@ namespace RoadCaptain.App.Runner.ViewModels
 
         private void SimulateRoute()
         {
-            var positionUpdateStepTimeout = 15;
+            //var positionUpdateStepTimeout = 15;
 
-            if (_simulationTask != null && SimulationState == SimulationState.Running)
-            {
-                SimulationState = SimulationState.Completed;
-                Thread.Sleep(positionUpdateStepTimeout);
-            }
+            //if (_simulationTask != null && SimulationState == SimulationState.Running)
+            //{
+            //    SimulationState = SimulationState.Completed;
+            //    Thread.Sleep(positionUpdateStepTimeout);
+            //}
 
-            _simulationTask = Task.Factory.StartNew(() =>
-            {
-                SimulationState = SimulationState.Running;
+            //_simulationTask = Task.Factory.StartNew(() =>
+            //{
+            //    SimulationState = SimulationState.Running;
 
-                var routePoints = new List<TrackPoint>();
+            //    var routePoints = new List<TrackPoint>();
 
-                foreach (var seq in Route.PlannedRoute.RouteSegmentSequence)
-                {
-                    var points = _segments.Single(s => s.Id == seq.SegmentId).Points;
+            //    foreach (var seq in Route.PlannedRoute.RouteSegmentSequence)
+            //    {
+            //        var points = _segments.Single(s => s.Id == seq.SegmentId).Points;
 
-                    if (seq.Direction == SegmentDirection.BtoA)
-                    {
-                        // Don't call Reverse() because that does an
-                        // in-place reverse and given that we're 
-                        // _referencing_ the list of points of the
-                        // segment that means that the actual segment
-                        // is modified. Reverse() does not return a
-                        // new IEnumerable<T>
-                        points = points.OrderByDescending(p => p.Index).ToList();
-                    }
+            //        if (seq.Direction == SegmentDirection.BtoA)
+            //        {
+            //            // Don't call Reverse() because that does an
+            //            // in-place reverse and given that we're 
+            //            // _referencing_ the list of points of the
+            //            // segment that means that the actual segment
+            //            // is modified. Reverse() does not return a
+            //            // new IEnumerable<T>
+            //            points = points.OrderByDescending(p => p.Index).ToList();
+            //        }
 
-                    routePoints.AddRange(points);
-                }
+            //        routePoints.AddRange(points);
+            //    }
 
-                var simulationIndex = 0;
+            //    var simulationIndex = 0;
 
-                while (SimulationState == SimulationState.Running && simulationIndex < routePoints.Count)
-                {
-                    RiderPosition = routePoints[simulationIndex++];
-                    Thread.Sleep(positionUpdateStepTimeout);
-                }
+            //    while (SimulationState == SimulationState.Running && simulationIndex < routePoints.Count)
+            //    {
+            //        RiderPosition = routePoints[simulationIndex++];
+            //        Thread.Sleep(positionUpdateStepTimeout);
+            //    }
 
-                SimulationState = SimulationState.Completed;
-                RiderPosition = null;
-            });
+            //    SimulationState = SimulationState.Completed;
+            //    RiderPosition = null;
+            //});
         }
     }
 

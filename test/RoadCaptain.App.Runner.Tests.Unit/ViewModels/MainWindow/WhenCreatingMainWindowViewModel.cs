@@ -186,7 +186,8 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.MainWindow
                 routeStore,
                 null,
                 new SegmentStore(),
-                _credentialCache);
+                _credentialCache,
+                new NopMonitoringEvents());
 
             mainWindowViewModel.Initialize().GetAwaiter().GetResult();
             

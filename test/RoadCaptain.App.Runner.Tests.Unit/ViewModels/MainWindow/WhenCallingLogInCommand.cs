@@ -41,7 +41,8 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.MainWindow
                 routeStore,
                 null, 
                 new SegmentStore(),
-                _credentialCache);
+                _credentialCache,
+                new NopMonitoringEvents());
             
             // This is required so that we can call new Window() below.
             var avaloniaDependencyResolver = new AvaloniaLocator();

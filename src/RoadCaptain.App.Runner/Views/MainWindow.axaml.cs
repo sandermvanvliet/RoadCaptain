@@ -16,6 +16,7 @@ using RoadCaptain.App.Runner.Models;
 using RoadCaptain.App.Runner.ViewModels;
 using RoadCaptain.App.Shared.Controls;
 using RoadCaptain.Ports;
+using Serilog.Core;
 using SkiaSharp;
 
 namespace RoadCaptain.App.Runner.Views
@@ -25,19 +26,23 @@ namespace RoadCaptain.App.Runner.Views
         private readonly MainWindowViewModel _viewModel;
         private readonly ISegmentStore _segmentStore;
         private CancellationTokenSource? _cancellationTokenSource;
+        private readonly MonitoringEvents _monitoringEvents;
 
         // ReSharper disable once UnusedMember.Global because this constructor only exists for the Avalonia designer
 #pragma warning disable CS8618
         public MainWindow()
 #pragma warning restore CS8618
         {
+            _monitoringEvents = new MonitoringEventsWithSerilog(Logger.None);
+
             InitializeComponent();
         }
 
-        public MainWindow(MainWindowViewModel viewModel, IGameStateReceiver gameStateReceiver, ISegmentStore segmentStore)
+        public MainWindow(MainWindowViewModel viewModel, IGameStateReceiver gameStateReceiver, ISegmentStore segmentStore, MonitoringEvents monitoringEvents)
         {
             _viewModel = viewModel;
             _segmentStore = segmentStore;
+            _monitoringEvents = monitoringEvents;
             _viewModel.PropertyChanged += (sender, args) =>
             {
                 if (args.PropertyName == nameof(_viewModel.RoutePath) && !string.IsNullOrEmpty(_viewModel.RoutePath))
@@ -150,9 +155,17 @@ namespace RoadCaptain.App.Runner.Views
                         while (!(_cancellationTokenSource?.IsCancellationRequested ?? false))
                         {
                             routePath.MoveNext();
-                            ZwiftMap.InvalidateVisual();
 
                             Thread.Sleep(40);
+
+                            try
+                            {
+                                ZwiftMap.InvalidateVisual();
+                            }
+                            catch (ArgumentException e)
+                            {
+                                _monitoringEvents.Error(e, "Failed to invalidate map");
+                            }
                         }
                     }
                     catch

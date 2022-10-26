@@ -23,6 +23,8 @@ namespace RoadCaptain.App.Runner.Models
                 return model;
             }
 
+            ThrowIfAnySegmentIsMissing(plannedRoute, segments);
+
             var metrics = plannedRoute
                 .RouteSegmentSequence
                 .Join(segments,
@@ -44,6 +46,20 @@ namespace RoadCaptain.App.Runner.Models
             model.Markers = DetermineMarkersForRoute(plannedRoute, markers, segments);
 
             return model;
+        }
+
+        private static void ThrowIfAnySegmentIsMissing(PlannedRoute plannedRoute, List<Segment> segments)
+        {
+            var segmentIdsOnRoute = plannedRoute.RouteSegmentSequence.Select(seq => seq.SegmentId).Distinct();
+
+            var missingSegments = segmentIdsOnRoute
+                .Where(segmentId => segments.All(segment => segment.Id != segmentId))
+                .ToList();
+
+            if (missingSegments.Any())
+            {
+                throw new MissingSegmentException(missingSegments.First());
+            }
         }
 
         private static List<MarkerViewModel> DetermineMarkersForRoute(PlannedRoute plannedRoute, List<Segment> markers, List<Segment> segments)
