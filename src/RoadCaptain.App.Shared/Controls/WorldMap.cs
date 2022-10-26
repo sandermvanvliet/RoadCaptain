@@ -1,5 +1,4 @@
 using System;
-using System.Diagnostics;
 using Avalonia;
 using Avalonia.Platform;
 using Codenizer.Avalonia.Map;
@@ -9,7 +8,7 @@ namespace RoadCaptain.App.Shared.Controls
 {
     public class WorldMap : MapObject
     {
-        private readonly SKImage _image;
+        private readonly SKImage? _image;
 
         public WorldMap(string worldId)
         {
@@ -27,10 +26,10 @@ namespace RoadCaptain.App.Shared.Controls
 
         public override void Render(SKCanvas canvas)
         {
-            var stopwatch = Stopwatch.StartNew();
-            canvas.DrawImage(_image, Bounds);
-            stopwatch.Stop();
-            Debug.WriteLine($"RenderMap: {stopwatch.ElapsedMilliseconds}ms");
+            if (_image != null)
+            {
+                canvas.DrawImage(_image, Bounds);
+            }
         }
 
         public override string Name { get; }
