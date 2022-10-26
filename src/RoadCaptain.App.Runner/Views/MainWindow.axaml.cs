@@ -25,7 +25,7 @@ namespace RoadCaptain.App.Runner.Views
         private readonly MainWindowViewModel _viewModel;
         private readonly ISegmentStore _segmentStore;
         private bool _isFirstTimeActivation = true;
-        private bool _playBackRoute;
+        private CancellationTokenSource? _cancellationTokenSource;
 
         // ReSharper disable once UnusedMember.Global because this constructor only exists for the Avalonia designer
 #pragma warning disable CS8618
@@ -120,10 +120,10 @@ namespace RoadCaptain.App.Runner.Views
 
         private void ShowRouteOnMap(RouteModel route)
         {
+            _cancellationTokenSource?.Cancel();
+
             using var updateScope = ZwiftMap.BeginUpdate();
-
-            _playBackRoute = false;
-
+            
             ZwiftMap.MapObjects.Clear();
 
             if (route.World == null)
@@ -143,26 +143,27 @@ namespace RoadCaptain.App.Runner.Views
             ZwiftMap.MapObjects.Add(routePath);
 
             ZwiftMap.ZoomExtent("route");
-
-            _playBackRoute = true;
+            
+            _cancellationTokenSource = new CancellationTokenSource();
 
             Task.Factory.StartNew(() =>
-            {
-                try
                 {
-                    while (_playBackRoute)
+                    try
                     {
-                        routePath.MoveNext();
-                        ZwiftMap.InvalidateVisual();
+                        while (!(_cancellationTokenSource?.IsCancellationRequested ?? false))
+                        {
+                            routePath.MoveNext();
+                            ZwiftMap.InvalidateVisual();
 
-                        Thread.Sleep(40);
+                            Thread.Sleep(40);
+                        }
                     }
-                }
-                catch
-                {
-                    // Nop
-                }
-            });
+                    catch
+                    {
+                        // Nop
+                    }
+                },
+                _cancellationTokenSource.Token);
         }
         
         private static SKPoint[] RoutePathPointsFrom(IEnumerable<SegmentSequence> routeSequence, List<MapSegment> mapSegments)
