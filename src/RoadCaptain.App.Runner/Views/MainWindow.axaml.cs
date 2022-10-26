@@ -11,13 +11,16 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
+using Avalonia.Skia;
 using Avalonia.Threading;
+using Codenizer.Avalonia.Map;
 using RoadCaptain.App.Runner.Models;
 using RoadCaptain.App.Runner.ViewModels;
 using RoadCaptain.App.Shared.Controls;
 using RoadCaptain.Ports;
 using Serilog.Core;
 using SkiaSharp;
+using Point = Avalonia.Point;
 
 namespace RoadCaptain.App.Runner.Views
 {
@@ -27,6 +30,8 @@ namespace RoadCaptain.App.Runner.Views
         private readonly ISegmentStore _segmentStore;
         private CancellationTokenSource? _cancellationTokenSource;
         private readonly MonitoringEvents _monitoringEvents;
+        private double? _scale;
+        private Task? _animationTask;
 
         // ReSharper disable once UnusedMember.Global because this constructor only exists for the Avalonia designer
 #pragma warning disable CS8618
@@ -66,6 +71,19 @@ namespace RoadCaptain.App.Runner.Views
 #if DEBUG
             this.AttachDevTools();
 #endif
+
+            ZwiftMap.LogDiagnostics = true;
+            ZwiftMap.DiagnosticsCaptured += (_, args) =>
+            {
+                var extentBounds = args.ExtentBounds ?? Rect.Empty;
+                if (_scale == null || Math.Abs(_scale.Value - args.Scale) > 0.1)
+                {
+                    _scale = args.Scale;
+                    _monitoringEvents.Information("Map diagnostics: scale: {Scale} map bounds: {MapWidth}x{MapHeight} extent bounds: {ExtentWidth}x{ExtentHeight} viewport bounds: {ViewportWidth}x{ViewportHeight}", args.Scale, args.MapObjectsBounds.Width, args.MapObjectsBounds.Height, extentBounds.Width, extentBounds.Height,
+                        Math.Round(ZwiftMap.Bounds.Width, 0),
+                        Math.Round(ZwiftMap.Bounds.Height, 0));
+                }
+            };
         }
 
         private void CloseButton_Click(object? sender, RoutedEventArgs e)
@@ -124,36 +142,65 @@ namespace RoadCaptain.App.Runner.Views
         {
             _cancellationTokenSource?.Cancel();
 
-            using var updateScope = ZwiftMap.BeginUpdate();
-
-            ZwiftMap.MapObjects.Clear();
-
-            if (route?.World == null || route.PlannedRoute == null)
+            try
             {
-                return;
+                _animationTask?.Wait();
+            }
+            catch (TaskCanceledException)
+            {
             }
 
-            ZwiftMap.MapObjects.Add(new WorldMap(route.World.Id));
+            var elementBounds = SKRect.Empty;
+            var elementBoundsMappedToViewport = SKRect.Empty;
+            
+            using (var updateScope = ZwiftMap.BeginUpdate())
+            {
+                ZwiftMap.MapObjects.Clear();
 
-            var segmentsOnRoute = _segmentStore.LoadSegments(route.World, route.Sport);
+                if (route?.World == null || route.PlannedRoute == null)
+                {
+                    return;
+                }
 
-            var mapSegments = CreatePathsForSegments(segmentsOnRoute, route.World);
+                ZwiftMap.MapObjects.Add(new WorldMap(route.World.Id));
 
-            var routePoints = RoutePathPointsFrom(route.PlannedRoute.RouteSegmentSequence, mapSegments);
+                var segmentsOnRoute = _segmentStore.LoadSegments(route.World, route.Sport);
 
-            var routePath = new RoutePath(routePoints) { IsVisible = true };
-            ZwiftMap.MapObjects.Add(routePath);
+                var mapSegments = CreatePathsForSegments(segmentsOnRoute, route.World);
 
-            ZwiftMap.ZoomExtent("route");
+                var routePoints = RoutePathPointsFrom(route.PlannedRoute.RouteSegmentSequence, mapSegments);
+
+                var routePath = new RoutePath(routePoints) { IsVisible = true };
+                ZwiftMap.MapObjects.Add(routePath);
+
+                (elementBounds, elementBoundsMappedToViewport) = ZwiftMap.ZoomExtent("route");
+            }
 
             _cancellationTokenSource = new CancellationTokenSource();
 
-            Task.Factory.StartNew(() =>
+            _animationTask = Task.Factory.StartNew(() =>
                 {
                     try
                     {
+                        var routePath = ZwiftMap.MapObjects.SingleOrDefault(mo => mo is RoutePath) as RoutePath;
+                        if(routePath == null)
+                        {
+                            return;
+                        }
+
                         while (!(_cancellationTokenSource?.IsCancellationRequested ?? false))
                         {
+                            var minScale = 0.45f;
+
+                            if(routePath.Current.HasValue && 
+                               (elementBoundsMappedToViewport == SKRect.Empty || 
+                               !CalculateMatrix.IsEntirelyWithin(elementBoundsMappedToViewport, ZwiftMap.Bounds.ToSKRect())))
+                            {
+                                var currentPosition = routePath.Current;
+                                var currentOnViewport = ZwiftMap.MapToViewport(currentPosition.Value);
+                                ZwiftMap.Zoom(minScale, currentOnViewport);
+                            }
+
                             routePath.MoveNext();
 
                             Thread.Sleep(40);

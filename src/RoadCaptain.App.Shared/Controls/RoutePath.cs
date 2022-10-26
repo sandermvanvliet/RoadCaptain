@@ -45,6 +45,19 @@ namespace RoadCaptain.App.Shared.Controls
         public override string Name { get; }
         public override SKRect Bounds { get; }
 
+        public SKPoint? Current
+        {
+            get
+            {
+                if (_currentPosition == -1)
+                {
+                    return null;
+                }
+
+                return _path.Points[_currentPosition];
+            }
+        }
+
         public void MoveNext()
         {
             if (_currentPosition + 1 > _path.PointCount)
