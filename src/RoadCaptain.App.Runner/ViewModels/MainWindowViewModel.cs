@@ -8,7 +8,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Avalonia;
@@ -47,9 +46,6 @@ namespace RoadCaptain.App.Runner.ViewModels
         private bool _endActivityAtEndOfRoute;
         private readonly IZwiftCredentialCache _credentialCache;
         private bool _haveCheckedLastOpenedVersion;
-        private List<Segment> _segments;
-        private Task? _simulationTask;
-        private TrackPoint? _riderPosition;
 
         public MainWindowViewModel(Configuration configuration,
             IUserPreferences userPreferences,
@@ -158,7 +154,7 @@ namespace RoadCaptain.App.Runner.ViewModels
                         plannedRoute.Sport), 
                     _segmentStore.LoadMarkers(plannedRoute.World));
 
-                _gameStateDispatcher.RouteSelected(Route.PlannedRoute);
+                _gameStateDispatcher.RouteSelected(Route!.PlannedRoute);
             }
             catch (FileNotFoundException)
             {
@@ -176,7 +172,7 @@ namespace RoadCaptain.App.Runner.ViewModels
         }
 
         public bool CanStartRoute =>
-            Route.PlannedRoute != null &&
+            Route?.PlannedRoute != null &&
             LoggedInToZwift;
 
         public string? RoutePath
@@ -331,7 +327,6 @@ namespace RoadCaptain.App.Runner.ViewModels
         public List<PlannedRoute> RebelRoutes
         {
             get;
-            private set;
         }
 
         public ICommand StartRouteCommand { get; set; }
@@ -452,22 +447,17 @@ namespace RoadCaptain.App.Runner.ViewModels
 
         private CommandResult StartRoute()
         {
+            if (Route?.PlannedRoute == null)
+            {
+                throw new InvalidOperationException("No route has been loaded");
+            }
+
             _configuration.Route = RoutePath;
             
             _userPreferences.Route = RoutePath;
             _userPreferences.Save();
 
-            if (Route.PlannedRoute == null && !string.IsNullOrEmpty(RoutePath))
-            {
-                var plannedRoute = _routeStore.LoadFrom(RoutePath);
-                Route = RouteModel.From(plannedRoute, _segmentStore.LoadSegments(plannedRoute.World, plannedRoute.Sport), _segmentStore.LoadMarkers(plannedRoute.World));
-            }
-
-            if (Route.PlannedRoute != null)
-            {
-                _gameStateDispatcher.RouteSelected(Route.PlannedRoute);
-            }
-            
+            _gameStateDispatcher.RouteSelected(Route!.PlannedRoute!);
             _gameStateDispatcher.StartRoute();
 
             return CommandResult.Success();
@@ -573,73 +563,5 @@ namespace RoadCaptain.App.Runner.ViewModels
             }
             
         }
-
-        private SimulationState SimulationState { get; set; }
-
-        public TrackPoint? RiderPosition
-        {
-            get => _riderPosition;
-            set
-            {
-                if (Equals(value, _riderPosition)) return;
-                _riderPosition = value;
-                this.RaisePropertyChanged();
-            }
-        }
-
-        private void SimulateRoute()
-        {
-            //var positionUpdateStepTimeout = 15;
-
-            //if (_simulationTask != null && SimulationState == SimulationState.Running)
-            //{
-            //    SimulationState = SimulationState.Completed;
-            //    Thread.Sleep(positionUpdateStepTimeout);
-            //}
-
-            //_simulationTask = Task.Factory.StartNew(() =>
-            //{
-            //    SimulationState = SimulationState.Running;
-
-            //    var routePoints = new List<TrackPoint>();
-
-            //    foreach (var seq in Route.PlannedRoute.RouteSegmentSequence)
-            //    {
-            //        var points = _segments.Single(s => s.Id == seq.SegmentId).Points;
-
-            //        if (seq.Direction == SegmentDirection.BtoA)
-            //        {
-            //            // Don't call Reverse() because that does an
-            //            // in-place reverse and given that we're 
-            //            // _referencing_ the list of points of the
-            //            // segment that means that the actual segment
-            //            // is modified. Reverse() does not return a
-            //            // new IEnumerable<T>
-            //            points = points.OrderByDescending(p => p.Index).ToList();
-            //        }
-
-            //        routePoints.AddRange(points);
-            //    }
-
-            //    var simulationIndex = 0;
-
-            //    while (SimulationState == SimulationState.Running && simulationIndex < routePoints.Count)
-            //    {
-            //        RiderPosition = routePoints[simulationIndex++];
-            //        Thread.Sleep(positionUpdateStepTimeout);
-            //    }
-
-            //    SimulationState = SimulationState.Completed;
-            //    RiderPosition = null;
-            //});
-        }
-    }
-
-    public enum SimulationState
-    {
-        NotStarted,
-        Running,
-        Paused,
-        Completed
     }
 }
