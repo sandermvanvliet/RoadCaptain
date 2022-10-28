@@ -51,10 +51,10 @@ namespace RoadCaptain.App.Shared.Controls
             { Color = SKColor.Parse("#4CFF00"), Style = SKPaintStyle.Stroke, StrokeWidth = 6, IsAntialias = true };
 
         public static readonly SKPaint SprintSegmentPaint = new()
-            { Color = SKColor.Parse("#B200FF"), Style = SKPaintStyle.Stroke, StrokeWidth = 4, IsAntialias = true };
+            { Color = SKColor.Parse("#B200FF"), Style = SKPaintStyle.Stroke, StrokeWidth = 6, IsAntialias = true };
 
         public static readonly SKPaint ClimbSegmentPaint = new()
-            { Color = SKColor.Parse("#FF6A00"), Style = SKPaintStyle.Stroke, StrokeWidth = 4, IsAntialias = true };
+            { Color = SKColor.Parse("#FF6A00"), Style = SKPaintStyle.Stroke, StrokeWidth = 6, IsAntialias = true };
 
         public static readonly SKPaint ElevationPlotClimbSegmentPaint = new()
             { Color = SKColor.Parse("#FF6A00"), Style = SKPaintStyle.Stroke, StrokeWidth = 2, IsAntialias = true };

@@ -64,13 +64,13 @@ namespace RoadCaptain.App.RouteBuilder.Views
                 : KeyModifiers.Control;
 
             KeyBindings.Add(new KeyBinding
-                { Command = ViewModel.OpenRouteCommand, Gesture = new KeyGesture(Key.O, modifier) });
+            { Command = ViewModel.OpenRouteCommand, Gesture = new KeyGesture(Key.O, modifier) });
             KeyBindings.Add(new KeyBinding
-                { Command = ViewModel.SaveRouteCommand, Gesture = new KeyGesture(Key.S, modifier) });
+            { Command = ViewModel.SaveRouteCommand, Gesture = new KeyGesture(Key.S, modifier) });
             KeyBindings.Add(new KeyBinding
-                { Command = ViewModel.ClearRouteCommand, Gesture = new KeyGesture(Key.R, modifier) });
+            { Command = ViewModel.ClearRouteCommand, Gesture = new KeyGesture(Key.R, modifier) });
             KeyBindings.Add(new KeyBinding
-                { Command = ViewModel.RemoveLastSegmentCommand, Gesture = new KeyGesture(Key.Z, modifier) });
+            { Command = ViewModel.RemoveLastSegmentCommand, Gesture = new KeyGesture(Key.Z, modifier) });
         }
 
         private MainWindowViewModel ViewModel { get; }
@@ -128,10 +128,34 @@ namespace RoadCaptain.App.RouteBuilder.Views
                     InvalidateZwiftMap();
 
                     break;
+                case nameof(ViewModel.ShowClimbs):
+                    ToggleClimbs(ViewModel.ShowClimbs);
+                    break;
+                case nameof(ViewModel.ShowSprints):
+                    ToggleSprints(ViewModel.ShowSprints);
+                    break;
             }
         }
 
-        private void InvalidateZwiftMap([CallerMemberName]string? caller = null)
+        private void ToggleSprints(bool visible)
+        {
+            ZwiftMap.MapObjects.OfType<SprintSegment>()
+                .ToList()
+                .ForEach(climb => climb.IsVisible = visible);
+
+            InvalidateZwiftMap();
+        }
+
+        private void ToggleClimbs(bool visible)
+        {
+            ZwiftMap.MapObjects.OfType<ClimbSegment>()
+                .ToList()
+                .ForEach(climb => climb.IsVisible = visible);
+
+            InvalidateZwiftMap();
+        }
+
+        private void InvalidateZwiftMap([CallerMemberName] string? caller = null)
         {
             Debug.WriteLine($"[InvalidateZwiftMap] {caller}");
             ZwiftMap.InvalidateVisual();
@@ -164,12 +188,12 @@ namespace RoadCaptain.App.RouteBuilder.Views
                     segment.IsLoop = seq.Type == SegmentSequenceType.Loop || seq.Type == SegmentSequenceType.LoopEnd || seq.Type == SegmentSequenceType.LoopStart;
                     segment.IsOnRoute = true;
                 }
-                else if(segment.IsOnRoute)
+                else if (segment.IsOnRoute)
                 {
                     segment.IsOnRoute = false;
                 }
             }
-            
+
             // Synchronize the route path with the route
             SynchronizeRoutePath(mapSegments);
         }
@@ -254,10 +278,39 @@ namespace RoadCaptain.App.RouteBuilder.Views
                 return;
             }
 
-            CreatePathsForSegments(ViewModel.Segments, world);
+            var offsets = CreatePathsForSegments(ViewModel.Segments, world);
+
+            CreatePathsForMarkers(
+                offsets,
+                ViewModel.Markers.Where(m => m.Type == SegmentType.Climb).ToList(),
+                (id, points) => new ClimbSegment(id, points));
+
+            CreatePathsForMarkers(
+                offsets,
+                ViewModel.Markers.Where(m => m.Type == SegmentType.Sprint).ToList(),
+                (id, points) => new SprintSegment(id, points));
         }
 
-        private void CreatePathsForSegments(List<Segment> segments, World world)
+        private void CreatePathsForMarkers(Offsets offsets, List<Segment> markers, Func<string, SKPoint[], MapObject> createMapObject)
+        {
+            var segmentsWithOffsets = markers
+                .Select(seg => new
+                {
+                    Segment = seg,
+                    GameCoordinates = seg.Points.Select(point => point.ToMapCoordinate()).ToList()
+                })
+            .ToList();
+
+            foreach (var segment in segmentsWithOffsets)
+            {
+                var segmentPath = SkiaPathFromSegment(offsets, segment.GameCoordinates);
+
+                var path = createMapObject(segment.Segment.Id, segmentPath.Points);
+                ZwiftMap.MapObjects.Add(path);
+            }
+        }
+
+        private Offsets? CreatePathsForSegments(List<Segment> segments, World world)
         {
             if (!world.MapMostLeft.HasValue || !world.MapMostRight.HasValue)
             {
@@ -274,7 +327,7 @@ namespace RoadCaptain.App.RouteBuilder.Views
 
             if (!segments.Any())
             {
-                return;
+                return null;
             }
 
             var segmentsWithOffsets = segments
@@ -308,12 +361,14 @@ namespace RoadCaptain.App.RouteBuilder.Views
             {
                 var segmentPath = ZwiftMap.MapObjects.OfType<MapSegment>()
                     .SingleOrDefault(mo => mo.SegmentId == spawnPoint);
-                
+
                 if (segmentPath != null)
                 {
                     ZwiftMap.MapObjects.Add(new SpawnPointSegment(segmentPath.SegmentId, segmentPath.Points));
                 }
             }
+
+            return overallOffsets;
         }
 
         private static SKPath SkiaPathFromSegment(Offsets offsets, List<MapCoordinate> data)
