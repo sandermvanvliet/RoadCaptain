@@ -356,15 +356,31 @@ namespace RoadCaptain.App.RouteBuilder.Views
                 ZwiftMap.MapObjects.Add(path);
             }
 
-            var spawnPointIds = world.SpawnPoints.Select(s => s.SegmentId).Distinct().ToList();
-            foreach (var spawnPoint in spawnPointIds)
+            var spawnPoints = world.SpawnPoints.Distinct(new SpawnPointComparer()).ToList();
+            foreach (var spawnPoint in spawnPoints)
             {
                 var segmentPath = ZwiftMap.MapObjects.OfType<MapSegment>()
-                    .SingleOrDefault(mo => mo.SegmentId == spawnPoint);
+                    .SingleOrDefault(mo => mo.SegmentId == spawnPoint.SegmentId);
 
                 if (segmentPath != null)
                 {
-                    ZwiftMap.MapObjects.Add(new SpawnPointSegment(segmentPath.SegmentId, segmentPath.Points));
+                    var spawnPointSegment = segments.Single(s => s.Id == spawnPoint.SegmentId);
+                    var offset = 4;
+                    var middle = spawnPointSegment.Points.Count / 2;
+
+                    var startPoint = spawnPointSegment.Points[middle - offset];
+                    var endPoint = spawnPointSegment.Points[middle + offset];
+
+                    var middleBearing = TrackPoint.Bearing(startPoint, endPoint);
+
+                    if (spawnPoint.Direction == SegmentDirection.BtoA)
+                    {
+                        // If the spawn point goes in the opposite direction
+                        // of the segment then flip the bearing
+                        middleBearing = (middleBearing + 180) % 360;
+                    }
+
+                    ZwiftMap.MapObjects.Add(new SpawnPointSegment(segmentPath.SegmentId, segmentPath.Points, middleBearing));
                 }
             }
 

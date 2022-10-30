@@ -72,7 +72,7 @@ namespace RoadCaptain.App.Shared.Tests.Unit
 
         private static SpawnPointSegment GivenSpawnPointSegment()
         {
-            return new SpawnPointSegment("x", Array.Empty<SKPoint>());
+            return new SpawnPointSegment("x", Array.Empty<SKPoint>(), 0);
         }
 
         private MapObject GivenRoutePath()

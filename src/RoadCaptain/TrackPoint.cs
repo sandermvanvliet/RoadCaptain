@@ -116,7 +116,7 @@ namespace RoadCaptain
             return (Math.Atan2(y, x) + Math.PI * 2) % (Math.PI * 2) * RadToDegree;
         }
 
-        private static double DegreesToRadians(double angle)
+        public static double DegreesToRadians(double angle)
         {
             return angle * PiRad;
         }
