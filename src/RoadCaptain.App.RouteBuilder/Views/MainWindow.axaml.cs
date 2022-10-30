@@ -58,6 +58,7 @@ namespace RoadCaptain.App.RouteBuilder.Views
 #endif
 
             ZwiftMap.RenderPriority = new ZwiftMapRenderPriority();
+            ZwiftMap.LogDiagnostics = false;
 
             var modifier = RuntimeInformation.IsOSPlatform(OSPlatform.OSX)
                 ? KeyModifiers.Meta

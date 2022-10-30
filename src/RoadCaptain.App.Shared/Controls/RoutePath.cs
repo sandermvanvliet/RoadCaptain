@@ -18,8 +18,8 @@ namespace RoadCaptain.App.Shared.Controls
             Name = "route";
             Bounds = _path.TightBounds;
         }
-        
-        public override void Render(SKCanvas canvas)
+
+        protected override void RenderCore(SKCanvas canvas)
         {
             if (!_path.Points.Any() || !IsVisible)
             {
@@ -41,9 +41,10 @@ namespace RoadCaptain.App.Shared.Controls
             }
         }
 
-        public bool IsVisible { get; set; }
+        public override bool IsVisible { get; set; }
         public override string Name { get; }
         public override SKRect Bounds { get; }
+        public override bool IsSelectable { get; set; } = false;
 
         public SKPoint? Current
         {

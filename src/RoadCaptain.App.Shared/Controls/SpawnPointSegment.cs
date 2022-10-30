@@ -48,10 +48,11 @@ namespace RoadCaptain.App.Shared.Controls
 
         public override string Name { get; }
         public override SKRect Bounds { get; }
+        public override bool IsSelectable { get; set; } = false;
         public string SegmentId { get; }
-        public bool IsVisible { get; set; } = true;
+        public override bool IsVisible { get; set; } = true;
 
-        public override void Render(SKCanvas canvas)
+        protected override void RenderCore(SKCanvas canvas)
         {
             if (IsVisible)
             {

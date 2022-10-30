@@ -72,18 +72,7 @@ namespace RoadCaptain.App.Runner.Views
             this.AttachDevTools();
 #endif
 
-            ZwiftMap.LogDiagnostics = true;
-            ZwiftMap.DiagnosticsCaptured += (_, args) =>
-            {
-                var extentBounds = args.ExtentBounds ?? Rect.Empty;
-                if (_scale == null || Math.Abs(_scale.Value - args.Scale) > 0.1)
-                {
-                    _scale = args.Scale;
-                    _monitoringEvents.Information("Map diagnostics: scale: {Scale} map bounds: {MapWidth}x{MapHeight} extent bounds: {ExtentWidth}x{ExtentHeight} viewport bounds: {ViewportWidth}x{ViewportHeight}", args.Scale, args.MapObjectsBounds.Width, args.MapObjectsBounds.Height, extentBounds.Width, extentBounds.Height,
-                        Math.Round(ZwiftMap.Bounds.Width, 0),
-                        Math.Round(ZwiftMap.Bounds.Height, 0));
-                }
-            };
+            ZwiftMap.LogDiagnostics = false;
         }
 
         private void CloseButton_Click(object? sender, RoutedEventArgs e)

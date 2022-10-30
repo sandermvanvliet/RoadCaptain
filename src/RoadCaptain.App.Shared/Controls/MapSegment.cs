@@ -1,3 +1,6 @@
+using System;
+using System.Linq;
+using Avalonia;
 using Codenizer.Avalonia.Map;
 using SkiaSharp;
 
@@ -95,12 +98,36 @@ namespace RoadCaptain.App.Shared.Controls
 
         public override string Name { get; }
         public override SKRect Bounds { get; }
+        public override bool IsSelectable { get; set; } = true;
+        public override bool IsVisible { get; set; } = true;
         public string SegmentId { get; }
         public SKPoint[] Points => _path.Points;
 
-        public override void Render(SKCanvas canvas)
+        protected override void RenderCore(SKCanvas canvas)
         {
             canvas.DrawPath(_path, _currentPaint);
+        }
+
+        public override bool Contains(SKPoint mapPosition)
+        {
+            if (!Bounds.Contains(mapPosition))
+            {
+                return false;
+            }
+
+            if (Points.Any(p => DistanceTo(p, mapPosition).Length < 10))
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        private static Vector DistanceTo(SKPoint a, SKPoint b)
+        {
+            return new Vector(
+                Math.Abs(a.X - b.X),
+                Math.Abs(a.Y - b.Y));
         }
 
         private void DeterminePathPaint()

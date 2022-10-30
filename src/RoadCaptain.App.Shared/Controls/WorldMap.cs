@@ -24,7 +24,7 @@ namespace RoadCaptain.App.Shared.Controls
             }
         }
 
-        public override void Render(SKCanvas canvas)
+        protected override void RenderCore(SKCanvas canvas)
         {
             if (_image != null)
             {
@@ -34,5 +34,7 @@ namespace RoadCaptain.App.Shared.Controls
 
         public override string Name { get; }
         public override SKRect Bounds { get; }
+        public override bool IsSelectable { get; set; } = false;
+        public override bool IsVisible { get; set; } = true;
     }
 }
