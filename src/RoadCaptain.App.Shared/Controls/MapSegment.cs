@@ -108,19 +108,9 @@ namespace RoadCaptain.App.Shared.Controls
             canvas.DrawPath(_path, _currentPaint);
         }
 
-        public override bool Contains(SKPoint mapPosition)
+        public override bool TightContains(SKPoint mapPosition)
         {
-            if (!Bounds.Contains(mapPosition))
-            {
-                return false;
-            }
-
-            if (Points.Any(p => DistanceTo(p, mapPosition).Length < 10))
-            {
-                return true;
-            }
-
-            return false;
+            return Points.Any(p => DistanceTo(p, mapPosition).Length < 10);
         }
 
         private static Vector DistanceTo(SKPoint a, SKPoint b)
