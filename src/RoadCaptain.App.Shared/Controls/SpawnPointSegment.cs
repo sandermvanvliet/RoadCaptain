@@ -14,7 +14,7 @@ namespace RoadCaptain.App.Shared.Controls
         private readonly SKPoint _centerPoint;
         private const int CircleMarkerRadius = 16;
 
-        public SpawnPointSegment(string segmentId, SKPoint[] points, double middleBearing)
+        public SpawnPointSegment(string segmentId, SKPoint[] points, double middleBearing, bool isTwoWay)
         {
             _path = new SKPath();
             _path.AddPoly(points, false);
@@ -22,18 +22,20 @@ namespace RoadCaptain.App.Shared.Controls
             SegmentId = segmentId;
             Name = $"spawnPoint-{segmentId}";
             Bounds = _path.TightBounds;
-            
-            _arrowPaint = new SKPaint{ Color = SKColor.Parse("#FFFFFF"), Style = SKPaintStyle.Stroke, StrokeWidth = 6, IsAntialias = true};
-            _circlePaint = new() { Color = SKColor.Parse("#FFFFFF"), Style = SKPaintStyle.Stroke, StrokeWidth = 2, IsAntialias = true };
+
+            _arrowPaint = new SKPaint { Color = SKColor.Parse("#FFFFFF"), Style = SKPaintStyle.Stroke, StrokeWidth = 4, IsAntialias = true };
+            _circlePaint = new() { Color = SKColor.Parse("#FFFFFF"), Style = SKPaintStyle.Stroke, StrokeWidth = 3, IsAntialias = true };
             _circleFillPaint = new() { Color = SKColor.Parse("#0094FF"), Style = SKPaintStyle.Fill, IsAntialias = true };
-            
+
             if (points.Any())
             {
                 _centerPoint = _path.Points[_path.PointCount / 2];
 
                 var angleRadians = (float)TrackPoint.DegreesToRadians(ConvertToSkiaAngle(middleBearing));
-                
-                _arrowPath = CreateArrowPath(angleRadians);
+
+                _arrowPath = isTwoWay
+                    ? CreateTwoWayArrowPath(angleRadians)
+                    : CreateArrowPath(angleRadians);
             }
         }
 
@@ -70,7 +72,7 @@ namespace RoadCaptain.App.Shared.Controls
             const int size = CircleMarkerRadius - 4;
 
             var matrix = SKMatrix.CreateRotation(angleRadians);
-            
+
             var chevronPoints = matrix.MapPoints(new[]
             {
                 new SKPoint(size, size),
@@ -88,6 +90,47 @@ namespace RoadCaptain.App.Shared.Controls
 
             arrowPath.AddPoly(chevronPoints, false);
             arrowPath.AddPoly(stemPoints, false);
+
+            arrowPath
+                .Transform(
+                    SKMatrix.CreateTranslation(
+                        _centerPoint.X - arrowPath.TightBounds.MidX,
+                        _centerPoint.Y - arrowPath.TightBounds.MidY));
+
+            return arrowPath;
+        }
+
+        private SKPath CreateTwoWayArrowPath(float angleRadians)
+        {
+            const int size = CircleMarkerRadius - 4;
+
+            var matrix = SKMatrix.CreateRotation(angleRadians);
+
+            var leftChevronParts = matrix.MapPoints(new[]
+            {
+                new SKPoint(size - 2, size - 2),
+                new SKPoint(0, 0),
+                new SKPoint(size - 2, -(size - 2))
+            });
+
+            var rightChevronParts = matrix.MapPoints(new[]
+            {
+                new SKPoint(size + 2, size - 2),
+                new SKPoint(2 * size, 0),
+                new SKPoint(size + 2, -(size - 2))
+            });
+
+            var stemPoints = matrix.MapPoints(new[]
+            {
+                new SKPoint(0, 0),
+                new SKPoint(2 * size, 0)
+            });
+
+            var arrowPath = new SKPath();
+
+            arrowPath.AddPoly(leftChevronParts, false);
+            arrowPath.AddPoly(stemPoints, false);
+            arrowPath.AddPoly(rightChevronParts, false);
 
             arrowPath
                 .Transform(
