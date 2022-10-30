@@ -8,7 +8,7 @@ namespace RoadCaptain.App.Shared.Controls
         private readonly SKPath _path;
         private readonly float _angleRadians;
         private readonly SKPaint _arrowPaint;
-        private SKPaint _circlePaint;
+        private readonly SKPaint _circlePaint;
         private readonly SKPaint _circleFillPaint;
         private const int CircleMarkerRadius = 16;
 
