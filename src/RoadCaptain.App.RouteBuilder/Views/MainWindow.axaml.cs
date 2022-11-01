@@ -186,7 +186,7 @@ namespace RoadCaptain.App.RouteBuilder.Views
                 {
                     segment.IsLeadIn = seq.Type == SegmentSequenceType.LeadIn;
                     segment.IsLeadOut = seq.Type == SegmentSequenceType.LeadOut;
-                    segment.IsLoop = seq.Type == SegmentSequenceType.Loop || seq.Type == SegmentSequenceType.LoopEnd || seq.Type == SegmentSequenceType.LoopStart;
+                    segment.IsLoop = seq.Type is SegmentSequenceType.Loop or SegmentSequenceType.LoopEnd or SegmentSequenceType.LoopStart;
                     segment.IsOnRoute = true;
                 }
                 else if (segment.IsOnRoute)
@@ -203,12 +203,12 @@ namespace RoadCaptain.App.RouteBuilder.Views
         {
             var routePath = ZwiftMap.MapObjects.SingleOrDefault(mo => mo is RoutePath);
 
-            var routePathPoints = RoutePathPointsFrom(ViewModel.Route.Sequence, mapSegments);
-
             if (routePath != null)
             {
                 ZwiftMap.MapObjects.Remove(routePath);
             }
+
+            var routePathPoints = RoutePathPointsFrom(ViewModel.Route.Sequence, mapSegments);
 
             routePath = new RoutePath(routePathPoints);
             ZwiftMap.MapObjects.Add(routePath);
@@ -217,6 +217,11 @@ namespace RoadCaptain.App.RouteBuilder.Views
         private static SKPoint[] RoutePathPointsFrom(IEnumerable<SegmentSequenceViewModel> routeSequence,
             List<MapSegment> mapSegments)
         {
+            if (!mapSegments.Any())
+            {
+                return Array.Empty<SKPoint>();
+            }
+
             var routePoints = new List<SKPoint>();
 
             foreach (var seq in routeSequence)
