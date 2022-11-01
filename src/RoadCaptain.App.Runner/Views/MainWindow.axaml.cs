@@ -5,8 +5,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
@@ -21,6 +19,7 @@ using RoadCaptain.Ports;
 using Serilog.Core;
 using SkiaSharp;
 using Point = Avalonia.Point;
+using Timer = System.Timers.Timer;
 
 namespace RoadCaptain.App.Runner.Views
 {
@@ -28,10 +27,9 @@ namespace RoadCaptain.App.Runner.Views
     {
         private readonly MainWindowViewModel _viewModel;
         private readonly ISegmentStore _segmentStore;
-        private CancellationTokenSource? _cancellationTokenSource;
         private readonly MonitoringEvents _monitoringEvents;
-        private double? _scale;
-        private Task? _animationTask;
+        private readonly Timer _animationTimer;
+        private SKRect _elementBoundsMappedToViewport = SKRect.Empty;
 
         // ReSharper disable once UnusedMember.Global because this constructor only exists for the Avalonia designer
 #pragma warning disable CS8618
@@ -48,7 +46,7 @@ namespace RoadCaptain.App.Runner.Views
             _viewModel = viewModel;
             _segmentStore = segmentStore;
             _monitoringEvents = monitoringEvents;
-            _viewModel.PropertyChanged += (sender, args) =>
+            _viewModel.PropertyChanged += (_, args) =>
             {
                 if (args.PropertyName == nameof(_viewModel.RoutePath) && !string.IsNullOrEmpty(_viewModel.RoutePath))
                 {
@@ -63,6 +61,9 @@ namespace RoadCaptain.App.Runner.Views
 
             gameStateReceiver.ReceiveRoute(route => viewModel.Route = RouteModel.From(route, _segmentStore.LoadSegments(route.World, route.Sport), _segmentStore.LoadMarkers(route.World)));
             gameStateReceiver.ReceiveGameState(viewModel.UpdateGameState);
+
+            _animationTimer = new Timer(100);
+            _animationTimer.Elapsed += (_, _) => AnimateRouteOnTimerTick();
 
             DataContext = viewModel;
 
@@ -88,7 +89,7 @@ namespace RoadCaptain.App.Runner.Views
             {
                 _viewModel.RoutePath = null;
 
-                if (comboBox.SelectedItem is PlannedRoute selectedRoute)
+                if (comboBox.SelectedItem is PlannedRoute { World: { } } selectedRoute)
                 {
                     _viewModel.Route = RouteModel.From(selectedRoute, _segmentStore.LoadSegments(selectedRoute.World, selectedRoute.Sport), _segmentStore.LoadMarkers(selectedRoute.World));
                 }
@@ -129,19 +130,9 @@ namespace RoadCaptain.App.Runner.Views
 
         private void ShowRouteOnMap(RouteModel? route)
         {
-            _cancellationTokenSource?.Cancel();
-
-            try
-            {
-                _animationTask?.Wait();
-            }
-            catch (TaskCanceledException)
-            {
-            }
-
-            var elementBoundsMappedToViewport = SKRect.Empty;
+            _animationTimer.Stop();
             
-            using (var updateScope = ZwiftMap.BeginUpdate())
+            using (ZwiftMap.BeginUpdate())
             {
                 ZwiftMap.MapObjects.Clear();
 
@@ -161,54 +152,41 @@ namespace RoadCaptain.App.Runner.Views
                 var routePath = new RoutePath(routePoints) { IsVisible = true };
                 ZwiftMap.MapObjects.Add(routePath);
 
-                (_, elementBoundsMappedToViewport) = ZwiftMap.ZoomExtent("route");
+                (_, _elementBoundsMappedToViewport) = ZwiftMap.ZoomExtent("route");
             }
 
-            _cancellationTokenSource = new CancellationTokenSource();
+            _animationTimer.Start();
+        }
 
-            _animationTask = Task.Factory.StartNew(() =>
-                {
-                    try
-                    {
-                        var routePath = ZwiftMap.MapObjects.SingleOrDefault(mo => mo is RoutePath) as RoutePath;
-                        if(routePath == null)
-                        {
-                            return;
-                        }
+        private void AnimateRouteOnTimerTick()
+        {
+            const float minScale = 0.45f;
 
-                        while (!(_cancellationTokenSource?.IsCancellationRequested ?? false))
-                        {
-                            var minScale = 0.45f;
+            var routePath = ZwiftMap.MapObjects.SingleOrDefault(mo => mo is RoutePath) as RoutePath;
+            if (routePath == null)
+            {
+                return;
+            }
 
-                            if(routePath.Current.HasValue && 
-                               (elementBoundsMappedToViewport == SKRect.Empty || 
-                               !CalculateMatrix.IsEntirelyWithin(elementBoundsMappedToViewport, ZwiftMap.Bounds.ToSKRect())))
-                            {
-                                var currentPosition = routePath.Current;
-                                var currentOnViewport = ZwiftMap.MapToViewport(currentPosition.Value);
-                                ZwiftMap.Zoom(minScale, currentOnViewport);
-                            }
+            if (routePath.Current.HasValue &&
+                (_elementBoundsMappedToViewport == SKRect.Empty ||
+                 !CalculateMatrix.IsEntirelyWithin(_elementBoundsMappedToViewport, ZwiftMap.Bounds.ToSKRect())))
+            {
+                var currentPosition = routePath.Current;
+                var currentOnViewport = ZwiftMap.MapToViewport(currentPosition.Value);
+                (_, _elementBoundsMappedToViewport) = ZwiftMap.Zoom(minScale, currentOnViewport);
+            }
 
-                            routePath.MoveNext();
+            routePath.MoveNext();
 
-                            Thread.Sleep(40);
-
-                            try
-                            {
-                                ZwiftMap.InvalidateVisual();
-                            }
-                            catch (ArgumentException e)
-                            {
-                                _monitoringEvents.Error(e, "Failed to invalidate map");
-                            }
-                        }
-                    }
-                    catch
-                    {
-                        // Nop
-                    }
-                },
-                _cancellationTokenSource.Token);
+            try
+            {
+                ZwiftMap.InvalidateVisual();
+            }
+            catch (ArgumentException e)
+            {
+                _monitoringEvents.Error(e, "Failed to invalidate map");
+            }
         }
 
         private static SKPoint[] RoutePathPointsFrom(IEnumerable<SegmentSequence> routeSequence, List<MapSegment> mapSegments)
