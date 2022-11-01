@@ -133,7 +133,7 @@ namespace RoadCaptain.Tests.Unit
             try
             {
                 _useCase
-                    .ExecuteAsync(cancellationTokenSource.Token) // Always in cancelled state because otherwise the usecasse remains in an infinite loop
+                    .ExecuteAsync(cancellationTokenSource.Token) // Always in cancelled state because otherwise the use case remains in an infinite loop
                     .GetAwaiter()
                     .GetResult();
             }

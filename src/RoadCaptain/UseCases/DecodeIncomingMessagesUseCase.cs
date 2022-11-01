@@ -110,22 +110,44 @@ namespace RoadCaptain.UseCases
                         {
                             if (_zwiftCrypto != null)
                             {
-                                messageBytes = _zwiftCrypto.Decrypt(messageBytes);
-                            }
+                                var decryptionResult = _zwiftCrypto.Decrypt(messageBytes);
 
-                            // Have this inside the try/catch so that when decryption fails
-                            // this doesn't attempt to emit encrypted message bytes because
-                            // that will just fail down the line.
-                            _messageEmitter.EmitMessageFromBytes(messageBytes);
+                                switch (decryptionResult)
+                                {
+                                    case SuccessfulDecryptionResult success:
+                                        messageBytes = success.Data;
+                                        // Have this inside the try/catch so that when decryption fails
+                                        // this doesn't attempt to emit encrypted message bytes because
+                                        // that will just fail down the line.
+                                        _messageEmitter.EmitMessageFromBytes(messageBytes);
+                                        break;
+                                    case DecryptionFailedResult { Exception: CryptographyException cx }:
+                                        _monitoringEvents.Error(cx, "Failed to decrypt message because of a cryptography error, further Zwift messages can't be decrypted");
+                                        _dispatcher.IncorrectConnectionSecret();
+                                        break;
+                                    case DecryptionFailedResult { Exception: { } } failure:
+                                        _monitoringEvents.Error(failure.Exception, "Failed to decrypt message because {Reason}, ignoring this message", failure.Exception.Message);
+                                        break;
+                                    case DecryptionFailedResult failure:
+                                        _monitoringEvents.Error("Failed to decrypt message because {Reason}, ignoring this message", failure.Reason);
+                                        break;
+                                    default:
+                                        throw new Exception("Got an unexpected result from Decrypt call that I don't know how to handle");
+                                }
+                            }
+                            else
+                            {
+                                // If no IZwiftCrypto is provided then no decryption needs to happen
+                                _messageEmitter.EmitMessageFromBytes(messageBytes);
+                            }
                         }
-                        catch (CryptographyException e)
+                        catch (Exception e)
                         {
-                            _monitoringEvents.Error(e, "Failed to decrypt message");
-                            _dispatcher.IncorrectConnectionSecret();
+                            _monitoringEvents.Error(e, "Failed to decrypt message because {Reason}, ignoring this message", e.Message);
                         }
                     }
 
-                    offset += (MessageLengthPrefix + (int)toSend.Length);
+                    offset += MessageLengthPrefix + (int)toSend.Length;
                 }
             } while (!token.IsCancellationRequested);
 

@@ -113,12 +113,12 @@ namespace RoadCaptain.Adapters
             throw new Exception("Empty message");
         }
 
-        public byte[] Decrypt(byte[] inputMessage)
+        public DecryptionResult Decrypt(byte[] inputMessage)
         {
             // If no key is defined then bypass decryption
             if (_key == null)
             {
-                return inputMessage;
+                return new SuccessfulDecryptionResult(inputMessage);
             }
 
             var input = new ByteBuffer(inputMessage);
@@ -134,12 +134,12 @@ namespace RoadCaptain.Adapters
                     {
                         if (input.GetInt() != _relayId)
                         {
-                            throw new CryptographyException("Relay id does not match");
+                            return new DecryptionFailedResult("Relay id does not match");
                         }
                     }
                     else
                     {
-                        throw new CryptographyException("Relay id announced but missing");
+                        return new DecryptionFailedResult("Relay id announced but missing");
                     }
                 }
 
@@ -157,12 +157,12 @@ namespace RoadCaptain.Adapters
                     }
                     else
                     {
-                        throw new CryptographyException("Connection id announced but missing");
+                        return new DecryptionFailedResult("Connection id announced but missing");
                     }
                 }
                 else if (_isEncryptedConnection && !_hasConnectionId)
                 {
-                    throw new CryptographyException("Connection id expected but missing");
+                    return new DecryptionFailedResult("Connection id expected but missing");
                 }
 
                 if (HasCounter(firstByte))
@@ -173,7 +173,7 @@ namespace RoadCaptain.Adapters
                     }
                     else
                     {
-                        throw new CryptographyException("Sequence number announced but missing");
+                        return new DecryptionFailedResult("Sequence number announced but missing");
                     }
                 }
 
@@ -207,7 +207,7 @@ namespace RoadCaptain.Adapters
                     }
                     catch (Org.BouncyCastle.Crypto.InvalidCipherTextException e)
                     {
-                        throw new CryptographyException(e);
+                        return new DecryptionFailedResult("Cryptography error", new CryptographyException(e));
                     }
                 }
                 else
@@ -217,10 +217,10 @@ namespace RoadCaptain.Adapters
 
                 _gameToClientInitializationVector.IncrementCounter();
 
-                return decryptedOutput;
+                return new SuccessfulDecryptionResult(decryptedOutput.ToArray());
             }
 
-            throw new CryptographyException($"Unsupported protocol version {FBitTwiddle(firstByte)}");
+            return new DecryptionFailedResult($"Unsupported protocol version {FBitTwiddle(firstByte)}");
         }
 
         private void InitInitializationVectors(short connectionId)
