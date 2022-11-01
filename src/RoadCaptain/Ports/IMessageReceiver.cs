@@ -2,8 +2,6 @@
 // Licensed under Artistic License 2.0
 // See LICENSE or https://choosealicense.com/licenses/artistic-2.0/
 
-using System.Threading.Tasks;
-
 namespace RoadCaptain.Ports
 {
     /// <summary>
@@ -17,13 +15,7 @@ namespace RoadCaptain.Ports
         /// <returns>An array of bytes with a payload or <c>null</c> if the connection is closed</returns>
         /// <remarks>This method blocks while waiting for new input</remarks>
         byte[]? ReceiveMessageBytes();
-        
-        /// <summary>
-        /// Start the message receiver accepting a Zwift connection and its data
-        /// </summary>
-        /// <remarks>This method is idempotent and can be called multiple times</remarks>
-        Task StartAsync();
-        
+
         /// <summary>
         /// Stop the message receiver from accepting data from a Zwift connection
         /// </summary>

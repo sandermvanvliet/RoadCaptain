@@ -3,7 +3,6 @@
 // See LICENSE or https://choosealicense.com/licenses/artistic-2.0/
 
 using System;
-using System.Threading.Tasks;
 using RoadCaptain.Ports;
 
 namespace RoadCaptain.App.Runner.Tests.Unit.Engine
@@ -13,11 +12,6 @@ namespace RoadCaptain.App.Runner.Tests.Unit.Engine
         public byte[]? ReceiveMessageBytes()
         {
             return null;
-        }
-
-        public Task StartAsync()
-        {
-            return Task.CompletedTask;
         }
 
         public void Shutdown()
