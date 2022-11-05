@@ -285,7 +285,18 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
 
         public void Load()
         {
+            if (string.IsNullOrEmpty(OutputFilePath))
+            {
+                throw new ArgumentException("Cannot load the route because no path was provided", nameof(OutputFilePath));
+            }
+
             var plannedRoute = _routeStore.LoadFrom(OutputFilePath);
+            
+            if (plannedRoute.World == null)
+            {
+                throw new ArgumentException("Cannot load the route because the route has no world selected", nameof(World));
+            }
+
             var segments = _segmentStore.LoadSegments(plannedRoute.World, plannedRoute.Sport);
 
             _sequence.Clear();
@@ -392,8 +403,8 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
                     new
                     {
                         Index = index,
-                        SegmentId = seq.SegmentId,
-                        Direction = seq.Direction,
+                        seq.SegmentId,
+                        seq.Direction,
                         StartNode = seq.Direction == SegmentDirection.AtoB
                             ? seq.Segment.NextSegmentsNodeA
                             : seq.Segment.NextSegmentsNodeB,
@@ -441,7 +452,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
 
         private void DetermineMarkersForRoute()
         {
-            if (World == null || Sport == null)
+            if (World == null || Sport == SportType.Unknown)
             {
                 Markers = new List<MarkerViewModel>();
                 return;
@@ -531,23 +542,18 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             {
                 var segment = segments.Single(s => s.Id == seq.SegmentId);
 
-                if (seq.Direction == SegmentDirection.AtoB)
+                var points = segment.Points.AsEnumerable();
+
+                if (seq.Direction == SegmentDirection.BtoA)
                 {
-                    for (var index = 0; index < segment.Points.Count; index++)
-                    {
-                        var segmentPoint = segment.Points[index].Clone();
-                        segmentPoint.Index = routeTrackPointIndex++;
-                        trackPointsForRoute.Add(segmentPoint);
-                    }
+                    points = points.Reverse();
                 }
-                else if (seq.Direction == SegmentDirection.BtoA)
+                
+                foreach (var point in points)
                 {
-                    for (var index = segment.Points.Count - 1; index >= 0; index--)
-                    {
-                        var segmentPoint = segment.Points[index].Clone();
-                        segmentPoint.Index = routeTrackPointIndex++;
-                        trackPointsForRoute.Add(segmentPoint);
-                    }
+                    var segmentPoint = point.Clone();
+                    segmentPoint.Index = routeTrackPointIndex++;
+                    trackPointsForRoute.Add(segmentPoint);
                 }
             }
 
