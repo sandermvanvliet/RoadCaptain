@@ -161,7 +161,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             SimulationState = SimulationState.NotStarted;
 
             Segments = new List<Segment>();
-            
+
             Markers = new();
 
             var selectedSport = Sports.SingleOrDefault(s => s.IsSelected);
@@ -177,6 +177,8 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             {
                 selectedWorld.IsSelected = false;
             }
+
+            this.RaisePropertyChanged(nameof(Route));
 
             return CommandResult.Success();
         }
@@ -236,7 +238,10 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
                 TryLoadSegmentsForWorldAndSport(segmentStore);
             }
 
-            this.RaisePropertyChanged(nameof(Route));
+            if (args.PropertyName == nameof(Route.Sequence))
+            {
+                this.RaisePropertyChanged(nameof(Route));
+            }
         }
 
         private void TryLoadSegmentsForWorldAndSport(ISegmentStore segmentStore)
@@ -545,7 +550,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
 
         private async Task<CommandResult> ClearRoute()
         {
-            if(Route.IsTainted)
+            if (Route.IsTainted)
             {
                 var result = await _windowService.ShowClearRouteDialog();
 
@@ -562,6 +567,8 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             HighlightedMarker = null;
 
             SimulationState = SimulationState.NotStarted;
+
+            this.RaisePropertyChanged(nameof(Route));
 
             return commandResult;
         }
@@ -623,6 +630,8 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             {
                 Route.Load();
 
+                this.RaisePropertyChanged(nameof(Route));
+
                 return CommandResult.Success();
             }
             catch (Exception e)
@@ -642,6 +651,11 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             }
 
             world.IsSelected = true;
+
+            if (Route.ReadyToBuild)
+            {
+                this.RaisePropertyChanged(nameof(Route));
+            }
 
             return CommandResult.Success();
         }
@@ -668,6 +682,11 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             }
 
             sport.IsSelected = true;
+
+            if (Route.ReadyToBuild)
+            {
+                this.RaisePropertyChanged(nameof(Route));
+            }
 
             return CommandResult.Success();
         }
