@@ -545,11 +545,14 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
 
         private async Task<CommandResult> ClearRoute()
         {
-            var result = await _windowService.ShowClearRouteDialog();
-
-            if (result == MessageBoxResult.No)
+            if(Route.IsTainted)
             {
-                return CommandResult.Aborted();
+                var result = await _windowService.ShowClearRouteDialog();
+
+                if (result == MessageBoxResult.No)
+                {
+                    return CommandResult.Aborted();
+                }
             }
 
             var commandResult = Route.Clear();
