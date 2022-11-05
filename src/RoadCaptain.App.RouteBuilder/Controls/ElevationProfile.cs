@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Media;
+using Avalonia.Media.Imaging;
+using Avalonia.Skia;
 using RoadCaptain.App.RouteBuilder.ViewModels;
 
 namespace RoadCaptain.App.RouteBuilder.Controls
@@ -20,7 +22,9 @@ namespace RoadCaptain.App.RouteBuilder.Controls
         public static readonly DirectProperty<ElevationProfile, bool> ShowClimbsProperty = AvaloniaProperty.RegisterDirect<ElevationProfile, bool>(nameof(ShowClimbs), map => map.ShowClimbs, (map, value) => map.ShowClimbs = value);
 
         private RouteViewModel? _route;
-        
+        private RenderTargetBitmap? _renderTarget;
+        private ISkiaDrawingContextImpl? _skiaContext;
+
         public RouteViewModel? Route
         {
             get => _route;
@@ -97,6 +101,24 @@ namespace RoadCaptain.App.RouteBuilder.Controls
             {
                 context.Custom(_renderOperation);
             }
+
+            if (_renderTarget != null)
+            {
+                RenderElevationProfile();
+
+                context
+                    .DrawImage(
+                        _renderTarget,
+                        new Rect(0, 0, _renderTarget.PixelSize.Width, _renderTarget.PixelSize.Height),
+                        new Rect(0, 0, Bounds.Width, Bounds.Height));
+            }
+        }
+
+        private void InitializeRenderTarget()
+        {
+            _renderTarget = new RenderTargetBitmap(new PixelSize((int)Bounds.Width, (int)Bounds.Height));
+            var context = _renderTarget.CreateDrawingContext(null);
+            _skiaContext = context as ISkiaDrawingContextImpl;
         }
 
         protected override Size MeasureOverride(Size availableSize)
@@ -117,10 +139,20 @@ namespace RoadCaptain.App.RouteBuilder.Controls
                 // as we're drawing _inside_ of the control, not the parent.
                 _renderOperation.Bounds = new Rect(0, 0, Bounds.Width, Bounds.Height);
 
+                InitializeRenderTarget();
+
                 InvalidateVisual();
             }
 
             base.OnPropertyChanged(change);
+        }
+
+        private void RenderElevationProfile()
+        {
+            if (_skiaContext != null)
+            {
+                _renderOperation.Render(_skiaContext);
+            }
         }
     }
 }

@@ -250,7 +250,7 @@ namespace RoadCaptain.App.RouteBuilder.Controls
         {
             canvas.Clear(CanvasBackgroundColor);
 
-            if (_elevationPath != null && _elevationPath.PointCount > 0)
+            if (_elevationPath is { PointCount: > 0 })
             {
                 // Flip the canvas because otherwise the elevation is upside down
                 canvas.Save();
@@ -372,8 +372,7 @@ namespace RoadCaptain.App.RouteBuilder.Controls
                     Distance = TrackPoint.GetDistanceFromLatLonInMeters(point.Latitude, point.Longitude,
                         climbMarkerPoint.Latitude, climbMarkerPoint.Longitude)
                 })
-                .OrderBy(x => x.Distance)
-                .FirstOrDefault()
+                .MinBy(x => x.Distance)
                 ?.Point;
         }
 
