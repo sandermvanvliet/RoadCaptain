@@ -81,7 +81,6 @@ namespace RoadCaptain.App.RouteBuilder.Views
             switch (e.PropertyName)
             {
                 case nameof(ViewModel.SelectedSegment):
-                case nameof(ViewModel.SegmentPaths):
                     // Reset any manually selected item in the list
                     using (ZwiftMap.BeginUpdate())
                     {
