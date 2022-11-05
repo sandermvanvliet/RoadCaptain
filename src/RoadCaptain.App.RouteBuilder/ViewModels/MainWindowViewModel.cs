@@ -19,7 +19,6 @@ using CommandResult = RoadCaptain.App.Shared.Commands.CommandResult;
 using RelayCommand = RoadCaptain.App.Shared.Commands.RelayCommand;
 using Result = RoadCaptain.App.Shared.Commands.Result;
 using RoadCaptain.Ports;
-using SkiaSharp;
 
 namespace RoadCaptain.App.RouteBuilder.ViewModels
 {
@@ -162,8 +161,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             SimulationState = SimulationState.NotStarted;
 
             Segments = new List<Segment>();
-            SegmentPaths.Clear();
-
+            
             Markers = new();
 
             var selectedSport = Sports.SingleOrDefault(s => s.IsSelected);
@@ -252,7 +250,6 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
 
         public MainWindowModel Model { get; }
         public RouteViewModel Route { get; set; }
-        public Dictionary<string, SKPath> SegmentPaths { get; } = new();
 
         public List<Segment> Markers
         {
