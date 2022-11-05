@@ -249,7 +249,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
         }
 
         public MainWindowModel Model { get; }
-        public RouteViewModel Route { get; set; }
+        public RouteViewModel Route { get; }
 
         public List<Segment> Markers
         {

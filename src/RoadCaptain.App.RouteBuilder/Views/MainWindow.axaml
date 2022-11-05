@@ -115,7 +115,7 @@
 				VerticalAlignment="Bottom"
 				HorizontalAlignment="Stretch"
                 Segments="{Binding Path=Segments}"
-                Route="{Binding Path=Route}"
+                Route="{Binding Path=Route,Mode=OneWay}"
                 RiderPosition="{Binding Path=RiderPosition}"
                 ShowClimbs="{Binding Path=ShowClimbs}"
                 Markers="{Binding Path=Markers}"
@@ -299,7 +299,7 @@
                 Grid.Row="0"
                 CornerRadius="0,5,0,0" Background="#1192CC" BorderBrush="#cccccc"
                             HorizontalAlignment="Stretch" Padding="8,4,0,0" Height="56">
-					<StackPanel DataContext="{Binding Path=ViewModel.Route,RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}" Orientation="Vertical" VerticalAlignment="Top">
+					<StackPanel DataContext="{Binding Path=ViewModel.Route,RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window},Mode=OneWay}" Orientation="Vertical" VerticalAlignment="Top">
 						<StackPanel Orientation="Horizontal" Height="30">
 							<TextBlock Text="{Binding Path=TotalDistance,StringFormat=\{0:0.0\}}" FontSize="26" Foreground="White" FontWeight="Bold" VerticalAlignment="Bottom"/>
 							<TextBlock Text="km" FontSize="16" Foreground="White" FontWeight="Bold" VerticalAlignment="Bottom" Padding="2,0,0,2"/>
