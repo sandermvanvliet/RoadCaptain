@@ -82,7 +82,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
 
             ClearRouteCommand = new AsyncRelayCommand(
                     _ => ClearRoute(),
-                    _ => Route.ReadyToBuild && Route.Sequence.Any())
+                    _ => Route.ReadyToBuild && Route.IsTainted)
                 .SubscribeTo(this, () => Route.Sequence)
                 .SubscribeTo(this, () => Route.ReadyToBuild)
                 .OnSuccess(_ => Model.StatusBarInfo("Route cleared"))
