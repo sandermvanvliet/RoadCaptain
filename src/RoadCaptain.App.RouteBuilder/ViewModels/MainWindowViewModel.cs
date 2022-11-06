@@ -54,6 +54,9 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             _windowService = windowService;
             _worldStore = worldStore;
             _userPreferences = userPreferences;
+            _showClimbs = _userPreferences.ShowClimbs;
+            _showSprints = _userPreferences.ShowSprints;
+            _showElevationPlot = _userPreferences.ShowElevationPlot;
 
             Model = new MainWindowModel();
             _worlds = worldStore.LoadWorlds().Select(world => new WorldViewModel(world)).ToArray();
@@ -328,6 +331,8 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             {
                 if (value == _showClimbs) return;
                 _showClimbs = value;
+                _userPreferences.ShowClimbs = _showClimbs;
+                _userPreferences.Save();
                 this.RaisePropertyChanged();
             }
         }
@@ -339,6 +344,8 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             {
                 if (value == _showSprints) return;
                 _showSprints = value;
+                _userPreferences.ShowSprints = _showSprints;
+                _userPreferences.Save();
                 this.RaisePropertyChanged();
             }
         }
@@ -350,6 +357,8 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             {
                 if (value == _showElevationPlot) return;
                 _showElevationPlot = value;
+                _userPreferences.ShowElevationPlot = _showElevationPlot;
+                _userPreferences.Save();
                 this.RaisePropertyChanged();
             }
         }
