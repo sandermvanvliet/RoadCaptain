@@ -38,6 +38,7 @@
 		<None Remove=".gitignore" />
 	</ItemGroup>
 	<ItemGroup>
+		<PackageReference Include="Codenizer.Avalonia.Map" Version="0.1.0" />
 		<PackageReference Include="JetBrains.Annotations" Version="10.3.0" />
 		<PackageReference Include="Serilog.Sinks.Debug" Version="2.0.0" />
 		<PackageReference Include="XamlNameReferenceGenerator" Version="1.3.4" />
@@ -72,10 +73,5 @@
 		<None Include="..\RoadCaptain.App.Shared\icon.icns" Link="icon.icns">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</None>
-	</ItemGroup>
-	<ItemGroup>
-	  <Reference Include="Codenizer.Avalonia.Map">
-	    <HintPath>..\..\..\MapTest\Codenizer.Avalonia.Map\bin\Debug\net6.0\Codenizer.Avalonia.Map.dll</HintPath>
-	  </Reference>
 	</ItemGroup>
 </Project>
