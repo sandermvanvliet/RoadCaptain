@@ -285,8 +285,12 @@
 				<StackPanel Orientation="Horizontal">
 					<Button Content="+" Click="ZoomIn_Click" ToolTip.Tip="Zoom in" IsEnabled="{Binding Path=Route.ReadyToBuild}" IsVisible="{Binding Path=Route.ReadyToBuild}" Classes="toolbar" />
 					<Button Content="-" Click="ZoomOut_Click" ToolTip.Tip="Zoom out" IsEnabled="{Binding Path=Route.ReadyToBuild}" IsVisible="{Binding Path=Route.ReadyToBuild}" Classes="toolbar" />
-					<Button Content="◻" Click="ResetZoom_Click" ToolTip.Tip="Fit to screen" IsEnabled="{Binding Path=Route.ReadyToBuild}" IsVisible="{Binding Path=Route.ReadyToBuild}" Classes="toolbar" />
-					<Button Content="/" Click="ZoomRoute_Click" ToolTip.Tip="Fit to route" IsEnabled="{Binding Path=Route.ReadyToBuild}" IsVisible="{Binding Path=Route.ReadyToBuild}" Classes="toolbar" />
+					<Button Click="ResetZoom_Click" ToolTip.Tip="Fit to screen" IsEnabled="{Binding Path=Route.ReadyToBuild}" IsVisible="{Binding Path=Route.ReadyToBuild}" Classes="toolbar">
+                        <Image Source="../Assets/four-arrows-outward.png" Margin="2" />
+					</Button>
+					<Button Click="ZoomRoute_Click" ToolTip.Tip="Fit to route" IsEnabled="{Binding Path=Route.ReadyToBuild}" IsVisible="{Binding Path=Route.ReadyToBuild}" Classes="toolbar">
+                        <Image Source="../Assets/four-arrows-inward.png" Margin="2" />
+                    </Button>
 				</StackPanel>
 			</WrapPanel>
 
