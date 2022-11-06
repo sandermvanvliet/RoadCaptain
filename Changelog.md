@@ -11,12 +11,14 @@ There have also been a bunch of tweaks to the user interface to provide more and
 ### Route Builder
 
 - Show the segment id when hovering over the segment name in the route list
-- The window state (size and position) are now stored in the user preferences
+- The window state (size and position) are now stored in the user preferences so that the next time you open Route Builder it appears where you left off.
+- You can now zoom to your route by clicking the 4 outward pointing arrows in the toolbar. This will zoom in to show the entire route.
 - Show sprints, KOMs and Strava segments along the route on the main screen and improved the styling of the KOM and sprint segments on the map to make it look more "Zwifty" [#51](https://github.com/sandermvanvliet/RoadCaptain/issues/51)
 ![Screenshot of Road Captain route builder showing special segments](./images/routebuilder-markers.png)
 - Spawn point now show the direction so it's easier to understand in which direction you can build a route [#48](https://github.com/sandermvanvliet/RoadCaptain/issues/48), [#49](https://github.com/sandermvanvliet/RoadCaptain/issues/49): ![Direction marker on spawn point segment](./images/spawn-point-direction.png)
 - The elevation plot now has colorized grade indications so you can see more easily how hard the cilmbs are! ![Color grading on elevation plot](./images/route-builder-grades.png)
 - The show climbs, show sprints and show elevation plot check boxes are now stored in the user preferences.
+- Building loops has been improved so you don't get the "do you want to make a loop" question too often (and sometimes wrongly!)
 
 ### Runner
 
