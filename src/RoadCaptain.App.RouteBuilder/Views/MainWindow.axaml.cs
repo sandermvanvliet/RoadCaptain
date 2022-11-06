@@ -116,11 +116,11 @@ namespace RoadCaptain.App.RouteBuilder.Views
                         if (ViewModel.RiderPosition == null)
                         {
                             routePath.Reset();
-                            routePath.IsVisible = false;
+                            routePath.ShowFullPath = false;
                         }
                         else
                         {
-                            routePath.IsVisible = true;
+                            routePath.ShowFullPath = true;
                             routePath.MoveNext();
                         }
                     }

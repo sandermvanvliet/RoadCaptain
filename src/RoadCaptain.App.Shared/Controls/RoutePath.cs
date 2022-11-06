@@ -21,12 +21,15 @@ namespace RoadCaptain.App.Shared.Controls
 
         protected override void RenderCore(SKCanvas canvas)
         {
-            if (!_path.Points.Any() || !IsVisible)
+            if (!_path.Points.Any())
             {
                 return;
             }
-            
-            canvas.DrawPath(_path, SkiaPaints.RoutePathPaint);
+
+            if (ShowFullPath)
+            {
+                canvas.DrawPath(_path, SkiaPaints.RoutePathPaint);
+            }
             
             canvas.DrawCircle(_path.Points[0], CircleMarkerRadius, SkiaPaints.CircleMarkerPaint);
             canvas.DrawCircle(_path.Points[0], CircleMarkerRadius - SkiaPaints.CircleMarkerPaint.StrokeWidth, SkiaPaints.StartMarkerFillPaint);
@@ -41,10 +44,11 @@ namespace RoadCaptain.App.Shared.Controls
             }
         }
 
-        public override bool IsVisible { get; set; }
+        public override bool IsVisible { get; set; } = true;
         public override string Name { get; }
         public override SKRect Bounds { get; }
         public override bool IsSelectable { get; set; } = false;
+        public bool ShowFullPath { get; set; }
 
         public SKPoint? Current
         {
