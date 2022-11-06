@@ -6,17 +6,24 @@ With this release a lot of work has been done behind the scenes to keep the app 
 
 Ultimately you _should_ notice less quirky behaviour at times which means you can keep focusing on riding instead of checking whether the app still works!
 
+There have also been a bunch of tweaks to the user interface to provide more and better information in both Route Builder and Runner. See below for the details!
+
 ### Route Builder
 
 - Show the segment id when hovering over the segment name in the route list
 - The window state (size and position) are now stored in the user preferences
-- Show sprints, KOMs and Strava segments along the route on the main screen [#51](https://github.com/sandermvanvliet/RoadCaptain/issues/51)
+- Show sprints, KOMs and Strava segments along the route on the main screen and improved the styling of the KOM and sprint segments on the map to make it look more "Zwifty" [#51](https://github.com/sandermvanvliet/RoadCaptain/issues/51)
 ![Screenshot of Road Captain route builder showing special segments](./images/routebuilder-markers.png)
 - Spawn point now show the direction so it's easier to understand in which direction you can build a route [#48](https://github.com/sandermvanvliet/RoadCaptain/issues/48), [#49](https://github.com/sandermvanvliet/RoadCaptain/issues/49): ![Direction marker on spawn point segment](./images/spawn-point-direction.png)
 - The elevation plot now has colorized grade indications so you can see more easily how hard the cilmbs are! ![Color grading on elevation plot](./images/route-builder-grades.png)
 - The show climbs, show sprints and show elevation plot check boxes are now stored in the user preferences.
 
 ### Runner
+
+A big change in this release is the main screen of the Runner which has been updated to show the animated map of the route as well as the KOMs and sprints that you will pass along the route:
+![Screenshot of Road Captain runner showing special segments](./images/runner-0690-view.png)
+
+Additionally the following improvements and fixes have been made:
 
 - Automatically re-initialize the Zwift connection when the connection secret doesn't match
 - Removed the "Start new loop at end of route" as that is now handled by actual looped routes built with RouteBuilder
@@ -27,8 +34,6 @@ Ultimately you _should_ notice less quirky behaviour at times which means you ca
   - Show "Entered the game" when the activity starts
   - Show "Riding to start of route" when the activity started but you are not yet on the starting segment of the route
   - Show "Heading the wrong way" when you're on the starting segment of a route but heading in the wrong direction
-- Show sprints, KOMs and Strava segments along the route on the main screen [#51](https://github.com/sandermvanvliet/RoadCaptain/issues/51)
-![Screenshot of Road Captain runner showing special segments](./images/runner-markers.png)
 - Fix an issue where RoadCaptain would flip between on/off route very quickly many times
 - Fix an issue where the in-game window would only show the Zwift route to start without any other instruction when clicking "Let's go" and Zwift is not yet started
 - Fix an issue where the in-game window would appear off-screen
