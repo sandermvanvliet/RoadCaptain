@@ -17,5 +17,9 @@ namespace RoadCaptain.App.Shared.UserPreferences
         public Version? LastOpenedVersion { get; set; }
         [JsonConverter(typeof(CapturedWindowLocationConverter))]
         public CapturedWindowLocation? RouteBuilderWindowLocation { get; set; }
+
+        public bool ShowClimbs { get; set; }
+        public bool ShowSprints { get; set; }
+        public bool ShowElevationPlot { get; set; }
     }
 }

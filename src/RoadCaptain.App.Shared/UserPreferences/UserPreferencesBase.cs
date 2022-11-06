@@ -44,6 +44,9 @@ namespace RoadCaptain.App.Shared.UserPreferences
         public Version LastOpenedVersion { get; set; } = new(0, 0, 0, 0);
         public byte[]? ConnectionSecret { get; }
         public CapturedWindowLocation? RouteBuilderLocation { get; set; }
+        public bool ShowSprints { get; set; }
+        public bool ShowClimbs { get; set; }
+        public bool ShowElevationPlot { get; set; }
 
         public void Load()
         {
@@ -68,6 +71,9 @@ namespace RoadCaptain.App.Shared.UserPreferences
                     InGameWindowLocation = storageObject.InGameWindowLocation;
                     RouteBuilderLocation = storageObject.RouteBuilderWindowLocation;
                     LastOpenedVersion = storageObject.LastOpenedVersion ?? new Version(0, 0, 0, 0);
+                    ShowClimbs = storageObject.ShowClimbs;
+                    ShowSprints = storageObject.ShowSprints;
+                    ShowElevationPlot = storageObject.ShowElevationPlot;
                 }
             }
             catch
@@ -95,7 +101,10 @@ namespace RoadCaptain.App.Shared.UserPreferences
                 RouteBuilderWindowLocation = RouteBuilderLocation,
                 LastUsedFolder = LastUsedFolder,
                 Route = Route,
-                LastOpenedVersion = GetType().Assembly.GetName().Version ?? new Version(0, 0, 0, 0)
+                LastOpenedVersion = GetType().Assembly.GetName().Version ?? new Version(0, 0, 0, 0),
+                ShowClimbs = ShowClimbs,
+                ShowSprints = ShowSprints,
+                ShowElevationPlot = ShowElevationPlot
             };
 
             var serializedContents = JsonConvert.SerializeObject(storageObject, Formatting.Indented, _serializerSettings);

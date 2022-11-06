@@ -116,12 +116,12 @@ namespace RoadCaptain
             return (Math.Atan2(y, x) + Math.PI * 2) % (Math.PI * 2) * RadToDegree;
         }
 
-        private static double DegreesToRadians(double angle)
+        public static double DegreesToRadians(double angle)
         {
             return angle * PiRad;
         }
 
-        public bool Equals(TrackPoint other)
+        public bool Equals(TrackPoint? other)
         {
             if (ReferenceEquals(null, other))
             {
@@ -138,7 +138,7 @@ namespace RoadCaptain
                    Math.Abs(Altitude - other.Altitude) < CoordinateEqualityTolerance;
         }
 
-        public static bool Equals(TrackPoint a, TrackPoint b)
+        public static bool Equals(TrackPoint? a, TrackPoint? b)
         {
             if (a == null || b == null)
             {
@@ -148,7 +148,7 @@ namespace RoadCaptain
             return a.Equals(b);
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (ReferenceEquals(null, obj))
             {

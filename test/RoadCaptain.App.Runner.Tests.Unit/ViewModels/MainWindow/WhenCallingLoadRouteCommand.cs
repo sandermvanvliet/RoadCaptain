@@ -27,7 +27,8 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.MainWindow
                 routeStore,
                 null,
                 new SegmentStore(),
-                new NoZwiftCredentialCache());
+                new NoZwiftCredentialCache(),
+                new NopMonitoringEvents());
         }
 
         [Fact]

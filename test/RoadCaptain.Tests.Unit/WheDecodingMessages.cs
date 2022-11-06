@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using FluentAssertions;
+using RoadCaptain.Ports;
 using RoadCaptain.UseCases;
 using Xunit;
 
@@ -17,12 +18,14 @@ namespace RoadCaptain.Tests.Unit
         private readonly InMemoryMessageReceiver _messageReceiver;
         private readonly DecodeIncomingMessagesUseCase _useCase;
         private readonly InMemoryMessageEmitter _messageEmitter;
+        private readonly ControllableZwiftCrypto _controllableZwiftCrypto;
 
         public WheDecodingMessages()
         {
             _messageReceiver = new InMemoryMessageReceiver();
             _messageEmitter = new InMemoryMessageEmitter();
-            _useCase = new DecodeIncomingMessagesUseCase(_messageReceiver, _messageEmitter, new NopMonitoringEvents(), null, null);
+            _controllableZwiftCrypto = new ControllableZwiftCrypto();
+            _useCase = new DecodeIncomingMessagesUseCase(_messageReceiver, _messageEmitter, new NopMonitoringEvents(), _controllableZwiftCrypto, null);
         }
 
         [Fact]
@@ -126,6 +129,21 @@ namespace RoadCaptain.Tests.Unit
             }
         }
 
+        [Fact]
+        public void GivenWrongProtocolVersionInPayload_NoMessageIsEmitted()
+        {
+            _controllableZwiftCrypto.DecryptionResult = new DecryptionFailedResult("Unsupported protocol version 12");
+            
+            GivenBytesOnNetwork(new byte[] { 0x2, 0x3, 0x4 }, new byte[] { 0x5, 0x6});
+
+            WhenReceivingMessage();
+
+            _messageEmitter
+                .Messages
+                .Should()
+                .BeEmpty();
+        }
+
         private void WhenReceivingMessage()
         {
             var cancellationTokenSource = new CancellationTokenSource(50);
@@ -133,7 +151,7 @@ namespace RoadCaptain.Tests.Unit
             try
             {
                 _useCase
-                    .ExecuteAsync(cancellationTokenSource.Token) // Always in cancelled state because otherwise the usecasse remains in an infinite loop
+                    .ExecuteAsync(cancellationTokenSource.Token) // Always in cancelled state because otherwise the use case remains in an infinite loop
                     .GetAwaiter()
                     .GetResult();
             }

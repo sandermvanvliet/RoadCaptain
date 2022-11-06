@@ -19,7 +19,6 @@ using CommandResult = RoadCaptain.App.Shared.Commands.CommandResult;
 using RelayCommand = RoadCaptain.App.Shared.Commands.RelayCommand;
 using Result = RoadCaptain.App.Shared.Commands.Result;
 using RoadCaptain.Ports;
-using SkiaSharp;
 
 namespace RoadCaptain.App.RouteBuilder.ViewModels
 {
@@ -47,13 +46,17 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
         private bool _showElevationPlot;
         private Segment? _highlightedMarker;
 
-        public MainWindowViewModel(IRouteStore routeStore, ISegmentStore segmentStore, IVersionChecker versionChecker, IWindowService windowService, IWorldStore worldStore, IUserPreferences userPreferences)
+        public MainWindowViewModel(IRouteStore routeStore, ISegmentStore segmentStore, IVersionChecker versionChecker,
+            IWindowService windowService, IWorldStore worldStore, IUserPreferences userPreferences)
         {
             _segments = new List<Segment>();
             _versionChecker = versionChecker;
             _windowService = windowService;
             _worldStore = worldStore;
             _userPreferences = userPreferences;
+            _showClimbs = _userPreferences.ShowClimbs;
+            _showSprints = _userPreferences.ShowSprints;
+            _showElevationPlot = _userPreferences.ShowElevationPlot;
 
             Model = new MainWindowModel();
             _worlds = worldStore.LoadWorlds().Select(world => new WorldViewModel(world)).ToArray();
@@ -89,7 +92,8 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
                 .OnFailure(_ => Model.StatusBarError("Failed to clear route because: {0}", _.Message));
 
             SelectSegmentCommand = new AsyncRelayCommand(
-                    _ => SelectSegment(_ as Segment ?? throw new ArgumentNullException(nameof(RelayCommand.CommandParameter))),
+                    _ => SelectSegment(_ as Segment ??
+                                       throw new ArgumentNullException(nameof(RelayCommand.CommandParameter))),
                     _ => true)
                 .OnSuccess(_ => Model.StatusBarInfo("Added segment"))
                 .OnSuccessWithMessage(_ => Model.StatusBarInfo("Added segment {0}", _.Message))
@@ -99,14 +103,8 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
                     _ => RemoveLastSegment(),
                     _ => Route.Sequence.Any())
                 .SubscribeTo(this, () => Route.Sequence)
-                .OnSuccess(_ =>
-                {
-                    Model.StatusBarInfo("Removed segment");
-                })
-                .OnSuccessWithMessage(_ =>
-                {
-                    Model.StatusBarInfo("Removed segment {0}", _.Message);
-                })
+                .OnSuccess(_ => { Model.StatusBarInfo("Removed segment"); })
+                .OnSuccessWithMessage(_ => { Model.StatusBarInfo("Removed segment {0}", _.Message); })
                 .OnFailure(_ => Model.StatusBarWarning(_.Message));
 
             SimulateCommand = new RelayCommand(
@@ -119,11 +117,13 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
                 _ => !string.IsNullOrEmpty(_ as string));
 
             SelectWorldCommand = new RelayCommand(
-                _ => SelectWorld(_ as WorldViewModel ?? throw new ArgumentNullException(nameof(RelayCommand.CommandParameter))),
+                _ => SelectWorld(_ as WorldViewModel ??
+                                 throw new ArgumentNullException(nameof(RelayCommand.CommandParameter))),
                 _ => (_ as WorldViewModel)?.CanSelect ?? false);
 
             SelectSportCommand = new AsyncRelayCommand(
-                _ => SelectSport(_ as SportViewModel ?? throw new ArgumentNullException(nameof(RelayCommand.CommandParameter))),
+                _ => SelectSport(_ as SportViewModel ??
+                                 throw new ArgumentNullException(nameof(RelayCommand.CommandParameter))),
                 _ => _ is SportViewModel);
 
             ResetDefaultSportCommand = new RelayCommand(
@@ -131,8 +131,8 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
                 _ => true);
 
             ResetWorldCommand = new AsyncRelayCommand(
-                _ => ResetWorldAndSport(),
-                _ => Route.World != null)
+                    _ => ResetWorldAndSport(),
+                    _ => Route.World != null)
                 .SubscribeTo(this, () => Route.World);
 
             Version = GetType().Assembly.GetName().Version?.ToString(4) ?? "0.0.0.0";
@@ -164,7 +164,6 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             SimulationState = SimulationState.NotStarted;
 
             Segments = new List<Segment>();
-            SegmentPaths.Clear();
 
             Markers = new();
 
@@ -181,6 +180,8 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             {
                 selectedWorld.IsSelected = false;
             }
+
+            this.RaisePropertyChanged(nameof(Route));
 
             return CommandResult.Success();
         }
@@ -206,7 +207,8 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             {
                 var sport = Sports
                     .SingleOrDefault(s =>
-                        (_userPreferences.DefaultSport ?? "").Equals(s.Sport.ToString(), StringComparison.InvariantCultureIgnoreCase));
+                        (_userPreferences.DefaultSport ?? "").Equals(s.Sport.ToString(),
+                            StringComparison.InvariantCultureIgnoreCase));
 
                 if (sport != null)
                 {
@@ -239,7 +241,10 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
                 TryLoadSegmentsForWorldAndSport(segmentStore);
             }
 
-            this.RaisePropertyChanged(nameof(Route));
+            if (args.PropertyName == nameof(Route.Sequence))
+            {
+                this.RaisePropertyChanged(nameof(Route));
+            }
         }
 
         private void TryLoadSegmentsForWorldAndSport(ISegmentStore segmentStore)
@@ -252,8 +257,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
         }
 
         public MainWindowModel Model { get; }
-        public RouteViewModel Route { get; set; }
-        public Dictionary<string, SKPath> SegmentPaths { get; } = new();
+        public RouteViewModel Route { get; }
 
         public List<Segment> Markers
         {
@@ -327,6 +331,8 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             {
                 if (value == _showClimbs) return;
                 _showClimbs = value;
+                _userPreferences.ShowClimbs = _showClimbs;
+                _userPreferences.Save();
                 this.RaisePropertyChanged();
             }
         }
@@ -338,6 +344,8 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             {
                 if (value == _showSprints) return;
                 _showSprints = value;
+                _userPreferences.ShowSprints = _showSprints;
+                _userPreferences.Save();
                 this.RaisePropertyChanged();
             }
         }
@@ -349,6 +357,8 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             {
                 if (value == _showElevationPlot) return;
                 _showElevationPlot = value;
+                _userPreferences.ShowElevationPlot = _showElevationPlot;
+                _userPreferences.Save();
                 this.RaisePropertyChanged();
             }
         }
@@ -476,15 +486,16 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
 
         private async Task CheckForPossibleLoop()
         {
-            var result = Route.IsPossibleLoop();
+            var (isLoop, startIndex, endIndex) = Route.IsPossibleLoop();
 
-            if (result.Item1)
+            if (isLoop)
             {
                 var shouldCreateLoop = await _windowService.ShowRouteLoopDialog();
 
                 if (shouldCreateLoop)
                 {
-                    Route.MakeLoop(result.Item2.Value, result.Item3.Value);
+                    Route.MakeLoop(startIndex.Value, endIndex.Value);
+                    this.RaisePropertyChanged(nameof(Route));
                 }
             }
         }
@@ -548,11 +559,14 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
 
         private async Task<CommandResult> ClearRoute()
         {
-            var result = await _windowService.ShowClearRouteDialog();
-
-            if (result == MessageBoxResult.No)
+            if (Route.IsTainted)
             {
-                return CommandResult.Aborted();
+                var result = await _windowService.ShowClearRouteDialog();
+
+                if (result == MessageBoxResult.No)
+                {
+                    return CommandResult.Aborted();
+                }
             }
 
             var commandResult = Route.Clear();
@@ -562,6 +576,8 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             HighlightedMarker = null;
 
             SimulationState = SimulationState.NotStarted;
+
+            this.RaisePropertyChanged(nameof(Route));
 
             return commandResult;
         }
@@ -623,6 +639,8 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             {
                 Route.Load();
 
+                this.RaisePropertyChanged(nameof(Route));
+
                 return CommandResult.Success();
             }
             catch (Exception e)
@@ -642,6 +660,11 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             }
 
             world.IsSelected = true;
+
+            if (Route.ReadyToBuild)
+            {
+                this.RaisePropertyChanged(nameof(Route));
+            }
 
             return CommandResult.Success();
         }
@@ -669,6 +692,11 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
 
             sport.IsSelected = true;
 
+            if (Route.ReadyToBuild)
+            {
+                this.RaisePropertyChanged(nameof(Route));
+            }
+
             return CommandResult.Success();
         }
 
@@ -677,6 +705,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             if (_simulationTask != null && SimulationState == SimulationState.Running)
             {
                 SimulationState = SimulationState.Completed;
+                RiderPosition = null;
                 return CommandResult.Success();
             }
 
@@ -709,7 +738,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
                 while (SimulationState == SimulationState.Running && simulationIndex < routePoints.Count)
                 {
                     RiderPosition = routePoints[simulationIndex++];
-                    Thread.Sleep(15);
+                    Thread.Sleep(40);
                 }
 
                 SimulationState = SimulationState.Completed;
@@ -763,7 +792,8 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             {
                 if (value == _version) return;
                 _version = value;
-                ChangelogUri = $"https://github.com/sandermvanvliet/RoadCaptain/blob/main/Changelog.md/#{Version.Replace(".", "")}";
+                ChangelogUri =
+                    $"https://github.com/sandermvanvliet/RoadCaptain/blob/main/Changelog.md/#{Version.Replace(".", "")}";
                 this.RaisePropertyChanged();
             }
         }
@@ -810,6 +840,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
                 {
                     return;
                 }
+
                 _highlightedSegment = value;
                 this.RaisePropertyChanged();
             }
@@ -912,4 +943,3 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
         }
     }
 }
-

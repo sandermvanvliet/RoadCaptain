@@ -17,6 +17,9 @@ namespace RoadCaptain.App.RouteBuilder.Tests.Unit
         public Version LastOpenedVersion { get; set; }
         public byte[] ConnectionSecret { get; }
         public CapturedWindowLocation? RouteBuilderLocation { get; set; }
+        public bool ShowSprints { get; set; }
+        public bool ShowClimbs { get; set; }
+        public bool ShowElevationPlot { get; set; }
 
         public void Load()
         {

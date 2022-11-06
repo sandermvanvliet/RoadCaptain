@@ -3,7 +3,6 @@
 // See LICENSE or https://choosealicense.com/licenses/artistic-2.0/
 
 using System;
-using System.Threading.Tasks;
 using RoadCaptain.Ports;
 
 namespace RoadCaptain.Tests.Unit
@@ -29,11 +28,6 @@ namespace RoadCaptain.Tests.Unit
             }
 
             return AvailableBytes;
-        }
-
-        public Task StartAsync()
-        {
-            return Task.CompletedTask;
         }
 
         public void Shutdown()

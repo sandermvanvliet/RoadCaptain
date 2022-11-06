@@ -18,13 +18,14 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.MainWindow
         private readonly InMemoryGameStateDispatcher _gameStateDispatcher;
         private readonly DummyUserPreferences _userPreferences;
         private readonly Configuration _configuration;
+        private StubWindowService _windowService;
 
         public WhenCallingStartRouteCommand()
         {
             _gameStateDispatcher = new InMemoryGameStateDispatcher(new NopMonitoringEvents());
             _gameStateDispatcher.LoggedIn();
             
-            var windowService = new StubWindowService();
+            _windowService = new StubWindowService();
 
             _userPreferences = new DummyUserPreferences();
             _configuration = new Configuration(null);
@@ -33,19 +34,21 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.MainWindow
             _viewModel = new MainWindowViewModel(
                 _configuration,
                 _userPreferences,
-                windowService,
+                _windowService,
                 _gameStateDispatcher,
                 routeStore,
                 null, 
                 new SegmentStore(),
-                new NoZwiftCredentialCache());
+                new NoZwiftCredentialCache(),
+                new NopMonitoringEvents());
         }
 
 
         [Fact]
         public void RoutePathIsStoredInUserPreferences()
         {
-            _viewModel.RoutePath = "someroute.json";
+            _windowService.OpenFileDialogResult = "someroute.json";
+            _viewModel.LoadRouteCommand.Execute(null);
 
             StartRoute();
 
@@ -59,7 +62,8 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.MainWindow
         [Fact]
         public void RoutePathIsStoredInConfiguration()
         {
-            _viewModel.RoutePath = "someroute.json";
+            _windowService.OpenFileDialogResult = "someroute.json";
+            _viewModel.LoadRouteCommand.Execute(null);
 
             StartRoute();
 
@@ -72,7 +76,7 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.MainWindow
         [Fact]
         public void StartRouteIsDispatched()
         {
-            _viewModel.RoutePath = "someroute.json";
+            _windowService.OpenFileDialogResult = "someroute.json";
             _viewModel.LoadRouteCommand.Execute(null);
 
             StartRoute();

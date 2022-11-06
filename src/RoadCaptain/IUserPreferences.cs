@@ -16,6 +16,9 @@ namespace RoadCaptain
         Version LastOpenedVersion { get; set; }
         byte[]? ConnectionSecret { get; }
         CapturedWindowLocation? RouteBuilderLocation { get; set; }
+        bool ShowSprints { get; set; }
+        bool ShowClimbs { get; set; }
+        bool ShowElevationPlot { get; set; }
         void Load();
         void Save();
     }

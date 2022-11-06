@@ -19,12 +19,11 @@ namespace RoadCaptain.App.RouteBuilder.Controls
     public class ElevationProfileRenderOperation : ICustomDrawOperation
     {
         private static readonly SKColor CanvasBackgroundColor = SKColor.Parse("#FFFFFF");
-        private SKBitmap? _bitmap;
         private RouteViewModel? _route;
-        private SKPath? _elevationPath;
         private Rect _bounds;
         private float _altitudeOffset;
-        private readonly int _padding = 10;
+        private const float MarkerPadding = 30f;
+        private readonly float _padding = 10f + MarkerPadding;
         private double _altitudeScaleFactor = 1;
         private readonly List<float> _elevationLines = new();
         private readonly SKFont _defaultFont = new(SKTypeface.Default);
@@ -32,7 +31,38 @@ namespace RoadCaptain.App.RouteBuilder.Controls
         private float _step;
         private int _previousIndex;
         private TrackPoint? _riderPosition;
+        private List<ElevationGroup>? _elevationGroups;
+        private readonly SKPaint _textPaint;
+        private readonly SKPaint _fillPaint;
+        private readonly SKPaint _circlePaint;
+        private readonly SKFont _font;
+        private readonly float _offsetX;
+        private readonly float _offsetY;
+        private readonly SKPaint _squarePaint;
+        private readonly SKPaint _squarePaintAlternate;
+        private readonly SKPaint _linePaint;
+        private readonly SKPaint _finishCirclePaint;
+        private readonly SKPaint _finishLinePaint;
         private const int CircleMarkerRadius = 10;
+
+        public ElevationProfileRenderOperation() 
+        {
+            _textPaint = new SKPaint { Color = SKColor.Parse("#FFFFFF"), IsAntialias = true, Style = SKPaintStyle.Fill };
+            _fillPaint = new SKPaint { Color = SKColor.Parse("#fc4119"), IsAntialias = true, Style = SKPaintStyle.Fill };
+            _linePaint = new SKPaint { Color = SKColor.Parse("#fc4119"), IsAntialias = true, Style = SKPaintStyle.Stroke, StrokeWidth = 2, PathEffect = SKPathEffect.CreateDash(new [] { 4f, 2f}, 4) };
+            _finishLinePaint = new SKPaint { Color = SKColor.Parse("#000000"), IsAntialias = true, Style = SKPaintStyle.Stroke, StrokeWidth = 2, PathEffect = SKPathEffect.CreateDash(new [] { 4f, 2f}, 4) };
+            _circlePaint = new SKPaint { Color = SKColor.Parse("#FFFFFF"), IsAntialias = true, Style = SKPaintStyle.Stroke, StrokeWidth = 3 };
+            _finishCirclePaint = new SKPaint { Color = SKColor.Parse("#000000"), IsAntialias = true, Style = SKPaintStyle.Stroke, StrokeWidth = 3 };
+            
+            _squarePaint = new SKPaint { Color = SKColor.Parse("#000000"), Style = SKPaintStyle.Fill };
+            _squarePaintAlternate = new SKPaint { Color = SKColor.Parse("#FFFFFF"), Style = SKPaintStyle.Fill };
+
+            _font = new SKFont { Size = 16, Embolden = true };
+            var glyphs = _textPaint.GetGlyphs("K");
+            _font.MeasureText(glyphs, out var textBounds);
+            _offsetX = textBounds.Width / 2;
+            _offsetY = textBounds.Height / 2;
+        }
 
         public RouteViewModel? Route
         {
@@ -51,7 +81,6 @@ namespace RoadCaptain.App.RouteBuilder.Controls
             {
                 if (_bounds == value) return;
                 _bounds = value;
-                InitializeBitmap();
                 CreateElevationProfile();
             }
         }
@@ -96,15 +125,9 @@ namespace RoadCaptain.App.RouteBuilder.Controls
 
             canvas.Clear(CanvasBackgroundColor);
 
-            if (_bitmap is { Width: > 0 })
+            if (Bounds is { Width: > 0 })
             {
-                // TODO: Something smart so that we only render when actually needed
-                using (var mapCanvas = new SKCanvas(_bitmap))
-                {
-                    RenderCanvas(mapCanvas);
-                }
-
-                canvas.DrawBitmap(_bitmap, 0, 0);
+               RenderCanvas(canvas);
             }
         }
 
@@ -122,7 +145,7 @@ namespace RoadCaptain.App.RouteBuilder.Controls
         {
             if (Route == null || Segments == null || !Segments.Any() || !Route.Sequence.Any())
             {
-                _elevationPath = null;
+                _elevationGroups = null;
 
                 return;
             }
@@ -162,6 +185,9 @@ namespace RoadCaptain.App.RouteBuilder.Controls
 
             _routePoints = new List<TrackPoint>();
             
+            _elevationGroups = new List<ElevationGroup>();
+            ElevationGroup? currentGroup = null;
+
             foreach (var point in routePoints)
             {
                 var distanceFromLast = previousPoint == null
@@ -178,6 +204,31 @@ namespace RoadCaptain.App.RouteBuilder.Controls
                     Index = point.Index // Copy
                 };
 
+                var grade = previousPoint == null
+                    ? -1
+                    : CalculateBucketedGrade(previousPoint, newPoint, distanceFromLast);
+
+                if (currentGroup == null)
+                {
+                    currentGroup = new ElevationGroup();
+                    _elevationGroups.Add(currentGroup);
+                }
+                else if (Math.Abs(currentGroup.Grade - (-1)) < 0.1)
+                {
+                    currentGroup.Grade = grade;
+                }
+                else if (Math.Abs(currentGroup.Grade - grade) > 0.1 && currentGroup.Points.Count > 1)
+                {
+                    var lastPointOfLastGroup = currentGroup.Points.Last();
+                    currentGroup = new ElevationGroup
+                    {
+                        Grade = grade
+                    };
+                    currentGroup.Points.Add(lastPointOfLastGroup);
+                    _elevationGroups.Add(currentGroup);
+                }
+
+                currentGroup.Add(newPoint);
                 _routePoints.Add(newPoint);
 
                 previousPoint = point;
@@ -199,13 +250,20 @@ namespace RoadCaptain.App.RouteBuilder.Controls
             var totalDistanceMeters = Math.Round(_routePoints.Last().DistanceOnSegment, MidpointRounding.AwayFromZero);
 
             _step = (float)(Bounds.Width / totalDistanceMeters);
+            
+            foreach (var group in _elevationGroups)
+            {
+                var path = new SKPath();
+                var points = group
+                    .Points
+                    .Select(point => new SKPoint((float)(_step * point.DistanceOnSegment), CalculateYFromAltitude(point.Altitude)))
+                    .ToList();
 
-            var polyPoints = _routePoints
-                .Select(point => new SKPoint((float)(_step * point.DistanceOnSegment), CalculateYFromAltitude(point.Altitude)))
-                .ToArray();
-
-            _elevationPath = new SKPath();
-            _elevationPath.AddPoly(polyPoints, false);
+                points.Insert(0, new SKPoint(points[0].X, 0));
+                points.Add(new SKPoint(points.Last().X, 0));
+                path.AddPoly(points.ToArray());
+                group.Path = path;
+            }
 
             _elevationLines.Clear();
             _elevationLines.Add(0); // Always ensure sea-level exists
@@ -236,6 +294,34 @@ namespace RoadCaptain.App.RouteBuilder.Controls
             }
         }
 
+        private static double CalculateBucketedGrade(TrackPoint previousPoint, TrackPoint newPoint, double distanceFromLast)
+        {
+            var rawGrade = (Math.Abs(previousPoint.Altitude - newPoint.Altitude) / distanceFromLast) * 100;
+
+            if(rawGrade is > 0 and < 3)
+            {
+                return 0;
+            }
+            if(rawGrade is >= 3 and < 5)
+            {
+                return 3;
+            }
+            if(rawGrade is >= 5 and < 8)
+            {
+                return 5;
+            }
+            if(rawGrade is >= 8 and < 10)
+            {
+                return 8;
+            }
+            if(rawGrade >= 10)
+            {
+                return 10;
+            }
+
+            return rawGrade;
+        }
+
         private float CalculateYFromAltitude(double altitude)
         {
             return (float)((altitude + _altitudeOffset) * _altitudeScaleFactor) + _padding;
@@ -250,21 +336,17 @@ namespace RoadCaptain.App.RouteBuilder.Controls
         {
             canvas.Clear(CanvasBackgroundColor);
 
-            if (_elevationPath != null && _elevationPath.PointCount > 0)
+            if (_elevationGroups is { Count: > 0 })
             {
                 // Flip the canvas because otherwise the elevation is upside down
                 canvas.Save();
                 canvas.Scale(1, -1);
                 canvas.Translate(0, -(float)Bounds.Height);
-
-                var lastPoint = _elevationPath.Points.Last();
-                var backgroundPath = new SKPath();
-                backgroundPath.AddPoly(
-                    _elevationPath.Points.Concat(new[] { new SKPoint(lastPoint.X, 0), new SKPoint(0, 0) }).ToArray());
-
-                canvas.DrawPath(backgroundPath, SkiaPaints.ElevationPlotBackgroundPaint);
-
-                canvas.DrawPath(_elevationPath, SkiaPaints.ElevationPlotPaint);
+                
+                foreach (var group in _elevationGroups)
+                {
+                    canvas.DrawPath(group.Path, PaintForGrade(group.Grade));
+                }
 
                 if (RiderPosition != null && _routePoints != null)
                 {
@@ -292,7 +374,7 @@ namespace RoadCaptain.App.RouteBuilder.Controls
                 // Back to normal
                 canvas.Restore();
 
-                if (_routePoints != null && ShowClimbs && Markers!= null && Markers.Any())
+                if (_routePoints != null && Markers!= null && Markers.Any())
                 {
                     var climbMarkers = Markers.Where(m => m.Type == SegmentType.Climb).ToList();
 
@@ -313,8 +395,8 @@ namespace RoadCaptain.App.RouteBuilder.Controls
 
                         if (closestA != null && closestB != null && closestA.DistanceOnSegment < closestB.DistanceOnSegment)
                         {
-                            DrawClimbMarker(canvas, closestA, climbMarker.Name);
-                            DrawClimbMarker(canvas, closestB, null);
+                            DrawStartMarker(canvas, closestA);
+                            DrawFinishFlag(canvas, closestB);
                         }
                     }
                 }
@@ -339,31 +421,87 @@ namespace RoadCaptain.App.RouteBuilder.Controls
             }
         }
 
-        private void DrawClimbMarker(SKCanvas canvas, TrackPoint climbMarkerPoint, string? climbName)
+        private void DrawStartMarker(SKCanvas canvas, TrackPoint climbMarkerPoint)
         {
+            var radius = 12f;
             var x = (float)(_step * climbMarkerPoint.DistanceOnSegment);
-            canvas.DrawLine(
-                x,
-                0,
-                x,
-                (float)(Bounds.Height - _padding),
-                SkiaPaints.ElevationPlotClimbSegmentPaint);
+            var y = 1.5f * radius;
+            var startPoint = new SKPoint(x, y);
+            canvas.DrawCircle(startPoint, radius, _fillPaint);
+            canvas.DrawCircle(startPoint, radius, _circlePaint);
 
-            if (climbName != null)
+            canvas.DrawText("K", startPoint.X - _offsetX, startPoint.Y + _offsetY, _font, _textPaint);
+
+            canvas.DrawLine(x, y + radius, x, (float)(Bounds.Height), _linePaint );
+        }
+
+        private static SKPaint PaintForGrade(double grade)
+        {
+            switch (grade)
             {
-                canvas
-                    .DrawText(
-                        climbName,
-                        new SKPoint(
-                            x + 4,
-                            20),
-                        SkiaPaints.ElevationPlotClimbTextPaint
-                    );
+                case 0:
+                    return SkiaPaints.ElevationPlotGradeZeroPaint;
+                case 3:
+                    return SkiaPaints.ElevationPlotGradeThreePaint;
+                case 5:
+                    return SkiaPaints.ElevationPlotGradeFivePaint;
+                case 8:
+                    return SkiaPaints.ElevationPlotGradeEightPaint;
+                case 10:
+                    return SkiaPaints.ElevationPlotGradeTenPaint;
+                default:
+                    return SkiaPaints.ElevationPlotPaint;
+
             }
+        }
+
+        private void DrawFinishFlag(SKCanvas canvas, TrackPoint climbMarkerPoint)
+        {
+            var finishFlagWidth = 12f;
+
+            var x = (float)(_step * climbMarkerPoint.DistanceOnSegment);
+            var y = 1.5f * finishFlagWidth;
+
+            x -= (finishFlagWidth / 2);
+            y -= (finishFlagWidth / 2);
+
+            DrawFinishFlag(canvas, x, y, finishFlagWidth);
+
+            canvas.DrawLine(x + finishFlagWidth / 2, y + (1.5f * finishFlagWidth), x + finishFlagWidth / 2, (float)(Bounds.Height), _finishLinePaint);
+        }
+
+        private void DrawFinishFlag(SKCanvas canvas, float x, float y, float width)
+        {
+            const int numberOfSquares = 4;
+            var squareSize = width / numberOfSquares;
+
+            var boundsMidX = width / 2;
+
+            canvas.DrawCircle(x + boundsMidX, y + boundsMidX, boundsMidX + squareSize + _finishCirclePaint.StrokeWidth, _squarePaint);
+
+            for (var row = 0; row < numberOfSquares; row++)
+            {
+                for (var index = 0; index < numberOfSquares; index++)
+                {
+                    canvas.DrawRect(
+                        x + index * squareSize, 
+                        y + row * squareSize, 
+                        squareSize, 
+                        squareSize,
+                        index % 2 == row % 2 ? _squarePaint : _squarePaintAlternate);
+                }
+            }
+
+            canvas.DrawCircle(x + boundsMidX, y + boundsMidX, boundsMidX + squareSize, _circlePaint);
         }
 
         private TrackPoint? GetClosestPointOnRoute(TrackPoint climbMarkerPoint)
         {
+            if (_routePoints == null)
+            {
+                return null;
+            }
+
             return _routePoints
                 .Where(point => point.IsCloseTo(climbMarkerPoint))
                 .Select(point => new
@@ -372,8 +510,7 @@ namespace RoadCaptain.App.RouteBuilder.Controls
                     Distance = TrackPoint.GetDistanceFromLatLonInMeters(point.Latitude, point.Longitude,
                         climbMarkerPoint.Latitude, climbMarkerPoint.Longitude)
                 })
-                .OrderBy(x => x.Distance)
-                .FirstOrDefault()
+                .MinBy(x => x.Distance)
                 ?.Point;
         }
 
@@ -381,13 +518,6 @@ namespace RoadCaptain.App.RouteBuilder.Controls
         {
             canvas.DrawCircle(point, CircleMarkerRadius, SkiaPaints.CircleMarkerPaint);
             canvas.DrawCircle(point, CircleMarkerRadius - SkiaPaints.CircleMarkerPaint.StrokeWidth, fill);
-        }
-
-        private void InitializeBitmap()
-        {
-            _bitmap = new SKBitmap((int)Bounds.Width, (int)Bounds.Height, SKColorType.Bgra8888, SKAlphaType.Premul);
-
-            using var canvas = new SKCanvas(_bitmap);
         }
     }
 }

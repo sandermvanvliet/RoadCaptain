@@ -5,6 +5,7 @@
 using System;
 using FluentAssertions;
 using RoadCaptain.Adapters;
+using RoadCaptain.Ports;
 using Xunit;
 
 namespace RoadCaptain.Tests.Unit
@@ -36,7 +37,11 @@ namespace RoadCaptain.Tests.Unit
 
             byte[]? decrypted = null;
 
-            Action action = () => decrypted = doodle.Decrypt(new ByteBuffer(messageBytes).ToArray());
+            Action action = () =>
+            {
+                var decryptionResult = doodle.Decrypt(new ByteBuffer(messageBytes).ToArray()) as SuccessfulDecryptionResult;
+                decrypted = decryptionResult.Data;
+            };
 
             action
                 .Should()
