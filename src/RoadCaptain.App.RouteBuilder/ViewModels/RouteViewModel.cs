@@ -398,25 +398,32 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
                 return (false, null, null);
             }
 
-            var startNodes = Sequence
-                .Select((seq, index) =>
-                    new
-                    {
-                        Index = index,
-                        seq.SegmentId,
-                        seq.Direction,
-                        StartNode = seq.Direction == SegmentDirection.AtoB
-                            ? seq.Segment.NextSegmentsNodeA
-                            : seq.Segment.NextSegmentsNodeB,
-                        Seq = seq
-                    })
-                .ToList();
+            // Depending on the direction on the segment the next nodes
+            // that the last segment connects to are on NodeB or NodeA.
+            var lastNode = Last.Direction == SegmentDirection.AtoB
+                ? Last.Segment.NextSegmentsNodeB
+                : Last.Segment.NextSegmentsNodeA;
 
-            foreach (var seq in startNodes)
+            var nextSegmentIds = lastNode.Select(l => l.SegmentId).ToList();
+
+            foreach (var nextSegment in nextSegmentIds)
             {
-                if (seq.StartNode.Any(n => n.SegmentId == Last.SegmentId))
+                var connectingSegmentsOnRoute = Sequence
+                    .Where(seq => seq.SegmentId == nextSegment)
+                    .MinBy(seq => seq.SequenceNumber);
+
+                if (connectingSegmentsOnRoute != null)
                 {
-                    return (true, seq.Index, Sequence.Count() - 1);
+                    // Check if the next segment on the route after the match also connects to
+                    // the last added segment. If that's the case apparently the route is 
+                    // continuing in that direction and _that_ is the segment we'll continue
+                    // on for the loop.
+                    if(nextSegmentIds.Contains(Sequence.ToList()[connectingSegmentsOnRoute.SequenceNumber].SegmentId))
+                    {
+                        connectingSegmentsOnRoute = Sequence.ToList()[connectingSegmentsOnRoute.SequenceNumber];
+                    }
+
+                    return (true, connectingSegmentsOnRoute.SequenceNumber - 1, Last.SequenceNumber - 1);
                 }
             }
 
