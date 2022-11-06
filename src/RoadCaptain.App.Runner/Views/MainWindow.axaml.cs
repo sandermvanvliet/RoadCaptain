@@ -149,7 +149,7 @@ namespace RoadCaptain.App.Runner.Views
 
                 var routePoints = RoutePathPointsFrom(route.PlannedRoute.RouteSegmentSequence, mapSegments);
 
-                var routePath = new RoutePath(routePoints) { IsVisible = true };
+                var routePath = new RoutePath(routePoints) { IsVisible = true, ShowFullPath = true };
                 ZwiftMap.MapObjects.Add(routePath);
 
                 (_, _elementBoundsMappedToViewport) = ZwiftMap.ZoomExtent("route");
