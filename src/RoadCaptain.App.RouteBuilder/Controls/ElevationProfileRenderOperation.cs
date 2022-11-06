@@ -20,7 +20,6 @@ namespace RoadCaptain.App.RouteBuilder.Controls
     {
         private static readonly SKColor CanvasBackgroundColor = SKColor.Parse("#FFFFFF");
         private RouteViewModel? _route;
-        private SKPath? _elevationPath;
         private Rect _bounds;
         private float _altitudeOffset;
         private const float MarkerPadding = 30f;
@@ -146,7 +145,7 @@ namespace RoadCaptain.App.RouteBuilder.Controls
         {
             if (Route == null || Segments == null || !Segments.Any() || !Route.Sequence.Any())
             {
-                _elevationPath = null;
+                _elevationGroups = null;
 
                 return;
             }
@@ -251,14 +250,7 @@ namespace RoadCaptain.App.RouteBuilder.Controls
             var totalDistanceMeters = Math.Round(_routePoints.Last().DistanceOnSegment, MidpointRounding.AwayFromZero);
 
             _step = (float)(Bounds.Width / totalDistanceMeters);
-
-            var polyPoints = _routePoints
-                .Select(point => new SKPoint((float)(_step * point.DistanceOnSegment), CalculateYFromAltitude(point.Altitude)))
-                .ToArray();
-
-            _elevationPath = new SKPath();
-            _elevationPath.AddPoly(polyPoints, false);
-
+            
             foreach (var group in _elevationGroups)
             {
                 var path = new SKPath();
