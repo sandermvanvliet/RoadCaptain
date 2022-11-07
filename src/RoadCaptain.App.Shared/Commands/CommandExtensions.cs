@@ -18,7 +18,7 @@ namespace RoadCaptain.App.Shared.Commands
         private readonly Window _window;
         private readonly ICommand _command;
         private Key _key;
-        private KeyModifiers _platformModifier;
+        private readonly KeyModifiers _platformModifier;
 
         public BindingBuilder(Window window, ICommand command)
         {
