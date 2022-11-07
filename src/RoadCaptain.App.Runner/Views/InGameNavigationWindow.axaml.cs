@@ -3,12 +3,12 @@
 // See LICENSE or https://choosealicense.com/licenses/artistic-2.0/
 
 using System;
-using System.Runtime.InteropServices;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using RoadCaptain.App.Runner.ViewModels;
 using RoadCaptain.App.Shared;
+using RoadCaptain.App.Shared.Commands;
 using RoadCaptain.GameStates;
 using RoadCaptain.Ports;
 using Serilog;
@@ -57,12 +57,8 @@ namespace RoadCaptain.App.Runner.Views
             Activated -= InGameNavigationWindow_OnActivated;
             
             _viewModel = DataContext as InGameNavigationWindowViewModel ?? throw new Exception("");
-
-            var modifier = RuntimeInformation.IsOSPlatform(OSPlatform.OSX)
-                ? KeyModifiers.Meta
-                : KeyModifiers.Control;
-
-            KeyBindings.Add(new KeyBinding { Command = _viewModel.EndActivityCommand, Gesture = new KeyGesture(Key.X, modifier) });
+            
+            this.Bind(_viewModel.EndActivityCommand).To(Key.X).WithPlatformModifier();
         }
 
         private void GameStateReceived(GameState gameState)

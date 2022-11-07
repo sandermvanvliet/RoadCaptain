@@ -17,6 +17,7 @@ using Avalonia.Threading;
 using Codenizer.Avalonia.Map;
 using RoadCaptain.App.RouteBuilder.ViewModels;
 using RoadCaptain.App.Shared;
+using RoadCaptain.App.Shared.Commands;
 using RoadCaptain.App.Shared.Controls;
 using SkiaSharp;
 using KeyEventArgs = Avalonia.Input.KeyEventArgs;
@@ -59,19 +60,11 @@ namespace RoadCaptain.App.RouteBuilder.Views
 
             ZwiftMap.RenderPriority = new ZwiftMapRenderPriority();
             ZwiftMap.LogDiagnostics = false;
-
-            var modifier = RuntimeInformation.IsOSPlatform(OSPlatform.OSX)
-                ? KeyModifiers.Meta
-                : KeyModifiers.Control;
-
-            KeyBindings.Add(new KeyBinding
-            { Command = ViewModel.OpenRouteCommand, Gesture = new KeyGesture(Key.O, modifier) });
-            KeyBindings.Add(new KeyBinding
-            { Command = ViewModel.SaveRouteCommand, Gesture = new KeyGesture(Key.S, modifier) });
-            KeyBindings.Add(new KeyBinding
-            { Command = ViewModel.ClearRouteCommand, Gesture = new KeyGesture(Key.R, modifier) });
-            KeyBindings.Add(new KeyBinding
-            { Command = ViewModel.RemoveLastSegmentCommand, Gesture = new KeyGesture(Key.Z, modifier) });
+            
+            this.Bind(ViewModel.OpenRouteCommand).To(Key.O).WithPlatformModifier();
+            this.Bind(ViewModel.SaveRouteCommand).To(Key.S).WithPlatformModifier();
+            this.Bind(ViewModel.ClearRouteCommand).To(Key.R).WithPlatformModifier();
+            this.Bind(ViewModel.RemoveLastSegmentCommand).To(Key.Z).WithPlatformModifier();
         }
 
         private MainWindowViewModel ViewModel { get; }
