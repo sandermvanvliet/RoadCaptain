@@ -22,7 +22,7 @@ namespace RoadCaptain.App.RouteBuilder.Views
 
         public void ToggleClimbs(bool visible)
         {
-            _map.MapObjects.OfType<SprintSegment>()
+            _map.MapObjects.OfType<ClimbSegment>()
                 .ToList()
                 .ForEach(climb => climb.IsVisible = visible);
 
@@ -31,7 +31,7 @@ namespace RoadCaptain.App.RouteBuilder.Views
 
         public void ToggleSprints(bool visible)
         {
-            _map.MapObjects.OfType<ClimbSegment>()
+            _map.MapObjects.OfType<SprintSegment>()
                 .ToList()
                 .ForEach(climb => climb.IsVisible = visible);
 
