@@ -1,6 +1,11 @@
 name: pre_release_debug
 
-on: workflow_dispatch
+on:
+  workflow_dispatch:
+  push:
+    tags: 
+    - preereleases/[0-9]+.[0-9]+.[0-9]+
+    - prereleases/[0-9]+.[0-9]+.[0-9]+.[0-9]+
 
 jobs:
   create_release:
