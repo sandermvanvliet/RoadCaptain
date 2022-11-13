@@ -1,5 +1,8 @@
 param([string]$currentVersion = $(throw "currentVersion is required"))
 
+$gitSha = $env:GITHUB_SHA
+$workflow = $env:GITHUB_WORKFLOW
+
 $parts = $currentVersion.Split(".")
 $currentMajor = $parts[0]
 $currentMinor = $parts[1]
@@ -49,3 +52,15 @@ for($index = 0; $index -lt $lines.Length; $index++)
 }
 
 $output > version-changelog.md
+
+if($workflow -eq "pre_release_debug")
+{
+    $(
+        "# Pre-release ${currentVersion}+g${gitSha}"
+        ""
+        "This is a pre-release build. Be aware that there may be rough edges and the occasional bug."
+        "Enjoy testing!"
+        ""
+        (Get-Content version-changelog.md -Raw)
+    ) | Set-Content version-changelog.md
+}
