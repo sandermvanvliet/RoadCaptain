@@ -16,12 +16,16 @@ namespace RoadCaptain.App.Shared.Dialogs.ViewModels
         private string _version;
         private string _downloadLink;
         private string _releaseNotes;
+        private string _title;
 
         public UpdateAvailableViewModel(Release release)
         {
             _version = release.Version.ToString(4);
             _downloadLink = release.InstallerDownloadUri?.ToString() ?? "https://github.com/sandermvanvliet/RoadCaptain/";
             _releaseNotes = release.ReleaseNotes;
+            _title = release.IsPreRelease
+                ? "RoadCaptain test release available"
+                : "RoadCaptain update available";
 
             OpenLinkCommand = new RelayCommand(
                 _ => OpenLink(_ as string ?? throw new ArgumentNullException(nameof(RelayCommand.CommandParameter))),
@@ -30,6 +34,16 @@ namespace RoadCaptain.App.Shared.Dialogs.ViewModels
 
         public ICommand OpenLinkCommand { get; }
 
+        public string Title
+        {
+            get => _title;
+            set
+            {
+                if (value == _title) return;
+                _title = value;
+                this.RaisePropertyChanged();
+            }
+        }
         public string DownloadLink
         {
             get => _downloadLink;

@@ -13,6 +13,7 @@ namespace RoadCaptain.App.Shared
         {
             builder.RegisterType<UpdateAvailableWindow>().AsSelf();
             builder.RegisterType<WhatIsNewWindow>().AsSelf();
+            builder.RegisterType<CompileTimeFeatures>().As<IApplicationFeatures>();
         }
     }
 }

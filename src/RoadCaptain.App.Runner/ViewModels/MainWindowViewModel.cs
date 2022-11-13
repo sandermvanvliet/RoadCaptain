@@ -46,6 +46,7 @@ namespace RoadCaptain.App.Runner.ViewModels
         private bool _endActivityAtEndOfRoute;
         private readonly IZwiftCredentialCache _credentialCache;
         private bool _haveCheckedLastOpenedVersion;
+        private readonly IApplicationFeatures _applicationFeatures;
 
         public MainWindowViewModel(Configuration configuration,
             IUserPreferences userPreferences,
@@ -55,7 +56,8 @@ namespace RoadCaptain.App.Runner.ViewModels
             IVersionChecker versionChecker,
             ISegmentStore segmentStore,
             IZwiftCredentialCache credentialCache, 
-            MonitoringEvents monitoringEvents)
+            MonitoringEvents monitoringEvents, 
+            IApplicationFeatures applicationFeatures)
         {
             _configuration = configuration;
             _userPreferences = userPreferences;
@@ -65,6 +67,7 @@ namespace RoadCaptain.App.Runner.ViewModels
             _versionChecker = versionChecker;
             _segmentStore = segmentStore;
             _credentialCache = credentialCache;
+            _applicationFeatures = applicationFeatures;
 
 
             try
@@ -355,9 +358,15 @@ namespace RoadCaptain.App.Runner.ViewModels
             var currentVersion = System.Version.Parse(Version);
             var latestRelease = _versionChecker.GetLatestRelease();
 
-            if (latestRelease.Version > currentVersion)
+            if (latestRelease.official.Version > currentVersion)
             {
-                await _windowService.ShowNewVersionDialog(latestRelease);
+                await _windowService.ShowNewVersionDialog(latestRelease.official);
+            }
+            else if (_applicationFeatures.IsPreRelease && 
+                     latestRelease.preRelease != null &&
+                     latestRelease.preRelease.Version > currentVersion)
+            {
+                await _windowService.ShowNewVersionDialog(latestRelease.preRelease);
             }
         }
 
@@ -375,18 +384,18 @@ namespace RoadCaptain.App.Runner.ViewModels
             var latestRelease = _versionChecker.GetLatestRelease();
 
             // If there is a newer version available don't display anything
-            if (latestRelease.Version > thisVersion)
+            if (latestRelease.official.Version > thisVersion)
             {
                 return;
             }
 
             // If this version is newer than the previous one shown and it's
             // the latest version then show the what is new dialog
-            if (thisVersion > previousVersion && thisVersion == latestRelease.Version)
+            if (thisVersion > previousVersion && thisVersion == latestRelease.official.Version)
             {
                 // Update the current version so that the next time this won't be shown
                 _userPreferences.Save();
-                await _windowService.ShowWhatIsNewDialog(latestRelease);
+                await _windowService.ShowWhatIsNewDialog(latestRelease.official);
             }
         }
 

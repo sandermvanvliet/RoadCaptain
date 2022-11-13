@@ -13,8 +13,8 @@ namespace RoadCaptain.App.RouteBuilder.Tests.Unit
     public class TestableMainWindowViewModel : MainWindowViewModel
     {
         public TestableMainWindowViewModel(IRouteStore routeStore, ISegmentStore segmentStore, IVersionChecker versionChecker,
-            IWindowService windowService, IWorldStore worldStore, IUserPreferences userPreferences)
-            : base(routeStore, segmentStore, versionChecker, windowService, worldStore, userPreferences)
+            IWindowService windowService, IWorldStore worldStore, IUserPreferences userPreferences, IApplicationFeatures applicationFeatures)
+            : base(routeStore, segmentStore, versionChecker, windowService, worldStore, userPreferences, applicationFeatures)
         {
         }
 

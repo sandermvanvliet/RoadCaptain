@@ -11,5 +11,6 @@ namespace RoadCaptain
         public Version Version { get; set; }
         public string ReleaseNotes { get; set; }
         public Uri InstallerDownloadUri { get; set; }
+        public bool IsPreRelease { get; set; }
     }
 }

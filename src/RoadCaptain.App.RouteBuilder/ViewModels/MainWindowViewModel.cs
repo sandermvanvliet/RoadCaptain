@@ -45,15 +45,17 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
         private bool _haveCheckedLastOpenedVersion;
         private bool _showElevationPlot;
         private Segment? _highlightedMarker;
+        private readonly IApplicationFeatures _applicationFeatures;
 
         public MainWindowViewModel(IRouteStore routeStore, ISegmentStore segmentStore, IVersionChecker versionChecker,
-            IWindowService windowService, IWorldStore worldStore, IUserPreferences userPreferences)
+            IWindowService windowService, IWorldStore worldStore, IUserPreferences userPreferences, IApplicationFeatures applicationFeatures)
         {
             _segments = new List<Segment>();
             _versionChecker = versionChecker;
             _windowService = windowService;
             _worldStore = worldStore;
             _userPreferences = userPreferences;
+            _applicationFeatures = applicationFeatures;
             _showClimbs = _userPreferences.ShowClimbs;
             _showSprints = _userPreferences.ShowSprints;
             _showElevationPlot = _userPreferences.ShowElevationPlot;
@@ -873,9 +875,15 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             var currentVersion = System.Version.Parse(Version);
             var latestRelease = _versionChecker.GetLatestRelease();
 
-            if (latestRelease != null && latestRelease.Version > currentVersion)
+            if (latestRelease.official != null && latestRelease.official.Version > currentVersion)
             {
-                await _windowService.ShowNewVersionDialog(latestRelease);
+                await _windowService.ShowNewVersionDialog(latestRelease.official);
+            }
+            else if (_applicationFeatures.IsPreRelease && 
+                     latestRelease.preRelease != null &&
+                     latestRelease.preRelease.Version > currentVersion)
+            {
+                await _windowService.ShowNewVersionDialog(latestRelease.preRelease);
             }
         }
 
@@ -893,18 +901,31 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             var latestRelease = _versionChecker.GetLatestRelease();
 
             // If there is a newer version available don't display anything
-            if (latestRelease != null && latestRelease.Version > thisVersion)
+            if (latestRelease.official != null && latestRelease.official.Version > thisVersion)
+            {
+                return;
+            }
+
+            if (_applicationFeatures.IsPreRelease &&
+                latestRelease.preRelease != null &&
+                latestRelease.preRelease.Version > thisVersion)
             {
                 return;
             }
 
             // If this version is newer than the previous one shown and it's
             // the latest version then show the what is new dialog
-            if (latestRelease != null && thisVersion > previousVersion && thisVersion == latestRelease.Version)
+            if (latestRelease.official != null && thisVersion > previousVersion && thisVersion == latestRelease.official.Version)
             {
                 // Update the current version so that the next time this won't be shown
                 _userPreferences.Save();
-                await _windowService.ShowWhatIsNewDialog(latestRelease);
+                await _windowService.ShowWhatIsNewDialog(latestRelease.official);
+            }
+            else if (latestRelease.preRelease != null && thisVersion > previousVersion && thisVersion == latestRelease.preRelease.Version)
+            {
+                // Update the current version so that the next time this won't be shown
+                _userPreferences.Save();
+                await _windowService.ShowWhatIsNewDialog(latestRelease.preRelease);
             }
         }
 

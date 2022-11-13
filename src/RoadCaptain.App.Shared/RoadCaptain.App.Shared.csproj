@@ -4,6 +4,15 @@
 		<TargetFramework>net6.0</TargetFramework>
 		<ImplicitUsings>disable</ImplicitUsings>
 		<Nullable>enable</Nullable>
+		<DefineConstants Condition="'$(PreRelease)'=='True'">PRE_RELEASE</DefineConstants>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+	  <DefineConstants>PRE_RELEASE</DefineConstants>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+	  <DefineConstants>PRE_RELEASE</DefineConstants>
 	</PropertyGroup>
 
 	<Import Project="..\..\AvaloniaReferences.props" />

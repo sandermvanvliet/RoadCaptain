@@ -6,6 +6,6 @@ namespace RoadCaptain.Ports
 {
     public interface IVersionChecker
     {
-        Release GetLatestRelease();
+        (Release? official, Release? preRelease) GetLatestRelease();
     }
 }

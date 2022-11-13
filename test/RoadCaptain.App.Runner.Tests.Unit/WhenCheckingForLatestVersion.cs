@@ -131,7 +131,8 @@ namespace RoadCaptain.App.Runner.Tests.Unit
         {
             var client = new HttpClient(_handler);
             return new VersionChecker(client)
-                .GetLatestRelease();
+                .GetLatestRelease()
+                .official;
         }
     }
 }

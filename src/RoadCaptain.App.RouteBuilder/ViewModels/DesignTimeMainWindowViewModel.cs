@@ -22,7 +22,8 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             new DummyVersionChecker(), 
             new WindowService(null, _container.Resolve<MonitoringEvents>()), 
             _container.Resolve<IWorldStore>(), 
-            new DummyUserPreferences())
+            new DummyUserPreferences(),
+            new DummyApplicationFeatures())
         {
             Route.OutputFilePath = @"C:\git\RoadCaptain\test\RoadCaptain.Tests.Unit\GameState\Repro\Rebel.Route-Italian.Villa.Sprint.Loop.json";
             Route.Load();
@@ -39,11 +40,16 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
         }
     }
 
+    public class DummyApplicationFeatures : IApplicationFeatures
+    {
+        public bool IsPreRelease { get; set; }
+    }
+
     public class DummyVersionChecker : IVersionChecker
     {
-        public Release GetLatestRelease()
+        public (Release? official, Release? preRelease) GetLatestRelease()
         {
-            return null;
+            return (null, null);
         }
     }
 }
