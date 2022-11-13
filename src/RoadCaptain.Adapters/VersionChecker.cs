@@ -97,7 +97,7 @@ namespace RoadCaptain.Adapters
 
             return new Release
             {
-                Version = Version.Parse(release.TagName),
+                Version = Version.Parse(release.Name),
                 ReleaseNotes = release.Body,
                 InstallerDownloadUri = GetInstallerUriFrom(release),
                 IsPreRelease = release.PreRelease

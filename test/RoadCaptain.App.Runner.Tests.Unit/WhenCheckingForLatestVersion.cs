@@ -95,6 +95,7 @@ namespace RoadCaptain.App.Runner.Tests.Unit
             var release = new ReleaseResponse
             {
                 TagName = version.ToString(4),
+                Name = version.ToString(4),
                 Body = body,
                 Assets = new[]
                 {
@@ -116,12 +117,12 @@ namespace RoadCaptain.App.Runner.Tests.Unit
                 }
             };
 
-            var serializedRelease = JsonConvert.SerializeObject(release, VersionChecker.SerializerSettings);
+            var serializedRelease = JsonConvert.SerializeObject(new ReleaseResponse[] { release }, VersionChecker.SerializerSettings);
 
             _handler
                 .RespondTo()
                 .Get()
-                .ForUrl("/repos/sandermvanvliet/RoadCaptain/releases/latest")
+                .ForUrl("/repos/sandermvanvliet/RoadCaptain/releases")
                 .Accepting("application/vnd.github.v3+json")
                 .With(HttpStatusCode.OK)
                 .AndContent("application/vnd.github.v3+json", serializedRelease);
