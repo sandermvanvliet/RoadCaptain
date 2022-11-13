@@ -6,10 +6,17 @@ APPNAME=$3
 SIGNING_IDENTITY=$4
 RID=$5
 CONFIGURATION=$6
+PRE_RELEASE=$7
+PRE_RELEASE_ARG=""
 
 if [ -z "$RID" ]
 then
     RID="osx-x64"
+fi
+
+if [ "$PRE_RELEASE" = "PreRelease" ]
+then
+    PRE_RELEASE_ARG="-p:PreRlease=True"
 fi
 
 echo "PUBLISH_DIR: $PUBLISH_DIR"
@@ -28,7 +35,7 @@ echo "ENTITLEMENTS: $ENTITLEMENTS"
 echo "NOTARY_ZIP: $NOTARY_ZIP"
 
 echo "[INFO] Publishing $APPNAME"
-dotnet publish -c "${CONFIGURATION}" -r "$RID" --self-contained -o "$PUBLISH_DIR/$BUNDLE_NAME/Contents/MacOS" "src/RoadCaptain.App.$APPNAME/RoadCaptain.App.$APPNAME.csproj"
+dotnet publish -c "${CONFIGURATION}" -r "$RID" "$PRE_RELEASE_ARG" --self-contained -o "$PUBLISH_DIR/$BUNDLE_NAME/Contents/MacOS" "src/RoadCaptain.App.$APPNAME/RoadCaptain.App.$APPNAME.csproj"
 
 sed -e "s/##VERSION##/$VERSION/g" < "src/RoadCaptain.App.$APPNAME/Info.plist" > "$PUBLISH_DIR/$BUNDLE_NAME/Contents/Info.plist"
 

@@ -55,16 +55,16 @@ jobs:
       run: dotnet test --verbosity minimal -c Debug -r ${{ env.RID }}
     - name: Publish Runner
       # Because of reasons we need to explicitly set RuntimeIdentifiers to only win-x64 because MSBuild sets it to osx-x64;win-x64
-      run: dotnet publish --self-contained -c Debug -r ${{ env.RID }} -p:RuntimeIdentifiers=${{ env.RID }} src\RoadCaptain.App.Runner\RoadCaptain.App.Runner.csproj
+      run: dotnet publish --self-contained -c Debug -r ${{ env.RID }} -p:RuntimeIdentifiers=${{ env.RID }} -p:PreRelease=True src\RoadCaptain.App.Runner\RoadCaptain.App.Runner.csproj
     - name: Publish RouteBuilder
-      run: dotnet publish --self-contained -c Debug -r ${{ env.RID }} -p:RuntimeIdentifiers=${{ env.RID }} src\RoadCaptain.App.RouteBuilder\RoadCaptain.App.RouteBuilder.csproj
+      run: dotnet publish --self-contained -c Debug -r ${{ env.RID }} -p:RuntimeIdentifiers=${{ env.RID }} -p:PreRelease=True src\RoadCaptain.App.RouteBuilder\RoadCaptain.App.RouteBuilder.csproj
     - name: Update Wix components file
       run: dotnet run --project .\packaging\RoadCaptain.WixComponentFileGenerator\RoadCaptain.WixComponentFileGenerator.csproj src\RoadCaptain.App.Runner\bin\Debug\net6.0-windows\${{ env.RID }}\publish src\RoadCaptain.App.RouteBuilder\bin\Debug\net6.0-windows\${{ env.RID }}\publish .\packaging\RoadCaptain.Installer\Components.wxi
     - name: Add msbuild to PATH
       uses: microsoft/setup-msbuild@v1.1
     - name: Build MSI
       # Note: The trailing slash at the end of RunnerTargetDir and RouteBuilderTargetDir is mandatory, otherwise building the MSI fails!
-      run: msbuild .\packaging\RoadCaptain.Installer\RoadCaptain.Installer.wixproj -property:Configuration=Debug -property:RunnerTargetDir=D:\a\RoadCaptain\RoadCaptain\src\RoadCaptain.App.Runner\bin\Debug\net6.0-windows\${{ env.RID }}\publish\ -property:RouteBuilderTargetDir=D:\a\RoadCaptain\RoadCaptain\src\RoadCaptain.App.RouteBuilder\bin\Debug\net6.0-windows\${{ env.RID }}\publish\
+      run: msbuild .\packaging\RoadCaptain.Installer\RoadCaptain.Installer.wixproj -property:Configuration=Debug -property:RunnerTargetDir=D:\a\RoadCaptain\RoadCaptain\src\RoadCaptain.App.Runner\bin\Debug\net6.0-windows\${{ env.RID }}\publish\ -property:RouteBuilderTargetDir=D:\a\RoadCaptain\RoadCaptain\src\RoadCaptain.App.RouteBuilder\bin\Debug\net6.0-windows\${{ env.RID }}\publish\ -property:PreRelease=True
     - name: Upload Installer
       id: upload-release-asset 
       uses: actions/upload-release-asset@v1
@@ -113,13 +113,13 @@ jobs:
       run: |
         PUBLISH_DIR="$RUNNER_TEMP/${{ env.RID }}/Bundles"
         VERSION=$(grep Version Directory.Build.props | sed -e 's/<Version>//g' -e 's/<\/Version>//g' | tr -d '\t ')
-        ./packaging/build-macos-app "$PUBLISH_DIR" "$VERSION" "Runner" "${{ env.SIGNING_IDENTITY }}" "${{ env.RID }}" "Debug"
+        ./packaging/build-macos-app "$PUBLISH_DIR" "$VERSION" "Runner" "${{ env.SIGNING_IDENTITY }}" "${{ env.RID }}" "Debug" "PreRelease"
 
     - name: Build and package RouteBuilder
       run: |
         PUBLISH_DIR="$RUNNER_TEMP/${{ env.RID }}/Bundles"
         VERSION=$(grep Version Directory.Build.props | sed -e 's/<Version>//g' -e 's/<\/Version>//g' | tr -d '\t ')
-        ./packaging/build-macos-app "$PUBLISH_DIR" "$VERSION" "RouteBuilder" "${{ env.SIGNING_IDENTITY }}" "${{ env.RID }}" "Debug"
+        ./packaging/build-macos-app "$PUBLISH_DIR" "$VERSION" "RouteBuilder" "${{ env.SIGNING_IDENTITY }}" "${{ env.RID }}" "Debug" "PreRelease"
 
     - name: Create DMG
       run: |
@@ -182,13 +182,13 @@ jobs:
       run: |
         PUBLISH_DIR="$RUNNER_TEMP/${{ env.RID }}/Bundles"
         VERSION=$(grep Version Directory.Build.props | sed -e 's/<Version>//g' -e 's/<\/Version>//g' | tr -d '\t ')
-        ./packaging/build-macos-app "$PUBLISH_DIR" "$VERSION" "Runner" "${{ env.SIGNING_IDENTITY }}" "${{ env.RID }}" "Debug"
+        ./packaging/build-macos-app "$PUBLISH_DIR" "$VERSION" "Runner" "${{ env.SIGNING_IDENTITY }}" "${{ env.RID }}" "Debug" "PreRelease"
 
     - name: Build and package RouteBuilder
       run: |
         PUBLISH_DIR="$RUNNER_TEMP/${{ env.RID }}/Bundles"
         VERSION=$(grep Version Directory.Build.props | sed -e 's/<Version>//g' -e 's/<\/Version>//g' | tr -d '\t ')
-        ./packaging/build-macos-app "$PUBLISH_DIR" "$VERSION" "RouteBuilder" "${{ env.SIGNING_IDENTITY }}" "${{ env.RID }}" "Debug"
+        ./packaging/build-macos-app "$PUBLISH_DIR" "$VERSION" "RouteBuilder" "${{ env.SIGNING_IDENTITY }}" "${{ env.RID }}" "Debug" "PreRelease"
 
     - name: Create DMG
       run: |
