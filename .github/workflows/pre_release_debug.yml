@@ -25,8 +25,8 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        tag_name: prerelease/${{ steps.get_version.outputs.info }}-g${{ github.sha }}
-        release_name: ${{ steps.get_version.outputs.info }}-g${{ github.sha }}
+        tag_name: prerelease/${{ steps.get_version.outputs.info }}
+        release_name: ${{ steps.get_version.outputs.info }}
         draft: false
         prerelease: true
         body_path: ./version-changelog.md
