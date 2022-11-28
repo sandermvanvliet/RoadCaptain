@@ -3,14 +3,20 @@
 style: "style1"
 title : "RoadCaptain"
 subtitle: |
-  A custom route builder for <a href="https://zwift.com"><img src="zwf_icon_rgb_og_200x.png" alt="Zwift logo" height="22px" /> Zwift</a>
+  A custom route builder for <a href="https://zwift.com"><img src="images/zwift-logo.png" alt="Zwift logo" height="22px" /> Zwift</a>
 content : |
   Bored with the standard Zwift routes or fed up with having to navigate using Zwift Companion?
   RoadCaptain let's you design the route you want and will act as your personal road captain in Zwift and handles navigation for you! 
   <br /><br />
   Save your sweating for that KOM, not whether you'll miss a turn!
-button:
-  label : "Get Started"
-  link : "#build-route"
+buttons:    
+  - button:
+    label : "Get RoadCaptain"
+    link : "#releases"
+    class: "primary"
+    
+  - button:
+    label : "Learn More"
+    link : "#build-route"
 image : "images/banner.jpg"
 

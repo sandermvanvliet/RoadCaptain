@@ -1,0 +1,9 @@
+####################### Spotlight #########################
+style: "style1 content-align-center"
+id: "development"
+title : "RoadCaptain development"
+content: |
+  RoadCaptain is developed by <a href="https://blog.codenizer.nl">Sander van Vliet</a> and is released under the Artistic License 2.0.<br />
+  The source code is hosted <a href="https://github.com/sandermvanvliet/RoadCaptain">on GitHub</a> where you can request features and report issues if you find them.
+  <br /><br />
+  Development of RoadCaptain is a labour of love, any support is greatly appreciated. You can support development via <a href="https://github.com/sponsors/sandermvanvliet">GitHub Sponsors</a>

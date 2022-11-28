@@ -1,14 +1,18 @@
 title : "Runner features"
 id: runner-features
 content: |
-  The Runner supports these features. Missing one? Create <a href="https://github.com/sandermvanvliet/RoadCaptain/issues/new?assignees=&labels=missing+feature&template=feature_request.md&title=">a feature request</a> on GitHub!
-style: "style1 medium onscroll-fade-in"
+  RoadCaptain Runner supports these features. Missing one? Create <a href="https://github.com/sandermvanvliet/RoadCaptain/issues/new?assignees=&labels=missing+feature&template=feature_request.md&title=">a feature request</a> on GitHub!
+style: "style1 medium"
 items:
   # feature item loop
   - name: "Zwift secure authentication"
     content: "Authenticate via the official Zwift login. RoadCaptain won't see your credentials"
     style: "solid style2 major fa-lock"
   
+  - name: "Route preview"
+    content: "When selecting a route, an animated preview of the route is shown on the map as well as the distance, ascent & descent and the KOM & sprint segments on the route"
+    style: "style2 major fa-map-marked"
+
   # feature item loop
   - name: "Progress"
     content: "Track progress with the total distance, ascent and descent of your route and progress on the current segment"

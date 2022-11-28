@@ -1,5 +1,5 @@
 ####################### Spotlight #########################
-style: "style1 orient-left content-align-left image-position-left onscroll-image-fade-in"
+style: "style1 orient-left content-align-left image-position-left"
 id: ride-on
 title : "Ride on!"
 content: |
@@ -8,7 +8,13 @@ content: |
   The Runner app will tell you which route to select in Zwift and then automatically navigates you on your route. No more worrying about clicking the buttons to go left or right, RoadCaptain handles that for you automatically!
   <br /><br />
   When riding, RoadCaptain shows an overlay that tells you how far you've progressed on the route and where you are on the current segment. Perfect to pace yourself and to get ready for those sprints!
-button: 
-  label: "Learn More"
-  link: "#runner-features"
+buttons:
+  - button: 
+    label: "Demo"
+    link: "#demo"
+    class: "primary"
+
+  - button:
+    label: "Learn More"
+    link: "#runner-features"
 image: "images/spotlight02.png"

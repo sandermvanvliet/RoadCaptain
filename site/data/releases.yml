@@ -1,0 +1,37 @@
+####################### Spotlight #########################
+style: "style1 content-align-center"
+id: "releases"
+title : "RoadCaptain releases"
+content: |
+  Installers are available for Windows and MacOS.<br /><br />
+  Typically you will want to download the RoadCaptain stable release. If you want to test out new features as they are worked on you can choose to install the preview release. 
+  However, the preview release will have some rough edges and the occasional bug.
+  <table>
+    <thead>
+      <tr>
+        <th></th>
+        <th>Version</th>
+        <th>Installers</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Stable release</strong></td>
+        <td>0.6.9.0 - <a href="https://github.com/sandermvanvliet/RoadCaptain/releases/tag/0.6.9.0">Changelog</a></td>
+        <td>
+          <a href="https://github.com/sandermvanvliet/RoadCaptain/releases/download/0.6.9.0/RoadCaptain_0.6.9.0.msi" /><i class="fab fa-windows"></i> Windows</a> | 
+          <a href="https://github.com/sandermvanvliet/RoadCaptain/releases/download/0.6.9.0/RoadCaptain-0.6.9.0-osx-x64.dmg"><i class="fab fa-apple"></i> MacOS</a> |
+          <a href="#" style="color: grey;text-decoration:line-through"><i class="fab fa-linux"></i> Linux</a>
+        </td>
+      </tr>
+      <tr>
+        <td><span style="font-style:italic">Preview release</span></td>
+        <td>0.6.10.0 - <a href="https://github.com/sandermvanvliet/RoadCaptain/releases/tag/prerelease%2F0.6.10.0">Changelog</a></td>
+        <td>
+          <a href="https://github.com/sandermvanvliet/RoadCaptain/releases/download/prerelease%2F0.6.10.0/RoadCaptain_0.6.10.0.msi" /><i class="fab fa-windows"></i> Windows</a> | 
+          <a href="https://github.com/sandermvanvliet/RoadCaptain/releases/download/prerelease%2F0.6.10.0/RoadCaptain-0.6.10.0-osx-x64.dmg"><i class="fab fa-apple"></i> MacOS</a> |
+          <a href="#" style="color: grey;text-decoration:line-through"><i class="fab fa-linux"></i> Linux</a>
+        </td>
+      </tr>
+    </tbody>
+  </table>

@@ -1,5 +1,5 @@
 ####################### Spotlight #########################
-style: "style1 orient-right content-align-left image-position-left onscroll-image-fade-in"
+style: "style1 orient-right content-align-left image-position-left"
 id: "build-route"
 title : "Build a route"
 content: |
@@ -9,7 +9,12 @@ content: |
   With the KOM and Sprint highlights you can build a route and smash your PR's in a single ride.
   <br /><br />
   Looking to build a super flat route or some extra vert? The elevation plot helps you build your route with the right amount of ascent you want.
-button: 
-  label: "Learn more"
-  link: "#route-builder-features"
+buttons:
+  - button:
+    label: "Ride on"
+    link: "#ride-on"
+    class: "primary"
+  - button: 
+    label: "Learn more"
+    link: "#route-builder-features"
 image: "images/spotlight01.png"
