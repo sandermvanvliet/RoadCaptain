@@ -1,0 +1,55 @@
+title : "Route Builder features"
+id: route-builder-features
+content: |
+  The Route Builder supports these features. Missing one? Create <a href="https://github.com/sandermvanvliet/RoadCaptain/issues/new?assignees=&labels=missing+feature&template=feature_request.md&title=">a feature request</a> on GitHub!
+style: "style1 medium onscroll-fade-in"
+items:
+  # feature item loop
+  - name : "Elevation"
+    content : "Use the elevation plot to see the profile of your route and the grade of the climbs"
+    style : "solid style2 major fa-chart-bar"
+
+  # feature item loop
+  - name : "Simulate"
+    content : "Preview your route using the simulation feature and easily see the flow of your route"
+    style : "solid style2 major fa-bolt"
+
+  # feature item loop
+  - name : "KOM"
+    content : "Highlight KOMs on the map so you can include them on your route"
+    style : "solid style2 major fa-mountain"
+    
+  # feature item loop
+  - name : "Sprint"
+    content : "Highlight sprints on the map so you can include them on your route"
+    style : "solid style2 major fa-stopwatch"
+    
+  # feature item loop
+  - name : "Loop"
+    content : "Create a loop to ride a section again. Lead-in and lead-out are supported"
+    style : "solid style2 major fa-redo"
+    
+  # feature item loop
+  - name : "Zoom"
+    content : "Move around the map by zooming and panning"
+    style : "solid style2 major fa-search"
+
+  # feature item loop
+  - name: "Undo"
+    content: "Selected the wrong segment? Easily remove the last segment with undo"
+    style: "solid style2 major fa-undo"
+
+  # feature item loop
+  - name: "Segment list"
+    content: "Quickly see which special segments (KOM & sprint) are on your route"
+    style: "solid style2 major fa-list"
+  
+  # feature item loop
+  - name: "Statistics"
+    content: "See the total distance, ascent and descent of your route and each individual segment"
+    style: "solid style2 major fa-tachometer-alt"
+
+  # feature item loop
+  - name: "Running"
+    content: "Using Zwift for running? Running segments are supported too!"
+    style: "solid style2 major fa-running"

@@ -1,0 +1,30 @@
+title : "Runner features"
+id: runner-features
+content: |
+  The Runner supports these features. Missing one? Create <a href="https://github.com/sandermvanvliet/RoadCaptain/issues/new?assignees=&labels=missing+feature&template=feature_request.md&title=">a feature request</a> on GitHub!
+style: "style1 medium onscroll-fade-in"
+items:
+  # feature item loop
+  - name: "Zwift secure authentication"
+    content: "Authenticate via the official Zwift login. RoadCaptain won't see your credentials"
+    style: "solid style2 major fa-lock"
+  
+  # feature item loop
+  - name: "Progress"
+    content: "Track progress with the total distance, ascent and descent of your route and progress on the current segment"
+    style: "solid style2 major fa-tachometer-alt"
+
+  # feature item loop
+  - name: "Segment list"
+    content: "Quickly see which special segments (KOM & sprint) are on your route when opening a route"
+    style: "solid style2 major fa-list"
+
+  # feature item loop
+  - name: "Running"
+    content: "Using Zwift for running? Running segments are supported too!"
+    style: "solid style2 major fa-running"
+
+  # feature item loop
+  - name: "Rebel Routes"
+    content: "Pick any of the Rebel Routes built by <a href=\"https://zwiftinsider.com/rebel-routes/\">Zwift Insider</a>"
+    style: "solid style2 major fa-route"

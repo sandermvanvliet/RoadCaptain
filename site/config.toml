@@ -1,0 +1,25 @@
+baseURL = 'https://roadcaptain.nl/'
+languageCode = 'en-us'
+title = 'RoadCaptain for Zwift'
+
+theme = "hugo-story"
+
+disableKinds = ["taxonomy", "taxonomyTerm", "section"]
+
+
+## -----------------------------------------------
+## Site Parameters
+## -----------------------------------------------
+
+[Params]
+  description = "A (modular, highly tweakable) responsive one-page theme for Hugo"
+  logo = "images/banner.jpg"
+  favicon = true
+
+[Params.social]
+  github = "https://github.com/sandermvanvliet/"
+  twitter = ""
+  email = "info@roadcaptain.nl"
+  instagram = ""
+  linkedin = ""
+  telegram = ""
