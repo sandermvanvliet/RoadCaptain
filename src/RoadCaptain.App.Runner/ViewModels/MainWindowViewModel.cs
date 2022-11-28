@@ -154,13 +154,17 @@ namespace RoadCaptain.App.Runner.ViewModels
                     plannedRoute,
                     _segmentStore.LoadSegments(
                         plannedRoute.World,
-                        plannedRoute.Sport), 
+                        plannedRoute.Sport),
                     _segmentStore.LoadMarkers(plannedRoute.World));
 
                 _gameStateDispatcher.RouteSelected(Route!.PlannedRoute);
             }
             catch (FileNotFoundException)
             {
+            }
+            catch (InvalidOperationException)
+            {
+                // Route created with newer version or something similar
             }
         }
 

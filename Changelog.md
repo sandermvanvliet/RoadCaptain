@@ -2,7 +2,9 @@
 
 ## 0.6.10.0
 
+### Runner
 
+- Fixed a bug that would prevent RoadCaptain from starting when the preferences have a recent route that was created with a newer version.
 
 ## 0.6.9.0
 
