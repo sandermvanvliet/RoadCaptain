@@ -4,6 +4,5 @@ id: "demo"
 title : "RoadCaptain demo"
 content: |
   The video below shows how how RoadCaptain works with Zwift to ride a custom route:<br />
-  <video controls width="1024">
-    <source src="images/roadcaptain-demo.webm" />
-  </video>
+  <iframe width="1024" height="768" src="https://www.youtube.com/embed/o_Hs37y_FwM">
+  </iframe> 
