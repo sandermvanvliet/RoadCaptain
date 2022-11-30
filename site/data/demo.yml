@@ -1,8 +1,7 @@
 ####################### Spotlight #########################
-style: "style1 content-align-center"
+style: "style1 orient-left content-align-left"
 id: "demo"
 title : "RoadCaptain demo"
 content: |
-  The video below shows how how RoadCaptain works with Zwift to ride a custom route:<br />
-  <iframe width="1024" height="768" src="https://www.youtube.com/embed/o_Hs37y_FwM">
-  </iframe> 
+  The video below shows how how RoadCaptain works with Zwift to ride a custom route:
+youtube_id: o_Hs37y_FwM

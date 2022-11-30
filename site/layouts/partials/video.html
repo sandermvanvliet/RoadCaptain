@@ -1,0 +1,26 @@
+<!-- Spotlight -->
+<section class="spotlight {{ .style }}"{{ with .id }} id="{{ . }}"{{ end }}>
+    <div class="content">
+        {{ with .title }}<h2>{{ . }}</h2>{{ end }}
+        {{ with .content }}<p>{{ . | safeHTML }}</p>{{ end }}
+        <div class="iframe-wrapper"><iframe width="1024" height="768" src="https://www.youtube.com/embed/{{ .youtube_id }}"></iframe></div>
+    </div>
+    
+    <style type="text/css">
+    .iframe-wrapper {
+        position: relative;
+        padding-bottom: 56.10%;
+        height: 0;
+        overflow: hidden;
+      }
+      .iframe-wrapper iframe,
+      .iframe-wrapper object,
+      .iframe-wrapper embed {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+      }
+    </style>
+</section>
