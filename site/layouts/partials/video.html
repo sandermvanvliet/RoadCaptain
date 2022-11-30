@@ -3,7 +3,7 @@
     <div class="content">
         {{ with .title }}<h2>{{ . }}</h2>{{ end }}
         {{ with .content }}<p>{{ . | safeHTML }}</p>{{ end }}
-        <div class="iframe-wrapper"><iframe width="1024" height="768" src="https://www.youtube.com/embed/{{ .youtube_id }}"></iframe></div>
+        <div class="iframe-wrapper"><iframe width="1024" height="768" src="https://www.youtube-nocookie.com/embed/{{ .youtube_id }}"></iframe></div>
     </div>
     
     <style type="text/css">
