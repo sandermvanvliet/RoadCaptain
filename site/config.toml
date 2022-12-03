@@ -1,7 +1,6 @@
 baseURL = 'https://roadcaptain.nl/'
 languageCode = 'en-us'
-title = 'RoadCaptain for Zwift'
-
+title = 'RoadCaptain a Zwift custom route builder'
 theme = "hugo-story"
 
 disableKinds = ["taxonomy", "taxonomyTerm", "section"]
@@ -12,9 +11,11 @@ disableKinds = ["taxonomy", "taxonomyTerm", "section"]
 ## -----------------------------------------------
 
 [Params]
-  description = "A (modular, highly tweakable) responsive one-page theme for Hugo"
+  author = "Sander van vliet"
+  description = "Zwift custom route builder"
   logo = "images/banner.jpg"
-  favicon = true
+  favicon = false
+  keywords = "Zwift,RoadCaptain,Zwift custom route,road captain,cycling,Zwift Companion"
 
 [Params.social]
   github = "https://github.com/sandermvanvliet/"
