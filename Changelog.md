@@ -5,6 +5,7 @@
 ### Runner
 
 - Fixed a bug that would prevent RoadCaptain from starting when the preferences have a recent route that was created with a newer version.
+- Fixed a bug that would prevend RoadCaptain from entering the game because the position log file could not be created due to a wrong file path (see [#111](https://github.com/sandermvanvliet/RoadCaptain/issues/111))
 
 ## 0.6.9.0
 

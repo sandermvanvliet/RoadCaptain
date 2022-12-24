@@ -5,6 +5,7 @@
 using FluentAssertions;
 using RoadCaptain.Adapters;
 using RoadCaptain.App.Runner.ViewModels;
+using RoadCaptain.App.Shared;
 using Xunit;
 
 namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.MainWindow
@@ -23,7 +24,7 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.MainWindow
                 new Configuration(null),
                 new DummyUserPreferences(),
                 _windowService,
-                new InMemoryGameStateDispatcher(new NopMonitoringEvents()),
+                new InMemoryGameStateDispatcher(new NopMonitoringEvents(), new PlatformPaths()),
                 routeStore,
                 null,
                 new SegmentStore(),

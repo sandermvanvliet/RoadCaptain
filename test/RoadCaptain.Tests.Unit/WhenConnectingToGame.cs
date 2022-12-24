@@ -27,7 +27,7 @@ namespace RoadCaptain.Tests.Unit
             var monitoringEvents = new NopMonitoringEvents();
             _handler = new TestableMessageHandler();
 
-            _gameStateDispatcher = new InMemoryGameStateDispatcher(monitoringEvents);
+            _gameStateDispatcher = new InMemoryGameStateDispatcher(monitoringEvents, null);
             _useCase = new ConnectToZwiftUseCase(new Zwift(new HttpClient(_handler)),
                 monitoringEvents, // Use a different receiver than dispatcher
                 _gameStateDispatcher);

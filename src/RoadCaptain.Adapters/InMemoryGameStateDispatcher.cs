@@ -32,10 +32,12 @@ namespace RoadCaptain.Adapters
         private ulong _lastSequenceNumber;
         private GameState? _gameState;
         private StreamWriter? _output;
+        private readonly IPathProvider _pathProvider;
 
-        public InMemoryGameStateDispatcher(MonitoringEvents monitoringEvents)
+        public InMemoryGameStateDispatcher(MonitoringEvents monitoringEvents, IPathProvider pathProvider)
         {
             _monitoringEvents = monitoringEvents;
+            _pathProvider = pathProvider;
             _queue = new ConcurrentQueue<Message>();
         }
 
@@ -135,15 +137,30 @@ namespace RoadCaptain.Adapters
         public void EnterGame(uint riderId, ulong activityId)
         {
             State = State?.EnterGame(riderId, activityId);
-            _output = new StreamWriter(File.Open(
-                    $@"positions-{DateTime.UtcNow:yyyy-MM-dd_HHmmss}.log",
-                    FileMode.CreateNew,
-                    FileAccess.ReadWrite,
-                    FileShare.Read),
-                Encoding.UTF8)
+
+            InitializePositionLog();
+        }
+
+        private void InitializePositionLog()
+        {
+            try
             {
-                AutoFlush = true
-            };
+                var outputFileName = Path.Combine(_pathProvider.GetUserDataDirectory(),
+                    $"positions-{DateTime.UtcNow:yyyy-MM-dd_HHmmss}.log");
+                _output = new StreamWriter(File.Open(
+                        outputFileName,
+                        FileMode.CreateNew,
+                        FileAccess.ReadWrite,
+                        FileShare.Read),
+                    Encoding.UTF8)
+                {
+                    AutoFlush = true
+                };
+            }
+            catch (Exception e)
+            {
+                _monitoringEvents.Error(e, "Failed to initialize position log file");
+            }
         }
 
         public void LeaveGame()

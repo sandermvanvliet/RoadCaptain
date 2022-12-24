@@ -42,7 +42,7 @@ namespace RoadCaptain.Tests.Unit.UseCases
 
         public WhenLoadingRoute()
         {
-            _gameStateDispatcher = new InMemoryGameStateDispatcher(new NopMonitoringEvents());
+            _gameStateDispatcher = new InMemoryGameStateDispatcher(new NopMonitoringEvents(), null);
             IRouteStore routeStore = new StubRouteStore();
 
             _useCase = new LoadRouteUseCase(

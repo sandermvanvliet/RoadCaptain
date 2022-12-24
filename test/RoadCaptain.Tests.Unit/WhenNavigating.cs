@@ -25,7 +25,7 @@ namespace RoadCaptain.Tests.Unit
         public WhenNavigating()
         {
             var monitoringEvents = new NopMonitoringEvents();
-            _gameStateDispatcher = new InMemoryGameStateDispatcher(monitoringEvents);
+            _gameStateDispatcher = new InMemoryGameStateDispatcher(monitoringEvents, null);
             _plannedRoute = FixedForTesting();
 
             _inMemoryZwiftGameConnection = new InMemoryZwiftGameConnection();

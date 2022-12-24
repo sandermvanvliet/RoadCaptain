@@ -11,6 +11,7 @@ using RoadCaptain.Adapters;
 using RoadCaptain.App.Runner.Models;
 using RoadCaptain.App.Runner.ViewModels;
 using RoadCaptain.App.Runner.Views;
+using RoadCaptain.App.Shared;
 using RoadCaptain.GameStates;
 using Dispatcher = Avalonia.Threading.Dispatcher;
 
@@ -46,7 +47,7 @@ namespace RoadCaptain.App.Runner.Tests.Unit.Views
             var viewModel = new InGameNavigationWindowViewModel(model, segments, null, null);
             var monitoringEvents = new NopMonitoringEvents();
             var window =
-                new InGameNavigationWindow(new InMemoryGameStateDispatcher(monitoringEvents), monitoringEvents, new DummyUserPreferences())
+                new InGameNavigationWindow(new InMemoryGameStateDispatcher(monitoringEvents, new PlatformPaths()), monitoringEvents, new DummyUserPreferences())
                     {
                         ShowActivated = true,
                         DataContext = viewModel
@@ -107,7 +108,7 @@ namespace RoadCaptain.App.Runner.Tests.Unit.Views
             var viewModel = new InGameNavigationWindowViewModel(model, segments, null, null);
             var monitoringEvents = new NopMonitoringEvents();
             var window =
-                new InGameNavigationWindow(new InMemoryGameStateDispatcher(monitoringEvents), monitoringEvents, new DummyUserPreferences())
+                new InGameNavigationWindow(new InMemoryGameStateDispatcher(monitoringEvents, new PlatformPaths()), monitoringEvents, new DummyUserPreferences())
                     {
                         ShowActivated = true,
                         DataContext = viewModel
@@ -174,7 +175,7 @@ namespace RoadCaptain.App.Runner.Tests.Unit.Views
             var viewModel = new InGameNavigationWindowViewModel(model, segments, null, null);
             var monitoringEvents = new NopMonitoringEvents();
             var window =
-                new InGameNavigationWindow(new InMemoryGameStateDispatcher(monitoringEvents), monitoringEvents, new DummyUserPreferences())
+                new InGameNavigationWindow(new InMemoryGameStateDispatcher(monitoringEvents, new PlatformPaths()), monitoringEvents, new DummyUserPreferences())
                     {
                         ShowActivated = true,
                         DataContext = viewModel
@@ -244,7 +245,7 @@ namespace RoadCaptain.App.Runner.Tests.Unit.Views
             var viewModel = new InGameNavigationWindowViewModel(model, segments, null, null);
             var monitoringEvents = new NopMonitoringEvents();
             var window =
-                new InGameNavigationWindow(new InMemoryGameStateDispatcher(monitoringEvents), monitoringEvents, new DummyUserPreferences())
+                new InGameNavigationWindow(new InMemoryGameStateDispatcher(monitoringEvents, new PlatformPaths()), monitoringEvents, new DummyUserPreferences())
                     {
                         ShowActivated = true,
                         DataContext = viewModel

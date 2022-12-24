@@ -1,9 +1,10 @@
 ﻿using System;
 using System.IO;
+using RoadCaptain.Ports;
 
 namespace RoadCaptain.App.Shared
 {
-    public class PlatformPaths
+    public class PlatformPaths : IPathProvider
     {
         private const string CompanyName = "Codenizer BV";
         private const string ProductName = "RoadCaptain";
@@ -25,6 +26,11 @@ namespace RoadCaptain.App.Shared
 #endif
 
             return logDirectory;
+        }
+
+        string IPathProvider.GetUserDataDirectory()
+        {
+            return GetUserDataDirectory();
         }
     }
 }

@@ -7,6 +7,7 @@ using System.Threading;
 using FluentAssertions;
 using RoadCaptain.Adapters;
 using RoadCaptain.App.Runner.ViewModels;
+using RoadCaptain.App.Shared;
 using RoadCaptain.GameStates;
 using Xunit;
 
@@ -19,7 +20,7 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.MainWindow
 
         public WhenUpdatingMainWindowViewModel()
         {
-            _gameStateDispatcher = new InMemoryGameStateDispatcher(new NopMonitoringEvents());
+            _gameStateDispatcher = new InMemoryGameStateDispatcher(new NopMonitoringEvents(), new PlatformPaths());
             var routeStore = new StubRouteStore();
             _viewModel = new MainWindowViewModel(new Configuration(null), 
                 new DummyUserPreferences(),

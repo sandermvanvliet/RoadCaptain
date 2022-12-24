@@ -7,6 +7,7 @@ using System.Threading;
 using FluentAssertions;
 using RoadCaptain.Adapters;
 using RoadCaptain.App.Runner.ViewModels;
+using RoadCaptain.App.Shared;
 using RoadCaptain.GameStates;
 using Xunit;
 
@@ -22,7 +23,7 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.MainWindow
 
         public WhenCallingStartRouteCommand()
         {
-            _gameStateDispatcher = new InMemoryGameStateDispatcher(new NopMonitoringEvents());
+            _gameStateDispatcher = new InMemoryGameStateDispatcher(new NopMonitoringEvents(), new PlatformPaths());
             _gameStateDispatcher.LoggedIn();
             
             _windowService = new StubWindowService();
