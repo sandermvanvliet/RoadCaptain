@@ -43,7 +43,7 @@ namespace RoadCaptain.App.RouteBuilder
         // ReSharper disable once UnusedMember.Local
         private static string CreateLoggerForReleaseMode(string logFileName)
         {
-            var logDirectory = PlatformPaths.LogDirectory();
+            var logDirectory = PlatformPaths.GetUserDataDirectory();
 
             CreateDirectoryIfNotExists(logDirectory);
 

@@ -8,7 +8,7 @@ namespace RoadCaptain.App.Shared
         private const string CompanyName = "Codenizer BV";
         private const string ProductName = "RoadCaptain";
 
-        public static string LogDirectory()
+        public static string GetUserDataDirectory()
         {
 #if WIN
             var localAppDataFolder = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
