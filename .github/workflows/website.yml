@@ -22,14 +22,14 @@ jobs:
         ssh-agent -a $SSH_AUTH_SOCK > /dev/null
         ssh-add - <<< "${{ secrets.SSH_SITE_KEY }}"
 
-    - name: Setup Hugo
+    - name: Install Hugo
       uses: peaceiris/actions-hugo@v2
       with:
         hugo-version: '0.107.0'
         extended: true
     
     - name: Build website
-      run: hugo --minify
+      run: hugo
       working-directory: site/
 
     - name: Copy files to webserver
