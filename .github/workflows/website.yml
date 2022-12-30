@@ -27,6 +27,9 @@ jobs:
       with:
         hugo-version: 'latest'
         extended: true
+
+    - name: Add theme
+      run: git submodule add https://github.com/caressofsteel/hugo-story.git site/themes/hugo-story
     
     - name: Build website
       run: hugo
