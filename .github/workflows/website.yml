@@ -31,9 +31,9 @@ jobs:
     - name: Build website
       run: hugo --minify
       working-directory: site/
-      
+
     - name: Copy files to webserver
       env:
         SSH_AUTH_SOCK: /tmp/ssh_agent.sock
-      run: scp -r ./* roadcaptain@roadcaptain.nl:/var/www/roadcaptain.nl
+      run: scp -r -o "StrictHostKeyChecking no" ./* roadcaptain@roadcaptain.nl:/var/www/roadcaptain.nl
       working-directory: site/public/
