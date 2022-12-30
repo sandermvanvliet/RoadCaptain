@@ -27,7 +27,10 @@ jobs:
       with:
         hugo-version: 'latest'
         extended: true
-        
+
+    - name: Add theme
+      run: git submodule update site/themes/hugo-story
+    
     - name: Build website
       run: hugo
       working-directory: site/
@@ -35,5 +38,5 @@ jobs:
     - name: Copy files to webserver
       env:
         SSH_AUTH_SOCK: /tmp/ssh_agent.sock
-      run: scp -vv -r -o "StrictHostKeyChecking no" ./* roadcaptain@roadcaptain.nl:/var/www/roadcaptain.nl
+      run: scp -r -o "StrictHostKeyChecking no" ./* roadcaptain@roadcaptain.nl:/var/www/roadcaptain.nl
       working-directory: site/public/
