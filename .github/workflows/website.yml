@@ -29,7 +29,9 @@ jobs:
         extended: true
 
     - name: Add theme
-      run: git submodule init site/themes/hugo-story
+      run: |
+        git submodule init site/themes/hugo-story
+        git submodule update site/themes/hugo-story
     
     - name: Build website
       run: hugo
