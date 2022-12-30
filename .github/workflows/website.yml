@@ -35,5 +35,5 @@ jobs:
     - name: Copy files to webserver
       env:
         SSH_AUTH_SOCK: /tmp/ssh_agent.sock
-      run: scp -r -o "StrictHostKeyChecking no" "${GITHUB_WORKSPACE}/site/public/*" roadcaptain@roadcaptain.nl:/var/www/roadcaptain.nl -vv
+      run: scp -vv -r -o "StrictHostKeyChecking no" "${GITHUB_WORKSPACE}/site/public/*" roadcaptain@roadcaptain.nl:/var/www/roadcaptain.nl
       working-directory: site/public/
