@@ -1,0 +1,43 @@
+name: website
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+    paths:
+      - site/
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Setup SSH key
+      env:
+        SSH_AUTH_SOCK: /tmp/ssh_agent.sock
+      run: |
+        ssh-agent -a $SSH_AUTH_SOCK > /dev/null
+        ssh-add - <<< "${{ secrets.SSH_SITE_KEY }}"
+
+    - name: Setup Hugo
+      uses: peaceiris/actions-hugo@v2
+      with:
+        hugo-version: '0.107.0'
+        extended: true
+    
+    - name: Build website
+      run: hugo --minify
+      working-directory: site/
+
+    - name: Package website
+      run: tar -zcf ../site.tar.gz
+      working-directory: site/
+
+    - name: Copy files to webserver
+      env:
+        SSH_AUTH_SOCK: /tmp/ssh_agent.sock
+      run: scp -r ./* roadcaptain@roadcaptain.nl:/var/www/roadcaptain.nl
+      working-directory: site/public/
