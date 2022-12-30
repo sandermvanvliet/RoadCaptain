@@ -1,7 +1,7 @@
 ####################### Banner #########################
 #style: "style1 orient-left content-align-left image-position-right fullscreen onload-image-fade-in onload-content-fade-right"
 style: "style1"
-title : "RoadCaptain"
+title : "RoadCaptain for Zwift"
 subtitle: |
   A custom route builder for <a href="https://zwift.com"><img src="images/zwift-logo.png" alt="Zwift logo" height="22px" /> Zwift</a>
 content : |
