@@ -31,11 +31,7 @@ jobs:
     - name: Build website
       run: hugo --minify
       working-directory: site/
-
-    - name: Package website
-      run: tar -zcf ../site.tar.gz
-      working-directory: site/
-
+      
     - name: Copy files to webserver
       env:
         SSH_AUTH_SOCK: /tmp/ssh_agent.sock
