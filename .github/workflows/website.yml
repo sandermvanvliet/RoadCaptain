@@ -29,11 +29,11 @@ jobs:
         extended: true
     
     - name: Build website
-      run: hugo --minify
+      run: hugo --minify --destination "${GITHUB_WORKSPACE}/publish"
       working-directory: site/
 
     - name: Copy files to webserver
       env:
         SSH_AUTH_SOCK: /tmp/ssh_agent.sock
-      run: scp -vv -r -o "StrictHostKeyChecking no" "${GITHUB_WORKSPACE}/site/public/*" roadcaptain@roadcaptain.nl:/var/www/roadcaptain.nl
+      run: scp -vv -r -o "StrictHostKeyChecking no" "${GITHUB_WORKSPACE}/publish/*" roadcaptain@roadcaptain.nl:/var/www/roadcaptain.nl
       working-directory: site/public/
