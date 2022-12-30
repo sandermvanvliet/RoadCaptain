@@ -11,6 +11,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:controls="clr-namespace:RoadCaptain.App.RouteBuilder.Controls"
+        xmlns:sharedControls="clr-namespace:RoadCaptain.App.Shared.Controls;assembly=RoadCaptain.App.Shared"
         xmlns:appConverters="clr-namespace:RoadCaptain.App.RouteBuilder.Converters"
         xmlns:map="clr-namespace:Codenizer.Avalonia.Map;assembly=Codenizer.Avalonia.Map"
         mc:Ignorable="d"
@@ -108,10 +109,7 @@
 				<map:Map
 					Name="ZwiftMap"
 					Cursor="Hand"
-					MapObjectSelected="ZwiftMap_OnMapObjectSelected"
-                    HorizontalAlignment="Stretch"
-                    VerticalAlignment="Stretch"
-                    Margin="0,0,0,0"/>
+					MapObjectSelected="ZwiftMap_OnMapObjectSelected"/>
 
 				<controls:ElevationProfile
 					Height="250"
