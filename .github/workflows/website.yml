@@ -30,8 +30,8 @@ jobs:
 
     - name: Add theme
       run: |
-        git submodule init site/themes/hugo-story
-        git submodule update site/themes/hugo-story
+        git submodule init
+        git submodule update
     
     - name: Build website
       run: hugo
