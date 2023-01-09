@@ -28,6 +28,7 @@ items:
   - name : "Loop"
     content : "Create a loop to ride a section again. Lead-in and lead-out are supported"
     style : "solid style2 major fa-redo"
+    feature: "loop"
     
   # feature item loop
   - name : "Zoom"

@@ -17,19 +17,19 @@ content: |
     <tbody>
       <tr>
         <td><strong>Stable release</strong></td>
-        <td>0.6.9.0 - <a href="https://github.com/sandermvanvliet/RoadCaptain/releases/tag/0.6.9.0">Changelog</a></td>
+        <td>0.6.10.1 - <a href="https://github.com/sandermvanvliet/RoadCaptain/releases/tag/0.6.10.1">Changelog</a></td>
         <td>
-          <a href="https://github.com/sandermvanvliet/RoadCaptain/releases/download/0.6.9.0/RoadCaptain_0.6.9.0.msi" /><i class="fab fa-windows"></i> Windows</a> | 
-          <a href="https://github.com/sandermvanvliet/RoadCaptain/releases/download/0.6.9.0/RoadCaptain-0.6.9.0-osx-x64.dmg"><i class="fab fa-apple"></i> MacOS</a> |
+          <a href="https://github.com/sandermvanvliet/RoadCaptain/releases/download/0.6.10.1/RoadCaptain_0.6.10.1.msi" /><i class="fab fa-windows"></i> Windows</a> | 
+          <a href="https://github.com/sandermvanvliet/RoadCaptain/releases/download/0.6.10.1/RoadCaptain-0.6.10.1-osx-x64.dmg"><i class="fab fa-apple"></i> MacOS</a> |
           <a href="#" style="color: grey;text-decoration:line-through"><i class="fab fa-linux"></i> Linux</a>
         </td>
       </tr>
       <tr>
         <td><span style="font-style:italic">Preview release</span></td>
-        <td>0.6.10.0 - <a href="https://github.com/sandermvanvliet/RoadCaptain/releases/tag/prerelease%2F0.6.10.0">Changelog</a></td>
+        <td>0.6.11.0 - <a href="https://github.com/sandermvanvliet/RoadCaptain/releases/tag/prerelease%2F0.6.11.0">Changelog</a></td>
         <td>
-          <a href="https://github.com/sandermvanvliet/RoadCaptain/releases/download/prerelease%2F0.6.10.0/RoadCaptain_0.6.10.0.msi" /><i class="fab fa-windows"></i> Windows</a> | 
-          <a href="https://github.com/sandermvanvliet/RoadCaptain/releases/download/prerelease%2F0.6.10.0/RoadCaptain-0.6.10.0-osx-x64.dmg"><i class="fab fa-apple"></i> MacOS</a> |
+          <a href="https://github.com/sandermvanvliet/RoadCaptain/releases/download/prerelease%2F0.6.11.0/RoadCaptain_0.6.11.0.msi" /><i class="fab fa-windows"></i> Windows</a> | 
+          <a href="https://github.com/sandermvanvliet/RoadCaptain/releases/download/prerelease%2F0.6.11.0/RoadCaptain-0.6.11.0-osx-x64.dmg"><i class="fab fa-apple"></i> MacOS</a> |
           <a href="#" style="color: grey;text-decoration:line-through"><i class="fab fa-linux"></i> Linux</a>
         </td>
       </tr>

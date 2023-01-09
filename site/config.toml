@@ -1,7 +1,7 @@
 baseURL = 'https://roadcaptain.nl/'
 languageCode = 'en-us'
 title = 'RoadCaptain a Zwift custom route builder'
-theme = "hugo-story"
+theme = "roadcaptain"
 
 disableKinds = ["taxonomy", "taxonomyTerm", "section"]
 

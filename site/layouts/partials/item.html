@@ -2,4 +2,7 @@
     <span class="icon {{ .style }}"></span>
     <h3>{{ .name }}</h3>
     <p>{{ .content | safeHTML }}</p>
+    {{ if .feature }}
+    <p><a href="/features/{{ .feature }}">Read more</a></p>
+    {{ end }}
 </section>
