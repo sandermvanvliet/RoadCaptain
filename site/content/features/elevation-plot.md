@@ -1,7 +1,6 @@
 ---
 title: "RoadCaptain Feature: Elevation plot"
-date: "2023-01-15"
-style: blank
+ParentFeatureList: "route-builder-features"
 ---
 
 To help you build a route, the Route Builder can show an elevation plot of the route as you are building it. The plot can be displayed by clicking the "Elevation plot" checkbox in the menu bar:

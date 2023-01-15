@@ -1,7 +1,6 @@
 ---
 title: "RoadCaptain Feature: Zwift Secure Authentication"
-date: "2023-01-15"
-style: blank
+ParentFeatureList: "runner-features"
 ---
 
 When RoadCaptain starts, it will connect to the Zwift platform and initiates the connection between Zwift and RoadCaptain. The Zwift platform requires an access token so that it can authenticate these kinds of requests and keep your account secure.

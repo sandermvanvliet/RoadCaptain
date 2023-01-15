@@ -1,0 +1,23 @@
+{{ define "main" }}
+    <style type="text/css">
+        p.feature-image {
+            text-align: center;
+        }
+    </style>
+
+    <section class="banner style1">
+        <div class="content">
+            <h1>{{ .Title }}</h1>
+            <p><a href="/#{{ .Params.ParentFeatureList }}">&lt;&lt; Back to feature list</a></p>
+        </div>
+    </section>
+
+    <section class="content style1 spotlight align-left content-align-left">
+        <div class="content">
+            {{ .Content }}
+        </div>
+    </section>
+
+	{{ partial "template/footer" . }}
+
+{{ end }}

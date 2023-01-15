@@ -1,7 +1,6 @@
 ---
 title: "RoadCaptain Feature: Loops"
-date: "2023-01-09"
-style: blank
+ParentFeatureList: "route-builder-features"
 ---
 
 Loops are a special type of route that you can build in Route Builder which allow you to repeatedly ride the same section of a route. This can be particularly useful when you want to build a route with a specific training goal in mind.

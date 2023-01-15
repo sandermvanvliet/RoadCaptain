@@ -1,5 +1,6 @@
 ---
 title: "RoadCaptain Feature: KOMs and Sprints"
+ParentFeatureList: "route-builder-features"
 ---
 
 In Zwift there are numerous sprint and KOM segments. When you want to plan a route that targets a specific sprint or KOM you can show them on the map so you don't have to remember where they are.
