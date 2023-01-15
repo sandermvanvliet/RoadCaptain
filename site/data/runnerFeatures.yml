@@ -8,6 +8,7 @@ items:
   - name: "Zwift secure authentication"
     content: "Authenticate via the official Zwift login. RoadCaptain won't see your credentials"
     style: "solid style2 major fa-lock"
+    feature: "secure-authentication"
   
   - name: "Route preview"
     content: "When selecting a route, an animated preview of the route is shown on the map as well as the distance, ascent & descent and the KOM & sprint segments on the route"
