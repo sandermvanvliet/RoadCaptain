@@ -19,11 +19,13 @@ items:
   - name : "KOM"
     content : "Highlight KOMs on the map so you can include them on your route"
     style : "solid style2 major fa-mountain"
+    feature: "kom-sprint"
     
   # feature item loop
   - name : "Sprint"
     content : "Highlight sprints on the map so you can include them on your route"
     style : "solid style2 major fa-stopwatch"
+    feature: "kom-sprint"
     
   # feature item loop
   - name : "Loop"
