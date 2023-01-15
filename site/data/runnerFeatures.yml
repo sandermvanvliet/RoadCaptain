@@ -23,6 +23,7 @@ items:
   - name: "Segment list"
     content: "Quickly see which special segments (KOM & sprint) are on your route when opening a route"
     style: "solid style2 major fa-list"
+    feature: "segment-list"
 
   # feature item loop
   - name: "Running"
