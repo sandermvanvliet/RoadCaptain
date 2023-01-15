@@ -346,6 +346,25 @@
 					text-align: right;
 				}
 
+			// Title Alignment.
+				&.title-align-left {
+					h2 {
+						text-align: left;
+					}
+				}
+
+				&.title-align-center {
+					h2 {
+						text-align: center;
+					}
+				}
+
+				&.title-align-right {
+					h2 {
+						text-align: right;
+					}
+				}
+
 			// Image Position.
 				&.image-position-left {
 					.image {

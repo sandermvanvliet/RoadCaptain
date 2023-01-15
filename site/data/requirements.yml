@@ -1,0 +1,38 @@
+####################### Spotlight #########################
+style: "style1 content-align-left title-align-center"
+id: "requirements"
+title : "RoadCaptain requirements"
+content: |
+  RoadCaptain runs on many different platforms however there are some differences:
+  <table class="requirements" style="text-align: left">
+    <thead>
+      <tr>
+        <th>Platform</th>
+        <th>Supported</th>
+        <th>Requirements</th>
+        <th>Remarks</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td style="width:155px"><i class="fab fa-windows"> Windows</td><td>Yes</td><td>Windows 7 or up</td><td></td>
+      </tr>
+      <tr>
+        <td><i class="fab fa-apple"></i> macOS</td><td>Yes</td><td>macOS 10.15 or up</td><td>Keyboard support in the log in window is marginal due to browser integration issues. Backspace currently doesn't work so it's advisable to copy-paste your username and password</td>
+      </tr>
+      <tr>
+        <td><i class="fab fa-apple"></i> iOS / iPadOS / AppleTV</td><td>No</td><td></td><td>No support for these platforms is currently planned</td>
+      </tr>
+      <tr>
+        <td><i class="fab fa-linux"></i> Linux</td><td>Partial, no packages available</td><td>Any recent distribution should work</td><td>Route Builder works, however logging in with the Runner app currently does not work due to the lack of browser integration on Linux</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>iOS / iPadOS / AppleTV</h3>
+  <p>When you run Zwift on any of these platforms you can still use RoadCaptain, however you will need a separate computer to run RoadCaptain.</p>
+
+  <h3>Running RoadCaptain on a different machine</h3>
+  <p>It is possible to run RoadCaptain on a different machine than where you run Zwift. However, the computer running RoadCaptain and Zwift must be on the same network and must be able to reach each other.<p>
+  <p>RoadCaptain listens on TCP port 21588, you will need to ensure that your firewall allows inbound traffic to this port from your local network.<br />
+  <strong>Warning:</strong> For the safety of your machine, ensure that when you configure your firewall (or when your Operating System asks you to allow traffic on this port) you only allow this for the local network, not public networks or internet.</p>
