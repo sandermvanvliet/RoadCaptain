@@ -4,11 +4,11 @@ on:
   push:
     branches: [ main ]
     paths-ignore:
-      - site/
+      - site/**
   pull_request:
     branches: [ main ]
     paths-ignore:
-      - site/
+      - site/**
 
 jobs:
   build:
