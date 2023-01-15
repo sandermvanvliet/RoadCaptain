@@ -1,9 +1,9 @@
 ####################### Spotlight #########################
 style: "style1 orient-left content-align-left image-position-left"
-id: ride-on
-title : "Ride on!"
+id: get-started
+title : "Get started!"
 content: |
-  Select the route you've built in RoadCaptain Runner, log in to Zwift and Ride on!
+  Select the route you've built in RoadCaptain Runner, hit the log in button to log in to Zwift and Ride on!
   <br /><br />
   The Runner app will tell you which route to select in Zwift and then automatically navigates you on your route. No more worrying about clicking the buttons to go left or right, RoadCaptain handles that for you automatically!
   <br /><br />

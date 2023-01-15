@@ -11,8 +11,8 @@ content: |
   Looking to build a super flat route or some extra vert? The elevation plot helps you build your route with the right amount of ascent you want.
 buttons:
   - button:
-    label: "Ride on"
-    link: "#ride-on"
+    label: "Get started"
+    link: "#get-started"
     class: "primary"
   - button: 
     label: "Learn more"
