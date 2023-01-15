@@ -8,6 +8,7 @@ items:
   - name : "Elevation"
     content : "Use the elevation plot to see the profile of your route and the grade of the climbs"
     style : "solid style2 major fa-chart-bar"
+    feature: "elevation-plot"
 
   # feature item loop
   - name : "Simulate"
