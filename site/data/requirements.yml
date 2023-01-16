@@ -1,7 +1,7 @@
 ####################### Spotlight #########################
 style: "style1 medium"
 id: "requirements"
-title : "RoadCaptain requirements"
+title : "Requirements"
 items:
   - name: "Windows"
     supported: "Yes"

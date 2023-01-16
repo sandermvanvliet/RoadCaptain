@@ -1,7 +1,7 @@
 <!-- Items -->
 <section class="wrapper style1 align-center" id="{{ .id }}">
     <div class="inner"  style="text-align: left">
-        {{ with .title }}<h2>{{ . }}</h2>{{ end }}
+        {{ with .title }}<h2 style="text-align:center">{{ . }}</h2>{{ end }}
         <div class="items {{ .style }}" style="text-align: center">
             {{ range .items }}
                 {{ partial "requirement" . }}
