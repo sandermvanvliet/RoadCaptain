@@ -1,7 +1,7 @@
 ####################### Spotlight #########################
 style: "style1 content-align-center"
 id: "releases"
-title : "RoadCaptain releases"
+title : "Releases"
 content: |
   Installers are available for Windows and MacOS.<br /><br />
   Typically you will want to download the RoadCaptain stable release. If you want to test out new features as they are worked on you can choose to install the preview release. 
