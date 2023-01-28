@@ -103,7 +103,31 @@ namespace RoadCaptain.GameStates
                 return new OnSegmentState(RiderId, ActivityId, closestOnSegment, segment,direction, distance, ascent, descent);
             }
 
-            if (plannedRoute.HasStarted)
+            // If a connection lost event has happened and the user re-enters the game
+            // then the route has already started and we need to continue with the route
+            if (plannedRoute.HasStarted && 
+                plannedRoute.CurrentSegmentId == segment.Id &&
+                direction != SegmentDirection.Unknown && 
+                plannedRoute.CurrentSegmentSequence!.Direction == direction)
+            {
+                return new OnRouteState(RiderId, ActivityId, closestOnSegment, segment, plannedRoute, direction, distance, ascent, descent);
+            }
+
+            // This is the same case as above but the rider has progressed to the next
+            // segment. For example where the end of the current segment was reached
+            // during reconnection and the rider still moved forward
+            if (plannedRoute.HasStarted && 
+                plannedRoute.NextSegmentId == segment.Id &&
+                direction != SegmentDirection.Unknown && 
+                plannedRoute.NextSegmentSequence!.Direction == direction)
+            {
+                // Progress the route
+                plannedRoute.EnteredSegment(segment.Id);
+
+                return new OnRouteState(RiderId, ActivityId, closestOnSegment, segment, plannedRoute, direction, distance, ascent, descent);
+            }
+
+            if(plannedRoute.HasStarted)
             {
                 // If a route has been started you can only go to LostRouteLockState,
                 // OnRouteState, CompletedRouteState or UpcomingTurnState. Going back

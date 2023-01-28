@@ -36,7 +36,7 @@ namespace RoadCaptain.GameStates
             {
                 return new PositionedState(RiderId, ActivityId, position);
             }
-            
+
             return new OnSegmentState(RiderId, ActivityId, closestOnSegment, segment, SegmentDirection.Unknown, 0, 0, 0);
         }
 

@@ -73,23 +73,24 @@ namespace RoadCaptain.Tests.Unit.GameState
         }
 
         [Fact]
-        public void GivenInGameStateAndPositionIsUpdated_ResultingStateIsPositionedState()
+        public void GivenInGameStateAndPositionIsUpdatedAndPositionIsOnSegment_ResultingStateIsOnSegmentState()
         {
             var state = new InGameState(RiderId, ActivityId);
 
-            var result = state.UpdatePosition(PositionNotOnSegment, _segments, _route);
+            var result = state.UpdatePosition(PositionOnSegment, _segments, _route);
 
             result
                 .Should()
-                .BeOfType<PositionedState>()
+                .BeOfType<OnSegmentState>()
                 .Which
-                .CurrentPosition
+                .CurrentSegment
+                .Id
                 .Should()
-                .Be(PositionNotOnSegment);
+                .Be("segment-1");
         }
 
         [Fact]
-        public void GivenInGameStateAndPositionIsUpdatedAndPositionIsOnSegment_ResultingStateIsOnSegmentState()
+        public void GivenInGameStateAndPositionIsOnSegmentOfStartedRoute_ResultingStateIsOnRouteState()
         {
             var state = new InGameState(RiderId, ActivityId);
 
@@ -155,7 +156,7 @@ namespace RoadCaptain.Tests.Unit.GameState
         }
 
         [Fact]
-        public void GivenOnSegmentStateAndPositionIsUpdatedWhichIsOnAnotherSegment_ResultingStateIsOnSegmentStateWithNewSegmentid()
+        public void GivenOnSegmentStateAndPositionIsUpdatedWhichIsOnAnotherSegment_ResultingStateIsOnSegmentStateWithNewSegmentId()
         {
             var state = new OnSegmentState(RiderId, ActivityId, PositionOnSegment, SegmentById("segment-1"), SegmentDirection.AtoB, 0, 0, 0);
 
@@ -222,6 +223,44 @@ namespace RoadCaptain.Tests.Unit.GameState
                 .Id
                 .Should()
                 .Be("route-segment-2");
+        }
+
+        [Fact]
+        public void GivenOnSegmentStateAndPositionIsUpdated_ResultingStateIsPositionedState()
+        {
+            var state = new OnSegmentState(RiderId, ActivityId, RoutePosition2, SegmentById("route-segment-2"), SegmentDirection.Unknown, 0, 0, 0);
+
+            _route.EnteredSegment("route-segment-1");
+            _route.EnteredSegment("route-segment-2");
+
+            var result = state.UpdatePosition(RoutePosition2Point2, _segments, _route);
+
+            result
+                .Should()
+                .BeOfType<OnRouteState>()
+                .Which
+                .CurrentPosition
+                .Should()
+                .Be(RoutePosition2Point2);
+        }
+
+        [Fact]
+        public void GivenOnSegmentStateAndPositionIsUpdatedToPositionOnNextRouteSegment_ResultingStateIsPositionedState()
+        {
+            var state = new OnSegmentState(RiderId, ActivityId, RoutePosition3, SegmentById("route-segment-3"), SegmentDirection.Unknown, 0, 0, 0);
+
+            _route.EnteredSegment("route-segment-1");
+            _route.EnteredSegment("route-segment-2");
+
+            var result = state.UpdatePosition(RoutePosition3Point2, _segments, _route);
+
+            result
+                .Should()
+                .BeOfType<OnRouteState>()
+                .Which
+                .CurrentPosition
+                .Should()
+                .Be(RoutePosition3Point2);
         }
 
         [Fact]
