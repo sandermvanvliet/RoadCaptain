@@ -17,6 +17,9 @@ using RoadCaptain.App.RouteBuilder.Views;
 using RoadCaptain.App.Shared.Dialogs;
 using Serilog;
 using Serilog.Core;
+using RoadCaptain.App.Shared.Commands;
+using System.Runtime.InteropServices;
+using System.Security.Policy;
 
 namespace RoadCaptain.App.RouteBuilder
 {
@@ -141,6 +144,23 @@ namespace RoadCaptain.App.RouteBuilder
                 { ApplicationLifetime: IClassicDesktopStyleApplicationLifetime { MainWindow: { } mainWindow } })
             {
                 await dialog.ShowDialog(mainWindow);
+            }
+        }
+
+        private void Documentation_OnClick(object? sender, EventArgs e)
+        {
+            var url = "https://roadcaptain.nl";
+
+            if (Uri.TryCreate(url, UriKind.Absolute, out _))
+            {
+                // Code from Avalonia: AboutAvaloniaDialog.cs
+                using var process = Process.Start(new ProcessStartInfo
+                {
+                    FileName = RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? url : "open",
+                    Arguments = RuntimeInformation.IsOSPlatform(OSPlatform.OSX) ? url : "",
+                    CreateNoWindow = true,
+                    UseShellExecute = RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
+                });
             }
         }
     }

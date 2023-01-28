@@ -12,6 +12,7 @@
 	<NativeMenu.Menu>
 		<NativeMenu>
 			<NativeMenuItem Header="About RoadCaptain" Click="AboutRoadCaptainMenuItem_OnClick" />
+			<NativeMenuItem Header="Documentation" Click="Documentation_OnClick" />
 		</NativeMenu>
 	</NativeMenu.Menu>
 
