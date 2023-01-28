@@ -1,5 +1,11 @@
 ﻿# Changelog
 
+## 0.6.11.0
+
+### Runner
+
+- Fix a bug where a crash would occur because the map animation would continue running when the rider is already in-game.
+
 ## 0.6.10.1
 
 ### Runner
