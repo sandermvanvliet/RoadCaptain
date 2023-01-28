@@ -1,8 +1,8 @@
 <Project>
 	<PropertyGroup>
-		<Version>0.6.10.1</Version>
+		<Version>0.6.11.0</Version>
 		<Authors>Sander van Vliet</Authors>
 		<Company>Codenizer BV</Company>
-		<Copyright>2022 Sander van Vliet</Copyright>
+		<Copyright>2023 Sander van Vliet</Copyright>
 	</PropertyGroup>
 </Project>
