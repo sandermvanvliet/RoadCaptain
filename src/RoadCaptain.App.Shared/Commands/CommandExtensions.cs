@@ -1,4 +1,8 @@
-﻿using System.Runtime.InteropServices;
+// Copyright (c) 2023 Sander van Vliet
+// Licensed under Artistic License 2.0
+// See LICENSE or https://choosealicense.com/licenses/artistic-2.0/
+
+using System.Runtime.InteropServices;
 using System.Windows.Input;
 using Avalonia.Controls;
 using Avalonia.Input;
