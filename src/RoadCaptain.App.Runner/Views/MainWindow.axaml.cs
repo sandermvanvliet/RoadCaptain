@@ -165,6 +165,7 @@ namespace RoadCaptain.App.Runner.Views
             var routePath = ZwiftMap.MapObjects.SingleOrDefault(mo => mo is RoutePath) as RoutePath;
             if (routePath == null)
             {
+                _animationTimer.Stop();
                 return;
             }
 
