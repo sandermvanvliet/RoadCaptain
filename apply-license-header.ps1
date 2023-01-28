@@ -5,7 +5,7 @@ $prepend = Get-Content "csharp-license.txt" -Raw
 foreach($file in $csharpFiles)
 {
     $contents = get-content $file -head 1
-    if($contents.Trim() -ne "// Copyright (c) 2022 Sander van Vliet")
+    if(!$contents.Trim().StartsWith("// Copyright (c) "))
     {
         $fullPath = $file.FullName
 
@@ -25,7 +25,7 @@ $prepend = Get-Content "xaml-license.txt" -Raw
 foreach($file in $xamlFiles)
 {
     $contents = get-content $file -head 2
-    if($contents[1].Trim() -ne "// Copyright (c) 2022 Sander van Vliet")
+    if(!$contents[1].Trim().StartsWith("// Copyright (c) "))
     {
         $fullPath = $file.FullName
 
