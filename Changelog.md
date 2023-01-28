@@ -6,6 +6,10 @@
 
 - Fix a bug where a crash would occur because the map animation would continue running when the rider is already in-game.
 
+### Route Builder
+
+- Add a menu item to go to the documentation on roadcaptain.nl
+
 ## 0.6.10.1
 
 ### Runner
