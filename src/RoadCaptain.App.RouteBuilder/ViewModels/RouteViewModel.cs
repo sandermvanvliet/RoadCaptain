@@ -218,9 +218,13 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
                 return null;
             }
 
+            var zwiftRouteName = Sequence.Count() > 1
+                ? GetZwiftRouteName(Sequence.First())
+                : "Route starting at " + Sequence.First().SegmentId;
+
             var route = new PlannedRoute
             {
-                ZwiftRouteName = GetZwiftRouteName(Sequence.First()),
+                ZwiftRouteName = zwiftRouteName,
                 Name = Name,
                 World = World,
                 Sport = Sport
