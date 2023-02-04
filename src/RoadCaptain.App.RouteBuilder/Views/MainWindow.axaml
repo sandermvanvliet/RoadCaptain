@@ -10,7 +10,6 @@
         xmlns:converters="clr-namespace:RoadCaptain.App.Shared.Converters;assembly=RoadCaptain.App.Shared"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:controls="clr-namespace:RoadCaptain.App.RouteBuilder.Controls"
         xmlns:sharedControls="clr-namespace:RoadCaptain.App.Shared.Controls;assembly=RoadCaptain.App.Shared"
         xmlns:appConverters="clr-namespace:RoadCaptain.App.RouteBuilder.Converters"
         xmlns:map="clr-namespace:Codenizer.Avalonia.Map;assembly=Codenizer.Avalonia.Map"
@@ -71,7 +70,7 @@
 		<converters:ValueToBooleanConverter x:Key="ValueToBooleanConverter" />
 		<converters:BitmapConverter x:Key="BitmapConverter" />
 		<converters:NullabilityConverter x:Key="NullabilityConverter" />
-		<appConverters:RouteSequenceConverter x:Key="RouteSequenceConverter" />
+		<appConverters:RouteViewModelConverter x:Key="RouteViewModelConverter" />
 	</Window.Resources>
 	<DockPanel>
 		<Grid
@@ -111,12 +110,12 @@
 					Cursor="Hand"
 					MapObjectSelected="ZwiftMap_OnMapObjectSelected"/>
 
-				<controls:ElevationProfile
+				<sharedControls:ElevationProfile
 					Height="250"
 					VerticalAlignment="Bottom"
 					HorizontalAlignment="Stretch"
 					Segments="{Binding Path=Segments}"
-					Route="{Binding Path=Route,Mode=OneWay}"
+					Route="{Binding Path=Route,Mode=OneWay,Converter={StaticResource RouteViewModelConverter}}"
 					RiderPosition="{Binding Path=RiderPosition}"
 					ShowClimbs="{Binding Path=ShowClimbs}"
 					Markers="{Binding Path=Markers}"

@@ -199,6 +199,25 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
                 throw new ArgumentException("Output file path is empty");
             }
 
+            var route = AsPlannedRoute();
+
+            if (route == null)
+            {
+                return;
+            }
+
+            _routeStore.Store(route, OutputFilePath);
+
+            IsTainted = false;
+        }
+
+        public PlannedRoute? AsPlannedRoute()
+        {
+            if (!Sequence.Any())
+            {
+                return null;
+            }
+
             var route = new PlannedRoute
             {
                 ZwiftRouteName = GetZwiftRouteName(Sequence.First()),
@@ -221,10 +240,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             route
                 .RouteSegmentSequence
                 .AddRange(Sequence.Select(s => s.Model).ToList());
-
-            _routeStore.Store(route, OutputFilePath);
-
-            IsTainted = false;
+            return route;
         }
 
         private string GetZwiftRouteName(SegmentSequenceViewModel startingSegment)

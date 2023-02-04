@@ -8,29 +8,26 @@ using Avalonia.Controls;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Avalonia.Skia;
-using RoadCaptain.App.RouteBuilder.ViewModels;
 
-namespace RoadCaptain.App.RouteBuilder.Controls
+namespace RoadCaptain.App.Shared.Controls
 {
     public class ElevationProfile : UserControl
     {
         private readonly ElevationProfileRenderOperation _renderOperation;
-        public static readonly DirectProperty<ElevationProfile, RouteViewModel?> RouteProperty = AvaloniaProperty.RegisterDirect<ElevationProfile, RouteViewModel?>(nameof(Route), map => map.Route, (map, value) => map.Route = value);
+        public static readonly DirectProperty<ElevationProfile, PlannedRoute?> RouteProperty = AvaloniaProperty.RegisterDirect<ElevationProfile, PlannedRoute?>(nameof(Route), map => map.Route, (map, value) => map.Route = value);
         public static readonly DirectProperty<ElevationProfile, List<Segment>?> SegmentsProperty = AvaloniaProperty.RegisterDirect<ElevationProfile, List<Segment>?>(nameof(Segments), map => map.Segments, (map, value) => map.Segments = value);
         public static readonly DirectProperty<ElevationProfile, TrackPoint?> RiderPositionProperty = AvaloniaProperty.RegisterDirect<ElevationProfile, TrackPoint?>(nameof(RiderPosition), map => map.RiderPosition, (map, value) => map.RiderPosition = value);
         public static readonly DirectProperty<ElevationProfile, List<Segment>?> MarkersProperty = AvaloniaProperty.RegisterDirect<ElevationProfile, List<Segment>?>(nameof(Markers), map => map.Markers, (map, value) => map.Markers = value);
         public static readonly DirectProperty<ElevationProfile, bool> ShowClimbsProperty = AvaloniaProperty.RegisterDirect<ElevationProfile, bool>(nameof(ShowClimbs), map => map.ShowClimbs, (map, value) => map.ShowClimbs = value);
 
-        private RouteViewModel? _route;
         private RenderTargetBitmap? _renderTarget;
         private ISkiaDrawingContextImpl? _skiaContext;
 
-        public RouteViewModel? Route
+        public PlannedRoute? Route
         {
-            get => _route;
+            get => _renderOperation.Route;
             set
             {
-                _route = value;
                 _renderOperation.Route = value;
 
                 InvalidateVisual();

@@ -10,16 +10,14 @@ using Avalonia;
 using Avalonia.Platform;
 using Avalonia.Rendering.SceneGraph;
 using Avalonia.Skia;
-using RoadCaptain.App.RouteBuilder.ViewModels;
-using RoadCaptain.App.Shared.Controls;
 using SkiaSharp;
 
-namespace RoadCaptain.App.RouteBuilder.Controls
+namespace RoadCaptain.App.Shared.Controls
 {
     public class ElevationProfileRenderOperation : ICustomDrawOperation
     {
         private static readonly SKColor CanvasBackgroundColor = SKColor.Parse("#FFFFFF");
-        private RouteViewModel? _route;
+        private PlannedRoute? _route;
         private Rect _bounds;
         private float _altitudeOffset;
         private const float MarkerPadding = 30f;
@@ -64,7 +62,7 @@ namespace RoadCaptain.App.RouteBuilder.Controls
             _offsetY = textBounds.Height / 2;
         }
 
-        public RouteViewModel? Route
+        public PlannedRoute? Route
         {
             get => _route;
             set
@@ -143,7 +141,7 @@ namespace RoadCaptain.App.RouteBuilder.Controls
 
         private void CreateElevationProfile()
         {
-            if (Route == null || Segments == null || !Segments.Any() || !Route.Sequence.Any())
+            if (Route == null || Segments == null || !Segments.Any() || !Route.RouteSegmentSequence.Any())
             {
                 _elevationGroups = null;
 
@@ -152,7 +150,7 @@ namespace RoadCaptain.App.RouteBuilder.Controls
 
             var routePoints = new List<TrackPoint>();
 
-            foreach (var routeStep in Route.Sequence)
+            foreach (var routeStep in Route.RouteSegmentSequence)
             {
                 var segment = GetSegmentById(routeStep.SegmentId);
 
