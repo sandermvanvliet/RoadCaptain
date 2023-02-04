@@ -18,6 +18,7 @@ namespace RoadCaptain.App.Runner.Views
     public partial class InGameNavigationWindow : Window
     {
         private readonly MonitoringEvents _monitoringEvents;
+        private readonly IUserPreferences _userPreferences;
         private InGameNavigationWindowViewModel? _viewModel;
 
         // ReSharper disable once UnusedMember.Global this is only used for the Avalonia UI designer
@@ -40,6 +41,7 @@ namespace RoadCaptain.App.Runner.Views
                 });
 
             _monitoringEvents = monitoringEvents;
+            _userPreferences = userPreferences;
 
             InitializeComponent();
 
@@ -57,8 +59,14 @@ namespace RoadCaptain.App.Runner.Views
             Activated -= InGameNavigationWindow_OnActivated;
             
             _viewModel = DataContext as InGameNavigationWindowViewModel ?? throw new Exception("");
+
+            if (_userPreferences.ShowElevationPlotInGame)
+            {
+                _viewModel.ToggleElevationPlotCommand.Execute(_userPreferences.ShowElevationPlotInGame);
+            }
             
             this.Bind(_viewModel.EndActivityCommand).To(Key.X).WithPlatformModifier();
+            this.Bind(_viewModel.ToggleElevationPlotCommand).To(Key.E).WithPlatformModifier();
         }
 
         private void GameStateReceived(GameState gameState)

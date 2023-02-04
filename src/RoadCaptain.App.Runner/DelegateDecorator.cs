@@ -78,6 +78,11 @@ namespace RoadCaptain.App.Runner
             await InvokeIfNeededAsync(() => _decorated.ShowWhatIsNewDialog(release));
         }
 
+        public void ToggleElevationPlot(PlannedRoute? plannedRoute, bool? show)
+        {
+            InvokeIfNeeded(() => _decorated.ToggleElevationPlot(plannedRoute, show));
+        }
+
         private async Task<TResult> InvokeIfNeededAsync<TResult>(Func<Task<TResult>> action)
         {
             if (!_dispatcher.CheckAccess())

@@ -23,11 +23,6 @@ namespace RoadCaptain.App.Shared
             CapturedWindowLocation? windowLocation, 
             Action<CapturedWindowLocation> saveAction)
         {
-            if (windowLocation == null)
-            {
-                return;
-            }
-
             // ReSharper disable once ConvertToLocalFunction
             EventHandler? handler = null;
 

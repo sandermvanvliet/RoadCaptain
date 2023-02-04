@@ -1,0 +1,35 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:controls="clr-namespace:RoadCaptain.App.Shared.Controls;assembly=RoadCaptain.App.Shared"
+        mc:Ignorable="d"
+        x:Class="RoadCaptain.App.Runner.Views.ElevationPlotWindow"
+        Title="Elevation plot"
+        Activated="WindowBase_OnActivated"
+        PointerPressed="InputElement_OnPointerPressed"
+        Width="600"
+        Height="200"
+        WindowState="Maximized"
+        SystemDecorations="None"
+        Background="Transparent"
+        TransparencyLevelHint="Transparent"
+        CanResize="False"
+        Icon="avares://RoadCaptain.App.Shared/icon.png">
+	<Border
+        CornerRadius="20"
+        Background="#FFFFFF"
+        BorderBrush="#cccccc"
+        Padding="8,4,0,0">
+		<controls:ElevationProfile
+		  Segments="{Binding Path=Segments}"
+		  Route="{Binding Path=Route}"
+		  RiderPosition="{Binding Path=RiderPosition}"
+		  ShowClimbs="True"
+		  Markers="{Binding Path=Markers}"
+          HorizontalAlignment="Stretch"
+          VerticalAlignment="Stretch"
+          Margin="0,4,8,8"
+  />
+	</Border>
+</Window>

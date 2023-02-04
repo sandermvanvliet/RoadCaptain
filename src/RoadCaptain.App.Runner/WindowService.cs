@@ -2,6 +2,7 @@
 // Licensed under Artistic License 2.0
 // See LICENSE or https://choosealicense.com/licenses/artistic-2.0/
 
+using System.Linq;
 using System.Threading.Tasks;
 using Autofac;
 using Avalonia.Controls;
@@ -31,6 +32,33 @@ namespace RoadCaptain.App.Runner
         public void Shutdown(int exitCode)
         {
             _applicationLifetime.Shutdown(exitCode);
+        }
+
+        public void ToggleElevationPlot(PlannedRoute? plannedRoute, bool? show)
+        {
+            var elevationPlot = CurrentWindow.OwnedWindows.OfType<ElevationPlotWindow>().SingleOrDefault();
+            var userPreferences = Resolve<IUserPreferences>();
+
+            if (elevationPlot != null)
+            {
+                elevationPlot.Close();
+                userPreferences.ShowElevationPlotInGame = false;
+                userPreferences.Save();
+            }
+            else if(plannedRoute != null)
+            {
+                elevationPlot = Resolve<ElevationPlotWindow>();
+                
+                var viewModel = Resolve<ElevationPlotWindowViewModel>();
+                viewModel.UpdateRoute(plannedRoute);
+
+                elevationPlot.DataContext = viewModel;
+                
+                userPreferences.ShowElevationPlotInGame = true;
+                userPreferences.Save();
+
+                elevationPlot.Show(CurrentWindow);
+            }
         }
 
         public void ShowMainWindow()

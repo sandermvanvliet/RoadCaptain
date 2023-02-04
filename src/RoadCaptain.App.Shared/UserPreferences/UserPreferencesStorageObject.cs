@@ -21,5 +21,7 @@ namespace RoadCaptain.App.Shared.UserPreferences
         public bool ShowClimbs { get; set; }
         public bool ShowSprints { get; set; }
         public bool ShowElevationPlot { get; set; }
+        public CapturedWindowLocation? ElevationPlotWindowLocation { get; set; }
+        public bool ShowElevationPlotInGame { get; set; }
     }
 }

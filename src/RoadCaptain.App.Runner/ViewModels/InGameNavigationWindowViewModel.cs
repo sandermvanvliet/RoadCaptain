@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Avalonia;
 using ReactiveUI;
 using RoadCaptain.App.Runner.Models;
 using RoadCaptain.App.Shared.Commands;
@@ -23,8 +24,9 @@ namespace RoadCaptain.App.Runner.ViewModels
         private readonly IZwiftGameConnection _gameConnection;
         private CallToActionViewModel? _callToAction;
         private readonly MonitoringEvents _monitoringEvents;
+        private readonly IWindowService _windowService;
 
-        public InGameNavigationWindowViewModel(InGameWindowModel inGameWindowModel, List<Segment> segments, IZwiftGameConnection gameConnection, MonitoringEvents monitoringEvents)
+        public InGameNavigationWindowViewModel(InGameWindowModel inGameWindowModel, List<Segment> segments, IZwiftGameConnection gameConnection, MonitoringEvents monitoringEvents, IWindowService windowService)
         {
             Model = inGameWindowModel;
             Model.PropertyChanged += (_, args) =>
@@ -41,14 +43,20 @@ namespace RoadCaptain.App.Runner.ViewModels
             _segments = segments;
             _gameConnection = gameConnection;
             _monitoringEvents = monitoringEvents;
+            _windowService = windowService;
 
             EndActivityCommand = new AsyncRelayCommand(
                 _ => EndActivity(),
+                _ => true);
+
+            ToggleElevationPlotCommand = new AsyncRelayCommand(
+                show => ToggleElevationPlot(show as bool?),
                 _ => true);
         }
 
         public InGameWindowModel Model { get; }
         public ICommand EndActivityCommand { get; }
+        public ICommand ToggleElevationPlotCommand { get; }
 
         public void UpdateGameState(GameState gameState)
         {
@@ -280,6 +288,13 @@ namespace RoadCaptain.App.Runner.ViewModels
         private Task<CommandResult> EndActivity()
         {
             _gameConnection.EndActivity(LastSequenceNumber, "RoadCaptain: " + Model.Route.Name, _previousState?.RiderId ?? 0);
+
+            return Task.FromResult(CommandResult.Success());
+        }
+
+        private Task<CommandResult> ToggleElevationPlot(bool? show)
+        {
+            _windowService.ToggleElevationPlot(Model.Route, show);
 
             return Task.FromResult(CommandResult.Success());
         }

@@ -6,6 +6,7 @@
 
 - Fix a bug where a crash would occur because the map animation would continue running when the rider is already in-game.
 - Resue the route after connection was lost. This should fix the remaining issue in [#107](https://github.com/sandermvanvliet/RoadCaptain/issues/107)
+- Add the ability to show the elevation plot for the current route
 
 ### Route Builder
 

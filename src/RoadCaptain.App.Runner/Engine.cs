@@ -280,7 +280,7 @@ namespace RoadCaptain.App.Runner
                 Route = plannedRoute
             };
 
-            var viewModel = new InGameNavigationWindowViewModel(inGameWindowModel, segments, _zwiftGameConnection, _monitoringEvents);
+            var viewModel = new InGameNavigationWindowViewModel(inGameWindowModel, segments, _zwiftGameConnection, _monitoringEvents, _windowService);
 
             viewModel.UpdateGameState(gameState);
 

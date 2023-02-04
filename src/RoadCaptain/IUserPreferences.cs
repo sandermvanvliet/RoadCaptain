@@ -19,6 +19,8 @@ namespace RoadCaptain
         bool ShowSprints { get; set; }
         bool ShowClimbs { get; set; }
         bool ShowElevationPlot { get; set; }
+        CapturedWindowLocation? ElevationPlotWindowLocation { get; set; }
+        bool ShowElevationPlotInGame { get; set; }
         void Load();
         void Save();
     }

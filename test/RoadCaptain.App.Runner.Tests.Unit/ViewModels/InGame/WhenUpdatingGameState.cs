@@ -314,7 +314,7 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.InGame
                 }
             };
 
-            _viewModel = new InGameNavigationWindowViewModel(inGameWindowModel, segments, null, new NopMonitoringEvents());
+            _viewModel = new InGameNavigationWindowViewModel(inGameWindowModel, segments, null, new NopMonitoringEvents(), null);
         }
 
 

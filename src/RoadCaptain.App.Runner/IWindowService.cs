@@ -23,5 +23,6 @@ namespace RoadCaptain.App.Runner
         void SetLifetime(IApplicationLifetime applicationLifetime);
         void Shutdown(int exitCode);
         Task ShowWhatIsNewDialog(Release release);
+        void ToggleElevationPlot(PlannedRoute? plannedRoute, bool? show);
     }
 }

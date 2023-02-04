@@ -68,6 +68,11 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels
             throw new NotImplementedException();
         }
 
+        public void ToggleElevationPlot(PlannedRoute? plannedRoute, bool? show)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<string?> ShowOpenFileDialog(string? previousLocation)
         {
             OpenFileDialogInvocations++;
