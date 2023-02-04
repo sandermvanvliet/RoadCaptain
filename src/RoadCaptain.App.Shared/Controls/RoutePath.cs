@@ -63,6 +63,11 @@ namespace RoadCaptain.App.Shared.Controls
                     return null;
                 }
 
+                if (_currentPosition >= _path.Points.Length)
+                {
+                    _currentPosition = 0;
+                }
+
                 return _path.Points[_currentPosition];
             }
         }
