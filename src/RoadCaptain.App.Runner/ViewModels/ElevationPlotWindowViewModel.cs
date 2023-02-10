@@ -17,11 +17,13 @@ namespace RoadCaptain.App.Runner.ViewModels
         private readonly ISegmentStore _segmentStore;
         private TrackPoint _riderPosition;
         private readonly IWindowService _windowService;
+        private readonly IUserPreferences _userPreferences;
 
-        public ElevationPlotWindowViewModel(ISegmentStore segmentStore, IWindowService windowService)
+        public ElevationPlotWindowViewModel(ISegmentStore segmentStore, IWindowService windowService, IUserPreferences userPreferences)
         {
             _segmentStore = segmentStore;
             _windowService = windowService;
+            _userPreferences = userPreferences;
 
             ToggleElevationPlotCommand = new AsyncRelayCommand(
                 _ => ToggleElevationPlot(),
@@ -49,6 +51,11 @@ namespace RoadCaptain.App.Runner.ViewModels
                 _riderPosition = value;
                 this.RaisePropertyChanged();
             }
+        }
+
+        public int ZoomWindowDistance
+        {
+            get => _userPreferences.ElevationPlotRangeInMeters.GetValueOrDefault(1000);
         }
 
         public ICommand ToggleElevationPlotCommand { get; }
