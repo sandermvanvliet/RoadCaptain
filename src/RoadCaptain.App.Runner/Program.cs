@@ -6,10 +6,9 @@ using Avalonia;
 using Avalonia.ReactiveUI;
 using System;
 using System.Diagnostics;
-using Serilog.Core;
-#if MACOS
 using System.IO;
-#endif
+using System.Runtime.InteropServices;
+using Serilog.Core;
 
 namespace RoadCaptain.App.Runner
 {
@@ -23,14 +22,15 @@ namespace RoadCaptain.App.Runner
         [STAThread]
         public static void Main(string[] args)
         {
-#if MACOS
-            // When launching from an app bundle (.app) the working directory
-            // is set to be / which prevents us from loading resources...
-            if(Environment.CurrentDirectory == "/")
+            if(RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
             {
-                Environment.CurrentDirectory = Path.GetDirectoryName(typeof(Program).Assembly.Location);
+                // When launching from an app bundle (.app) the working directory
+                // is set to be / which prevents us from loading resources...
+                if(Environment.CurrentDirectory == "/")
+                {
+                    Environment.CurrentDirectory = Path.GetDirectoryName(typeof(Program).Assembly.Location);
+                }
             }
-#endif
 
             Logger = LoggerBootstrapper.CreateLogger();
 
