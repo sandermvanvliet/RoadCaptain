@@ -57,8 +57,6 @@ namespace RoadCaptain.App.Runner.Views
             _viewModel.UpdateGameState(gameState);
         }
 
-        public TrackPoint RiderPosition { get; set; }
-
         private void InputElement_OnPointerPressed(object? sender, PointerPressedEventArgs e)
         {
             if (e.GetCurrentPoint(this).Properties.IsLeftButtonPressed)
