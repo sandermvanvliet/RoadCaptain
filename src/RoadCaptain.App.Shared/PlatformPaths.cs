@@ -4,6 +4,7 @@
 
 using System;
 using System.IO;
+using System.Runtime.InteropServices;
 using RoadCaptain.Ports;
 
 namespace RoadCaptain.App.Shared
@@ -15,21 +16,18 @@ namespace RoadCaptain.App.Shared
 
         public static string GetUserDataDirectory()
         {
-#if WIN
-            var localAppDataFolder = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-            var logDirectory = Path.Combine(localAppDataFolder, CompanyName, ApplicationName);
-#elif MACOS
-            var localAppDataFolder = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-            var logDirectory = Path.Combine(localAppDataFolder, ApplicationName);
-#elif LINUX
-            var localAppDataFolder = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-            var logDirectory = Path.Combine(localAppDataFolder, ApplicationName);
-#else
-            var localAppDataFolder = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-            var logDirectory = Path.Combine(localAppDataFolder, CompanyName, ProductName);
-#endif
+            string localAppDataFolder;
 
-            return logDirectory;
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX) ||
+                RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            {
+                // macOS and Linux
+                localAppDataFolder = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+                return Path.Combine(localAppDataFolder, ProductName);
+            }
+            
+            localAppDataFolder = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+            return Path.Combine(localAppDataFolder, CompanyName, ProductName);
         }
 
         string IPathProvider.GetUserDataDirectory()
