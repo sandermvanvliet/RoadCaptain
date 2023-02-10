@@ -5,6 +5,7 @@
 using System;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
 
 namespace RoadCaptain.App.Shared
@@ -24,6 +25,12 @@ namespace RoadCaptain.App.Shared
 
         public string BuildConfiguration { get; private init; }
 
+        public string RuntimeIdentifier { get; set; }
+
+        public string RuntimeFrameworkDescription { get; set; }
+        
+        public string RuntimeOSDescription { get; set; }
+
         public static ApplicationDiagnosticInformation GetFrom(Assembly assembly)
         {
             var applicationDiagnosticInformation = new ApplicationDiagnosticInformation
@@ -34,7 +41,10 @@ namespace RoadCaptain.App.Shared
                 TargetFramework = GetAttributeOf<TargetFrameworkAttribute>(assembly)?.FrameworkName ?? "(unknown)",
                 TargetPlatform = GetAttributeOf<TargetPlatformAttribute>(assembly)?.PlatformName ?? "(unknown)",
                 SupportedPlatform = GetAttributeOf<SupportedOSPlatformAttribute>(assembly)?.PlatformName ?? "(unknown)",
-                StartTime = DateTime.UtcNow
+                StartTime = DateTime.UtcNow,
+                RuntimeIdentifier = RuntimeInformation.RuntimeIdentifier,
+                RuntimeFrameworkDescription = RuntimeInformation.FrameworkDescription,
+                RuntimeOSDescription = RuntimeInformation.OSDescription
             };
 
             return applicationDiagnosticInformation;
