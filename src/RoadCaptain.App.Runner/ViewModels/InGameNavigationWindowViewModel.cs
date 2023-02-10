@@ -287,7 +287,15 @@ namespace RoadCaptain.App.Runner.ViewModels
 
         private Task<CommandResult> EndActivity()
         {
-            _gameConnection.EndActivity(LastSequenceNumber, "RoadCaptain: " + Model.Route.Name, _previousState?.RiderId ?? 0);
+            if (GameState.IsInGame(_previousState))
+            {
+                _gameConnection.EndActivity(LastSequenceNumber, "RoadCaptain: " + Model.Route.Name,
+                    _previousState?.RiderId ?? 0);
+            }
+            else
+            {
+                _windowService.ShowMainWindow();
+            }
 
             return Task.FromResult(CommandResult.Success());
         }
