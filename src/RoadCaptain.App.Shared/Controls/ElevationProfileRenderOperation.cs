@@ -41,7 +41,12 @@ namespace RoadCaptain.App.Shared.Controls
         private readonly SKPaint _linePaint;
         private readonly SKPaint _finishCirclePaint;
         private readonly SKPaint _finishLinePaint;
+        private readonly SKPaint _distanceLinePaint;
+        private float? _zoomCenterStep;
+        private bool _hasShifted;
         private const int CircleMarkerRadius = 10;
+        private int _zoomWindowMetersAhead = 950;
+        private int _zoomWindowMetersBehind = 50;
 
         public ElevationProfileRenderOperation() 
         {
@@ -51,6 +56,7 @@ namespace RoadCaptain.App.Shared.Controls
             _finishLinePaint = new SKPaint { Color = SKColor.Parse("#000000"), IsAntialias = true, Style = SKPaintStyle.Stroke, StrokeWidth = 2, PathEffect = SKPathEffect.CreateDash(new [] { 4f, 2f}, 4) };
             _circlePaint = new SKPaint { Color = SKColor.Parse("#FFFFFF"), IsAntialias = true, Style = SKPaintStyle.Stroke, StrokeWidth = 3 };
             _finishCirclePaint = new SKPaint { Color = SKColor.Parse("#000000"), IsAntialias = true, Style = SKPaintStyle.Stroke, StrokeWidth = 3 };
+            _distanceLinePaint = new SKPaint { Color = SKColor.Parse("#999999"), IsAntialias = true, Style = SKPaintStyle.Stroke, StrokeWidth = 2, PathEffect = SKPathEffect.CreateDash(new [] { 4f, 2f}, 4)};
             
             _squarePaint = new SKPaint { Color = SKColor.Parse("#000000"), Style = SKPaintStyle.Fill };
             _squarePaintAlternate = new SKPaint { Color = SKColor.Parse("#FFFFFF"), Style = SKPaintStyle.Fill };
@@ -102,6 +108,19 @@ namespace RoadCaptain.App.Shared.Controls
 
         public bool ShowClimbs { get; set; }
         public List<Segment>? Markers { get; set; }
+        public bool ZoomOnCurrentPosition { get; set; }
+
+        public int ZoomWindowDistance
+        {
+            get => _zoomWindowMetersBehind + _zoomWindowMetersAhead;
+            set
+            {
+                var x = (int)Math.Round(value * 0.05, 0, MidpointRounding.AwayFromZero);
+
+                _zoomWindowMetersBehind = x;
+                _zoomWindowMetersAhead = value - x;
+            }
+        }
 
         public void Dispose()
         {
@@ -247,8 +266,22 @@ namespace RoadCaptain.App.Shared.Controls
             // This works because we've calculated it above
             var totalDistanceMeters = Math.Round(_routePoints.Last().DistanceOnSegment, MidpointRounding.AwayFromZero);
 
-            _step = (float)(Bounds.Width / totalDistanceMeters);
-            
+            if (ZoomOnCurrentPosition)
+            {
+                // If the route is less than the zoomed in viewport
+                // use the route distance, otherwise use the zoomed in viewport distance.
+                var viewPortMeters = Math.Min(
+                    _zoomWindowMetersBehind+_zoomWindowMetersAhead,
+                    totalDistanceMeters);
+
+                _step = (float)(Bounds.Width / viewPortMeters);
+                _zoomCenterStep = (float)(Bounds.Width / (_zoomWindowMetersBehind + _zoomWindowMetersAhead));
+            }
+            else
+            {
+                _step = (float)(Bounds.Width / totalDistanceMeters);
+            }
+
             foreach (var group in _elevationGroups)
             {
                 var path = new SKPath();
@@ -339,12 +372,9 @@ namespace RoadCaptain.App.Shared.Controls
                 // Flip the canvas because otherwise the elevation is upside down
                 canvas.Save();
                 canvas.Scale(1, -1);
-                canvas.Translate(0, -(float)Bounds.Height);
-                
-                foreach (var group in _elevationGroups)
-                {
-                    canvas.DrawPath(group.Path, PaintForGrade(group.Grade));
-                }
+                SKPoint? riderPositionPoint = null;
+
+                var dx = 0f;
 
                 if (RiderPosition != null && _routePoints != null)
                 {
@@ -352,13 +382,10 @@ namespace RoadCaptain.App.Shared.Controls
                     {
                         if (_routePoints[index].Equals(RiderPosition))
                         {
-                            DrawCircleMarker(
-                                canvas,
-                                new SKPoint(
-                                    (float)(_step * _routePoints[index].DistanceOnSegment),
-                                    CalculateYFromAltitude(RiderPosition.Altitude)),
-                                SkiaPaints.RiderPositionFillPaint);
-
+                            riderPositionPoint = new SKPoint(
+                                (float)(_step * _routePoints[index].DistanceOnSegment),
+                                CalculateYFromAltitude(RiderPosition.Altitude));
+                            
                             // RiderPosition always moves forward, so
                             // store this value and pick up from there
                             // on the next update.
@@ -369,8 +396,30 @@ namespace RoadCaptain.App.Shared.Controls
                     }
                 }
 
-                // Back to normal
-                canvas.Restore();
+                if (riderPositionPoint != null && riderPositionPoint.Value.X > _zoomWindowMetersBehind)
+                {
+                    _hasShifted = true;
+                    dx = riderPositionPoint.Value.X - _zoomWindowMetersBehind;
+                }
+                else
+                {
+                    _hasShifted = false;
+                }
+
+                canvas.Translate(-dx, -(float)Bounds.Height);
+                
+                foreach (var group in _elevationGroups)
+                {
+                    canvas.DrawPath(group.Path, PaintForGrade(group.Grade));
+                }
+
+                if (riderPositionPoint != null)
+                {
+                    DrawCircleMarker(
+                        canvas,
+                        riderPositionPoint.Value,
+                        SkiaPaints.RiderPositionFillPaint);
+                }
 
                 if (_routePoints != null && Markers!= null && Markers.Any())
                 {
@@ -398,6 +447,9 @@ namespace RoadCaptain.App.Shared.Controls
                         }
                     }
                 }
+
+                // Back to normal
+                canvas.Restore();
             }
 
             // Ensure sea-level exists
@@ -416,6 +468,25 @@ namespace RoadCaptain.App.Shared.Controls
                 var text = elevation == 0 ? "Sea level" : elevation.ToString(CultureInfo.InvariantCulture) + "m";
 
                 canvas.DrawText(text, 5, correctedAltitudeOffset, _defaultFont, SkiaPaints.ElevationLineTextPaint);
+            }
+
+            if (ZoomOnCurrentPosition)
+            {
+                for (var i = _hasShifted ? 100 : 0; i < _zoomWindowMetersAhead; i += 100)
+                {
+                    var x = _zoomWindowMetersBehind + (_zoomCenterStep.Value * i);
+                    canvas.DrawLine(
+                        x,
+                        0,
+                        x,
+                        (float)(Bounds.Height),
+                        _distanceLinePaint);
+
+                    var text = (_hasShifted ? i : i + 100).ToString(CultureInfo.InvariantCulture) + "m";
+                    
+                    var correctedAltitudeOffset = (float)(Bounds.Height - CalculateYFromAltitude(0));
+                    canvas.DrawText(text, x + 5, correctedAltitudeOffset, _defaultFont, SkiaPaints.ElevationLineTextPaint);
+                }
             }
         }
 

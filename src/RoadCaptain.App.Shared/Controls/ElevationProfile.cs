@@ -19,7 +19,9 @@ namespace RoadCaptain.App.Shared.Controls
         public static readonly DirectProperty<ElevationProfile, TrackPoint?> RiderPositionProperty = AvaloniaProperty.RegisterDirect<ElevationProfile, TrackPoint?>(nameof(RiderPosition), map => map.RiderPosition, (map, value) => map.RiderPosition = value);
         public static readonly DirectProperty<ElevationProfile, List<Segment>?> MarkersProperty = AvaloniaProperty.RegisterDirect<ElevationProfile, List<Segment>?>(nameof(Markers), map => map.Markers, (map, value) => map.Markers = value);
         public static readonly DirectProperty<ElevationProfile, bool> ShowClimbsProperty = AvaloniaProperty.RegisterDirect<ElevationProfile, bool>(nameof(ShowClimbs), map => map.ShowClimbs, (map, value) => map.ShowClimbs = value);
-
+        public static readonly DirectProperty<ElevationProfile, bool> ZoomOnCurrentPositionProperty = AvaloniaProperty.RegisterDirect<ElevationProfile, bool>(nameof(ZoomOnCurrentPosition), map => map.ZoomOnCurrentPosition, (map, value) => map.ZoomOnCurrentPosition = value);
+        public static readonly DirectProperty<ElevationProfile, int> ZoomWindowDistanceProperty = AvaloniaProperty.RegisterDirect<ElevationProfile, int>(nameof(ZoomWindowDistance), map => map.ZoomWindowDistance, (map, value) => map.ZoomWindowDistance = value);
+        
         private RenderTargetBitmap? _renderTarget;
         private ISkiaDrawingContextImpl? _skiaContext;
 
@@ -81,6 +83,28 @@ namespace RoadCaptain.App.Shared.Controls
             {
                 _renderOperation.ShowClimbs = value;
 
+                InvalidateVisual();
+            }
+        }
+
+        public bool ZoomOnCurrentPosition
+        {
+            get => _renderOperation.ZoomOnCurrentPosition;
+            set
+            {
+                _renderOperation.ZoomOnCurrentPosition = value;
+
+                InvalidateVisual();
+            }
+        }
+
+        public int ZoomWindowDistance
+        {
+            get => _renderOperation.ZoomWindowDistance;
+            set
+            {
+                _renderOperation.ZoomWindowDistance = value;
+                
                 InvalidateVisual();
             }
         }
