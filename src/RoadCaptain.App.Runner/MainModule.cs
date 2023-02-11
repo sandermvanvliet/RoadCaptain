@@ -6,6 +6,11 @@ using Autofac;
 using Autofac.Core.Activators.Reflection;
 using Avalonia.Controls;
 using RoadCaptain.App.Runner.ViewModels;
+using System.Reflection;
+using System.Runtime.InteropServices;
+using System;
+using System.IO;
+using Module = Autofac.Module;
 
 namespace RoadCaptain.App.Runner
 {
@@ -22,21 +27,26 @@ namespace RoadCaptain.App.Runner
             builder.RegisterType<WindowService>().As<IWindowService>().SingleInstance();
             builder.RegisterDecorator<DelegateDecorator, IWindowService>();
 
-            // Note: If you think "why not RuntimeInformation.IsOSPlatform()?" then
-            //       realize that the platform specific projects are only referenced
-            //       for a particular platform _at build time_ and not at runtime.
-            //       So if you would want to use a runtime check here that means
-            //       that for example the macOS project would need to be included
-            //       in the build for Windows and that defeats the purpose of all this.
-#if WIN
-            builder.RegisterModule(new RoadCaptain.App.Windows.WindowsModule());
-#elif LINUX
-            builder.RegisterModule(new RoadCaptain.App.Linux.LinuxModule());
-#elif MACOS
-            builder.RegisterModule(new RoadCaptain.App.MacOs.MacOsModule());
-#else
-            builder.RegisterType<DummyUserPreferences>().As<RoadCaptain.IUserPreferences>().SingleInstance();
-#endif
+            Assembly platformAssembly;
+
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                platformAssembly = Assembly.LoadFile(Path.Combine(Environment.CurrentDirectory, "RoadCaptain.App.Windows.dll"));
+            }
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            {
+                platformAssembly = Assembly.LoadFile(Path.Combine(Environment.CurrentDirectory, "RoadCaptain.App.Linux.dll"));
+            }
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+            {
+                platformAssembly = Assembly.LoadFile(Path.Combine(Environment.CurrentDirectory, "RoadCaptain.App.MacOs.dll"));
+            }
+            else
+            {
+                throw new Exception("Unable to determine the platform assembly to load!");
+            }
+
+            builder.RegisterAssemblyModules(platformAssembly);
             
             
             builder
