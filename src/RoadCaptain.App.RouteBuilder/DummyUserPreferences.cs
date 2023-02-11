@@ -23,6 +23,7 @@ namespace RoadCaptain.App.RouteBuilder
         public CapturedWindowLocation? ElevationPlotWindowLocation { get; set; }
         public bool ShowElevationPlotInGame { get; set; }
         public int? ElevationPlotRangeInMeters { get; set; }
+        public bool? ElevationProfileZoomOnPosition { get; set; }
 
         public void Load()
         {

@@ -58,6 +58,11 @@ namespace RoadCaptain.App.Runner.ViewModels
             get => _userPreferences.ElevationPlotRangeInMeters.GetValueOrDefault(1000);
         }
 
+        public bool ZoomOnCurrentPosition
+        {
+            get => _userPreferences.ElevationProfileZoomOnPosition.GetValueOrDefault();
+        }
+
         public ICommand ToggleElevationPlotCommand { get; }
 
         public void UpdateGameState(GameState gameState)

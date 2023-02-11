@@ -36,7 +36,7 @@
           HorizontalAlignment="Stretch"
           VerticalAlignment="Stretch"
           Margin="0,4,8,8"
-          ZoomOnCurrentPosition="True"
+          ZoomOnCurrentPosition="{Binding Path=ZoomOnCurrentPosition}"
           ZoomWindowDistance="{Binding Path=ZoomWindowDistance}"
   />
 	</Border>

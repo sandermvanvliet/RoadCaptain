@@ -50,6 +50,7 @@ namespace RoadCaptain.App.Shared.UserPreferences
         public CapturedWindowLocation? ElevationPlotWindowLocation { get; set; }
         public bool ShowElevationPlotInGame { get; set; }
         public int? ElevationPlotRangeInMeters { get; set; }
+        public bool? ElevationProfileZoomOnPosition { get; set; }
 
         public void Load()
         {
@@ -80,6 +81,7 @@ namespace RoadCaptain.App.Shared.UserPreferences
                     ElevationPlotWindowLocation = storageObject.ElevationPlotWindowLocation;
                     ShowElevationPlotInGame = storageObject.ShowElevationPlotInGame;
                     ElevationPlotRangeInMeters = storageObject.ElevationPlotRangeInMeters;
+                    ElevationProfileZoomOnPosition = storageObject.ElevationProfileZoomOnPosition;
                 }
             }
             catch
@@ -113,7 +115,8 @@ namespace RoadCaptain.App.Shared.UserPreferences
                 ShowElevationPlot = ShowElevationPlot,
                 ElevationPlotWindowLocation = ElevationPlotWindowLocation,
                 ShowElevationPlotInGame = ShowElevationPlotInGame,
-                ElevationPlotRangeInMeters = ElevationPlotRangeInMeters
+                ElevationPlotRangeInMeters = ElevationPlotRangeInMeters,
+                ElevationProfileZoomOnPosition = ElevationProfileZoomOnPosition
             };
 
             var serializedContents = JsonConvert.SerializeObject(storageObject, Formatting.Indented, _serializerSettings);

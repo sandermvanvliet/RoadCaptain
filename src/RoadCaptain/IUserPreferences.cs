@@ -22,6 +22,7 @@ namespace RoadCaptain
         CapturedWindowLocation? ElevationPlotWindowLocation { get; set; }
         bool ShowElevationPlotInGame { get; set; }
         int? ElevationPlotRangeInMeters { get; set; }
+        bool? ElevationProfileZoomOnPosition { get; set; }
         void Load();
         void Save();
     }
