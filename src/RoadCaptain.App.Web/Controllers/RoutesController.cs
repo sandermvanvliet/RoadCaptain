@@ -5,7 +5,7 @@ using RoadCaptain.App.Web.Models;
 namespace RoadCaptain.App.Web.Controllers
 {
     [ApiController]
-    [Route("/routes")]
+    [Route("/2023-01/routes")]
     public class RoutesController : ControllerBase
     {
         private readonly MonitoringEvents _monitoringEvents;
