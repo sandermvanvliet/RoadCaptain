@@ -1,4 +1,5 @@
-﻿using RoadCaptain.App.Web.Adapters.EntityFramework;
+﻿using Microsoft.EntityFrameworkCore;
+using RoadCaptain.App.Web.Adapters.EntityFramework;
 using RoadCaptain.App.Web.Models;
 using RoadCaptain.App.Web.Ports;
 using Route = RoadCaptain.App.Web.Adapters.EntityFramework.Route;
@@ -20,6 +21,7 @@ namespace RoadCaptain.App.Web.Adapters
         {
             return _roadCaptainDataContext
                 .Routes
+                .Include(r => r.User)
                 .ToList()
                 .Select(RouteModelFrom)
                 .ToArray();
@@ -29,6 +31,7 @@ namespace RoadCaptain.App.Web.Adapters
         {
             var route = _roadCaptainDataContext
                 .Routes
+                .Include(r => r.User)
                 .SingleOrDefault(r => r.Id == id);
 
             return route == null

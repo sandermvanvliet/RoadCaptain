@@ -2,8 +2,6 @@ namespace RoadCaptain.App.Web.Models
 {
     public class CreateRouteModel
     {
-        public string CreatorName { get; set; }
-        public string CreatorZwiftProfileId { get; set; }
         public string Name { get; set; }
         public string ZwiftRouteName { get; set; }
         public decimal Distance { get; set; }

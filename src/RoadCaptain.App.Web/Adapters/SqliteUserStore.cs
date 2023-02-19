@@ -15,7 +15,7 @@ namespace RoadCaptain.App.Web.Adapters
 
         public User? GetOrCreate(ClaimsPrincipal principal)
         {
-            var subjectClaim = principal.Claims.SingleOrDefault(c => c.Type == "sub");
+            var subjectClaim = principal.Claims.SingleOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
 
             if (subjectClaim == null)
             {
@@ -28,8 +28,8 @@ namespace RoadCaptain.App.Web.Adapters
             {
                 user = new User
                 {
-                    ZwiftProfileId = null,
-                    Name = principal.Claims.Single(c => c.Type == "name").Value,
+                    ZwiftProfileId = "",
+                    Name = principal.Claims.SingleOrDefault(c => c.Type == ClaimTypes.Name).Value,
                     ZwiftSubject = subjectClaim.Value
                 };
                 _roadCaptainDataContext.Users.Add(user);
