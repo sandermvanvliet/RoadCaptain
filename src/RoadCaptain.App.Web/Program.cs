@@ -1,4 +1,3 @@
-using System.Diagnostics;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -14,6 +13,8 @@ namespace RoadCaptain.App.Web
         public static void Main(string[] args)
         {
             Logger = LoggerBootstrapper.CreateLogger();
+
+            var monitoringEvents = new MonitoringEventsWithSerilog(Logger);
 
             var builder = WebApplication.CreateBuilder(args);
 
@@ -41,12 +42,7 @@ namespace RoadCaptain.App.Web
                     options.Events = new JwtBearerEvents();
                     options.Events.OnAuthenticationFailed += context =>
                     {
-                        Debugger.Break();
-                        return Task.CompletedTask;
-                    };
-                    options.Events.OnTokenValidated += context =>
-                    {
-                        Debugger.Break();
+                        monitoringEvents.Error(context.Exception, "Authentication failed: {Message}", context.Exception.Message);
                         return Task.CompletedTask;
                     };
                 });
@@ -61,7 +57,6 @@ namespace RoadCaptain.App.Web
                             configurePolicy.AuthenticationSchemes = new List<string> { JwtBearerDefaults.AuthenticationScheme} ;
                             configurePolicy.RequireAuthenticatedUser();
                         });
-                    
                 });
 
             builder.Services.AddControllers();
@@ -70,8 +65,7 @@ namespace RoadCaptain.App.Web
             builder.Services.AddSwaggerGen();
 
             var app = builder.Build();
-
-            var monitoringEvents = app.Services.GetService<MonitoringEvents>();
+            
             app.Lifetime.ApplicationStarted.Register(() => monitoringEvents.ApplicationStarted());
             app.Lifetime.ApplicationStopping.Register(() => monitoringEvents.ApplicationStopping());
             app.Lifetime.ApplicationStopped.Register(() => monitoringEvents.ApplicationStopped());
