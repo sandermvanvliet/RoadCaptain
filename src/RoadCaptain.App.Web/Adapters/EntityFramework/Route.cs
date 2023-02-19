@@ -1,9 +1,10 @@
-namespace RoadCaptain.App.Web.Models
+﻿namespace RoadCaptain.App.Web.Adapters.EntityFramework
 {
-    public class CreateRouteModel
+    public class Route
     {
-        public string CreatorName { get; set; }
-        public string CreatorZwiftProfileId { get; set; }
+        public long Id { get; set; }
+        public long UserId { get; set; }
+        public User User { get; set; }
         public string Name { get; set; }
         public string ZwiftRouteName { get; set; }
         public decimal Distance { get; set; }

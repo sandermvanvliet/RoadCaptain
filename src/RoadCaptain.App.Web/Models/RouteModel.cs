@@ -2,7 +2,7 @@ namespace RoadCaptain.App.Web.Models
 {
     public class RouteModel
     {
-        public string Id { get; set; }
+        public long Id { get; set; }
         public string CreatorName { get; set; }
         public string CreatorZwiftProfileId { get; set; }
         public string Name { get; set; }
@@ -11,5 +11,6 @@ namespace RoadCaptain.App.Web.Models
         public decimal Ascent { get; set; }
         public decimal Descent { get; set; }
         public bool IsLoop { get; set; }
+        public string Serialized { get; set; }
     }
 }

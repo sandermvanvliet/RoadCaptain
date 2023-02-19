@@ -1,6 +1,10 @@
+using System.Net;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using RoadCaptain.App.Web.Adapters.EntityFramework;
 using RoadCaptain.App.Web.Models;
+using RoadCaptain.App.Web.Ports;
 
 namespace RoadCaptain.App.Web.Controllers
 {
@@ -9,10 +13,14 @@ namespace RoadCaptain.App.Web.Controllers
     public class RoutesController : ControllerBase
     {
         private readonly MonitoringEvents _monitoringEvents;
+        private readonly IRouteStore _routeStore;
+        private readonly IUserStore _userStore;
 
-        public RoutesController(MonitoringEvents monitoringEvents)
+        public RoutesController(MonitoringEvents monitoringEvents, IRouteStore routeStore, IUserStore userStore)
         {
             _monitoringEvents = monitoringEvents;
+            _routeStore = routeStore;
+            _userStore = userStore;
         }
 
         [HttpGet(Name = "GetAllRoutes")]
@@ -33,39 +41,55 @@ namespace RoadCaptain.App.Web.Controllers
         {
             _monitoringEvents.Information($"Calling GetAllRoutes({world ?? "null"}, {creator ?? "null"})");
 
-            return Array.Empty<RouteModel>();
+            return _routeStore.Search(world, creator, name, zwiftRouteName, minDistance, maxDistance, minAscent, maxAscent, minDescent, maxDescent, isLoop, komSegments, sprintSegments);
         }
 
         [HttpGet("{id}", Name = "GetRouteById")]
-        public IActionResult GetRouteById([FromRoute] string id)
+        public IActionResult GetRouteById([FromRoute] long id)
         {
-            if (string.IsNullOrEmpty(id))
+            if (id < 1)
+            {
+                return BadRequest();
+            }
+
+            var route = _routeStore.GetById(id);
+
+            if (route == null)
             {
                 return NotFound();
             }
 
-            return NotFound();
+            return Ok(route);
         }
 
         [HttpDelete("{id}", Name = "DeleteRouteById")]
         [Authorize(Policy = "ZwiftUserPolicy")]
-        public IActionResult DeleteRouteById([FromRoute] string id)
+        public IActionResult DeleteRouteById([FromRoute] long id)
         {
-            return Unauthorized();
+            _routeStore.Delete(id);
+
+            return Ok();
         }
 
         [HttpPost(Name = "CreateRoute")]
         [Authorize(Policy = "ZwiftUserPolicy")]
         public IActionResult CreateRoute([FromBody] CreateRouteModel createRoute)
         {
-            return BadRequest();
+            var user = _userStore.GetOrCreate(HttpContext.User);
+            if (user == null)
+            {
+                return BadRequest(ProblemDetailsFactory.CreateProblemDetails(HttpContext,
+                    (int)HttpStatusCode.BadRequest, "Invalid user"));
+            }
+
+            return Ok(_routeStore.Store(createRoute, user));
         }
 
         [HttpPut("{id}", Name = "UpdateRouteById")]
         [Authorize(Policy = "ZwiftUserPolicy")]
-        public IActionResult UpdateRouteById([FromRoute] string id, [FromBody] UpdateRouteModel updateRoute)
+        public IActionResult UpdateRouteById([FromRoute] long id, [FromBody] UpdateRouteModel updateRoute)
         {
-            return BadRequest();
+            return Ok(_routeStore.Update(id, updateRoute));
         }
     }
 }
