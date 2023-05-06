@@ -22,7 +22,7 @@
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 			<PrivateAssets>all</PrivateAssets>
 		</PackageReference>
-		<PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.16.0" />
+		<PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.30.0" />
 		<PackageReference Include="Xunit.StaFact" Version="1.1.11" />
 	</ItemGroup>
 	
