@@ -1,0 +1,8 @@
+﻿<ProjectConfiguration>
+  <Settings>
+    <CopyReferencedAssembliesToWorkspace>True</CopyReferencedAssembliesToWorkspace>
+    <ImplicitProjectDependencyPathsRelativeToSolutionDirectory>
+      <Value>src\RoadCaptain.App.Windows\RoadCaptain.App.Windows.csproj</Value>
+    </ImplicitProjectDependencyPathsRelativeToSolutionDirectory>
+  </Settings>
+</ProjectConfiguration>
