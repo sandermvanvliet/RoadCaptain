@@ -21,10 +21,6 @@
 		<!--Avalonia doesen't support TrimMode=link currently,but we are working on that https://github.com/AvaloniaUI/Avalonia/issues/6892 -->
 		<TrimMode>copyused</TrimMode>
 		<BuiltInComInteropSupport>true</BuiltInComInteropSupport>
-		<DefineConstants Condition="'$(RuntimeIdentifier)'=='win-x64'">WIN</DefineConstants>
-		<DefineConstants Condition="'$(RuntimeIdentifier)'=='linux-x64'">LINUX</DefineConstants>
-		<DefineConstants Condition="'$(RuntimeIdentifier)'=='osx-x64'">MACOS</DefineConstants>
-		<DefineConstants Condition="'$(RuntimeIdentifier)'=='osx-arm64'">MACOS</DefineConstants>
 		<UseAppHost Condition="'$(RuntimeIdentifier)'!='win-x64'">true</UseAppHost>
 
 		<!-- Ignore translations -->
