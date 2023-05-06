@@ -28,4 +28,4 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore -r ${{ env.RID }}
     - name: Test
-      run: dotnet test --no-restore --verbosity normal -c Release -r ${{ env.RID }}
+      run: dotnet test --no-restore --verbosity normal -c Release -r ${{ env.RID }} -p:RuntimeIdentifier=${{ env.RID }} -p:RuntimeIdentifiers=${{ env.RID }}
