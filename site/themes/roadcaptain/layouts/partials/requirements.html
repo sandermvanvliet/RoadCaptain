@@ -2,7 +2,7 @@
 <section class="wrapper style1 align-center" id="{{ .id }}">
     <div class="inner"  style="text-align: left">
         {{ with .title }}<h2 style="text-align:center">{{ . }}</h2>{{ end }}
-        <div class="items {{ .style }} requirements" style="text-align: center">
+        <div class="items {{ .style }} supportedPlatforms" style="text-align: center">
             {{ range .items }}
                 {{ partial "requirement" . }}
             {{ end }}
@@ -10,7 +10,7 @@
         {{ with .content }}<p>{{ . | safeHTML }}</p>{{ end }}
     </div>
     <style type="text/css">
-        .requirements i {
+        .supportedPlatforms i {
             font-size: 200%;
         }
     </style>

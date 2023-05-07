@@ -6,7 +6,7 @@ content: |
   Installers are available for Windows and MacOS.<br /><br />
   Typically you will want to download the RoadCaptain stable release. If you want to test out new features as they are worked on you can choose to install the preview release. 
   However, the preview release will have some rough edges and the occasional bug.<br /><br />
-  See the <a href="#requirements">requirements</a> for what is needed to run RoadCaptain.
+  See the <a href="#supportedPlatforms">supported platforms</a> for what is needed to run RoadCaptain.
   <table>
     <thead>
       <tr>

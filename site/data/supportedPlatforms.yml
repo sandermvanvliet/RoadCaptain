@@ -1,7 +1,7 @@
 ####################### Spotlight #########################
 style: "style1 medium"
-id: "requirements"
-title : "Requirements"
+id: "supportedPlatforms"
+title : "Supported Platforms"
 items:
   - name: "Windows"
     supported: "Yes"
