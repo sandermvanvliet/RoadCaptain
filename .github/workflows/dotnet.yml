@@ -35,5 +35,7 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+    - name: Prebuild macOS shared library
+      run: dotnet build -c Release -r ${{ env.RID }} --no-self-contained src/RoadCaptain.App.MacOs/RoadCaptain.App.MacOs.csproj
     - name: Test
       run: dotnet test --verbosity normal -c Release -r ${{ env.RID }} -p:RuntimeIdentifier=${{ env.RID }} -p:RuntimeIdentifiers=${{ env.RID }}
