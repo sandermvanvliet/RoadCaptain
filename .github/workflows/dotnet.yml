@@ -12,7 +12,7 @@ on:
       - site/**
 
 jobs:
-  build:
+  build_win:
 
     runs-on: windows-2022
 
@@ -21,10 +21,20 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: 6.0.x
+    - name: Restore dependencies
+      run: dotnet restore -r ${{ env.RID }}
+    - name: Test
+      run: dotnet test --no-restore --verbosity normal -c Release -r ${{ env.RID }} -p:RuntimeIdentifier=${{ env.RID }} -p:RuntimeIdentifiers=${{ env.RID }}
+
+  build_macos-x64:
+
+    runs-on: macos-11
+
+    env:
+      RID: osx-x64
+
+    steps:
+    - uses: actions/checkout@v2
     - name: Restore dependencies
       run: dotnet restore -r ${{ env.RID }}
     - name: Test

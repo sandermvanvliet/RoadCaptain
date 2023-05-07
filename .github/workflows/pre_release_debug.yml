@@ -50,10 +50,6 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: 6.0.x
     - name: Restore dependencies
       run: dotnet restore -r ${{ env.RID }}
     - name: Test
@@ -108,11 +104,6 @@ jobs:
         security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k "${{ secrets.KEYCHAIN_PASSWORD}}" build.keychain
         # Add app password for notarytool
         xcrun notarytool store-credentials "AC_PASSWORD" --apple-id "${{ secrets.APPLE_ID }}" --team-id ${{ env.TEAM_ID }} --password "${{ secrets.NOTARY_TOOL_PASSWORD }}"
-
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: 6.0.x
 
     - name: Build and package Runner
       run: |
@@ -177,11 +168,6 @@ jobs:
         security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k "${{ secrets.KEYCHAIN_PASSWORD}}" build.keychain
         # Add app password for notarytool
         xcrun notarytool store-credentials "AC_PASSWORD" --apple-id "${{ secrets.APPLE_ID }}" --team-id ${{ env.TEAM_ID }} --password "${{ secrets.NOTARY_TOOL_PASSWORD }}"
-        
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: 6.0.x
 
     - name: Build and package Runner
       run: |
