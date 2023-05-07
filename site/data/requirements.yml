@@ -26,10 +26,14 @@ items:
     min_version: "N/A"
     content: "No support for these platforms is currently planned"
     style: "fa-apple"
-content: |
-  <h3>AppleTV</h3>
-  <p>When you run Zwift on any of these platforms you can still use RoadCaptain, however you will need a separate computer to run RoadCaptain.</p>
 
+  - name: "AppleTV"
+    supported: "Partial"
+    min_version: "N/A"
+    content: "When you run Zwift on AppleTV you can still use RoadCaptain, however you will need a separate computer to run RoadCaptain."
+    style: "fa-apple"
+
+content: |
   <h3>Running RoadCaptain on a different machine</h3>
   <p>It is possible to run RoadCaptain on a different machine than where you run Zwift. However, the computer running RoadCaptain and Zwift must be on the same network and must be able to reach each other.<p>
   <p>RoadCaptain listens on TCP port 21588, you will need to ensure that your firewall allows inbound traffic to this port from your local network.<br />
