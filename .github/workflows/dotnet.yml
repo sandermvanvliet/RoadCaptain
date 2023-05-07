@@ -35,7 +35,5 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - name: Restore dependencies
-      run: dotnet restore -r ${{ env.RID }}
     - name: Test
-      run: dotnet test --no-restore --verbosity normal -c Release -r ${{ env.RID }} -p:RuntimeIdentifier=${{ env.RID }} -p:RuntimeIdentifiers=${{ env.RID }}
+      run: dotnet test --verbosity normal -c Release -r ${{ env.RID }} -p:RuntimeIdentifier=${{ env.RID }} -p:RuntimeIdentifiers=${{ env.RID }}
