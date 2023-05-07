@@ -25,6 +25,8 @@ jobs:
       run: dotnet restore -r ${{ env.RID }}
     - name: Prebuild Windows shared library
       run: dotnet build -c Release -r ${{ env.RID }} --no-self-contained src/RoadCaptain.App.Windows/RoadCaptain.App.Windows.csproj
+    - name: Build Runner test project
+      run: dotnet build --no-restore --verbosity normal -c Release -r ${{ env.RID }} -p:RuntimeIdentifier=${{ env.RID }} -p:RuntimeIdentifiers=${{ env.RID }} test/RoadCaptain.App.Runner.Tests.Unit/RoadCaptain.App.Runner.Tests.Unit.csproj
     - name: Test
       run: dotnet test --no-restore --verbosity normal -c Release -r ${{ env.RID }} -p:RuntimeIdentifier=${{ env.RID }} -p:RuntimeIdentifiers=${{ env.RID }}
 
@@ -39,5 +41,7 @@ jobs:
     - uses: actions/checkout@v2
     - name: Prebuild macOS shared library
       run: dotnet build -c Release -r ${{ env.RID }} --no-self-contained src/RoadCaptain.App.MacOs/RoadCaptain.App.MacOs.csproj
+    - name: Build Runner test project
+      run: dotnet build --no-restore --verbosity normal -c Release -r ${{ env.RID }} -p:RuntimeIdentifier=${{ env.RID }} -p:RuntimeIdentifiers=${{ env.RID }} test/RoadCaptain.App.Runner.Tests.Unit/RoadCaptain.App.Runner.Tests.Unit.csproj
     - name: Test
       run: dotnet test --verbosity normal -c Release -r ${{ env.RID }} -p:RuntimeIdentifier=${{ env.RID }} -p:RuntimeIdentifiers=${{ env.RID }}
