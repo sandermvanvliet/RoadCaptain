@@ -23,6 +23,8 @@ jobs:
     - uses: actions/checkout@v2
     - name: Restore dependencies
       run: dotnet restore -r ${{ env.RID }}
+    - name: Prebuild Windows shared library
+      run: dotnet build -c Release -r ${{ env.RID }} --no-self-contained src/RoadCaptain.App.Windows/RoadCaptain.App.Windows.csproj
     - name: Test
       run: dotnet test --no-restore --verbosity normal -c Release -r ${{ env.RID }} -p:RuntimeIdentifier=${{ env.RID }} -p:RuntimeIdentifiers=${{ env.RID }}
 
