@@ -42,6 +42,6 @@ jobs:
     - name: Prebuild macOS shared library
       run: dotnet build -c Release -r ${{ env.RID }} --no-self-contained src/RoadCaptain.App.MacOs/RoadCaptain.App.MacOs.csproj
     - name: Build Runner test project
-      run: dotnet build --no-restore --verbosity normal -c Release -r ${{ env.RID }} -p:RuntimeIdentifier=${{ env.RID }} -p:RuntimeIdentifiers=${{ env.RID }} test/RoadCaptain.App.Runner.Tests.Unit/RoadCaptain.App.Runner.Tests.Unit.csproj --no-self-contained
+      run: dotnet build --verbosity normal -c Release -r ${{ env.RID }} -p:RuntimeIdentifier=${{ env.RID }} -p:RuntimeIdentifiers=${{ env.RID }} test/RoadCaptain.App.Runner.Tests.Unit/RoadCaptain.App.Runner.Tests.Unit.csproj --no-self-contained
     - name: Test
       run: dotnet test --verbosity normal -c Release -r ${{ env.RID }} -p:RuntimeIdentifier=${{ env.RID }} -p:RuntimeIdentifiers=${{ env.RID }}
