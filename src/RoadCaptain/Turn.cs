@@ -32,7 +32,7 @@ namespace RoadCaptain
             return Direction == other.Direction && SegmentId == other.SegmentId;
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (ReferenceEquals(null, obj))
             {

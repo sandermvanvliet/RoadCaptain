@@ -9,7 +9,7 @@ namespace RoadCaptain.Adapters
 {
     public class SegmentDirectionConverter : JsonConverter
     {
-        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+        public override void WriteJson(JsonWriter writer, object? value, JsonSerializer serializer)
         {
             if (value is SegmentDirection direction)
             {
@@ -17,11 +17,11 @@ namespace RoadCaptain.Adapters
             }
         }
 
-        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+        public override object? ReadJson(JsonReader reader, Type objectType, object? existingValue, JsonSerializer serializer)
         {
             if(objectType == typeof(SegmentDirection) && reader.Value is string direction)
             {
-                if (Enum.TryParse(typeof(SegmentDirection), direction, out var parsedDirection))
+                if (Enum.TryParse<SegmentDirection>(direction, out var parsedDirection))
                 {
                     return parsedDirection;
                 }

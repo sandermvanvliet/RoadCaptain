@@ -28,7 +28,7 @@ namespace RoadCaptain
             return X.Equals(other.X) && Y.Equals(other.Y) && Altitude.Equals(other.Altitude);
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             return obj is GameCoordinate other && Equals(other);
         }

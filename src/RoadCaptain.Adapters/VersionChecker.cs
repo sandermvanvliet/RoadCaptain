@@ -99,7 +99,7 @@ namespace RoadCaptain.Adapters
             {
                 Version = Version.Parse(release.Name),
                 ReleaseNotes = release.Body,
-                InstallerDownloadUri = GetInstallerUriFrom(release),
+                InstallerDownloadUri = GetInstallerUriFrom(release) ?? new Uri("https://roadcaptain.nl"),
                 IsPreRelease = release.PreRelease
             };
         }

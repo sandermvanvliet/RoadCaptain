@@ -16,7 +16,7 @@ namespace RoadCaptain
         private double? _ascent;
         private double? _descent;
         private double? _distance;
-        private string _name;
+        private string? _name;
         
         public string Id { get; set; }
         public List<TrackPoint> Points { get; }
@@ -109,6 +109,7 @@ namespace RoadCaptain
 
         public Segment(List<TrackPoint> points)
         {
+            Id = "(unknown)";
             Points = points;
             BoundingBox = BoundingBox.From(Points);
         }
@@ -162,8 +163,18 @@ namespace RoadCaptain
         {
             var doc = XDocument.Parse(gpxFileContents);
 
+            if (doc.Root == null)
+            {
+                throw new InvalidOperationException("XML document doesn't have a root node");
+            }
+
             var trkElement = doc.Root.Element(XName.Get("trk", GpxNamespace));
-            
+
+            if (trkElement == null)
+            {
+                throw new InvalidOperationException("GPX file does not contain a track");
+            }
+
             var typeElement = trkElement.Element(XName.Get("link", GpxNamespace))?.Element(XName.Get("type", GpxNamespace));
             var trkSeg = trkElement.Elements(XName.Get("trkseg", GpxNamespace));
 
@@ -171,9 +182,9 @@ namespace RoadCaptain
 
             var trackPoints = trkpt
                 .Select(trackPoint => new TrackPoint(
-                    double.Parse(trackPoint.Attribute(XName.Get("lat")).Value, CultureInfo.InvariantCulture),
-                    double.Parse(trackPoint.Attribute(XName.Get("lon")).Value, CultureInfo.InvariantCulture),
-                    double.Parse(trackPoint.Element(XName.Get("ele", GpxNamespace)).Value,
+                    double.Parse(trackPoint.Attribute(XName.Get("lat"))?.Value ?? "0", CultureInfo.InvariantCulture),
+                    double.Parse(trackPoint.Attribute(XName.Get("lon"))?.Value ?? "0", CultureInfo.InvariantCulture),
+                    double.Parse(trackPoint.Element(XName.Get("ele", GpxNamespace))?.Value ?? "0",
                         CultureInfo.InvariantCulture)
                 ))
                 .ToList();
@@ -187,18 +198,18 @@ namespace RoadCaptain
             {
                 sport = SportType.Both;
             }
-            else if(Enum.TryParse(typeof(SportType), sports.First(), true, out var parsedSport))
+            else if(Enum.TryParse<SportType>(sports.First(), true, out var parsedSport))
             {
-                sport = (SportType)parsedSport;
+                sport = parsedSport;
             }
-            else if(Enum.TryParse(typeof(SegmentType), sports.First(), true, out var parsedSegmentType))
+            else if(Enum.TryParse<SegmentType>(sports.First(), true, out var parsedSegmentType))
             {
-                segmentType = (SegmentType)parsedSegmentType;
+                segmentType = parsedSegmentType;
             }
 
             var segment = new Segment(trackPoints)
             {
-                Name = trkElement.Element(XName.Get("name", GpxNamespace)).Value,
+                Name = trkElement.Element(XName.Get("name", GpxNamespace))?.Value ?? "(unknown)",
                 Sport = sport,
                 Type = segmentType
             };

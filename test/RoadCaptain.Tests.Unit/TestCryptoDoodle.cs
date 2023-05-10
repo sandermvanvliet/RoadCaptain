@@ -40,14 +40,14 @@ namespace RoadCaptain.Tests.Unit
             Action action = () =>
             {
                 var decryptionResult = doodle.Decrypt(new ByteBuffer(messageBytes).ToArray()) as SuccessfulDecryptionResult;
-                decrypted = decryptionResult.Data;
+                decrypted = decryptionResult!.Data;
             };
 
             action
                 .Should()
                 .NotThrow();
 
-            action = () => doodle.Encrypt(decrypted);
+            action = () => doodle.Encrypt(decrypted!);
 
             action
                 .Should()
