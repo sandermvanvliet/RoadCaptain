@@ -12,24 +12,24 @@ namespace RoadCaptain.App.Shared
 {
     public class ApplicationDiagnosticInformation
     {
-        public string Name { get; private init; }
-        public string TargetFramework { get; private init; }
+        public string? Name { get; private init; }
+        public string? TargetFramework { get; private init; }
 
         public DateTime StartTime { get; private init; }
 
-        public string TargetPlatform { get; private init; }
+        public string? TargetPlatform { get; private init; }
 
-        public string SupportedPlatform { get; private init; }
+        public string? SupportedPlatform { get; private init; }
 
-        public string Version { get; private init; }
+        public string? Version { get; private init; }
 
-        public string BuildConfiguration { get; private init; }
+        public string? BuildConfiguration { get; private init; }
 
-        public string RuntimeIdentifier { get; set; }
+        public string? RuntimeIdentifier { get; set; }
 
-        public string RuntimeFrameworkDescription { get; set; }
+        public string? RuntimeFrameworkDescription { get; set; }
         
-        public string RuntimeOSDescription { get; set; }
+        public string? RuntimeOSDescription { get; set; }
 
         public static ApplicationDiagnosticInformation GetFrom(Assembly assembly)
         {
@@ -50,7 +50,7 @@ namespace RoadCaptain.App.Shared
             return applicationDiagnosticInformation;
         }
 
-        private static string GetVersionFrom(Assembly assembly)
+        private static string? GetVersionFrom(Assembly assembly)
         {
             var informationalVersion = GetAttributeOf<AssemblyInformationalVersionAttribute>(assembly);
 

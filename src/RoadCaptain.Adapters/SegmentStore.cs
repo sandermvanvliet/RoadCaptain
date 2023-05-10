@@ -160,6 +160,10 @@ namespace RoadCaptain.Adapters
                 if (!File.Exists(outputPath) || IsJsonNewer(file, outputPath))
                 {
                     var segments = JsonConvert.DeserializeObject<List<Segment>>(File.ReadAllText(file));
+                    if (segments == null)
+                    {
+                        throw new Exception("Failed to deserialize segments");
+                    }
                     using var writer = new BinaryWriter(File.OpenWrite(outputPath));
                     BinarySegmentSerializer.SerializeSegments(writer, segments);
                 }
@@ -174,19 +178,19 @@ namespace RoadCaptain.Adapters
 
     internal class SegmentTurns
     {
-        public string SegmentId { get; set; }
-        public SegmentTurn TurnsA { get; set; }
-        public SegmentTurn TurnsB { get; set; }
+        public string? SegmentId { get; set; }
+        public SegmentTurn? TurnsA { get; set; }
+        public SegmentTurn? TurnsB { get; set; }
     }
 
     internal class SegmentTurn
     {
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public string Left { get; set; }
+        public string? Left { get; set; }
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public string Right { get; set; }
+        public string? Right { get; set; }
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public string GoStraight { get; set; }
+        public string? GoStraight { get; set; }
 
         public List<Turn> AsTurns()
         {

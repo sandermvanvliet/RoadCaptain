@@ -11,7 +11,7 @@ namespace RoadCaptain.App.Shared.Models
         [JsonPropertyName("accessToken")]
         public string? AccessToken { get; set; }
         [JsonPropertyName("refreshToken")]
-        public string RefreshToken { get; set; }
+        public string? RefreshToken { get; set; }
         [JsonPropertyName("expiresIn")]
         public long ExpiresIn { get; set; }
         [JsonPropertyName("userProfile")]

@@ -22,7 +22,7 @@ namespace RoadCaptain.Adapters
         /// <summary>
         /// The path to the NPCAP file containing the TCP packets to replay
         /// </summary>
-        public string CaptureFilePath { get; set; }
+        public string? CaptureFilePath { get; set; }
 
         protected override void Load(ContainerBuilder builder)
         {
@@ -54,6 +54,11 @@ namespace RoadCaptain.Adapters
             }
             else if ("file".Equals(MessageReceiverSource, StringComparison.InvariantCultureIgnoreCase))
             {
+                if (string.IsNullOrEmpty(CaptureFilePath))
+                {
+                    throw new ArgumentException("CaptureFilePath is empty");
+                }
+
                 builder
                     .RegisterType<MessageReceiverFromCaptureFile>()
                     .As<IMessageReceiver>()

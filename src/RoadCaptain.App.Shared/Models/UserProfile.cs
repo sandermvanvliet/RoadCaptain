@@ -9,9 +9,9 @@ namespace RoadCaptain.App.Shared.Models
     public class UserProfile
     {
         [JsonPropertyName("firstName")]
-        public string FirstName { get; set; }
+        public string? FirstName { get; set; }
         [JsonPropertyName("lastName")]
-        public string LastName { get; set; }
+        public string? LastName { get; set; }
         [JsonPropertyName("avatar")] 
         public string? Avatar { get; set; }
     }

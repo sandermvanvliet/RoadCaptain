@@ -8,7 +8,7 @@ namespace RoadCaptain.Adapters
 {
     internal class PersistedRouteVersion0
     {
-        public string ZwiftRouteName { get; set; }
+        public string? ZwiftRouteName { get; set; }
         public List<SegmentSequence> RouteSegmentSequence { get; } = new();
 
         public PlannedRoute AsRoute(World watopia)
