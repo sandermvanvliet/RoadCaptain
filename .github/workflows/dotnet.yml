@@ -20,7 +20,7 @@ jobs:
       RID: win-x64
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: Test
       run: dotnet test --no-restore --verbosity normal -c Release
 
@@ -32,6 +32,6 @@ jobs:
       RID: osx-x64
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: Test
       run: dotnet test --no-restore --verbosity normal -c Release

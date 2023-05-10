@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: Get the version
       id: get_version
       uses: mavrosxristoforos/get-xml-info@1.0
@@ -38,7 +38,7 @@ jobs:
       RID: win-x64
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: Setup .NET
       uses: actions/setup-dotnet@v1
       with:
@@ -82,7 +82,7 @@ jobs:
       RID: osx-x64
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
 
     - name: Import signing certificate and set up keychain
       run: |
@@ -151,7 +151,7 @@ jobs:
       RID: osx-arm64
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
 
     - name: Import signing certificate and set up keychain
       run: |
