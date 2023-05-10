@@ -5,4 +5,32 @@
 		<Company>Codenizer BV</Company>
 		<Copyright>2023 Sander van Vliet</Copyright>
 	</PropertyGroup>
+
+	<PropertyGroup>
+		<OSPlatform Condition="'$(OSPlatform)'=='' And $([MSBuild]::IsOSPlatform('WINDOWS'))">WINDOWS</OSPlatform>
+		<OSPlatform Condition="'$(OSPlatform)'=='' And $([MSBuild]::IsOSPlatform('LINUX'))">LINUX</OSPlatform>
+		<OSPlatform Condition="'$(OSPlatform)'=='' And $([MSBuild]::IsOSPlatform('OSX'))">OSX</OSPlatform>
+
+		<!--
+		Some special things requierd to make WebView2 work on Windows.
+		Because we're doing funky stuff by embedding a WinForms control
+		into Avalonia that requires us to set the RuntimeIdentifier but
+		also tell MSBuild to add the relevant WinForms references.
+		-->
+		<RuntimeIdentifier Condition="'$(OSPlatform)'=='WINDOWS'">win-x64</RuntimeIdentifier>
+
+		<!-- On macOS always set this to osx-x64 -->
+		<RuntimeIdentifier Condition="'$(OSPlatform)'=='OSX'">osx-x64</RuntimeIdentifier>
+
+		<!-- On Linux always set to linux-x64 -->
+		<RuntimeIdentifier Condition="'$(OSPlatform)'=='LINUX'">linux-x64</RuntimeIdentifier>
+		
+		<!-- Need to specify both RuntimeIdentifier and RuntimeIdentifiers because of MSBuild weirdness -->
+		<RuntimeIdentifiers>$(RuntimeIdentifier)</RuntimeIdentifiers>
+
+		<!-- For non-Windows platforms always set to net6.0 -->
+		<TargetFramework Condition="'$(TargetFramework)'=='' And '$(RuntimeIdentifier)'!='win-x64'">net6.0</TargetFramework>
+		<!-- For Windows we need to change the target framework to net6.0-windows to ensure everything restores properly -->
+		<TargetFramework Condition="'$(TargetFramework)'=='' And '$(RuntimeIdentifier)'=='win-x64'">net6.0-windows</TargetFramework>
+	</PropertyGroup>
 </Project>

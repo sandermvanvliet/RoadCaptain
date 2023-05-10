@@ -1,22 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
-		<!--
-		Some special things requierd to make WebView2 work on Windows.
-		Because we're doing funky stuff by embedding a WinForms control
-		into Avalonia that requires us to set the RuntimeIdentifier but
-		also tell MSBuild to add the relevant WinForms references.
-		-->
-		<RuntimeIdentifier Condition="$([MSBuild]::IsOSPlatform('WINDOWS')) And '$(Configuration)'=='Debug'">win-x64</RuntimeIdentifier>
-		<!-- Need to specify both RuntimeIdentifier and RuntimeIdentifiers because of MSBuild weirdness -->
-		<RuntimeIdentifiers Condition="$([MSBuild]::IsOSPlatform('WINDOWS')) And '$(Configuration)'=='Debug'">win-x64</RuntimeIdentifiers>
-		<!-- On macOS always set this to osx-x64 in debug mode so that debugging from Rider works  -->
-		<RuntimeIdentifier Condition="$([MSBuild]::IsOSPlatform('OSX')) And '$(Configuration)'=='Debug'">osx-x64</RuntimeIdentifier>
-		<RuntimeIdentifiers Condition="$([MSBuild]::IsOSPlatform('OSX')) And '$(Configuration)'=='Debug'">osx-x64</RuntimeIdentifiers>
-
 		<OutputType>WinExe</OutputType>
 		<OutputType Condition="'$(RuntimeIdentifier)'=='linux-x64' Or '$(RuntimeIdentifier)'=='osx-x64'">Exe</OutputType>
-		<TargetFramework Condition="'$(RuntimeIdentifier)'!='win-x64'">net6.0</TargetFramework>
-		<TargetFramework Condition="'$(RuntimeIdentifier)'=='win-x64'">net6.0-windows</TargetFramework>
 		<Nullable>enable</Nullable>
 		<!--Avalonia doesen't support TrimMode=link currently,but we are working on that https://github.com/AvaloniaUI/Avalonia/issues/6892 -->
 		<TrimMode>copyused</TrimMode>
