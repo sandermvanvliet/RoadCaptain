@@ -285,11 +285,6 @@ namespace RoadCaptain.Adapters
             }
         }
 
-        public event EventHandler? AcceptTimeoutExpired;
-        public event EventHandler? DataTimeoutExpired;
-        public event EventHandler? ConnectionLost;
-        public event EventHandler? ConnectionAccepted;
-
         private void SendMessageBytes(byte[] payload)
         {
             if (_acceptedSocket == null)

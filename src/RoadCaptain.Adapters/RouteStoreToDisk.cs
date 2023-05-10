@@ -35,7 +35,7 @@ namespace RoadCaptain.Adapters
         {
             _segmentStore = segmentStore;
             _worldStore = worldStore;
-            _currentVersion = GetType().Assembly.GetName().Version;
+            _currentVersion = GetType().Assembly.GetName().Version ?? new Version(0, 0, 0, 1);
         }
 
         public PlannedRoute LoadFrom(string path)
@@ -48,7 +48,7 @@ namespace RoadCaptain.Adapters
             var serialized = File.ReadAllText(path);
             var parsed = JObject.Parse(serialized);
 
-            PlannedRoute plannedRoute;
+            PlannedRoute? plannedRoute;
 
             if (parsed.ContainsKey("version"))
             {
@@ -59,6 +59,16 @@ namespace RoadCaptain.Adapters
                     var deserialized = JsonConvert.DeserializeObject<PersistedRouteVersion1>(
                         serialized,
                         RouteSerializationSettings);
+
+                    if (deserialized == null || deserialized.Route == null)
+                    {
+                        throw new InvalidOperationException("Failed to deserialize to a valid route object");
+                    }
+
+                    if (deserialized.Route.WorldId == null)
+                    {
+                        throw new InvalidOperationException("Expected route to have a WorldId but it didn't have one");
+                    }
 
                     deserialized.Route.World = _worldStore.LoadWorldById(deserialized.Route.WorldId);
                     
@@ -81,10 +91,20 @@ namespace RoadCaptain.Adapters
                         serialized,
                         RouteSerializationSettings);
 
+                    if (deserialized == null || deserialized.Route == null)
+                    {
+                        throw new InvalidOperationException("Failed to deserialize to a valid route object");
+                    }
+
                     if (Version.Parse(deserialized.RoadCaptainVersion) > _currentVersion)
                     {
                         throw new InvalidOperationException(
                             "Route was created with a newer version of RoadCaptain and that won't work");
+                    }
+
+                    if (deserialized.Route.WorldId == null)
+                    {
+                        throw new InvalidOperationException("Expected route to have a WorldId but it didn't have one");
                     }
 
                     deserialized.Route.World = _worldStore.LoadWorldById(deserialized.Route.WorldId);
@@ -148,6 +168,11 @@ namespace RoadCaptain.Adapters
                         serialized,
                         RouteSerializationSettings);
 
+                    if (deserialized == null || deserialized.Route == null)
+                    {
+                        throw new InvalidOperationException("Failed to deserialize to a valid route object");
+                    }
+
                     if (Version.Parse(deserialized.RoadCaptainVersion) > _currentVersion)
                     {
                         throw new InvalidOperationException(
@@ -158,6 +183,11 @@ namespace RoadCaptain.Adapters
                     {
                         throw new InvalidOperationException(
                             "The route file has version 3 but was created with a version of RoadCaptain that does not support version 3, did you manually change the file?");
+                    }
+
+                    if (deserialized.Route.WorldId == null)
+                    {
+                        throw new InvalidOperationException("Expected route to have a WorldId but it didn't have one");
                     }
 
                     deserialized.Route.World = _worldStore.LoadWorldById(deserialized.Route.WorldId);
@@ -209,6 +239,11 @@ namespace RoadCaptain.Adapters
                     serialized,
                     RouteSerializationSettings);
 
+                if (deserializeObject == null)
+                {
+                    throw new InvalidOperationException("Failed to deserialize to a valid route object");
+                }
+
                 // ReSharper disable once PossibleNullReferenceException
                 plannedRoute = deserializeObject.AsRoute(_worldStore.LoadWorldById("watopia"));
 
@@ -232,7 +267,7 @@ namespace RoadCaptain.Adapters
                 }
             }
 
-            return plannedRoute;
+            return plannedRoute!;
         }
 
         /// <summary>
@@ -313,6 +348,11 @@ namespace RoadCaptain.Adapters
 
         private string SerializeAsGpx(PlannedRoute route)
         {
+            if (route.World == null)
+            {
+                throw new ArgumentException("Can't serialize this route because it does not have a world defined");
+            }
+
             var segments = _segmentStore.LoadSegments(route.World, route.Sport);
 
             var trackSegments = string.Join(

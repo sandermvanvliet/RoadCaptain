@@ -32,8 +32,8 @@ namespace RoadCaptain.Adapters
         private readonly ConcurrentQueue<byte[]> _payloads = new();
         private readonly AutoResetEvent _receiveQueueResetEvent;
         private readonly CancellationTokenSource _tokenSource = new();
-        private CaptureFileReaderDevice _device;
-        private Task<Task> _receiveTask;
+        private CaptureFileReaderDevice? _device;
+        private Task<Task>? _receiveTask;
 
         public MessageReceiverFromCaptureFile(string captureFilePath, MonitoringEvents monitoringEvents, IGameStateDispatcher gameStateDispatcher)
         {
@@ -81,18 +81,13 @@ namespace RoadCaptain.Adapters
 
             try
             {
-                _receiveTask.GetAwaiter().GetResult();
+                _receiveTask?.GetAwaiter().GetResult();
             }
             catch (OperationCanceledException)
             {
                 // Nop
             }
         }
-
-        public event EventHandler? AcceptTimeoutExpired;
-        public event EventHandler? DataTimeoutExpired;
-        public event EventHandler? ConnectionLost;
-        public event EventHandler? ConnectionAccepted;
 
         private void EnqueueForReceive(byte[] payload)
         {

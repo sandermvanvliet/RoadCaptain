@@ -42,7 +42,7 @@ namespace RoadCaptain.Tests.Unit.UseCases
 
         public WhenLoadingRoute()
         {
-            _gameStateDispatcher = new InMemoryGameStateDispatcher(new NopMonitoringEvents(), null);
+            _gameStateDispatcher = new InMemoryGameStateDispatcher(new NopMonitoringEvents(), new StubPathProvider());
             IRouteStore routeStore = new StubRouteStore();
 
             _useCase = new LoadRouteUseCase(
@@ -50,12 +50,12 @@ namespace RoadCaptain.Tests.Unit.UseCases
                 routeStore);
         }
 
-        private void LoadRoute(string routePath)
+        private void LoadRoute(string? routePath)
         {
             _useCase.Execute(new LoadRouteCommand { Path = routePath });
         }
 
-        private PlannedRoute GetDispatchedRoute()
+        private PlannedRoute? GetDispatchedRoute()
         {
             // This method is meant to collect the first route
             // that is sent through the dispatcher.
@@ -64,7 +64,7 @@ namespace RoadCaptain.Tests.Unit.UseCases
             // that first dispatch call without having
             // to do Thread.Sleep() calls.
 
-            PlannedRoute lastRoute = null;
+            PlannedRoute? lastRoute = null;
 
             // Use a cancellation token with a time-out so that
             // the test fails if no route is dispatched.

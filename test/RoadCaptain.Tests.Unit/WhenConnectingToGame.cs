@@ -27,7 +27,7 @@ namespace RoadCaptain.Tests.Unit
             var monitoringEvents = new NopMonitoringEvents();
             _handler = new TestableMessageHandler();
 
-            _gameStateDispatcher = new InMemoryGameStateDispatcher(monitoringEvents, null);
+            _gameStateDispatcher = new InMemoryGameStateDispatcher(monitoringEvents, new StubPathProvider());
             _useCase = new ConnectToZwiftUseCase(new Zwift(new HttpClient(_handler)),
                 monitoringEvents, // Use a different receiver than dispatcher
                 _gameStateDispatcher);
@@ -83,7 +83,7 @@ namespace RoadCaptain.Tests.Unit
             _handler
                 .Requests
                 .Should()
-                .Contain(req => req.RequestUri.PathAndQuery == "/relay/profiles/me/phone");
+                .Contain(req => req.RequestUri != null && req.RequestUri.PathAndQuery == "/relay/profiles/me/phone");
         }
 
         [Fact]
@@ -116,7 +116,7 @@ namespace RoadCaptain.Tests.Unit
                 .BeOfType<InvalidCredentialsState>();
         }
 
-        private GameStates.GameState GetFirstDispatchedGameState()
+        private GameStates.GameState? GetFirstDispatchedGameState()
         {
             // This method is meant to collect the first game
             // state update that is sent through the dispatcher.
@@ -125,7 +125,7 @@ namespace RoadCaptain.Tests.Unit
             // that first game state dispatch call without having
             // to do Thread.Sleep() calls.
 
-            GameStates.GameState lastState = null;
+            GameStates.GameState? lastState = null;
 
             // Use a cancellation token with a time-out so that
             // the test fails if no game state is dispatched.

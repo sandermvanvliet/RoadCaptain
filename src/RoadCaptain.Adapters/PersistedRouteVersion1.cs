@@ -12,6 +12,6 @@ namespace RoadCaptain.Adapters
         public const string Version = "1";
 
         [JsonProperty("route")]
-        public PlannedRoute Route { get; set; }
+        public PlannedRoute? Route { get; set; }
     }
 }
