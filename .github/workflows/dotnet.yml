@@ -16,22 +16,16 @@ jobs:
 
     runs-on: windows-2022
 
-    env:
-      RID: win-x64
-
     steps:
     - uses: actions/checkout@v3
     - name: Test
-      run: dotnet test --no-restore --verbosity normal -c Release
+      run: dotnet test --verbosity normal -c Release
 
   build_macos-x64:
 
     runs-on: macos-11
 
-    env:
-      RID: osx-x64
-
     steps:
     - uses: actions/checkout@v3
     - name: Test
-      run: dotnet test --no-restore --verbosity normal -c Release
+      run: dotnet test --verbosity normal -c Release
