@@ -52,7 +52,7 @@ namespace RoadCaptain.App.Web.Adapters
             }
         }
 
-        public RouteModel? Update(long id, UpdateRouteModel updateModel)
+        public RouteModel Update(long id, UpdateRouteModel updateModel)
         {
             var route = _roadCaptainDataContext
                 .Routes
@@ -60,7 +60,7 @@ namespace RoadCaptain.App.Web.Adapters
 
             if (route == null)
             {
-                return null;
+                throw new InvalidOperationException("Route not found");
             }
 
             _roadCaptainDataContext.SaveChanges();

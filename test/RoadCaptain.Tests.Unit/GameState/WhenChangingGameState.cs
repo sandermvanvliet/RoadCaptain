@@ -514,6 +514,7 @@ namespace RoadCaptain.Tests.Unit.GameState
 
         // Ignore in build
         //[Fact]
+        // ReSharper disable once UnusedMember.Global
         public void OverlappingSegmentMatch()
         {
             // This test verifies that segments that cross each other

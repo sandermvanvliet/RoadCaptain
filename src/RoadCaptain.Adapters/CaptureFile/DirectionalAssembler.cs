@@ -11,7 +11,7 @@ namespace RoadCaptain.Adapters.CaptureFile
     internal class DirectionalAssembler
     {
         private readonly MonitoringEvents _monitoringEvents;
-        public event EventHandler<PayloadReadyEventArgs> PayloadReady;
+        public event EventHandler<PayloadReadyEventArgs>? PayloadReady;
 
         public DirectionalAssembler(MonitoringEvents monitoringEvents)
         {
@@ -34,7 +34,7 @@ namespace RoadCaptain.Adapters.CaptureFile
             }
         }
         private int _assembledLen;
-        private byte[] _payload;
+        private byte[]? _payload;
         private bool _complete;
         private uint _startingSequenceNumber;
 
@@ -63,7 +63,7 @@ namespace RoadCaptain.Adapters.CaptureFile
                 else if (packet.Push && packet.Acknowledgment)
                 {
                     // Last packet in the sequence
-                    _payload = _payload.Concat(packet.PayloadData).ToArray();
+                    _payload = _payload!.Concat(packet.PayloadData).ToArray();
                     _assembledLen += packet.PayloadData.Length;
                     _complete = true;
 
@@ -81,7 +81,7 @@ namespace RoadCaptain.Adapters.CaptureFile
                 else if (packet.Acknowledgment)
                 {
                     // Middle packet in a sequence
-                    _payload = _payload.Concat(packet.PayloadData).ToArray();
+                    _payload = _payload!.Concat(packet.PayloadData).ToArray();
                     _assembledLen += packet.PayloadData.Length;
 
                     Debug($"Fragmented packet continued - Actual: {_payload.Length}, Push: {packet.Push}, Ack: {packet.Acknowledgment}");
@@ -107,6 +107,7 @@ namespace RoadCaptain.Adapters.CaptureFile
             }
         }
 
+        // ReSharper disable once UnusedParameter.Local
         private void Debug(string message)
         {
             //_monitoringEvents.Debug(message);

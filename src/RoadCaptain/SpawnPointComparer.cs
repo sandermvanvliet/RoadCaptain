@@ -9,7 +9,7 @@ namespace RoadCaptain
 {
     public class SpawnPointComparer : IEqualityComparer<SpawnPoint>
     {
-        public bool Equals(SpawnPoint x, SpawnPoint y)
+        public bool Equals(SpawnPoint? x, SpawnPoint? y)
         {
             if (ReferenceEquals(x, y))
             {

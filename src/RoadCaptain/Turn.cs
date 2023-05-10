@@ -17,7 +17,7 @@ namespace RoadCaptain
         public TurnDirection Direction { get; }
         public string SegmentId { get; }
 
-        public bool Equals(Turn other)
+        public bool Equals(Turn? other)
         {
             if (ReferenceEquals(null, other))
             {
