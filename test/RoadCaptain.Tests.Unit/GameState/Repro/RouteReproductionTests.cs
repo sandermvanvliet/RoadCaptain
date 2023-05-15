@@ -110,13 +110,13 @@ namespace RoadCaptain.Tests.Unit.GameState.Repro
                     new World { Id = "watopia", ZwiftId = ZwiftWorldId.Watopia },
                     SportType.Cycling);
 
-            var plannedRoute = routeStore.LoadFrom(@"GameState\Repro\VolcanoClimbRepro-2.json");
+            var plannedRoute = routeStore.LoadFrom(AbsolutePathTo(@"GameState\Repro\VolcanoClimbRepro-2.json"));
 
             plannedRoute.EnteredSegment(plannedRoute.RouteSegmentSequence[0].SegmentId);
             plannedRoute.EnteredSegment(plannedRoute.RouteSegmentSequence[1].SegmentId);
 
             var positions = File
-                .ReadAllLines("GameState\\Repro\\VolcanoClimbJunction.json")
+                .ReadAllLines(AbsolutePathTo(@"GameState\Repro\VolcanoClimbJunction.json"))
                 .Select(JsonConvert.DeserializeObject<TrackPoint>)
                 .ToList();
 
@@ -174,10 +174,10 @@ namespace RoadCaptain.Tests.Unit.GameState.Repro
                     new World { Id = "watopia", ZwiftId = ZwiftWorldId.Watopia },
                     SportType.Cycling);
 
-            var plannedRoute = routeStore.LoadFrom(@"GameState\Repro\VolcanoClimbRepro-2.json");
+            var plannedRoute = routeStore.LoadFrom(AbsolutePathTo(@"GameState\Repro\VolcanoClimbRepro-2.json"));
             
             var positions = File
-                .ReadAllLines("GameState\\Repro\\VolcanoClimbLostRouteLock-positions.json")
+                .ReadAllLines(AbsolutePathTo(@"GameState\Repro\VolcanoClimbLostRouteLock-positions.json"))
                 .Select(JsonConvert.DeserializeObject<TrackPoint>)
                 .ToList();
             
@@ -230,10 +230,10 @@ namespace RoadCaptain.Tests.Unit.GameState.Repro
                     new World { Id = "watopia", ZwiftId = ZwiftWorldId.Watopia },
                     SportType.Cycling);
 
-            var plannedRoute = routeStore.LoadFrom(@"GameState\Repro\VolcanoClimbRepro-2.json");
+            var plannedRoute = routeStore.LoadFrom(AbsolutePathTo(@"GameState\Repro\VolcanoClimbRepro-2.json"));
             
             var positions = File
-                .ReadAllLines("GameState\\Repro\\VolcanoClimbUpcomingTurnToPositioned-positions.json")
+                .ReadAllLines(AbsolutePathTo(@"GameState\Repro\VolcanoClimbUpcomingTurnToPositioned-positions.json"))
                 .Select(JsonConvert.DeserializeObject<TrackPoint>)
                 .ToList();
             
@@ -286,7 +286,7 @@ namespace RoadCaptain.Tests.Unit.GameState.Repro
                     new World { Id = "watopia", ZwiftId = ZwiftWorldId.Watopia },
                     SportType.Cycling);
 
-            var plannedRoute = routeStore.LoadFrom(@"GameState\Repro\Rebel.Route-Italian.Villa.Sprint.Loop.json");
+            var plannedRoute = routeStore.LoadFrom(AbsolutePathTo(@"GameState\Repro\Rebel.Route-Italian.Villa.Sprint.Loop.json"));
 
             plannedRoute.EnteredSegment(plannedRoute.RouteSegmentSequence[0].SegmentId);
             plannedRoute.EnteredSegment(plannedRoute.RouteSegmentSequence[1].SegmentId);
@@ -331,7 +331,7 @@ namespace RoadCaptain.Tests.Unit.GameState.Repro
                     new World { Id = "watopia", ZwiftId = ZwiftWorldId.Watopia },
                     SportType.Cycling);
 
-            var plannedRoute = routeStore.LoadFrom(@"GameState\Repro\Rebel.Route-Italian.Villa.Sprint.Loop.json");
+            var plannedRoute = routeStore.LoadFrom(AbsolutePathTo(@"GameState\Repro\Rebel.Route-Italian.Villa.Sprint.Loop.json"));
 
             plannedRoute.EnteredSegment(plannedRoute.RouteSegmentSequence[0].SegmentId);
             plannedRoute.EnteredSegment(plannedRoute.RouteSegmentSequence[1].SegmentId);
@@ -370,6 +370,11 @@ namespace RoadCaptain.Tests.Unit.GameState.Repro
 
                 state = newState;
             }
+        }
+
+        private string AbsolutePathTo(string relativePath)
+        {
+            return Path.Combine(Path.GetDirectoryName(GetType().Assembly.Location)!, relativePath);
         }
     }
 }

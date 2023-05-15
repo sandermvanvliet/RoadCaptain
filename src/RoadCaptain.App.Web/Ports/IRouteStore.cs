@@ -1,4 +1,8 @@
-﻿using RoadCaptain.App.Web.Adapters.EntityFramework;
+// Copyright (c) 2023 Sander van Vliet
+// Licensed under Artistic License 2.0
+// See LICENSE or https://choosealicense.com/licenses/artistic-2.0/
+
+using RoadCaptain.App.Web.Adapters.EntityFramework;
 using RoadCaptain.App.Web.Models;
 
 namespace RoadCaptain.App.Web.Ports
@@ -26,3 +30,4 @@ namespace RoadCaptain.App.Web.Ports
         RouteModel Store(CreateRouteModel createModel, User user);
     }
 }
+
