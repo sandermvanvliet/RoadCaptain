@@ -16,6 +16,7 @@ using Xilium.CefGlue;
 
 namespace RoadCaptain.App.MacOs.Views
 {
+    // ReSharper disable once PartialTypeWithSinglePart because this is required by Avalonia
     public partial class ZwiftLoginWindow : ZwiftLoginWindowBase
     {
         private readonly FieldInfo _cefRequestField;
@@ -88,8 +89,8 @@ namespace RoadCaptain.App.MacOs.Views
             var headerKeys = cefRequest
                 .GetHeaderMap()
                 .AllKeys
-                .Where(key => !"Content-Type".Equals(key, StringComparison.InvariantCultureIgnoreCase))
-                .ToList();
+                .Where(key => key != null && !"Content-Type".Equals(key, StringComparison.InvariantCultureIgnoreCase))!
+                .ToList<string>();
 
             foreach (var key in headerKeys)
             {
