@@ -4,6 +4,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Autofac;
 using FluentAssertions;
 using RoadCaptain.Adapters;
 using RoadCaptain.App.RouteBuilder.ViewModels;
@@ -16,7 +17,7 @@ namespace RoadCaptain.App.RouteBuilder.Tests.Unit
     {
         private readonly TestableMainWindowViewModel _viewModel;
         private readonly SegmentStore _segmentStore;
-        private List<Segment> _segments;
+        private List<Segment>? _segments;
         private readonly WorldStoreToDisk _worldStore;
 
         public WhenPlanningRoute()
@@ -28,8 +29,8 @@ namespace RoadCaptain.App.RouteBuilder.Tests.Unit
             _viewModel = new TestableMainWindowViewModel(
                 new RouteStoreToDisk(_segmentStore, _worldStore),
                 _segmentStore,
-                null,
-                new StubWindowService(null, new NopMonitoringEvents()),
+                new DummyVersionChecker(),
+                new StubWindowService(new ContainerBuilder().Build(), new NopMonitoringEvents()),
                 _worldStore,
                 new TestUserPreferences(),
                 new DummyApplicationFeatures());
@@ -39,7 +40,7 @@ namespace RoadCaptain.App.RouteBuilder.Tests.Unit
         {
             _viewModel.SelectWorldCommand.Execute(new WorldViewModel(_worldStore.LoadWorldById(worldId)));
             _viewModel.SelectSportCommand.Execute(new SportViewModel(sportType));
-            _segments = _segmentStore.LoadSegments(_viewModel.Route.World, _viewModel.Route.Sport);
+            _segments = _segmentStore.LoadSegments(_viewModel.Route.World!, _viewModel.Route.Sport);
         }
 
         [Theory]
@@ -196,7 +197,7 @@ namespace RoadCaptain.App.RouteBuilder.Tests.Unit
 
         private Segment GetSegmentById(string id)
         {
-            return _segments.Single(s => s.Id == id);
+            return _segments!.Single(s => s.Id == id);
         }
     }
 }
