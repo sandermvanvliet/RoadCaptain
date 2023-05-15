@@ -17,7 +17,7 @@ namespace RoadCaptain.Adapters.CaptureFile
     /// </summary>
     internal class PacketAssembler
     {
-        public event EventHandler<PayloadReadyEventArgs> PayloadReady;
+        public event EventHandler<PayloadReadyEventArgs>? PayloadReady;
         
         private void OnPayloadReady(PayloadReadyEventArgs e)
         {

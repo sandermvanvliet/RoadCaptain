@@ -8,10 +8,10 @@ namespace RoadCaptain
 {
     public class World
     {
-        public string Id { get; set; }
-        public string Name { get; set; }
-        public string Description { get; set; }
-        public SpawnPoint[] SpawnPoints { get; set; }
+        public string? Id { get; set; }
+        public string? Name { get; set; }
+        public string? Description { get; set; }
+        public SpawnPoint[]? SpawnPoints { get; set; }
         public WorldStatus Status { get; set; }
         public ZwiftWorldId ZwiftId { get; set; } = ZwiftWorldId.Unknown;
         /// <summary>

@@ -33,7 +33,7 @@ namespace RoadCaptain
         public double DistanceFromLast { get; set; }
         
         [JsonIgnore]
-        public Segment Segment { get; set; }
+        public Segment? Segment { get; set; }
         
         [JsonIgnore]
         // ReSharper disable once UnusedMember.Global because this is only used to look up a point using Garmin BaseCamp

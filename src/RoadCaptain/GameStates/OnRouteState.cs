@@ -122,6 +122,12 @@ namespace RoadCaptain.GameStates
                     ? plannedRoute.CurrentSegmentSequence
                     : plannedRoute.NextSegmentSequence;
 
+                if (nextSegmentSequenceOnRoute == null)
+                {
+                    return new ErrorState(
+                        "Nearing the end of the segment but can't determine the next segment on the route", RiderId);
+                }
+
                 var directionOnNextSegment = nextSegmentSequenceOnRoute.Direction;
 
                 if (directionOnNextSegment == SegmentDirection.AtoB)
@@ -207,6 +213,11 @@ namespace RoadCaptain.GameStates
                 }
             }
 
+            if (segment == null)
+            {
+                return new ErrorState("segment was null which at this point should be impossible", RiderId);
+            }
+
             var positionDelta = CurrentPosition.DeltaTo(closestOnSegment);
 
             var distance = ElapsedDistance + positionDelta.Distance;
@@ -250,7 +261,7 @@ namespace RoadCaptain.GameStates
 
             if (plannedRoute.CurrentSegmentId == segment.Id)
             {
-                if (direction != SegmentDirection.Unknown && plannedRoute.CurrentSegmentSequence.Direction != direction)
+                if (direction != SegmentDirection.Unknown && plannedRoute.CurrentSegmentSequence!.Direction != direction)
                 {
                     return new LostRouteLockState(RiderId, ActivityId, closestOnSegment, segment, plannedRoute,
                         direction, distance, ascent, descent);
@@ -423,7 +434,7 @@ namespace RoadCaptain.GameStates
             {
                 var lastOfRoute = plannedRoute.CurrentSegmentSequence;
                 var lastSegmentOfRoute = segments.Single(s => s.Id == plannedRoute.CurrentSegmentId);
-                if (lastOfRoute.Direction == SegmentDirection.AtoB)
+                if (lastOfRoute!.Direction == SegmentDirection.AtoB)
                 {
                     if (lastSegmentOfRoute.NextSegmentsNodeB.Any(t =>
                             t.SegmentId == segment.Id))

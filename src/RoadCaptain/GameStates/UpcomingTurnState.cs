@@ -112,6 +112,12 @@ namespace RoadCaptain.GameStates
                     ? plannedRoute.CurrentSegmentSequence
                     : plannedRoute.NextSegmentSequence;
 
+                if (nextSegmentSequenceOnRoute == null)
+                {
+                    return new ErrorState(
+                        "Nearing the end of the segment but can't determine the next segment on the route", RiderId);
+                }
+
                 var directionOnNextSegment = nextSegmentSequenceOnRoute.Direction;
 
                 if (directionOnNextSegment == SegmentDirection.AtoB)
@@ -195,6 +201,11 @@ namespace RoadCaptain.GameStates
                 {
                     return new PositionedState(RiderId, ActivityId, position);
                 }
+            }
+
+            if (segment == null)
+            {
+                return new ErrorState("segment was null which at this point should be impossible", RiderId);
             }
 
             var positionDelta = CurrentPosition.DeltaTo(closestOnSegment);

@@ -15,7 +15,7 @@ namespace RoadCaptain.UseCases
         private readonly MonitoringEvents _monitoringEvents;
         private ulong _lastSequenceNumber;
         private int _lastRouteSequenceIndex;
-        private GameState _previousState;
+        private GameState? _previousState;
         private readonly IZwiftGameConnection _gameConnection;
 
         public NavigationUseCase(
@@ -48,7 +48,7 @@ namespace RoadCaptain.UseCases
 
                 if (CommandsMatchTurnToNextSegment(turnState.Directions, nextTurnDirection))
                 {
-                    _monitoringEvents.Information("Executing turn {TurnDirection} onto {SegmentId}", nextTurnDirection, turnState.Route.NextSegmentId);
+                    _monitoringEvents.Information("Executing turn {TurnDirection} onto {SegmentId}", nextTurnDirection, turnState.Route.NextSegmentId ?? "(unknown)");
 
                     // Behold: The Zwift Konami Code
                     //
@@ -89,11 +89,12 @@ namespace RoadCaptain.UseCases
 
             if (gameState is OnRouteState routeState)
             {
-                if (routeState.Route.CurrentSegmentSequence.Index != _lastRouteSequenceIndex)
+                // CurrentSegmentSequence is never null because we are on a OnRouteState
+                if (routeState.Route.CurrentSegmentSequence!.Index != _lastRouteSequenceIndex)
                 {
                     _monitoringEvents.Information(
                         "Entered route segment {CurrentSegment} ({CurrentIndex})",
-                        routeState.Route.CurrentSegmentSequence.SegmentId,
+                        routeState.Route.CurrentSegmentSequence.SegmentId!, // A segment always has a segment id
                         routeState.Route.CurrentSegmentSequence.Index);
                 }
 

@@ -15,6 +15,13 @@ namespace RoadCaptain.GameStates
         {
         }
 
+        public ErrorState(string message, uint riderId)
+        {
+            Message = message;
+            Exception = null;
+            RiderId = riderId;
+        }
+
         public ErrorState(string message, Exception exception)
         {
             Message = message;
@@ -34,7 +41,7 @@ namespace RoadCaptain.GameStates
         public string Message { get; set; }
 
         [JsonProperty]
-        public Exception Exception { get; private set; }
+        public Exception? Exception { get; private set; }
 
         public override GameState EnterGame(uint riderId, ulong activityId)
         {
