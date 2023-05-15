@@ -42,7 +42,7 @@ namespace RoadCaptain.Adapters
         {
             if (!File.Exists(path))
             {
-                throw new FileNotFoundException();
+                throw new FileNotFoundException($"Couldn't find '{path}'");
             }
 
             var serialized = File.ReadAllText(path);

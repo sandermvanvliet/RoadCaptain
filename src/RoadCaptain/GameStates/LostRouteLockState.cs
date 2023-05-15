@@ -94,7 +94,8 @@ namespace RoadCaptain.GameStates
 
             if (plannedRoute.CurrentSegmentId == segment.Id)
             {
-                if(plannedRoute.CurrentSegmentSequence.Direction == direction)
+                // CurrentSegmentSequence is never null because we check CurrentSegmentId for null above
+                if(plannedRoute.CurrentSegmentSequence!.Direction == direction)
                 {
                     return new OnRouteState(RiderId, ActivityId, closestOnSegment, segment, plannedRoute, direction,
                     distance, ascent, descent);

@@ -14,8 +14,8 @@ namespace RoadCaptain
         private World? _world;
         private string? _worldId;
         private int _segmentSequenceIndex;
-        public string Name { get; set; }
-        public string ZwiftRouteName { get; set; }
+        public string? Name { get; set; }
+        public string? ZwiftRouteName { get; set; }
         [JsonIgnore]
         public bool HasCompleted { get; private set; }
         [JsonIgnore]
@@ -161,7 +161,7 @@ namespace RoadCaptain
 
         public override string ToString()
         {
-            return Name;
+            return Name ?? "(unknown)";
         }
 
         public void Complete()

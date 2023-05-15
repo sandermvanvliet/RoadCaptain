@@ -23,6 +23,7 @@ namespace RoadCaptain.GameStates
 
         public ErrorState(Exception exception, uint riderId)
         {
+            Message = exception.Message;
             Exception = exception;
             RiderId = riderId;
         }
