@@ -13,19 +13,19 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
 {
     public class DesignTimeMainWindowViewModel : MainWindowViewModel
     {
-        private static readonly IContainer _container;
+        private static readonly IContainer Container;
 
         static DesignTimeMainWindowViewModel()
         {
-            _container = InversionOfControl.ConfigureContainer(new ConfigurationBuilder().Build(), Logger.None, Dispatcher.UIThread).Build();
+            Container = InversionOfControl.ConfigureContainer(new ConfigurationBuilder().Build(), Logger.None, Dispatcher.UIThread).Build();
         }
 
         public DesignTimeMainWindowViewModel()
-        : base(_container.Resolve<IRouteStore>(), 
-            _container.Resolve<ISegmentStore>(), 
+        : base(Container.Resolve<IRouteStore>(), 
+            Container.Resolve<ISegmentStore>(), 
             new DummyVersionChecker(), 
-            new WindowService(null, _container.Resolve<MonitoringEvents>()), 
-            _container.Resolve<IWorldStore>(), 
+            new WindowService(Container, Container.Resolve<MonitoringEvents>()), 
+            Container.Resolve<IWorldStore>(), 
             new DummyUserPreferences(),
             new DummyApplicationFeatures())
         {

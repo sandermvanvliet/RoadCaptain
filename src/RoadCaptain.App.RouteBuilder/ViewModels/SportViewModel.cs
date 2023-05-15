@@ -31,7 +31,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
                 }
 
                 _isSelected = value;
-                this.RaisePropertyChanged(nameof(IsSelected));
+                this.RaisePropertyChanged();
             }
         }
 
@@ -46,14 +46,14 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
                 }
 
                 _isDefault = value;
-                this.RaisePropertyChanged(nameof(IsDefault));
+                this.RaisePropertyChanged();
             }
         }
 
         public DrawingImage? Image {
             get
             {
-                if (Application.Current.TryFindResource($"{Sport}DrawingImage", out var resource))
+                if (Application.Current!.TryFindResource($"{Sport}DrawingImage", out var resource))
                 {
                     return resource as DrawingImage;
                 }

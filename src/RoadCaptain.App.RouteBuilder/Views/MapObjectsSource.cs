@@ -137,7 +137,7 @@ namespace RoadCaptain.App.RouteBuilder.Views
                 .OfType<MapSegment>()
                 .ToList();
 
-            var highlightedSegmentId = (highlightedSegment.Id ?? "no selection");
+            var highlightedSegmentId = (highlightedSegment?.Id ?? "no selection");
 
             foreach (var segment in highlightedSegments)
             {
@@ -170,6 +170,11 @@ namespace RoadCaptain.App.RouteBuilder.Views
             }
 
             var offsets = CreatePathsForSegments(segments, world);
+
+            if (offsets == null)
+            {
+                return;
+            }
 
             CreatePathsForMarkers(
                 offsets,

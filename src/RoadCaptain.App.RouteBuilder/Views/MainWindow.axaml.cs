@@ -31,7 +31,7 @@ namespace RoadCaptain.App.RouteBuilder.Views
         public MainWindow()
 #pragma warning restore CS8618
         {
-            ViewModel = DataContext as MainWindowViewModel;
+            ViewModel = (DataContext as MainWindowViewModel)!; // Suppressed because it's initialized from XAML
 
             InitializeComponent();
         }

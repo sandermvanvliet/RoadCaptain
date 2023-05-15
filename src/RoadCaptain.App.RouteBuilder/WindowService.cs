@@ -19,7 +19,7 @@ namespace RoadCaptain.App.RouteBuilder
 {
     public class WindowService : BaseWindowService, IWindowService
     {
-        private IClassicDesktopStyleApplicationLifetime _applicationLifetime;
+        private IClassicDesktopStyleApplicationLifetime? _applicationLifetime;
 
         public WindowService(IComponentContext componentContext, MonitoringEvents monitoringEvents) : base(componentContext, monitoringEvents)
         {
@@ -31,7 +31,7 @@ namespace RoadCaptain.App.RouteBuilder
                 "Only one instance of RoadCaptain Route Builder can be active",
                 "Already running",
                 MessageBoxButton.Ok,
-                CurrentWindow,
+                CurrentWindow!,
                 MessageBoxIcon.Warning);
         }
 
@@ -62,7 +62,7 @@ namespace RoadCaptain.App.RouteBuilder
                 InitialFileName = suggestedFileName
             };
 
-            return await dialog.ShowAsync(CurrentWindow);
+            return await dialog.ShowAsync(CurrentWindow!);
         }
 
         public async Task<bool> ShowDefaultSportSelectionDialog(SportType sport)
@@ -71,7 +71,7 @@ namespace RoadCaptain.App.RouteBuilder
                 $"Do you want to use {sport} as your default selection?\nIf you do you won't have to select it again when you build more routes.",
                 "Select default sport",
                 MessageBoxButton.YesNo,
-                CurrentWindow,
+                CurrentWindow!,
                 MessageBoxIcon.Question);
 
             return result == MessageBoxResult.Yes;
@@ -83,7 +83,7 @@ namespace RoadCaptain.App.RouteBuilder
                 "Do you want to save the current route?",
                 "Current route was changed",
                 MessageBoxButton.YesNoCancel,
-                CurrentWindow);
+                CurrentWindow!);
         }
 
         public async Task<MessageBoxResult> ShowClearRouteDialog()
@@ -92,7 +92,7 @@ namespace RoadCaptain.App.RouteBuilder
                     "This action will remove all segments from the current route. Are you sure?",
                     "Clear route",
                     MessageBoxButton.YesNo,
-                    CurrentWindow,
+                    CurrentWindow!,
                     MessageBoxIcon.Question);
         }
 
@@ -102,7 +102,7 @@ namespace RoadCaptain.App.RouteBuilder
                 "The route ends on a connection to the first segment, do you want to make it a loop?",
                 "Create route loop",
                 MessageBoxButton.YesNo,
-                CurrentWindow,
+                CurrentWindow!,
                 MessageBoxIcon.Question);
 
             return result == MessageBoxResult.Yes;
@@ -112,10 +112,7 @@ namespace RoadCaptain.App.RouteBuilder
         {
             var saveRouteDialog = Resolve<SaveRouteDialog>();
 
-            var viewModel = new SaveRouteDialogViewModel(this, Resolve<IUserPreferences>())
-            {
-                Route = routeViewModel
-            };
+            var viewModel = new SaveRouteDialogViewModel(this, Resolve<IUserPreferences>(), routeViewModel);
 
             saveRouteDialog.DataContext = viewModel;
 
@@ -126,7 +123,7 @@ namespace RoadCaptain.App.RouteBuilder
 
         public void Shutdown(int exitCode)
         {
-            _applicationLifetime.Shutdown(exitCode);
+            _applicationLifetime?.Shutdown(exitCode);
         }
 
         public void ShowMainWindow(IApplicationLifetime applicationLifetime)

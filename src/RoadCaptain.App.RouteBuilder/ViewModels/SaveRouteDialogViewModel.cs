@@ -16,15 +16,16 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
         private readonly IUserPreferences _userPreferences;
         private RouteViewModel _route;
 
-        public SaveRouteDialogViewModel(IWindowService windowService, IUserPreferences userPreferences)
+        public SaveRouteDialogViewModel(IWindowService windowService, IUserPreferences userPreferences, RouteViewModel route)
         {
             _windowService = windowService;
             _userPreferences = userPreferences;
+            _route = route;
 
             SaveRouteCommand = new AsyncRelayCommand(
                 _ => SaveRoute(),
                 _ => true)
-                .OnSuccess(async result =>
+                .OnSuccess(async _ =>
                 {
                     await CloseWindow();
                 });
@@ -68,7 +69,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             set
             {
                 if (_route.Name == value) return;
-                _route.Name = value;
+                _route.Name = value ?? string.Empty;
                 this.RaisePropertyChanged();
             }
         }
@@ -97,11 +98,11 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
 
         public ICommand SaveRouteCommand { get; }
         public ICommand SelectPathCommand { get; }
-        public event EventHandler ShouldClose;
+        public event EventHandler? ShouldClose;
 
         private Task CloseWindow()
         {
-            ShouldClose.Invoke(this, EventArgs.Empty);
+            ShouldClose?.Invoke(this, EventArgs.Empty);
             return Task.CompletedTask;
         }
     }

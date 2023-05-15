@@ -28,7 +28,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             Segment = segment;
         }
 
-        private static string? GlyphFromTurn(TurnDirection turnDirection)
+        private static string GlyphFromTurn(TurnDirection turnDirection)
         {
             return turnDirection switch
             {
@@ -50,7 +50,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             private set
             {
                 _turnGlyph = value;
-                this.RaisePropertyChanged(nameof(TurnGlyph));
+                this.RaisePropertyChanged();
             }
         }
 
@@ -89,7 +89,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             set
             {
                 _direction = value;
-                this.RaisePropertyChanged(nameof(Direction));
+                this.RaisePropertyChanged();
                 this.RaisePropertyChanged(nameof(Ascent));
                 this.RaisePropertyChanged(nameof(Descent));
             }
@@ -97,7 +97,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
 
         public string SegmentName { get; }
 
-        public string NoSelectReason { get; }
+        public string? NoSelectReason { get; }
 
         public SegmentSequenceType Type
         {
