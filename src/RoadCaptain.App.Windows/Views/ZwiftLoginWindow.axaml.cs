@@ -7,12 +7,13 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 using Microsoft.Web.WebView2.Core;
-using RoadCaptain.App.Runner.Controls;
 using RoadCaptain.App.Shared.Models;
 using RoadCaptain.App.Shared.Views;
+using RoadCaptain.App.Windows.Controls;
 
 namespace RoadCaptain.App.Windows.Views
 {
+    // ReSharper disable once PartialTypeWithSinglePart because this is required by Avalonia
     public partial class ZwiftLoginWindow : ZwiftLoginWindowBase
     {
         private readonly WebView _webView;
@@ -35,6 +36,7 @@ namespace RoadCaptain.App.Windows.Views
             AvaloniaXamlLoader.Load(this);
         }
 
+        // ReSharper disable twice UnusedParameter.Local
         private void WindowBase_OnActivated(object? sender, EventArgs e)
         {
             if (_isInitialActivation)
@@ -44,16 +46,31 @@ namespace RoadCaptain.App.Windows.Views
                 _webView.Navigate("https://www.zwift.com/eu/sign-in?redirect_uri=https://www.zwift.com/feed?auth_redirect=true");
             }
         }
-        
+
         private void ZwiftAuthView_OnCoreWebView2InitializationCompleted(object? sender,
             CoreWebView2InitializationCompletedEventArgs? e)
         {
-            _webView.CoreWebView2.WebResourceResponseReceived += ZwiftAuthView_WebResourceResponseReceived;
-            _webView.CoreWebView2.CookieManager.DeleteAllCookies();
+            if (e == null)
+            {
+                return;
+            }
+
+            if (!e.IsSuccess)
+            {
+                throw new Exception("Failed to initialize CoreWebView2", e.InitializationException);
+            }
+
+            _webView.CoreWebView2!.WebResourceResponseReceived += ZwiftAuthView_WebResourceResponseReceived;
+            _webView.CoreWebView2!.CookieManager.DeleteAllCookies();
         }
 
         private void ZwiftAuthView_OnNavigationStarting(object? sender, CoreWebView2NavigationStartingEventArgs? e)
         {
+            if (e == null)
+            {
+                return;
+            }
+
             if (e.Uri.StartsWith("https://www.zwift.com/feed"))
             {
                 e.Cancel = true;
@@ -64,6 +81,11 @@ namespace RoadCaptain.App.Windows.Views
             object? sender,
             CoreWebView2WebResourceResponseReceivedEventArgs? e)
         {
+            if (e == null)
+            {
+                return;
+            }
+
             if (e.Request.Uri.StartsWith("https://www.zwift.com/auth/login") &&
                 "POST".Equals(e.Request.Method, StringComparison.InvariantCultureIgnoreCase) &&
                 e.Response.StatusCode == 200)

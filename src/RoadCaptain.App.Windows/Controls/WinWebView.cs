@@ -7,12 +7,12 @@ using Avalonia.Platform;
 using Microsoft.Web.WebView2.Core;
 using Microsoft.Web.WebView2.WinForms;
 
-namespace RoadCaptain.App.Runner.Controls
+namespace RoadCaptain.App.Windows.Controls
 {
     internal class WebView : NativeControlHost
     {
         private WebView2? _webView;
-        public CoreWebView2 CoreWebView2 => _webView.CoreWebView2;
+        public CoreWebView2? CoreWebView2 => _webView?.CoreWebView2;
 
         protected override IPlatformHandle CreateNativeControlCore(IPlatformHandle parent)
         {
@@ -60,6 +60,11 @@ namespace RoadCaptain.App.Runner.Controls
 
         public void Navigate(string url)
         {
+            if (_webView == null)
+            {
+                throw new InvalidOperationException("WebView hasn't initialized yet, can't navigate");
+            }
+
             _webView.Source = new Uri(url);
         }
     }

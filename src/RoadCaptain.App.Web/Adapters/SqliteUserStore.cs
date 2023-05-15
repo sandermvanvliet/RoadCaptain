@@ -33,7 +33,7 @@ namespace RoadCaptain.App.Web.Adapters
                 user = new User
                 {
                     ZwiftProfileId = "",
-                    Name = principal.Claims.SingleOrDefault(c => c.Type == ClaimTypes.Name).Value,
+                    Name = principal.Claims.SingleOrDefault(c => c.Type == ClaimTypes.Name)?.Value ?? "(unknown)",
                     ZwiftSubject = subjectClaim.Value
                 };
                 _roadCaptainDataContext.Users.Add(user);

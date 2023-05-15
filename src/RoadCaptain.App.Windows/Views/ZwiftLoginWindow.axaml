@@ -8,7 +8,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:controls="clr-namespace:RoadCaptain.App.Runner.Controls"
+        xmlns:controls="clr-namespace:RoadCaptain.App.Windows.Controls"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="600"
         x:Class="RoadCaptain.App.Windows.Views.ZwiftLoginWindow"
         Title="Log in to Zwift"

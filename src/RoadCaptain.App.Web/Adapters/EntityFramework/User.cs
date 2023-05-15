@@ -10,6 +10,6 @@ namespace RoadCaptain.App.Web.Adapters.EntityFramework
         public string? Name { get; set; }
         public string? ZwiftSubject { get; set; }
         public string? ZwiftProfileId { get; set; }
-        public IEnumerable<Route> Routes { get; set; }
+        public IEnumerable<Route>? Routes { get; set; }
     }
 }

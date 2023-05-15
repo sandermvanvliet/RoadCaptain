@@ -8,7 +8,7 @@ namespace RoadCaptain.App.Web.Adapters.EntityFramework
     {
         public long Id { get; set; }
         public long UserId { get; set; }
-        public User User { get; set; }
+        public User? User { get; set; }
         public string? Name { get; set; }
         public string? ZwiftRouteName { get; set; }
         public decimal Distance { get; set; }
