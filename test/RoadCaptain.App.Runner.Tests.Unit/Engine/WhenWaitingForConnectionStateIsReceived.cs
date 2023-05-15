@@ -28,7 +28,10 @@ namespace RoadCaptain.App.Runner.Tests.Unit.Engine
 
         // TODO: Re-enable this test
         //[Fact]
+        // ReSharper disable once UnusedMember.Global
+#pragma warning disable xUnit1013
         public void GivenRouteIsLoadedAndMainWindowIsActive_MainWindowIsClosed()
+#pragma warning restore xUnit1013
         {
             GivenLoadedRoute();
             WindowService.ShowMainWindow();

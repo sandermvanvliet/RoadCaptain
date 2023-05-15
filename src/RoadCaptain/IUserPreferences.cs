@@ -13,7 +13,7 @@ namespace RoadCaptain
         string? Route { get; set; }
         CapturedWindowLocation? InGameWindowLocation { get; set; }
         bool EndActivityAtEndOfRoute { get; set; }
-        Version LastOpenedVersion { get; set; }
+        Version? LastOpenedVersion { get; set; }
         byte[]? ConnectionSecret { get; }
         CapturedWindowLocation? RouteBuilderLocation { get; set; }
         bool ShowSprints { get; set; }

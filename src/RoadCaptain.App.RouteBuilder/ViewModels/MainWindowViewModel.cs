@@ -490,7 +490,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
         {
             var (isLoop, startIndex, endIndex) = Route.IsPossibleLoop();
 
-            if (isLoop)
+            if (isLoop && startIndex.HasValue && endIndex.HasValue)
             {
                 var shouldCreateLoop = await _windowService.ShowRouteLoopDialog();
 
