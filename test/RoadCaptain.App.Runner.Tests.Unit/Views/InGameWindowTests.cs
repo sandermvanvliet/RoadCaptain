@@ -259,7 +259,7 @@ namespace RoadCaptain.App.Runner.Tests.Unit.Views
 
             window.Show();
             
-            Dispatcher.UIThread.InvokeAsync(async () => { }, DispatcherPriority.SystemIdle);
+            Dispatcher.UIThread.InvokeAsync(() => { return Task.CompletedTask; }, DispatcherPriority.SystemIdle);
 
             route.EnteredSegment("seg-2");
             viewModel.UpdateGameState(new OnRouteState(1, 2, new TrackPoint(1, 2, 3), segments[1], route, SegmentDirection.AtoB, 0, 0, 0));
@@ -279,7 +279,7 @@ namespace RoadCaptain.App.Runner.Tests.Unit.Views
                 .BeFalse();
         }
 
-        public async Task<bool> TryScreenshotToClipboardAsync(Avalonia.Controls.Control frameworkElement)
+        public Task<bool> TryScreenshotToClipboardAsync(Avalonia.Controls.Control frameworkElement)
         {
             //frameworkElement.ClipToBounds = true; // Can remove if everything still works when the screen is maximised.
             //Rect relativeBounds = frameworkElement.Bounds;
@@ -304,7 +304,7 @@ namespace RoadCaptain.App.Runner.Tests.Unit.Views
             
             //return await TryCopyBitmapToClipboard(bitmap);
 
-            return false;
+            return Task.FromResult(false);
         }
     }
 }

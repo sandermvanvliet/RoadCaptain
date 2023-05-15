@@ -48,17 +48,17 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
         }
 
 
-        private async Task<CommandResult> SaveRoute()
+        private Task<CommandResult> SaveRoute()
         {
             try
             {
                 _route.Save();
 
-                return CommandResult.Success();
+                return Task.FromResult(CommandResult.Success());
             }
             catch (Exception e)
             {
-                return CommandResult.Failure(e.Message);
+                return Task.FromResult<CommandResult>(CommandResult.Failure(e.Message));
             }
         }
 
@@ -99,9 +99,10 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
         public ICommand SelectPathCommand { get; }
         public event EventHandler ShouldClose;
 
-        private async Task CloseWindow()
+        private Task CloseWindow()
         {
             ShouldClose.Invoke(this, EventArgs.Empty);
+            return Task.CompletedTask;
         }
     }
 }

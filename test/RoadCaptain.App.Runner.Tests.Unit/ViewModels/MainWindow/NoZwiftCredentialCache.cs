@@ -9,13 +9,14 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.MainWindow
 {
     public class NoZwiftCredentialCache : IZwiftCredentialCache
     {
-        public async Task StoreAsync(TokenResponse tokenResponse)
+        public Task StoreAsync(TokenResponse tokenResponse)
         {
+            return Task.CompletedTask;
         }
         
-        public async Task<TokenResponse?> LoadAsync()
+        public Task<TokenResponse?> LoadAsync()
         {
-            return null;
+            return Task.FromResult<TokenResponse?>(null);
         }
     }
 }

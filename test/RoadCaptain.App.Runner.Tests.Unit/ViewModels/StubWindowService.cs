@@ -31,9 +31,10 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels
             throw new NotImplementedException();
         }
 
-        public async Task ShowErrorDialog(string message)
+        public Task ShowErrorDialog(string message)
         {
             ErrorDialogInvocations++;
+            return Task.CompletedTask;
         }
 
         public void ShowMainWindow()
@@ -73,10 +74,10 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels
             throw new NotImplementedException();
         }
 
-        public async Task<string?> ShowOpenFileDialog(string? previousLocation)
+        public Task<string?> ShowOpenFileDialog(string? previousLocation)
         {
             OpenFileDialogInvocations++;
-            return OpenFileDialogResult;
+            return Task.FromResult(OpenFileDialogResult);
         }
 
         public void ShowInGameWindow(InGameNavigationWindowViewModel viewModel)
@@ -84,10 +85,10 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels
             ShownWindows.Add(typeof(InGameNavigationWindow));
         }
 
-        public async Task<TokenResponse?> ShowLogInDialog(Window owner)
+        public Task<TokenResponse?> ShowLogInDialog(Window owner)
         {
             LogInDialogInvocations++;
-            return LogInDialogResult;
+            return Task.FromResult(LogInDialogResult);
         }
     }
 }

@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Threading.Tasks;
 using Autofac;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Threading;
@@ -62,7 +63,11 @@ namespace RoadCaptain.App.Runner.Tests.Unit.Engine
             });
             _gameStateReceiver.ReceiveGameState(state => States.Add(state));
 
-            _receiverTask = TaskWithCancellation.Start(async token => _gameStateReceiver.Start(token));
+            _receiverTask = TaskWithCancellation.Start(token =>
+            {
+                _gameStateReceiver.Start(token);
+                return Task.CompletedTask;
+            });
 
             _zwiftGameConnection = container.Resolve<IZwiftGameConnection>() as InMemoryZwiftGameConnection;
             
@@ -143,7 +148,7 @@ namespace RoadCaptain.App.Runner.Tests.Unit.Engine
 
         protected TaskWithCancellation GivenTaskIsRunning(string fieldName)
         {
-            var taskWithCancellation = TaskWithCancellation.Start(async token => token.WaitHandle.WaitOne());
+            var taskWithCancellation = TaskWithCancellation.Start(token => Task.FromResult(token.WaitHandle.WaitOne()));
 
             SetFieldValueByName(fieldName, taskWithCancellation);
 

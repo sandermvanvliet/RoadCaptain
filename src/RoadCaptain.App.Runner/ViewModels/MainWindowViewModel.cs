@@ -437,7 +437,7 @@ namespace RoadCaptain.App.Runner.ViewModels
         }
 
 #pragma warning disable CS1998
-        private async Task<CommandResult> LaunchRouteBuilder()
+        private Task<CommandResult> LaunchRouteBuilder()
 #pragma warning restore CS1998
         {
             var assemblyLocation = GetType().Assembly.Location;
@@ -451,11 +451,11 @@ namespace RoadCaptain.App.Runner.ViewModels
                 {
                     Process.Start(routeBuilderPath);
 
-                    return CommandResult.Success();
+                    return Task.FromResult(CommandResult.Success());
                 }
             }
 
-            return CommandResult.Failure("Could not locate RoadCaptain Route Builder");
+            return Task.FromResult<CommandResult>(CommandResult.Failure("Could not locate RoadCaptain Route Builder"));
         }
 
         private CommandResult StartRoute()
