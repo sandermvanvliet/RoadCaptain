@@ -214,11 +214,7 @@ namespace RoadCaptain.Adapters
                 _monitoringEvents.Warning($"Did not recognise command {numericalCommandType} ({description})");
             }
 
-            Enqueue(new ZwiftCommandAvailableMessage
-            {
-                Type = commandType.ToString(),
-                SequenceNumber = sequenceNumber
-            });
+            Enqueue(new ZwiftCommandAvailableMessage(commandType.ToString(), sequenceNumber));
         }
 
         protected virtual void OnRiderPosition(float latitude, float longitude, float altitude)

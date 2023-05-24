@@ -17,8 +17,14 @@ namespace RoadCaptain
 
     public sealed class ZwiftCommandAvailableMessage : ZwiftMessage
     {
-        public string? Type { get; init; }
-        public ulong SequenceNumber { get; init; }
+        public ZwiftCommandAvailableMessage(string type, ulong sequenceNumber)
+        {
+            Type = type;
+            SequenceNumber = sequenceNumber;
+        }
+
+        public string Type { get; }
+        public ulong SequenceNumber { get; }
     }
 
     public sealed class ZwiftPowerUpMessage : ZwiftMessage

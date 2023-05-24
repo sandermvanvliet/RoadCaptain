@@ -47,7 +47,7 @@ namespace RoadCaptain
             }
         }
 
-        [JsonIgnore] public string StartingSegmentId => RouteSegmentSequence[0].SegmentId;
+        [JsonIgnore] public string? StartingSegmentId => RouteSegmentSequence[0].SegmentId;
         [JsonIgnore] public string? CurrentSegmentId => CurrentSegmentSequence?.SegmentId;
         [JsonIgnore] public string? NextSegmentId => NextSegmentSequence?.SegmentId;
         [JsonIgnore] public TurnDirection TurnToNextSegment => CurrentSegmentSequence?.TurnToNextSegment ?? TurnDirection.None;

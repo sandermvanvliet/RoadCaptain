@@ -35,6 +35,11 @@ namespace RoadCaptain.UseCases
             {
                 throw new ArgumentException("Connection secret must be provided");
             }
+
+            if (string.IsNullOrEmpty(connectCommand.AccessToken))
+            {
+                throw new ArgumentException("Access token must be provided");
+            }
             
             // TODO: Work out what the correct IP address should be
             var ipAddress = GetMostLikelyAddress()?.ToString();
