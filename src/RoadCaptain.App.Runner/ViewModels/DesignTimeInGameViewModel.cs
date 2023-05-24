@@ -52,30 +52,12 @@ namespace RoadCaptain.App.Runner.ViewModels
                         ZwiftRouteName = "The Mega Pretzel",
                         RouteSegmentSequence = new List<SegmentSequence>
                         {
-                            new()
-                            {
-                                SegmentId = "seg-1",
-                                NextSegmentId = "seg-2",
-                                Direction = SegmentDirection.AtoB,
-                                TurnToNextSegment = TurnDirection.GoStraight,
-                                Type = SegmentSequenceType.Regular
-                            },
-                            new()
-                            {
-                                SegmentId = "seg-2",
-                                NextSegmentId = "seg-3",
-                                Direction = SegmentDirection.AtoB,
-                                TurnToNextSegment = TurnDirection.GoStraight,
-                                Type = SegmentSequenceType.Regular
-                            },
-                            new()
-                            {
-                                SegmentId = "seg-3",
-                                NextSegmentId = null,
-                                Direction = SegmentDirection.AtoB,
-                                TurnToNextSegment = TurnDirection.GoStraight,
-                                Type = SegmentSequenceType.Regular
-                            }
+                            new(segmentId: "seg-1", nextSegmentId: "seg-2", direction: SegmentDirection.AtoB,
+                                turnToNextSegment: TurnDirection.GoStraight, type: SegmentSequenceType.Regular),
+                            new(segmentId: "seg-2", nextSegmentId: "seg-3", direction: SegmentDirection.AtoB,
+                                turnToNextSegment: TurnDirection.GoStraight, type: SegmentSequenceType.Regular),
+                            new(segmentId: "seg-3", nextSegmentId: null, direction: SegmentDirection.AtoB,
+                                turnToNextSegment: TurnDirection.GoStraight, type: SegmentSequenceType.Regular)
                         }
                     }
                 }, 

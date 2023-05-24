@@ -111,14 +111,8 @@ namespace RoadCaptain.Tests.Unit
                 ZwiftRouteName = "TestRoute"
             };
 
-            route.RouteSegmentSequence.Add(new SegmentSequence
-            {
-                SegmentId = _segment.Id,
-                Direction = SegmentDirection.AtoB,
-                NextSegmentId = _segment.Id + "-after",
-                TurnToNextSegment = turn,
-                Type = SegmentSequenceType.Regular
-            });
+            route.RouteSegmentSequence.Add(new SegmentSequence(segmentId: _segment.Id, direction: SegmentDirection.AtoB,
+                nextSegmentId: _segment.Id + "-after", turnToNextSegment: turn, type: SegmentSequenceType.Regular));
 
             route.EnteredSegment(_segment.Id);
             

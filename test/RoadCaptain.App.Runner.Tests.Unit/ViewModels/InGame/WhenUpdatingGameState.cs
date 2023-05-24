@@ -234,9 +234,9 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.InGame
         public void GivenOnRouteStateAndRouteLockIsLost_InstructionIsMakeUTurn()
         {
             var plannedRoute = new PlannedRoute();
-            plannedRoute.RouteSegmentSequence.Add(new SegmentSequence { SegmentId = "seg-1", NextSegmentId = "seg-2"});
-            plannedRoute.RouteSegmentSequence.Add(new SegmentSequence { SegmentId = "seg-2", NextSegmentId = "seg-3"});
-            plannedRoute.RouteSegmentSequence.Add(new SegmentSequence { SegmentId = "seg-3", });
+            plannedRoute.RouteSegmentSequence.Add(new SegmentSequence(segmentId: "seg-1", nextSegmentId: "seg-2"));
+            plannedRoute.RouteSegmentSequence.Add(new SegmentSequence(segmentId: "seg-2", nextSegmentId: "seg-3"));
+            plannedRoute.RouteSegmentSequence.Add(new SegmentSequence(segmentId: "seg-3"));
             plannedRoute.EnteredSegment("seg-1");
             plannedRoute.EnteredSegment("seg-2");
             WhenUpdating(new OnRouteState(1, 2, new TrackPoint(1, 2, 3), new Segment(new List<TrackPoint>()) { Id = "seg-1"}, plannedRoute, SegmentDirection.AtoB, 0, 0, 0));
@@ -250,9 +250,9 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.InGame
         public void GivenRouteLockWasLostAndUserReturnsToRoute_InstructionTextIsCleared()
         {
             var plannedRoute = new PlannedRoute();
-            plannedRoute.RouteSegmentSequence.Add(new SegmentSequence { SegmentId = "seg-1", NextSegmentId = "seg-2"});
-            plannedRoute.RouteSegmentSequence.Add(new SegmentSequence { SegmentId = "seg-2", NextSegmentId = "seg-3"});
-            plannedRoute.RouteSegmentSequence.Add(new SegmentSequence { SegmentId = "seg-3", });
+            plannedRoute.RouteSegmentSequence.Add(new SegmentSequence(segmentId: "seg-1", nextSegmentId: "seg-2"));
+            plannedRoute.RouteSegmentSequence.Add(new SegmentSequence(segmentId: "seg-2", nextSegmentId: "seg-3"));
+            plannedRoute.RouteSegmentSequence.Add(new SegmentSequence(segmentId: "seg-3"));
             plannedRoute.EnteredSegment("seg-1");
             plannedRoute.EnteredSegment("seg-2");
             WhenUpdating(new OnRouteState(1, 2, new TrackPoint(1, 2, 3), new Segment(new List<TrackPoint>()) { Id = "seg-1"}, plannedRoute, SegmentDirection.AtoB, 0, 0, 0));
@@ -268,9 +268,9 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.InGame
         public void GivenOnRouteStateIsReceived_NextSegmentIsTheSecondSegmentOfTheRoute()
         {
             var plannedRoute = new PlannedRoute();
-            plannedRoute.RouteSegmentSequence.Add(new SegmentSequence { SegmentId = "seg-1", NextSegmentId = "seg-2"});
-            plannedRoute.RouteSegmentSequence.Add(new SegmentSequence { SegmentId = "seg-2", NextSegmentId = "seg-3"});
-            plannedRoute.RouteSegmentSequence.Add(new SegmentSequence { SegmentId = "seg-3", });
+            plannedRoute.RouteSegmentSequence.Add(new SegmentSequence(segmentId: "seg-1", nextSegmentId: "seg-2"));
+            plannedRoute.RouteSegmentSequence.Add(new SegmentSequence(segmentId: "seg-2", nextSegmentId: "seg-3"));
+            plannedRoute.RouteSegmentSequence.Add(new SegmentSequence(segmentId: "seg-3"));
             plannedRoute.EnteredSegment("seg-1");
             WhenUpdating(new OnRouteState(1, 2, new TrackPoint(1, 2, 3), new Segment(new List<TrackPoint>()) { Id = "seg-1"}, plannedRoute, SegmentDirection.AtoB, 0, 0, 0));
 
@@ -295,21 +295,9 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.InGame
                     World = _world,
                     RouteSegmentSequence =
                     {
-                        new SegmentSequence
-                        {
-                            Direction = SegmentDirection.AtoB,
-                            SegmentId = "seg-1"
-                        },
-                        new SegmentSequence
-                        {
-                            Direction = SegmentDirection.AtoB,
-                            SegmentId = "seg-2"
-                        },
-                        new SegmentSequence
-                        {
-                            Direction = SegmentDirection.AtoB,
-                            SegmentId = "seg-3"
-                        }
+                        new SegmentSequence(direction: SegmentDirection.AtoB, segmentId: "seg-1"),
+                        new SegmentSequence(direction: SegmentDirection.AtoB, segmentId: "seg-2"),
+                        new SegmentSequence(direction: SegmentDirection.AtoB, segmentId: "seg-3")
                     }
                 }
             };

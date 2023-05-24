@@ -95,7 +95,8 @@ namespace RoadCaptain.App.Runner.Tests.Unit.Engine
                 World = new World { Id = "watopia" }
             };
 
-            plannedRoute.RouteSegmentSequence.Add(new SegmentSequence { Direction = SegmentDirection.AtoB, SegmentId = "watopia-beach-island-loop-001" });
+            plannedRoute.RouteSegmentSequence.Add(new SegmentSequence(direction: SegmentDirection.AtoB,
+                segmentId: "watopia-beach-island-loop-001"));
             SetFieldValueByName("_loadedRoute", plannedRoute);
         }
     }

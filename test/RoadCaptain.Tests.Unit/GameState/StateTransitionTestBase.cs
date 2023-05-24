@@ -87,28 +87,14 @@ namespace RoadCaptain.Tests.Unit.GameState
         {
             RouteSegmentSequence =
             {
-                new SegmentSequence
-                {
-                    SegmentId = RouteSegment1.Id,
-                    Direction = SegmentDirection.AtoB,
-                    Type = SegmentSequenceType.Regular,
-                    NextSegmentId = RouteSegment2.Id,
-                    TurnToNextSegment = TurnDirection.Left
-                },
-                new SegmentSequence
-                {
-                    SegmentId = RouteSegment2.Id,
-                    Direction = SegmentDirection.AtoB,
-                    Type = SegmentSequenceType.Regular,
-                    NextSegmentId = RouteSegment3.Id,
-                    TurnToNextSegment = TurnDirection.Left
-                },
-                new SegmentSequence
-                {
-                    SegmentId = RouteSegment3.Id,
-                    Direction = SegmentDirection.AtoB,
-                    Type = SegmentSequenceType.Regular
-                }
+                new SegmentSequence(segmentId: RouteSegment1.Id, direction: SegmentDirection.AtoB,
+                    type: SegmentSequenceType.Regular, nextSegmentId: RouteSegment2.Id,
+                    turnToNextSegment: TurnDirection.Left),
+                new SegmentSequence(segmentId: RouteSegment2.Id, direction: SegmentDirection.AtoB,
+                    type: SegmentSequenceType.Regular, nextSegmentId: RouteSegment3.Id,
+                    turnToNextSegment: TurnDirection.Left),
+                new SegmentSequence(segmentId: RouteSegment3.Id, direction: SegmentDirection.AtoB,
+                    type: SegmentSequenceType.Regular)
             },
             Sport = SportType.Cycling,
             WorldId = "watopia",
@@ -173,28 +159,14 @@ namespace RoadCaptain.Tests.Unit.GameState
             {
                 RouteSegmentSequence =
                 {
-                    new SegmentSequence
-                    {
-                        SegmentId = RouteSegment1.Id,
-                        Direction = SegmentDirection.AtoB,
-                        Type = SegmentSequenceType.Regular,
-                        NextSegmentId = RouteSegment2.Id,
-                        TurnToNextSegment = TurnDirection.Left
-                    },
-                    new SegmentSequence
-                    {
-                        SegmentId = RouteSegment2.Id,
-                        Direction = SegmentDirection.AtoB,
-                        Type = SegmentSequenceType.Regular,
-                        NextSegmentId = RouteSegment3.Id,
-                        TurnToNextSegment = TurnDirection.Left
-                    },
-                    new SegmentSequence
-                    {
-                        SegmentId = RouteSegment3.Id,
-                        Direction = SegmentDirection.AtoB,
-                        Type = SegmentSequenceType.Regular
-                    }
+                    new SegmentSequence(segmentId: RouteSegment1.Id, direction: SegmentDirection.AtoB,
+                        type: SegmentSequenceType.Regular, nextSegmentId: RouteSegment2.Id,
+                        turnToNextSegment: TurnDirection.Left),
+                    new SegmentSequence(segmentId: RouteSegment2.Id, direction: SegmentDirection.AtoB,
+                        type: SegmentSequenceType.Regular, nextSegmentId: RouteSegment3.Id,
+                        turnToNextSegment: TurnDirection.Left),
+                    new SegmentSequence(segmentId: RouteSegment3.Id, direction: SegmentDirection.AtoB,
+                        type: SegmentSequenceType.Regular)
                 },
                 Sport = SportType.Cycling,
                 WorldId = "watopia",

@@ -140,8 +140,11 @@ namespace RoadCaptain.Tests.Unit.GameState
         {
             RouteSegmentSequence =
             {
-                new SegmentSequence { SegmentId = "watopia-bambino-fondo-003-before-before", NextSegmentId = "watopia-bambino-fondo-003-before-after", TurnToNextSegment = TurnDirection.Left, Direction = SegmentDirection.AtoB},
-                new SegmentSequence { SegmentId = "watopia-bambino-fondo-003-before-after", Direction = SegmentDirection.AtoB },
+                new SegmentSequence(segmentId: "watopia-bambino-fondo-003-before-before",
+                    nextSegmentId: "watopia-bambino-fondo-003-before-after", turnToNextSegment: TurnDirection.Left,
+                    direction: SegmentDirection.AtoB),
+                new SegmentSequence(segmentId: "watopia-bambino-fondo-003-before-after",
+                    direction: SegmentDirection.AtoB),
             }
         };
 

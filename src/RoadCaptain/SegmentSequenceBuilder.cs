@@ -24,11 +24,7 @@ namespace RoadCaptain
 
         public SegmentSequenceBuilder StartingAt(string segmentId)
         {
-            var step = new SegmentSequence
-            {
-                SegmentId = segmentId,
-                Type = SegmentSequenceType.Regular
-            };
+            var step = new SegmentSequence(segmentId: segmentId, type: SegmentSequenceType.Regular);
 
             _route.RouteSegmentSequence.Add(step);
 
@@ -40,11 +36,7 @@ namespace RoadCaptain
             Last.NextSegmentId = segmentId;
             Last.TurnToNextSegment = TurnDirection.Left;
 
-            var step = new SegmentSequence
-            {
-                SegmentId = segmentId,
-                Type = SegmentSequenceType.Regular
-            };
+            var step = new SegmentSequence(segmentId: segmentId, type: SegmentSequenceType.Regular);
 
             _route.RouteSegmentSequence.Add(step);
 
@@ -56,11 +48,7 @@ namespace RoadCaptain
             Last.NextSegmentId = segmentId;
             Last.TurnToNextSegment = TurnDirection.GoStraight;
 
-            var step = new SegmentSequence
-            {
-                SegmentId = segmentId,
-                Type = SegmentSequenceType.Regular
-            };
+            var step = new SegmentSequence(segmentId: segmentId, type: SegmentSequenceType.Regular);
 
             _route.RouteSegmentSequence.Add(step);
 
@@ -72,11 +60,7 @@ namespace RoadCaptain
             Last.NextSegmentId = segmentId;
             Last.TurnToNextSegment = TurnDirection.Right;
 
-            var step = new SegmentSequence
-            {
-                SegmentId = segmentId,
-                Type = SegmentSequenceType.Regular
-            };
+            var step = new SegmentSequence(segmentId: segmentId, type: SegmentSequenceType.Regular);
 
             _route.RouteSegmentSequence.Add(step);
 

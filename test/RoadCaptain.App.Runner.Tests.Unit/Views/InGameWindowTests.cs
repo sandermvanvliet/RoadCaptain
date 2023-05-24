@@ -34,9 +34,12 @@ namespace RoadCaptain.App.Runner.Tests.Unit.Views
                 World = new World { Id = "testworld", Name = "TestWorld" },
                 ZwiftRouteName = "Mountain route"
             };
-            route.RouteSegmentSequence.Add(new SegmentSequence { SegmentId = "seg-1", NextSegmentId = "seg-2", Direction = SegmentDirection.AtoB, TurnToNextSegment = TurnDirection.GoStraight });
-            route.RouteSegmentSequence.Add(new SegmentSequence { SegmentId = "seg-2", NextSegmentId = "seg-3", Direction = SegmentDirection.AtoB, TurnToNextSegment = TurnDirection.GoStraight });
-            route.RouteSegmentSequence.Add(new SegmentSequence { SegmentId = "seg-3", NextSegmentId = null, Direction = SegmentDirection.AtoB, TurnToNextSegment = TurnDirection.GoStraight });
+            route.RouteSegmentSequence.Add(new SegmentSequence(segmentId: "seg-1", nextSegmentId: "seg-2",
+                direction: SegmentDirection.AtoB, turnToNextSegment: TurnDirection.GoStraight));
+            route.RouteSegmentSequence.Add(new SegmentSequence(segmentId: "seg-2", nextSegmentId: "seg-3",
+                direction: SegmentDirection.AtoB, turnToNextSegment: TurnDirection.GoStraight));
+            route.RouteSegmentSequence.Add(new SegmentSequence(segmentId: "seg-3", nextSegmentId: null,
+                direction: SegmentDirection.AtoB, turnToNextSegment: TurnDirection.GoStraight));
             route.EnteredSegment("seg-1");
 
             var model = new InGameWindowModel(segments)
@@ -95,9 +98,12 @@ namespace RoadCaptain.App.Runner.Tests.Unit.Views
                 World = new World { Id = "testworld", Name = "TestWorld" },
                 ZwiftRouteName = "Mountain route"
             };
-            route.RouteSegmentSequence.Add(new SegmentSequence { SegmentId = "seg-1", NextSegmentId = "seg-2", Direction = SegmentDirection.AtoB, TurnToNextSegment = TurnDirection.GoStraight });
-            route.RouteSegmentSequence.Add(new SegmentSequence { SegmentId = "seg-2", NextSegmentId = "seg-3", Direction = SegmentDirection.AtoB, TurnToNextSegment = TurnDirection.GoStraight });
-            route.RouteSegmentSequence.Add(new SegmentSequence { SegmentId = "seg-3", NextSegmentId = null, Direction = SegmentDirection.AtoB, TurnToNextSegment = TurnDirection.GoStraight });
+            route.RouteSegmentSequence.Add(new SegmentSequence(segmentId: "seg-1", nextSegmentId: "seg-2",
+                direction: SegmentDirection.AtoB, turnToNextSegment: TurnDirection.GoStraight));
+            route.RouteSegmentSequence.Add(new SegmentSequence(segmentId: "seg-2", nextSegmentId: "seg-3",
+                direction: SegmentDirection.AtoB, turnToNextSegment: TurnDirection.GoStraight));
+            route.RouteSegmentSequence.Add(new SegmentSequence(segmentId: "seg-3", nextSegmentId: null,
+                direction: SegmentDirection.AtoB, turnToNextSegment: TurnDirection.GoStraight));
             route.EnteredSegment("seg-1");
 
             var model = new InGameWindowModel(segments)
@@ -162,9 +168,12 @@ namespace RoadCaptain.App.Runner.Tests.Unit.Views
                 World = new World { Id = "testworld", Name = "TestWorld" },
                 ZwiftRouteName = "Mountain route"
             };
-            route.RouteSegmentSequence.Add(new SegmentSequence { SegmentId = "seg-1", NextSegmentId = "seg-2", Direction = SegmentDirection.AtoB, TurnToNextSegment = TurnDirection.GoStraight });
-            route.RouteSegmentSequence.Add(new SegmentSequence { SegmentId = "seg-2", NextSegmentId = "seg-3", Direction = SegmentDirection.AtoB, TurnToNextSegment = TurnDirection.GoStraight });
-            route.RouteSegmentSequence.Add(new SegmentSequence { SegmentId = "seg-3", NextSegmentId = null, Direction = SegmentDirection.AtoB, TurnToNextSegment = TurnDirection.GoStraight });
+            route.RouteSegmentSequence.Add(new SegmentSequence(segmentId: "seg-1", nextSegmentId: "seg-2",
+                direction: SegmentDirection.AtoB, turnToNextSegment: TurnDirection.GoStraight));
+            route.RouteSegmentSequence.Add(new SegmentSequence(segmentId: "seg-2", nextSegmentId: "seg-3",
+                direction: SegmentDirection.AtoB, turnToNextSegment: TurnDirection.GoStraight));
+            route.RouteSegmentSequence.Add(new SegmentSequence(segmentId: "seg-3", nextSegmentId: null,
+                direction: SegmentDirection.AtoB, turnToNextSegment: TurnDirection.GoStraight));
             route.EnteredSegment("seg-1");
 
             var model = new InGameWindowModel(segments)
@@ -232,9 +241,12 @@ namespace RoadCaptain.App.Runner.Tests.Unit.Views
                 World = new World { Id = "testworld", Name = "TestWorld" },
                 ZwiftRouteName = "Mountain route"
             };
-            route.RouteSegmentSequence.Add(new SegmentSequence { SegmentId = "seg-1", NextSegmentId = "seg-2", Direction = SegmentDirection.AtoB, TurnToNextSegment = TurnDirection.GoStraight });
-            route.RouteSegmentSequence.Add(new SegmentSequence { SegmentId = "seg-2", NextSegmentId = "seg-3", Direction = SegmentDirection.AtoB, TurnToNextSegment = TurnDirection.GoStraight });
-            route.RouteSegmentSequence.Add(new SegmentSequence { SegmentId = "seg-3", NextSegmentId = null, Direction = SegmentDirection.AtoB, TurnToNextSegment = TurnDirection.GoStraight });
+            route.RouteSegmentSequence.Add(new SegmentSequence(segmentId: "seg-1", nextSegmentId: "seg-2",
+                direction: SegmentDirection.AtoB, turnToNextSegment: TurnDirection.GoStraight));
+            route.RouteSegmentSequence.Add(new SegmentSequence(segmentId: "seg-2", nextSegmentId: "seg-3",
+                direction: SegmentDirection.AtoB, turnToNextSegment: TurnDirection.GoStraight));
+            route.RouteSegmentSequence.Add(new SegmentSequence(segmentId: "seg-3", nextSegmentId: null,
+                direction: SegmentDirection.AtoB, turnToNextSegment: TurnDirection.GoStraight));
             route.EnteredSegment("seg-1");
 
             var model = new InGameWindowModel(segments)

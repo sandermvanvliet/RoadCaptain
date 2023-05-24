@@ -64,7 +64,8 @@ namespace RoadCaptain.App.Runner.Tests.Unit.Models
         public void GivenPlannedRouteWithOneSegment_TotalDistanceIsLengthOfSegment()
         {
             var plannedRoute = new PlannedRoute();
-            plannedRoute.RouteSegmentSequence.Add(new SegmentSequence { SegmentId = "seg-1", Type = SegmentSequenceType.Regular, Direction = SegmentDirection.AtoB, Index = 0 });
+            plannedRoute.RouteSegmentSequence.Add(new SegmentSequence(segmentId: "seg-1",
+                type: SegmentSequenceType.Regular, direction: SegmentDirection.AtoB, index: 0));
 
             var result = RouteModel.From(plannedRoute, _segments, _markers);
 
@@ -78,7 +79,8 @@ namespace RoadCaptain.App.Runner.Tests.Unit.Models
         public void GivenPlannedRouteWithOneSegment_TotalAscentIsAscentOfSegment()
         {
             var plannedRoute = new PlannedRoute();
-            plannedRoute.RouteSegmentSequence.Add(new SegmentSequence { SegmentId = "seg-1", Type = SegmentSequenceType.Regular, Direction = SegmentDirection.AtoB, Index = 0 });
+            plannedRoute.RouteSegmentSequence.Add(new SegmentSequence(segmentId: "seg-1",
+                type: SegmentSequenceType.Regular, direction: SegmentDirection.AtoB, index: 0));
 
             var result = RouteModel.From(plannedRoute, _segments, _markers);
 
@@ -92,7 +94,8 @@ namespace RoadCaptain.App.Runner.Tests.Unit.Models
         public void GivenPlannedRouteWithOneSegment_TotalDescentIsDescentOfSegment()
         {
             var plannedRoute = new PlannedRoute();
-            plannedRoute.RouteSegmentSequence.Add(new SegmentSequence { SegmentId = "seg-1", Type = SegmentSequenceType.Regular, Direction = SegmentDirection.AtoB, Index = 0 });
+            plannedRoute.RouteSegmentSequence.Add(new SegmentSequence(segmentId: "seg-1",
+                type: SegmentSequenceType.Regular, direction: SegmentDirection.AtoB, index: 0));
 
             var result = RouteModel.From(plannedRoute, _segments, _markers);
 
@@ -106,7 +109,8 @@ namespace RoadCaptain.App.Runner.Tests.Unit.Models
         public void GivenPlannedRouteWithMarkerOnRoute_ResultingModelContainsMarker()
         {
             var plannedRoute = new PlannedRoute();
-            plannedRoute.RouteSegmentSequence.Add(new SegmentSequence { SegmentId = "seg-1", Type = SegmentSequenceType.Regular, Direction = SegmentDirection.AtoB, Index = 0 });
+            plannedRoute.RouteSegmentSequence.Add(new SegmentSequence(segmentId: "seg-1",
+                type: SegmentSequenceType.Regular, direction: SegmentDirection.AtoB, index: 0));
 
             var result = RouteModel.From(plannedRoute, _segments, _markers);
 
@@ -121,10 +125,8 @@ namespace RoadCaptain.App.Runner.Tests.Unit.Models
         public void GivenPlannedRouteWithSegmentThatDoesntExist_MissingSegmentExceptionIsThrown()
         {
             var plannedRoute = new PlannedRoute();
-            plannedRoute.RouteSegmentSequence.Add(new SegmentSequence
-            {
-                SegmentId = "seg-2", Type = SegmentSequenceType.Regular, Direction = SegmentDirection.AtoB, Index = 0
-            });
+            plannedRoute.RouteSegmentSequence.Add(new SegmentSequence(segmentId: "seg-2",
+                type: SegmentSequenceType.Regular, direction: SegmentDirection.AtoB, index: 0));
 
             Action action = () => RouteModel.From(plannedRoute, _segments, _markers);
 

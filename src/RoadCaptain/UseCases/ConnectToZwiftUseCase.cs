@@ -55,6 +55,11 @@ namespace RoadCaptain.UseCases
             {
                 var relayUri = await _zwift.RetrieveRelayUrl(connectCommand.AccessToken);
 
+                if (relayUri == null)
+                {
+                    throw new Exception("Unable to retrieve the Zwift relay URI");
+                }
+
                 await _zwift.InitiateRelayAsync(connectCommand.AccessToken, relayUri, ipAddress, connectCommand.ConnectionEncryptionSecret);
             }
             catch (Exception e)

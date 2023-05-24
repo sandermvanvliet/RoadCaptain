@@ -448,9 +448,12 @@ namespace RoadCaptain.Tests.Unit.GameState
             {
                 RouteSegmentSequence =
                 {
-                    new SegmentSequence { SegmentId = "route-segment-1", NextSegmentId = "route-segment-2", TurnToNextSegment = TurnDirection.Left, Direction = SegmentDirection.AtoB},
-                    new SegmentSequence { SegmentId = "route-segment-2", NextSegmentId = "route-segment-3", TurnToNextSegment = TurnDirection.Right, Direction = SegmentDirection.AtoB },
-                    new SegmentSequence { SegmentId = "route-segment-3", NextSegmentId = "route-segment-1", TurnToNextSegment = TurnDirection.GoStraight, Direction = SegmentDirection.AtoB },
+                    new SegmentSequence(segmentId: "route-segment-1", nextSegmentId: "route-segment-2",
+                        turnToNextSegment: TurnDirection.Left, direction: SegmentDirection.AtoB),
+                    new SegmentSequence(segmentId: "route-segment-2", nextSegmentId: "route-segment-3",
+                        turnToNextSegment: TurnDirection.Right, direction: SegmentDirection.AtoB),
+                    new SegmentSequence(segmentId: "route-segment-3", nextSegmentId: "route-segment-1",
+                        turnToNextSegment: TurnDirection.GoStraight, direction: SegmentDirection.AtoB),
                 }
             };
             loopRoute.EnteredSegment("route-segment-1");
@@ -673,9 +676,14 @@ namespace RoadCaptain.Tests.Unit.GameState
         {
             RouteSegmentSequence =
             {
-                new SegmentSequence { SegmentId = "route-segment-1", NextSegmentId = "route-segment-2", TurnToNextSegment = TurnDirection.Left, Direction = SegmentDirection.AtoB, Type = SegmentSequenceType.Regular},
-                new SegmentSequence { SegmentId = "route-segment-2", NextSegmentId = "route-segment-3", TurnToNextSegment = TurnDirection.Right, Direction = SegmentDirection.AtoB, Type = SegmentSequenceType.Regular },
-                new SegmentSequence { SegmentId = "route-segment-3", Direction = SegmentDirection.AtoB, Type = SegmentSequenceType.Regular },
+                new SegmentSequence(segmentId: "route-segment-1", nextSegmentId: "route-segment-2",
+                    turnToNextSegment: TurnDirection.Left, direction: SegmentDirection.AtoB,
+                    type: SegmentSequenceType.Regular),
+                new SegmentSequence(segmentId: "route-segment-2", nextSegmentId: "route-segment-3",
+                    turnToNextSegment: TurnDirection.Right, direction: SegmentDirection.AtoB,
+                    type: SegmentSequenceType.Regular),
+                new SegmentSequence(segmentId: "route-segment-3", direction: SegmentDirection.AtoB,
+                    type: SegmentSequenceType.Regular),
             }
         };
 

@@ -129,11 +129,16 @@ namespace RoadCaptain.Tests.Unit
                 World = new World { Id = "watopia", ZwiftId = ZwiftWorldId.Watopia },
                 RouteSegmentSequence =
                 {
-                    new SegmentSequence { Direction = SegmentDirection.AtoB, NextSegmentId = "seg-1", SegmentId = "seg-0", Type = SegmentSequenceType.LeadIn, TurnToNextSegment = TurnDirection.GoStraight },
-                    new SegmentSequence { Direction = SegmentDirection.AtoB, NextSegmentId = "seg-2", SegmentId = "seg-1", Type = SegmentSequenceType.LeadIn, TurnToNextSegment = TurnDirection.GoStraight },
-                    new SegmentSequence { Direction = SegmentDirection.AtoB, NextSegmentId = "seg-3", SegmentId = "seg-2", Type = SegmentSequenceType.LoopStart, TurnToNextSegment = TurnDirection.GoStraight },
-                    new SegmentSequence { Direction = SegmentDirection.AtoB, NextSegmentId = "seg-4", SegmentId = "seg-3", Type = SegmentSequenceType.Loop, TurnToNextSegment = TurnDirection.GoStraight },
-                    new SegmentSequence { Direction = SegmentDirection.AtoB, NextSegmentId = "seg-2", SegmentId = "seg-4", Type = SegmentSequenceType.LoopEnd, TurnToNextSegment = TurnDirection.GoStraight },
+                    new SegmentSequence(direction: SegmentDirection.AtoB, nextSegmentId: "seg-1", segmentId: "seg-0",
+                        type: SegmentSequenceType.LeadIn, turnToNextSegment: TurnDirection.GoStraight),
+                    new SegmentSequence(direction: SegmentDirection.AtoB, nextSegmentId: "seg-2", segmentId: "seg-1",
+                        type: SegmentSequenceType.LeadIn, turnToNextSegment: TurnDirection.GoStraight),
+                    new SegmentSequence(direction: SegmentDirection.AtoB, nextSegmentId: "seg-3", segmentId: "seg-2",
+                        type: SegmentSequenceType.LoopStart, turnToNextSegment: TurnDirection.GoStraight),
+                    new SegmentSequence(direction: SegmentDirection.AtoB, nextSegmentId: "seg-4", segmentId: "seg-3",
+                        type: SegmentSequenceType.Loop, turnToNextSegment: TurnDirection.GoStraight),
+                    new SegmentSequence(direction: SegmentDirection.AtoB, nextSegmentId: "seg-2", segmentId: "seg-4",
+                        type: SegmentSequenceType.LoopEnd, turnToNextSegment: TurnDirection.GoStraight),
                 }
             };
         }

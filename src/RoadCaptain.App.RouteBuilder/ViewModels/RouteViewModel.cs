@@ -125,14 +125,8 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             }
 
             _sequence.Add(new SegmentSequenceViewModel(
-                new SegmentSequence
-                {
-                    SegmentId = segment.Id,
-                    TurnToNextSegment = TurnDirection.None,
-                    NextSegmentId = null,
-                    Direction = segmentDirection,
-                    Type = SegmentSequenceType.Regular
-                },
+                new SegmentSequence(segmentId: segment.Id, turnToNextSegment: TurnDirection.None, nextSegmentId: null,
+                    direction: segmentDirection, type: SegmentSequenceType.Regular),
                 segment,
                 _sequence.Count + 1)
             {
@@ -171,14 +165,8 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             }
 
             var segmentSequenceViewModel = new SegmentSequenceViewModel(
-                new SegmentSequence
-                {
-                    SegmentId = ontoSegmentId,
-                    TurnToNextSegment = TurnDirection.None,
-                    NextSegmentId = null,
-                    Direction = newSegmentDirection,
-                    Type = newType
-                },
+                new SegmentSequence(segmentId: ontoSegmentId, turnToNextSegment: TurnDirection.None,
+                    nextSegmentId: null, direction: newSegmentDirection, type: newType),
                 segment,
                 _sequence.Count + 1)
             {
