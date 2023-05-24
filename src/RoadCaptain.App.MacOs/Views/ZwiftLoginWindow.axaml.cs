@@ -49,6 +49,11 @@ namespace RoadCaptain.App.MacOs.Views
                 // need to use reflection because it isn't exposed by 
                 // the webview control...
                 var cefRequest = _cefRequestField.GetValue(resourcehandler) as CefRequest;
+                if (cefRequest == null)
+                {
+                    return;
+                }
+
                 var postData = Encoding.UTF8.GetString(cefRequest.PostData.GetElements()[0].GetBytes());
                 
                 var requestMessage = new HttpRequestMessage(HttpMethod.Post, resourcehandler.Url)
@@ -111,6 +116,7 @@ namespace RoadCaptain.App.MacOs.Views
             AvaloniaXamlLoader.Load(this);
         }
 
+        // ReSharper disable twice UnusedParameter.Local
         private void WindowBase_OnActivated(object? sender, EventArgs e)
         {
             if (_isInitialActivation)
