@@ -81,7 +81,7 @@ namespace RoadCaptain
         }
 
         public bool IsLoop =>
-            RouteSegmentSequence.Count(seq => seq.Type == SegmentSequenceType.Regular) == 0 &&
+            RouteSegmentSequence.All(seq => seq.Type != SegmentSequenceType.Regular) &&
             RouteSegmentSequence.Count >= 2;
         [JsonIgnore] public int LoopCount { get; private set; } = 1;
         [JsonIgnore] public bool OnLeadIn => HasStarted && CurrentSegmentSequence!.Type == SegmentSequenceType.LeadIn;
