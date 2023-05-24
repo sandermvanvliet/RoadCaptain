@@ -63,15 +63,17 @@ namespace RoadCaptain.Adapters
                         var firstOfficial = releases.Where(r => !r.Draft && !r.PreRelease).MaxBy(r => r.CreatedAt);
                         var firstPreRelease = releases.Where(r => !r.Draft && r.PreRelease).MaxBy(r => r.CreatedAt);
 
-                        var officialVersion = firstOfficial == null ? Version.Parse("0.0.0.0") : Version.Parse(firstOfficial.Name);
-                        var preReleaseVersion = firstPreRelease == null ? Version.Parse("0.0.0.0") : Version.Parse(firstPreRelease.Name);
+                        var officialVersion = string.IsNullOrEmpty(firstOfficial?.Name) ? Version.Parse("0.0.0.0") : Version.Parse(firstOfficial.Name);
+                        var preReleaseVersion = string.IsNullOrEmpty(firstPreRelease?.Name) ? Version.Parse("0.0.0.0") : Version.Parse(firstPreRelease.Name);
 
                         if (preReleaseVersion < officialVersion)
                         {
                             firstPreRelease = null;
                         }
 
-                        return (FromGitHubRelease(firstOfficial), FromGitHubRelease(firstPreRelease));
+                        return (
+                            FromGitHubRelease(firstOfficial) ?? GetCurrentRelease(), 
+                            FromGitHubRelease(firstPreRelease));
                     }
                 }
             }
@@ -81,21 +83,28 @@ namespace RoadCaptain.Adapters
             }
 
             return (
-                new Release(GetType().Assembly.GetName().Version ?? new Version(), new Uri("https://roadcaptain.nl"),
-                    false, ""),
+                GetCurrentRelease(),
                 null);
+        }
+
+        private Release GetCurrentRelease()
+        {
+            return new Release(GetType().Assembly.GetName().Version ?? new Version(), new Uri("https://roadcaptain.nl"),
+                false, "");
         }
 
         private Release? FromGitHubRelease(ReleaseResponse? release)
         {
-            if (release == null)
+            if (release == null || string.IsNullOrEmpty(release.Name))
             {
                 return null;
             }
 
-            return new Release(version: Version.Parse(release.Name),
+            return new Release(
+                version: Version.Parse(release.Name),
                 installerDownloadUri: GetInstallerUriFrom(release) ?? new Uri("https://roadcaptain.nl"),
-                isPreRelease: release.PreRelease, releaseNotes: release.Body);
+                isPreRelease: release.PreRelease, 
+                releaseNotes: release.Body ?? string.Empty);
         }
 
         private static Uri? GetInstallerUriFrom(ReleaseResponse release)
@@ -105,7 +114,7 @@ namespace RoadCaptain.Adapters
                 .FirstOrDefault(a =>
                     "application/x-msi".Equals(a.ContentType, StringComparison.InvariantCultureIgnoreCase));
 
-            if (installerAsset != null)
+            if (installerAsset != null && !string.IsNullOrEmpty(installerAsset.BrowserDownloadUrl))
             {
                 return new Uri(installerAsset.BrowserDownloadUrl);
             }
