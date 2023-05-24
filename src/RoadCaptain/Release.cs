@@ -8,9 +8,17 @@ namespace RoadCaptain
 {
     public class Release
     {
-        public Version? Version { get; set; }
-        public string? ReleaseNotes { get; set; }
-        public Uri? InstallerDownloadUri { get; set; }
-        public bool IsPreRelease { get; set; }
+        public Release(Version version, Uri installerDownloadUri, bool isPreRelease, string releaseNotes)
+        {
+            InstallerDownloadUri = installerDownloadUri;
+            IsPreRelease = isPreRelease;
+            ReleaseNotes = releaseNotes;
+            Version = version;
+        }
+
+        public Version Version { get; }
+        public string ReleaseNotes { get; }
+        public Uri InstallerDownloadUri { get; }
+        public bool IsPreRelease { get; }
     }
 }

@@ -171,6 +171,11 @@ namespace RoadCaptain.App.Shared.Controls
 
             foreach (var routeStep in Route.RouteSegmentSequence)
             {
+                if (routeStep.SegmentId == null)
+                {
+                    continue;
+                }
+
                 var segment = GetSegmentById(routeStep.SegmentId);
 
                 if (segment == null)
@@ -432,7 +437,7 @@ namespace RoadCaptain.App.Shared.Controls
                             Marker = climbMarkers.FirstOrDefault(m => m.Contains(point))
                         })
                         .Where(x => x.Marker != null)
-                        .GroupBy(x => x.Marker.Id, x => x.Marker, (key, values) => values.First())
+                        .GroupBy(x => x.Marker!.Id, x => x.Marker!, (_, values) => values.First())
                         .ToList();
 
                     foreach (var climbMarker in climbMarkersOnRoute)
@@ -470,7 +475,7 @@ namespace RoadCaptain.App.Shared.Controls
                 canvas.DrawText(text, 5, correctedAltitudeOffset, _defaultFont, SkiaPaints.ElevationLineTextPaint);
             }
 
-            if (ZoomOnCurrentPosition)
+            if (ZoomOnCurrentPosition && _zoomCenterStep != null)
             {
                 for (var i = _hasShifted ? 100 : 0; i < _zoomWindowMetersAhead; i += 100)
                 {

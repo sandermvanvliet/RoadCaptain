@@ -16,7 +16,7 @@ namespace RoadCaptain.App.Runner.Tests.Unit
     public class WhenCheckingForLatestVersion
     {
         private static readonly Version
-            CurrentVersion = typeof(WhenCheckingForLatestVersion).Assembly.GetName().Version;
+            CurrentVersion = typeof(WhenCheckingForLatestVersion).Assembly.GetName().Version ?? new Version();
 
         private static readonly Version NewVersion = new(1, 2, 3, 4);
         private readonly TestableMessageHandler _handler;
@@ -117,7 +117,7 @@ namespace RoadCaptain.App.Runner.Tests.Unit
                 }
             };
 
-            var serializedRelease = JsonConvert.SerializeObject(new ReleaseResponse[] { release }, VersionChecker.SerializerSettings);
+            var serializedRelease = JsonConvert.SerializeObject(new[] { release }, VersionChecker.SerializerSettings);
 
             _handler
                 .RespondTo()
@@ -131,9 +131,13 @@ namespace RoadCaptain.App.Runner.Tests.Unit
         private Release GetLatestVersion()
         {
             var client = new HttpClient(_handler);
-            return new VersionChecker(client)
+            var latestVersion = new VersionChecker(client)
                 .GetLatestRelease()
                 .official;
+
+            latestVersion.Should().NotBeNull();
+
+            return latestVersion!;
         }
     }
 }

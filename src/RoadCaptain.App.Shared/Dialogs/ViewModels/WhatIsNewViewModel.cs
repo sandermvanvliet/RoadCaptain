@@ -2,6 +2,7 @@
 // Licensed under Artistic License 2.0
 // See LICENSE or https://choosealicense.com/licenses/artistic-2.0/
 
+using System;
 using ReactiveUI;
 
 namespace RoadCaptain.App.Shared.Dialogs.ViewModels
@@ -13,8 +14,8 @@ namespace RoadCaptain.App.Shared.Dialogs.ViewModels
 
         public WhatIsNewViewModel(Release release)
         {
-            _version = release.Version.ToString(4);
-            _releaseNotes = release.ReleaseNotes;
+            _version = (release.Version ?? new Version()).ToString(4);
+            _releaseNotes = release.ReleaseNotes ?? string.Empty;
         }
 
         public string Version

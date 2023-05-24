@@ -3,6 +3,7 @@
 // See LICENSE or https://choosealicense.com/licenses/artistic-2.0/
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Platform;
@@ -58,7 +59,7 @@ namespace RoadCaptain.App.Shared
             };
         }
 
-        private static bool CanRestore(this CapturedWindowLocation? windowLocation, Screen screen)
+        private static bool CanRestore([NotNullWhen(true)]this CapturedWindowLocation? windowLocation, Screen screen)
         {
             return windowLocation is { } &&
                    (

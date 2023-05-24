@@ -17,7 +17,7 @@ namespace RoadCaptain.App.Shared.Dialogs.ViewModels
 
         public AboutRoadCaptainViewModel()
         {
-            Version = GetType().Assembly.GetName().Version?.ToString(4) ?? "0.0.0.0";
+            _version = GetType().Assembly.GetName().Version?.ToString(4) ?? "0.0.0.0";
 
             OpenLinkCommand = new RelayCommand(
                 _ => OpenLink("https://github.com/sandermvanvliet/RoadCaptain/"),

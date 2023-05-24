@@ -3,13 +3,12 @@
 // See LICENSE or https://choosealicense.com/licenses/artistic-2.0/
 
 using System;
-using ReactiveUI;
 
 namespace RoadCaptain.App.Shared.Dialogs.ViewModels
 {
     public class DesignTimeUpdateAvailableViewModel : UpdateAvailableViewModel
     {
-        public DesignTimeUpdateAvailableViewModel(): base(new Release { InstallerDownloadUri = new Uri("https://tempuri.org"), IsPreRelease = true, ReleaseNotes = "lorem ipsum, dolor sit amet", Version = System.Version.Parse("0.1.2.3")})
+        public DesignTimeUpdateAvailableViewModel(): base(new Release(version: System.Version.Parse("0.1.2.3"), installerDownloadUri: new Uri("https://tempuri.org"), isPreRelease: true, releaseNotes: "lorem ipsum, dolor sit amet"))
         {
         }
     }

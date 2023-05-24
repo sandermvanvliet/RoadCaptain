@@ -41,7 +41,7 @@ namespace RoadCaptain.App.Shared.Dialogs.ViewModels
         public bool ShowContinueButton => _buttonOptions == MessageBoxButton.CancelTryContinue;
         public bool ShowIgnoreButton => _buttonOptions == MessageBoxButton.AbortRetryIgnore;
 
-        public Bitmap Icon
+        public Bitmap? Icon
         {
             get
             {
@@ -63,6 +63,11 @@ namespace RoadCaptain.App.Shared.Dialogs.ViewModels
         private Bitmap FromResource(string name)
         {
             var assets = AvaloniaLocator.Current.GetService<IAssetLoader>();
+            if (assets == null)
+            {
+                throw new InvalidOperationException("Unable to retrieve Avalonia asset loader");
+            }
+
             var uri = new Uri($"avares://RoadCaptain.App.Shared/Assets/{name}.png");
             var asset = assets.Open(uri);
 

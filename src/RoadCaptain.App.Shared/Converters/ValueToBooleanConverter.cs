@@ -22,7 +22,9 @@ namespace RoadCaptain.App.Shared.Converters
                 return false;
             }
 
-            return value.ToString().Equals(parameter as string, StringComparison.InvariantCultureIgnoreCase);
+            var input = value as string;
+
+            return input is {} && input.Equals(parameter as string, StringComparison.InvariantCultureIgnoreCase);
         }
 
         public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)

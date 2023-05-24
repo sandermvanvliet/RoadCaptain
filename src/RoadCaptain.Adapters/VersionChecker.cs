@@ -80,12 +80,7 @@ namespace RoadCaptain.Adapters
                 // Ignore
             }
 
-            return (
-                new Release
-                {
-                    Version = GetType().Assembly.GetName().Version ?? new Version(0, 0)
-                },
-                null);
+            return (null, null);
         }
 
         private Release? FromGitHubRelease(ReleaseResponse? release)
@@ -95,13 +90,9 @@ namespace RoadCaptain.Adapters
                 return null;
             }
 
-            return new Release
-            {
-                Version = Version.Parse(release.Name),
-                ReleaseNotes = release.Body,
-                InstallerDownloadUri = GetInstallerUriFrom(release) ?? new Uri("https://roadcaptain.nl"),
-                IsPreRelease = release.PreRelease
-            };
+            return new Release(version: Version.Parse(release.Name),
+                installerDownloadUri: GetInstallerUriFrom(release) ?? new Uri("https://roadcaptain.nl"),
+                isPreRelease: release.PreRelease, releaseNotes: release.Body);
         }
 
         private static Uri? GetInstallerUriFrom(ReleaseResponse release)

@@ -15,6 +15,6 @@ namespace RoadCaptain.App.Shared.Models
         [JsonPropertyName("expires_in")]
         public long ExpiresIn { get; set; }
         [JsonPropertyName("userProfile")]
-        public UserProfile UserProfile { get; set; }
+        public UserProfile? UserProfile { get; set; }
     }
 }
