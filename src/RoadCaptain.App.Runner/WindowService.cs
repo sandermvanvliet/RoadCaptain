@@ -18,7 +18,7 @@ namespace RoadCaptain.App.Runner
 {
     public class WindowService : BaseWindowService, IWindowService
     {
-        private IClassicDesktopStyleApplicationLifetime _applicationLifetime;
+        private IClassicDesktopStyleApplicationLifetime? _applicationLifetime;
 
         public WindowService(IComponentContext componentContext, MonitoringEvents monitoringEvents) : base(componentContext, monitoringEvents)
         {
@@ -31,12 +31,12 @@ namespace RoadCaptain.App.Runner
 
         public void Shutdown(int exitCode)
         {
-            _applicationLifetime.Shutdown(exitCode);
+            _applicationLifetime?.Shutdown(exitCode);
         }
 
         public void ToggleElevationPlot(PlannedRoute? plannedRoute, bool? show)
         {
-            var elevationPlot = CurrentWindow.OwnedWindows.OfType<ElevationPlotWindow>().SingleOrDefault();
+            var elevationPlot = CurrentWindow!.OwnedWindows.OfType<ElevationPlotWindow>().SingleOrDefault();
             var userPreferences = Resolve<IUserPreferences>();
 
             if (elevationPlot != null)
@@ -71,7 +71,7 @@ namespace RoadCaptain.App.Runner
 
             var mainWindow = Resolve<MainWindow>();
             
-            _applicationLifetime.MainWindow = mainWindow;
+            _applicationLifetime!.MainWindow = mainWindow;
             
             SwapWindows(mainWindow);
         }
@@ -82,7 +82,7 @@ namespace RoadCaptain.App.Runner
                 "Only one instance of RoadCaptain Runner can be active",
                 "Already running",
                 MessageBoxButton.Ok,
-                CurrentWindow,
+                CurrentWindow!,
                 MessageBoxIcon.Warning);
         }
 
@@ -98,7 +98,7 @@ namespace RoadCaptain.App.Runner
 
             inGameWindow.DataContext = viewModel;
 
-            _applicationLifetime.MainWindow = inGameWindow;
+            _applicationLifetime!.MainWindow = inGameWindow;
 
             SwapWindows(inGameWindow);
         }

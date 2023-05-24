@@ -289,7 +289,7 @@ namespace RoadCaptain.App.Runner.ViewModels
         {
             if (GameState.IsInGame(_previousState))
             {
-                _gameConnection.EndActivity(LastSequenceNumber, "RoadCaptain: " + Model.Route.Name,
+                _gameConnection.EndActivity(LastSequenceNumber, "RoadCaptain: " + Model.Route?.Name,
                     _previousState?.RiderId ?? 0);
             }
             else

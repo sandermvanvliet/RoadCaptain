@@ -84,7 +84,7 @@ namespace RoadCaptain.App.Runner
             _gameStateReceiver.ReceiveLastSequenceNumber(sequenceNumber => _lastSequenceNumber = sequenceNumber);
             _gameStateReceiver.ReceiveGameState(GameStateReceived);
 
-            _watchdogTimer = new Timer(state =>
+            _watchdogTimer = new Timer(_ =>
             {
                 Watchdog()
                     .GetAwaiter()
@@ -240,7 +240,7 @@ namespace RoadCaptain.App.Runner
 
             if (gameState is ErrorState errorState)
             {
-                _windowService.ShowErrorDialog(errorState.Exception.Message);
+                _windowService.ShowErrorDialog(errorState.Exception?.Message ?? errorState.Message);
             }
 
             if (gameState is IncorrectConnectionSecretState && _previousGameState is not IncorrectConnectionSecretState)
@@ -273,6 +273,11 @@ namespace RoadCaptain.App.Runner
 
         private InGameNavigationWindowViewModel CreateInGameViewModel(PlannedRoute plannedRoute, GameState gameState)
         {
+            if (plannedRoute.World == null)
+            {
+                throw new Exception("Route does not have a world set");
+            }
+
             var segments = _segmentStore.LoadSegments(plannedRoute.World, plannedRoute.Sport);
 
             var inGameWindowModel = new InGameWindowModel(segments)

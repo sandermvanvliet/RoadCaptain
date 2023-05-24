@@ -51,13 +51,13 @@ namespace RoadCaptain.App.Runner
             
             builder
                 .RegisterAssemblyTypes(ThisAssembly)
-                .Where(type => type.BaseType == typeof(Window) && type.Namespace.EndsWith(".Views"))
+                .Where(type => type.BaseType == typeof(Window) && (type.Namespace ?? "").EndsWith(".Views"))
                 .UsingConstructor(new MostParametersConstructorSelector())
                 .AsSelf();
             
             builder
                 .RegisterAssemblyTypes(ThisAssembly)
-                .Where(type => type.BaseType == typeof(ViewModelBase) && type.Namespace.EndsWith(".ViewModels"))
+                .Where(type => type.BaseType == typeof(ViewModelBase) && (type.Namespace ?? "").EndsWith(".ViewModels"))
                 .AsSelf();
 
             builder.RegisterType<Engine>().AsSelf().SingleInstance();

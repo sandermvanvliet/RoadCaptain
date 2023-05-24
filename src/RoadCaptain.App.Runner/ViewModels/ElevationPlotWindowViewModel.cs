@@ -15,7 +15,7 @@ namespace RoadCaptain.App.Runner.ViewModels
     public class ElevationPlotWindowViewModel : ViewModelBase
     {
         private readonly ISegmentStore _segmentStore;
-        private TrackPoint _riderPosition;
+        private TrackPoint? _riderPosition;
         private readonly IWindowService _windowService;
         private readonly IUserPreferences _userPreferences;
 
@@ -39,13 +39,13 @@ namespace RoadCaptain.App.Runner.ViewModels
 
         public PlannedRoute? Route { get; private set; }
 
-        public List<Segment> Segments { get; private set; }
+        public List<Segment>? Segments { get; private set; }
 
-        public List<Segment> Markers { get; private set; }
+        public List<Segment>? Markers { get; private set; }
 
         public TrackPoint RiderPosition
         {
-            get => _riderPosition;
+            get => _riderPosition ?? TrackPoint.Unknown;
             private set
             {
                 _riderPosition = value;

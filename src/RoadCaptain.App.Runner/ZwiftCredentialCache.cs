@@ -36,7 +36,7 @@ namespace RoadCaptain.App.Runner
 
 #if DEBUG
             // This is for testing only to prevent me having to log in all the time.
-            if (tokenResponse.UserProfile.FirstName + " " + tokenResponse.UserProfile.LastName ==
+            if (tokenResponse.UserProfile?.FirstName + " " + tokenResponse.UserProfile?.LastName ==
                 "Sander van Vliet [RoadCaptain]")
             {
                 await File.WriteAllTextAsync("devtokens.json", JsonConvert.SerializeObject(tokenResponse, Formatting.Indented));
@@ -56,21 +56,16 @@ namespace RoadCaptain.App.Runner
                 {
                     tokenResponse = JsonConvert.DeserializeObject<TokenResponse>(await File.ReadAllTextAsync("devtokens.json"));
 
-                    if (tokenResponse?.AccessToken != null && new JsonWebToken(tokenResponse.AccessToken).ValidTo < DateTime.Now)
+                    if (tokenResponse?.AccessToken != null && 
+                        new JsonWebToken(tokenResponse.AccessToken).ValidTo < DateTime.Now &&
+                        !string.IsNullOrEmpty(tokenResponse.RefreshToken))
                     {
                         // When the token expires, break here and use postman to refresh the token manually
                         var oauthToken = await _zwift.RefreshTokenAsync(tokenResponse.RefreshToken);
 
-                        if (oauthToken != null)
-                        {
-                            tokenResponse.AccessToken = oauthToken.AccessToken;
-                            tokenResponse.RefreshToken = oauthToken.RefreshToken;
-                            tokenResponse.ExpiresIn = (int)oauthToken.ExpiresOn.Subtract(DateTime.UtcNow).TotalSeconds;
-                        }
-                        else
-                        {
-                            tokenResponse = null;
-                        }
+                        tokenResponse.AccessToken = oauthToken.AccessToken;
+                        tokenResponse.RefreshToken = oauthToken.RefreshToken;
+                        tokenResponse.ExpiresIn = (int)oauthToken.ExpiresOn.Subtract(DateTime.UtcNow).TotalSeconds;
                     }
                 }
                 catch (Exception e)

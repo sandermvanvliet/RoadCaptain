@@ -128,9 +128,9 @@ namespace RoadCaptain.App.Runner.Models
 
         public World? World => PlannedRoute?.World;
         public string? Name => PlannedRoute?.Name;
-        public string TotalDistance { get; private set; }
-        public string TotalAscent { get; private set; }
-        public string TotalDescent { get; private set; }
+        public string TotalDistance { get; private set; } = "0";
+        public string TotalAscent { get; private set; } = "0";
+        public string TotalDescent { get; private set; } = "0";
         public bool IsLoop => PlannedRoute?.IsLoop ?? false;
         public List<MarkerViewModel> Markers { get; private set; } = new();
     }

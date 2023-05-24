@@ -25,6 +25,7 @@ namespace RoadCaptain.App.Runner.Views
         public InGameNavigationWindow()
         {
             _monitoringEvents = new MonitoringEventsWithSerilog(new LoggerConfiguration().WriteTo.Debug().CreateLogger());
+            _userPreferences = new DummyUserPreferences();
 
             InitializeComponent();
         }
@@ -50,7 +51,7 @@ namespace RoadCaptain.App.Runner.Views
 #endif
 
             gameStateReceiver.ReceiveGameState(GameStateReceived);
-            gameStateReceiver.ReceiveLastSequenceNumber(sequenceNumber => _viewModel.LastSequenceNumber = sequenceNumber);
+            gameStateReceiver.ReceiveLastSequenceNumber(sequenceNumber => _viewModel!.LastSequenceNumber = sequenceNumber);
         }
 
         private void InGameNavigationWindow_OnActivated(object? sender, EventArgs e)
@@ -73,7 +74,7 @@ namespace RoadCaptain.App.Runner.Views
         {
             try
             {
-                _viewModel.UpdateGameState(gameState);
+                _viewModel!.UpdateGameState(gameState);
             }
             catch (Exception e)
             {

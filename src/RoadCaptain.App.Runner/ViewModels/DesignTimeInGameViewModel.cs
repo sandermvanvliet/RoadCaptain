@@ -5,6 +5,7 @@
 using System.Collections.Generic;
 using RoadCaptain.App.Runner.Models;
 using RoadCaptain.GameStates;
+using RoadCaptain.Ports;
 using Serilog.Core;
 
 namespace RoadCaptain.App.Runner.ViewModels
@@ -62,14 +63,31 @@ namespace RoadCaptain.App.Runner.ViewModels
                     }
                 }, 
                 DefaultSegments, 
-                null,
+                new NopGameConnection(),
                 new MonitoringEventsWithSerilog(Logger.None),
-                null)
+                new DesignTimeWindowService())
         {
-            var onRouteState = new OnRouteState(1, 2, TrackPoint.Unknown, DefaultSegments[0], Model.Route, SegmentDirection.AtoB, 0, 0, 0);
-            Model.Route.EnteredSegment("seg-1");
+            var onRouteState = new OnRouteState(1, 2, TrackPoint.Unknown, DefaultSegments[0], Model.Route!, SegmentDirection.AtoB, 0, 0, 0);
+            Model.Route!.EnteredSegment("seg-1");
             UpdateGameState(onRouteState);
-            //UpdateGameState(new ReadyToGoState());B
+        }
+    }
+
+    public class NopGameConnection : IZwiftGameConnection
+    {
+        public void SendInitialPairingMessage(uint riderId, uint sequenceNumber)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void SendTurnCommand(TurnDirection direction, ulong sequenceNumber, uint riderId)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void EndActivity(ulong sequenceNumber, string activityName, uint riderId)
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

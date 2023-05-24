@@ -28,7 +28,14 @@ namespace RoadCaptain.App.Runner
                 // is set to be / which prevents us from loading resources...
                 if(Environment.CurrentDirectory == "/")
                 {
-                    Environment.CurrentDirectory = Path.GetDirectoryName(typeof(Program).Assembly.Location);
+                    var currentDirectory = Path.GetDirectoryName(typeof(Program).Assembly.Location);
+                    
+                    if (string.IsNullOrEmpty(currentDirectory))
+                    {
+                        throw new Exception("Unable to determine application startup directory");
+                    }
+
+                    Environment.CurrentDirectory = currentDirectory;
                 }
             }
 
