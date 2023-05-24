@@ -53,13 +53,11 @@ namespace RoadCaptain.Adapters.CaptureFile
             _clientToServerAssembler = new(monitoringEvents);
             _clientToServerAssembler.PayloadReady += (_, args) =>
             {
-                args.ClientToServer = true;
-                OnPayloadReady(args);
+                OnPayloadReady(new PayloadReadyEventArgs(args.SequenceNumber, args.Payload, true));
             };
             _serverToClientAssembler.PayloadReady += (_, args) =>
             {
-                args.ClientToServer = false;
-                OnPayloadReady(args);
+                OnPayloadReady(new PayloadReadyEventArgs(args.SequenceNumber, args.Payload, false));
             };
         }
 

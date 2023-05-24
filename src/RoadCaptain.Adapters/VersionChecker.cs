@@ -111,7 +111,7 @@ namespace RoadCaptain.Adapters
         {
             var installerAsset = release
                 .Assets
-                .FirstOrDefault(a =>
+                ?.FirstOrDefault(a =>
                     "application/x-msi".Equals(a.ContentType, StringComparison.InvariantCultureIgnoreCase));
 
             if (installerAsset != null && !string.IsNullOrEmpty(installerAsset.BrowserDownloadUrl))

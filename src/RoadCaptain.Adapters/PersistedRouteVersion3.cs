@@ -15,6 +15,6 @@ namespace RoadCaptain.Adapters
         public string? RoadCaptainVersion { get; set; }
 
         [JsonProperty("route")]
-        public PlannedRoute Route { get; set; }
+        public PlannedRoute? Route { get; set; }
     }
 }

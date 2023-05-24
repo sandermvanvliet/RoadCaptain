@@ -23,7 +23,7 @@ namespace RoadCaptain.Adapters
             _httpClient = httpClient;
         }
 
-        public async Task<Uri> RetrieveRelayUrl(string accessToken)
+        public async Task<Uri?> RetrieveRelayUrl(string accessToken)
         {
             var request = new HttpRequestMessage(HttpMethod.Get, new Uri("https://us-or-rly101.zwift.com/api/servers"));
             request.Headers.Add("Zwift-Api-Version", "2.6");
@@ -38,7 +38,11 @@ namespace RoadCaptain.Adapters
 
             var responseObject = JObject.Parse(await response.Content.ReadAsStringAsync());
 
-            return new Uri(responseObject["baseUrl"].Value<string>());
+            var baseUrl = responseObject["baseUrl"]?.Value<string>();
+
+            return !string.IsNullOrEmpty(baseUrl) 
+                ? new Uri(baseUrl) 
+                : null;
         }
 
         public async Task InitiateRelayAsync(string accessToken, Uri uri, string ipAddress, byte[] connectionSecret)
@@ -85,9 +89,8 @@ namespace RoadCaptain.Adapters
             }
 
             var serializedContent = await response.Content.ReadAsStringAsync();
-            var profile = JsonConvert.DeserializeObject<ZwiftProfileResponse>(serializedContent);
 
-            return profile.ToDomain();
+            return JsonConvert.DeserializeObject<ZwiftProfileResponse>(serializedContent)!.ToDomain();
         }
 
         public async Task<OAuthToken> RefreshTokenAsync(string refreshToken)
@@ -112,7 +115,7 @@ namespace RoadCaptain.Adapters
 
             var serializedContent = await response.Content.ReadAsStringAsync();
 
-            return JsonConvert.DeserializeObject<TokenResponse>(serializedContent)?.ToDomain();
+            return JsonConvert.DeserializeObject<TokenResponse>(serializedContent)!.ToDomain();
         }
     }
 }

@@ -16,7 +16,7 @@ namespace RoadCaptain.Adapters
     internal class WorldStoreToDisk : IWorldStore
     {
         private readonly string _worldsPath;
-        private World[] _loadedWorlds;
+        private World[]? _loadedWorlds;
         private readonly JsonSerializerSettings _serializerSettings = new()
         {
             ContractResolver = new CamelCasePropertyNamesContractResolver(),
@@ -28,7 +28,7 @@ namespace RoadCaptain.Adapters
             NullValueHandling = NullValueHandling.Ignore
         };
 
-        public WorldStoreToDisk() : this(Path.GetDirectoryName(typeof(WorldStoreToDisk).Assembly.Location))
+        public WorldStoreToDisk() : this(Path.GetDirectoryName(typeof(WorldStoreToDisk).Assembly.Location) ?? Environment.CurrentDirectory)
         {
         }
 
@@ -41,22 +41,20 @@ namespace RoadCaptain.Adapters
         {
             if (_loadedWorlds == null)
             {
-                _loadedWorlds = JsonConvert.DeserializeObject<World[]>(
-                    File.ReadAllText(_worldsPath), 
-                    _serializerSettings);
+                _loadedWorlds = JsonConvert.DeserializeObject<World[]>(File.ReadAllText(_worldsPath), _serializerSettings);
             }
 
-            return _loadedWorlds;
+            return _loadedWorlds!;
         }
 
-        public World LoadWorldById(string id)
+        public World? LoadWorldById(string id)
         {
             if (_loadedWorlds == null)
             {
                 LoadWorlds();
             }
 
-            return _loadedWorlds.SingleOrDefault(w => string.Equals(w.Id, id, StringComparison.InvariantCultureIgnoreCase));
+            return _loadedWorlds!.SingleOrDefault(w => string.Equals(w.Id, id, StringComparison.InvariantCultureIgnoreCase));
         }
     }
 }

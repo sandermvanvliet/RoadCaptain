@@ -8,8 +8,15 @@ namespace RoadCaptain.Adapters
 {
     internal class Message
     {
-        public string? Topic { get; set; }
-        public object? Data { get; set; }
-        public DateTime TimeStamp { get; set; }
+        public Message(string topic, DateTime timeStamp, object data)
+        {
+            Topic = topic;
+            TimeStamp = timeStamp;
+            Data = data;
+        }
+
+        public string Topic { get;  }
+        public object Data { get; }
+        public DateTime TimeStamp { get; }
     }
 }

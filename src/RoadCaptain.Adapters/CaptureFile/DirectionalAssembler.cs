@@ -91,11 +91,7 @@ namespace RoadCaptain.Adapters.CaptureFile
                 {
                     Debug($"Packet completed!, Actual: {_assembledLen}, Push: {packet.Push}, Ack: {packet.Acknowledgment}");
 
-                    OnPayloadReady(new PayloadReadyEventArgs
-                    {
-                        Payload = _payload,
-                        SequenceNumber = _startingSequenceNumber
-                    });
+                    OnPayloadReady(new PayloadReadyEventArgs(_startingSequenceNumber, _payload, false));
 
                     Reset();
                 }

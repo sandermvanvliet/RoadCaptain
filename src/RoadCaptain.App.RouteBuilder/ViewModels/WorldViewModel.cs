@@ -8,10 +8,10 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
 {
     public class WorldViewModel : ViewModelBase
     {
-        private readonly World _world;
+        private readonly World? _world;
         private bool _isSelected;
 
-        public WorldViewModel(World world)
+        public WorldViewModel(World? world)
         {
             _world = world;
         }

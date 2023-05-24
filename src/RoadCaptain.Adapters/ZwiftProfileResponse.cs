@@ -11,7 +11,7 @@ namespace RoadCaptain.Adapters
         [JsonProperty("id")]
         public long Id { get; set; }
         [JsonProperty("publicId")]
-        public string PublicId { get; set; }
+        public string? PublicId { get; set; }
         [JsonProperty("riding")]
         public bool Riding { get; set; }
         [JsonProperty("likelyInGame")]

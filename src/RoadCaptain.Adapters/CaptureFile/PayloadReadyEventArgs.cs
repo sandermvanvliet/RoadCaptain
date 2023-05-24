@@ -6,10 +6,18 @@ using System;
 
 namespace RoadCaptain.Adapters.CaptureFile
 {
-    internal class PayloadReadyEventArgs : EventArgs {
-        public byte[] Payload { get; set; }
-        public uint SequenceNumber { get; set; }
-        public bool ClientToServer { get; set; }
+    internal class PayloadReadyEventArgs : EventArgs
+    {
+        public PayloadReadyEventArgs(uint sequenceNumber, byte[] payload, bool clientToServer)
+        {
+            SequenceNumber = sequenceNumber;
+            Payload = payload;
+            ClientToServer = clientToServer;
+        }
+
+        public byte[] Payload { get; }
+        public uint SequenceNumber { get; }
+        public bool ClientToServer { get; }
         public bool ServerToClient => !ClientToServer;
     }
 }

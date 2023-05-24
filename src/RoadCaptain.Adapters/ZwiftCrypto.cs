@@ -15,8 +15,8 @@ namespace RoadCaptain.Adapters
         private InitializationVector _clientToGameInitializationVector;
         private InitializationVector _gameToClientInitializationVector;
         private bool _hasConnectionId;
-        private bool _isEncryptedConnection;
-        private int _relayId;
+        private const bool IsEncryptedConnection = false;
+        private const int RelayId = 0;
 
         private readonly bool a = false;
         private readonly bool b = false;
@@ -43,7 +43,7 @@ namespace RoadCaptain.Adapters
 
             if (input.Remaining != 0)
             {
-                if (_isEncryptedConnection && !_hasConnectionId)
+                if (IsEncryptedConnection && !_hasConnectionId)
                 {
                     throw new CryptographyException("Connection id expected but missing");
                 }
@@ -67,7 +67,7 @@ namespace RoadCaptain.Adapters
                 encryptedOutput.Put(GenerateHeaderByte()); // as a, b and c are false this puts a 0 byte to the encrypted output
                 if (a)
                 {
-                    encryptedOutput.PutInt(_relayId);
+                    encryptedOutput.PutInt(RelayId);
                 }
 
                 if (b)
@@ -107,7 +107,7 @@ namespace RoadCaptain.Adapters
 
                 _clientToGameInitializationVector.IncrementCounter();
 
-                return encryptedOutput;
+                return encryptedOutput!;
             }
 
             throw new Exception("Empty message");
@@ -132,7 +132,7 @@ namespace RoadCaptain.Adapters
                 {
                     if (input.Remaining >= 4)
                     {
-                        if (input.GetInt() != _relayId)
+                        if (input.GetInt() != RelayId)
                         {
                             return new DecryptionFailedResult("Relay id does not match");
                         }
@@ -160,7 +160,7 @@ namespace RoadCaptain.Adapters
                         return new DecryptionFailedResult("Connection id announced but missing");
                     }
                 }
-                else if (_isEncryptedConnection && !_hasConnectionId)
+                else if (IsEncryptedConnection && !_hasConnectionId)
                 {
                     return new DecryptionFailedResult("Connection id expected but missing");
                 }

@@ -96,6 +96,12 @@ namespace RoadCaptain.Adapters
                         throw new InvalidOperationException("Failed to deserialize to a valid route object");
                     }
 
+                    if (string.IsNullOrEmpty(deserialized.RoadCaptainVersion))
+                    {
+                        throw new InvalidOperationException(
+                            "Route does not specify the RoadCaptain version it was created with, I can't determine what to do now");
+                    }
+
                     if (Version.Parse(deserialized.RoadCaptainVersion) > _currentVersion)
                     {
                         throw new InvalidOperationException(
@@ -123,6 +129,12 @@ namespace RoadCaptain.Adapters
                     if (Version.Parse(deserialized.RoadCaptainVersion) < new Version(0, 6, 6, 0))
                     {
                         SetSegmentSequenceType(plannedRoute);
+                    }
+
+                    if (plannedRoute.World == null)
+                    {
+                        throw new InvalidOperationException(
+                            "Route doesn't specify for which world it is, I don't know what to do with that");
                     }
 
                     // If the route is a loop then we need to ensure that the
@@ -173,6 +185,12 @@ namespace RoadCaptain.Adapters
                         throw new InvalidOperationException("Failed to deserialize to a valid route object");
                     }
 
+                    if (string.IsNullOrEmpty(deserialized.RoadCaptainVersion))
+                    {
+                        throw new InvalidOperationException(
+                            "Route does not specify the RoadCaptain version it was created with, I can't determine what to do now");
+                    }
+
                     if (Version.Parse(deserialized.RoadCaptainVersion) > _currentVersion)
                     {
                         throw new InvalidOperationException(
@@ -206,6 +224,12 @@ namespace RoadCaptain.Adapters
                     if (Version.Parse(deserialized.RoadCaptainVersion) < new Version(0, 6, 6, 0))
                     {
                         SetSegmentSequenceType(plannedRoute);
+                    }
+
+                    if (plannedRoute.World == null)
+                    {
+                        throw new InvalidOperationException(
+                            "Route doesn't specify for which world it is, I don't know what to do with that");
                     }
 
                     // If the route is a loop then we need to ensure that the

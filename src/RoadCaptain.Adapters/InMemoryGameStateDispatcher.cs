@@ -232,12 +232,7 @@ namespace RoadCaptain.Adapters
         {
             try
             {
-                var message = new Message
-                {
-                    Topic = topic,
-                    TimeStamp = DateTime.UtcNow,
-                    Data = data
-                };
+                var message = new Message(topic: topic, timeStamp: DateTime.UtcNow, data: data);
 
                 _queue.Enqueue(message);
             }

@@ -11,7 +11,7 @@ namespace RoadCaptain.Adapters
         public string? ZwiftRouteName { get; set; }
         public List<SegmentSequence> RouteSegmentSequence { get; } = new();
 
-        public PlannedRoute AsRoute(World watopia)
+        public PlannedRoute AsRoute(World? watopia)
         {
             var plannedRoute = new PlannedRoute
             {
