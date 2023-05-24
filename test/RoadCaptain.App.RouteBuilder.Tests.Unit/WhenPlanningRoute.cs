@@ -38,7 +38,9 @@ namespace RoadCaptain.App.RouteBuilder.Tests.Unit
 
         private void GivenWorldAndSport(string worldId, SportType sportType)
         {
-            _viewModel.SelectWorldCommand.Execute(new WorldViewModel(_worldStore.LoadWorldById(worldId)));
+            var world = _worldStore.LoadWorldById(worldId);
+            world.Should().NotBeNull();
+            _viewModel.SelectWorldCommand.Execute(new WorldViewModel(world!));
             _viewModel.SelectSportCommand.Execute(new SportViewModel(sportType));
             _segments = _segmentStore.LoadSegments(_viewModel.Route.World!, _viewModel.Route.Sport);
         }

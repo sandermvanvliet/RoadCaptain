@@ -152,7 +152,7 @@ namespace RoadCaptain.App.RouteBuilder.Views
         // ReSharper disable UnusedParameter.Local
         private void RouteListView_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (e.AddedItems.Count == 1 && e.AddedItems[0] is SegmentSequenceViewModel viewModel)
+            if (e.AddedItems.Count == 1 && e.AddedItems[0] is SegmentSequenceViewModel viewModel && !string.IsNullOrEmpty(viewModel.SegmentId))
             {
                 ViewModel.HighlightSegment(viewModel.SegmentId);
             }
