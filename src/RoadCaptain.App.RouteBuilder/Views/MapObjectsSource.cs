@@ -208,6 +208,11 @@ namespace RoadCaptain.App.RouteBuilder.Views
 
         private Offsets? CreatePathsForSegments(List<Segment> segments, World world)
         {
+            if (world.SpawnPoints == null)
+            {
+                throw new ArgumentException("Can't create paths if the spawn points for the world are missing");
+            }
+
             if (!world.MapMostLeft.HasValue || !world.MapMostRight.HasValue)
             {
                 throw new ArgumentException("Can't create paths if the bounding box for the world is missing");

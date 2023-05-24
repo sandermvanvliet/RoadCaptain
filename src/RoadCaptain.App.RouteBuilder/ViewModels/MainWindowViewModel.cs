@@ -504,7 +504,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
 
         private bool IsValidSpawnPointProgression(out CommandResult commandResult, SegmentDirection segmentDirection)
         {
-            if (Route.World != null && Route.Sequence.Count() == 1)
+            if (Route.World != null && Route.Sequence.Count() == 1 && Route.World.SpawnPoints != null)
             {
                 var startSegmentSequence = Route.Sequence.First();
                 if (!Route.World.SpawnPoints.Any(sp =>
@@ -653,6 +653,11 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
 
         private CommandResult SelectWorld(WorldViewModel world)
         {
+            if (string.IsNullOrEmpty(world.Id))
+            {
+                return CommandResult.Failure("Can't select the world because its id is empty");
+            }
+
             Route.World = _worldStore.LoadWorldById(world.Id);
 
             var currentSelected = Worlds.SingleOrDefault(w => w.IsSelected);

@@ -54,7 +54,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             }
         }
 
-        public string SegmentId => Model.SegmentId;
+        public string? SegmentId => Model.SegmentId;
         public double Distance { get; }
 
         public double Ascent

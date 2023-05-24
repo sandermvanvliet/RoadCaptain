@@ -106,6 +106,11 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
                 throw new InvalidOperationException("Can't set a start segment because the world hasn't been selected yet");
             }
 
+            if (_world.SpawnPoints == null)
+            {
+                throw new InvalidOperationException("Can't set a start segment because the world doesn't have any spawn points");
+            }
+
             var segmentDirection = SegmentDirection.Unknown;
 
             var routesStartingOnSegment = _world.SpawnPoints.Where(s => s.SegmentId == segment.Id).Select(s => s.Direction).ToList();
@@ -253,6 +258,10 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             {
                 throw new InvalidOperationException("Can't get route name because no world has been selected");
             }
+            if (_world.SpawnPoints == null)
+            {
+                throw new InvalidOperationException("Can't get route name because the world doesn't have spawn points");
+            }
 
             var spawnPoint = _world.SpawnPoints
                 .SingleOrDefault(s =>
@@ -263,7 +272,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
                 throw new InvalidOperationException($"No spawn point found for segment '{startingSegment.SegmentId}'");
             }
 
-            return spawnPoint.ZwiftRouteName;
+            return spawnPoint.ZwiftRouteName!;
         }
 
         public CommandResult Reset()
@@ -295,7 +304,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
 
         public bool IsSpawnPointSegment(string segmentId)
         {
-            if (_world == null)
+            if (_world == null || _world.SpawnPoints == null)
             {
                 return false;
             }
@@ -438,7 +447,15 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
                     // the last added segment. If that's the case apparently the route is 
                     // continuing in that direction and _that_ is the segment we'll continue
                     // on for the loop.
-                    if(nextSegmentIds.Contains(Sequence.ToList()[connectingSegmentsOnRoute.SequenceNumber].SegmentId))
+                    var segmentId = Sequence.ToList()[connectingSegmentsOnRoute.SequenceNumber].SegmentId;
+
+                    if (segmentId == null)
+                    {
+                        throw new InvalidOperationException(
+                            "Expected a segment id on the connecting segment but it was empty");
+                    }
+
+                    if(nextSegmentIds.Contains(segmentId))
                     {
                         connectingSegmentsOnRoute = Sequence.ToList()[connectingSegmentsOnRoute.SequenceNumber];
                     }
