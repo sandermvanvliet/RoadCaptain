@@ -117,7 +117,7 @@ namespace RoadCaptain.Tests.Unit.GameState.Repro
 
             var positions = File
                 .ReadAllLines(Path.Combine("GameState", "Repro", "VolcanoClimbJunction.json"))
-                .Select(JsonConvert.DeserializeObject<TrackPoint>)
+                .Select(s => JsonConvert.DeserializeObject<TrackPoint>(s)!)
                 .ToList();
 
             var segment = segments.Single(s => s.Id == plannedRoute.RouteSegmentSequence[1].SegmentId);
@@ -178,7 +178,7 @@ namespace RoadCaptain.Tests.Unit.GameState.Repro
             
             var positions = File
                 .ReadAllLines(Path.Combine("GameState", "Repro", "VolcanoClimbLostRouteLock-positions.json"))
-                .Select(JsonConvert.DeserializeObject<TrackPoint>)
+                .Select(s => JsonConvert.DeserializeObject<TrackPoint>(s)!)
                 .ToList();
             
             GameStates.GameState state = new PositionedState(1, 2, positions[0]);
@@ -234,7 +234,7 @@ namespace RoadCaptain.Tests.Unit.GameState.Repro
             
             var positions = File
                 .ReadAllLines(Path.Combine("GameState", "Repro", "VolcanoClimbUpcomingTurnToPositioned-positions.json"))
-                .Select(JsonConvert.DeserializeObject<TrackPoint>)
+                .Select(s => JsonConvert.DeserializeObject<TrackPoint>(s)!)
                 .ToList();
             
             GameStates.GameState state = new PositionedState(1, 2, positions[0]);

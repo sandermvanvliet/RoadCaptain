@@ -25,7 +25,7 @@ namespace RoadCaptain.Tests.Unit
         public WhenNavigating()
         {
             var monitoringEvents = new NopMonitoringEvents();
-            _gameStateDispatcher = new InMemoryGameStateDispatcher(monitoringEvents, null);
+            _gameStateDispatcher = new InMemoryGameStateDispatcher(monitoringEvents, new StubPathProvider());
             _plannedRoute = FixedForTesting();
 
             _inMemoryZwiftGameConnection = new InMemoryZwiftGameConnection();
@@ -170,7 +170,7 @@ namespace RoadCaptain.Tests.Unit
                 5678,
                 1234, 
                 new TrackPoint(0, 0, 0), 
-                new Segment(new List<TrackPoint>()) { Id = _plannedRoute.CurrentSegmentId },
+                new Segment(new List<TrackPoint>()) { Id = _plannedRoute.CurrentSegmentId! },
                 _plannedRoute, 
                 SegmentDirection.AtoB, 
                 directions.ToList(),

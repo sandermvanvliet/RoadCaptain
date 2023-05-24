@@ -88,7 +88,7 @@ namespace RoadCaptain.Tests.Unit
             _plannedRoute.OnLeadIn.Should().BeFalse();
 
             _plannedRoute
-                .NextSegmentSequence
+                .NextSegmentSequence!
                 .SegmentId
                 .Should()
                 .Be("seg-2");
@@ -102,18 +102,18 @@ namespace RoadCaptain.Tests.Unit
             _plannedRoute.EnteredSegment("seg-2");
             _plannedRoute.EnteredSegment("seg-3");
             _plannedRoute.EnteredSegment("seg-4");
-            _plannedRoute.EnteredSegment(_plannedRoute.NextSegmentId);
+            _plannedRoute.EnteredSegment(_plannedRoute.NextSegmentId!);
             
             _plannedRoute.SegmentSequenceIndex.Should().Be(2);
 
             _plannedRoute
-                .CurrentSegmentSequence
+                .CurrentSegmentSequence!
                 .SegmentId
                 .Should()
                 .Be("seg-2");
 
             _plannedRoute
-                .NextSegmentSequence
+                .NextSegmentSequence!
                 .SegmentId
                 .Should()
                 .Be("seg-3");

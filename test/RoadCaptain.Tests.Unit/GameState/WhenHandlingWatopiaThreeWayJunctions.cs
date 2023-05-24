@@ -2,6 +2,7 @@
 // Licensed under Artistic License 2.0
 // See LICENSE or https://choosealicense.com/licenses/artistic-2.0/
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
@@ -32,7 +33,7 @@ namespace RoadCaptain.Tests.Unit.GameState
 
         private Segment SegmentById(string id)
         {
-            return _segments.SingleOrDefault(s => s.Id == id);
+            return _segments.SingleOrDefault(s => s.Id == id) ?? throw new Exception($"Segment '{id}' not found");
         }
 
         private readonly List<Segment> _segments = new()
@@ -121,7 +122,6 @@ namespace RoadCaptain.Tests.Unit.GameState
         // Note on the positions: Keep them far away from eachother otherwise you'll
         // get some interesting test failures because they are too close together
         // and you'll end up with the wrong segment....
-        private readonly TrackPoint _positionNotOnSegment = new(2, 2, 0);
         private static readonly TrackPoint PositionOnSegment = new(1, 2, 3);
         private static readonly TrackPoint OtherOnSegment = new(3, 2, 3);
         private static readonly TrackPoint PositionOnAnotherSegment = new(4, 2, 3);

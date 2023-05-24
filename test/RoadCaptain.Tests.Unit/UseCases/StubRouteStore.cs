@@ -16,7 +16,7 @@ namespace RoadCaptain.Tests.Unit.UseCases
                 return new PlannedRoute();
             }
 
-            return null;
+            throw new Exception("Route not fond");
         }
 
         public void Store(PlannedRoute route, string path)

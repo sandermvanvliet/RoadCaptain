@@ -2,6 +2,7 @@
 // Licensed under Artistic License 2.0
 // See LICENSE or https://choosealicense.com/licenses/artistic-2.0/
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
@@ -330,10 +331,10 @@ namespace RoadCaptain.Tests.Unit.GameState
             _route.EnteredSegment("route-segment-2");
             GameStates.GameState state = new OnRouteState(RiderId, ActivityId, RoutePosition2, SegmentById("route-segment-2"), _route, SegmentDirection.AtoB, 0, 0, 0);
             var state2 = state.UpdatePosition(RoutePosition2Point2, _segments, _route) as OnRouteState;
-            var state3 = state2.TurnCommandAvailable("TurnLeft") as OnRouteState;
-            var state4 = state3.TurnCommandAvailable("TurnRight") as UpcomingTurnState;
+            var state3 = state2!.TurnCommandAvailable("TurnLeft") as OnRouteState;
+            var state4 = state3!.TurnCommandAvailable("TurnRight") as UpcomingTurnState;
 
-            var result = state4.UpdatePosition(RoutePosition2Point3, _segments, _route);
+            var result = state4!.UpdatePosition(RoutePosition2Point3, _segments, _route);
 
             result
                 .Should()
@@ -483,7 +484,7 @@ namespace RoadCaptain.Tests.Unit.GameState
 
             var result = state.UpdatePosition(RoutePosition1Point2, _segments, _route) as OnSegmentState;
 
-            result
+            result!
                 .ElapsedDistance
                 .Should()
                 .BeApproximately(109.5d, 0.01);
@@ -496,7 +497,7 @@ namespace RoadCaptain.Tests.Unit.GameState
             var state2 = state1.UpdatePosition(RoutePosition1Point2, _segments, _route);
             var result = state2.UpdatePosition(RoutePosition1Point3, _segments, _route) as OnRouteState;
 
-            result
+            result!
                 .ElapsedDistance
                 .Should()
                 .BeApproximately(219.01d, 0.01);
@@ -509,7 +510,7 @@ namespace RoadCaptain.Tests.Unit.GameState
             state = state.UpdatePosition(RoutePosition1Point2, _segments, _route);
             var result = state.UpdatePosition(RoutePosition1Point3, _segments, _route) as OnRouteState;
 
-            result
+            result!
                 .ElapsedAscent
                 .Should()
                 .Be(2);
@@ -568,7 +569,7 @@ namespace RoadCaptain.Tests.Unit.GameState
 
         private Segment SegmentById(string id)
         {
-            return _segments.SingleOrDefault(s => s.Id == id);
+            return _segments.SingleOrDefault(s => s.Id == id) ?? throw new Exception($"Segment '{id}' not found");
         }
 
         private readonly List<Segment> _segments = new()

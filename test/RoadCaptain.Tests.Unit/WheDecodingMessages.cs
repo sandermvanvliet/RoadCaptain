@@ -25,7 +25,7 @@ namespace RoadCaptain.Tests.Unit
             _messageReceiver = new InMemoryMessageReceiver();
             _messageEmitter = new InMemoryMessageEmitter();
             _controllableZwiftCrypto = new ControllableZwiftCrypto();
-            _useCase = new DecodeIncomingMessagesUseCase(_messageReceiver, _messageEmitter, new NopMonitoringEvents(), _controllableZwiftCrypto, null);
+            _useCase = new DecodeIncomingMessagesUseCase(_messageReceiver, _messageEmitter, new NopMonitoringEvents(), _controllableZwiftCrypto, new NopGameStateDispatcher());
         }
 
         [Fact]
