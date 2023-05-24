@@ -29,12 +29,12 @@ namespace RoadCaptain.Adapters
             _client = client;
         }
 
-        public (Release? official, Release? preRelease) GetLatestRelease()
+        public (Release official, Release? preRelease) GetLatestRelease()
         {
             return GetLatestReleaseIncludingPreReleases();
         }
 
-        private (Release? official, Release? preRelease) GetLatestReleaseIncludingPreReleases()
+        private (Release official, Release? preRelease) GetLatestReleaseIncludingPreReleases()
         {
             try
             {
@@ -80,7 +80,10 @@ namespace RoadCaptain.Adapters
                 // Ignore
             }
 
-            return (null, null);
+            return (
+                new Release(GetType().Assembly.GetName().Version ?? new Version(), new Uri("https://roadcaptain.nl"),
+                    false, ""),
+                null);
         }
 
         private Release? FromGitHubRelease(ReleaseResponse? release)
