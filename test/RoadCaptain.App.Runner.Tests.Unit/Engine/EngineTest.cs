@@ -7,8 +7,8 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Threading.Tasks;
 using Autofac;
-using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Threading;
+using FluentAssertions;
 using Microsoft.Extensions.Configuration;
 using RoadCaptain.App.Runner.Tests.Unit.ViewModels;
 using RoadCaptain.App.Shared;
@@ -24,7 +24,6 @@ namespace RoadCaptain.App.Runner.Tests.Unit.Engine
     {
         private readonly TaskWithCancellation _receiverTask;
         private readonly IGameStateReceiver _gameStateReceiver;
-        private readonly ClassicDesktopStyleApplicationLifetime _lifetime;
         private readonly InMemoryZwiftGameConnection _zwiftGameConnection;
         protected IUserPreferences UserPreferences;
         private readonly IGameStateDispatcher _gameStateDispatcher;
@@ -69,7 +68,7 @@ namespace RoadCaptain.App.Runner.Tests.Unit.Engine
                 return Task.CompletedTask;
             });
 
-            _zwiftGameConnection = container.Resolve<IZwiftGameConnection>() as InMemoryZwiftGameConnection;
+            _zwiftGameConnection = (container.Resolve<IZwiftGameConnection>() as InMemoryZwiftGameConnection)!;
             
             // Ensure some credentials are available
             container
@@ -84,7 +83,7 @@ namespace RoadCaptain.App.Runner.Tests.Unit.Engine
 
         protected StubWindowService WindowService { get; }
 
-        protected PlannedRoute LoadedRoute { get; private set; }
+        protected PlannedRoute? LoadedRoute { get; private set; }
 
         protected List<GameState> States { get; } = new();
 
@@ -105,8 +104,6 @@ namespace RoadCaptain.App.Runner.Tests.Unit.Engine
             {
                 // ignored
             }
-            
-            _lifetime?.Dispose();
         }
 
         protected void ReceiveGameState(GameState state)
@@ -123,27 +120,40 @@ namespace RoadCaptain.App.Runner.Tests.Unit.Engine
             _gameStateDispatcher.RouteSelected(plannedRoute);
         }
 
-        protected TaskWithCancellation TheTaskWithName(string fieldName)
+        protected TaskWithCancellation? TheTaskWithName(string fieldName)
         {
-            return GetFieldValueByName(fieldName) as TaskWithCancellation;
+            var value = GetFieldValueByName(fieldName);
+
+            if (value == null)
+            {
+                return null;
+            }
+
+            value.Should().BeOfType<TaskWithCancellation>();
+
+            return value as TaskWithCancellation;
         }
 
-        protected object GetFieldValueByName(string fieldName)
+        protected object? GetFieldValueByName(string fieldName)
         {
             var fieldInfo = typeof(Runner.Engine)
                 .GetField(fieldName, BindingFlags.Instance | BindingFlags.GetField | BindingFlags.NonPublic);
 
-            // ReSharper disable once PossibleNullReferenceException
-            return fieldInfo.GetValue(Engine);
+            fieldInfo.Should().NotBeNull($"the field '{fieldName}' should exist");
+
+            var fieldValueByName = fieldInfo!.GetValue(Engine);
+
+            return fieldValueByName;
         }
 
         protected void SetFieldValueByName(string fieldName, object value)
         {
             var fieldInfo = typeof(Runner.Engine)
                 .GetField(fieldName, BindingFlags.Instance | BindingFlags.SetField | BindingFlags.NonPublic);
-
-            // ReSharper disable once PossibleNullReferenceException
-            fieldInfo.SetValue(Engine, value);
+            
+            fieldInfo.Should().NotBeNull($"the field '{fieldName}' should exist");
+            
+            fieldInfo!.SetValue(Engine, value);
         }
 
         protected TaskWithCancellation GivenTaskIsRunning(string fieldName)

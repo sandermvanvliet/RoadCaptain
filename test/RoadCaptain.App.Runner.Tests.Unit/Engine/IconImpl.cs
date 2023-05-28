@@ -12,30 +12,34 @@ namespace RoadCaptain.App.Runner.Tests.Unit.Engine
 {
     internal class IconImpl : IWindowIconImpl
     {
-        private Bitmap bitmap;
-        private Icon icon;
+        private readonly Bitmap? _bitmap;
+        private readonly Icon? _icon;
 
         public IconImpl(Bitmap bitmap)
         {
-            this.bitmap = bitmap;
+            _bitmap = bitmap;
         }
 
         public IconImpl(Icon icon)
         {
-            this.icon = icon;
+            _icon = icon;
         }
 
-        public IntPtr HIcon => icon?.Handle ?? bitmap.GetHicon();
+        public IntPtr HIcon => _icon?.Handle ?? _bitmap?.GetHicon() ?? IntPtr.Zero;
 
         public void Save(Stream outputStream)
         {
-            if (icon != null)
+            if (_icon != null)
             {
-                icon.Save(outputStream);
+                _icon.Save(outputStream);
+            }
+            else if(_bitmap != null)
+            {
+                _bitmap.Save(outputStream, ImageFormat.Png);
             }
             else
             {
-                bitmap.Save(outputStream, ImageFormat.Png);
+                throw new InvalidOperationException("No icon or bitmap available to save");
             }
         }
     }

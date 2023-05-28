@@ -9,6 +9,7 @@ using Avalonia.Threading;
 using FluentAssertions;
 using RoadCaptain.Adapters;
 using RoadCaptain.App.Runner.Models;
+using RoadCaptain.App.Runner.Tests.Unit.ViewModels;
 using RoadCaptain.App.Runner.ViewModels;
 using RoadCaptain.App.Runner.Views;
 using RoadCaptain.App.Shared;
@@ -47,7 +48,7 @@ namespace RoadCaptain.App.Runner.Tests.Unit.Views
                 Route = route
             };
 
-            var viewModel = new InGameNavigationWindowViewModel(model, segments, null, null, null);
+            var viewModel = new InGameNavigationWindowViewModel(model, segments, new NopGameConnection(), new NopMonitoringEvents(), new StubWindowService());
             var monitoringEvents = new NopMonitoringEvents();
             var window =
                 new InGameNavigationWindow(new InMemoryGameStateDispatcher(monitoringEvents, new PlatformPaths()), monitoringEvents, new DummyUserPreferences())
@@ -111,7 +112,7 @@ namespace RoadCaptain.App.Runner.Tests.Unit.Views
                 Route = route
             };
 
-            var viewModel = new InGameNavigationWindowViewModel(model, segments, null, null, null);
+            var viewModel = new InGameNavigationWindowViewModel(model, segments, new NopGameConnection(), new NopMonitoringEvents(), new StubWindowService());
             var monitoringEvents = new NopMonitoringEvents();
             var window =
                 new InGameNavigationWindow(new InMemoryGameStateDispatcher(monitoringEvents, new PlatformPaths()), monitoringEvents, new DummyUserPreferences())
@@ -138,7 +139,8 @@ namespace RoadCaptain.App.Runner.Tests.Unit.Views
             Dispatcher.UIThread.InvokeAsync(() => { }, DispatcherPriority.SystemIdle);
             
             var windowContent = (window.Content as Grid);
-            TryScreenshotToClipboardAsync(windowContent).GetAwaiter().GetResult();
+            windowContent.Should().NotBeNull();
+            TryScreenshotToClipboardAsync(windowContent!).GetAwaiter().GetResult();
             var secondRow = (windowContent.FindControl<Grid>("Placeholder"));
 
             secondRow
@@ -181,7 +183,7 @@ namespace RoadCaptain.App.Runner.Tests.Unit.Views
                 Route = route
             };
 
-            var viewModel = new InGameNavigationWindowViewModel(model, segments, null, null, null);
+            var viewModel = new InGameNavigationWindowViewModel(model, segments, new NopGameConnection(), new NopMonitoringEvents(), new StubWindowService());
             var monitoringEvents = new NopMonitoringEvents();
             var window =
                 new InGameNavigationWindow(new InMemoryGameStateDispatcher(monitoringEvents, new PlatformPaths()), monitoringEvents, new DummyUserPreferences())
@@ -211,7 +213,8 @@ namespace RoadCaptain.App.Runner.Tests.Unit.Views
             Dispatcher.UIThread.InvokeAsync(() => { }, DispatcherPriority.SystemIdle);
             
             var windowContent = (window.Content as Grid);
-            TryScreenshotToClipboardAsync(windowContent).GetAwaiter().GetResult();
+            windowContent.Should().NotBeNull();
+            TryScreenshotToClipboardAsync(windowContent!).GetAwaiter().GetResult();
             var secondRow = (windowContent.FindControl<StackPanel>("FinishFlag"));
 
             secondRow
@@ -254,7 +257,7 @@ namespace RoadCaptain.App.Runner.Tests.Unit.Views
                 Route = route
             };
 
-            var viewModel = new InGameNavigationWindowViewModel(model, segments, null, null, null);
+            var viewModel = new InGameNavigationWindowViewModel(model, segments, new NopGameConnection(), new NopMonitoringEvents(), new StubWindowService());
             var monitoringEvents = new NopMonitoringEvents();
             var window =
                 new InGameNavigationWindow(new InMemoryGameStateDispatcher(monitoringEvents, new PlatformPaths()), monitoringEvents, new DummyUserPreferences())
@@ -282,7 +285,8 @@ namespace RoadCaptain.App.Runner.Tests.Unit.Views
             Dispatcher.UIThread.InvokeAsync(() => { }, DispatcherPriority.SystemIdle);
             
             var windowContent = (window.Content as Grid);
-            TryScreenshotToClipboardAsync(windowContent).GetAwaiter().GetResult();
+            windowContent.Should().NotBeNull();
+            TryScreenshotToClipboardAsync(windowContent!).GetAwaiter().GetResult();
             var secondRow = (windowContent.FindControl<StackPanel>("FinishFlag"));
 
             secondRow

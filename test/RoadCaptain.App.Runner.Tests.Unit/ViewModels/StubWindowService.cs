@@ -15,8 +15,8 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels
 {
     public class StubWindowService : IWindowService
     {
-        public string OpenFileDialogResult { get; set; }
-        public TokenResponse LogInDialogResult { get; set; }
+        public string? OpenFileDialogResult { get; set; }
+        public TokenResponse? LogInDialogResult { get; set; }
         public int OpenFileDialogInvocations { get; private set; }
         public int LogInDialogInvocations { get; private set; }
         public int MainWindowInvocations { get; private set; }

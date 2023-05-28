@@ -185,7 +185,7 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.MainWindow
                 new StubWindowService(),
                 _gameStateDispatcher,
                 routeStore,
-                null,
+                new StubVersionChecker(),
                 new SegmentStore(),
                 _credentialCache,
                 new NopMonitoringEvents(),
@@ -196,7 +196,7 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.MainWindow
             return mainWindowViewModel;
         }
 
-        private GameState GetFirstDispatchedGameState()
+        private GameState? GetFirstDispatchedGameState()
         {
             // This method is meant to collect the first game
             // state update that is sent through the dispatcher.
@@ -205,7 +205,7 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.MainWindow
             // that first game state dispatch call without having
             // to do Thread.Sleep() calls.
 
-            GameState lastState = null;
+            GameState? lastState = null;
 
             // Use a cancellation token with a time-out so that
             // the test fails if no game state is dispatched.

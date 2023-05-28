@@ -38,7 +38,7 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.MainWindow
                 _windowService,
                 _gameStateDispatcher,
                 routeStore,
-                null, 
+                new StubVersionChecker(), 
                 new SegmentStore(),
                 new NoZwiftCredentialCache(),
                 new NopMonitoringEvents(),

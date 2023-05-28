@@ -15,7 +15,7 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.MainWindow
 {
     public class WhenUpdatingMainWindowViewModel
     {
-        private static InMemoryGameStateDispatcher _gameStateDispatcher;
+        private readonly InMemoryGameStateDispatcher _gameStateDispatcher;
         private readonly MainWindowViewModel _viewModel;
 
         public WhenUpdatingMainWindowViewModel()
@@ -27,7 +27,7 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.MainWindow
                 new StubWindowService(),
                 _gameStateDispatcher,
                 routeStore,
-                null, 
+                new StubVersionChecker(), 
                 new SegmentStore(),
                 new NoZwiftCredentialCache(),
                 new NopMonitoringEvents(),
@@ -39,7 +39,7 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.MainWindow
         {
             GivenLoggedInUser();
 
-            _viewModel.UpdateGameState(new InvalidCredentialsState(null));
+            _viewModel.UpdateGameState(new InvalidCredentialsState(new Exception("BANG")));
 
             _viewModel
                 .LoggedInToZwift
@@ -52,7 +52,7 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.MainWindow
         {
             GivenLoggedInUser();
 
-            _viewModel.UpdateGameState(new InvalidCredentialsState(null));
+            _viewModel.UpdateGameState(new InvalidCredentialsState(new Exception("BANG")));
 
             _viewModel
                 .ZwiftAccessToken
@@ -65,7 +65,7 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.MainWindow
         {
             GivenLoggedInUser();
 
-            _viewModel.UpdateGameState(new InvalidCredentialsState(null));
+            _viewModel.UpdateGameState(new InvalidCredentialsState(new Exception("BANG")));
 
             _viewModel
                 .ZwiftAvatarUri
@@ -78,7 +78,7 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.MainWindow
         {
             GivenLoggedInUser();
 
-            _viewModel.UpdateGameState(new InvalidCredentialsState(null));
+            _viewModel.UpdateGameState(new InvalidCredentialsState(new Exception("BANG")));
 
             _viewModel
                 .ZwiftName
@@ -94,7 +94,7 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.MainWindow
             _viewModel.ZwiftAvatarUri = "avatar";
         }
         
-        private GameState GetFirstDispatchedGameState()
+        private GameState? GetFirstDispatchedGameState()
         {
             // This method is meant to collect the first game
             // state update that is sent through the dispatcher.
@@ -103,7 +103,7 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.MainWindow
             // that first game state dispatch call without having
             // to do Thread.Sleep() calls.
 
-            GameState lastState = null;
+            GameState? lastState = null;
 
             // Use a cancellation token with a time-out so that
             // the test fails if no game state is dispatched.
