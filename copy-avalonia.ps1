@@ -1,3 +1,6 @@
+# Copyright (c) 2023 Sander van Vliet
+# Licensed under Artistic License 2.0
+# See LICENSE or https://choosealicense.com/licenses/artistic-2.0/
 $dlls = Get-ChildItem -Filter Avalonia*.dll "C:\git\Avalonia\samples\ControlCatalog.Desktop\bin\Debug\net461"
 
 $dllTargetDir = "c:\git\RoadCaptain\vendor\AvaloniaUI"
