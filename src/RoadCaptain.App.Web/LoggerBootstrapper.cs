@@ -31,9 +31,14 @@ namespace RoadCaptain.App.Web
                 loggerConfiguration = loggerConfiguration
                     .WriteTo.Debug(LogEventLevel.Debug);
             }
+            else
+            {
+                loggerConfiguration = loggerConfiguration
+                    .WriteTo.File(logFilePath, LogEventLevel.Debug);
+            }
 
             return loggerConfiguration
-                .WriteTo.File(logFilePath, LogEventLevel.Debug)
+                
                 .CreateLogger();
         }
 
