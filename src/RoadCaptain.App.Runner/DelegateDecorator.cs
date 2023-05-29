@@ -83,6 +83,11 @@ namespace RoadCaptain.App.Runner
             InvokeIfNeeded(() => _decorated.ToggleElevationPlot(plannedRoute, show));
         }
 
+        public Task<RouteModel?> ShowSelectRouteDialog()
+        {
+            return InvokeIfNeededAsync(() => _decorated.ShowSelectRouteDialog());
+        }
+
         private async Task<TResult> InvokeIfNeededAsync<TResult>(Func<Task<TResult>> action)
         {
             if (!_dispatcher.CheckAccess())

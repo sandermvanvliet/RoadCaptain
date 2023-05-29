@@ -38,7 +38,7 @@ namespace RoadCaptain.App.Runner.ViewModels
         private readonly IRouteStore _routeStore;
         private string _version = "0.0.0.0";
         private string? _changelogUri;
-        private RouteModel? _route = new();
+        private Models.RouteModel? _route = new();
         private readonly IVersionChecker _versionChecker;
         private readonly ISegmentStore _segmentStore;
         private bool _haveCheckedVersion;
@@ -99,7 +99,7 @@ namespace RoadCaptain.App.Runner.ViewModels
                 {
                     await _windowService.ShowErrorDialog(result.Message);
                     // Clear the current route
-                    Route = new RouteModel();
+                    Route = new Models.RouteModel();
                 });
 
             LogInCommand = new AsyncRelayCommand(
@@ -150,7 +150,7 @@ namespace RoadCaptain.App.Runner.ViewModels
 
                 WindowTitle = $"RoadCaptain - {routeFileName}";
 
-                Route = RouteModel.From(
+                Route = Models.RouteModel.From(
                     plannedRoute,
                     _segmentStore.LoadSegments(
                         plannedRoute.World,
@@ -305,7 +305,7 @@ namespace RoadCaptain.App.Runner.ViewModels
             }
         }
 
-        public RouteModel? Route
+        public Models.RouteModel? Route
         {
             get => _route;
             set
@@ -426,11 +426,11 @@ namespace RoadCaptain.App.Runner.ViewModels
 
         private async Task<CommandResult> LoadRoute()
         {
-            var fileName = await _windowService.ShowOpenFileDialog(_userPreferences.LastUsedFolder);
+            var routeModel = await _windowService.ShowSelectRouteDialog();
 
-            if (!string.IsNullOrEmpty(fileName))
+            if(routeModel != null)
             {
-                LoadRouteFromPath(fileName);
+                //LoadRouteFromPath(routeModel);
             }
 
             return CommandResult.Success();

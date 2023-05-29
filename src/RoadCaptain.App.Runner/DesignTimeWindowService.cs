@@ -71,5 +71,10 @@ namespace RoadCaptain.App.Runner
         {
             throw new System.NotImplementedException();
         }
+
+        public Task<RouteModel?> ShowSelectRouteDialog()
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

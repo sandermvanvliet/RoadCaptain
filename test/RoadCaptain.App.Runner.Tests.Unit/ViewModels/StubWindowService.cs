@@ -74,6 +74,11 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels
             throw new NotImplementedException();
         }
 
+        public Task<RouteModel?> ShowSelectRouteDialog()
+        {
+            throw new NotImplementedException();
+        }
+
         public Task<string?> ShowOpenFileDialog(string? previousLocation)
         {
             OpenFileDialogInvocations++;

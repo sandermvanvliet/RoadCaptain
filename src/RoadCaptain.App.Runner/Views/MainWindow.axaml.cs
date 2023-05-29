@@ -12,7 +12,6 @@ using Avalonia.Interactivity;
 using Avalonia.Skia;
 using Avalonia.Threading;
 using Codenizer.Avalonia.Map;
-using RoadCaptain.App.Runner.Models;
 using RoadCaptain.App.Runner.ViewModels;
 using RoadCaptain.App.Shared.Controls;
 using RoadCaptain.Ports;
@@ -48,18 +47,13 @@ namespace RoadCaptain.App.Runner.Views
             _monitoringEvents = monitoringEvents;
             _viewModel.PropertyChanged += (_, args) =>
             {
-                if (args.PropertyName == nameof(_viewModel.RoutePath) && !string.IsNullOrEmpty(_viewModel.RoutePath))
-                {
-                    RebelRouteCombo.SelectedItem = null;
-                }
-
                 if (args.PropertyName == nameof(MainWindowViewModel.Route))
                 {
                     ShowRouteOnMap(viewModel.Route);
                 }
             };
 
-            gameStateReceiver.ReceiveRoute(route => viewModel.Route = RouteModel.From(route, _segmentStore.LoadSegments(route.World, route.Sport), _segmentStore.LoadMarkers(route.World)));
+            gameStateReceiver.ReceiveRoute(route => viewModel.Route = Models.RouteModel.From(route, _segmentStore.LoadSegments(route.World, route.Sport), _segmentStore.LoadMarkers(route.World)));
             gameStateReceiver.ReceiveGameState(viewModel.UpdateGameState);
 
             _animationTimer = new Timer(100);
@@ -79,25 +73,6 @@ namespace RoadCaptain.App.Runner.Views
         private void CloseButton_Click(object? sender, RoutedEventArgs e)
         {
             Close();
-        }
-
-        private void Selector_OnSelectionChanged(object? sender, SelectionChangedEventArgs e)
-        {
-            var comboBox = sender as ComboBox;
-
-            if (comboBox?.SelectedItem != null)
-            {
-                _viewModel.RoutePath = null;
-
-                if (comboBox.SelectedItem is PlannedRoute { World: { } } selectedRoute)
-                {
-                    _viewModel.Route = RouteModel.From(selectedRoute, _segmentStore.LoadSegments(selectedRoute.World, selectedRoute.Sport), _segmentStore.LoadMarkers(selectedRoute.World));
-                }
-                else
-                {
-                    _viewModel.Route = new RouteModel();
-                }
-            }
         }
 
         private void WindowBase_OnActivated(object? sender, EventArgs e)
@@ -120,15 +95,7 @@ namespace RoadCaptain.App.Runner.Views
             }
         }
 
-        private void RebelRouteCombo_OnPointerPressed(object? sender, PointerPressedEventArgs e)
-        {
-            // This prevents the situation where the PointerPressed event bubbles
-            // up to the window and initiates the window drag operation.
-            // It fixes a bug where the combo box can't be opened.
-            e.Handled = true;
-        }
-
-        private void ShowRouteOnMap(RouteModel? route)
+        private void ShowRouteOnMap(Models.RouteModel? route)
         {
             _animationTimer.Stop();
             

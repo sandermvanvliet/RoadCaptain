@@ -91,6 +91,34 @@ namespace RoadCaptain.Adapters
                 .RegisterType<MessageEmitterToQueue>()
                 .As<IMessageEmitter>()
                 .SingleInstance();
+
+            builder
+                .RegisterType<HttpRouteRepositorySettings>()
+                .AsSelf()
+                .SingleInstance();
+
+            builder
+                .RegisterType<LocalDirectoryRouteRepositorySettings>()
+                .AsSelf()
+                .SingleInstance();
+
+            builder
+                .Register(componentContext =>
+                {
+                    var settings = componentContext.Resolve<HttpRouteRepositorySettings>();
+                    var httpClient = new HttpClient();
+                    httpClient.BaseAddress = settings.Uri;
+                    return httpClient;
+                })
+                .Named<HttpClient>(nameof(HttpRouteRepository))
+                .SingleInstance();
+            
+            builder
+                .Register(componentContext => new HttpRouteRepository(
+                    componentContext.ResolveNamed<HttpClient>(nameof(HttpRouteRepository)), 
+                    componentContext.Resolve<HttpRouteRepositorySettings>()))
+                .As<IRouteRepository>()
+                .InstancePerLifetimeScope();
         }
 
         private static TestableMessageHandler TestableHandlerForZwiftApiCalls()

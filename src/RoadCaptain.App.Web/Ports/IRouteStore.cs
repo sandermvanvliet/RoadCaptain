@@ -9,7 +9,7 @@ namespace RoadCaptain.App.Web.Ports
 {
     public interface IRouteStore
     {
-        RouteModel[] Search(
+        Models.RouteModel[] Search(
             string? world, 
             string? creator,
             string? name,
@@ -24,10 +24,10 @@ namespace RoadCaptain.App.Web.Ports
             string[]? komSegments,
             string[]? sprintSegments);
 
-        RouteModel? GetById(long id);
+        Models.RouteModel? GetById(long id);
         void Delete(long id);
-        RouteModel Update(long id, UpdateRouteModel updateModel);
-        RouteModel Store(CreateRouteModel createModel, User user);
+        Models.RouteModel Update(long id, UpdateRouteModel updateModel);
+        Models.RouteModel Store(CreateRouteModel createModel, User user);
     }
 }
 

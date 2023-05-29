@@ -4,9 +4,7 @@
 
 using System.Net;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using RoadCaptain.App.Web.Adapters.EntityFramework;
 using RoadCaptain.App.Web.Models;
 using RoadCaptain.App.Web.Ports;
 
@@ -28,7 +26,7 @@ namespace RoadCaptain.App.Web.Controllers
         }
 
         [HttpGet(Name = "GetAllRoutes")]
-        public IEnumerable<RouteModel> GetAll(
+        public IEnumerable<Models.RouteModel> GetAll(
             [FromQuery] string? world, 
             [FromQuery] string? creator,
             [FromQuery] string? name,

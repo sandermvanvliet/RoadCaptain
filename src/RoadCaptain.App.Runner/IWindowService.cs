@@ -24,5 +24,6 @@ namespace RoadCaptain.App.Runner
         void Shutdown(int exitCode);
         Task ShowWhatIsNewDialog(Release release);
         void ToggleElevationPlot(PlannedRoute? plannedRoute, bool? show);
+        Task<RouteModel?> ShowSelectRouteDialog();
     }
 }

@@ -19,7 +19,7 @@ namespace RoadCaptain.App.Web.Adapters
             _roadCaptainDataContext = roadCaptainDataContext;
         }
 
-        public RouteModel[] Search(string? world, string? creator, string? name, string? zwiftRouteName, decimal? minDistance,
+        public Models.RouteModel[] Search(string? world, string? creator, string? name, string? zwiftRouteName, decimal? minDistance,
             decimal? maxDistance, decimal? minAscent, decimal? maxAscent, decimal? minDescent, decimal? maxDescent,
             bool? isLoop, string[]? komSegments, string[]? sprintSegments)
         {
@@ -31,7 +31,7 @@ namespace RoadCaptain.App.Web.Adapters
                 .ToArray();
         }
 
-        public RouteModel? GetById(long id)
+        public Models.RouteModel? GetById(long id)
         {
             var route = _roadCaptainDataContext
                 .Routes
@@ -56,7 +56,7 @@ namespace RoadCaptain.App.Web.Adapters
             }
         }
 
-        public RouteModel Update(long id, UpdateRouteModel updateModel)
+        public Models.RouteModel Update(long id, UpdateRouteModel updateModel)
         {
             var route = _roadCaptainDataContext
                 .Routes
@@ -72,7 +72,7 @@ namespace RoadCaptain.App.Web.Adapters
             return RouteModelFrom(route);
         }
 
-        public RouteModel Store(CreateRouteModel createModel, User user)
+        public Models.RouteModel Store(CreateRouteModel createModel, User user)
         {
             var route = RouteStorageModelFrom(createModel, user);
 
@@ -82,9 +82,9 @@ namespace RoadCaptain.App.Web.Adapters
             return RouteModelFrom(route);
         }
 
-        private static RouteModel RouteModelFrom(Route route)
+        private static Models.RouteModel RouteModelFrom(Route route)
         {
-            return new RouteModel
+            return new Models.RouteModel
             {
                 Id = route.Id,
                 Name = route.Name,

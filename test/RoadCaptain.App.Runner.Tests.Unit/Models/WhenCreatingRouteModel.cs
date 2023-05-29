@@ -52,7 +52,7 @@ namespace RoadCaptain.App.Runner.Tests.Unit.Models
         [Fact]
         public void GivenPlannedRouteIsNull_ModelWithoutRouteIsReturned()
         {
-            var result = RouteModel.From(null, _segments, _markers);
+            var result = Runner.Models.RouteModel.From(null, _segments, _markers);
 
             result
                 .PlannedRoute
@@ -67,7 +67,7 @@ namespace RoadCaptain.App.Runner.Tests.Unit.Models
             plannedRoute.RouteSegmentSequence.Add(new SegmentSequence(segmentId: "seg-1",
                 type: SegmentSequenceType.Regular, direction: SegmentDirection.AtoB, index: 0));
 
-            var result = RouteModel.From(plannedRoute, _segments, _markers);
+            var result = Runner.Models.RouteModel.From(plannedRoute, _segments, _markers);
 
             result
                 .TotalDistance
@@ -82,7 +82,7 @@ namespace RoadCaptain.App.Runner.Tests.Unit.Models
             plannedRoute.RouteSegmentSequence.Add(new SegmentSequence(segmentId: "seg-1",
                 type: SegmentSequenceType.Regular, direction: SegmentDirection.AtoB, index: 0));
 
-            var result = RouteModel.From(plannedRoute, _segments, _markers);
+            var result = Runner.Models.RouteModel.From(plannedRoute, _segments, _markers);
 
             result
                 .TotalAscent
@@ -97,7 +97,7 @@ namespace RoadCaptain.App.Runner.Tests.Unit.Models
             plannedRoute.RouteSegmentSequence.Add(new SegmentSequence(segmentId: "seg-1",
                 type: SegmentSequenceType.Regular, direction: SegmentDirection.AtoB, index: 0));
 
-            var result = RouteModel.From(plannedRoute, _segments, _markers);
+            var result = Runner.Models.RouteModel.From(plannedRoute, _segments, _markers);
 
             result
                 .TotalDescent
@@ -112,7 +112,7 @@ namespace RoadCaptain.App.Runner.Tests.Unit.Models
             plannedRoute.RouteSegmentSequence.Add(new SegmentSequence(segmentId: "seg-1",
                 type: SegmentSequenceType.Regular, direction: SegmentDirection.AtoB, index: 0));
 
-            var result = RouteModel.From(plannedRoute, _segments, _markers);
+            var result = Runner.Models.RouteModel.From(plannedRoute, _segments, _markers);
 
             result
                 .Markers
@@ -128,7 +128,7 @@ namespace RoadCaptain.App.Runner.Tests.Unit.Models
             plannedRoute.RouteSegmentSequence.Add(new SegmentSequence(segmentId: "seg-2",
                 type: SegmentSequenceType.Regular, direction: SegmentDirection.AtoB, index: 0));
 
-            Action action = () => RouteModel.From(plannedRoute, _segments, _markers);
+            Action action = () => Runner.Models.RouteModel.From(plannedRoute, _segments, _markers);
 
             action
                 .Should()
