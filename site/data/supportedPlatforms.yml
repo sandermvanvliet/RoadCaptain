@@ -36,5 +36,5 @@ items:
 content: |
   <h3>Running RoadCaptain on a different machine</h3>
   <p>It is possible to run RoadCaptain on a different machine than where you run Zwift. However, the computer running RoadCaptain and Zwift must be on the same network and must be able to reach each other.<p>
-  <p>RoadCaptain listens on TCP port 21588, you will need to ensure that your firewall allows inbound traffic to this port from your local network.<br />
-  <strong>Warning:</strong> For the safety of your machine, ensure that when you configure your firewall (or when your Operating System asks you to allow traffic on this port) you only allow this for the local network, not public networks or internet.</p>
+  <p>RoadCaptain listens on TCP port 21588, you will need to ensure that your firewall allows inbound traffic to this port from your local network.</p>
+  <p><strong>Attention:</strong> For the safety of your machine, ensure that when you configure your firewall (or when your Operating System asks you to allow traffic on this port) you only allow this for the local network, not public networks or internet.</p>
