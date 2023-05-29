@@ -81,6 +81,8 @@ namespace RoadCaptain.App.Web
                 app.UseSwaggerUI();
             }
 
+            app.UseMiddleware<RequestResponseLoggingMiddleware>();
+
             app.UseAuthentication();
             app.UseAuthorization();
             
