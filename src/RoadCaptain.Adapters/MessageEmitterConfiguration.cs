@@ -10,7 +10,7 @@ namespace RoadCaptain.Adapters
     {
         public MessageEmitterConfiguration(IConfiguration configuration)
         {
-            configuration?.Bind(this);
+            configuration.Bind(this);
         }
 
         /// <summary>
