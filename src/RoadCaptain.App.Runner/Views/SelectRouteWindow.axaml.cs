@@ -6,25 +6,35 @@ using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Avalonia.Threading;
 using RoadCaptain.App.Runner.ViewModels;
+using Serilog.Core;
 
 namespace RoadCaptain.App.Runner.Views
 {
     public partial class SelectRouteWindow : Window
     {
-        private SelectRouteWindowViewModel _viewModel;
-        
+        private readonly SelectRouteWindowViewModel _viewModel;
+        private readonly MonitoringEvents _monitoringEvents;
+        private readonly IWindowService _windowService;
+
         // ReSharper disable once UnusedMember.Global because this constructor only exists for the Avalonia designer
 #pragma warning disable CS8618
         public SelectRouteWindow()
 #pragma warning restore CS8618
         {
+            _monitoringEvents = new MonitoringEventsWithSerilog(Logger.None);
+            _windowService = new DesignTimeWindowService();
             InitializeComponent();
         }
-        
 
-        public SelectRouteWindow(SelectRouteWindowViewModel viewModel)
+
+        public SelectRouteWindow(
+            SelectRouteWindowViewModel viewModel, 
+            MonitoringEvents monitoringEvents,
+            IWindowService windowService)
         {
             _viewModel = viewModel;
+            _monitoringEvents = monitoringEvents;
+            _windowService = windowService;
 
             _viewModel.PropertyChanged += (sender, args) =>
             {
@@ -33,9 +43,9 @@ namespace RoadCaptain.App.Runner.Views
                     SelectedRoute = _viewModel.SelectedRoute?.AsRouteModel();
                 }
             };
-            
+
             DataContext = viewModel;
-            
+
             InitializeComponent();
 #if DEBUG
             this.AttachDevTools();
@@ -53,7 +63,7 @@ namespace RoadCaptain.App.Runner.Views
         {
             Close();
         }
-        
+
         private void WindowBase_OnActivated(object? sender, EventArgs e)
         {
             // Remove event handler to ensure this is only called once
@@ -82,7 +92,6 @@ namespace RoadCaptain.App.Runner.Views
 
         private void RoutesListBox_OnSelectionChanged(object? sender, SelectionChangedEventArgs e)
         {
-            
         }
 
         private async void RepositoryComboBox_OnSelectionChanged(object? sender, SelectionChangedEventArgs e)
@@ -92,10 +101,12 @@ namespace RoadCaptain.App.Runner.Views
                 return;
             }
 
-            if (comboBox.SelectedItem is string selectedValue)
+            if (comboBox.SelectedItem is not string repositoryName)
             {
-                await _viewModel.LoadRoutesForRepositoryAsync(selectedValue);
+                return;
             }
+
+            _viewModel.RefreshRoutesCommand.Execute(repositoryName);
         }
     }
 }

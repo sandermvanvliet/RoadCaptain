@@ -109,6 +109,10 @@
 					<ComboBox Name="RepositoryComboBox" Width="200" VerticalAlignment="Center" Items="{Binding Path=Repositories}"
 					          SelectionChanged="RepositoryComboBox_OnSelectionChanged"
 					          PointerPressed="RoutesListBox_OnPointerPressed"/>
+					<Button Content="🗘" Margin="4,0,0,0" 
+					        IsEnabled="{Binding Path=SelectedItem, ElementName=RepositoryComboBox, Converter={StaticResource NullabilityConverter}}"
+					        Command="{Binding Path=RefreshRoutesCommand}"
+					        CommandParameter="{Binding Path=SelectedItem, ElementName=RepositoryComboBox}"/>
 				</StackPanel>
 				
 				<ListBox Name="RoutesListBox" Grid.Row="1"

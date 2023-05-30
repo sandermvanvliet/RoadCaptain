@@ -8,7 +8,8 @@ namespace RoadCaptain.App.Runner.ViewModels
     {
         public DesignTimeSelectRouteWindowViewModel() : base(
             new SearchRoutesUseCase(new [] { new StubRouteRepository()}),
-            new RetrieveRepositoryNamesUseCase(new [] { new StubRouteRepository()}))
+            new RetrieveRepositoryNamesUseCase(new [] { new StubRouteRepository()}),
+            new DesignTimeWindowService())
         {
             Repositories = new[]
             {
