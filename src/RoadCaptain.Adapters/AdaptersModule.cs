@@ -103,6 +103,8 @@ namespace RoadCaptain.Adapters
                 .SingleInstance();
 
             RegisterRouteRepositories(builder);
+
+            builder.RegisterType<RouteStoreToDisk>().AsSelf();
         }
 
         private void RegisterRouteRepositories(ContainerBuilder builder)
@@ -126,7 +128,7 @@ namespace RoadCaptain.Adapters
                 {
                     var settings = new LocalDirectoryRouteRepositorySettings(childSection);
                     builder
-                        .Register<IRouteRepository>(componentContext => new LocalDirectoryRouteRepository(settings, componentContext.Resolve<MonitoringEvents>()))
+                        .Register<IRouteRepository>(componentContext => new LocalDirectoryRouteRepository(settings, componentContext.Resolve<MonitoringEvents>(), componentContext.Resolve<RouteStoreToDisk>()))
                         .As<IRouteRepository>()
                         .SingleInstance();
                 }
@@ -134,7 +136,7 @@ namespace RoadCaptain.Adapters
                 {
                     var settings = new HttpRouteRepositorySettings(childSection);
                     builder
-                        .Register<IRouteRepository>(_ => new HttpRouteRepository(new HttpClient(), settings))
+                        .Register<IRouteRepository>(componentContext => new HttpRouteRepository(new HttpClient(), settings, componentContext.Resolve<RouteStoreToDisk>()))
                         .As<IRouteRepository>()
                         .SingleInstance();
                 }

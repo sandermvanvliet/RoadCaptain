@@ -1,13 +1,14 @@
 using System.Threading.Tasks;
 using RoadCaptain.Ports;
 using RoadCaptain.UseCases;
+using Serilog.Core;
 
 namespace RoadCaptain.App.Runner.ViewModels
 {
     public class DesignTimeSelectRouteWindowViewModel : SelectRouteWindowViewModel
     {
         public DesignTimeSelectRouteWindowViewModel() : base(
-            new SearchRoutesUseCase(new [] { new StubRouteRepository()}),
+            new SearchRoutesUseCase(new [] { new StubRouteRepository()}, new MonitoringEventsWithSerilog(Logger.None)),
             new RetrieveRepositoryNamesUseCase(new [] { new StubRouteRepository()}),
             new DesignTimeWindowService())
         {

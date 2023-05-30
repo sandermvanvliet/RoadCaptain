@@ -15,7 +15,9 @@ namespace RoadCaptain.UseCases
 
         public string[] Execute()
         {
-            return _routeRepositories.Select(r => r.Name).ToArray();
+            return new [] { "All" }
+                .Concat(_routeRepositories.Select(r => r.Name))
+                .ToArray();
         }
     }
 }

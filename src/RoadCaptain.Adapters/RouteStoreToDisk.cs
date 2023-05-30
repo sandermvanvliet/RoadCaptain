@@ -46,8 +46,14 @@ namespace RoadCaptain.Adapters
             }
 
             var serialized = File.ReadAllText(path);
-            var parsed = JObject.Parse(serialized);
 
+            return DeserializeAndUpgrade(serialized);
+        }
+
+        internal PlannedRoute DeserializeAndUpgrade(string serialized)
+        {
+            var parsed = JObject.Parse(serialized);
+            
             PlannedRoute? plannedRoute;
 
             if (parsed.ContainsKey("version"))

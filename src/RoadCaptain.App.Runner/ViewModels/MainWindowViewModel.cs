@@ -172,7 +172,7 @@ namespace RoadCaptain.App.Runner.ViewModels
         {
             try
             {
-                var plannedRoute = routeModel.AsPlannedRoute();
+                var plannedRoute = routeModel.PlannedRoute;
 
                 RoutePath = routeModel.Uri.ToString();
 

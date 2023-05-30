@@ -10,10 +10,12 @@ namespace RoadCaptain.UseCases
     public class SearchRoutesUseCase
     {
         private readonly IEnumerable<IRouteRepository> _routeRepositories;
+        private readonly MonitoringEvents _monitoringEvents;
 
-        public SearchRoutesUseCase(IEnumerable<IRouteRepository> routeRepositories)
+        public SearchRoutesUseCase(IEnumerable<IRouteRepository> routeRepositories, MonitoringEvents monitoringEvents)
         {
             _routeRepositories = routeRepositories;
+            _monitoringEvents = monitoringEvents;
         }
         
         public async Task<IEnumerable<RouteModel>> ExecuteAsync(SearchRouteCommand command)
@@ -46,9 +48,24 @@ namespace RoadCaptain.UseCases
                 tasks.Add(repository.SearchAsync());
             }
 
-            await Task.WhenAll(tasks);
+            try
+            {
+                await Task.WhenAll(tasks);
+            }
+            catch 
+            {
+                var failedTasks = tasks
+                    .Where(t => t.IsFaulted && t.Exception != null)
+                    .ToArray();
+
+                foreach (var failedTask in failedTasks)
+                {
+                    _monitoringEvents.Error(failedTask.Exception!, "Unable to retrieve routes from repository");
+                }
+            }
 
             return tasks
+                .Where(t => t.IsCompletedSuccessfully)
                 .SelectMany(t => t.Result)
                 .ToArray();
         }
