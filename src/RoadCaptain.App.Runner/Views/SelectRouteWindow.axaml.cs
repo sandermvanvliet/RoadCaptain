@@ -62,6 +62,14 @@ namespace RoadCaptain.App.Runner.Views
             Dispatcher.UIThread.InvokeAsync(() => _viewModel.Initialize());
         }
 
+        private void RoutesListBox_OnPointerPressed(object? sender, PointerPressedEventArgs e)
+        {
+            // This prevents the situation where the PointerPressed event bubbles
+            // up to the window and initiates the window drag operation.
+            // It fixes a bug where the combo box can't be opened.
+            e.Handled = true;
+        }
+
         private void InputElement_OnPointerPressed(object? sender, PointerPressedEventArgs e)
         {
             var currentPoint = e.GetCurrentPoint(this);

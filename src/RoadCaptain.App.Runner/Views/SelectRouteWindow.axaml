@@ -107,7 +107,8 @@
 				<StackPanel Grid.Row="0" Orientation="Horizontal">
 					<TextBlock Text="Repository:" VerticalAlignment="Center" Padding="0,0,8,0" />
 					<ComboBox Name="RepositoryComboBox" Width="200" VerticalAlignment="Center" Items="{Binding Path=Repositories}"
-					          SelectionChanged="RepositoryComboBox_OnSelectionChanged"/>
+					          SelectionChanged="RepositoryComboBox_OnSelectionChanged"
+					          PointerPressed="RoutesListBox_OnPointerPressed"/>
 				</StackPanel>
 				
 				<ListBox Name="RoutesListBox" Grid.Row="1"
