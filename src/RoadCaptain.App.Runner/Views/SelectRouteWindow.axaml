@@ -161,6 +161,10 @@
 										<TextBlock Text="m" FontSize="10" FontWeight="Bold" VerticalAlignment="Bottom" Padding="0,0,0,1.5"/>
 									</StackPanel>
 								</StackPanel>
+								<TextBlock
+									Grid.Row="1"
+									Text="{Binding Path=RepositoryName}"
+								    HorizontalAlignment="Right"/>
 							</Grid>
 						</DataTemplate>
 					</ListBox.ItemTemplate>
@@ -179,7 +183,8 @@
 				        Margin="2,4,4,2" Padding="0,0,4,0"
 				        Width="100"
 				        VerticalAlignment="Center"
-				        Command="{Binding Path=SelectRouteCommand}"/>
+				        Click="CloseButton_Click"
+				        IsEnabled="{Binding Path=SelectedRoute, Converter={StaticResource NullabilityConverter}}"/>
 				<Button Grid.Column="2"
 				        Content="Cancel" HorizontalAlignment="Right"
 				        Margin="2,4,4,2" Padding="0,0,4,0"

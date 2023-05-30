@@ -168,6 +168,48 @@ namespace RoadCaptain.App.Runner.ViewModels
             }
         }
 
+        private void LoadRouteFromRouteModel(RouteModel routeModel)
+        {
+            try
+            {
+                var plannedRoute = routeModel.AsPlannedRoute();
+
+                RoutePath = routeModel.Uri.ToString();
+
+                _userPreferences.LastUsedFolder = Path.GetDirectoryName(RoutePath);
+                _userPreferences.Save();
+
+                var routeFileName = RoutePath;
+
+                try
+                {
+                    routeFileName = Path.GetFileName(routeFileName);
+                }
+                catch
+                {
+                    /* nop */
+                }
+
+                WindowTitle = $"RoadCaptain - {routeFileName}";
+
+                Route = Models.RouteModel.From(
+                    plannedRoute,
+                    _segmentStore.LoadSegments(
+                        plannedRoute.World,
+                        plannedRoute.Sport),
+                    _segmentStore.LoadMarkers(plannedRoute.World));
+
+                _gameStateDispatcher.RouteSelected(Route!.PlannedRoute);
+            }
+            catch (FileNotFoundException)
+            {
+            }
+            catch (InvalidOperationException)
+            {
+                // Route created with newer version or something similar
+            }
+        }
+
         private List<PlannedRoute> LoadRebelRoutes()
         {
             return Directory
@@ -430,7 +472,7 @@ namespace RoadCaptain.App.Runner.ViewModels
 
             if(routeModel != null)
             {
-                //LoadRouteFromPath(routeModel);
+                LoadRouteFromRouteModel(routeModel);
             }
 
             return CommandResult.Success();

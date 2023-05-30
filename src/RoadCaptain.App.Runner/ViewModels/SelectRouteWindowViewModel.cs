@@ -15,7 +15,6 @@ namespace RoadCaptain.App.Runner.ViewModels
         private RouteViewModel[] _routes = Array.Empty<RouteViewModel>();
         private string[] _repositories = Array.Empty<string>();
         private RouteViewModel? _selectedRoute;
-        private readonly IWindowService _windowService;
 
         public SelectRouteWindowViewModel(
             SearchRoutesUseCase useCase,
@@ -23,17 +22,17 @@ namespace RoadCaptain.App.Runner.ViewModels
         {
             _useCase = useCase;
             _retrieveRepositoryNamesUseCase = retrieveRepositoryNamesUseCase;
-            _windowService = windowService;
 
             RefreshRoutesCommand =
                 new AsyncRelayCommand(
                         async parameter => await LoadRoutesForRepositoryAsync(parameter as string ?? "(unknown)"),
                         _ => true)
-                    .OnFailure (async _ =>
+                    .OnFailure(async _ =>
                     {
-                        await _windowService.ShowErrorDialog(_.Message);
+                        await windowService.ShowErrorDialog(_.Message);
                         Routes = Array.Empty<RouteViewModel>();
-                    });
+                    })
+                    .OnSuccess(_ => SelectedRoute = null);
         }
 
         public AsyncRelayCommand RefreshRoutesCommand { get; }

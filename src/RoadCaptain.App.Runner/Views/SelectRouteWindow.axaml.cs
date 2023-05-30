@@ -36,14 +36,6 @@ namespace RoadCaptain.App.Runner.Views
             _monitoringEvents = monitoringEvents;
             _windowService = windowService;
 
-            _viewModel.PropertyChanged += (sender, args) =>
-            {
-                if (args.PropertyName == nameof(SelectRouteWindowViewModel.SelectedRoute))
-                {
-                    SelectedRoute = _viewModel.SelectedRoute?.AsRouteModel();
-                }
-            };
-
             DataContext = viewModel;
 
             InitializeComponent();
@@ -52,7 +44,7 @@ namespace RoadCaptain.App.Runner.Views
 #endif
         }
 
-        public RouteModel? SelectedRoute { get; set; }
+        public RouteModel? SelectedRoute => _viewModel.SelectedRoute?.AsRouteModel();
 
         private void InitializeComponent()
         {
@@ -92,6 +84,12 @@ namespace RoadCaptain.App.Runner.Views
 
         private void RoutesListBox_OnSelectionChanged(object? sender, SelectionChangedEventArgs e)
         {
+            if (sender is not ListBox listBox)
+            {
+                return;
+            }
+
+            _viewModel.SelectedRoute = listBox.SelectedItem as RouteViewModel;
         }
 
         private async void RepositoryComboBox_OnSelectionChanged(object? sender, SelectionChangedEventArgs e)
