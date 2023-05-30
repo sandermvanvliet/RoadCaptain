@@ -45,7 +45,8 @@ namespace RoadCaptain.Adapters
                 .Except<IZwiftGameConnection>()
                 .Except<IZwiftCrypto>()
                 .Except<HttpRouteRepository>()
-                .Except<LocalDirectoryRouteRepository>();
+                .Except<LocalDirectoryRouteRepository>()
+                .Except<RebelRouteRepository>();
 
             builder.RegisterType<MessageEmitterConfiguration>().AsSelf();
             builder.RegisterType<ZwiftCrypto>().As<IZwiftCrypto>().SingleInstance();
@@ -137,6 +138,13 @@ namespace RoadCaptain.Adapters
                     var settings = new HttpRouteRepositorySettings(childSection);
                     builder
                         .Register<IRouteRepository>(componentContext => new HttpRouteRepository(new HttpClient(), settings, componentContext.Resolve<RouteStoreToDisk>()))
+                        .As<IRouteRepository>()
+                        .SingleInstance();
+                }
+                else if ("rebel".Equals(repositoryType, StringComparison.InvariantCultureIgnoreCase))
+                {
+                    builder
+                        .RegisterType<RebelRouteRepository>()
                         .As<IRouteRepository>()
                         .SingleInstance();
                 }
