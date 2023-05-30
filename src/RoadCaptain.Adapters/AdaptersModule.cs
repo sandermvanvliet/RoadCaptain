@@ -7,12 +7,20 @@ using System.Net;
 using System.Net.Http;
 using Autofac;
 using Codenizer.HttpClient.Testable;
+using Microsoft.Extensions.Configuration;
 using RoadCaptain.Ports;
 
 namespace RoadCaptain.Adapters
 {
     public class AdaptersModule : Module
     {
+        private readonly IConfiguration _configuration;
+
+        public AdaptersModule(IConfiguration configuration)
+        {
+            _configuration = configuration;
+        }
+        
         /// <summary>
         ///     Where to read packets from. Can be 'socket' or 'file'
         /// </summary>
@@ -35,7 +43,9 @@ namespace RoadCaptain.Adapters
                 .Except<IGameStateDispatcher>()
                 .Except<IGameStateReceiver>()
                 .Except<IZwiftGameConnection>()
-                .Except<IZwiftCrypto>();
+                .Except<IZwiftCrypto>()
+                .Except<HttpRouteRepository>()
+                .Except<LocalDirectoryRouteRepository>();
 
             builder.RegisterType<MessageEmitterConfiguration>().AsSelf();
             builder.RegisterType<ZwiftCrypto>().As<IZwiftCrypto>().SingleInstance();
@@ -92,33 +102,38 @@ namespace RoadCaptain.Adapters
                 .As<IMessageEmitter>()
                 .SingleInstance();
 
-            builder
-                .RegisterType<HttpRouteRepositorySettings>()
-                .AsSelf()
-                .SingleInstance();
+            RegisterRouteRepositories(builder);
+        }
 
-            builder
-                .RegisterType<LocalDirectoryRouteRepositorySettings>()
-                .AsSelf()
-                .SingleInstance();
+        private void RegisterRouteRepositories(ContainerBuilder builder)
+        {
+            var section = _configuration.GetRequiredSection("RouteRepositories");
 
-            builder
-                .Register(componentContext =>
+            foreach (var childSection in section.GetChildren())
+            {
+                var repositoryType = childSection["type"];
+                if (string.IsNullOrEmpty(repositoryType))
                 {
-                    var settings = componentContext.Resolve<HttpRouteRepositorySettings>();
-                    var httpClient = new HttpClient();
-                    httpClient.BaseAddress = settings.Uri;
-                    return httpClient;
-                })
-                .Named<HttpClient>(nameof(HttpRouteRepository))
-                .SingleInstance();
-            
-            builder
-                .Register(componentContext => new HttpRouteRepository(
-                    componentContext.ResolveNamed<HttpClient>(nameof(HttpRouteRepository)), 
-                    componentContext.Resolve<HttpRouteRepositorySettings>()))
-                .As<IRouteRepository>()
-                .InstancePerLifetimeScope();
+                    continue;
+                }
+
+                if ("local".Equals(repositoryType, StringComparison.InvariantCultureIgnoreCase))
+                {
+                    var settings = new LocalDirectoryRouteRepositorySettings(childSection);
+                    builder
+                        .Register<IRouteRepository>(componentContext => new LocalDirectoryRouteRepository(settings, componentContext.Resolve<MonitoringEvents>()))
+                        .As<IRouteRepository>()
+                        .SingleInstance();
+                }
+                else if ("http".Equals(repositoryType, StringComparison.InvariantCultureIgnoreCase))
+                {
+                    var settings = new HttpRouteRepositorySettings(childSection);
+                    builder
+                        .Register<IRouteRepository>(_ => new HttpRouteRepository(new HttpClient(), settings))
+                        .As<IRouteRepository>()
+                        .SingleInstance();
+                }
+            }
         }
 
         private static TestableMessageHandler TestableHandlerForZwiftApiCalls()

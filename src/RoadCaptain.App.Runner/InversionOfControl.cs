@@ -25,7 +25,7 @@ namespace RoadCaptain.App.Runner
             builder.RegisterType<Configuration>().AsSelf().SingleInstance();
 
             builder.RegisterModule<DomainModule>();
-            builder.RegisterModule<AdaptersModule>();
+            builder.RegisterModule(new AdaptersModule(configuration));
             builder.RegisterModule<SharedModule>();
 
             builder.RegisterModule<MainModule>();

@@ -21,7 +21,7 @@ namespace RoadCaptain.App.RouteBuilder
             builder.Register<IConfiguration>(_ => configuration).SingleInstance();
 
             builder.RegisterModule<DomainModule>();
-            builder.RegisterModule<AdaptersModule>();
+            builder.RegisterModule(new AdaptersModule(configuration));
             builder.RegisterModule<SharedModule>();
 
             builder.RegisterModule<MainModule>();

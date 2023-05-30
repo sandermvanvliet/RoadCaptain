@@ -15,7 +15,7 @@ namespace RoadCaptain.App.Web
             builder.Register(_ => configuration).SingleInstance();
 
             builder.RegisterModule<DomainModule>();
-            builder.RegisterModule<AdaptersModule>();
+            builder.RegisterModule(new AdaptersModule(configuration));
             builder.RegisterModule<MainModule>();
         }
     }
