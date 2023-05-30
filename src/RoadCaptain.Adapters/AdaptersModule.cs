@@ -107,7 +107,12 @@ namespace RoadCaptain.Adapters
 
         private void RegisterRouteRepositories(ContainerBuilder builder)
         {
-            var section = _configuration.GetRequiredSection("RouteRepositories");
+            var section = _configuration.GetSection("RouteRepositories");
+
+            if (section == null || !section.Exists())
+            {
+                return;
+            }
 
             foreach (var childSection in section.GetChildren())
             {
