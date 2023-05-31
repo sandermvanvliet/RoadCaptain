@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using ReactiveUI;
 using RoadCaptain.App.Shared.Commands;
 using RoadCaptain.Commands;
+using RoadCaptain.Ports;
 using RoadCaptain.UseCases;
 
 namespace RoadCaptain.App.Runner.ViewModels
@@ -12,34 +13,44 @@ namespace RoadCaptain.App.Runner.ViewModels
     {
         private readonly SearchRoutesUseCase _useCase;
         private readonly RetrieveRepositoryNamesUseCase _retrieveRepositoryNamesUseCase;
+        private readonly IWindowService _windowService;
+        private readonly IWorldStore _worldStore;
         private RouteViewModel[] _routes = Array.Empty<RouteViewModel>();
         private string[] _repositories = Array.Empty<string>();
         private RouteViewModel? _selectedRoute;
+        private World[] _availableWorlds = Array.Empty<World>();
+        private World? _filterWorld;
 
-        public SelectRouteWindowViewModel(
-            SearchRoutesUseCase useCase,
-            RetrieveRepositoryNamesUseCase retrieveRepositoryNamesUseCase, IWindowService windowService)
+        public SelectRouteWindowViewModel(SearchRoutesUseCase useCase,
+            RetrieveRepositoryNamesUseCase retrieveRepositoryNamesUseCase,
+            IWindowService windowService, IWorldStore worldStore)
         {
             _useCase = useCase;
             _retrieveRepositoryNamesUseCase = retrieveRepositoryNamesUseCase;
-
-            RefreshRoutesCommand =
-                new AsyncRelayCommand(
-                        async parameter => await LoadRoutesForRepositoryAsync(parameter as string ?? "(unknown)"),
-                        _ => true)
-                    .OnFailure(async _ =>
-                    {
-                        await windowService.ShowErrorDialog(_.Message);
-                        Routes = Array.Empty<RouteViewModel>();
-                    })
-                    .OnSuccess(_ => SelectedRoute = null);
+            _windowService = windowService;
+            _worldStore = worldStore;
         }
 
-        public AsyncRelayCommand RefreshRoutesCommand { get; }
+        public AsyncRelayCommand RefreshRoutesCommand => new AsyncRelayCommand(
+                async parameter => await LoadRoutesForRepositoryAsync(parameter as string ?? "(unknown)"),
+                _ => true)
+            .OnFailure(async _ =>
+            {
+                await _windowService.ShowErrorDialog(_.Message);
+                Routes = Array.Empty<RouteViewModel>();
+            })
+            .OnSuccess(_ => SelectedRoute = null);
+
+        public string WindowTitle => "RoadCaptain - Route selection";
 
         public void Initialize()
         {
             Repositories = _retrieveRepositoryNamesUseCase.Execute();
+            var allWorlds = new World { Id = "all", Name = "All" };
+            AvailableWorlds = new[] { allWorlds }
+                .Concat(_worldStore.LoadWorlds())
+                .ToArray();
+            FilterWorld = allWorlds;
         }
 
         public RouteViewModel[] Routes
@@ -86,6 +97,38 @@ namespace RoadCaptain.App.Runner.ViewModels
 
                 _selectedRoute = value;
 
+                this.RaisePropertyChanged();
+            }
+        }
+
+        public World[] AvailableWorlds
+        {
+            get => _availableWorlds;
+            set
+            {
+                if (value == _availableWorlds)
+                {
+                    return;
+                }
+                
+                _availableWorlds = value;
+
+                this.RaisePropertyChanged();
+            }
+        }
+
+        public World? FilterWorld
+        {
+            get => _filterWorld;
+            set
+            {
+                if (value == _filterWorld)
+                {
+                    return;
+                }
+                
+                _filterWorld = value;
+                
                 this.RaisePropertyChanged();
             }
         }

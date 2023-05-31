@@ -10,13 +10,30 @@ namespace RoadCaptain.App.Runner.ViewModels
         public DesignTimeSelectRouteWindowViewModel() : base(
             new SearchRoutesUseCase(new [] { new StubRouteRepository()}, new MonitoringEventsWithSerilog(Logger.None)),
             new RetrieveRepositoryNamesUseCase(new [] { new StubRouteRepository()}),
-            new DesignTimeWindowService())
+            new DesignTimeWindowService(), new StubWorldStore())
         {
             Repositories = new[]
             {
                 "All",
                 "Local"
             };
+        }
+    }
+
+    public class StubWorldStore : IWorldStore
+    {
+        public World[] LoadWorlds()
+        {
+            return new[]
+            {
+                new World { Id = "watopia", Name = "Watopia" },
+                new World { Id = "makuri_islands", Name = "Makuri Islands" },
+            };
+        }
+
+        public World? LoadWorldById(string id)
+        {
+            return null;
         }
     }
 

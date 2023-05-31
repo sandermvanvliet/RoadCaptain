@@ -58,6 +58,17 @@
 			<Setter Property="TextTrimming" Value="CharacterEllipsis" />
 			<Setter Property="Padding" Value="4,0,0,0" />
 		</Style>
+		<Style Selector="TextBlock.filterLabel">
+			<Setter Property="Width" Value="100" />
+			<Setter Property="HorizontalAlignment" Value="Left" />
+			<Setter Property="VerticalAlignment" Value="Center" />
+			<Setter Property="Padding" Value="0,0,4,0" />
+		</Style>
+		<Style Selector="TextBox.filterInput, ComboBox.filterInput">
+			<Setter Property="HorizontalAlignment" Value="Left" />
+			<Setter Property="VerticalAlignment" Value="Center" />
+			<Setter Property="Margin" Value="4,0,4,0" />
+		</Style>
 	</Window.Styles>
 	<Window.Resources>
 		<converters:BooleanConverter x:Key="BooleanConverter" />
@@ -100,20 +111,45 @@
 			<!-- -->
 			<Grid Grid.Row="1">
 				<Grid.RowDefinitions>
-					<RowDefinition Height="40" />
+					<RowDefinition Height="120" />
 					<RowDefinition Height="*" />
 				</Grid.RowDefinitions>
 				
-				<StackPanel Grid.Row="0" Orientation="Horizontal">
-					<TextBlock Text="Repository:" VerticalAlignment="Center" Padding="0,0,8,0" />
-					<ComboBox Name="RepositoryComboBox" Width="200" VerticalAlignment="Center" Items="{Binding Path=Repositories}"
-					          SelectionChanged="RepositoryComboBox_OnSelectionChanged"
-					          PointerPressed="RoutesListBox_OnPointerPressed"/>
-					<Button Content="🗘" Margin="4,0,0,0" 
-					        IsEnabled="{Binding Path=SelectedItem, ElementName=RepositoryComboBox, Converter={StaticResource NullabilityConverter}}"
-					        Command="{Binding Path=RefreshRoutesCommand}"
-					        CommandParameter="{Binding Path=SelectedItem, ElementName=RepositoryComboBox}"/>
-				</StackPanel>
+				<Grid Grid.Row="0" HorizontalAlignment="Stretch">
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="*" />
+						<ColumnDefinition Width="234" />
+					</Grid.ColumnDefinitions>
+					<Grid.RowDefinitions>
+						<RowDefinition Height="34" />
+						<RowDefinition Height="34" />
+						<RowDefinition Height="34" />
+						<RowDefinition Height="34" />
+					</Grid.RowDefinitions>
+					
+					<ComboBox Grid.Column="0" Grid.Row="0" Name="World" Classes="filterInput" Width="140" Items="{Binding Path=AvailableWorlds}"
+					          PointerPressed="RoutesListBox_OnPointerPressed"
+					          SelectedItem="{Binding Path=FilterWorld}">
+						<ComboBox.ItemTemplate>
+							<DataTemplate>
+								<TextBlock Text="{Binding Path=Name}" />
+							</DataTemplate>
+						</ComboBox.ItemTemplate>
+					</ComboBox>
+					<TextBox Grid.Column="0" Grid.Row="1" Name="RouteName" Classes="filterInput" Watermark="Route name" Width="300" />
+					<TextBox Grid.Column="0" Grid.Row="2" Name="Creator" Classes="filterInput" Watermark="Creator name" Width="300" />
+					
+					<StackPanel Grid.Row="0" Grid.Column="1" Orientation="Horizontal">
+						<ComboBox Name="RepositoryComboBox" Width="200" VerticalAlignment="Center" Items="{Binding Path=Repositories}"
+						          SelectionChanged="RepositoryComboBox_OnSelectionChanged"
+						          PointerPressed="RoutesListBox_OnPointerPressed"/>
+						<Button Content="🗘" Margin="4,0,0,0"
+						        ToolTip.Tip="Refresh repository"
+						        IsEnabled="{Binding Path=SelectedItem, ElementName=RepositoryComboBox, Converter={StaticResource NullabilityConverter}}"
+						        Command="{Binding Path=RefreshRoutesCommand}"
+						        CommandParameter="{Binding Path=SelectedItem, ElementName=RepositoryComboBox}"/>
+					</StackPanel>
+				</Grid>
 				
 				<ListBox Name="RoutesListBox" Grid.Row="1"
 				         HorizontalAlignment="Stretch"
