@@ -2,6 +2,7 @@
 // Licensed under Artistic License 2.0
 // See LICENSE or https://choosealicense.com/licenses/artistic-2.0/
 
+using System;
 using FluentAssertions;
 using RoadCaptain.Adapters;
 using RoadCaptain.App.Runner.ViewModels;
@@ -39,7 +40,7 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.MainWindow
             LoadRoute();
 
             _windowService
-                .OpenFileDialogInvocations
+                .ShowSelectRouteDialogInvocations
                 .Should()
                 .Be(1);
         }
@@ -60,17 +61,17 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.MainWindow
         }
 
         [Fact]
-        public void GivenUserSelectedFile_RoutePathIsSet()
+        public void GivenUserSelectedRoute_RoutePathIsSet()
         {
             _viewModel.RoutePath = null;
-            _windowService.OpenFileDialogResult = "someroute.json";
+            _windowService.ShowSelectRouteDialogResult = new RouteModel { Uri = new Uri("file:///c:/temp/someroute.json")};
 
             LoadRoute();
 
             _viewModel
                 .RoutePath
                 .Should()
-                .Be("someroute.json");
+                .Be("file:///c:/temp/someroute.json");
         }
 
         [Fact]
@@ -88,7 +89,7 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.MainWindow
         public void GivenUserSelectedFile_WindowTitleIsUpdatedWithRouteFileName()
         {
             _viewModel.RoutePath = null;
-            _windowService.OpenFileDialogResult = "someroute.json";
+            _windowService.ShowSelectRouteDialogResult = new RouteModel { Uri = new Uri("file:///c:/temp/someroute.json")};
 
             LoadRoute();
 

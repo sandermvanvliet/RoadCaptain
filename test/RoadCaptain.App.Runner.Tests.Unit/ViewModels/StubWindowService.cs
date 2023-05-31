@@ -21,10 +21,12 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels
         public int LogInDialogInvocations { get; private set; }
         public int MainWindowInvocations { get; private set; }
         public int ErrorDialogInvocations { get; private set; }
+        public int ShowSelectRouteDialogInvocations { get; private set; }
         public Dictionary<Type, object> Overrides { get; } = new();
 
         public List<Type> ClosedWindows { get; } = new();
         public List<Type> ShownWindows { get; } = new();
+        public RouteModel? ShowSelectRouteDialogResult { get; set; }
 
         public Task ShowErrorDialog(string message, Window owner)
         {
@@ -76,7 +78,8 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels
 
         public Task<RouteModel?> ShowSelectRouteDialog()
         {
-            throw new NotImplementedException();
+            ShowSelectRouteDialogInvocations++;
+            return Task.FromResult<RouteModel?>(ShowSelectRouteDialogResult);
         }
 
         public Task<string?> ShowOpenFileDialog(string? previousLocation)

@@ -19,7 +19,8 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.MainWindow
         private readonly InMemoryGameStateDispatcher _gameStateDispatcher;
         private readonly DummyUserPreferences _userPreferences;
         private readonly Configuration _configuration;
-        private StubWindowService _windowService;
+        private readonly StubWindowService _windowService;
+        private readonly PlannedRoute _plannedRoute;
 
         public WhenCallingStartRouteCommand()
         {
@@ -32,6 +33,8 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.MainWindow
             _configuration = new Configuration(null);
 
             StubRouteStore routeStore = new();
+            _plannedRoute = routeStore.LoadFrom("someroute.json");
+
             _viewModel = new MainWindowViewModel(
                 _configuration,
                 _userPreferences,
@@ -49,7 +52,7 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.MainWindow
         [Fact]
         public void RoutePathIsStoredInUserPreferences()
         {
-            _windowService.OpenFileDialogResult = "someroute.json";
+            _windowService.ShowSelectRouteDialogResult = new RouteModel { Uri = new Uri("file:///c:/temp/someroute.json"), PlannedRoute = _plannedRoute };
             _viewModel.LoadRouteCommand.Execute(null);
 
             StartRoute();
@@ -64,7 +67,7 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.MainWindow
         [Fact]
         public void RoutePathIsStoredInConfiguration()
         {
-            _windowService.OpenFileDialogResult = "someroute.json";
+            _windowService.ShowSelectRouteDialogResult = new RouteModel { Uri = new Uri("file:///c:/temp/someroute.json"), PlannedRoute = _plannedRoute };
             _viewModel.LoadRouteCommand.Execute(null);
 
             StartRoute();
@@ -78,7 +81,7 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.MainWindow
         [Fact]
         public void StartRouteIsDispatched()
         {
-            _windowService.OpenFileDialogResult = "someroute.json";
+            _windowService.ShowSelectRouteDialogResult = new RouteModel { Uri = new Uri("file:///c:/temp/someroute.json"), PlannedRoute = _plannedRoute };
             _viewModel.LoadRouteCommand.Execute(null);
 
             StartRoute();
