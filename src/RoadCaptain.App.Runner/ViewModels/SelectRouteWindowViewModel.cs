@@ -32,6 +32,7 @@ namespace RoadCaptain.App.Runner.ViewModels
         private double? _filterDistanceMin;
         private double? _filterAscentMin;
         private double? _filterDescentMin;
+        private string? _filterRepository;
 
         public SelectRouteWindowViewModel(SearchRoutesUseCase useCase,
             RetrieveRepositoryNamesUseCase retrieveRepositoryNamesUseCase,
@@ -43,7 +44,7 @@ namespace RoadCaptain.App.Runner.ViewModels
             _worldStore = worldStore;
         }
 
-        public AsyncRelayCommand RefreshRoutesCommand => new AsyncRelayCommand(
+        public AsyncRelayCommand SearchRoutesCommand => new AsyncRelayCommand(
                 async parameter => await LoadRoutesForRepositoryAsync(parameter as string ?? "(unknown)"),
                 _ => true)
             .OnFailure(async _ =>
@@ -63,6 +64,7 @@ namespace RoadCaptain.App.Runner.ViewModels
                 .Concat(_worldStore.LoadWorlds())
                 .ToArray();
             FilterWorld = allWorlds;
+            FilterRepository = "All";
         }
 
         public RouteViewModel[] Routes
@@ -129,6 +131,22 @@ namespace RoadCaptain.App.Runner.ViewModels
             }
         }
 
+        public string? FilterRepository
+        {
+            get => _filterRepository;
+            set
+            {
+                if (value == _filterRepository)
+                {
+                    return;
+                }
+                
+                _filterRepository = value;
+
+                this.RaisePropertyChanged();
+            }
+        }
+
         public World? FilterWorld
         {
             get => _filterWorld;
@@ -166,12 +184,12 @@ namespace RoadCaptain.App.Runner.ViewModels
             get => _filterCreatorName;
             set
             {
-                if (value == _filterRouteName)
+                if (value == _filterCreatorName)
                 {
                     return;
                 }
                 
-                _filterRouteName = value;
+                _filterCreatorName = value;
                 
                 this.RaisePropertyChanged();
             }
@@ -182,12 +200,12 @@ namespace RoadCaptain.App.Runner.ViewModels
             get => _filterZwiftRouteName;
             set
             {
-                if (value == _filterRouteName)
+                if (value == _filterZwiftRouteName)
                 {
                     return;
                 }
                 
-                _filterRouteName = value;
+                _filterZwiftRouteName = value;
                 
                 this.RaisePropertyChanged();
             }

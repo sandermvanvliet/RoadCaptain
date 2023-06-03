@@ -104,7 +104,7 @@ namespace RoadCaptain.App.Runner.Views
                 return;
             }
 
-            _viewModel.RefreshRoutesCommand.Execute(repositoryName);
+            _viewModel.SearchRoutesCommand.Execute(repositoryName);
         }
     }
 }

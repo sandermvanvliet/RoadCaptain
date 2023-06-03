@@ -136,6 +136,7 @@
                 <Grid HorizontalAlignment="Stretch">
                     <ComboBox Name="RepositoryComboBox" VerticalAlignment="Center"
                               Items="{Binding Path=Repositories}"
+                              SelectedItem="{Binding Path=FilterRepository}"
                               SelectionChanged="RepositoryComboBox_OnSelectionChanged"
                               PointerPressed="RoutesListBox_OnPointerPressed"
                               HorizontalAlignment="Stretch"
@@ -143,8 +144,8 @@
                     <Button Content="🗘"
                             ToolTip.Tip="Refresh repository"
                             IsEnabled="{Binding Path=SelectedItem, ElementName=RepositoryComboBox, Converter={StaticResource NullabilityConverter}}"
-                            Command="{Binding Path=RefreshRoutesCommand}"
-                            CommandParameter="{Binding Path=SelectedItem, ElementName=RepositoryComboBox}"
+                            Command="{Binding Path=SearchRoutesCommand}"
+                            CommandParameter="{Binding FilterRepository}"
                             HorizontalAlignment="Right"
                             Margin="0,0,2,0"/>
                 </Grid>
@@ -189,8 +190,8 @@
                 </StackPanel>
                 
                 <Button Content="Search" HorizontalAlignment="Right" Margin="0,16,4,0" 
-                        Command="{Binding RefreshRoutesCommand}"
-                        CommandParameter="{Binding Path=SelectedItem, ElementName=RepositoryComboBox}"/>
+                        Command="{Binding SearchRoutesCommand}"
+                        CommandParameter="{Binding FilterRepository}"/>
             </StackPanel>
 
             <ListBox Name="RoutesListBox" Grid.Row="1" Grid.Column="1"
