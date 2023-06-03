@@ -20,6 +20,18 @@ namespace RoadCaptain.App.Runner.ViewModels
         private RouteViewModel? _selectedRoute;
         private World[] _availableWorlds = Array.Empty<World>();
         private World? _filterWorld;
+        private string? _filterRouteName;
+        private string? _filterCreatorName;
+        private string? _filterZwiftRouteName;
+        private double? _filterDistanceMax;
+        private double? _filterDescentMax;
+        private double? _filterAscentMax;
+        private bool _isLoopYesChecked;
+        private bool _isLoopNoChecked;
+        private bool _isLoopBothChecked;
+        private double? _filterDistanceMin;
+        private double? _filterAscentMin;
+        private double? _filterDescentMin;
 
         public SelectRouteWindowViewModel(SearchRoutesUseCase useCase,
             RetrieveRepositoryNamesUseCase retrieveRepositoryNamesUseCase,
@@ -133,11 +145,240 @@ namespace RoadCaptain.App.Runner.ViewModels
             }
         }
 
+        public string? FilterRouteName
+        {
+            get => _filterRouteName;
+            set
+            {
+                if (value == _filterRouteName)
+                {
+                    return;
+                }
+                
+                _filterRouteName = value;
+                
+                this.RaisePropertyChanged();
+            }
+        }
+
+        public string? FilterCreatorName
+        {
+            get => _filterCreatorName;
+            set
+            {
+                if (value == _filterRouteName)
+                {
+                    return;
+                }
+                
+                _filterRouteName = value;
+                
+                this.RaisePropertyChanged();
+            }
+        }
+
+        public string? FilterZwiftRouteName
+        {
+            get => _filterZwiftRouteName;
+            set
+            {
+                if (value == _filterRouteName)
+                {
+                    return;
+                }
+                
+                _filterRouteName = value;
+                
+                this.RaisePropertyChanged();
+            }
+        }
+
+        public double? FilterDistanceMin
+        {
+            get => _filterDistanceMin;
+            set
+            {
+                if (value == _filterDistanceMin)
+                {
+                    return;
+                }
+                
+                _filterDistanceMin = value;
+                
+                this.RaisePropertyChanged();
+            }
+        }
+
+        public double? FilterDistanceMax
+        {
+            get => _filterDistanceMax;
+            set
+            {
+                if (value == _filterDistanceMax)
+                {
+                    return;
+                }
+                
+                _filterDistanceMax = value;
+                
+                this.RaisePropertyChanged();
+            }
+        }
+
+        public double? FilterAscentMin
+        {
+            get => _filterAscentMin;
+            set
+            {
+                if (value == _filterAscentMin)
+                {
+                    return;
+                }
+                
+                _filterAscentMin = value;
+                
+                this.RaisePropertyChanged();
+            }
+        }
+
+        public double? FilterAscentMax
+        {
+            get => _filterAscentMax;
+            set
+            {
+                if (value == _filterAscentMax)
+                {
+                    return;
+                }
+                
+                _filterAscentMax = value;
+                
+                this.RaisePropertyChanged();
+            }
+        }
+
+        public double? FilterDescentMin
+        {
+            get => _filterDescentMin;
+            set
+            {
+                if (value == _filterDescentMin)
+                {
+                    return;
+                }
+                
+                _filterDescentMin = value;
+                
+                this.RaisePropertyChanged();
+            }
+        }
+
+        public double? FilterDescentMax
+        {
+            get => _filterDescentMax;
+            set
+            {
+                if (value == _filterDescentMax)
+                {
+                    return;
+                }
+                
+                _filterDescentMax = value;
+                
+                this.RaisePropertyChanged();
+            }
+        }
+
+        public bool IsLoopYesChecked
+        {
+            get => _isLoopYesChecked;
+            set
+            {
+                if (value == _isLoopYesChecked)
+                {
+                    return;
+                }
+                
+                _isLoopYesChecked = value;
+
+                this.RaisePropertyChanged();
+                this.RaisePropertyChanged(nameof(FilterIsLoop));
+            }
+        }
+
+        public bool IsLoopNoChecked
+        {
+            get => _isLoopNoChecked;
+            set
+            {
+                if (value == _isLoopNoChecked)
+                {
+                    return;
+                }
+                
+                _isLoopNoChecked = value;
+
+                this.RaisePropertyChanged();
+                this.RaisePropertyChanged(nameof(FilterIsLoop));
+            }
+        }
+
+        public bool IsLoopBothChecked
+        {
+            get => _isLoopBothChecked;
+            set
+            {
+                if (value == _isLoopBothChecked)
+                {
+                    return;
+                }
+                
+                _isLoopBothChecked = value;
+
+                this.RaisePropertyChanged();
+                this.RaisePropertyChanged(nameof(FilterIsLoop));
+            }
+        }
+
+        public bool? FilterIsLoop
+        {
+            get
+            {
+                if (IsLoopYesChecked)
+                {
+                    return true;
+                }
+
+                if (IsLoopNoChecked)
+                {
+                    return false;
+                }
+
+                return null;
+            }
+        }
+
+
         public async Task<CommandResult> LoadRoutesForRepositoryAsync(string repository)
         {
             try
             {
-                var command = new SearchRouteCommand(repository);
+                var command = new SearchRouteCommand(
+                    repository,
+                    FilterWorld?.Name,
+                    FilterCreatorName,
+                    FilterRouteName,
+                    FilterZwiftRouteName,
+                    FilterDistanceMin == null ? null : (decimal)FilterDistanceMin,
+                    FilterDistanceMax == null ? null : (decimal)FilterDistanceMax,
+                    FilterAscentMin == null ? null : (decimal)FilterAscentMin,
+                    FilterAscentMax == null ? null : (decimal)FilterAscentMax,
+                    FilterDescentMin == null ? null : (decimal)FilterDescentMin,
+                    FilterDescentMax == null ? null : (decimal)FilterDescentMax,
+                    FilterIsLoop,
+                    null,
+                    null
+                    );
 
                 Routes = (await _useCase.ExecuteAsync(command))
                     .Select(routeModel => new RouteViewModel(routeModel))

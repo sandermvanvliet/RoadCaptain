@@ -45,7 +45,20 @@ namespace RoadCaptain.UseCases
             
             foreach (var repository in repositoriesToSearch)
             {
-                tasks.Add(repository.SearchAsync());
+                tasks.Add(repository.SearchAsync(
+                    command.World,
+                    command.Creator,
+                    command.Name,
+                    command.ZwiftRouteName,
+                    command.MinDistance,
+                    command.MaxDistance,
+                    command.MinAscent,
+                    command.MaxAscent,
+                    command.MinDescent,
+                    command.MaxDescent,
+                    command.IsLoop,
+                    command.KomSegments,
+                    command.SprintSegments));
             }
 
             try
