@@ -26,9 +26,10 @@ namespace RoadCaptain.Adapters
             return Task.FromResult(true);
         }
 
-        public async Task<RouteModel[]> SearchAsync(string? world = null, string? creator = null, string? name = null, string? zwiftRouteName = null,
-            decimal? minDistance = null, decimal? maxDistance = null, decimal? minAscent = null, decimal? maxAscent = null,
-            decimal? minDescent = null, decimal? maxDescent = null, bool? isLoop = null, string[]? komSegments = null,
+        public async Task<RouteModel[]> SearchAsync(string? world = null, string? creator = null, string? name = null,
+            string? zwiftRouteName = null,
+            int? minDistance = null, int? maxDistance = null, int? minAscent = null, int? maxAscent = null,
+            int? minDescent = null, int? maxDescent = null, bool? isLoop = null, string[]? komSegments = null,
             string[]? sprintSegments = null)
         {
             var path = Path.GetDirectoryName(GetType().Assembly.Location);

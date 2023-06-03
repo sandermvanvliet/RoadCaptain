@@ -41,17 +41,16 @@ namespace RoadCaptain.Adapters
             return response.IsSuccessStatusCode;
         }
 
-        public async Task<RouteModel[]> SearchAsync(
-            string? world = null,
+        public async Task<RouteModel[]> SearchAsync(string? world = null,
             string? creator = null,
             string? name = null,
             string? zwiftRouteName = null,
-            decimal? minDistance = null,
-            decimal? maxDistance = null,
-            decimal? minAscent = null,
-            decimal? maxAscent = null,
-            decimal? minDescent = null,
-            decimal? maxDescent = null,
+            int? minDistance = null,
+            int? maxDistance = null,
+            int? minAscent = null,
+            int? maxAscent = null,
+            int? minDescent = null,
+            int? maxDescent = null,
             bool? isLoop = null,
             string[]? komSegments = null,
             string[]? sprintSegments = null)
@@ -108,9 +107,12 @@ namespace RoadCaptain.Adapters
                 throw new Exception($"Unable to search for routes, received an non-successful response: {response.StatusCode.ToString()}");
             }
             
-            using var textReader = new StreamReader(await response.Content.ReadAsStreamAsync());
-            await using var jsonTextReader = new JsonTextReader(textReader);
-            var routeModels = _serializer.Deserialize<RouteModel[]>(jsonTextReader);
+            // using var textReader = new StreamReader(await response.Content.ReadAsStreamAsync());
+            // await using var jsonTextReader = new JsonTextReader(textReader);
+            // var routeModels = _serializer.Deserialize<RouteModel[]>(jsonTextReader);
+
+            var serialized = await response.Content.ReadAsStringAsync();
+            var routeModels = JsonConvert.DeserializeObject<RouteModel[]>(serialized, JsonSettings);
 
             if (routeModels != null)
             {

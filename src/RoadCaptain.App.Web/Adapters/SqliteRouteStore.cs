@@ -23,8 +23,65 @@ namespace RoadCaptain.App.Web.Adapters
             decimal? maxDistance, decimal? minAscent, decimal? maxAscent, decimal? minDescent, decimal? maxDescent,
             bool? isLoop, string[]? komSegments, string[]? sprintSegments)
         {
-            return _roadCaptainDataContext
-                .Routes
+            var query = _roadCaptainDataContext.Routes.AsQueryable();
+
+            if (!string.IsNullOrEmpty(world))
+            {
+                query = query.Where(route => route.World == world);
+            }
+
+            if (!string.IsNullOrEmpty(creator))
+            {
+                query = query.Where(route => route.User != null && route.User.Name  == creator);
+            }
+            
+            if (!string.IsNullOrEmpty(name))
+            {
+                query = query.Where(route => route.Name == name);
+            }
+            
+            if (!string.IsNullOrEmpty(zwiftRouteName))
+            {
+                query = query.Where(route => route.ZwiftRouteName == zwiftRouteName);
+            }
+
+            if (minDistance is > 0)
+            {
+                query = query.Where(route => route.Distance >= minDistance.Value);
+            }
+
+            if (minAscent is > 0)
+            {
+                query = query.Where(route => route.Ascent >= minAscent.Value);
+            }
+
+            if (minDescent is > 0)
+            {
+                query = query.Where(route => route.Descent >= minDescent.Value);
+            }
+
+            if (maxDistance is > 0)
+            {
+                query = query.Where(route => route.Distance <= maxDistance.Value);
+            }
+
+            if (maxAscent is > 0)
+            {
+                query = query.Where(route => route.Ascent <= maxAscent.Value);
+            }
+
+
+            if (maxDescent is > 0)
+            {
+                query = query.Where(route => route.Descent <= maxDescent.Value);
+            }
+
+            if (isLoop is { })
+            {
+                query = query.Where(route => route.IsLoop == isLoop);
+            }
+            
+            return query
                 .Include(r => r.User)
                 .ToList()
                 .Select(RouteModelFrom)

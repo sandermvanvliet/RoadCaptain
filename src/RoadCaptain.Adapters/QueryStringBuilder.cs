@@ -16,7 +16,7 @@ namespace RoadCaptain.Adapters
 
         public void Add(string name, string value)
         {
-            _parameters.Add(new KeyValuePair<string, string>(name, _urlEncoder.Encode(value)));
+            _parameters.Add(new KeyValuePair<string, string>(name, value));
         }
 
         public override string ToString()
