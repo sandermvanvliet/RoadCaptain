@@ -383,7 +383,7 @@ namespace RoadCaptain.App.Runner.ViewModels
             {
                 var command = new SearchRouteCommand(
                     repository,
-                    FilterWorld?.Name,
+                    FilterWorld?.Id,
                     FilterCreatorName,
                     FilterRouteName,
                     FilterZwiftRouteName,
