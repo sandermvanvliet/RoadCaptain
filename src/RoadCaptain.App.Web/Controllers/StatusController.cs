@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+using RoadCaptain.App.Shared;
 
 namespace RoadCaptain.App.Web.Controllers
 {
@@ -9,7 +11,8 @@ namespace RoadCaptain.App.Web.Controllers
         [HttpGet(Name = "GetStatus")]
         public IActionResult GetStatus()
         {
-            return Ok();
+            var applicationDiagnosticInformation = ApplicationDiagnosticInformation.GetFrom(GetType().Assembly);
+            return Ok(JsonConvert.SerializeObject(applicationDiagnosticInformation));
         }
     }
 }
