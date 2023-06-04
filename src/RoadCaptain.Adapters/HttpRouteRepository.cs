@@ -107,12 +107,9 @@ namespace RoadCaptain.Adapters
                 throw new Exception($"Unable to search for routes, received an non-successful response: {response.StatusCode.ToString()}");
             }
             
-            // using var textReader = new StreamReader(await response.Content.ReadAsStreamAsync());
-            // await using var jsonTextReader = new JsonTextReader(textReader);
-            // var routeModels = _serializer.Deserialize<RouteModel[]>(jsonTextReader);
-
-            var serialized = await response.Content.ReadAsStringAsync();
-            var routeModels = JsonConvert.DeserializeObject<RouteModel[]>(serialized, JsonSettings);
+            using var textReader = new StreamReader(await response.Content.ReadAsStreamAsync());
+            await using var jsonTextReader = new JsonTextReader(textReader);
+            var routeModels = _serializer.Deserialize<RouteModel[]>(jsonTextReader);
 
             if (routeModels != null)
             {
