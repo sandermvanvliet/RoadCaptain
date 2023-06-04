@@ -46,7 +46,7 @@ namespace RoadCaptain.UseCases
             foreach (var repository in repositoriesToSearch)
             {
                 tasks.Add(repository.SearchAsync(
-                    command.World,
+                    "all".Equals(command.World, StringComparison.InvariantCultureIgnoreCase) ? null : command.World,
                     command.Creator,
                     command.Name,
                     command.ZwiftRouteName,

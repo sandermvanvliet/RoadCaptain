@@ -23,15 +23,15 @@ namespace RoadCaptain.App.Runner.ViewModels
         private string? _filterRouteName;
         private string? _filterCreatorName;
         private string? _filterZwiftRouteName;
-        private double? _filterDistanceMax;
-        private double? _filterDescentMax;
-        private double? _filterAscentMax;
+        private int? _filterDistanceMax;
+        private int? _filterDescentMax;
+        private int? _filterAscentMax;
+        private int? _filterDistanceMin;
+        private int? _filterAscentMin;
+        private int? _filterDescentMin;
         private bool _isLoopYesChecked;
         private bool _isLoopNoChecked;
-        private bool _isLoopBothChecked;
-        private double? _filterDistanceMin;
-        private double? _filterAscentMin;
-        private double? _filterDescentMin;
+        private bool _isLoopBothChecked = true;
         private string? _filterRepository;
 
         public SelectRouteWindowViewModel(SearchRoutesUseCase useCase,
@@ -211,7 +211,7 @@ namespace RoadCaptain.App.Runner.ViewModels
             }
         }
 
-        public double? FilterDistanceMin
+        public int? FilterDistanceMin
         {
             get => _filterDistanceMin;
             set
@@ -227,7 +227,7 @@ namespace RoadCaptain.App.Runner.ViewModels
             }
         }
 
-        public double? FilterDistanceMax
+        public int? FilterDistanceMax
         {
             get => _filterDistanceMax;
             set
@@ -243,7 +243,7 @@ namespace RoadCaptain.App.Runner.ViewModels
             }
         }
 
-        public double? FilterAscentMin
+        public int? FilterAscentMin
         {
             get => _filterAscentMin;
             set
@@ -259,7 +259,7 @@ namespace RoadCaptain.App.Runner.ViewModels
             }
         }
 
-        public double? FilterAscentMax
+        public int? FilterAscentMax
         {
             get => _filterAscentMax;
             set
@@ -275,7 +275,7 @@ namespace RoadCaptain.App.Runner.ViewModels
             }
         }
 
-        public double? FilterDescentMin
+        public int? FilterDescentMin
         {
             get => _filterDescentMin;
             set
@@ -291,7 +291,7 @@ namespace RoadCaptain.App.Runner.ViewModels
             }
         }
 
-        public double? FilterDescentMax
+        public int? FilterDescentMax
         {
             get => _filterDescentMax;
             set
@@ -377,7 +377,7 @@ namespace RoadCaptain.App.Runner.ViewModels
         }
 
 
-        public async Task<CommandResult> LoadRoutesForRepositoryAsync(string repository)
+        private async Task<CommandResult> LoadRoutesForRepositoryAsync(string repository)
         {
             try
             {
@@ -387,12 +387,12 @@ namespace RoadCaptain.App.Runner.ViewModels
                     FilterCreatorName,
                     FilterRouteName,
                     FilterZwiftRouteName,
-                    FilterDistanceMin == null ? null : (int)FilterDistanceMin,
-                    FilterDistanceMax == null ? null : (int)FilterDistanceMax,
-                    FilterAscentMin == null ? null : (int)FilterAscentMin,
-                    FilterAscentMax == null ? null : (int)FilterAscentMax,
-                    FilterDescentMin == null ? null : (int)FilterDescentMin,
-                    FilterDescentMax == null ? null : (int)FilterDescentMax,
+                    FilterDistanceMin == 0 ? null : FilterDistanceMin,
+                    FilterDistanceMax == 0 ? null : FilterDistanceMax,
+                    FilterAscentMin == 0 ? null : FilterAscentMin,
+                    FilterAscentMax == 0 ? null : FilterAscentMax,
+                    FilterDescentMin == 0 ? null : FilterDescentMin,
+                    FilterDescentMax == 0 ? null : FilterDescentMax,
                     FilterIsLoop,
                     null,
                     null

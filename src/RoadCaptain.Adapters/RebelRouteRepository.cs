@@ -55,6 +55,7 @@ namespace RoadCaptain.Adapters
                         CreatorName = "Zwift Insider",
                         IsLoop = plannedRoute.IsLoop,
                         PlannedRoute = plannedRoute,
+                        World = "Watopia"
                     };
                     
                     routeModels.Add(routeModel);
@@ -118,7 +119,7 @@ namespace RoadCaptain.Adapters
                 query = query.Where(route => route.IsLoop == isLoop);
             }
 
-            return routeModels.ToArray();
+            return query.ToArray();
         }
 
         public string Name => "Zwift Insider - Rebel Routes";

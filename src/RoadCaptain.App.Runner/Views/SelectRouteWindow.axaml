@@ -84,6 +84,18 @@
             <Setter Property="VerticalAlignment" Value="Center" />
             <Setter Property="Margin" Value="0,0,4,0" />
         </Style>
+        <Style Selector="StackPanel.filterMinMax">
+            <Setter Property="Orientation" Value="Horizontal" />
+        </Style>
+        <Style Selector="StackPanel.filterMinMax TextBlock">
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Padding" Value="4,0,4,0"></Setter>
+        </Style>
+        <Style Selector="StackPanel.filterMinMax NumericUpDown">
+            <Setter Property="ShowButtonSpinner" Value="False" />
+            <Setter Property="Increment" Value="1" />
+            <Setter Property="Minimum" Value="0" />
+        </Style>
     </Window.Styles>
     <Window.Resources>
         <converters:NullabilityConverter x:Key="NullabilityConverter" />
@@ -167,21 +179,27 @@
                 <TextBox Name="Creator" Classes="filterInput" Watermark="Creator name" Text="{Binding FilterCreatorName}" />
                 <TextBlock Classes="filterLabel" Text="Zwift route name:" />
                 <TextBox Name="ZwiftRoute" Classes="filterInput" Watermark="Zwift route name" Text="{Binding FilterZwiftRouteName}" />
-                <TextBlock Classes="filterLabel" Text="Min distance:" />
-                <Grid>
-                    <Slider Name="Distance" Classes="filterInput" Minimum="1" Maximum="500" IsEnabled="True" Value="{Binding FilterDistanceMin}" />
-                    <TextBlock Text="{Binding ElementName=Distance, Path=Value, StringFormat=\{0:0 km\}}" Classes="sliderValue" />
-                </Grid>
-                <TextBlock Classes="filterLabel" Text="Min ascent:" />
-                <Grid>
-                    <Slider Name="Ascent" Classes="filterInput" Minimum="1" Maximum="500" IsEnabled="True" Value="{Binding FilterAscentMin}" />
-                    <TextBlock Text="{Binding ElementName=Ascent, Path=Value, StringFormat=\{0:0 km\}}" Classes="sliderValue" />
-                </Grid>
-                <TextBlock Classes="filterLabel" Text="Min descent:" />
-                <Grid>
-                    <Slider Name="Descent" Classes="filterInput" Minimum="1" Maximum="500" IsEnabled="True" Value="{Binding FilterDescentMin}" />
-                    <TextBlock Text="{Binding ElementName=Descent, Path=Value, StringFormat=\{0:0 km\}}" Classes="sliderValue" />
-                </Grid>
+                <TextBlock Classes="filterLabel" Text="Distance:" />
+                <StackPanel Classes="filterMinMax">
+                    <TextBlock Text="Min:"/>
+                    <NumericUpDown Value="{Binding FilterDistanceMin}" />
+                    <TextBlock Text="Max:"/>
+                    <NumericUpDown Value="{Binding FilterDistanceMax}" />
+                </StackPanel>
+                <TextBlock Classes="filterLabel" Text="Ascent:" />
+                <StackPanel Classes="filterMinMax">
+                    <TextBlock Text="Min:"/>
+                    <NumericUpDown Value="{Binding FilterAscentMin}" />
+                    <TextBlock Text="Max:"/>
+                    <NumericUpDown Value="{Binding FilterAscentMax}" />
+                </StackPanel>
+                <TextBlock Classes="filterLabel" Text="Descent:" />
+                <StackPanel Classes="filterMinMax">
+                    <TextBlock Text="Min:"/>
+                    <NumericUpDown Value="{Binding FilterDescentMin}" />
+                    <TextBlock Text="Max:"/>
+                    <NumericUpDown Value="{Binding FilterDescentMax}" />
+                </StackPanel>
                 <TextBlock Classes="filterLabel" Text="Loop:" />
                 <StackPanel Orientation="Horizontal">
                     <RadioButton GroupName="IsLoop" Content="Yes" Margin="4,0,0,0" IsChecked="{Binding IsLoopYesChecked}" />
