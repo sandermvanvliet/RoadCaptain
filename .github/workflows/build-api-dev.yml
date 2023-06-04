@@ -11,25 +11,32 @@ jobs:
     env:
       CONFIGURATION: Debug
       RID: linux-x64
-      ZIP_FILE: roadcaptain-app-web-$GITHUB_SHA.tar.gz
+      ZIP_FILE: roadcaptain-app-web-${{ github.sha }}.tar.gz
 
     steps:
     - uses: actions/checkout@v3
+    
     - name: Publish API
       # Because of reasons we need to explicitly set RuntimeIdentifiers to only win-x64 because MSBuild sets it to osx-x64;win-x64
       run: dotnet publish --self-contained -c ${{ env.CONFIGURATION }} -r ${{ env.RID }} -p:RuntimeIdentifiers=${{ env.RID }} src/RoadCaptain.App.Web/RoadCaptain.App.Web.csproj
+    
     - name: Create ZIP archive
       run: tar -zcf "${{ github.workspace }}/${{ env.ZIP_FILE }}" *
       working-directory: src/RoadCaptain.App.Web/bin/${{ env.CONFIGURATION }}/net6.0/linux-x64/publish
-    - name: Copy artifacts to server
-      env:
-        SSH_AUTH_SOCK: /tmp/ssh_agent.sock
-      run: scp -r -o "StrictHostKeyChecking no" "${{ github.workspace }}/${{ env.ZIP_FILE }}" roadcaptain@roadcaptain.nl:/tmp/${{ env.ZIP_FILE }}
-    - name: Extract artifacts on server
+      
+    - name: Setup SSH key
       env:
         SSH_AUTH_SOCK: /tmp/ssh_agent.sock
       run: |
-        service stop RoadCaptainApiDev
-        cd /opt/roadcaptain/api-dev
-        ssh tar -zxf /tmp/${{ env.ZIP_FILE }}
-        service start RoadCaptainApiDev
+        ssh-agent -a $SSH_AUTH_SOCK > /dev/null
+        ssh-add - <<< "${{ secrets.SSH_SITE_KEY }}"
+    
+    - name: Copy artifacts to server
+      env:
+        SSH_AUTH_SOCK: /tmp/ssh_agent.sock
+      run: scp -r -o "StrictHostKeyChecking no" "${{ github.workspace }}/${{ env.ZIP_FILE }}" roadcaptain@roadcaptain.nl:/opt/roadcaptain/${{ env.ZIP_FILE }}
+    
+    - name: Extract artifacts on server
+      env:
+        SSH_AUTH_SOCK: /tmp/ssh_agent.sock
+      run: ssh -o "StrictHostKeyChecking no" roadcaptain@roadcaptain.nl 'systemctl stop --user RoadCaptainApiDev; cd /opt/roadcaptain/api-dev; tar -zxf /opt/roadcaptain/${{ env.ZIP_FILE }}; systemctl start --user RoadCaptainApiDev; rm -f /opt/roadcaptain/roadcaptain-app-web-*.tar.gz'
