@@ -9,7 +9,7 @@ ExecStart=/opt/roadcaptain/api-prod/RoadCaptain.App.Web
 WorkingDirectory=/opt/roadcaptain/api-prod
 Restart=always
 RestartSec=10s
-KillSignal=SIGINYT
+KillSignal=SIGINT
 SyslogIdentifier=RoadCaptainApiprod
 Environment=ASPNETCORE_URLS=http://+:6000
 Environment=ASPNETCORE_ENVIRONMENT=Development
