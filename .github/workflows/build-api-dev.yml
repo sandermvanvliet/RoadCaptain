@@ -2,6 +2,12 @@ name: build-api-dev
 
 on:
   workflow_dispatch:
+  push:
+    branches: [ main ]
+    paths-ignore:
+      - site/**
+      - src/RoadCaptain.App.Runner/** # Don't trigger on Runner only changes
+      - src/RoadCaptain.App.RouteBuilder/** # Don't trigger on RouteBuilder only changes
 
 jobs:
   build_api_linux-x64:
