@@ -90,19 +90,20 @@ namespace RoadCaptain.Adapters
 
             if (!string.IsNullOrEmpty(world))
             {
-                query = query.Where(route => route.World == world);
+                query = query.Where(route => string.Equals(route.World, world, StringComparison.InvariantCultureIgnoreCase));
             }
             
             if (!string.IsNullOrEmpty(name))
             {
-                query = query.Where(route => route.Name == name);
+                query = query.Where(route => string.Equals(route.Name, name, StringComparison.InvariantCultureIgnoreCase));
             }
             
             if (!string.IsNullOrEmpty(zwiftRouteName))
             {
-                query = query.Where(route => route.ZwiftRouteName == zwiftRouteName);
+                query = query.Where(route =>
+                    string.Equals(route.ZwiftRouteName, zwiftRouteName, StringComparison.InvariantCultureIgnoreCase));
             }
-
+            
             if (minDistance is > 0)
             {
                 query = query.Where(route => route.Distance >= minDistance.Value);
