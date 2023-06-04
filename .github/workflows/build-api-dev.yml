@@ -40,7 +40,7 @@ jobs:
       env:
         SSH_AUTH_SOCK: /tmp/ssh_agent.sock
       run: |
-        service stop RoadCaptainApiDev
+        systemctl stop RoadCaptainApiDev.service
         cd /opt/roadcaptain/api-dev
         ssh tar -zxf /opt/roadcaptain/${{ env.ZIP_FILE }}
-        service start RoadCaptainApiDev
+        systemctl start RoadCaptainApiDev.service
