@@ -5,6 +5,7 @@
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.IdentityModel.Tokens;
 using Serilog.Core;
 
@@ -80,6 +81,11 @@ namespace RoadCaptain.App.Web
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
+            
+            app.UseForwardedHeaders(new ForwardedHeadersOptions
+            {
+                ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+            });
 
             app.UseMiddleware<RequestResponseLoggingMiddleware>();
 
