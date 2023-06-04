@@ -2,10 +2,6 @@ name: build-api-dev
 
 on:
   workflow_dispatch:
-  push:
-    branches: [ main ]
-    paths-ignore:
-      - site/**
 
 jobs:
   build_api_linux-x64:
