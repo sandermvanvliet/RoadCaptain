@@ -7,6 +7,9 @@ on:
     - prereleases/[0-9]+.[0-9]+.[0-9]+
     - prereleases/[0-9]+.[0-9]+.[0-9]+.[0-9]+
 
+permissions:
+  contents: write
+  
 jobs:
   create_release:
     runs-on: ubuntu-latest
@@ -202,3 +205,18 @@ jobs:
         asset_path: "/Users/runner/work/_temp/RoadCaptain-${{ needs.create_release.outputs.version }}-${{ env.RID }}.dmg" # Explicit path here because $RUNNER_TEMP doesn't get expanded...
         asset_name: RoadCaptain-${{ needs.create_release.outputs.version }}-${{ env.RID }}.dmg
         asset_content_type: application/x-apple-diskimage
+
+  update_site_releases:
+    runs-on: ubuntu-latest
+    needs: [create_release, build_win, build_macos-x64, build_macos-arm64]
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Replace pre-release version
+      shell: bash
+      run: |
+        previous_version=`sed -nr "s/.*prerelease%2F([0-9]\.[0-9]*\.[0-9]*\.[0-9]*).*$/\1/p" site/data/releases.yml  | head -n 1`
+        sed -i "s/$previous_version/0.6.12.0/g" site/data/releases.yml
+        git add site/data/releases.yml
+        git commit -m "Update pre-release version on website"
+        git push
