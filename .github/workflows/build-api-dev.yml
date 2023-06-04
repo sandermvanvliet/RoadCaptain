@@ -19,12 +19,12 @@ jobs:
       # Because of reasons we need to explicitly set RuntimeIdentifiers to only win-x64 because MSBuild sets it to osx-x64;win-x64
       run: dotnet publish --self-contained -c ${{ env.CONFIGURATION }} -r ${{ env.RID }} -p:RuntimeIdentifiers=${{ env.RID }} src/RoadCaptain.App.Web/RoadCaptain.App.Web.csproj
     - name: Create ZIP archive
-      run: tar -zcf "${{ env.GITHUB_WORKSPACE }}/${{ env.ZIP_FILE }}" *
+      run: tar -zcf "${{ github.workspace }}/${{ env.ZIP_FILE }}" *
       working-directory: src/RoadCaptain.App.Web/bin/${{ env.CONFIGURATION }}/net6.0/linux-x64/publish
     - name: Copy artifacts to server
       env:
         SSH_AUTH_SOCK: /tmp/ssh_agent.sock
-      run: scp -r -o "StrictHostKeyChecking no" "${{ env.GITHUB_WORKSPACE }}/${{ env.ZIP_FILE }}" roadcaptain@roadcaptain.nl:/tmp/${{ env.ZIP_FILE }}
+      run: scp -r -o "StrictHostKeyChecking no" "${{ github.workspace }}/${{ env.ZIP_FILE }}" roadcaptain@roadcaptain.nl:/tmp/${{ env.ZIP_FILE }}
     - name: Extract artifacts on server
       env:
         SSH_AUTH_SOCK: /tmp/ssh_agent.sock
