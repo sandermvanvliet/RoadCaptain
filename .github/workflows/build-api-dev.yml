@@ -19,7 +19,7 @@ jobs:
       run: dotnet publish --self-contained -c ${{ env.CONFIGURATION }} -r ${{ env.RID }} -p:RuntimeIdentifiers=${{ env.RID }} src/RoadCaptain.App.Web/RoadCaptain.App.Web.csproj
     - name: Create ZIP archive
       run: tar -zcf "${{ env.GITHUB_WORKSPACE }}/roadcaptain-app-web-${{ env.GITHUB_SHA }}.tar.gz" *
-      working-directory: src/RoadCaptain.App.Web/RoadCaptain.App.Web/bin/${{ env.CONFIGURATION }}/net6.0/linux-x64/publish
+      working-directory: src/RoadCaptain.App.Web/bin/${{ env.CONFIGURATION }}/net6.0/linux-x64/publish
     - name: Copy artifacts to server
       env:
         SSH_AUTH_SOCK: /tmp/ssh_agent.sock
