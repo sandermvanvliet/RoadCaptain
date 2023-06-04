@@ -11,7 +11,7 @@ jobs:
     env:
       CONFIGURATION: Debug
       RID: linux-x64
-      ZIP_FILE: roadcaptain-app-web-$GITHUB_SHA.tar.gz
+      ZIP_FILE: roadcaptain-app-web-${{ github.sha }}.tar.gz
 
     steps:
     - uses: actions/checkout@v3
