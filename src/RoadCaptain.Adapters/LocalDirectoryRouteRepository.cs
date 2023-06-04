@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using RoadCaptain.Ports;
@@ -83,8 +84,61 @@ namespace RoadCaptain.Adapters
                     _monitoringEvents.Error(e, "Unable to deserialize route model from file '{File}'", file);
                 }
             }
+            
+            var query = routeModels.AsQueryable();
 
-            return routeModels.ToArray();
+            if (!string.IsNullOrEmpty(world))
+            {
+                query = query.Where(route => route.World == world);
+            }
+            
+            if (!string.IsNullOrEmpty(name))
+            {
+                query = query.Where(route => route.Name == name);
+            }
+            
+            if (!string.IsNullOrEmpty(zwiftRouteName))
+            {
+                query = query.Where(route => route.ZwiftRouteName == zwiftRouteName);
+            }
+
+            if (minDistance is > 0)
+            {
+                query = query.Where(route => route.Distance >= minDistance.Value);
+            }
+
+            if (minAscent is > 0)
+            {
+                query = query.Where(route => route.Ascent >= minAscent.Value);
+            }
+
+            if (minDescent is > 0)
+            {
+                query = query.Where(route => route.Descent >= minDescent.Value);
+            }
+
+            if (maxDistance is > 0)
+            {
+                query = query.Where(route => route.Distance <= maxDistance.Value);
+            }
+
+            if (maxAscent is > 0)
+            {
+                query = query.Where(route => route.Ascent <= maxAscent.Value);
+            }
+
+
+            if (maxDescent is > 0)
+            {
+                query = query.Where(route => route.Descent <= maxDescent.Value);
+            }
+
+            if (isLoop is { })
+            {
+                query = query.Where(route => route.IsLoop == isLoop);
+            }
+
+            return query.ToArray();
         }
 
         private PlannedRoute? UpgradeIfNecessaryAndSerialize(string? routeModelSerialized)

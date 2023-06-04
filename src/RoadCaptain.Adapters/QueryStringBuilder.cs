@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text.Encodings.Web;
 
@@ -30,7 +31,7 @@ namespace RoadCaptain.Adapters
                 "&",
                 _parameters
                     .OrderBy(kv => kv.Key)
-                    .Select(kv => $"{kv.Key}={kv.Value}"));
+                    .Select(kv => $"{kv.Key}={Uri.EscapeDataString(kv.Value)}"));
         }
 
         public void AddIfNotDefault<TValue>(string name, TValue? value)

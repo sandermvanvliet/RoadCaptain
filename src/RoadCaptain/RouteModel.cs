@@ -18,5 +18,6 @@ namespace RoadCaptain
         public string? RepositoryName { get; set; }
         public Uri Uri { get; set; }
         public PlannedRoute? PlannedRoute { get; set; }
+        public string? World { get; set; }
     }
 }
