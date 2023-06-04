@@ -72,6 +72,7 @@ namespace RoadCaptain.Adapters
                         routeModel.RepositoryName = Name;
                         routeModel.Uri = new Uri(file);
                         routeModel.PlannedRoute = UpgradeIfNecessaryAndSerialize(routeModel.Serialized);
+                        routeModel.World = routeModel.PlannedRoute?.WorldId;
                         routeModels.Add(routeModel);
                     }
                     else

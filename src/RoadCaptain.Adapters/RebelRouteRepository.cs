@@ -55,7 +55,7 @@ namespace RoadCaptain.Adapters
                         CreatorName = "Zwift Insider",
                         IsLoop = plannedRoute.IsLoop,
                         PlannedRoute = plannedRoute,
-                        World = "Watopia"
+                        World = plannedRoute.WorldId
                     };
                     
                     routeModels.Add(routeModel);
