@@ -24,12 +24,12 @@ jobs:
     - name: Copy artifacts to server
       env:
         SSH_AUTH_SOCK: /tmp/ssh_agent.sock
-      run: scp -r -o "StrictHostKeyChecking no" "${{ github.workspace }}/${{ env.ZIP_FILE }}" roadcaptain@roadcaptain.nl:/tmp/${{ env.ZIP_FILE }}
+      run: scp -r -o "StrictHostKeyChecking no" "${{ github.workspace }}/${{ env.ZIP_FILE }}" roadcaptain@roadcaptain.nl:/opt/roadcaptain/${{ env.ZIP_FILE }}
     - name: Extract artifacts on server
       env:
         SSH_AUTH_SOCK: /tmp/ssh_agent.sock
       run: |
         service stop RoadCaptainApiDev
         cd /opt/roadcaptain/api-dev
-        ssh tar -zxf /tmp/${{ env.ZIP_FILE }}
+        ssh tar -zxf /opt/roadcaptain/${{ env.ZIP_FILE }}
         service start RoadCaptainApiDev
