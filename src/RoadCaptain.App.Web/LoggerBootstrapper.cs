@@ -17,12 +17,6 @@ namespace RoadCaptain.App.Web
                 .Enrich.FromLogContext()
                 .MinimumLevel.Debug();
 
-            // In debug builds always write to the current directory for simplicity sake
-            // as that makes the log file easier to pick up from bin\Debug
-            var logFilePath = $"roadcaptain-web-log-{DateTime.UtcNow:yyyy-MM-ddTHHmmss}.log";
-
-            logFilePath = CreateLoggerForReleaseMode(logFilePath);
-
             loggerConfiguration = loggerConfiguration
                 .MinimumLevel.Information();
 
@@ -31,14 +25,24 @@ namespace RoadCaptain.App.Web
                 loggerConfiguration = loggerConfiguration
                     .WriteTo.Debug(LogEventLevel.Debug);
             }
-            else
+            else if("1".Equals(Environment.GetEnvironmentVariable("RUN_IN_SYSTEMD")))
             {
                 loggerConfiguration = loggerConfiguration
-                    .WriteTo.File(logFilePath, LogEventLevel.Debug);
+                    .WriteTo.Console();
+            }
+            else
+            {
+                // In debug builds always write to the current directory for simplicity sake
+                // as that makes the log file easier to pick up from bin\Debug
+                var logFilePath = $"roadcaptain-web-log-{DateTime.UtcNow:yyyy-MM-ddTHHmmss}.log";
+
+                logFilePath = CreateLoggerForReleaseMode(logFilePath);
+                
+                loggerConfiguration = loggerConfiguration
+                    .WriteTo.File(logFilePath, LogEventLevel.Debug);                
             }
 
             return loggerConfiguration
-                
                 .CreateLogger();
         }
 

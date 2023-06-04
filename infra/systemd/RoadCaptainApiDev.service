@@ -14,6 +14,7 @@ SyslogIdentifier=RoadCaptainApiDev
 Environment=ASPNETCORE_URLS=http://+:6000
 Environment=ASPNETCORE_ENVIRONMENT=Development
 Environment=DOTNETN_PRINT_TELEMETRY_MESSAGE=false
+Environment=RUN_IN_SYSTEMD=1
 
 [Install]
 WantedBy=multi-user.target
