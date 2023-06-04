@@ -39,4 +39,4 @@ jobs:
     - name: Extract artifacts on server
       env:
         SSH_AUTH_SOCK: /tmp/ssh_agent.sock
-      run: ssh -o "StrictHostKeyChecking no" roadcaptain@roadcaptain.nl 'systemctl stop --user RoadCaptainApiDev; cd /opt/roadcaptain/api-dev; tar -zxf /opt/roadcaptain/${{ env.ZIP_FILE }}; systemctl start --user RoadCaptainApiDev'
+      run: ssh -o "StrictHostKeyChecking no" roadcaptain@roadcaptain.nl 'systemctl stop --user RoadCaptainApiDev; cd /opt/roadcaptain/api-dev; tar -zxf /opt/roadcaptain/${{ env.ZIP_FILE }}; systemctl start --user RoadCaptainApiDev; rm -f /opt/roadcaptain/roadcaptain-app-web-*.tar.gz'
