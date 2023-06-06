@@ -4,7 +4,7 @@ Description=RoadCaptain API dev environment
 [Service]
 # systemd will run this executable to start the service
 # if /usr/bin/dotnet doesn't work, use `which dotnet` to find correct dotnet executable path
-ExecStart=/opt/roadcaptain/api-dev/RoadCaptain.App.Web
+ExecStart=dotnet /opt/roadcaptain/api-dev/RoadCaptain.App.Web.dll
 
 WorkingDirectory=/opt/roadcaptain/api-dev
 Restart=always
