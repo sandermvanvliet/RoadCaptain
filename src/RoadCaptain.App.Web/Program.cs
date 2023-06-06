@@ -7,6 +7,7 @@ using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.Extensions.Hosting.Systemd;
 using Serilog.Core;
 
 namespace RoadCaptain.App.Web
@@ -22,7 +23,9 @@ namespace RoadCaptain.App.Web
             var monitoringEvents = new MonitoringEventsWithSerilog(Logger);
 
             var builder = WebApplication.CreateBuilder(args);
-
+            
+            builder.Host.UseSystemd();
+            
             builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
 
             // Add services to the container.
