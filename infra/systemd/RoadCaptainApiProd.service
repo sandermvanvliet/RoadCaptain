@@ -17,4 +17,4 @@ Environment=DOTNETN_PRINT_TELEMETRY_MESSAGE=false
 Environment=RUN_IN_SYSTEMD=1
 
 [Install]
-WantedBy=multi-user.target
+WantedBy=default.target
