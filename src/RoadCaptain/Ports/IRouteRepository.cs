@@ -9,6 +9,7 @@ namespace RoadCaptain.Ports
     public interface IRouteRepository
     {
         Task<bool> IsAvailableAsync();
+
         Task<RouteModel[]> SearchAsync(string? world = null,
             string? creator = null,
             string? name = null,
@@ -22,6 +23,8 @@ namespace RoadCaptain.Ports
             bool? isLoop = null,
             string[]? komSegments = null,
             string[]? sprintSegments = null);
+
+        Task<RouteModel> StoreAsync(PlannedRoute plannedRoute, OAuthToken token);
 
         string Name { get; }
     }

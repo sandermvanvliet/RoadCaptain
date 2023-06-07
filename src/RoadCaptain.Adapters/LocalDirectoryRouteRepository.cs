@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using RoadCaptain.Ports;
@@ -14,6 +15,7 @@ namespace RoadCaptain.Adapters
 {
     internal class LocalDirectoryRouteRepository : IRouteRepository
     {
+        private const string FileNamePattern = "roadcaptain-route-*.json";
         private readonly LocalDirectoryRouteRepositorySettings _settings;
         private static readonly JsonSerializerSettings JsonSettings = new();
         private readonly JsonSerializer _serializer;
@@ -60,7 +62,7 @@ namespace RoadCaptain.Adapters
                 throw new Exception("Route repository is not configured correctly");
             }
             
-            var routeFiles = Directory.GetFiles(_settings.Directory!, "roadcaptain-route-*.json", SearchOption.TopDirectoryOnly);
+            var routeFiles = Directory.GetFiles(_settings.Directory!, FileNamePattern, SearchOption.TopDirectoryOnly);
             var routeModels = new List<RouteModel>();
 
             foreach (var file in routeFiles)
@@ -145,6 +147,28 @@ namespace RoadCaptain.Adapters
             }
 
             return query.ToArray();
+        }
+
+        public async Task<RouteModel> StoreAsync(PlannedRoute plannedRoute, OAuthToken token)
+        {
+            var storageModel = new RouteModel
+            {
+                Name = plannedRoute.Name,
+                World = plannedRoute.WorldId,
+                ZwiftRouteName = plannedRoute.ZwiftRouteName,
+                IsLoop = plannedRoute.IsLoop,
+                RepositoryName = Name,
+                Serialized = RouteStoreToDisk.SerializeAsJson(plannedRoute)
+            };
+
+            var routeNameForFile = storageModel.Name!.Replace(" ", "").ToLower();
+
+            var serialized = JsonConvert.SerializeObject(storageModel, JsonSettings);
+            var path = Path.Combine(_settings.Directory!, FileNamePattern.Replace("*", routeNameForFile));
+            
+            await File.WriteAllTextAsync(path, serialized);
+
+            return storageModel;
         }
 
         private PlannedRoute? UpgradeIfNecessaryAndSerialize(string? routeModelSerialized)

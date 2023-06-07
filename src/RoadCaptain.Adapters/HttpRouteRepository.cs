@@ -6,6 +6,7 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using RoadCaptain.Ports;
@@ -129,6 +130,41 @@ namespace RoadCaptain.Adapters
             }
 
             return Array.Empty<RouteModel>();
+        }
+
+        public async Task<RouteModel> StoreAsync(PlannedRoute plannedRoute, OAuthToken token)
+        {
+            var createRouteModel = new CreateRouteModel(plannedRoute);
+
+            var builder = new UriBuilder
+            {
+                Scheme = _settings.Uri.Scheme,
+                Host = _settings.Uri.Host,
+                Port = _settings.Uri.Port,
+                Path = "/2023-01/routes"
+            };
+            
+            using var request = new HttpRequestMessage(HttpMethod.Post, builder.Uri);
+            request.Content = new StringContent(JsonConvert.SerializeObject(createRouteModel, JsonSettings));
+            request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token.AccessToken);
+
+            using var response = await _httpClient.SendAsync(request);
+            
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new Exception($"Unable to store route, received an non-successful response: {response.StatusCode.ToString()}");
+            }
+            
+            using var textReader = new StreamReader(await response.Content.ReadAsStreamAsync());
+            await using var jsonTextReader = new JsonTextReader(textReader);
+            var routeModel = _serializer.Deserialize<RouteModel>(jsonTextReader);
+
+            if (routeModel == null)
+            {
+                throw new Exception("Unable to store route, response was empty");
+            }
+            
+            return routeModel;
         }
 
         private PlannedRoute? UpgradeIfNecessaryAndSerialize(string? routeModelSerialized)

@@ -127,6 +127,11 @@ namespace RoadCaptain.Adapters
             return query.ToArray();
         }
 
+        public Task<RouteModel> StoreAsync(PlannedRoute plannedRoute, OAuthToken token)
+        {
+            throw new InvalidOperationException("Rebel route repository is read-only");
+        }
+
         public string Name => "Zwift Insider - Rebel Routes";
 
         private PlannedRoute? UpgradeIfNecessaryAndSerialize(string? routeModelSerialized)

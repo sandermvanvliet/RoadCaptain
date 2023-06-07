@@ -71,6 +71,11 @@ namespace RoadCaptain.App.Runner.ViewModels
             });
         }
 
+        public Task<RouteModel> StoreAsync(PlannedRoute plannedRoute, OAuthToken token)
+        {
+            throw new System.NotImplementedException();
+        }
+
         public string Name => "Local";
     }
 }

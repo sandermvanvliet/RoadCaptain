@@ -365,7 +365,7 @@ namespace RoadCaptain.Adapters
             File.WriteAllText(path, serialized);
         }
 
-        private static string SerializeAsJson(PlannedRoute route)
+        internal static string SerializeAsJson(PlannedRoute route)
         {
             var versionedRoute = new PersistedRouteVersion2
             {
