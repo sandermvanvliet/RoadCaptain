@@ -13,6 +13,8 @@ using RoadCaptain.App.RouteBuilder.ViewModels;
 using RoadCaptain.App.RouteBuilder.Views;
 using RoadCaptain.App.Shared.Dialogs;
 using RoadCaptain.App.Shared.Dialogs.ViewModels;
+using RoadCaptain.Ports;
+using RoadCaptain.UseCases;
 using IApplicationLifetime = Avalonia.Controls.ApplicationLifetimes.IApplicationLifetime;
 
 namespace RoadCaptain.App.RouteBuilder
@@ -112,7 +114,11 @@ namespace RoadCaptain.App.RouteBuilder
         {
             var saveRouteDialog = Resolve<SaveRouteDialog>();
 
-            var viewModel = new SaveRouteDialogViewModel(this, Resolve<IUserPreferences>(), routeViewModel);
+            var viewModel = new SaveRouteDialogViewModel(
+                this, 
+                Resolve<IUserPreferences>(), 
+                routeViewModel, 
+                Resolve<RetrieveRepositoryNamesUseCase>());
 
             saveRouteDialog.DataContext = viewModel;
 

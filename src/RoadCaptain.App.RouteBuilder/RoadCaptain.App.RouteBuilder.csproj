@@ -17,6 +17,9 @@
 	<ItemGroup>
 		<AvaloniaResource Include="Assets\**" />
 		<None Remove=".gitignore" />
+		<None Update="appsettings.routerepositories.json">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
 	</ItemGroup>
 	<ItemGroup>
 		<PackageReference Include="Codenizer.Avalonia.Map" Version="0.2.0" />

@@ -8,15 +8,21 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:viewModels="using:RoadCaptain.App.RouteBuilder.ViewModels"
         mc:Ignorable="d" Width="600" Height="240"
         x:Class="RoadCaptain.App.RouteBuilder.Views.SaveRouteDialog"
         Title="SaveRouteDialog"
         Icon="avares://RoadCaptain.App.Shared/icon.png"
+        Background="Transparent"
         TransparencyLevelHint="Transparent"
         CanResize="False"
         SystemDecorations="None"
         WindowStartupLocation="CenterOwner"
-        Activated="WindowBase_OnActivated">
+        Activated="WindowBase_OnActivated"
+        PointerPressed="InputElement_OnPointerPressed">
+	<Design.DataContext>
+		<viewModels:DesignTimeSaveRouteDialogViewModel />
+	</Design.DataContext>
 	<Window.Styles>
 		<Style Selector="Button">
 			<Setter Property="Background" Value="#FF6141" />
@@ -37,15 +43,8 @@
 				</Setter.Value>
 			</Setter>
 		</Style>
-		<Style Selector="Button.linkButton">
-			<Setter Property="Background" Value="Transparent" />
-			<Setter Property="Foreground" Value="Blue" />
-			<Setter Property="BorderThickness" Value="0" />
-			<Setter Property="VerticalAlignment" Value="Center" />
-			<Setter Property="Cursor" Value="Hand" />
-			<Setter Property="Padding" Value="0" />
-			<Setter Property="FontSize" Value="14" />
-			<Setter Property="FontWeight" Value="Normal" />
+		<Style Selector="Button:disabled">
+			<Setter Property="Background" Value="LightGray" />
 		</Style>
 	</Window.Styles>
 	<Border BorderBrush="DarkGray" BorderThickness="1" CornerRadius="8" Opacity="1" Background="White">
@@ -82,7 +81,7 @@
 
 			<Grid Grid.Row="1" ZIndex="2" Margin="8,32,0,0">
 				<Grid.ColumnDefinitions>
-					<ColumnDefinition Width="100" />
+					<ColumnDefinition Width="120" />
 					<ColumnDefinition />
 					<ColumnDefinition Width="100" />
 				</Grid.ColumnDefinitions>
@@ -105,14 +104,13 @@
 				<TextBlock Text="Route name:" Grid.Row="0" Grid.Column="0" Classes="field" />
 				<TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Path=RouteName}" />
 
-                <TextBlock Text="File name:" Grid.Row="1" Grid.Column="0" Classes="field" />
-                <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Path=Path}" />
-                <Button
-                    Grid.Row="1" Grid.Column="2"
-                    Content="Browse"
-                    HorizontalAlignment="Left" VerticalAlignment="Top"
-                    Margin="8,0,0,0"
-                    Command="{Binding Path=SelectPathCommand}"/>
+                <TextBlock Text="Route repository:" Grid.Row="1" Grid.Column="0" Classes="field" />
+				<ComboBox Name="RepositoryComboBox" VerticalAlignment="Center"
+				          Items="{Binding Path=Repositories}"
+				          SelectedItem="{Binding Path=SelectedRepository}"
+				          PointerPressed="RoutesListBox_OnPointerPressed"
+				          HorizontalAlignment="Stretch"
+				          Grid.Row="1" Grid.Column="1"/>
 			</Grid>
 
 			<!-- Bottom row -->

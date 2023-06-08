@@ -81,7 +81,7 @@ namespace RoadCaptain.App.RouteBuilder
                 message,
                 "An error occurred",
                 MessageBoxButton.Ok,
-                owner,
+                owner ?? CurrentWindow,
                 MessageBoxIcon.Error);
         }
 

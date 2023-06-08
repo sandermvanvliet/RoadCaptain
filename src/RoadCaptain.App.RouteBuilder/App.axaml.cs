@@ -5,6 +5,7 @@
 using System;
 using System.Linq;
 using System.Diagnostics;
+using System.IO;
 using System.Threading.Tasks;
 using Autofac;
 using Avalonia;
@@ -20,6 +21,7 @@ using Serilog.Core;
 using RoadCaptain.App.Shared.Commands;
 using System.Runtime.InteropServices;
 using System.Security.Policy;
+using RoadCaptain.App.Shared;
 
 namespace RoadCaptain.App.RouteBuilder
 {
@@ -49,6 +51,8 @@ namespace RoadCaptain.App.RouteBuilder
             
             var configuration = new ConfigurationBuilder()
                 .AddJsonFile("appsettings.json", true)
+                .AddJsonFile("appsettings.routerepositories.json", true)
+                .AddJsonFile(Path.Combine(PlatformPaths.GetUserDataDirectory(), "routerepositories.json"), true)
                 .Build();
 
             _container = InversionOfControl

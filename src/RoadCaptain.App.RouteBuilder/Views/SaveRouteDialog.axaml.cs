@@ -5,6 +5,7 @@
 using System;
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Avalonia.Threading;
@@ -32,12 +33,19 @@ namespace RoadCaptain.App.RouteBuilder.Views
             Close();
         }
 
-        private void StyledElement_OnInitialized(object? sender, EventArgs e)
+        private void InputElement_OnPointerPressed(object? sender, PointerPressedEventArgs e)
         {
+            if (e.GetCurrentPoint(this).Properties.IsLeftButtonPressed)
+            {
+                BeginMoveDrag(e);
+            }
         }
 
         private void WindowBase_OnActivated(object? sender, EventArgs e)
         {
+            // Remove event handler to ensure this is only called once
+            Activated -= WindowBase_OnActivated;
+            
             if (DataContext is SaveRouteDialogViewModel viewModel)
             {
                 viewModel.ShouldClose += (_, _) =>
@@ -51,7 +59,17 @@ namespace RoadCaptain.App.RouteBuilder.Views
                         Close();
                     }
                 };
+
+                Dispatcher.UIThread.InvokeAsync(() => viewModel.Initialize());
             }
+        }
+
+        private void RoutesListBox_OnPointerPressed(object? sender, PointerPressedEventArgs e)
+        {
+            // This prevents the situation where the PointerPressed event bubbles
+            // up to the window and initiates the window drag operation.
+            // It fixes a bug where the combo box can't be opened.
+            e.Handled = true;
         }
     }
 }

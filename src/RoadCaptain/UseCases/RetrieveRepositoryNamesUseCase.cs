@@ -4,6 +4,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using RoadCaptain.Commands;
 using RoadCaptain.Ports;
 
 namespace RoadCaptain.UseCases
@@ -17,11 +18,17 @@ namespace RoadCaptain.UseCases
             _routeRepositories = routeRepositories;
         }
 
-        public string[] Execute()
+        public string[] Execute(RetrieveRepositoryNameCommand command)
         {
-            return new [] { "All" }
-                .Concat(_routeRepositories.Select(r => r.Name))
-                .ToArray();
+            var repositories = _routeRepositories.Select(r => r.Name);
+            
+            if (command.Intent == RetrieveRepositoriesIntent.Retrieve)
+            {
+                repositories = new[] { "All" }
+                    .Concat(repositories);
+            }
+
+            return repositories.ToArray();
         }
     }
 }
