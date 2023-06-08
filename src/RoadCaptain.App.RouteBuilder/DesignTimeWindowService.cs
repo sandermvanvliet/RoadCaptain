@@ -62,7 +62,7 @@ namespace RoadCaptain.App.RouteBuilder
             throw new System.NotImplementedException();
         }
 
-        public Task<string?> ShowSaveRouteDialog(string? lastUsedFolder, RouteViewModel routeViewModel)
+        public Task ShowSaveRouteDialog(string? lastUsedFolder, RouteViewModel routeViewModel)
         {
             throw new System.NotImplementedException();
         }

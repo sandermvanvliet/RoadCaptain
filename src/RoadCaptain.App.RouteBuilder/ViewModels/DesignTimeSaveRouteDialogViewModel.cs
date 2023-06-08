@@ -8,7 +8,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
     internal class DesignTimeSaveRouteDialogViewModel : SaveRouteDialogViewModel
     {
         public DesignTimeSaveRouteDialogViewModel()
-            : base(new DesignTimeWindowService(), new DummyUserPreferences(), new RouteViewModel(null, null), new RetrieveRepositoryNamesUseCase(new [] { new StubRouteRepository() }))
+            : base(new DesignTimeWindowService(), new DummyUserPreferences(), new RouteViewModel(null, null), new RetrieveRepositoryNamesUseCase(new [] { new StubRouteRepository() }), new SaveRouteUseCase(new [] { new StubRouteRepository() }))
         {
             Repositories = new[] { "All", "Local" }.ToImmutableList();
         }

@@ -110,7 +110,7 @@ namespace RoadCaptain.App.RouteBuilder
             return result == MessageBoxResult.Yes;
         }
 
-        public async Task<string?> ShowSaveRouteDialog(string? lastUsedFolder, RouteViewModel routeViewModel)
+        public async Task ShowSaveRouteDialog(string? lastUsedFolder, RouteViewModel routeViewModel)
         {
             var saveRouteDialog = Resolve<SaveRouteDialog>();
 
@@ -118,13 +118,12 @@ namespace RoadCaptain.App.RouteBuilder
                 this, 
                 Resolve<IUserPreferences>(), 
                 routeViewModel, 
-                Resolve<RetrieveRepositoryNamesUseCase>());
+                Resolve<RetrieveRepositoryNamesUseCase>(),
+                Resolve<SaveRouteUseCase>());
 
             saveRouteDialog.DataContext = viewModel;
 
             await saveRouteDialog.ShowDialog(CurrentWindow);
-
-            return viewModel.Path;
         }
 
         public void Shutdown(int exitCode)

@@ -5,6 +5,7 @@
 using System;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
@@ -152,6 +153,11 @@ namespace RoadCaptain.Adapters
             
             if (!response.IsSuccessStatusCode)
             {
+                if (response.StatusCode == HttpStatusCode.Unauthorized)
+                {
+                    throw new Exception("You're not authorized to store a route on this repository");
+                }
+                
                 throw new Exception($"Unable to store route, received an non-successful response: {response.StatusCode.ToString()}");
             }
             

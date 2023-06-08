@@ -586,17 +586,16 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
 
         private async Task<CommandResult> SaveRoute()
         {
-            var outputFilePath = await _windowService.ShowSaveRouteDialog(_userPreferences.LastUsedFolder, Route);
-
-            if (!string.IsNullOrEmpty(outputFilePath))
+            try
             {
-                _userPreferences.LastUsedFolder = Path.GetDirectoryName(outputFilePath);
-                _userPreferences.Save();
+                await _windowService.ShowSaveRouteDialog(_userPreferences.LastUsedFolder, Route);
 
                 return CommandResult.Success();
             }
-
-            return CommandResult.Aborted();
+            catch (Exception e)
+            {
+                return CommandResult.Failure("Failed to save route: " + e.Message);
+            }
         }
 
         private async Task<CommandResult> OpenRoute()

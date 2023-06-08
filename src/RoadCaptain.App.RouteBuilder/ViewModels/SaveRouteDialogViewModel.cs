@@ -21,17 +21,20 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
         private ImmutableList<string> _repositories;
         private string? _selectedRepository;
         private readonly RetrieveRepositoryNamesUseCase _retrieveRepositoryNamesUseCase;
+        private readonly SaveRouteUseCase _saveRouteUseCase;
 
         public SaveRouteDialogViewModel(
             IWindowService windowService,
             IUserPreferences userPreferences,
             RouteViewModel route,
-            RetrieveRepositoryNamesUseCase retrieveRepositoryNamesUseCase)
+            RetrieveRepositoryNamesUseCase retrieveRepositoryNamesUseCase, 
+            SaveRouteUseCase saveRouteUseCase)
         {
             _windowService = windowService;
             _userPreferences = userPreferences;
             _route = route;
             _retrieveRepositoryNamesUseCase = retrieveRepositoryNamesUseCase;
+            _saveRouteUseCase = saveRouteUseCase;
         }
 
         public ICommand SaveRouteCommand => new AsyncRelayCommand(
@@ -46,35 +49,26 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             .SubscribeTo(this, () => SelectedRepository)
             .SubscribeTo(this, () => RouteName);
         
-        public ICommand SelectPathCommand => new AsyncRelayCommand(
-            _ => SelectPath(),
-            _ => true);
-
-        private async Task<CommandResult> SelectPath()
+        private async Task<CommandResult> SaveRoute()
         {
-            var result = await _windowService.ShowSaveFileDialog(_userPreferences.LastUsedFolder, RouteName);
-
-            if (!string.IsNullOrEmpty(result))
+            if (string.IsNullOrEmpty(RouteName))
             {
-                Path = result;
-                return CommandResult.Success();
+                return CommandResult.Failure("Route name is empty");
             }
-
-            return CommandResult.Aborted();
-        }
-
-
-        private Task<CommandResult> SaveRoute()
-        {
+            if (string.IsNullOrEmpty(SelectedRepository))
+            {
+                return CommandResult.Failure("No route repository selected");
+            }
+            
             try
             {
-                _route.Save();
-
-                return Task.FromResult(CommandResult.Success());
+                await _saveRouteUseCase.ExecuteAsync(new SaveRouteCommand(_route.AsPlannedRoute()!, RouteName, SelectedRepository));
+                
+                return CommandResult.Success();
             }
             catch (Exception e)
             {
-                return Task.FromResult<CommandResult>(CommandResult.Failure(e.Message));
+                return CommandResult.Failure(e.Message);
             }
         }
 
@@ -96,17 +90,6 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             {
                 if (_route == value) return;
                 _route = value;
-                this.RaisePropertyChanged();
-            }
-        }
-
-        public string? Path
-        {
-            get => _route.OutputFilePath;
-            set
-            {
-                if (_route.OutputFilePath == value) return;
-                _route.OutputFilePath = value;
                 this.RaisePropertyChanged();
             }
         }
