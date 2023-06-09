@@ -9,12 +9,14 @@ namespace RoadCaptain.Commands
         public PlannedRoute Route { get; }
         public string RouteName { get; }
         public string RepositoryName { get; }
+        public string? Token { get; }
 
-        public SaveRouteCommand(PlannedRoute route, string routeName, string repositoryName)
+        public SaveRouteCommand(PlannedRoute route, string routeName, string repositoryName, string? token)
         {
             Route = route;
             RouteName = routeName;
             RepositoryName = repositoryName;
+            Token = token;
         }
     }
 }

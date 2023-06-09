@@ -11,9 +11,9 @@ using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using RoadCaptain.App.RouteBuilder.ViewModels;
 using RoadCaptain.App.RouteBuilder.Views;
+using RoadCaptain.App.Shared;
 using RoadCaptain.App.Shared.Dialogs;
 using RoadCaptain.App.Shared.Dialogs.ViewModels;
-using RoadCaptain.Ports;
 using RoadCaptain.UseCases;
 using IApplicationLifetime = Avalonia.Controls.ApplicationLifetimes.IApplicationLifetime;
 
@@ -119,7 +119,8 @@ namespace RoadCaptain.App.RouteBuilder
                 Resolve<IUserPreferences>(), 
                 routeViewModel, 
                 Resolve<RetrieveRepositoryNamesUseCase>(),
-                Resolve<SaveRouteUseCase>());
+                Resolve<SaveRouteUseCase>(),
+                Resolve<IZwiftCredentialCache>());
 
             saveRouteDialog.DataContext = viewModel;
 

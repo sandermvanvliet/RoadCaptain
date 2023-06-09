@@ -127,7 +127,7 @@ namespace RoadCaptain.Adapters
             return query.ToArray();
         }
 
-        public Task<RouteModel> StoreAsync(PlannedRoute plannedRoute, OAuthToken token)
+        public Task<RouteModel> StoreAsync(PlannedRoute plannedRoute, string? token)
         {
             throw new InvalidOperationException("Rebel route repository is read-only");
         }

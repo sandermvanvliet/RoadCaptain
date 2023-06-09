@@ -24,7 +24,7 @@ namespace RoadCaptain.Ports
             string[]? komSegments = null,
             string[]? sprintSegments = null);
 
-        Task<RouteModel> StoreAsync(PlannedRoute plannedRoute, OAuthToken token);
+        Task<RouteModel> StoreAsync(PlannedRoute plannedRoute, string? token);
 
         string Name { get; }
     }

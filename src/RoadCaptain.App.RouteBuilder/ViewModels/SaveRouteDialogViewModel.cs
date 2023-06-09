@@ -7,6 +7,7 @@ using System.Collections.Immutable;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using ReactiveUI;
+using RoadCaptain.App.Shared;
 using RoadCaptain.App.Shared.Commands;
 using RoadCaptain.Commands;
 using RoadCaptain.UseCases;
@@ -22,19 +23,21 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
         private string? _selectedRepository;
         private readonly RetrieveRepositoryNamesUseCase _retrieveRepositoryNamesUseCase;
         private readonly SaveRouteUseCase _saveRouteUseCase;
+        private readonly IZwiftCredentialCache _credentialCache;
 
         public SaveRouteDialogViewModel(
             IWindowService windowService,
             IUserPreferences userPreferences,
             RouteViewModel route,
             RetrieveRepositoryNamesUseCase retrieveRepositoryNamesUseCase, 
-            SaveRouteUseCase saveRouteUseCase)
+            SaveRouteUseCase saveRouteUseCase, IZwiftCredentialCache credentialCache)
         {
             _windowService = windowService;
             _userPreferences = userPreferences;
             _route = route;
             _retrieveRepositoryNamesUseCase = retrieveRepositoryNamesUseCase;
             _saveRouteUseCase = saveRouteUseCase;
+            _credentialCache = credentialCache;
         }
 
         public ICommand SaveRouteCommand => new AsyncRelayCommand(
@@ -62,7 +65,11 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             
             try
             {
-                await _saveRouteUseCase.ExecuteAsync(new SaveRouteCommand(_route.AsPlannedRoute()!, RouteName, SelectedRepository));
+                var token = await _credentialCache.LoadAsync();
+
+                // TODO: Handle situation where the token has expired.
+                
+                await _saveRouteUseCase.ExecuteAsync(new SaveRouteCommand(_route.AsPlannedRoute()!, RouteName, SelectedRepository, token?.AccessToken));
                 
                 return CommandResult.Success();
             }

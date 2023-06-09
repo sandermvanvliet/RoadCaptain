@@ -4,6 +4,7 @@
 
 using System.Collections.Immutable;
 using System.Threading.Tasks;
+using RoadCaptain.App.Shared;
 using RoadCaptain.Ports;
 using RoadCaptain.UseCases;
 
@@ -12,7 +13,13 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
     internal class DesignTimeSaveRouteDialogViewModel : SaveRouteDialogViewModel
     {
         public DesignTimeSaveRouteDialogViewModel()
-            : base(new DesignTimeWindowService(), new DummyUserPreferences(), new RouteViewModel(null, null), new RetrieveRepositoryNamesUseCase(new [] { new StubRouteRepository() }), new SaveRouteUseCase(new [] { new StubRouteRepository() }))
+            : base(
+                new DesignTimeWindowService(),
+                new DummyUserPreferences(),
+                new RouteViewModel(null, null), 
+                new RetrieveRepositoryNamesUseCase(new [] { new StubRouteRepository() }), 
+                new SaveRouteUseCase(new [] { new StubRouteRepository() }),
+                new InMemoryZwiftCredentialCache())
         {
             Repositories = new[] { "All", "Local" }.ToImmutableList();
         }
@@ -48,7 +55,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             });
         }
 
-        public Task<RouteModel> StoreAsync(PlannedRoute plannedRoute, OAuthToken token)
+        public Task<RouteModel> StoreAsync(PlannedRoute plannedRoute, string? token)
         {
             throw new System.NotImplementedException();
         }

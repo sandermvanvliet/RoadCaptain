@@ -71,7 +71,7 @@ namespace RoadCaptain.App.Runner.ViewModels
             });
         }
 
-        public Task<RouteModel> StoreAsync(PlannedRoute plannedRoute, OAuthToken token)
+        public Task<RouteModel> StoreAsync(PlannedRoute plannedRoute, string? token)
         {
             throw new System.NotImplementedException();
         }

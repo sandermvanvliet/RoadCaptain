@@ -149,7 +149,7 @@ namespace RoadCaptain.Adapters
             return query.ToArray();
         }
 
-        public async Task<RouteModel> StoreAsync(PlannedRoute plannedRoute, OAuthToken token)
+        public async Task<RouteModel> StoreAsync(PlannedRoute plannedRoute, string? token)
         {
             var storageModel = new RouteModel
             {

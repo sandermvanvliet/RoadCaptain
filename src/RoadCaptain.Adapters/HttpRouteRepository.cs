@@ -133,8 +133,13 @@ namespace RoadCaptain.Adapters
             return Array.Empty<RouteModel>();
         }
 
-        public async Task<RouteModel> StoreAsync(PlannedRoute plannedRoute, OAuthToken token)
+        public async Task<RouteModel> StoreAsync(PlannedRoute plannedRoute, string? token)
         {
+            if (string.IsNullOrEmpty(token))
+            {
+                throw new ArgumentException("A valid token is required for this route repository");
+            }
+
             var createRouteModel = new CreateRouteModel(plannedRoute);
 
             var builder = new UriBuilder
@@ -147,7 +152,7 @@ namespace RoadCaptain.Adapters
             
             using var request = new HttpRequestMessage(HttpMethod.Post, builder.Uri);
             request.Content = new StringContent(JsonConvert.SerializeObject(createRouteModel, JsonSettings));
-            request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token.AccessToken);
+            request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
             using var response = await _httpClient.SendAsync(request);
             

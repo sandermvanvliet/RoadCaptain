@@ -32,9 +32,7 @@ namespace RoadCaptain.UseCases
 
             saveRouteCommand.Route.Name = saveRouteCommand.RouteName;
             
-            var token = new OAuthToken();
-            
-            await repository.StoreAsync(saveRouteCommand.Route, token);
+            await repository.StoreAsync(saveRouteCommand.Route, saveRouteCommand.Token);
         }
     }
 }
