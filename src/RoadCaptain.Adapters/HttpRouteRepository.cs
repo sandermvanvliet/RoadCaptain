@@ -8,6 +8,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using RoadCaptain.Ports;
@@ -151,7 +152,7 @@ namespace RoadCaptain.Adapters
             };
             
             using var request = new HttpRequestMessage(HttpMethod.Post, builder.Uri);
-            request.Content = new StringContent(JsonConvert.SerializeObject(createRouteModel, JsonSettings));
+            request.Content = new StringContent(JsonConvert.SerializeObject(createRouteModel, JsonSettings), Encoding.UTF8, "application/json");
             request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
             using var response = await _httpClient.SendAsync(request);
