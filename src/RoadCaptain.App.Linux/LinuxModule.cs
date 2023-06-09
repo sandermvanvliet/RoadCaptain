@@ -4,6 +4,7 @@
 
 using Autofac;
 using RoadCaptain.App.Linux.UserPreferences;
+using RoadCaptain.App.Shared;
 
 namespace RoadCaptain.App.Linux
 {
@@ -12,6 +13,7 @@ namespace RoadCaptain.App.Linux
         protected override void Load(ContainerBuilder builder)
         {
             builder.RegisterType<LinuxUserPreferences>().As<IUserPreferences>().SingleInstance();
+            builder.RegisterType<InMemoryZwiftCredentialCache>().As<IZwiftCredentialCache>().SingleInstance();
         }
     }
 }

@@ -5,6 +5,7 @@
 using Autofac;
 using RoadCaptain.App.MacOs.UserPreferences;
 using RoadCaptain.App.MacOs.Views;
+using RoadCaptain.App.Shared;
 using RoadCaptain.App.Shared.Views;
 
 namespace RoadCaptain.App.MacOs
@@ -15,6 +16,7 @@ namespace RoadCaptain.App.MacOs
         {
             builder.RegisterType<MacOsUserPreferences>().As<IUserPreferences>().SingleInstance();
             builder.RegisterType<ZwiftLoginWindow>().As<ZwiftLoginWindowBase>();
+            builder.RegisterType<InMemoryZwiftCredentialCache>().As<IZwiftCredentialCache>().SingleInstance();
         }
     }
 }

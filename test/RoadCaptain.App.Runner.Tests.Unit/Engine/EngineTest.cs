@@ -46,6 +46,7 @@ namespace RoadCaptain.App.Runner.Tests.Unit.Engine
 
             // Register the testable engine so we can properly resolve it
             containerBuilder.RegisterType<TestableEngine>().AsSelf();
+            containerBuilder.RegisterType<InMemoryZwiftCredentialCache>().As<IZwiftCredentialCache>().SingleInstance();
             
             var container = containerBuilder.Build();
             

@@ -2,6 +2,7 @@
 // Licensed under Artistic License 2.0
 // See LICENSE or https://choosealicense.com/licenses/artistic-2.0/
 
+using RoadCaptain.App.Shared;
 using RoadCaptain.GameStates;
 using RoadCaptain.Ports;
 using RoadCaptain.UseCases;

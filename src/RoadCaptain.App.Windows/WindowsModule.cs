@@ -3,6 +3,7 @@
 // See LICENSE or https://choosealicense.com/licenses/artistic-2.0/
 
 using Autofac;
+using RoadCaptain.App.Shared;
 using RoadCaptain.App.Shared.Views;
 using RoadCaptain.App.Windows.UserPreferences;
 using RoadCaptain.App.Windows.Views;
@@ -15,6 +16,7 @@ namespace RoadCaptain.App.Windows
         {
             builder.RegisterType<WindowsUserPreferences>().As<IUserPreferences>().SingleInstance();
             builder.RegisterType<ZwiftLoginWindow>().As<ZwiftLoginWindowBase>();
+            builder.RegisterType<CredentialCache>().As<IZwiftCredentialCache>().SingleInstance();
         }
     }
 }

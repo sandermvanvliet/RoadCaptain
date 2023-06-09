@@ -20,8 +20,6 @@ namespace RoadCaptain.App.Runner
             builder.Register(_ => logger).SingleInstance();
             builder.Register<IConfiguration>(_ => configuration).SingleInstance();
 
-            builder.RegisterType<ZwiftCredentialCache>().As<IZwiftCredentialCache>().SingleInstance();
-
             builder.RegisterType<Configuration>().AsSelf().SingleInstance();
 
             builder.RegisterModule<DomainModule>();

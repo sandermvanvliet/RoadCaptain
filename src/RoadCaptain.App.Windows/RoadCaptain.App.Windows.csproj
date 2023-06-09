@@ -25,4 +25,10 @@
 	  </Compile>
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Reference Include="WindowsCredentialManager">
+	    <HintPath>..\..\vendor\WindowsCredentialManager\WindowsCredentialManager.dll</HintPath>
+	  </Reference>
+	</ItemGroup>
+
 </Project>

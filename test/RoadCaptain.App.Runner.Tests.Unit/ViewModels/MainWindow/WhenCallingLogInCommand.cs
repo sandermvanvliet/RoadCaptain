@@ -26,13 +26,13 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.MainWindow
         private readonly MainWindowViewModel _viewModel;
         private readonly StubWindowService _windowService;
         private readonly InMemoryGameStateDispatcher _gameStateDispatcher;
-        private readonly ZwiftCredentialCache _credentialCache;
+        private readonly InMemoryZwiftCredentialCache _credentialCache;
 
         public WhenCallingLogInCommand()
         {
             _windowService = new StubWindowService();
             _gameStateDispatcher = new InMemoryGameStateDispatcher(new NopMonitoringEvents(), new PlatformPaths());
-            _credentialCache = new ZwiftCredentialCache(new Zwift(new HttpClient(new TestableMessageHandler())), new NopMonitoringEvents());
+            _credentialCache = new InMemoryZwiftCredentialCache();
 
             StubRouteStore routeStore = new StubRouteStore();
             _viewModel = new MainWindowViewModel(new Configuration(null),

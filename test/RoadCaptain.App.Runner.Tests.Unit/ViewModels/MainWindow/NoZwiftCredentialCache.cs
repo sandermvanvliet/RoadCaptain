@@ -3,6 +3,7 @@
 // See LICENSE or https://choosealicense.com/licenses/artistic-2.0/
 
 using System.Threading.Tasks;
+using RoadCaptain.App.Shared;
 using RoadCaptain.App.Shared.Models;
 
 namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.MainWindow
