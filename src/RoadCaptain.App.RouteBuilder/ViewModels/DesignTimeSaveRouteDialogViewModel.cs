@@ -2,6 +2,7 @@
 // Licensed under Artistic License 2.0
 // See LICENSE or https://choosealicense.com/licenses/artistic-2.0/
 
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Threading.Tasks;
 using RoadCaptain.App.Shared;
@@ -18,7 +19,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
                 new DummyUserPreferences(),
                 new RouteViewModel(null, null), 
                 new RetrieveRepositoryNamesUseCase(new [] { new StubRouteRepository() }), 
-                new SaveRouteUseCase(new [] { new StubRouteRepository() }),
+                new SaveRouteUseCase(new [] { new StubRouteRepository() }, null),
                 new InMemoryZwiftCredentialCache())
         {
             Repositories = new[] { "All", "Local" }.ToImmutableList();
@@ -55,7 +56,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             });
         }
 
-        public Task<RouteModel> StoreAsync(PlannedRoute plannedRoute, string? token)
+        public Task<RouteModel> StoreAsync(PlannedRoute plannedRoute, string? token, List<Segment> segments)
         {
             throw new System.NotImplementedException();
         }

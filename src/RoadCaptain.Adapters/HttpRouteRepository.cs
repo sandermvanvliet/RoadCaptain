@@ -3,6 +3,7 @@
 // See LICENSE or https://choosealicense.com/licenses/artistic-2.0/
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -134,14 +135,14 @@ namespace RoadCaptain.Adapters
             return Array.Empty<RouteModel>();
         }
 
-        public async Task<RouteModel> StoreAsync(PlannedRoute plannedRoute, string? token)
+        public async Task<RouteModel> StoreAsync(PlannedRoute plannedRoute, string? token, List<Segment> segments)
         {
             if (string.IsNullOrEmpty(token))
             {
                 throw new ArgumentException("A valid token is required for this route repository");
             }
 
-            var createRouteModel = new CreateRouteModel(plannedRoute);
+            var createRouteModel = new CreateRouteModel(plannedRoute, segments);
 
             var builder = new UriBuilder
             {

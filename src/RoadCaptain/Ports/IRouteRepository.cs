@@ -2,6 +2,7 @@
 // Licensed under Artistic License 2.0
 // See LICENSE or https://choosealicense.com/licenses/artistic-2.0/
 
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace RoadCaptain.Ports
@@ -24,7 +25,7 @@ namespace RoadCaptain.Ports
             string[]? komSegments = null,
             string[]? sprintSegments = null);
 
-        Task<RouteModel> StoreAsync(PlannedRoute plannedRoute, string? token);
+        Task<RouteModel> StoreAsync(PlannedRoute plannedRoute, string? token, List<Segment> segments);
 
         string Name { get; }
     }

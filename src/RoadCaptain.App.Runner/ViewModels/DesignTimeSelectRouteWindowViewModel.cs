@@ -2,6 +2,7 @@
 // Licensed under Artistic License 2.0
 // See LICENSE or https://choosealicense.com/licenses/artistic-2.0/
 
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using RoadCaptain.Ports;
 using RoadCaptain.UseCases;
@@ -71,7 +72,7 @@ namespace RoadCaptain.App.Runner.ViewModels
             });
         }
 
-        public Task<RouteModel> StoreAsync(PlannedRoute plannedRoute, string? token)
+        public Task<RouteModel> StoreAsync(PlannedRoute plannedRoute, string? token, List<Segment> segments)
         {
             throw new System.NotImplementedException();
         }

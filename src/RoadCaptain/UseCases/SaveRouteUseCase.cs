@@ -14,10 +14,12 @@ namespace RoadCaptain.UseCases
     public class SaveRouteUseCase
     {
         private readonly IEnumerable<IRouteRepository> _repositories;
+        private readonly ISegmentStore _segmentStore;
 
-        public SaveRouteUseCase(IEnumerable<IRouteRepository> repositories)
+        public SaveRouteUseCase(IEnumerable<IRouteRepository> repositories, ISegmentStore segmentStore)
         {
             _repositories = repositories;
+            _segmentStore = segmentStore;
         }
         
         public async Task ExecuteAsync(SaveRouteCommand saveRouteCommand)
@@ -32,7 +34,9 @@ namespace RoadCaptain.UseCases
 
             saveRouteCommand.Route.Name = saveRouteCommand.RouteName;
             
-            await repository.StoreAsync(saveRouteCommand.Route, saveRouteCommand.Token);
+            var segments = _segmentStore.LoadSegments(saveRouteCommand.Route.World!, saveRouteCommand.Route.Sport);
+            
+            await repository.StoreAsync(saveRouteCommand.Route, saveRouteCommand.Token, segments);
         }
     }
 }
