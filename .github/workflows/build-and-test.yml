@@ -19,9 +19,9 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: Build
-      run: dotnet build --verbosity normal -c Release -p:SkipInvalidConfigurations=true
+      run: dotnet build RoadCaptain.Windows.slnf --verbosity quiet -c Release -p:SkipInvalidConfigurations=true
     - name: Test
-      run: dotnet test --no-build --verbosity normal -c Release
+      run: dotnet test RoadCaptain.Windows.slnf  --no-build --verbosity quiet -c Release
 
   build_macos-x64:
 
@@ -30,9 +30,9 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: Build
-      run: dotnet build --verbosity normal -c Release -p:SkipInvalidConfigurations=true -p:EnableWindowsTargeting=true
+      run: dotnet build RoadCaptain.MacOS.slnf --verbosity quiet -c Release -p:SkipInvalidConfigurations=true
     - name: Test
-      run: dotnet test --no-build --verbosity normal -c Release
+      run: dotnet test RoadCaptain.MacOS.slnf --no-build --verbosity quiet -c Release
          
   build_linux-x64:
 
@@ -41,6 +41,6 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: Build
-      run: dotnet build --verbosity normal -c Release -p:SkipInvalidConfigurations=true -p:EnableWindowsTargeting=true
+      run: dotnet build RoadCaptain.Linux.slnf --verbosity quiet -c Release -p:SkipInvalidConfigurations=true
     - name: Test
-      run: dotnet test --no-build --verbosity normal -c Release
+      run: dotnet test RoadCaptain.Linux.slnf --no-build --verbosity quiet -c Release
