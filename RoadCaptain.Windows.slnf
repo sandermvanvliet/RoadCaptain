@@ -1,0 +1,27 @@
+{
+  "solution": {
+    "path": "RoadCaptain.sln",
+    "projects": [
+      "packaging\\RoadCaptain.Installer\\RoadCaptain.Installer.wixproj",
+      "packaging\\RoadCaptain.WixComponentFileGenerator\\RoadCaptain.WixComponentFileGenerator.csproj",
+      "src\\RoadCaptain.Adapters\\RoadCaptain.Adapters.csproj",
+      "src\\RoadCaptain.App.RouteBuilder\\RoadCaptain.App.RouteBuilder.csproj",
+      "src\\RoadCaptain.App.Runner\\RoadCaptain.App.Runner.csproj",
+      "src\\RoadCaptain.App.Shared\\RoadCaptain.App.Shared.csproj",
+      "src\\RoadCaptain.App.Web\\RoadCaptain.App.Web.csproj",
+      "src\\RoadCaptain.App.Windows\\RoadCaptain.App.Windows.csproj",
+      "src\\RoadCaptain.MarkerBuilder\\RoadCaptain.MarkerBuilder.csproj",
+      "src\\RoadCaptain.SegmentBuilder\\RoadCaptain.SegmentBuilder.csproj",
+      "src\\RoadCaptain.SegmentSerializer\\RoadCaptain.SegmentSerializer.csproj",
+      "src\\RoadCaptain.SegmentSplitter\\RoadCaptain.SegmentSplitter.csproj",
+      "src\\RoadCaptain\\RoadCaptain.csproj",
+      "test\\RoadCaptain.Adapters.Tests.Unit\\RoadCaptain.Adapters.Tests.Unit.csproj",
+      "test\\RoadCaptain.App.RouteBuilder.Tests.Unit\\RoadCaptain.App.RouteBuilder.Tests.Unit.csproj",
+      "test\\RoadCaptain.App.Runner.Tests.Unit\\RoadCaptain.App.Runner.Tests.Unit.csproj",
+      "test\\RoadCaptain.App.Shared.Tests.Unit\\RoadCaptain.App.Shared.Tests.Unit.csproj",
+      "test\\RoadCaptain.App.Windows.Tests.Unit\\RoadCaptain.App.Windows.Tests.Unit.csproj",
+      "test\\RoadCaptain.Tests.Benchmark\\RoadCaptain.Tests.Benchmark.csproj",
+      "test\\RoadCaptain.Tests.Unit\\RoadCaptain.Tests.Unit.csproj"
+    ]
+  }
+}
