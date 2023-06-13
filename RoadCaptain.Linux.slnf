@@ -2,7 +2,6 @@
   "solution": {
     "path": "RoadCaptain.sln",
     "projects": [
-      "packaging\\RoadCaptain.Installer\\RoadCaptain.Installer.wixproj",
       "packaging\\RoadCaptain.WixComponentFileGenerator\\RoadCaptain.WixComponentFileGenerator.csproj",
       "src\\RoadCaptain.Adapters\\RoadCaptain.Adapters.csproj",
       "src\\RoadCaptain.App.Linux\\RoadCaptain.App.Linux.csproj",
