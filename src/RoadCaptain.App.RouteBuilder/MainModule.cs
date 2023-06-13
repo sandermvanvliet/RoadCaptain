@@ -54,7 +54,7 @@ namespace RoadCaptain.App.RouteBuilder
                 // to run under unit tests when working in the generic solution
                 if (File.Exists(platformAssemblyPath))
                 {
-                    var platformAssembly = Assembly.Load(platformAssemblyPath);
+                    var platformAssembly = Assembly.LoadFile(platformAssemblyPath);
                     builder.RegisterAssemblyModules(platformAssembly);
                 }
             }
