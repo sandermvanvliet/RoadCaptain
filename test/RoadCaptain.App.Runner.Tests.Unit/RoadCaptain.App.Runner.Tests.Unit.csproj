@@ -34,8 +34,7 @@
 		<ProjectReference Include="..\..\src\RoadCaptain\RoadCaptain.csproj" />
 	</ItemGroup>
 
-	<ItemGroup>
-		<ProjectReference Include="..\..\src\RoadCaptain.App.Windows\RoadCaptain.App.Windows.csproj" Condition="'$(RuntimeIdentifier)'=='win-x64'" />	
+	<ItemGroup>	
 		<ProjectReference Include="..\..\src\RoadCaptain.App.Linux\RoadCaptain.App.Linux.csproj" Condition="'$(RuntimeIdentifier)'=='linux-x64'" />
 		<ProjectReference Include="..\..\src\RoadCaptain.App.MacOs\RoadCaptain.App.MacOs.csproj" Condition="'$(RuntimeIdentifier)'=='osx-x64' Or '$(RuntimeIdentifier)'=='osx-arm64'" />
 	</ItemGroup>

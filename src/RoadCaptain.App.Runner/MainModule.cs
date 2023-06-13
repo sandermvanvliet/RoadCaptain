@@ -10,6 +10,7 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System;
 using System.IO;
+using Serilog;
 using Module = Autofac.Module;
 
 namespace RoadCaptain.App.Runner
@@ -27,28 +28,36 @@ namespace RoadCaptain.App.Runner
             builder.RegisterType<WindowService>().As<IWindowService>().SingleInstance();
             builder.RegisterDecorator<DelegateDecorator, IWindowService>();
 
-            Assembly platformAssembly;
+            string? platformAssemblyPath = null;
 
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
-                platformAssembly = Assembly.LoadFile(Path.Combine(Environment.CurrentDirectory, "RoadCaptain.App.Windows.dll"));
+                platformAssemblyPath = Path.Combine(Environment.CurrentDirectory, "RoadCaptain.App.Windows.dll");
             }
             else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
             {
-                platformAssembly = Assembly.LoadFile(Path.Combine(Environment.CurrentDirectory, "RoadCaptain.App.Linux.dll"));
+                platformAssemblyPath = Path.Combine(Environment.CurrentDirectory, "RoadCaptain.App.Linux.dll");
             }
             else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
             {
-                platformAssembly = Assembly.LoadFile(Path.Combine(Environment.CurrentDirectory, "RoadCaptain.App.MacOs.dll"));
+                platformAssemblyPath = Path.Combine(Environment.CurrentDirectory, "RoadCaptain.App.MacOs.dll");
+            }
+
+            if (!string.IsNullOrEmpty(platformAssemblyPath))
+            {
+                // This is inside a File.Exists check to allow this part
+                // to run under unit tests when working in the generic solution
+                if (File.Exists(platformAssemblyPath))
+                {
+                    var platformAssembly = Assembly.Load(platformAssemblyPath);
+                    builder.RegisterAssemblyModules(platformAssembly);
+                }
             }
             else
             {
-                throw new Exception("Unable to determine the platform assembly to load!");
+                throw new Exception("Unable to determine platform, can't load platform specific application components and I refuse to start");
             }
 
-            builder.RegisterAssemblyModules(platformAssembly);
-            
-            
             builder
                 .RegisterAssemblyTypes(ThisAssembly)
                 .Where(type => type.BaseType == typeof(Window) && (type.Namespace ?? "").EndsWith(".Views"))

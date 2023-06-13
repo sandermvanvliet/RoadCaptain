@@ -24,7 +24,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\RoadCaptain\RoadCaptain.csproj" />
-    <ProjectReference Include="..\..\src\RoadCaptain.App.Windows\RoadCaptain.App.Windows.csproj" />
   </ItemGroup>
 
   <ItemGroup>
