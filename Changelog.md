@@ -1,5 +1,15 @@
 ﻿# Changelog
 
+## 0.6.11.1
+
+This release adds a new feature that brings the social aspect of Zwift to RoadCaptain: _route sharing_!
+
+You can now share the routes you create in Route Builder with other Zwifters that use RoadCaptain as well as browse routes that other Zwifters have created 🎉🎉
+
+### Route Builder
+
+- It is now possible to import a route from [Zwift Map](https://zwiftmap.com/) into Route Builder. This saves you a lot of work to rebuild a route to make it work for RoadCaptain.
+
 ## 0.6.11.0
 
 ### Runner
