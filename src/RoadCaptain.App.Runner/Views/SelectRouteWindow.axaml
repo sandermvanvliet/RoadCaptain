@@ -240,7 +240,7 @@
                      ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                      ScrollViewer.VerticalScrollBarVisibility="Auto"
                      VerticalAlignment="Stretch"
-                     SelectionChanged="RoutesListBox_OnSelectionChanged">
+                     DoubleTapped="RoutesListBox_OnDoubleTapped">
                 <ListBox.Styles>
                     <Style Selector="ListBoxItem">
                         <Setter Property="Margin" Value="0" />

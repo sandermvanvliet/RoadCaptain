@@ -110,5 +110,21 @@ namespace RoadCaptain.App.Runner.Views
 
             _viewModel.SearchRoutesCommand.Execute(repositoryName);
         }
+
+        private void RoutesListBox_OnDoubleTapped(object? sender, RoutedEventArgs e)
+        {
+            if (sender is not ListBox listBox)
+            {
+                return;
+            }
+
+            if (listBox.SelectedItem is not RouteViewModel selectedRoute)
+            {
+                return;
+            }
+
+            _viewModel.SelectedRoute = selectedRoute;
+            this.Close();
+        }
     }
 }
