@@ -330,5 +330,52 @@ namespace RoadCaptain
 
             return false;
         }
+
+        public bool Contains(TrackPoint position, out TrackPoint? match)
+        {
+            match = null;
+
+            // Short-circuit matching by first checking against the bounding box of this segment
+            if (!BoundingBox.IsIn(position))
+            {
+                return false;
+            }
+            
+            // Some segments may have a lot of points, especially on longer
+            // segments. Because the points are in sequence but not ordered
+            // based on their values it means that we need to iterate over
+            // the entire collection.
+            // To speed up this process the lookup will proceed from both
+            // ends of the collection so that we reduce the amount of
+            // iterations that would be needed if the point we seek is at
+            // the end of the Points collection.
+            // If index and reverseIndex converge we exit as in that case
+            // we haven't found a match.
+            var reverseIndex = Points.Count - 1;
+            for (var index = 0; index < Points.Count; index++)
+            {
+                var headIsCloseTo = Points[index].IsCloseTo(position);
+                var tailIsCloseTo = Points[reverseIndex--].IsCloseTo(position);
+                if (headIsCloseTo || tailIsCloseTo)
+                {
+                    match = headIsCloseTo
+                        ? Points[index]
+                        : Points[reverseIndex];
+
+                    return true;
+                }
+                
+                // Note: Use greater-than-or-equal to deal with collections
+                //       that have an odd number of items as in that case
+                //       the indexes won't ever be equal and we'd still
+                //       iterate over the entire collection.
+                if (index >= reverseIndex)
+                {
+                    break;
+                }
+            }
+
+            return false;
+        }
     }
 }

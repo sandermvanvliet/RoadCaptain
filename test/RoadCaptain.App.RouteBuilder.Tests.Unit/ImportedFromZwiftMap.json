@@ -1,0 +1,101 @@
+{
+  "version": "2",
+  "roadCaptainVersion": "0.6.11.1",
+  "route": {
+    "name": "Custom Route",
+    "zwiftRouteName": "Mountain Route",
+    "isLoop": true,
+    "routeSegmentSequence": [
+      {
+        "segmentId": "watopia-bambino-fondo-001-after-after-after-after-after-after",
+        "turnToNextSegment": "goStraight",
+        "nextSegmentId": "watopia-bambino-fondo-001-after-before",
+        "direction": "atoB",
+        "type": "loopStart",
+        "index": 0
+      },
+      {
+        "segmentId": "watopia-bambino-fondo-001-after-before",
+        "turnToNextSegment": "goStraight",
+        "nextSegmentId": "watopia-bambino-fondo-002-before-before-before",
+        "direction": "atoB",
+        "type": "loop",
+        "index": 0
+      },
+      {
+        "segmentId": "watopia-bambino-fondo-002-before-before-before",
+        "turnToNextSegment": "goStraight",
+        "nextSegmentId": "watopia-bambino-fondo-002-before-before-after",
+        "direction": "atoB",
+        "type": "loop",
+        "index": 0
+      },
+      {
+        "segmentId": "watopia-bambino-fondo-002-before-before-after",
+        "turnToNextSegment": "goStraight",
+        "nextSegmentId": "watopia-bambino-fondo-002-before-after-before",
+        "direction": "atoB",
+        "type": "loop",
+        "index": 0
+      },
+      {
+        "segmentId": "watopia-bambino-fondo-002-before-after-before",
+        "turnToNextSegment": "goStraight",
+        "nextSegmentId": "watopia-bambino-fondo-002-before-after-after",
+        "direction": "atoB",
+        "type": "loop",
+        "index": 0
+      },
+      {
+        "segmentId": "watopia-bambino-fondo-002-before-after-after",
+        "turnToNextSegment": "goStraight",
+        "nextSegmentId": "watopia-bambino-fondo-002-after",
+        "direction": "atoB",
+        "type": "loop",
+        "index": 0
+      },
+      {
+        "segmentId": "watopia-bambino-fondo-002-after",
+        "turnToNextSegment": "goStraight",
+        "nextSegmentId": "watopia-bambino-fondo-001-after-after-after-before",
+        "direction": "atoB",
+        "type": "loop",
+        "index": 0
+      },
+      {
+        "segmentId": "watopia-bambino-fondo-001-after-after-after-before",
+        "turnToNextSegment": "right",
+        "nextSegmentId": "watopia-bambino-fondo-001-after-after-after-after-before-before",
+        "direction": "atoB",
+        "type": "loop",
+        "index": 0
+      },
+      {
+        "segmentId": "watopia-bambino-fondo-001-after-after-after-after-before-before",
+        "turnToNextSegment": "goStraight",
+        "nextSegmentId": "watopia-bambino-fondo-001-after-after-after-after-before-after",
+        "direction": "atoB",
+        "type": "loop",
+        "index": 0
+      },
+      {
+        "segmentId": "watopia-bambino-fondo-001-after-after-after-after-before-after",
+        "turnToNextSegment": "right",
+        "nextSegmentId": "watopia-bambino-fondo-001-after-after-after-after-after-before",
+        "direction": "atoB",
+        "type": "loop",
+        "index": 0
+      },
+      {
+        "segmentId": "watopia-bambino-fondo-001-after-after-after-after-after-before",
+        "turnToNextSegment": "none",
+        "nextSegmentId": "watopia-bambino-fondo-001-after-after-after-after-after-after",
+        "direction": "atoB",
+        "type": "loopEnd",
+        "index": 0
+      }
+    ],
+    "world": "watopia",
+    "sport": "cycling"
+  }
+}

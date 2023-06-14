@@ -11,6 +11,10 @@
 		<!-- Ignore translations -->
 		<SatelliteResourceLanguages>en</SatelliteResourceLanguages>
 	</PropertyGroup>
+
+	<ItemGroup>
+		<InternalsVisibleTo Include="RoadCaptain.App.RouteBuilder.Tests.Unit" />
+	</ItemGroup>
 	
 	<Import Project="..\..\AvaloniaReferences.props" />
 
