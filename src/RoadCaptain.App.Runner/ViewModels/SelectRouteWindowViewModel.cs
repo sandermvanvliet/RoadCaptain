@@ -37,6 +37,7 @@ namespace RoadCaptain.App.Runner.ViewModels
         private bool _isLoopNoChecked;
         private bool _isLoopBothChecked = true;
         private string? _filterRepository;
+        private bool _isBusy;
 
         public SelectRouteWindowViewModel(SearchRoutesUseCase useCase,
             RetrieveRepositoryNamesUseCase retrieveRepositoryNamesUseCase,
@@ -49,14 +50,38 @@ namespace RoadCaptain.App.Runner.ViewModels
         }
 
         public AsyncRelayCommand SearchRoutesCommand => new AsyncRelayCommand(
-                async parameter => await LoadRoutesForRepositoryAsync(parameter as string ?? "(unknown)"),
+                async parameter =>
+                {
+                    IsBusy = true;
+                    return await LoadRoutesForRepositoryAsync(parameter as string ?? "(unknown)");
+                },
                 _ => true)
             .OnFailure(async _ =>
             {
                 await _windowService.ShowErrorDialog(_.Message);
                 Routes = Array.Empty<RouteViewModel>();
+                IsBusy = false;
             })
-            .OnSuccess(_ => SelectedRoute = null);
+            .OnSuccess(_ =>
+            {  
+                SelectedRoute = null;
+                IsBusy = false;
+            });
+
+        public bool IsBusy
+        {
+            get => _isBusy;
+            set
+            {
+                if (value == _isBusy)
+                {
+                    return;
+                }
+                
+                _isBusy = value;
+                this.RaisePropertyChanged();
+            }
+        }
 
         public string WindowTitle => "RoadCaptain - Route selection";
 

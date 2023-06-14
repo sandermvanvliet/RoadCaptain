@@ -148,7 +148,7 @@
             </Button>
 
             <!-- -->
-            <StackPanel Grid.Row="1" Grid.Column="0" 
+            <StackPanel Grid.Row="1" Grid.Column="0"
                         HorizontalAlignment="Stretch" Orientation="Vertical">
                 <TextBlock Classes="filterLabel" Text="Route repository" />
                 <Grid HorizontalAlignment="Stretch">
@@ -158,16 +158,16 @@
                               SelectionChanged="RepositoryComboBox_OnSelectionChanged"
                               PointerPressed="RoutesListBox_OnPointerPressed"
                               HorizontalAlignment="Stretch"
-                              Margin="4,0,34,0"/>
+                              Margin="4,0,34,0" />
                     <Button Content="🗘"
                             ToolTip.Tip="Refresh repository"
                             IsEnabled="{Binding Path=SelectedItem, ElementName=RepositoryComboBox, Converter={StaticResource NullabilityConverter}}"
                             Command="{Binding Path=SearchRoutesCommand}"
                             CommandParameter="{Binding FilterRepository}"
                             HorizontalAlignment="Right"
-                            Margin="0,0,2,0"/>
+                            Margin="0,0,2,0" />
                 </Grid>
-                
+
                 <TextBlock Classes="filterLabel" Text="World:" />
                 <ComboBox Name="World" Classes="filterInput"
                           Items="{Binding Path=AvailableWorlds}"
@@ -182,43 +182,56 @@
                 <TextBlock Classes="filterLabel" Text="Route name:" />
                 <TextBox Name="RouteName" Classes="filterInput" Watermark="Route name" Text="{Binding FilterRouteName}" />
                 <TextBlock Classes="filterLabel" Text="Creator name:" />
-                <TextBox Name="Creator" Classes="filterInput" Watermark="Creator name" Text="{Binding FilterCreatorName}" />
+                <TextBox Name="Creator" Classes="filterInput" Watermark="Creator name"
+                         Text="{Binding FilterCreatorName}" />
                 <TextBlock Classes="filterLabel" Text="Zwift route name:" />
-                <TextBox Name="ZwiftRoute" Classes="filterInput" Watermark="Zwift route name" Text="{Binding FilterZwiftRouteName}" />
+                <TextBox Name="ZwiftRoute" Classes="filterInput" Watermark="Zwift route name"
+                         Text="{Binding FilterZwiftRouteName}" />
                 <TextBlock Classes="filterLabel" Text="Distance:" />
                 <StackPanel Classes="filterMinMax">
-                    <TextBlock Text="Min:"/>
+                    <TextBlock Text="Min:" />
                     <NumericUpDown Value="{Binding FilterDistanceMin}" />
-                    <TextBlock Text="Max:"/>
+                    <TextBlock Text="Max:" />
                     <NumericUpDown Value="{Binding FilterDistanceMax}" />
                 </StackPanel>
                 <TextBlock Classes="filterLabel" Text="Ascent:" />
                 <StackPanel Classes="filterMinMax">
-                    <TextBlock Text="Min:"/>
+                    <TextBlock Text="Min:" />
                     <NumericUpDown Value="{Binding FilterAscentMin}" />
-                    <TextBlock Text="Max:"/>
+                    <TextBlock Text="Max:" />
                     <NumericUpDown Value="{Binding FilterAscentMax}" />
                 </StackPanel>
                 <TextBlock Classes="filterLabel" Text="Descent:" />
                 <StackPanel Classes="filterMinMax">
-                    <TextBlock Text="Min:"/>
+                    <TextBlock Text="Min:" />
                     <NumericUpDown Value="{Binding FilterDescentMin}" />
-                    <TextBlock Text="Max:"/>
+                    <TextBlock Text="Max:" />
                     <NumericUpDown Value="{Binding FilterDescentMax}" />
                 </StackPanel>
                 <TextBlock Classes="filterLabel" Text="Loop:" />
                 <StackPanel Orientation="Horizontal">
-                    <RadioButton GroupName="IsLoop" Content="Yes" Margin="4,0,0,0" IsChecked="{Binding IsLoopYesChecked}" />
+                    <RadioButton GroupName="IsLoop" Content="Yes" Margin="4,0,0,0"
+                                 IsChecked="{Binding IsLoopYesChecked}" />
                     <RadioButton GroupName="IsLoop" Content="No" Margin="8,0,0,0" IsChecked="{Binding IsLoopNoChecked}" />
-                    <RadioButton GroupName="IsLoop" Content="Both" Margin="8,0,0,0" IsChecked="{Binding IsLoopBothChecked}" />
+                    <RadioButton GroupName="IsLoop" Content="Both" Margin="8,0,0,0"
+                                 IsChecked="{Binding IsLoopBothChecked}" />
                 </StackPanel>
-                
-                <Button Content="Search" HorizontalAlignment="Right" Margin="0,16,4,0" 
+
+                <Button Content="Search" HorizontalAlignment="Right" Margin="0,16,4,0"
                         Command="{Binding SearchRoutesCommand}"
-                        CommandParameter="{Binding FilterRepository}"/>
+                        CommandParameter="{Binding FilterRepository}" />
             </StackPanel>
 
+            <Grid Grid.Row="1" Grid.Column="1" ZIndex="100"
+                  Background="Transparent"
+                  IsVisible="{Binding Path=IsBusy}">
+                <Canvas Background="White" Opacity="0.5" />
+                <TextBlock Text="Loading..."
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center" />
+            </Grid>
             <ListBox Name="RoutesListBox" Grid.Row="1" Grid.Column="1"
+                     ZIndex="50"
                      HorizontalAlignment="Stretch"
                      Padding="0"
                      Margin="4"
