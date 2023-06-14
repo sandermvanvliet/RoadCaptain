@@ -87,6 +87,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
                     _ => OpenRoute(),
                     _ => true)
                 .OnSuccess(_ => Model.StatusBarInfo("Route loaded successfully"))
+                .OnSuccessWithMessage(_ => Model.StatusBarInfo(_.Message))
                 .OnFailure(_ => Model.StatusBarError("Failed to load route because: {0}", _.Message));
 
             ClearRouteCommand = new AsyncRelayCommand(
@@ -644,10 +645,13 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
 
             try
             {
+                string? successMessage = null;
+
                 if (fileName.EndsWith(".gpx"))
                 {
                     var convertedRoute = _convertUseCase.Execute(ZwiftMapRoute.FromGpxFile(fileName));
                     Route.LoadFromPlannedRoute(convertedRoute, true);
+                    successMessage = $"Successfully imported ZwiftMap route: {Path.GetFileName(fileName)}";
                 }
                 else
                 {
@@ -656,7 +660,9 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
 
                 this.RaisePropertyChanged(nameof(Route));
 
-                return CommandResult.Success();
+                return successMessage == null
+                    ? CommandResult.Success()
+                    : CommandResult.SuccessWithMessage(successMessage);
             }
             catch (Exception e)
             {
