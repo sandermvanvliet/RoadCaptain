@@ -3,6 +3,7 @@ using FluentAssertions;
 using RoadCaptain.Adapters;
 using Xunit;
 using RoadCaptain.App.RouteBuilder.Models;
+using RoadCaptain.App.RouteBuilder.UseCases;
 
 namespace RoadCaptain.App.RouteBuilder.Tests.Unit
 {
@@ -18,10 +19,9 @@ namespace RoadCaptain.App.RouteBuilder.Tests.Unit
 
             var expectedPlannedRoute = routeStore.LoadFrom("ImportedFromZwiftMap.json");
 
-            var result = ZwiftMapRoute.ConvertToPlannedRoute(
-                worldStore, 
-                segmentStore, 
-                ZwiftMapRoute.FromGpxFile("zwiftmap-route.gpx"));
+            var useCase = new ConvertZwiftMapRouteUseCase(worldStore, segmentStore);
+
+            var result = useCase.Execute(ZwiftMapRoute.FromGpxFile("zwiftmap-route.gpx"));
 
             routeStore.Store(result, @"c:\temp\result.json");
             result.Should().BeEquivalentTo(expectedPlannedRoute);
