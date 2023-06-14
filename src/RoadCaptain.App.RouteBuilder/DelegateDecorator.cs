@@ -28,7 +28,7 @@ namespace RoadCaptain.App.RouteBuilder
             return await InvokeIfNeededAsync(() => _decorated.ShowOpenFileDialog(previousLocation));
         }
 
-        public async Task ShowErrorDialog(string message, Window owner)
+        public async Task ShowErrorDialog(string message, Window? owner)
         {
             await InvokeIfNeededAsync(() => _decorated.ShowErrorDialog(message, owner));
         }

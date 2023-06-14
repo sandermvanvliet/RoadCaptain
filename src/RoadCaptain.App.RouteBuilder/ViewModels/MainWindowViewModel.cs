@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using ReactiveUI;
 using RoadCaptain.App.RouteBuilder.Models;
+using RoadCaptain.App.RouteBuilder.UseCases;
 using RoadCaptain.App.Shared.Commands;
 using RoadCaptain.App.Shared.Dialogs;
 using CommandResult = RoadCaptain.App.Shared.Commands.CommandResult;
@@ -46,6 +47,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
         private bool _showElevationPlot;
         private Segment? _highlightedMarker;
         private readonly IApplicationFeatures _applicationFeatures;
+        private readonly ConvertZwiftMapRouteUseCase _convertUseCase;
 
         public MainWindowViewModel(IRouteStore routeStore, ISegmentStore segmentStore, IVersionChecker versionChecker,
             IWindowService windowService, IWorldStore worldStore, IUserPreferences userPreferences, IApplicationFeatures applicationFeatures)
@@ -56,6 +58,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             _worldStore = worldStore;
             _userPreferences = userPreferences;
             _applicationFeatures = applicationFeatures;
+            _convertUseCase = new ConvertZwiftMapRouteUseCase(worldStore, segmentStore);
             _showClimbs = _userPreferences.ShowClimbs;
             _showSprints = _userPreferences.ShowSprints;
             _showElevationPlot = _userPreferences.ShowElevationPlot;
@@ -64,9 +67,10 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             _worlds = worldStore.LoadWorlds().Select(world => new WorldViewModel(world)).ToArray();
             _sports = new[] { new SportViewModel(SportType.Cycling), new SportViewModel(SportType.Running) };
             _markers = new List<Segment>();
-            Route = new RouteViewModel(routeStore, segmentStore);
+            var segmentStore1 = segmentStore;
+            Route = new RouteViewModel(routeStore, segmentStore1);
 
-            Route.PropertyChanged += (_, args) => HandleRoutePropertyChanged(segmentStore, args);
+            Route.PropertyChanged += (_, args) => HandleRoutePropertyChanged(segmentStore1, args);
 
             SelectDefaultSportFromPreferences();
 
@@ -629,7 +633,9 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
                 return CommandResult.Success();
             }
 
-            Route.OutputFilePath = fileName;
+            Route.OutputFilePath = fileName.EndsWith(".gpx")
+                ? Path.ChangeExtension(fileName, ".json")
+                : fileName;
 
             _userPreferences.LastUsedFolder = Path.GetDirectoryName(Route.OutputFilePath);
             _userPreferences.Save();
@@ -638,7 +644,15 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
 
             try
             {
-                Route.Load();
+                if (fileName.EndsWith(".gpx"))
+                {
+                    var convertedRoute = _convertUseCase.Execute(ZwiftMapRoute.FromGpxFile(fileName));
+                    Route.LoadFromPlannedRoute(convertedRoute, true);
+                }
+                else
+                {
+                    Route.Load();
+                }
 
                 this.RaisePropertyChanged(nameof(Route));
 

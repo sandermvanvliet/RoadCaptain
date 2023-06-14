@@ -17,7 +17,7 @@ namespace RoadCaptain.App.RouteBuilder
             throw new System.NotImplementedException();
         }
 
-        public Task ShowErrorDialog(string message, Window owner)
+        public Task ShowErrorDialog(string message, Window? owner)
         {
             throw new System.NotImplementedException();
         }

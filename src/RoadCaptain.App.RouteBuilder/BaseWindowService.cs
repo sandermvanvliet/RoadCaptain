@@ -42,7 +42,8 @@ namespace RoadCaptain.App.RouteBuilder
                 AllowMultiple = false,
                 Filters = new List<FileDialogFilter>
                 {
-                    new() { Extensions = new List<string>{"json"}, Name = "RoadCaptain route file (.json)"}
+                    new() { Extensions = new List<string>{"json"}, Name = "RoadCaptain route file (.json)"},
+                    new() { Extensions = new List<string>{"gpx"}, Name = "ZwiftMap route file (.gpx)"}
                 },
                 Title = "Open RoadCaptain route file"
             };
@@ -75,7 +76,7 @@ namespace RoadCaptain.App.RouteBuilder
             await ShowDialog(window);
         }
 
-        public virtual async Task ShowErrorDialog(string message, Window owner)
+        public virtual async Task ShowErrorDialog(string message, Window? owner)
         {
             await MessageBox.ShowAsync(
                 message,

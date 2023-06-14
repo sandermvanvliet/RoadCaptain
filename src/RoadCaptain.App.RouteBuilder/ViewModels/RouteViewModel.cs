@@ -314,6 +314,11 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
                 throw new ArgumentException("Cannot load the route because the route has no world selected", nameof(World));
             }
 
+            LoadFromPlannedRoute(plannedRoute);
+        }
+
+        public void LoadFromPlannedRoute(PlannedRoute plannedRoute, bool isTainted = false)
+        {
             var segments = _segmentStore.LoadSegments(plannedRoute.World, plannedRoute.Sport);
 
             _sequence.Clear();
@@ -330,7 +335,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
                     });
             }
 
-            IsTainted = false;
+            IsTainted = isTainted;
 
             DetermineMarkersForRoute();
 
