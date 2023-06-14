@@ -10,6 +10,7 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using RoadCaptain.Ports;
@@ -108,7 +109,8 @@ namespace RoadCaptain.Adapters
 
             using var request = new HttpRequestMessage(HttpMethod.Get, builder.Uri);
 
-            using var response = await _httpClient.SendAsync(request);
+            using var tokenSource = new CancellationTokenSource(TimeSpan.FromSeconds(3));
+            using var response = await _httpClient.SendAsync(request, HttpCompletionOption.ResponseContentRead, tokenSource.Token);
 
             if (!response.IsSuccessStatusCode)
             {

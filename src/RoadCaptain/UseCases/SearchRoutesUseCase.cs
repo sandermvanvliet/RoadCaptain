@@ -72,12 +72,23 @@ namespace RoadCaptain.UseCases
             catch 
             {
                 var failedTasks = tasks
-                    .Where(t => t.IsFaulted && t.Exception != null)
+                    .Where(t => t.IsFaulted || t.IsCanceled)
                     .ToArray();
 
                 foreach (var failedTask in failedTasks)
                 {
-                    _monitoringEvents.Error(failedTask.Exception!, "Unable to retrieve routes from repository");
+                    if (failedTask.IsCanceled)
+                    {
+                        _monitoringEvents.Warning("Unable to retrieve routes from repository because the repository timed-out");
+                    }
+                    else if(failedTask.Exception != null)
+                    {
+                        _monitoringEvents.Error(failedTask.Exception, "Unable to retrieve routes from repository");
+                    }
+                    else
+                    {
+                        _monitoringEvents.Error("Unable to retrieve routes from repository");
+                    }
                 }
             }
 
