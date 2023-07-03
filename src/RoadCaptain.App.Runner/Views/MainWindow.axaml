@@ -228,7 +228,7 @@
 				<!-- row 5 -->
 				<TextBlock Text="Route options:" Grid.Row="4" Grid.Column="0" HorizontalAlignment="Right" FontWeight="Bold" FontSize="16"
                            VerticalAlignment="Center" Margin="0,2,0,0" />
-				<CheckBox Content="End Zwift activity at end of route" Margin="4,0,0,0"
+				<CheckBox Content="Automatically end Zwift activity at end of route" Margin="4,0,0,0"
                           Grid.Row="4" Grid.Column="1"
                           IsChecked="{Binding Path=EndActivityAtEndOfRoute}" />
 			</Grid>
