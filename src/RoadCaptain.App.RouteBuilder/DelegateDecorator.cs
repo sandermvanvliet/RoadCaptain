@@ -9,6 +9,7 @@ using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Threading;
 using RoadCaptain.App.RouteBuilder.ViewModels;
 using RoadCaptain.App.Shared.Dialogs;
+using RoadCaptain.App.Shared.Models;
 
 namespace RoadCaptain.App.RouteBuilder
 {
@@ -91,6 +92,16 @@ namespace RoadCaptain.App.RouteBuilder
         public void SetLifetime(IApplicationLifetime applicationLifetime)
         {
             InvokeIfNeeded(() => _decorated.SetLifetime(applicationLifetime));
+        }
+
+        public Task<TokenResponse?> ShowLogInDialog(Window owner)
+        {
+            return InvokeIfNeededAsync(() => _decorated.ShowLogInDialog(owner));
+        }
+
+        public Window? GetCurrentWindow()
+        {
+            return _decorated.GetCurrentWindow();
         }
 
         private async Task<TResult> InvokeIfNeededAsync<TResult>(Func<Task<TResult>> action)

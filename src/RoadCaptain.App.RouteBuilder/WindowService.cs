@@ -14,6 +14,9 @@ using RoadCaptain.App.RouteBuilder.Views;
 using RoadCaptain.App.Shared;
 using RoadCaptain.App.Shared.Dialogs;
 using RoadCaptain.App.Shared.Dialogs.ViewModels;
+using RoadCaptain.App.Shared.Models;
+using RoadCaptain.App.Shared.Views;
+using RoadCaptain.Ports;
 using RoadCaptain.UseCases;
 using IApplicationLifetime = Avalonia.Controls.ApplicationLifetimes.IApplicationLifetime;
 
@@ -40,6 +43,25 @@ namespace RoadCaptain.App.RouteBuilder
         public void SetLifetime(IApplicationLifetime applicationLifetime)
         {
             _applicationLifetime = applicationLifetime as IClassicDesktopStyleApplicationLifetime;
+        }
+
+        public virtual async Task<TokenResponse?> ShowLogInDialog(Window owner)
+        {
+            var zwiftLoginWindow = Resolve<ZwiftLoginWindowBase>();
+
+            zwiftLoginWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+
+            if (await ShowDialog(zwiftLoginWindow) ?? false)
+            {
+                return zwiftLoginWindow.TokenResponse;
+            }
+
+            return null;
+        }
+
+        public Window? GetCurrentWindow()
+        {
+            return CurrentWindow;
         }
 
         public async Task<string?> ShowSaveFileDialog(string? previousLocation, string? suggestedFileName = null)
@@ -116,11 +138,11 @@ namespace RoadCaptain.App.RouteBuilder
 
             var viewModel = new SaveRouteDialogViewModel(
                 this, 
-                Resolve<IUserPreferences>(), 
                 routeViewModel, 
                 Resolve<RetrieveRepositoryNamesUseCase>(),
                 Resolve<SaveRouteUseCase>(),
-                Resolve<IZwiftCredentialCache>());
+                Resolve<IZwiftCredentialCache>(),
+                Resolve<IZwift>());
 
             saveRouteDialog.DataContext = viewModel;
 

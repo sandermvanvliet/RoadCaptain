@@ -7,6 +7,7 @@ using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using RoadCaptain.App.RouteBuilder.ViewModels;
 using RoadCaptain.App.Shared.Dialogs;
+using RoadCaptain.App.Shared.Models;
 
 namespace RoadCaptain.App.RouteBuilder
 {
@@ -26,5 +27,7 @@ namespace RoadCaptain.App.RouteBuilder
         void Shutdown(int exitCode);
         Task ShowAlreadyRunningDialog();
         void SetLifetime(IApplicationLifetime applicationLifetime);
+        Task<TokenResponse?> ShowLogInDialog(Window owner);
+        Window? GetCurrentWindow();
     }
 }

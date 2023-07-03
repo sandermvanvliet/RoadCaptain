@@ -538,13 +538,13 @@ namespace RoadCaptain.App.Runner.ViewModels
                 {
                     var accessToken = new JsonWebToken(tokenResponse.AccessToken);
 
-                    if (accessToken.ValidTo < DateTime.UtcNow.AddDays(1))
+                    if (accessToken.ValidTo < DateTime.UtcNow.AddHours(1))
                     {
                         if (!string.IsNullOrEmpty(tokenResponse.RefreshToken))
                         {
                             var refreshToken = new JsonWebToken(tokenResponse.RefreshToken);
 
-                            if (refreshToken.ValidTo < DateTime.UtcNow.AddDays(1))
+                            if (refreshToken.ValidTo < DateTime.UtcNow.AddHours(1))
                             {
                                 tokenResponse = null;
                             }

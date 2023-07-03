@@ -7,6 +7,7 @@ using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using RoadCaptain.App.RouteBuilder.ViewModels;
 using RoadCaptain.App.Shared.Dialogs;
+using RoadCaptain.App.Shared.Models;
 
 namespace RoadCaptain.App.RouteBuilder
 {
@@ -80,6 +81,16 @@ namespace RoadCaptain.App.RouteBuilder
         public void SetLifetime(IApplicationLifetime applicationLifetime)
         {
             throw new System.NotImplementedException();
+        }
+
+        public Task<TokenResponse?> ShowLogInDialog(Window owner)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public Window? GetCurrentWindow()
+        {
+            return null;
         }
     }
 }

@@ -16,11 +16,11 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
         public DesignTimeSaveRouteDialogViewModel()
             : base(
                 new DesignTimeWindowService(),
-                new DummyUserPreferences(),
                 new RouteViewModel(null, null), 
                 new RetrieveRepositoryNamesUseCase(new [] { new StubRouteRepository() }), 
                 new SaveRouteUseCase(new [] { new StubRouteRepository() }, null),
-                new InMemoryZwiftCredentialCache())
+                new InMemoryZwiftCredentialCache(),
+                new DesignTimeZwiftStub())
         {
             Repositories = new[] { "All", "Local" }.ToImmutableList();
         }
