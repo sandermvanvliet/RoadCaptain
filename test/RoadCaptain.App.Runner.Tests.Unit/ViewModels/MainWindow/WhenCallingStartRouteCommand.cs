@@ -53,7 +53,7 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.MainWindow
         public void RoutePathIsStoredInUserPreferences()
         {
             _windowService.ShowSelectRouteDialogResult = new RouteModel { Uri = new Uri("file:///c:/temp/someroute.json"), PlannedRoute = _plannedRoute };
-            _viewModel.LoadRouteCommand.Execute(null);
+            _viewModel.SearchRouteCommand.Execute(null);
 
             StartRoute();
 
@@ -68,7 +68,7 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.MainWindow
         public void RoutePathIsStoredInConfiguration()
         {
             _windowService.ShowSelectRouteDialogResult = new RouteModel { Uri = new Uri("file:///c:/temp/someroute.json"), PlannedRoute = _plannedRoute };
-            _viewModel.LoadRouteCommand.Execute(null);
+            _viewModel.SearchRouteCommand.Execute(null);
 
             StartRoute();
 
@@ -82,7 +82,7 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.MainWindow
         public void StartRouteIsDispatched()
         {
             _windowService.ShowSelectRouteDialogResult = new RouteModel { Uri = new Uri("file:///c:/temp/someroute.json"), PlannedRoute = _plannedRoute };
-            _viewModel.LoadRouteCommand.Execute(null);
+            _viewModel.SearchRouteCommand.Execute(null);
 
             StartRoute();
 

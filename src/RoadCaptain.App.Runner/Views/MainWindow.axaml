@@ -142,10 +142,17 @@
                         IsEnabled="{Binding Path=LoggedInToZwift,Converter={StaticResource BooleanConverter},ConverterParameter=invert}"/>
 
 				<!-- row 2 -->
-				<TextBlock Text="Route:" HorizontalAlignment="Right" FontWeight="Bold" FontSize="16" Grid.Column="0" Grid.Row="1" VerticalAlignment="Center" Margin="0,2,0,0" />
-				<TextBox Text="{Binding Path=Route.Name, FallbackValue=Not selected, TargetNullValue=Not selected}" Height="28" Grid.Column="1" Grid.Row="1" Margin="4,2,4,0" VerticalAlignment="Center" VerticalContentAlignment="Center" FontSize="14" Padding="4,0,0,0"
+				<StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="1" Margin="4,0,0,0">
+					<Button Content="Search" Margin="0,2,4,0" VerticalAlignment="Center" Command="{Binding Path=SearchRouteCommand}" />
+					<TextBlock Text="a route or"  VerticalAlignment="Center" FontSize="16" />
+					<Button Content="Open" Margin="8,2,4,0" VerticalAlignment="Center" Command="{Binding Path=LoadRouteCommand}" />
+					<TextBlock Text="a route from a local file" VerticalAlignment="Center" FontSize="16" />
+				</StackPanel>
+				
+				<!-- row 3 -->
+				<TextBlock Text="Route:" HorizontalAlignment="Right" FontWeight="Bold" FontSize="16" Grid.Column="0" Grid.Row="2" VerticalAlignment="Center" Margin="0,2,0,0" />
+				<TextBox Text="{Binding Path=Route.Name, FallbackValue=Not selected, TargetNullValue=Not selected}" Height="28" Grid.Column="1" Grid.Row="2" Margin="4,2,4,0" VerticalAlignment="Center" VerticalContentAlignment="Center" FontSize="14" Padding="4,0,0,0"
 				         HorizontalAlignment="Stretch" IsReadOnly="True" />
-				<Button Content="Select" HorizontalAlignment="Right" Grid.Column="2" Grid.Row="1" Margin="0,2,4,0" VerticalAlignment="Center" Command="{Binding Path=LoadRouteCommand}" Width="72" />
 
 				<!-- row 4 -->
 				<Grid Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="3"

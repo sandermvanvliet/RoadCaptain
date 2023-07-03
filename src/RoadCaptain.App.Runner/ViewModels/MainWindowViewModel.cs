@@ -93,9 +93,20 @@ namespace RoadCaptain.App.Runner.ViewModels
                 )
                 .SubscribeTo(this, () => CanStartRoute);
 
-            LoadRouteCommand = new AsyncRelayCommand(
-                _ => LoadRoute(),
+            
+            SearchRouteCommand = new AsyncRelayCommand(
+                _ => SearchRoute(),
                 _ => true)
+                .OnFailure(async result =>
+                {
+                    await _windowService.ShowErrorDialog(result.Message);
+                    // Clear the current route
+                    Route = new Models.RouteModel();
+                });
+            
+            LoadRouteCommand = new AsyncRelayCommand(
+                    _ => LoadRouteFromLocalFile(),
+                    _ => true)
                 .OnFailure(async result =>
                 {
                     await _windowService.ShowErrorDialog(result.Message);
@@ -380,6 +391,7 @@ namespace RoadCaptain.App.Runner.ViewModels
         }
 
         public ICommand StartRouteCommand { get; set; }
+        public ICommand SearchRouteCommand { get; set; }
         public ICommand LoadRouteCommand { get; set; }
         public ICommand LogInCommand { get; set; }
         public ICommand BuildRouteCommand { get; set; }
@@ -467,13 +479,25 @@ namespace RoadCaptain.App.Runner.ViewModels
             return token.ValidTo > DateTime.UtcNow.AddHours(1);
         }
 
-        private async Task<CommandResult> LoadRoute()
+        private async Task<CommandResult> SearchRoute()
         {
             var routeModel = await _windowService.ShowSelectRouteDialog();
 
             if(routeModel != null)
             {
                 LoadRouteFromRouteModel(routeModel);
+            }
+
+            return CommandResult.Success();
+        }
+
+        private async Task<CommandResult> LoadRouteFromLocalFile()
+        {
+            var fileName = await _windowService.ShowOpenFileDialog(_userPreferences.LastUsedFolder);
+
+            if (!string.IsNullOrEmpty(fileName))
+            {
+                LoadRouteFromPath(fileName);
             }
 
             return CommandResult.Success();

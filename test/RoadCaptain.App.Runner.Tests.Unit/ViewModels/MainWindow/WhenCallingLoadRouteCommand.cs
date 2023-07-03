@@ -101,7 +101,7 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.MainWindow
 
         private void LoadRoute()
         {
-            _viewModel.LoadRouteCommand.Execute(null);
+            _viewModel.SearchRouteCommand.Execute(null);
         }
     }
 }
