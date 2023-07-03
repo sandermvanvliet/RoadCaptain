@@ -7,23 +7,22 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
 using RoadCaptain.Ports;
 
 namespace RoadCaptain.Adapters
 {
     internal class RebelRouteRepository : IRouteRepository
     {
-        private static readonly JsonSerializerSettings JsonSettings = new();
-        private readonly JsonSerializer _serializer;
         private readonly MonitoringEvents _monitoringEvents;
         private readonly RouteStoreToDisk _routeStoreToDisk;
+        private readonly ISegmentStore _segmentStore;
+        private List<RouteModel>? _routeModels;
 
-        public RebelRouteRepository(MonitoringEvents monitoringEvents, RouteStoreToDisk routeStoreToDisk)
+        public RebelRouteRepository(MonitoringEvents monitoringEvents, RouteStoreToDisk routeStoreToDisk, ISegmentStore segmentStore)
         {
             _monitoringEvents = monitoringEvents;
             _routeStoreToDisk = routeStoreToDisk;
-            _serializer = JsonSerializer.Create(JsonSettings);
+            _segmentStore = segmentStore;
         }
         
         public Task<bool> IsAvailableAsync()
@@ -39,38 +38,17 @@ namespace RoadCaptain.Adapters
         {
             var path = Path.GetDirectoryName(GetType().Assembly.Location);
 
-            var routeFiles = Directory.GetFiles(Path.Combine(path, "Routes"), "RebelRoute-*.json", SearchOption.TopDirectoryOnly);
-            
-            var routeModels = new List<RouteModel>();
-
-            foreach (var file in routeFiles)
+            if (string.IsNullOrEmpty(path))
             {
-                try
-                {
-                    var serialized = File.ReadAllText(file);
-                    var plannedRoute = UpgradeIfNecessaryAndSerialize(serialized);
-
-                    var routeModel = new RouteModel
-                    {
-                        RepositoryName = Name,
-                        Uri = new Uri($"https://zwiftinsider.com/rebel-routes/{plannedRoute.Name}"),
-                        Name = plannedRoute.Name,
-                        ZwiftRouteName = plannedRoute.ZwiftRouteName,
-                        CreatorName = "Zwift Insider",
-                        IsLoop = plannedRoute.IsLoop,
-                        PlannedRoute = plannedRoute,
-                        World = plannedRoute.WorldId
-                    };
-                    
-                    routeModels.Add(routeModel);
-                }
-                catch (Exception e)
-                {
-                    _monitoringEvents.Error(e, "Unable to deserialize route model from file '{File}'", file);
-                }
+                throw new InvalidOperationException("Unable to determine application path and I can't load the Rebel Routes if I don't know where to start looking");
             }
-            
-            var query = routeModels.AsQueryable();
+
+            if (_routeModels == null)
+            {
+                _routeModels = await LoadRouteModels(path);
+            }
+
+            var query = _routeModels.AsQueryable();
 
             if (!string.IsNullOrEmpty(world))
             {
@@ -127,6 +105,51 @@ namespace RoadCaptain.Adapters
             return query.ToArray();
         }
 
+        private async Task<List<RouteModel>> LoadRouteModels(string path)
+        {
+            var routeFiles =
+                Directory.GetFiles(Path.Combine(path, "Routes"), "RebelRoute-*.json", SearchOption.TopDirectoryOnly);
+
+            var routeModels = new List<RouteModel>();
+
+            foreach (var file in routeFiles)
+            {
+                try
+                {
+                    var serialized = await File.ReadAllTextAsync(file);
+                    var plannedRoute = UpgradeIfNecessaryAndSerialize(serialized);
+
+                    if (plannedRoute == null)
+                    {
+                        _monitoringEvents.Warning("Was unable to load the route from {File}", Path.GetFileName(file));
+                        continue;
+                    }
+
+                    var routeModel = new RouteModel
+                    {
+                        RepositoryName = Name,
+                        Uri = new Uri($"https://zwiftinsider.com/rebel-routes/{plannedRoute.Name}"),
+                        Name = plannedRoute.Name,
+                        ZwiftRouteName = plannedRoute.ZwiftRouteName,
+                        CreatorName = "Zwift Insider",
+                        IsLoop = plannedRoute.IsLoop,
+                        PlannedRoute = plannedRoute,
+                        World = plannedRoute.WorldId
+                    };
+
+                    routeModel = CalculateMetrics(routeModel);
+
+                    routeModels.Add(routeModel);
+                }
+                catch (Exception e)
+                {
+                    _monitoringEvents.Error(e, "Unable to deserialize route model from file '{File}'", file);
+                }
+            }
+
+            return routeModels;
+        }
+
         public Task<RouteModel> StoreAsync(PlannedRoute plannedRoute, string? token, List<Segment> segments)
         {
             throw new InvalidOperationException("Rebel route repository is read-only");
@@ -149,6 +172,43 @@ namespace RoadCaptain.Adapters
             {
                 return null;
             }
+        }
+
+        private RouteModel CalculateMetrics(RouteModel routeModel)
+        {
+            if (routeModel.PlannedRoute == null)
+            {
+                return routeModel;
+            }
+
+            var distance = 0d;
+            var ascent = 0d;
+            var descent = 0d;
+
+            var segments = _segmentStore.LoadSegments(routeModel.PlannedRoute.World!, routeModel.PlannedRoute.Sport);
+            foreach (var seq in routeModel.PlannedRoute.RouteSegmentSequence)
+            {
+                var segment = segments.Single(s => s.Id == seq.SegmentId);
+
+                distance += segment.Distance;
+
+                if (seq.Direction == SegmentDirection.AtoB)
+                {
+                    ascent += segment.Ascent;
+                    descent += segment.Descent;
+                }
+                else if(seq.Direction == SegmentDirection.BtoA)
+                {
+                    ascent += segment.Descent;
+                    descent += segment.Ascent;
+                }
+            }
+
+            routeModel.Distance = (decimal)Math.Round(distance / 1000, 1);
+            routeModel.Ascent = (decimal)Math.Round(ascent, 1);
+            routeModel.Descent = (decimal)Math.Round(descent, 1);
+
+            return routeModel;
         }
     }
 }

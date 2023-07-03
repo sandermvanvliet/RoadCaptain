@@ -19,7 +19,7 @@ namespace RoadCaptain
         public bool IsLoop { get; set; }
         public string? Serialized { get; set; }
         public string? RepositoryName { get; set; }
-        public Uri Uri { get; set; }
+        public Uri? Uri { get; set; }
         public PlannedRoute? PlannedRoute { get; set; }
         public string? World { get; set; }
     }

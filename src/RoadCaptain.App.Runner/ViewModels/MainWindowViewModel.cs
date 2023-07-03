@@ -3,10 +3,8 @@
 // See LICENSE or https://choosealicense.com/licenses/artistic-2.0/
 
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -129,8 +127,6 @@ namespace RoadCaptain.App.Runner.ViewModels
                 _ => !string.IsNullOrEmpty(_ as string));
 
             Version = GetType().Assembly.GetName().Version?.ToString(4) ?? "0.0.0.0";
-
-            RebelRoutes = LoadRebelRoutes();
         }
 
         private void LoadRouteFromPath(string? routePath)
@@ -220,16 +216,6 @@ namespace RoadCaptain.App.Runner.ViewModels
             {
                 // Route created with newer version or something similar
             }
-        }
-
-        private List<PlannedRoute> LoadRebelRoutes()
-        {
-            return Directory
-                .GetFiles(
-                    Path.Combine(Environment.CurrentDirectory, "Routes"),
-                    "RebelRoute-*.json")
-                .Select(file => _routeStore.LoadFrom(file))
-                .ToList();
         }
 
         public bool CanStartRoute =>
@@ -383,11 +369,6 @@ namespace RoadCaptain.App.Runner.ViewModels
                 _userPreferences.EndActivityAtEndOfRoute = value;
                 this.RaisePropertyChanged();
             }
-        }
-
-        public List<PlannedRoute> RebelRoutes
-        {
-            get;
         }
 
         public ICommand StartRouteCommand { get; set; }
