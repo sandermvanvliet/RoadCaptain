@@ -116,7 +116,6 @@
 				<Grid.RowDefinitions>
 					<RowDefinition Height="38" />
 					<RowDefinition Height="38" />
-					<RowDefinition Height="38" />
 					<RowDefinition />
 					<RowDefinition Height="32" />
 				</Grid.RowDefinitions>
@@ -148,15 +147,10 @@
 					<Button Content="Open" Margin="8,2,4,0" VerticalAlignment="Center" Command="{Binding Path=LoadRouteCommand}" />
 					<TextBlock Text="a route from a local file" VerticalAlignment="Center" FontSize="16" />
 				</StackPanel>
-				
-				<!-- row 3 -->
-				<TextBlock Text="Route:" HorizontalAlignment="Right" FontWeight="Bold" FontSize="16" Grid.Column="0" Grid.Row="2" VerticalAlignment="Center" Margin="0,2,0,0" />
-				<TextBox Text="{Binding Path=Route.Name, FallbackValue=Not selected, TargetNullValue=Not selected}" Height="28" Grid.Column="1" Grid.Row="2" Margin="4,2,4,0" VerticalAlignment="Center" VerticalContentAlignment="Center" FontSize="14" Padding="4,0,0,0"
-				         HorizontalAlignment="Stretch" IsReadOnly="True" />
 
-				<!-- row 4 -->
-				<Grid Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="3"
-                      Margin="4,16,4,0">
+				<!-- row 3 -->
+				<Grid Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3"
+                      Margin="4,4,4,0">
 					<Grid.ColumnDefinitions>
 						<ColumnDefinition Width="300" />
 						<ColumnDefinition />
@@ -232,11 +226,11 @@
                              AllowUserZoom="False"/>
 				</Grid>
 
-				<!-- row 5 -->
-				<TextBlock Text="Route options:" Grid.Row="4" Grid.Column="0" HorizontalAlignment="Right" FontWeight="Bold" FontSize="16"
+				<!-- row 4 -->
+				<TextBlock Text="Route options:" Grid.Row="3" Grid.Column="0" HorizontalAlignment="Right" FontWeight="Bold" FontSize="16"
                            VerticalAlignment="Center" Margin="0,2,0,0" />
 				<CheckBox Content="Automatically end Zwift activity at end of route" Margin="4,0,0,0"
-                          Grid.Row="4" Grid.Column="1"
+                          Grid.Row="3" Grid.Column="1"
                           IsChecked="{Binding Path=EndActivityAtEndOfRoute}" />
 			</Grid>
 			<Grid Grid.Row="2">
