@@ -68,8 +68,6 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             try
             {
                 var token = await AuthenticateToZwiftAsync();
-
-                // TODO: Handle situation where the token has expired.
                 
                 await _saveRouteUseCase.ExecuteAsync(new SaveRouteCommand(_route.AsPlannedRoute()!, RouteName, SelectedRepository, token?.AccessToken));
                 
