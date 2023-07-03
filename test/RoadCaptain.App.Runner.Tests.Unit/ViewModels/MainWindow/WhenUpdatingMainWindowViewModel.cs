@@ -31,7 +31,8 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.MainWindow
                 new SegmentStore(),
                 new NoZwiftCredentialCache(),
                 new NopMonitoringEvents(),
-                new DummyApplicationFeatures());
+                new DummyApplicationFeatures(),
+                new Zwift(null));
         }
 
         [Fact]

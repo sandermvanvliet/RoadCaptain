@@ -18,6 +18,7 @@ using ReactiveUI;
 using RoadCaptain.App.Runner.Models;
 using RoadCaptain.App.Shared;
 using RoadCaptain.App.Shared.Commands;
+using RoadCaptain.App.Shared.Models;
 using RoadCaptain.GameStates;
 using RoadCaptain.Ports;
 
@@ -46,6 +47,7 @@ namespace RoadCaptain.App.Runner.ViewModels
         private readonly IZwiftCredentialCache _credentialCache;
         private bool _haveCheckedLastOpenedVersion;
         private readonly IApplicationFeatures _applicationFeatures;
+        private IZwift _zwift;
 
         public MainWindowViewModel(Configuration configuration,
             IUserPreferences userPreferences,
@@ -56,7 +58,8 @@ namespace RoadCaptain.App.Runner.ViewModels
             ISegmentStore segmentStore,
             IZwiftCredentialCache credentialCache, 
             MonitoringEvents monitoringEvents, 
-            IApplicationFeatures applicationFeatures)
+            IApplicationFeatures applicationFeatures, 
+            IZwift zwift)
         {
             _configuration = configuration;
             _userPreferences = userPreferences;
@@ -67,6 +70,7 @@ namespace RoadCaptain.App.Runner.ViewModels
             _segmentStore = segmentStore;
             _credentialCache = credentialCache;
             _applicationFeatures = applicationFeatures;
+            _zwift = zwift;
 
 
             try
@@ -527,8 +531,70 @@ namespace RoadCaptain.App.Runner.ViewModels
         private async Task<CommandResult> LogInToZwift(Window window)
         {
             var tokenResponse = await _credentialCache.LoadAsync();
+
+            if (tokenResponse != null)
+            {
+                if (!string.IsNullOrEmpty(tokenResponse.AccessToken))
+                {
+                    var accessToken = new JsonWebToken(tokenResponse.AccessToken);
+
+                    if (accessToken.ValidTo < DateTime.UtcNow.AddDays(1))
+                    {
+                        if (!string.IsNullOrEmpty(tokenResponse.RefreshToken))
+                        {
+                            var refreshToken = new JsonWebToken(tokenResponse.RefreshToken);
+
+                            if (refreshToken.ValidTo < DateTime.UtcNow.AddDays(1))
+                            {
+                                tokenResponse = null;
+                            }
+                            else
+                            {
+                                try
+                                {
+                                    var refreshedTokens = await _zwift.RefreshTokenAsync(tokenResponse.RefreshToken);
+
+                                    tokenResponse = new TokenResponse
+                                    {
+                                        AccessToken = refreshedTokens.AccessToken,
+                                        RefreshToken = refreshedTokens.RefreshToken,
+                                        ExpiresIn = (long)refreshedTokens.ExpiresOn.Subtract(DateTime.UtcNow).TotalSeconds,
+                                        UserProfile = tokenResponse.UserProfile
+                                    };
+
+                                    await _credentialCache.StoreAsync(tokenResponse);
+                                }
+                                catch
+                                {
+                                    tokenResponse = null;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            tokenResponse = null;
+                        }
+                    }
+                }
+                else
+                {
+                    tokenResponse = null;
+                }
+            }
             
-            tokenResponse ??= await _windowService.ShowLogInDialog(window);
+            if(tokenResponse == null)
+            {
+                tokenResponse = await _windowService.ShowLogInDialog(window);
+
+                if (tokenResponse != null &&
+                    !string.IsNullOrEmpty(tokenResponse.AccessToken))
+                {
+                    // Keep this in memory so that when the app navigates
+                    // from the in-game window to the main window the user
+                    // remains logged in.
+                    await _credentialCache.StoreAsync(tokenResponse);
+                }
+            }
 
             if (tokenResponse != null &&
                 !string.IsNullOrEmpty(tokenResponse.AccessToken))
@@ -542,11 +608,6 @@ namespace RoadCaptain.App.Runner.ViewModels
                     ZwiftAvatarUri = tokenResponse.UserProfile.Avatar;
                     ZwiftAvatar = DownloadAvatarImage(ZwiftAvatarUri);
                 }
-                
-                // Keep this in memory so that when the app navigates
-                // from the in-game window to the main window the user
-                // remains logged in.
-                await _credentialCache.StoreAsync(tokenResponse);
 
                 LoggedInToZwift = true;
 

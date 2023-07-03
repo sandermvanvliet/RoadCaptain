@@ -189,7 +189,8 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.MainWindow
                 new SegmentStore(),
                 _credentialCache,
                 new NopMonitoringEvents(),
-                new DummyApplicationFeatures());
+                new DummyApplicationFeatures(),
+                new Zwift(null));
 
             mainWindowViewModel.Initialize().GetAwaiter().GetResult();
             
