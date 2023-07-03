@@ -3,7 +3,7 @@
 # See LICENSE or https://choosealicense.com/licenses/artistic-2.0/
 param([string]$currentVersion = $(throw "currentVersion is required"))
 
-$gitSha = $env:GITHUB_SHA
+$gitSha = (git rev-parse --short "$env:GITHUB_SHA")
 $workflow = $env:GITHUB_WORKFLOW
 
 $parts = $currentVersion.Split(".")

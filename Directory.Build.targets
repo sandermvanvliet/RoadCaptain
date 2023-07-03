@@ -1,6 +1,6 @@
 <Project>
 	<Target Name="DetermineInformationalVersion" BeforeTargets="BeforeBuild">
-		<Exec Command="git rev-parse HEAD" 
+		<Exec Command="git rev-parse --short HEAD" 
 		      ConsoleToMSBuild="True" 
 		      EchoOff="True" 
 		      IgnoreExitCode="True">
