@@ -23,6 +23,65 @@ namespace RoadCaptain.App.Runner.ViewModels
             RepositoryName = routeModel.RepositoryName ?? "(unknown)";
             Uri = routeModel.Uri;
             PlannedRoute = routeModel.PlannedRoute;
+            World = routeModel.World;
+            WorldName = WorldNameOf(routeModel.World);
+            WorldAbbreviation = Abbreviate(routeModel.World);
+        }
+
+        private string? WorldNameOf(string? world)
+        {
+            switch (world)
+            {
+                case "watopia":
+                    return "Watopia";
+                case "makuri_islands":
+                    return "Makuri Islands";
+                case "france":
+                    return "France";
+                case "richmond":
+                    return "Richmond";
+                case "london":
+                    return "London";
+                case "paris":
+                    return "Paris";
+                case "new_york":
+                    return "New York";
+                case "innsbruck":
+                    return "Innsbruck";
+                case "yorkshire":
+                    return "Yorkshire";
+                default:
+                    return "XX";
+            }
+        }
+
+        public string? WorldName { get; }
+
+        private string? Abbreviate(string? world)
+        {
+            switch (world)
+            {
+                case "watopia":
+                    return "WA";
+                case "makuri_islands":
+                    return "MI";
+                case "france":
+                    return "FR";
+                case "richmond":
+                    return "RM";
+                case "london":
+                    return "LO";
+                case "paris":
+                    return "PA";
+                case "new_york":
+                    return "NY";
+                case "innsbruck":
+                    return "IN";
+                case "yorkshire":
+                    return "YO";
+                default:
+                    return "XX";
+            }
         }
 
         public long Id { get; set; }
@@ -38,6 +97,8 @@ namespace RoadCaptain.App.Runner.ViewModels
         public string RepositoryName { get; }
         public Uri Uri { get; set; }
         public PlannedRoute? PlannedRoute { get; set; }
+        public string? World { get; set; }
+        public string WorldAbbreviation { get; }
 
         public RouteModel? AsRouteModel()
         {

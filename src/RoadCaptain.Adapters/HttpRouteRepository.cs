@@ -129,6 +129,7 @@ namespace RoadCaptain.Adapters
                         r.RepositoryName = Name;
                         r.Uri = new Uri(_settings.Uri, $"2023-01/routes/{r.Id}");
                         r.PlannedRoute = UpgradeIfNecessaryAndSerialize(r.Serialized);
+                        r.World = r.PlannedRoute?.WorldId;
                         return r;
                     })
                     .ToArray();
