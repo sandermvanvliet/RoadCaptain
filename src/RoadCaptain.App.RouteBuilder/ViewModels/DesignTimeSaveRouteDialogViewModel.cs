@@ -11,7 +11,7 @@ using RoadCaptain.UseCases;
 
 namespace RoadCaptain.App.RouteBuilder.ViewModels
 {
-    internal class DesignTimeSaveRouteDialogViewModel : SaveRouteDialogViewModel
+    public class DesignTimeSaveRouteDialogViewModel : SaveRouteDialogViewModel
     {
         public DesignTimeSaveRouteDialogViewModel()
             : base(
