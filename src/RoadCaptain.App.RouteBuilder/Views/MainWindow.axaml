@@ -64,6 +64,12 @@
 		<Style Selector="Button.world:pointerover">
 			<Setter Property="Background" Value="#FF6141" />
 		</Style>
+		<Style Selector="map|Map">
+			<Setter Property="Margin" Value="0,0,0,0" />
+		</Style>
+		<Style Selector="map|Map.narrowHeight">
+			<Setter Property="Margin" Value="0,0,0,250" />
+		</Style>
 	</Window.Styles>
 	<Window.Resources>
 		<converters:BooleanConverter x:Key="BooleanConverter" />
@@ -102,13 +108,15 @@
 				<RowDefinition Height="*" />
 			</Grid.RowDefinitions>
 
-			<Grid IsVisible="{Binding Path=Route.ReadyToBuild}"
+			<Panel IsVisible="{Binding Path=Route.ReadyToBuild}"
                   Grid.Row="1" Grid.Column="1"
                   VerticalAlignment="Stretch">
 				<map:Map
 					Name="ZwiftMap"
 					Cursor="Hand"
-					MapObjectSelected="ZwiftMap_OnMapObjectSelected"/>
+					MapObjectSelected="ZwiftMap_OnMapObjectSelected"
+					VerticalAlignment="Top"
+					Classes.narrowHeight="{Binding Path=ShowElevationPlot}" />
 
 				<sharedControls:ElevationProfile
 					Height="250"
@@ -121,7 +129,7 @@
 					Markers="{Binding Path=Markers}"
 					IsVisible="{Binding Path=ShowElevationPlot}"
             />
-			</Grid>
+			</Panel>
 
 			<Grid Grid.Row="0" Grid.RowSpan="2" Grid.Column="1"
                   IsVisible="{Binding Path=Route.ReadyToBuild,Converter={StaticResource BooleanConverter},ConverterParameter=invert}"
