@@ -1,9 +1,13 @@
-name: build-api-dev
+name: build-api-prod
 
 on:
   workflow_dispatch:
   push:
-    branches: [ main ]
+    tags: 
+    - releases/[0-9]+.[0-9]+.[0-9]+
+    - releases/[0-9]+.[0-9]+.[0-9]+.[0-9]+
+    - prereleases/[0-9]+.[0-9]+.[0-9]+
+    - prereleases/[0-9]+.[0-9]+.[0-9]+.[0-9]+
     paths-ignore:
       - site/**
       - src/RoadCaptain.App.Runner/** # Don't trigger on Runner only changes
@@ -15,9 +19,9 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      CONFIGURATION: Debug
+      CONFIGURATION: Release
       RID: linux-x64
-      ZIP_FILE: roadcaptain-app-web-dev-${{ github.sha }}.tar.gz
+      ZIP_FILE: roadcaptain-app-web-prod-${{ github.sha }}.tar.gz
 
     steps:
     - uses: actions/checkout@v3
@@ -45,4 +49,4 @@ jobs:
     - name: Extract artifacts on server
       env:
         SSH_AUTH_SOCK: /tmp/ssh_agent.sock
-      run: ssh -o "StrictHostKeyChecking no" roadcaptain@roadcaptain.nl 'systemctl stop --user RoadCaptainApiDev; cd /opt/roadcaptain/api-dev; tar -zxf /opt/roadcaptain/${{ env.ZIP_FILE }}; systemctl start --user RoadCaptainApiDev; rm -f /opt/roadcaptain/roadcaptain-app-web-dev-*.tar.gz'
+      run: ssh -o "StrictHostKeyChecking no" roadcaptain@roadcaptain.nl 'systemctl stop --user RoadCaptainApiProd; cd /opt/roadcaptain/api-prod; tar -zxf /opt/roadcaptain/${{ env.ZIP_FILE }}; systemctl start --user RoadCaptainApiProd; rm -f /opt/roadcaptain/roadcaptain-app-web-prod-*.tar.gz'

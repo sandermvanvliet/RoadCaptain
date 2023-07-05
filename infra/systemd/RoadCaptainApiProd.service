@@ -4,14 +4,14 @@ Description=RoadCaptain API prod environment
 [Service]
 # systemd will run this executable to start the service
 # if /usr/bin/dotnet doesn't work, use `which dotnet` to find correct dotnet executable path
-ExecStart=dotnet /opt/roadcaptain/api-dev/RoadCaptain.App.Web.dll
+ExecStart=dotnet /opt/roadcaptain/api-prod/RoadCaptain.App.Web.dll
 
 WorkingDirectory=/opt/roadcaptain/api-prod
 Restart=always
 RestartSec=2s
 KillSignal=SIGINT
 SyslogIdentifier=RoadCaptainApiprod
-Environment=ASPNETCORE_URLS=http://+:6000
+Environment=ASPNETCORE_URLS=http://+:5000
 Environment=ASPNETCORE_ENVIRONMENT=Development
 Environment=DOTNETN_PRINT_TELEMETRY_MESSAGE=false
 Environment=RUN_IN_SYSTEMD=1
