@@ -156,6 +156,7 @@ namespace RoadCaptain.Adapters
         }
 
         public string Name => "Zwift Insider - Rebel Routes";
+        public bool IsReadOnly => true;
 
         private PlannedRoute? UpgradeIfNecessaryAndSerialize(string? routeModelSerialized)
         {

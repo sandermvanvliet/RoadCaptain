@@ -2,6 +2,7 @@
 // Licensed under Artistic License 2.0
 // See LICENSE or https://choosealicense.com/licenses/artistic-2.0/
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using RoadCaptain.Commands;
@@ -20,15 +21,14 @@ namespace RoadCaptain.UseCases
 
         public string[] Execute(RetrieveRepositoryNameCommand command)
         {
-            var repositories = _routeRepositories.Select(r => r.Name);
-            
-            if (command.Intent == RetrieveRepositoriesIntent.Retrieve)
+            var repositories = command.Intent switch
             {
-                repositories = new[] { "All" }
-                    .Concat(repositories);
-            }
+                RetrieveRepositoriesIntent.Retrieve => new[] { "All" }.Concat(_routeRepositories.Select(r => r.Name)).ToArray(),
+                RetrieveRepositoriesIntent.Store => _routeRepositories.Where(r => !r.IsReadOnly).Select(r => r.Name).ToArray(),
+                _ => throw new ArgumentException("Invalid intent")
+            };
 
-            return repositories.ToArray();
+            return repositories;
         }
     }
 }

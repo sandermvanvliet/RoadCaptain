@@ -63,5 +63,6 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
         }
 
         public string Name => "Local";
+        public bool IsReadOnly => false;
     }
 }

@@ -123,5 +123,6 @@ namespace RoadCaptain.App.Runner.ViewModels
         }
 
         public string Name => "Local";
+        public bool IsReadOnly => false;
     }
 }

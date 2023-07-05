@@ -35,6 +35,7 @@ namespace RoadCaptain.Adapters
         }
 
         public string Name { get; }
+        public bool IsReadOnly => false;
 
         public async Task<bool> IsAvailableAsync()
         {

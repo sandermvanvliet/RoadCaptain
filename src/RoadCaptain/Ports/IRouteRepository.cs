@@ -28,5 +28,6 @@ namespace RoadCaptain.Ports
         Task<RouteModel> StoreAsync(PlannedRoute plannedRoute, string? token, List<Segment> segments);
 
         string Name { get; }
+        bool IsReadOnly { get; }
     }
 }
