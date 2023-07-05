@@ -3,6 +3,7 @@
 // See LICENSE or https://choosealicense.com/licenses/artistic-2.0/
 
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
@@ -23,9 +24,14 @@ namespace RoadCaptain.App.Runner
             _dispatcher = dispatcher;
         }
 
-        public async Task<string?> ShowOpenFileDialog(string? previousLocation)
+        public async Task ShowAlreadyRunningDialog(string applicationName)
         {
-            return await InvokeIfNeededAsync(() => _decorated.ShowOpenFileDialog(previousLocation));
+            await InvokeIfNeededAsync(() => ShowAlreadyRunningDialog(applicationName));
+        }
+
+        public async Task<string?> ShowOpenFileDialog(string? previousLocation, IDictionary<string, string> filters)
+        {
+            return await InvokeIfNeededAsync(() => _decorated.ShowOpenFileDialog(previousLocation, filters));
         }
 
         public void ShowInGameWindow(InGameNavigationWindowViewModel viewModel)
@@ -58,11 +64,6 @@ namespace RoadCaptain.App.Runner
             await InvokeIfNeededAsync(() => _decorated.ShowNewVersionDialog(release));
         }
 
-        public async Task ShowAlreadyRunningDialog()
-        {
-            await InvokeIfNeededAsync(() => _decorated.ShowAlreadyRunningDialog());
-        }
-
         public void SetLifetime(IApplicationLifetime applicationLifetime)
         {
             _decorated.SetLifetime(applicationLifetime);
@@ -72,6 +73,8 @@ namespace RoadCaptain.App.Runner
         {
             InvokeIfNeeded(() => _decorated.Shutdown(exitCode));
         }
+
+        public Window? CurrentWindow => _decorated.CurrentWindow;
 
         public async Task ShowWhatIsNewDialog(Release release)
         {

@@ -108,8 +108,7 @@ namespace RoadCaptain.App.RouteBuilder
             {
                 if (IsRouteBuilderRunning())
                 {
-                    await _windowService.ShowAlreadyRunningDialog();
-
+                    await _windowService.ShowAlreadyRunningDialog("RoadCaptain Route Builder");
                     _monitoringEvents.Warning("Another instance of RoadCaptain is already running");
 
                     _windowService.Shutdown(-1);

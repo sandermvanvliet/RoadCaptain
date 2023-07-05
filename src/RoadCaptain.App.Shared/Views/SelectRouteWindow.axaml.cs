@@ -9,36 +9,27 @@ using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Avalonia.Threading;
-using RoadCaptain.App.Runner.ViewModels;
-using Serilog.Core;
+using RoadCaptain.App.Shared.ViewModels;
 
-namespace RoadCaptain.App.Runner.Views
+namespace RoadCaptain.App.Shared.Views
 {
     public partial class SelectRouteWindow : Window
     {
         private readonly SelectRouteWindowViewModel _viewModel;
-        private readonly MonitoringEvents _monitoringEvents;
-        private readonly IWindowService _windowService;
 
         // ReSharper disable once UnusedMember.Global because this constructor only exists for the Avalonia designer
 #pragma warning disable CS8618
         public SelectRouteWindow()
 #pragma warning restore CS8618
         {
-            _monitoringEvents = new MonitoringEventsWithSerilog(Logger.None);
-            _windowService = new DesignTimeWindowService();
             InitializeComponent();
         }
 
 
         public SelectRouteWindow(
-            SelectRouteWindowViewModel viewModel, 
-            MonitoringEvents monitoringEvents,
-            IWindowService windowService)
+            SelectRouteWindowViewModel viewModel)
         {
             _viewModel = viewModel;
-            _monitoringEvents = monitoringEvents;
-            _windowService = windowService;
 
             DataContext = viewModel;
 

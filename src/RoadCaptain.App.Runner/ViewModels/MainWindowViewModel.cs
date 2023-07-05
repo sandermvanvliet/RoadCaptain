@@ -3,6 +3,7 @@
 // See LICENSE or https://choosealicense.com/licenses/artistic-2.0/
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Net.Http;
@@ -478,7 +479,12 @@ namespace RoadCaptain.App.Runner.ViewModels
 
         private async Task<CommandResult> LoadRouteFromLocalFile()
         {
-            var fileName = await _windowService.ShowOpenFileDialog(_userPreferences.LastUsedFolder);
+            var fileName = await _windowService.ShowOpenFileDialog(
+                _userPreferences.LastUsedFolder,
+                new Dictionary<string, string>
+                {
+                    { "json", "RoadCaptain route file (.json)"}
+                });
 
             if (!string.IsNullOrEmpty(fileName))
             {

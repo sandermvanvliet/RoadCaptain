@@ -62,4 +62,10 @@
 	<ItemGroup>
 	  <Folder Include="Controls\" />
 	</ItemGroup>
+	<ItemGroup>
+	  <Compile Update="Views\OpenRouteDialog.axaml.cs">
+	    <DependentUpon>OpenRouteDialog.axaml</DependentUpon>
+	    <SubType>Code</SubType>
+	  </Compile>
+	</ItemGroup>
 </Project>

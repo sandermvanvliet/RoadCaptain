@@ -2,28 +2,34 @@
 // Licensed under Artistic License 2.0
 // See LICENSE or https://choosealicense.com/licenses/artistic-2.0/
 
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
-using RoadCaptain.App.RouteBuilder.ViewModels;
 using RoadCaptain.App.Shared.Dialogs;
 using RoadCaptain.App.Shared.Models;
+using RouteViewModel = RoadCaptain.App.RouteBuilder.ViewModels.RouteViewModel;
 
 namespace RoadCaptain.App.RouteBuilder
 {
     internal class DesignTimeWindowService : IWindowService
     {
-        public Task<string?> ShowOpenFileDialog(string? previousLocation)
-        {
-            throw new System.NotImplementedException();
-        }
-
         public Task ShowErrorDialog(string message, Window? owner)
         {
             throw new System.NotImplementedException();
         }
 
         public void ShowMainWindow(IApplicationLifetime applicationLifetime)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public Task ShowAlreadyRunningDialog(string applicationName)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public Task<string?> ShowOpenFileDialog(string? previousLocation, IDictionary<string, string> filters)
         {
             throw new System.NotImplementedException();
         }
@@ -73,6 +79,8 @@ namespace RoadCaptain.App.RouteBuilder
             throw new System.NotImplementedException();
         }
 
+        public Window? CurrentWindow { get; }
+
         public Task ShowAlreadyRunningDialog()
         {
             throw new System.NotImplementedException();
@@ -91,6 +99,11 @@ namespace RoadCaptain.App.RouteBuilder
         public Window? GetCurrentWindow()
         {
             return null;
+        }
+
+        public Task ShowErrorDialog(string message)
+        {
+            return Task.CompletedTask;
         }
     }
 }

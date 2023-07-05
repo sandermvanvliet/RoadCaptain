@@ -18,31 +18,14 @@ using RoadCaptain.App.Shared.Models;
 using RoadCaptain.App.Shared.Views;
 using RoadCaptain.Ports;
 using RoadCaptain.UseCases;
-using IApplicationLifetime = Avalonia.Controls.ApplicationLifetimes.IApplicationLifetime;
+using RouteViewModel = RoadCaptain.App.RouteBuilder.ViewModels.RouteViewModel;
 
 namespace RoadCaptain.App.RouteBuilder
 {
     public class WindowService : BaseWindowService, IWindowService
-    {
-        private IClassicDesktopStyleApplicationLifetime? _applicationLifetime;
-
+    { 
         public WindowService(IComponentContext componentContext, MonitoringEvents monitoringEvents) : base(componentContext, monitoringEvents)
         {
-        }
-
-        public async Task ShowAlreadyRunningDialog()
-        {
-            await MessageBox.ShowAsync(
-                "Only one instance of RoadCaptain Route Builder can be active",
-                "Already running",
-                MessageBoxButton.Ok,
-                CurrentWindow!,
-                MessageBoxIcon.Warning);
-        }
-
-        public void SetLifetime(IApplicationLifetime applicationLifetime)
-        {
-            _applicationLifetime = applicationLifetime as IClassicDesktopStyleApplicationLifetime;
         }
 
         public virtual async Task<TokenResponse?> ShowLogInDialog(Window owner)
@@ -150,21 +133,16 @@ namespace RoadCaptain.App.RouteBuilder
             await saveRouteDialog.ShowDialog(CurrentWindow);
         }
 
-        public void Shutdown(int exitCode)
-        {
-            _applicationLifetime?.Shutdown(exitCode);
-        }
-
         public void ShowMainWindow(IApplicationLifetime applicationLifetime)
         {
             var desktopMainWindow = Resolve<MainWindow>();
 
-            if (applicationLifetime is IClassicDesktopStyleApplicationLifetime desktop && desktop.MainWindow == null)
+            if (applicationLifetime is IClassicDesktopStyleApplicationLifetime { MainWindow: null } desktop)
             {
                 desktop.MainWindow = desktopMainWindow;
             }
 
-            base.Show(desktopMainWindow);
+            Show(desktopMainWindow);
         }
     }
 }

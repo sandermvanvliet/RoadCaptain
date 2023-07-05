@@ -1,4 +1,4 @@
-// Copyright (c) 2023 Sander van Vliet
+﻿// Copyright (c) 2023 Sander van Vliet
 // Licensed under Artistic License 2.0
 // See LICENSE or https://choosealicense.com/licenses/artistic-2.0/
 
@@ -7,11 +7,13 @@ using System.Linq;
 using System.Threading.Tasks;
 using ReactiveUI;
 using RoadCaptain.App.Shared.Commands;
+using RoadCaptain.App.Shared.Dialogs.ViewModels;
+using RoadCaptain.App.Shared.Views;
 using RoadCaptain.Commands;
 using RoadCaptain.Ports;
 using RoadCaptain.UseCases;
 
-namespace RoadCaptain.App.Runner.ViewModels
+namespace RoadCaptain.App.Shared.ViewModels
 {
     public class SelectRouteWindowViewModel : ViewModelBase
     {

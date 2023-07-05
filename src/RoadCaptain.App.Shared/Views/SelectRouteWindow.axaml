@@ -8,10 +8,11 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:viewModels="using:RoadCaptain.App.Runner.ViewModels"
+        xmlns:viewModels="using:RoadCaptain.App.Shared.ViewModels"
         xmlns:converters="clr-namespace:RoadCaptain.App.Shared.Converters;assembly=RoadCaptain.App.Shared"
+        xmlns:viewModels1="clr-namespace:RoadCaptain.App.Shared.ViewModels;assembly=RoadCaptain.App.Shared"
         mc:Ignorable="d"
-        x:Class="RoadCaptain.App.Runner.Views.SelectRouteWindow"
+        x:Class="RoadCaptain.App.Shared.Views.SelectRouteWindow"
         Title="{Binding Path=WindowTitle}"
         Height="800" Width="1000"
         CanResize="False"
@@ -24,7 +25,7 @@
         PointerPressed="InputElement_OnPointerPressed"
         Icon="avares://RoadCaptain.App.Shared/icon.png">
     <Design.DataContext>
-        <viewModels:DesignTimeSelectRouteWindowViewModel />
+        <viewModels1:DesignTimeSelectRouteWindowViewModel />
     </Design.DataContext>
     <Window.Styles>
         <Style Selector="Button">

@@ -46,6 +46,16 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels
             ClosedWindows.Add(typeof(InGameNavigationWindow));
         }
 
+        public Task ShowAlreadyRunningDialog(string applicationName)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<string?> ShowOpenFileDialog(string? previousLocation, IDictionary<string, string> filters)
+        {
+            throw new NotImplementedException();
+        }
+
         public Task ShowNewVersionDialog(Release release)
         {
             throw new NotImplementedException();
@@ -65,6 +75,8 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels
         {
             throw new NotImplementedException();
         }
+
+        public Window? CurrentWindow { get; }
 
         public Task ShowWhatIsNewDialog(Release release)
         {

@@ -104,7 +104,7 @@ namespace RoadCaptain.App.Runner
             {
                 if (IsRoadCaptainRunning())
                 {
-                    await _windowService.ShowAlreadyRunningDialog();
+                    await _windowService.ShowAlreadyRunningDialog("RoadCaptain Runner");
 
                     _monitoringEvents.Warning("Another instance of RoadCaptain is already running");
 

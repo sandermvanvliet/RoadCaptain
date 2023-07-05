@@ -10,7 +10,6 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System;
 using System.IO;
-using Serilog;
 using Module = Autofac.Module;
 
 namespace RoadCaptain.App.Runner

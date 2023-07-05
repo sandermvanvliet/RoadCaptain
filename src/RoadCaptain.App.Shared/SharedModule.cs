@@ -4,6 +4,8 @@
 
 using Autofac;
 using RoadCaptain.App.Shared.Dialogs;
+using RoadCaptain.App.Shared.ViewModels;
+using RoadCaptain.App.Shared.Views;
 using RoadCaptain.Ports;
 
 namespace RoadCaptain.App.Shared
@@ -16,6 +18,9 @@ namespace RoadCaptain.App.Shared
             builder.RegisterType<WhatIsNewWindow>().AsSelf();
             builder.RegisterType<CompileTimeFeatures>().As<IApplicationFeatures>();
             builder.RegisterType<PlatformPaths>().As<IPathProvider>();
+            builder.RegisterType<BaseWindowService>().As<IWindowService>();
+            builder.RegisterType<SelectRouteWindow>().AsSelf();
+            builder.RegisterType<SelectRouteWindowViewModel>().AsSelf();
         }
     }
 }

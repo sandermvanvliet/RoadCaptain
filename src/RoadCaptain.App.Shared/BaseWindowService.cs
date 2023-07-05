@@ -1,4 +1,4 @@
-// Copyright (c) 2023 Sander van Vliet
+﻿// Copyright (c) 2023 Sander van Vliet
 // Licensed under Artistic License 2.0
 // See LICENSE or https://choosealicense.com/licenses/artistic-2.0/
 
@@ -9,25 +9,48 @@ using System.Linq;
 using System.Threading.Tasks;
 using Autofac;
 using Avalonia.Controls;
+using Avalonia.Controls.ApplicationLifetimes;
 using RoadCaptain.App.Shared.Dialogs;
 using RoadCaptain.App.Shared.Dialogs.ViewModels;
 
-namespace RoadCaptain.App.Runner
+namespace RoadCaptain.App.Shared
 {
-    public abstract class BaseWindowService
+    public class BaseWindowService : IWindowService
     {
         private readonly IComponentContext _componentContext;
         private readonly MonitoringEvents _monitoringEvents;
 
-        protected BaseWindowService(IComponentContext componentContext, MonitoringEvents monitoringEvents)
+        protected IClassicDesktopStyleApplicationLifetime? ApplicationLifetime { get; private set; }
+
+        public BaseWindowService(IComponentContext componentContext, MonitoringEvents monitoringEvents)
         {
             _componentContext = componentContext;
             _monitoringEvents = monitoringEvents;
         }
 
-        protected Window? CurrentWindow { get; private set; }
+        public Window? CurrentWindow { get; private set; }
 
-        public virtual async Task<string?> ShowOpenFileDialog(string? previousLocation)
+        public void SetLifetime(IApplicationLifetime applicationLifetime)
+        {
+            ApplicationLifetime = applicationLifetime as IClassicDesktopStyleApplicationLifetime;
+        }
+
+        public void Shutdown(int exitCode)
+        {
+            ApplicationLifetime?.Shutdown(exitCode);
+        }
+
+        public async Task ShowAlreadyRunningDialog(string applicationName)
+        {
+            await MessageBox.ShowAsync(
+                $"Only one instance of {applicationName} can be active",
+                "Already running",
+                MessageBoxButton.Ok,
+                CurrentWindow!,
+                MessageBoxIcon.Warning);
+        }
+
+        public virtual async Task<string?> ShowOpenFileDialog(string? previousLocation, IDictionary<string, string> filters)
         {
             var initialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
 
@@ -40,10 +63,9 @@ namespace RoadCaptain.App.Runner
             {
                 Directory = initialDirectory,
                 AllowMultiple = false,
-                Filters = new List<FileDialogFilter>
-                {
-                    new() { Extensions = new List<string>{"json"}, Name = "RoadCaptain route file (.json)"}
-                },
+                Filters = filters
+                    .Select(kv => new FileDialogFilter { Extensions = new List<string> { kv.Key }, Name = kv.Value })
+                    .ToList(),
                 Title = "Open RoadCaptain route file"
             };
 
@@ -74,8 +96,8 @@ namespace RoadCaptain.App.Runner
 
             await ShowDialog(window);
         }
-
-        public virtual async Task ShowErrorDialog(string message)
+        
+        public async Task ShowErrorDialog(string message)
         {
             await ShowErrorDialog(message, CurrentWindow ?? throw new ArgumentNullException(nameof(CurrentWindow)));
         }
@@ -90,7 +112,7 @@ namespace RoadCaptain.App.Runner
                 MessageBoxIcon.Error);
         }
 
-        protected virtual TType Resolve<TType>() where TType : notnull
+        protected TType Resolve<TType>() where TType : notnull
         {
             try
             {
@@ -103,21 +125,21 @@ namespace RoadCaptain.App.Runner
             }
         }
 
-        protected virtual async Task<bool?> ShowDialog(Window window)
+        protected async Task<bool?> ShowDialog(Window window)
         {
             await window.ShowDialog(CurrentWindow);
 
             return true;
         }
 
-        protected virtual void Show(Window window)
+        protected void Show(Window window)
         {
             CurrentWindow = window;
 
             window.Show();
         }
 
-        protected virtual void SwapWindows(Window window)
+        protected void SwapWindows(Window window)
         {
             var toClose = CurrentWindow;
 
@@ -131,16 +153,10 @@ namespace RoadCaptain.App.Runner
             CurrentWindow = window;
         }
 
-        protected virtual void Close(Window window)
+        private void Close(Window window)
         {
             window.Close();
             CurrentWindow = null;
-        }
-
-        protected virtual bool Activate(Window window)
-        {
-            window.Activate();
-            return true;
         }
     }
 }

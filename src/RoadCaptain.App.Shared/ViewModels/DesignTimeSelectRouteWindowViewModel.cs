@@ -1,21 +1,17 @@
-// Copyright (c) 2023 Sander van Vliet
-// Licensed under Artistic License 2.0
-// See LICENSE or https://choosealicense.com/licenses/artistic-2.0/
-
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using RoadCaptain.Ports;
 using RoadCaptain.UseCases;
-using Serilog.Core;
 
-namespace RoadCaptain.App.Runner.ViewModels
+namespace RoadCaptain.App.Shared.ViewModels
 {
     public class DesignTimeSelectRouteWindowViewModel : SelectRouteWindowViewModel
     {
         public DesignTimeSelectRouteWindowViewModel() : base(
-            new SearchRoutesUseCase(new [] { new StubRouteRepository()}, new MonitoringEventsWithSerilog(Logger.None)),
+            new SearchRoutesUseCase(new [] { new StubRouteRepository()}, new NopMonitoringEvents()),
             new RetrieveRepositoryNamesUseCase(new [] { new StubRouteRepository()}),
-            new DesignTimeWindowService(), new StubWorldStore())
+            new DesignTimeWindowService(),
+            new StubWorldStore())
         {
             Repositories = new[]
             {
@@ -69,7 +65,6 @@ namespace RoadCaptain.App.Runner.ViewModels
             };
         }
     }
-
     public class StubWorldStore : IWorldStore
     {
         public World[] LoadWorlds()

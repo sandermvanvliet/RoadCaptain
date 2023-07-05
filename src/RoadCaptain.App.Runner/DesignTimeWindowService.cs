@@ -2,6 +2,7 @@
 // Licensed under Artistic License 2.0
 // See LICENSE or https://choosealicense.com/licenses/artistic-2.0/
 
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
@@ -12,10 +13,6 @@ namespace RoadCaptain.App.Runner
 {
     public class DesignTimeWindowService : IWindowService
     {
-        public Task<string?> ShowOpenFileDialog(string? previousLocation)
-        {
-            throw new System.NotImplementedException();
-        }
 
         public void ShowInGameWindow(InGameNavigationWindowViewModel viewModel)
         {
@@ -42,12 +39,17 @@ namespace RoadCaptain.App.Runner
             throw new System.NotImplementedException();
         }
 
-        public Task ShowNewVersionDialog(Release release)
+        public Task ShowAlreadyRunningDialog(string applicationName)
         {
             throw new System.NotImplementedException();
         }
 
-        public Task ShowAlreadyRunningDialog()
+        public Task<string?> ShowOpenFileDialog(string? previousLocation, IDictionary<string, string> filters)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public Task ShowNewVersionDialog(Release release)
         {
             throw new System.NotImplementedException();
         }
@@ -61,6 +63,8 @@ namespace RoadCaptain.App.Runner
         {
             throw new System.NotImplementedException();
         }
+
+        public Window? CurrentWindow { get; }
 
         public Task ShowWhatIsNewDialog(Release release)
         {

@@ -3,6 +3,7 @@
 // See LICENSE or https://choosealicense.com/licenses/artistic-2.0/
 
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
@@ -10,6 +11,7 @@ using Avalonia.Threading;
 using RoadCaptain.App.RouteBuilder.ViewModels;
 using RoadCaptain.App.Shared.Dialogs;
 using RoadCaptain.App.Shared.Models;
+using RouteViewModel = RoadCaptain.App.RouteBuilder.ViewModels.RouteViewModel;
 
 namespace RoadCaptain.App.RouteBuilder
 {
@@ -24,9 +26,14 @@ namespace RoadCaptain.App.RouteBuilder
             _dispatcher = dispatcher;
         }
 
-        public async Task<string?> ShowOpenFileDialog(string? previousLocation)
+        public async Task<string?> ShowOpenFileDialog(string? previousLocation, IDictionary<string, string> filters)
         {
-            return await InvokeIfNeededAsync(() => _decorated.ShowOpenFileDialog(previousLocation));
+            return await InvokeIfNeededAsync(() => _decorated.ShowOpenFileDialog(previousLocation, filters));
+        }
+
+        public async Task ShowErrorDialog(string message)
+        {
+            await InvokeIfNeededAsync(() => _decorated.ShowErrorDialog(message));
         }
 
         public async Task ShowErrorDialog(string message, Window? owner)
@@ -84,9 +91,11 @@ namespace RoadCaptain.App.RouteBuilder
             InvokeIfNeeded(() => _decorated.Shutdown(exitCode));
         }
 
-        public async Task ShowAlreadyRunningDialog()
+        public Window? CurrentWindow => _decorated.CurrentWindow;
+
+        public async Task ShowAlreadyRunningDialog(string applicationName)
         {
-            await InvokeIfNeededAsync(() => _decorated.ShowAlreadyRunningDialog());
+            await InvokeIfNeededAsync(() => _decorated.ShowAlreadyRunningDialog(applicationName));
         }
 
         public void SetLifetime(IApplicationLifetime applicationLifetime)

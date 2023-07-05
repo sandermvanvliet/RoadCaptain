@@ -6,11 +6,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using Autofac;
 using Avalonia.Controls;
-using Avalonia.Controls.ApplicationLifetimes;
 using RoadCaptain.App.Runner.ViewModels;
 using RoadCaptain.App.Runner.Views;
-using RoadCaptain.App.Shared.Dialogs;
-using RoadCaptain.App.Shared.Dialogs.ViewModels;
+using RoadCaptain.App.Shared;
 using RoadCaptain.App.Shared.Models;
 using RoadCaptain.App.Shared.Views;
 
@@ -18,20 +16,9 @@ namespace RoadCaptain.App.Runner
 {
     public class WindowService : BaseWindowService, IWindowService
     {
-        private IClassicDesktopStyleApplicationLifetime? _applicationLifetime;
-
-        public WindowService(IComponentContext componentContext, MonitoringEvents monitoringEvents) : base(componentContext, monitoringEvents)
+        public WindowService(IComponentContext componentContext, MonitoringEvents monitoringEvents) 
+            : base(componentContext, monitoringEvents)
         {
-        }
-
-        public void SetLifetime(IApplicationLifetime applicationLifetime)
-        {
-            _applicationLifetime = applicationLifetime as IClassicDesktopStyleApplicationLifetime;
-        }
-
-        public void Shutdown(int exitCode)
-        {
-            _applicationLifetime?.Shutdown(exitCode);
         }
 
         public void ToggleElevationPlot(PlannedRoute? plannedRoute, bool? show)
@@ -85,19 +72,9 @@ namespace RoadCaptain.App.Runner
 
             var mainWindow = Resolve<MainWindow>();
             
-            _applicationLifetime!.MainWindow = mainWindow;
+            ApplicationLifetime!.MainWindow = mainWindow;
             
             SwapWindows(mainWindow);
-        }
-
-        public async Task ShowAlreadyRunningDialog()
-        {
-            await MessageBox.ShowAsync(
-                "Only one instance of RoadCaptain Runner can be active",
-                "Already running",
-                MessageBoxButton.Ok,
-                CurrentWindow!,
-                MessageBoxIcon.Warning);
         }
 
         public void ShowInGameWindow(InGameNavigationWindowViewModel viewModel)
@@ -112,12 +89,12 @@ namespace RoadCaptain.App.Runner
 
             inGameWindow.DataContext = viewModel;
 
-            _applicationLifetime!.MainWindow = inGameWindow;
+            ApplicationLifetime!.MainWindow = inGameWindow;
 
             SwapWindows(inGameWindow);
         }
 
-        public virtual async Task<TokenResponse?> ShowLogInDialog(Window owner)
+        public async Task<TokenResponse?> ShowLogInDialog(Window owner)
         {
             var zwiftLoginWindow = Resolve<ZwiftLoginWindowBase>();
 

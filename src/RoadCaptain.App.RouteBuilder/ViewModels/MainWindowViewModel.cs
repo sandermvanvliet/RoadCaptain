@@ -627,7 +627,13 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
                 }
             }
 
-            var fileName = await _windowService.ShowOpenFileDialog(_userPreferences.LastUsedFolder);
+            var fileName = await _windowService.ShowOpenFileDialog(
+                _userPreferences.LastUsedFolder,
+                new Dictionary<string, string>
+                {
+                    { "json", "RoadCaptain route file (.json)"},
+                    { "gpx", "GPS Exchange Format (.gpx)"}
+                });
 
             if (string.IsNullOrEmpty(fileName))
             {

@@ -14,19 +14,10 @@ namespace RoadCaptain.App.Shared.Converters
         {
             if (value == null)
             {
-                if ("invert".Equals(parameter))
-                {
-                    return true;
-                }
-                return false;
+                return "invert".Equals(parameter);
             }
 
-            if ("invert".Equals(parameter))
-            {
-                return false;
-            }
-
-            return true;
+            return !"invert".Equals(parameter);
         }
 
         public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
