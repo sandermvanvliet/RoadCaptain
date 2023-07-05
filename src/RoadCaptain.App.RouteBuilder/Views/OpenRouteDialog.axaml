@@ -1,0 +1,144 @@
+<!--
+// Copyright (c) 2023 Sander van Vliet
+// Licensed under Artistic License 2.0
+// See LICENSE or https://choosealicense.com/licenses/artistic-2.0/
+-->
+
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:viewModels="using:RoadCaptain.App.RouteBuilder.ViewModels"
+        xmlns:converters="clr-namespace:RoadCaptain.App.Shared.Converters;assembly=RoadCaptain.App.Shared"
+        mc:Ignorable="d" Width="600" Height="270"
+        x:Class="RoadCaptain.App.RouteBuilder.Views.OpenRouteDialog"
+        Title="Open route"
+        Icon="avares://RoadCaptain.App.Shared/icon.png"
+        Background="Transparent"
+        TransparencyLevelHint="Transparent"
+        CanResize="False"
+        SystemDecorations="None"
+        WindowStartupLocation="CenterOwner"
+        Activated="WindowBase_OnActivated"
+        PointerPressed="InputElement_OnPointerPressed">
+	<Design.DataContext>
+		<viewModels:DesignTimeOpenRouteDialogViewModel />
+	</Design.DataContext>
+	<Window.Styles>
+		<Style Selector="Button">
+			<Setter Property="Background" Value="#FF6141" />
+			<Setter Property="Foreground" Value="White" />
+			<Setter Property="Height" Value="32" />
+			<Setter Property="FontSize" Value="20" />
+			<Setter Property="FontWeight" Value="Bold" />
+			<Setter Property="BorderThickness" Value="0" />
+			<Setter Property="VerticalAlignment" Value="Center" />
+			<Setter Property="Cursor" Value="Hand" />
+			<Setter Property="Template">
+				<Setter.Value>
+					<ControlTemplate TargetType="Button">
+						<Border Name="borderZero" Background="{TemplateBinding Background}" CornerRadius="8" Padding="4,0,4,0">
+							<ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" Content="{TemplateBinding Content}" />
+						</Border>
+					</ControlTemplate>
+				</Setter.Value>
+			</Setter>
+		</Style>
+		<Style Selector="Button:disabled">
+			<Setter Property="Background" Value="LightGray" />
+		</Style>
+	</Window.Styles>
+	<Window.Resources>
+		<converters:NullabilityConverter x:Key="NullabilityConverter" />
+	</Window.Resources>
+	<Border BorderBrush="DarkGray" BorderThickness="1" CornerRadius="8" Opacity="1" Background="White">
+		<Grid Margin="4">
+			<Grid.RowDefinitions>
+				<RowDefinition Height="30" />
+				<!-- banner -->
+				<RowDefinition Height="*" />
+				<!-- main content-->
+				<RowDefinition Height="40" />
+				<!-- bottom button row -->
+			</Grid.RowDefinitions>
+
+			<StackPanel Orientation="Horizontal" Grid.Row="0">
+				<Image Source="avares://RoadCaptain.App.Shared/icon.png" Height="24" VerticalAlignment="Center" Margin="4,0,4,0" />
+				<TextBlock Text="Open route" FontWeight="ExtraBold" FontSize="24" VerticalAlignment="Center" Margin="0,1,0,0" />
+			</StackPanel>
+			<Button Content="X" Background="Red" Foreground="White" Grid.Row="0" HorizontalAlignment="Right" Width="40" Height="20" Margin="0,-3,-3,0" VerticalAlignment="Top"
+                    Click="CloseButton_Click" FontSize="14">
+				<Button.Styles>
+					<Style Selector="Button">
+						<Setter Property="Template">
+							<Setter.Value>
+								<ControlTemplate TargetType="Button">
+									<Border Name="borderZero" Background="{TemplateBinding Background}" CornerRadius="0,8,0,0">
+										<ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" Content="{TemplateBinding Content}"/>
+									</Border>
+								</ControlTemplate>
+							</Setter.Value>
+						</Setter>
+					</Style>
+				</Button.Styles>
+			</Button>
+
+			<Grid Grid.Row="1" ZIndex="2" Margin="8,32,0,0">
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="120" />
+					<ColumnDefinition />
+					<ColumnDefinition Width="84" />
+				</Grid.ColumnDefinitions>
+				<Grid.RowDefinitions>
+					<RowDefinition Height="32" />
+					<RowDefinition Height="32" />
+					<RowDefinition Height="32" />
+					<RowDefinition Height="32" />
+				</Grid.RowDefinitions>
+				<Grid.Styles>
+					<Style Selector="TextBox">
+						<Setter Property="Margin" Value="0,0,0,8"/>
+						<Setter Property="TextWrapping" Value="NoWrap" />
+					</Style>
+					<Style Selector="TextBlock.field">
+						<Setter Property="VerticalAlignment" Value="Top" />
+						<Setter Property="HorizontalAlignment" Value="Right"/>
+						<Setter Property="Margin" Value="0,6,4,0"/>
+					</Style>
+				</Grid.Styles>
+
+				<StackPanel Orientation="Horizontal"
+				            Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3"
+				            HorizontalAlignment="Center">
+					<Button Content="Search" 
+					        Command="{Binding Path=SelectRouteCommand}"/>
+					<TextBlock Text="a route" VerticalAlignment="Center" Margin="8,0,0,0" />
+				</StackPanel>
+				
+				<StackPanel Orientation="Horizontal"
+				            Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3"
+				            HorizontalAlignment="Center"
+				            IsVisible="{Binding Path=SelectedRoute, Converter={StaticResource NullabilityConverter}}">
+					<TextBlock Text="Selected route:" VerticalAlignment="Center" />
+					<TextBlock Text="{Binding Path=SelectedRoute.Name, FallbackValue='Search for a route'}" Margin="8,0,0,0" VerticalAlignment="Center"/>
+				</StackPanel>
+
+				<TextBlock Grid.Row="2" Grid.Column="0" Text="or.." Grid.ColumnSpan="3" HorizontalAlignment="Center" Margin="0,8,0,0" FontWeight="Bold" />
+				
+				<TextBlock Grid.Row="3" Grid.Column="0" Text="Open a local file:" Classes="field" />
+				<TextBox Grid.Row="3" Grid.Column="1" VerticalAlignment="Center" IsReadOnly="True" Text="{Binding Path=RouteFilePath}"/>
+				<Button Grid.Row="3" Grid.Column="2" Content="Select" Width="76" Margin="4,-8,0,0" VerticalAlignment="Center" Command="{Binding Path=SelectFileCommand}" />
+			</Grid>
+
+			<!-- Bottom row -->
+			<Button
+                Grid.Row="2"
+                Content="Cancel" HorizontalAlignment="Right" Margin="2,4,70,2" VerticalAlignment="Center"
+                Click="CloseButton_Click" />
+			<Button
+                Grid.Row="2"
+                Content="Open" HorizontalAlignment="Right" Margin="2,4,4,2" VerticalAlignment="Center"
+                Command="{Binding Path=OpenRouteCommand}" />
+		</Grid>
+	</Border>
+</Window>

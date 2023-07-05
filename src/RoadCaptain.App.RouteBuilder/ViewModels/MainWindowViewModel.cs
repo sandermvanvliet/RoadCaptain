@@ -627,53 +627,54 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
                 }
             }
 
-            var fileName = await _windowService.ShowOpenFileDialog(
-                _userPreferences.LastUsedFolder,
-                new Dictionary<string, string>
-                {
-                    { "json", "RoadCaptain route file (.json)"},
-                    { "gpx", "GPS Exchange Format (.gpx)"}
-                });
+            var (plannedRoute, fileName) = await _windowService.ShowOpenRouteDialog();
 
-            if (string.IsNullOrEmpty(fileName))
+            if (plannedRoute != null)
             {
+                Route.LoadFromPlannedRoute(plannedRoute);
+                
                 return CommandResult.Success();
             }
 
-            Route.OutputFilePath = fileName.EndsWith(".gpx")
-                ? Path.ChangeExtension(fileName, ".json")
-                : fileName;
-
-            _userPreferences.LastUsedFolder = Path.GetDirectoryName(Route.OutputFilePath);
-            _userPreferences.Save();
-
-            SelectedSegment = null;
-
-            try
+            if (fileName != null)
             {
-                string? successMessage = null;
+                Route.OutputFilePath = fileName.EndsWith(".gpx")
+                    ? Path.ChangeExtension(fileName, ".json")
+                    : fileName;
 
-                if (fileName.EndsWith(".gpx"))
+                _userPreferences.LastUsedFolder = Path.GetDirectoryName(Route.OutputFilePath);
+                _userPreferences.Save();
+
+                SelectedSegment = null;
+
+                try
                 {
-                    var convertedRoute = _convertUseCase.Execute(ZwiftMapRoute.FromGpxFile(fileName));
-                    Route.LoadFromPlannedRoute(convertedRoute, true);
-                    successMessage = $"Successfully imported ZwiftMap route: {Path.GetFileName(fileName)}";
+                    string? successMessage = null;
+
+                    if (fileName.EndsWith(".gpx"))
+                    {
+                        var convertedRoute = _convertUseCase.Execute(ZwiftMapRoute.FromGpxFile(fileName));
+                        Route.LoadFromPlannedRoute(convertedRoute, true);
+                        successMessage = $"Successfully imported ZwiftMap route: {Path.GetFileName(fileName)}";
+                    }
+                    else
+                    {
+                        Route.Load();
+                    }
+
+                    this.RaisePropertyChanged(nameof(Route));
+
+                    return successMessage == null
+                        ? CommandResult.Success()
+                        : CommandResult.SuccessWithMessage(successMessage);
                 }
-                else
+                catch (Exception e)
                 {
-                    Route.Load();
+                    return CommandResult.Failure(e.Message);
                 }
-
-                this.RaisePropertyChanged(nameof(Route));
-
-                return successMessage == null
-                    ? CommandResult.Success()
-                    : CommandResult.SuccessWithMessage(successMessage);
             }
-            catch (Exception e)
-            {
-                return CommandResult.Failure(e.Message);
-            }
+
+            return CommandResult.Aborted();
         }
 
         private CommandResult SelectWorld(WorldViewModel world)

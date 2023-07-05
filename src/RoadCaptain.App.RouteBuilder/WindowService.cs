@@ -133,6 +133,22 @@ namespace RoadCaptain.App.RouteBuilder
             await saveRouteDialog.ShowDialog(CurrentWindow);
         }
 
+        public async Task<(PlannedRoute?, string?)> ShowOpenRouteDialog()
+        {
+            var openRouteDialog = Resolve<OpenRouteDialog>();
+    
+            var viewModel = new OpenRouteDialogViewModel(
+                this,
+                Resolve<IUserPreferences>(),
+                Resolve<IRouteStore>());
+
+            openRouteDialog.DataContext = viewModel;
+
+            await openRouteDialog.ShowDialog(CurrentWindow);
+
+            return (viewModel.SelectedRoute?.PlannedRoute, viewModel.RouteFilePath);
+        }
+
         public void ShowMainWindow(IApplicationLifetime applicationLifetime)
         {
             var desktopMainWindow = Resolve<MainWindow>();

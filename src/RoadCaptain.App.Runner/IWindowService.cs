@@ -15,6 +15,5 @@ namespace RoadCaptain.App.Runner
         Task<TokenResponse?> ShowLogInDialog(Window owner);
         void ShowMainWindow();
         void ToggleElevationPlot(PlannedRoute? plannedRoute, bool? show);
-        Task<RouteModel?> ShowSelectRouteDialog();
     }
 }

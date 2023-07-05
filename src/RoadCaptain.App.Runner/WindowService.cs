@@ -48,20 +48,6 @@ namespace RoadCaptain.App.Runner
             }
         }
 
-        public async Task<RouteModel?> ShowSelectRouteDialog()
-        {
-            var selectRouteWindow = Resolve<SelectRouteWindow>();
-
-            selectRouteWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
-
-            if (await ShowDialog(selectRouteWindow) ?? false)
-            {
-                return selectRouteWindow.SelectedRoute;
-            }
-
-            return null;
-        }
-
         public void ShowMainWindow()
         {
             if (CurrentWindow is MainWindow)

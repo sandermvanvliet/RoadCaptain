@@ -44,7 +44,17 @@ namespace RoadCaptain.App.RouteBuilder
             throw new System.NotImplementedException();
         }
 
+        public Task<RouteModel?> ShowSelectRouteDialog()
+        {
+            throw new System.NotImplementedException();
+        }
+
         public Task<string?> ShowSaveFileDialog(string? previousLocation, string? suggestedFileName = null)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public Task<(PlannedRoute?, string?)> ShowOpenRouteDialog()
         {
             throw new System.NotImplementedException();
         }

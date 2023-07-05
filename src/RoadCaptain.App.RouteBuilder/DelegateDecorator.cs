@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Threading;
-using RoadCaptain.App.RouteBuilder.ViewModels;
 using RoadCaptain.App.Shared.Dialogs;
 using RoadCaptain.App.Shared.Models;
 using RouteViewModel = RoadCaptain.App.RouteBuilder.ViewModels.RouteViewModel;
@@ -56,9 +55,19 @@ namespace RoadCaptain.App.RouteBuilder
             await InvokeIfNeededAsync(() => _decorated.ShowWhatIsNewDialog(release));
         }
 
+        public async Task<RouteModel?> ShowSelectRouteDialog()
+        {
+            return await InvokeIfNeededAsync(() => _decorated.ShowSelectRouteDialog());
+        }
+
         public async Task<string?> ShowSaveFileDialog(string? previousLocation, string? suggestedFileName = null)
         {
             return await InvokeIfNeededAsync(() => _decorated.ShowSaveFileDialog(previousLocation, suggestedFileName));
+        }
+
+        public async Task<(PlannedRoute?,string?)> ShowOpenRouteDialog()
+        {
+            return await InvokeIfNeededAsync(() => _decorated.ShowOpenRouteDialog());
         }
 
         public async Task<bool> ShowDefaultSportSelectionDialog(SportType sport)

@@ -16,5 +16,6 @@ namespace RoadCaptain.App.Shared
         Task<string?> ShowOpenFileDialog(string? previousLocation, IDictionary<string, string> filters);
         Task ShowNewVersionDialog(Release release);
         Task ShowWhatIsNewDialog(Release release);
+        Task<RouteModel?> ShowSelectRouteDialog();
     }
 }

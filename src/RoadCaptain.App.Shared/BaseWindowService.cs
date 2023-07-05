@@ -12,6 +12,7 @@ using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using RoadCaptain.App.Shared.Dialogs;
 using RoadCaptain.App.Shared.Dialogs.ViewModels;
+using RoadCaptain.App.Shared.Views;
 
 namespace RoadCaptain.App.Shared
 {
@@ -96,7 +97,21 @@ namespace RoadCaptain.App.Shared
 
             await ShowDialog(window);
         }
-        
+
+        public async Task<RouteModel?> ShowSelectRouteDialog()
+        {
+            var selectRouteWindow = Resolve<SelectRouteWindow>();
+
+            selectRouteWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+
+            if (await ShowDialog(selectRouteWindow) ?? false)
+            {
+                return selectRouteWindow.SelectedRoute;
+            }
+
+            return null;
+        }
+
         public async Task ShowErrorDialog(string message)
         {
             await ShowErrorDialog(message, CurrentWindow ?? throw new ArgumentNullException(nameof(CurrentWindow)));

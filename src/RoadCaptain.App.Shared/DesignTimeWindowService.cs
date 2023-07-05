@@ -47,5 +47,10 @@ namespace RoadCaptain.App.Shared
         {
             throw new System.NotImplementedException();
         }
+
+        public Task<RouteModel?> ShowSelectRouteDialog()
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }
