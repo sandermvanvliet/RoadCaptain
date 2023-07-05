@@ -117,6 +117,18 @@ namespace RoadCaptain.Adapters
                 return;
             }
 
+            // Always register the local repository
+            builder
+                .Register<IRouteRepository>(componentContext => new LocalDirectoryRouteRepository(new LocalDirectoryRouteRepositorySettings(componentContext.Resolve<IPathProvider>()), componentContext.Resolve<MonitoringEvents>(), componentContext.Resolve<RouteStoreToDisk>()))
+                .As<IRouteRepository>()
+                .SingleInstance();
+            
+            // Always register the rebel routes repository
+            builder
+                .RegisterType<RebelRouteRepository>()
+                .As<IRouteRepository>()
+                .SingleInstance();
+            
             foreach (var childSection in section.GetChildren())
             {
                 var repositoryType = childSection["type"];
@@ -125,26 +137,11 @@ namespace RoadCaptain.Adapters
                     continue;
                 }
 
-                if ("local".Equals(repositoryType, StringComparison.InvariantCultureIgnoreCase))
-                {
-                    var settings = new LocalDirectoryRouteRepositorySettings(childSection);
-                    builder
-                        .Register<IRouteRepository>(componentContext => new LocalDirectoryRouteRepository(settings, componentContext.Resolve<MonitoringEvents>(), componentContext.Resolve<RouteStoreToDisk>()))
-                        .As<IRouteRepository>()
-                        .SingleInstance();
-                }
-                else if ("http".Equals(repositoryType, StringComparison.InvariantCultureIgnoreCase))
+                if ("http".Equals(repositoryType, StringComparison.InvariantCultureIgnoreCase))
                 {
                     var settings = new HttpRouteRepositorySettings(childSection);
                     builder
                         .Register<IRouteRepository>(componentContext => new HttpRouteRepository(new HttpClient(), settings, componentContext.Resolve<RouteStoreToDisk>()))
-                        .As<IRouteRepository>()
-                        .SingleInstance();
-                }
-                else if ("rebel".Equals(repositoryType, StringComparison.InvariantCultureIgnoreCase))
-                {
-                    builder
-                        .RegisterType<RebelRouteRepository>()
                         .As<IRouteRepository>()
                         .SingleInstance();
                 }

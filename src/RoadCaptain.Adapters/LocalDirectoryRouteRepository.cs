@@ -40,7 +40,12 @@ namespace RoadCaptain.Adapters
                 return Task.FromResult(false);
             }
 
-            return Task.FromResult(Directory.Exists(_settings.Directory));
+            if (!Directory.Exists(_settings.Directory))
+            {
+                Directory.CreateDirectory(_settings.Directory);
+            }
+            
+            return Task.FromResult(true);
         }
 
         public async Task<RouteModel[]> SearchAsync(string? world = null,
@@ -60,6 +65,11 @@ namespace RoadCaptain.Adapters
             if (!_settings.IsValid)
             {
                 throw new Exception("Route repository is not configured correctly");
+            }
+
+            if (!Directory.Exists(_settings.Directory))
+            {
+                Directory.CreateDirectory(_settings.Directory);
             }
             
             var routeFiles = Directory.GetFiles(_settings.Directory!, FileNamePattern, SearchOption.TopDirectoryOnly);
@@ -151,6 +161,11 @@ namespace RoadCaptain.Adapters
 
         public async Task<RouteModel> StoreAsync(PlannedRoute plannedRoute, string? token, List<Segment> segments)
         {
+            if (!Directory.Exists(_settings.Directory))
+            {
+                Directory.CreateDirectory(_settings.Directory);
+            }
+            
             var storageModel = new RouteModel
             {
                 Name = plannedRoute.Name,

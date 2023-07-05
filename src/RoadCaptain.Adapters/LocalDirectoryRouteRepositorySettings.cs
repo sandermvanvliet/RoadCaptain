@@ -2,26 +2,23 @@
 // Licensed under Artistic License 2.0
 // See LICENSE or https://choosealicense.com/licenses/artistic-2.0/
 
-using Microsoft.Extensions.Configuration;
+using System.IO;
+using RoadCaptain.Ports;
 
 namespace RoadCaptain.Adapters
 {
     internal class LocalDirectoryRouteRepositorySettings
     {
-        public LocalDirectoryRouteRepositorySettings(IConfiguration configuration)
+        public LocalDirectoryRouteRepositorySettings(IPathProvider pathProvider)
         {
-            configuration.Bind(this);
+            Directory = Path.Combine(pathProvider.GetUserDataDirectory(), "Routes");
             IsValid = !string.IsNullOrEmpty(Directory);
         }
 
         public bool IsValid { get; }
 
-        // ReSharper disable once UnassignedGetOnlyAutoProperty, property is assigned through Bind() in the constructor
-        // ReSharper disable once UnusedAutoPropertyAccessor.Global
-        public string Name { get; init; } = "(unknown)";
+        public string Name => "Local";
 
-        // ReSharper disable once UnassignedGetOnlyAutoProperty, property is assigned through Bind() in the constructor
-        // ReSharper disable once UnusedAutoPropertyAccessor.Global
-        public string? Directory { get; init; }
+        public string Directory { get; }
     }
 }
