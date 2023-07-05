@@ -8,6 +8,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Linq;
@@ -346,7 +347,7 @@ namespace RoadCaptain.Adapters
             return false;
         }
 
-        public void Store(PlannedRoute route, string path)
+        public async Task Store(PlannedRoute route, string path)
         {
             // Ensure that segment sequences have at least
             // the type regular if it's not been set.
@@ -362,7 +363,7 @@ namespace RoadCaptain.Adapters
                 ? SerializeAsGpx(route)
                 : SerializeAsJson(route);
 
-            File.WriteAllText(path, serialized);
+            await File.WriteAllTextAsync(path, serialized);
         }
 
         internal static string SerializeAsJson(PlannedRoute route)

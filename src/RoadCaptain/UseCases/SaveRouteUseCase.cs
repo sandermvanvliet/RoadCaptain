@@ -15,28 +15,42 @@ namespace RoadCaptain.UseCases
     {
         private readonly IEnumerable<IRouteRepository> _repositories;
         private readonly ISegmentStore _segmentStore;
+        private readonly IRouteStore _routeStore;
 
-        public SaveRouteUseCase(IEnumerable<IRouteRepository> repositories, ISegmentStore segmentStore)
+        public SaveRouteUseCase(IEnumerable<IRouteRepository> repositories, ISegmentStore segmentStore, IRouteStore routeStore)
         {
             _repositories = repositories;
             _segmentStore = segmentStore;
+            _routeStore = routeStore;
         }
         
         public async Task ExecuteAsync(SaveRouteCommand saveRouteCommand)
         {
-            var repository = _repositories.SingleOrDefault(r => r.Name == saveRouteCommand.RepositoryName);
-
-            if (repository == null)
+            if (!string.IsNullOrEmpty(saveRouteCommand.RepositoryName))
             {
-                throw new Exception(
-                    $"Unable to find a repository with the name '{saveRouteCommand.RepositoryName}");
-            }
+                var repository = _repositories.SingleOrDefault(r => r.Name == saveRouteCommand.RepositoryName);
 
-            saveRouteCommand.Route.Name = saveRouteCommand.RouteName;
-            
-            var segments = _segmentStore.LoadSegments(saveRouteCommand.Route.World!, saveRouteCommand.Route.Sport);
-            
-            await repository.StoreAsync(saveRouteCommand.Route, saveRouteCommand.Token, segments);
+                if (repository == null)
+                {
+                    throw new Exception(
+                        $"Unable to find a repository with the name '{saveRouteCommand.RepositoryName}");
+                }
+
+                saveRouteCommand.Route.Name = saveRouteCommand.RouteName;
+
+                var segments = _segmentStore.LoadSegments(saveRouteCommand.Route.World!, saveRouteCommand.Route.Sport);
+
+                await repository.StoreAsync(saveRouteCommand.Route, saveRouteCommand.Token, segments);
+            }
+            else if (!string.IsNullOrEmpty(saveRouteCommand.OutputFilePath))
+            {
+                await _routeStore.Store(saveRouteCommand.Route, saveRouteCommand.OutputFilePath);
+            }
+            else
+            {
+                throw new ArgumentException(
+                    "Neither a repository name or a local file was provided and I can't save the route because I need one of those");
+            }
         }
     }
 }

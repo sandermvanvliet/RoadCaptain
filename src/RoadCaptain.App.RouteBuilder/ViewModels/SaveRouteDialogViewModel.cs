@@ -27,12 +27,17 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
         private readonly SaveRouteUseCase _saveRouteUseCase;
         private readonly IZwiftCredentialCache _credentialCache;
         private readonly IZwift _zwift;
-
+        private readonly IUserPreferences _userPreferences;
+        private string? _outputFilePath;
+    
         public SaveRouteDialogViewModel(
             IWindowService windowService,
             RouteViewModel route,
             RetrieveRepositoryNamesUseCase retrieveRepositoryNamesUseCase, 
-            SaveRouteUseCase saveRouteUseCase, IZwiftCredentialCache credentialCache, IZwift zwift)
+            SaveRouteUseCase saveRouteUseCase, 
+            IZwiftCredentialCache credentialCache, 
+            IZwift zwift, 
+            IUserPreferences userPreferences)
         {
             _windowService = windowService;
             _route = route;
@@ -40,11 +45,13 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             _saveRouteUseCase = saveRouteUseCase;
             _credentialCache = credentialCache;
             _zwift = zwift;
+            _userPreferences = userPreferences;
         }
 
         public ICommand SaveRouteCommand => new AsyncRelayCommand(
                 _ => SaveRoute(),
-                _ => SelectedRepository != null && !string.IsNullOrEmpty(RouteName))
+                _ => !string.IsNullOrEmpty(RouteName) &&
+                    (SelectedRepository != null || (SelectedRepository == null && !string.IsNullOrEmpty(OutputFilePath))))
             .OnSuccess(async _ =>
             {
                 await CloseWindow();
@@ -52,6 +59,18 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             .OnFailure(async result =>
                 await _windowService.ShowErrorDialog($"Unable to save route: {result.Message}", null))
             .SubscribeTo(this, () => SelectedRepository)
+            .SubscribeTo(this, () => RouteName)
+            .SubscribeTo(this, () => OutputFilePath);
+        
+        public ICommand SelectFileCommand => new AsyncRelayCommand(
+            _ => SelectFile(),
+            _ => !string.IsNullOrEmpty(RouteName))
+            .OnSuccess(async _ =>
+            {
+                SelectedRepository = null;
+            })
+            .OnFailure(async result =>
+                await _windowService.ShowErrorDialog($"Unable to select a file to save to: {result.Message}", null))
             .SubscribeTo(this, () => RouteName);
         
         private async Task<CommandResult> SaveRoute()
@@ -60,22 +79,54 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             {
                 return CommandResult.Failure("Route name is empty");
             }
-            if (string.IsNullOrEmpty(SelectedRepository))
+            if (string.IsNullOrEmpty(SelectedRepository) && string.IsNullOrEmpty(OutputFilePath))
             {
-                return CommandResult.Failure("No route repository selected");
+                return CommandResult.Failure("No route repository selected and no local file given, can't save this route without either of those");
             }
             
             try
             {
                 var token = await AuthenticateToZwiftAsync();
                 
-                await _saveRouteUseCase.ExecuteAsync(new SaveRouteCommand(_route.AsPlannedRoute()!, RouteName, SelectedRepository, token?.AccessToken));
+                await _saveRouteUseCase.ExecuteAsync(new SaveRouteCommand(_route.AsPlannedRoute()!, RouteName, SelectedRepository, token?.AccessToken, OutputFilePath));
+                
+                _route.Save();
                 
                 return CommandResult.Success();
             }
             catch (Exception e)
             {
                 return CommandResult.Failure(e.Message);
+            }
+        }
+
+        private async Task<CommandResult> SelectFile()
+        {
+            var outputFilePath = await _windowService.ShowSaveFileDialog(_userPreferences.LastUsedFolder, RouteName + ".json");
+
+            if (string.IsNullOrEmpty(outputFilePath))
+            {
+                return CommandResult.Aborted();
+            }
+
+            OutputFilePath = outputFilePath;
+            
+            return CommandResult.Success();
+        }
+
+        public string? OutputFilePath
+        {
+            get => _outputFilePath;
+            set
+            {
+                if (value == _outputFilePath)
+                {
+                    return;
+                }
+                
+                _outputFilePath = value;
+                
+                this.RaisePropertyChanged();
             }
         }
 
@@ -208,6 +259,11 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
                 }
                 
                 _selectedRepository = value;
+
+                if (value != null)
+                {
+                    OutputFilePath = null;
+                }
                 
                 this.RaisePropertyChanged();
             }

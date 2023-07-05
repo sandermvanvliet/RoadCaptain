@@ -3,6 +3,7 @@
 // See LICENSE or https://choosealicense.com/licenses/artistic-2.0/
 
 using System;
+using System.Threading.Tasks;
 using RoadCaptain.Ports;
 
 namespace RoadCaptain.Tests.Unit.UseCases
@@ -19,7 +20,7 @@ namespace RoadCaptain.Tests.Unit.UseCases
             throw new Exception("Route not fond");
         }
 
-        public void Store(PlannedRoute route, string path)
+        public Task Store(PlannedRoute route, string path)
         {
             throw new NotImplementedException();
         }

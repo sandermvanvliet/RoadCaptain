@@ -4,6 +4,7 @@
 
 using System;
 using System.IO;
+using System.Threading.Tasks;
 using RoadCaptain.Ports;
 
 namespace RoadCaptain.App.Runner.Tests.Unit
@@ -34,7 +35,7 @@ namespace RoadCaptain.App.Runner.Tests.Unit
             throw new FileNotFoundException();
         }
 
-        public void Store(PlannedRoute route, string path)
+        public Task Store(PlannedRoute route, string path)
         {
             throw new NotImplementedException();
         }

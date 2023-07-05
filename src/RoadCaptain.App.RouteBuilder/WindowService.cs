@@ -142,7 +142,8 @@ namespace RoadCaptain.App.RouteBuilder
                 Resolve<RetrieveRepositoryNamesUseCase>(),
                 Resolve<SaveRouteUseCase>(),
                 Resolve<IZwiftCredentialCache>(),
-                Resolve<IZwift>());
+                Resolve<IZwift>(),
+                Resolve<IUserPreferences>());
 
             saveRouteDialog.DataContext = viewModel;
 

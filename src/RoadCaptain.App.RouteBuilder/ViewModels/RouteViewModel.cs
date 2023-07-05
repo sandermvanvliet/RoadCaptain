@@ -187,20 +187,6 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
 
         public void Save()
         {
-            if (string.IsNullOrEmpty(OutputFilePath))
-            {
-                throw new ArgumentException("Output file path is empty");
-            }
-
-            var route = AsPlannedRoute();
-
-            if (route == null)
-            {
-                return;
-            }
-
-            _routeStore.Store(route, OutputFilePath);
-
             IsTainted = false;
         }
 
