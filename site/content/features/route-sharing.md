@@ -56,3 +56,9 @@ The list of routes gives you a quick idea of how long it is, ascent (and descent
 
 
 ![Screenshot of the selected route in the main screen](/images/route-sharing-step-6-route.png)
+
+## Feedback
+
+Route Sharing is a pre-release feature and there may be some sharp edges.
+
+Any feedback is greatly appreciated, head over to [the feedback discussion](https://github.com/sandermvanvliet/RoadCaptain/discussions/116) on GitHub to shrae your feedback!

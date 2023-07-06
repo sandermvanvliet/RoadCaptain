@@ -1,6 +1,12 @@
 <section>
-    <span class="icon {{ .style }}"></span>
+    <span class="icon {{ .style }}">
+    </span>
     <h3>{{ .name }}</h3>
+        {{ if .feature }}
+            {{ if .beta }}
+            <h4 title="This feature can be used but is not super polished yet, expect some sharp edges" style="color:#666666"><span class="icon major solid fa-flask" style="display:inline;margin-right:8px"></span>pre-release feature</h4>
+            {{ end }}
+        {{ end }}
     <p>{{ .content | safeHTML }}</p>
     {{ if .feature }}
     <p><a href="/features/{{ .feature }}">Read more</a></p>

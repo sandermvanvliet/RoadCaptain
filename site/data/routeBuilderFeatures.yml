@@ -4,6 +4,13 @@ content: |
   RoadCaptain Route Builder supports these features. Missing one? Create <a href="https://github.com/sandermvanvliet/RoadCaptain/issues/new?assignees=&labels=missing+feature&template=feature_request.md&title=">a feature request</a> on GitHub!
 style: "style1 medium"
 items:
+  # feature route sharing
+  - name: "Route sharing"
+    content: "Share routes you've created with other RoadCaptain users"
+    style: "solid style2 major fa-share-square"
+    feature: "route-sharing"
+    beta: true
+
   # feature item loop
   - name : "Elevation"
     content : "Use the elevation plot to see the profile of your route and the grade of the climbs"
