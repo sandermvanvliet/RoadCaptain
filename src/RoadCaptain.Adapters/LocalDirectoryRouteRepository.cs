@@ -90,6 +90,7 @@ namespace RoadCaptain.Adapters
                         routeModel.Uri = new Uri(file);
                         routeModel.PlannedRoute = UpgradeIfNecessaryAndSerialize(routeModel.Serialized);
                         routeModel.World = routeModel.PlannedRoute?.WorldId;
+                        routeModel.CreatorName = "You";
                         routeModels.Add(routeModel);
                     }
                     else
