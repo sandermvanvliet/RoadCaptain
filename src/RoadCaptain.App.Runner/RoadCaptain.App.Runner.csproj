@@ -17,6 +17,9 @@
 		<None Update="appsettings.routerepositories.json">
 		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</None>
+		<None Update="appsettings.routerepositories.release.json">
+		  <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+		</None>
 	</ItemGroup>
 	<ItemGroup>
 		<!--This helps with theme dll-s trimming.
