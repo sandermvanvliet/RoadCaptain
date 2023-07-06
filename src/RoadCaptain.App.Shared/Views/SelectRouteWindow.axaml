@@ -300,15 +300,15 @@
 
                             <StackPanel Grid.Column="1" Grid.Row="1" Orientation="Horizontal" Margin="0,0,0,0">
                                 <StackPanel Orientation="Horizontal" Height="18">
-                                    <TextBlock Text="{Binding Path=Distance,StringFormat=\{0:0.0\}}" FontSize="16"
+                                    <TextBlock Text="{Binding Path=Distance,StringFormat=\{0:0\}}" FontSize="16"
                                                FontWeight="Bold" VerticalAlignment="Bottom" />
                                     <TextBlock Text="km" FontSize="10" FontWeight="Bold" VerticalAlignment="Bottom"
                                                Padding="0,0,0,1.5" />
 
                                     <TextBlock Text="⛰" FontSize="15" Margin="8,-4,0,0" Padding="0"
                                                FontWeight="ExtraBold"
-                                               ToolTip.Tip="{Binding Path=Descent,StringFormat=Descent \{0:0.0\}m}"/>
-                                    <TextBlock Text="{Binding Path=Ascent,StringFormat=\{0:0.0\}}" FontSize="16"
+                                               ToolTip.Tip="{Binding Path=Descent,StringFormat=Descent \{0:0\}m}"/>
+                                    <TextBlock Text="{Binding Path=Ascent,StringFormat=\{0:0\}}" FontSize="16"
                                                FontWeight="Bold" VerticalAlignment="Bottom" />
                                     <TextBlock Text="m" FontSize="10" FontWeight="Bold" VerticalAlignment="Bottom"
                                                Padding="0,0,0,1.5" />
