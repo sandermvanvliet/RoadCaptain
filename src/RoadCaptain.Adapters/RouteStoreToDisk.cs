@@ -361,12 +361,12 @@ namespace RoadCaptain.Adapters
 
             var serialized = path.EndsWith(".gpx", StringComparison.InvariantCultureIgnoreCase)
                 ? SerializeAsGpx(route)
-                : SerializeAsJson(route);
+                : SerializeAsJson(route, Formatting.Indented);
 
             await File.WriteAllTextAsync(path, serialized);
         }
 
-        internal static string SerializeAsJson(PlannedRoute route)
+        internal static string SerializeAsJson(PlannedRoute route, Formatting formatting = Formatting.Indented)
         {
             var versionedRoute = new PersistedRouteVersion2
             {
@@ -374,7 +374,7 @@ namespace RoadCaptain.Adapters
                 Route = route
             };
 
-            return JsonConvert.SerializeObject(versionedRoute, Formatting.Indented, RouteSerializationSettings);
+            return JsonConvert.SerializeObject(versionedRoute, formatting, RouteSerializationSettings);
         }
 
         private string SerializeAsGpx(PlannedRoute route)

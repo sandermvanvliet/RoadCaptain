@@ -175,7 +175,7 @@ namespace RoadCaptain.Adapters
                 ZwiftRouteName = plannedRoute.ZwiftRouteName,
                 IsLoop = plannedRoute.IsLoop,
                 RepositoryName = Name,
-                Serialized = RouteStoreToDisk.SerializeAsJson(plannedRoute)
+                Serialized = RouteStoreToDisk.SerializeAsJson(plannedRoute, Formatting.None)
             };
 
             var routeNameForFile = storageModel.Name!.Replace(" ", "").ToLower();

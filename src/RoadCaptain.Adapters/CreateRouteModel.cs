@@ -12,11 +12,6 @@ namespace RoadCaptain.Adapters
 {
     internal class CreateRouteModel
     {
-        private static readonly JsonSerializerSettings SerializerSettings = new JsonSerializerSettings
-        {
-            ContractResolver = new CamelCasePropertyNamesContractResolver()
-        };
-
         public CreateRouteModel(PlannedRoute plannedRoute, List<Segment> segments)
         {
             if (plannedRoute.World == null || string.IsNullOrEmpty(plannedRoute.World.Id))
@@ -38,7 +33,7 @@ namespace RoadCaptain.Adapters
             Name = plannedRoute.Name;
             ZwiftRouteName = plannedRoute.ZwiftRouteName;
             IsLoop = plannedRoute.IsLoop;
-            Serialized = JsonConvert.SerializeObject(plannedRoute, SerializerSettings);
+            Serialized = RouteStoreToDisk.SerializeAsJson(plannedRoute, Formatting.None);
             CalculateTotalAscentAndDescent(plannedRoute, segments);
         }
 

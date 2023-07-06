@@ -316,8 +316,8 @@
                                     <TextBlock Text="↻" FontWeight="Bold" Foreground="Green" FontSize="18" IsVisible="{Binding Path=IsLoop}" Margin="4,-2,0,0"
                                                ToolTip.Tip="This route is a loop"/>
                                     
-                                    <TextBlock Text="🚴🏾" FontSize="18" Margin="8,-6,0,0" />
-                                    <TextBlock Text="{Binding Path=CreatorName}" />
+                                    <TextBlock Text="🚴🏾" FontSize="18" Margin="8,-6,0,0" ToolTip.Tip="Created by" />
+                                    <TextBlock Text="{Binding Path=CreatorName}" ToolTip.Tip="Created by" />
                                 </StackPanel>
                             </StackPanel>
                             <StackPanel Grid.Column="1" Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right">

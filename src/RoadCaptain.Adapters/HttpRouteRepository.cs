@@ -13,6 +13,8 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using Newtonsoft.Json.Serialization;
 using RoadCaptain.Ports;
 
 namespace RoadCaptain.Adapters
@@ -21,7 +23,14 @@ namespace RoadCaptain.Adapters
     {
         private readonly HttpClient _httpClient;
         private readonly HttpRouteRepositorySettings _settings;
-        private static readonly JsonSerializerSettings JsonSettings = new();
+        public static readonly JsonSerializerSettings JsonSettings = new()
+        {
+            ContractResolver = new CamelCasePropertyNamesContractResolver(),
+            Converters = new List<JsonConverter>
+            {
+                new StringEnumConverter()
+            }
+        };
         private readonly JsonSerializer _serializer;
         private readonly RouteStoreToDisk _routeStoreToDisk;
 
