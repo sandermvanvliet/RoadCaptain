@@ -16,7 +16,7 @@
         PointerPressed="InputElement_OnPointerPressed"
         Width="600"
         Height="200"
-        WindowState="Maximized"
+        WindowState="Normal"
         SystemDecorations="None"
         Background="Transparent"
         TransparencyLevelHint="Transparent"
