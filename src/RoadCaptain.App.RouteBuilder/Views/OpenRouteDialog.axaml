@@ -10,7 +10,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:viewModels="using:RoadCaptain.App.RouteBuilder.ViewModels"
         xmlns:converters="clr-namespace:RoadCaptain.App.Shared.Converters;assembly=RoadCaptain.App.Shared"
-        mc:Ignorable="d" Width="600" Height="270"
+        mc:Ignorable="d" Width="600" Height="230"
         x:Class="RoadCaptain.App.RouteBuilder.Views.OpenRouteDialog"
         Title="Open route"
         Icon="avares://RoadCaptain.App.Shared/icon.png"
@@ -92,8 +92,6 @@
 				<Grid.RowDefinitions>
 					<RowDefinition Height="32" />
 					<RowDefinition Height="32" />
-					<RowDefinition Height="32" />
-					<RowDefinition Height="32" />
 				</Grid.RowDefinitions>
 				<Grid.Styles>
 					<Style Selector="TextBox">
@@ -112,22 +110,20 @@
 				            HorizontalAlignment="Center">
 					<Button Content="Search" 
 					        Command="{Binding Path=SelectRouteCommand}"/>
-					<TextBlock Text="a route" VerticalAlignment="Center" Margin="8,0,0,0" />
+					<TextBlock Text="a route or" VerticalAlignment="Center" Margin="4,0,0,0" />
+
+					<Button Content="Open" Width="76" Margin="8,0,0,0" VerticalAlignment="Center" Command="{Binding Path=SelectFileCommand}" />
+					<TextBlock Text="a local file" VerticalAlignment="Center" Margin="4,0,0,0" />
 				</StackPanel>
 				
 				<StackPanel Orientation="Horizontal"
 				            Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3"
 				            HorizontalAlignment="Center"
-				            IsVisible="{Binding Path=SelectedRoute, Converter={StaticResource NullabilityConverter}}">
-					<TextBlock Text="Selected route:" VerticalAlignment="Center" />
-					<TextBlock Text="{Binding Path=SelectedRoute.Name, FallbackValue='Search for a route'}" Margin="8,0,0,0" VerticalAlignment="Center"/>
+				            IsVisible="{Binding Path=SelectedRouteName, Converter={StaticResource NullabilityConverter}}"
+				            Margin="0,16,0,0">
+					<TextBlock Text="Selected route:" VerticalAlignment="Center" FontWeight="Bold" />
+					<TextBlock Text="{Binding Path=SelectedRouteName, FallbackValue='Search for a route'}" Margin="8,0,0,0" VerticalAlignment="Center"/>
 				</StackPanel>
-
-				<TextBlock Grid.Row="2" Grid.Column="0" Text="or.." Grid.ColumnSpan="3" HorizontalAlignment="Center" Margin="0,8,0,0" FontWeight="Bold" />
-				
-				<TextBlock Grid.Row="3" Grid.Column="0" Text="Open a local file:" Classes="field" />
-				<TextBox Grid.Row="3" Grid.Column="1" VerticalAlignment="Center" IsReadOnly="True" Text="{Binding Path=RouteFilePath}"/>
-				<Button Grid.Row="3" Grid.Column="2" Content="Select" Width="76" Margin="4,-8,0,0" VerticalAlignment="Center" Command="{Binding Path=SelectFileCommand}" />
 			</Grid>
 
 			<!-- Bottom row -->

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using ReactiveUI;
@@ -15,8 +16,10 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
         private readonly IRouteStore _routeStore;
         private RouteModel? _selectedRoute;
         private string? _routeFilePath;
+        private string? _selectedRouteName;
 
-        public OpenRouteDialogViewModel(IWindowService windowService, IUserPreferences userPreferences, IRouteStore routeStore)
+        public OpenRouteDialogViewModel(IWindowService windowService, IUserPreferences userPreferences,
+            IRouteStore routeStore)
         {
             _windowService = windowService;
             _userPreferences = userPreferences;
@@ -25,18 +28,15 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             SelectRouteCommand = new AsyncRelayCommand(
                 async _ => await SelectRoute(),
                 _ => true);
-            
-            SelectFileCommand =  new AsyncRelayCommand(
+
+            SelectFileCommand = new AsyncRelayCommand(
                 async _ => await SelectFile(),
                 _ => true);
-            
+
             OpenRouteCommand = new AsyncRelayCommand(
-                async _ => OpenRoute(),
-                _ => SelectedRoute != null || !string.IsNullOrEmpty(RouteFilePath))
-                .OnSuccess(async _ =>
-                {
-                    await CloseWindow();
-                })
+                    async _ => OpenRoute(),
+                    _ => SelectedRoute != null || !string.IsNullOrEmpty(RouteFilePath))
+                .OnSuccess(async _ => { await CloseWindow(); })
                 .OnFailure(async result =>
                     await _windowService.ShowErrorDialog($"Unable to save route: {result.Message}", null))
                 .SubscribeTo(this, () => SelectedRoute)
@@ -49,8 +49,8 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
                 _userPreferences.LastUsedFolder,
                 new Dictionary<string, string>
                 {
-                    { "json", "RoadCaptain route file (.json)"},
-                    { "gpx", "GPS Exchange Format (.gpx)"}
+                    { "json", "RoadCaptain route file (.json)" },
+                    { "gpx", "GPS Exchange Format (.gpx)" }
                 });
 
             if (string.IsNullOrEmpty(filePath))
@@ -59,7 +59,8 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             }
 
             RouteFilePath = filePath;
-            
+            SelectedRouteName = Path.GetFileName(_routeFilePath);
+
             return CommandResult.Success();
         }
 
@@ -69,9 +70,22 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             set
             {
                 if (value == _routeFilePath) return;
-                
+
                 _routeFilePath = value;
-                
+
+                this.RaisePropertyChanged();
+            }
+        }
+
+        public string? SelectedRouteName
+        {
+            get => _selectedRouteName;
+            set
+            {
+                if (value == _selectedRouteName) return;
+
+                _selectedRouteName = value;
+
                 this.RaisePropertyChanged();
             }
         }
@@ -82,9 +96,10 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             set
             {
                 if (value == _selectedRoute) return;
-                
+
                 _selectedRoute = value;
-                
+                SelectedRouteName = _selectedRoute?.Name;
+
                 this.RaisePropertyChanged();
             }
         }
@@ -102,24 +117,20 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
                 SelectedRoute = selectedRoute;
                 return CommandResult.Success();
             }
-            
+
             return CommandResult.Aborted();
         }
 
         public event EventHandler? ShouldClose;
 
-        public void Initialize()
-        {
-            
-        }
-
         private CommandResult OpenRoute()
         {
-            if(SelectedRoute == null && string.IsNullOrEmpty(RouteFilePath))
+            if (SelectedRoute == null && string.IsNullOrEmpty(RouteFilePath))
             {
-                return CommandResult.Failure("No local file or route from a repository selected, I can't open a route that way"); 
+                return CommandResult.Failure(
+                    "No local file or route from a repository selected, I can't open a route that way");
             }
-            
+
             return CommandResult.Success();
         }
 

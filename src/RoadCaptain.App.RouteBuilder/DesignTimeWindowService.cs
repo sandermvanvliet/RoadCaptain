@@ -54,7 +54,7 @@ namespace RoadCaptain.App.RouteBuilder
             throw new System.NotImplementedException();
         }
 
-        public Task<(PlannedRoute?, string?)> ShowOpenRouteDialog()
+        public Task<(PlannedRoute? PlannedRoute, string? RouteFilePath)> ShowOpenRouteDialog()
         {
             throw new System.NotImplementedException();
         }

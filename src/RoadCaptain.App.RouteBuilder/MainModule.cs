@@ -29,7 +29,7 @@ namespace RoadCaptain.App.RouteBuilder
 
             builder
                 .RegisterAssemblyTypes(ThisAssembly)
-                .Where(type => type.BaseType == typeof(Window) && type.Namespace != null && type.Namespace.EndsWith(".Views"))
+                .Where(type => typeof(Window).IsAssignableFrom(type) && type.Namespace != null && type.Namespace.EndsWith(".Views"))
                 .UsingConstructor(new MostParametersConstructorSelector())
                 .AsSelf();
 

@@ -4,16 +4,16 @@
 
 using System;
 using Avalonia;
-using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Avalonia.Threading;
 using RoadCaptain.App.RouteBuilder.ViewModels;
+using RoadCaptain.App.Shared.Dialogs;
 
 namespace RoadCaptain.App.RouteBuilder.Views
 {
-    public partial class OpenRouteDialog : Window
+    public partial class OpenRouteDialog : DialogWindow
     {
         public OpenRouteDialog()
         {
@@ -30,6 +30,7 @@ namespace RoadCaptain.App.RouteBuilder.Views
 
         private void CloseButton_Click(object? sender, RoutedEventArgs e)
         {
+            DialogResult = DialogResult.Cancel;
             Close();
         }
 
@@ -56,11 +57,13 @@ namespace RoadCaptain.App.RouteBuilder.Views
                     }
                     else
                     {
+                        DialogResult = viewModel.SelectedRoute != null || !string.IsNullOrEmpty(viewModel.RouteFilePath)
+                            ? DialogResult.Ok
+                            : DialogResult.Cancel;
+                        
                         Close();
                     }
                 };
-
-                Dispatcher.UIThread.InvokeAsync(() => viewModel.Initialize());
             }
         }
     }
