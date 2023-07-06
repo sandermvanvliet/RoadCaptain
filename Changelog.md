@@ -1,14 +1,22 @@
 ﻿# Changelog
 
-## 0.6.11.2
+## 0.7.0.0
 
 This release adds a new feature that brings the social aspect of Zwift to RoadCaptain: _route sharing_!
 
 You can now share the routes you create in Route Builder with other Zwifters that use RoadCaptain as well as browse routes that other Zwifters have created 🎉🎉
 
+Read more about how it works on [the RoadCaptain site](https://roadcaptain.nl/features/route-sharing/).
+
 ### Route Builder
 
 - It is now possible to import a route from [Zwift Map](https://zwiftmap.com/) into Route Builder. This saves you a lot of work to rebuild a route to make it work for RoadCaptain.
+- The color scheme of the elevation plot has been changed to provide much clearer indication of the grade
+
+### Runner
+
+- **Windows** Zwift credentials will now be stored securely in the Credential Manager instead of keeping them in memory only. This reduces the amount of times you'll need to log in to Zwift
+- The color scheme of the elevation plot has been changed to provide much clearer indication of the grade
 
 ## 0.6.11.0
 
