@@ -22,7 +22,7 @@
 		<AvaloniaResource Include="Assets\**" />
 		<None Remove=".gitignore" />
 		<None Update="appsettings.routerepositories.json">
-		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</None>
 		<None Update="appsettings.routerepositories.release.json">
 		  <CopyToOutputDirectory>Never</CopyToOutputDirectory>
