@@ -10,6 +10,7 @@ Read more about how it works on [the RoadCaptain site](https://roadcaptain.nl/fe
 
 ### Route Builder
 
+- Add a menu item to go to the documentation on roadcaptain.nl
 - It is now possible to import a route from [Zwift Map](https://zwiftmap.com/) into Route Builder. This saves you a lot of work to rebuild a route to make it work for RoadCaptain.
 - The color scheme of the elevation plot has been changed to provide much clearer indication of the grade
 
@@ -17,6 +18,11 @@ Read more about how it works on [the RoadCaptain site](https://roadcaptain.nl/fe
 
 - **Windows** Zwift credentials will now be stored securely in the Credential Manager instead of keeping them in memory only. This reduces the amount of times you'll need to log in to Zwift
 - The color scheme of the elevation plot has been changed to provide much clearer indication of the grade
+- Resue the route after connection was lost. This should fix the remaining issue in [#107](https://github.com/sandermvanvliet/RoadCaptain/issues/107)
+- Add the ability to show the elevation plot for the current route by pressing <kbd>CTRL</kbd> + <kdb>E</kbd> / <kbd>META</kdb> + <kbd>E</kbd>
+- The elevation plot now shows a view of the next 950m which helps you plan your effort much easier than having to squint at the elevation plot for the entire route.
+- Fixed a bug where a crash would occur because the map animation would continue running when the rider is already in-game.
+- Fixed a bug where hitting <kbd>CTRL</kbd> + <kbd>X</kbd> / <kbd>META</kbd> + <kbd>X</kbd> in the in-game window when you are not yet in a game would not return to the main window.
 
 ## 0.6.11.0
 
