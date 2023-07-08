@@ -16,6 +16,7 @@ namespace RoadCaptain
         private const double CoordinateEqualityTolerance = 0.00001d;
         private const double PiRad = Math.PI / 180d;
         private const double RadToDegree = 180 / Math.PI;
+        private const double RadiusOfEarth = 6371;
 
         public TrackPoint(double latitude, double longitude, double altitude, ZwiftWorldId? worldId = null)
         {
@@ -36,7 +37,7 @@ namespace RoadCaptain
         public Segment? Segment { get; set; }
         
         [JsonIgnore]
-        // ReSharper disable once UnusedMember.Global because this is only used to look up a point using Garmin BaseCamp
+        // RadiusOfEartheSharper disable once UnusedMember.Global because this is only used to look up a point using Garmin BaseCamp
         public string CoordinatesDecimal =>
             $"S{(Latitude * -1).ToString("0.00000", CultureInfo.InvariantCulture)}° E{Longitude.ToString("0.00000", CultureInfo.InvariantCulture)}°";
 
@@ -92,7 +93,6 @@ namespace RoadCaptain
 
         public static double GetDistanceFromLatLonInMeters(double lat1, double lon1, double lat2, double lon2)
         {
-            const double radiusOfEarth = 6371; // Radius of the earth in km
             var dLat = (lat2 - lat1) * PiRad;
             var dLon = (lon2 - lon1) * PiRad;
 
@@ -102,9 +102,52 @@ namespace RoadCaptain
                 Math.Sin(dLon / 2d) * Math.Sin(dLon / 2d);
 
             var c = 2 * Math.Atan2(Math.Sqrt(a), Math.Sqrt(1 - a));
-            var d = radiusOfEarth * c; // Distance in km
+            var d = RadiusOfEarth * c; // Distance in km
 
             return d * 1000;
+        }
+        
+        public TrackPoint ProjectTo(double bearingInDegrees, double distanceInMeters, int? altitude = null)
+        {
+            /*
+def get_point_at_distance(lat1, lon1, d, bearing, R=6371):
+    """
+    lat: initial latitude, in degrees
+    lon: initial longitude, in degrees
+    d: target distance from initial
+    bearing: (true) heading in degrees
+    R: optional radius of sphere, defaults to mean radius of earth
+
+    Returns new lat/lon coordinate {d}km from initial, in degrees
+    """
+    lat1 = radians(lat1)
+    lon1 = radians(lon1)
+    a = radians(bearing)
+    lat2 = asin(sin(lat1) * cos(d/R) + cos(lat1) * sin(d/R) * cos(a))
+    lon2 = lon1 + atan2(
+        sin(a) * sin(d/R) * cos(lat1),
+        cos(d/R) - sin(lat1) * sin(lat2)
+    )
+    return (degrees(lat2), degrees(lon2),)
+    */
+
+            var latRadians = DegreesToRadians(Latitude);
+            var lonRadians = DegreesToRadians(Longitude);
+            var bearingInRadians = DegreesToRadians(bearingInDegrees);
+
+            var newLatRadians = Math.Asin(Math.Sin(latRadians) * Math.Cos(distanceInMeters / RadiusOfEarth) +
+                                          Math.Cos(latRadians) * Math.Sin(distanceInMeters / RadiusOfEarth) *
+                                          Math.Cos(bearingInRadians));
+
+            var newLonRadians = lonRadians + Math.Atan2(
+                Math.Sin(bearingInRadians) * Math.Sin(distanceInMeters / RadiusOfEarth) * Math.Cos(latRadians),
+                Math.Cos(distanceInMeters / RadiusOfEarth) - Math.Sin(latRadians) * Math.Sin(newLatRadians));
+
+            return new TrackPoint(
+                RadToDegree * newLatRadians,
+                RadToDegree * newLonRadians,
+                altitude ?? Altitude,
+                WorldId);
         }
 
         public static double Bearing(TrackPoint pt1, TrackPoint pt2)

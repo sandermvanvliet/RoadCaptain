@@ -3,6 +3,7 @@
   <component name="AvaloniaProject">
     <option name="projectPerEditor">
       <map>
+        <entry key="src/RoadCaptain.App.Runner/Views/ElevationPlotWindow.axaml" value="src/RoadCaptain.App.Runner/RoadCaptain.App.Runner.csproj" />
         <entry key="src/RoadCaptain.App.Runner/Views/MainWindow.axaml" value="src/RoadCaptain.App.Runner/RoadCaptain.App.Runner.csproj" />
         <entry key="src/RoadCaptain.App.Runner/Views/SelectRouteWindow.axaml" value="src/RoadCaptain.App.Runner/RoadCaptain.App.Runner.csproj" />
       </map>

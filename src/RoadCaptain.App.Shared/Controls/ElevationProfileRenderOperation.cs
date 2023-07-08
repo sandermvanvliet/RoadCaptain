@@ -47,6 +47,7 @@ namespace RoadCaptain.App.Shared.Controls
         private const int CircleMarkerRadius = 10;
         private int _zoomWindowMetersAhead = 950;
         private int _zoomWindowMetersBehind = 50;
+        private List<Segment>? _climbMarkersOnRoute;
 
         public ElevationProfileRenderOperation() 
         {
@@ -122,6 +123,8 @@ namespace RoadCaptain.App.Shared.Controls
             }
         }
 
+        public bool ZoomToClimb { get; set; }
+
         public void Dispose()
         {
         }
@@ -171,7 +174,7 @@ namespace RoadCaptain.App.Shared.Controls
 
             foreach (var routeStep in Route.RouteSegmentSequence)
             {
-                if (routeStep.SegmentId == null)
+                if (string.IsNullOrEmpty(routeStep.SegmentId))
                 {
                     continue;
                 }
@@ -271,7 +274,32 @@ namespace RoadCaptain.App.Shared.Controls
             // This works because we've calculated it above
             var totalDistanceMeters = Math.Round(_routePoints.Last().DistanceOnSegment, MidpointRounding.AwayFromZero);
 
-            if (ZoomOnCurrentPosition)
+            var isZoomedToClimb = false;
+            
+            if(ZoomToClimb && _climbMarkersOnRoute != null && RiderPosition != null)
+            {
+                // Determine if we're on a segment, if not then check if we're on ZoomOnCurrentPosition mode
+                // and use that logic.
+                // If not, fall back to the default
+                var currentClimb = _climbMarkersOnRoute.SingleOrDefault(climb => climb.Contains(RiderPosition));
+            
+                if (currentClimb != null)
+                {
+                    isZoomedToClimb = true;
+                    
+                    var closestA = GetClosestPointOnRoute(currentClimb.A);
+                    var closestB = GetClosestPointOnRoute(currentClimb.B);
+            
+                    if (closestA != null && closestB != null && closestA.DistanceOnSegment < closestB.DistanceOnSegment)
+                    {
+                        var distanceMeters = (closestB.DistanceOnSegment - closestA.DistanceOnSegment) + 20; // 10m before and 10m after
+                        _step = (float)(Bounds.Width / distanceMeters);
+                        _zoomCenterStep = (float)(Bounds.Width / distanceMeters);
+                    }
+                }
+            }
+            
+            if (ZoomOnCurrentPosition && !isZoomedToClimb)
             {
                 // If the route is less than the zoomed in viewport
                 // use the route distance, otherwise use the zoomed in viewport distance.
@@ -401,18 +429,25 @@ namespace RoadCaptain.App.Shared.Controls
                     }
                 }
 
-                if (riderPositionPoint != null && riderPositionPoint.Value.X > _zoomWindowMetersBehind)
+                if (!ZoomToClimb)
                 {
-                    _hasShifted = true;
-                    dx = riderPositionPoint.Value.X - _zoomWindowMetersBehind;
+                    if (riderPositionPoint != null && riderPositionPoint.Value.X > _zoomWindowMetersBehind)
+                    {
+                        _hasShifted = true;
+                        dx = riderPositionPoint.Value.X - _zoomWindowMetersBehind;
+                    }
+                    else
+                    {
+                        _hasShifted = false;
+                    }
                 }
                 else
                 {
-                    _hasShifted = false;
+                    dx = 0;
                 }
-
-                canvas.Translate(-dx, -(float)Bounds.Height);
                 
+                canvas.Translate(-dx, -(float)Bounds.Height);
+
                 foreach (var group in _elevationGroups)
                 {
                     canvas.DrawPath(group.Path, PaintForGrade(group.Grade));
@@ -428,17 +463,22 @@ namespace RoadCaptain.App.Shared.Controls
 
                 if (_routePoints != null && Markers!= null && Markers.Any())
                 {
-                    var climbMarkers = Markers.Where(m => m.Type == SegmentType.Climb).ToList();
+                    var climbMarkersOnRoute = _climbMarkersOnRoute;
 
-                    var climbMarkersOnRoute = _routePoints
-                        .Select(point => new
-                        {
-                            Point = point,
-                            Marker = climbMarkers.FirstOrDefault(m => m.Contains(point))
-                        })
-                        .Where(x => x.Marker != null)
-                        .GroupBy(x => x.Marker!.Id, x => x.Marker!, (_, values) => values.First())
-                        .ToList();
+                    if (climbMarkersOnRoute == null)
+                    {
+                        var climbMarkers = Markers.Where(m => m.Type == SegmentType.Climb).ToList();
+
+                        _climbMarkersOnRoute = climbMarkersOnRoute = _routePoints
+                            .Select(point => new
+                            {
+                                Point = point,
+                                Marker = climbMarkers.FirstOrDefault(m => m.Contains(point))
+                            })
+                            .Where(x => x.Marker != null)
+                            .GroupBy(x => x.Marker!.Id, x => x.Marker!, (_, values) => values.First())
+                            .ToList();
+                    }
 
                     foreach (var climbMarker in climbMarkersOnRoute)
                     {
@@ -455,6 +495,26 @@ namespace RoadCaptain.App.Shared.Controls
 
                 // Back to normal
                 canvas.Restore();
+
+                // Render the upcoming 100m distance lines
+                if (ZoomOnCurrentPosition && _zoomCenterStep != null)
+                {
+                    for (var i = _hasShifted ? 100 : 0; i < _zoomWindowMetersAhead; i += 100)
+                    {
+                        var x = _zoomWindowMetersBehind + (_zoomCenterStep.Value * i);
+                        canvas.DrawLine(
+                            x,
+                            0,
+                            x,
+                            (float)(Bounds.Height),
+                            _distanceLinePaint);
+
+                        var text = (_hasShifted ? i : i + 100).ToString(CultureInfo.InvariantCulture) + "m";
+                    
+                        var correctedAltitudeOffset = (float)(Bounds.Height - CalculateYFromAltitude(0));
+                        canvas.DrawText(text, x + 5, correctedAltitudeOffset, _defaultFont, SkiaPaints.ElevationLineTextPaint);
+                    }
+                }
             }
 
             // Ensure sea-level exists
@@ -463,6 +523,7 @@ namespace RoadCaptain.App.Shared.Controls
                 _elevationLines.Add(0);
             }
 
+            // Render the elevation lines
             foreach (var elevation in _elevationLines)
             {
                 var correctedAltitudeOffset = (float)(Bounds.Height - CalculateYFromAltitude(elevation));
@@ -473,25 +534,6 @@ namespace RoadCaptain.App.Shared.Controls
                 var text = elevation == 0 ? "Sea level" : elevation.ToString(CultureInfo.InvariantCulture) + "m";
 
                 canvas.DrawText(text, 5, correctedAltitudeOffset, _defaultFont, SkiaPaints.ElevationLineTextPaint);
-            }
-
-            if (ZoomOnCurrentPosition && _zoomCenterStep != null)
-            {
-                for (var i = _hasShifted ? 100 : 0; i < _zoomWindowMetersAhead; i += 100)
-                {
-                    var x = _zoomWindowMetersBehind + (_zoomCenterStep.Value * i);
-                    canvas.DrawLine(
-                        x,
-                        0,
-                        x,
-                        (float)(Bounds.Height),
-                        _distanceLinePaint);
-
-                    var text = (_hasShifted ? i : i + 100).ToString(CultureInfo.InvariantCulture) + "m";
-                    
-                    var correctedAltitudeOffset = (float)(Bounds.Height - CalculateYFromAltitude(0));
-                    canvas.DrawText(text, x + 5, correctedAltitudeOffset, _defaultFont, SkiaPaints.ElevationLineTextPaint);
-                }
             }
         }
 

@@ -64,6 +64,7 @@ namespace RoadCaptain.App.Runner.ViewModels
         }
 
         public ICommand ToggleElevationPlotCommand { get; }
+        public bool ZoomToClimb { get; set; } = true;
 
         public void UpdateGameState(GameState gameState)
         {

@@ -9,6 +9,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:controls="clr-namespace:RoadCaptain.App.Shared.Controls;assembly=RoadCaptain.App.Shared"
+        xmlns:viewModels="clr-namespace:RoadCaptain.App.Runner.ViewModels"
         mc:Ignorable="d"
         x:Class="RoadCaptain.App.Runner.Views.ElevationPlotWindow"
         Title="Elevation plot"
@@ -22,6 +23,9 @@
         TransparencyLevelHint="Transparent"
         CanResize="False"
         Icon="avares://RoadCaptain.App.Shared/icon.png">
+	<Window.DataContext>
+		<viewModels:DesignTimeElevationPlotWindowViewModel />
+	</Window.DataContext>
 	<Border
         CornerRadius="20"
         Background="#FFFFFF"
@@ -38,6 +42,7 @@
           Margin="0,4,8,8"
           ZoomOnCurrentPosition="{Binding Path=ZoomOnCurrentPosition}"
           ZoomWindowDistance="{Binding Path=ZoomWindowDistance}"
+		  ZoomToClimb="{Binding Path=ZoomToClimb}"
   />
 	</Border>
 </Window>

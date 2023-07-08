@@ -21,6 +21,7 @@ namespace RoadCaptain.App.Shared.Controls
         public static readonly DirectProperty<ElevationProfile, bool> ShowClimbsProperty = AvaloniaProperty.RegisterDirect<ElevationProfile, bool>(nameof(ShowClimbs), map => map.ShowClimbs, (map, value) => map.ShowClimbs = value);
         public static readonly DirectProperty<ElevationProfile, bool> ZoomOnCurrentPositionProperty = AvaloniaProperty.RegisterDirect<ElevationProfile, bool>(nameof(ZoomOnCurrentPosition), map => map.ZoomOnCurrentPosition, (map, value) => map.ZoomOnCurrentPosition = value);
         public static readonly DirectProperty<ElevationProfile, int> ZoomWindowDistanceProperty = AvaloniaProperty.RegisterDirect<ElevationProfile, int>(nameof(ZoomWindowDistance), map => map.ZoomWindowDistance, (map, value) => map.ZoomWindowDistance = value);
+        public static readonly DirectProperty<ElevationProfile, bool> ZoomToClimbProperty = AvaloniaProperty.RegisterDirect<ElevationProfile, bool>(nameof(ZoomToClimb), map => map.ZoomToClimb, (map, value) => map.ZoomToClimb = value);
         
         private RenderTargetBitmap? _renderTarget;
         private ISkiaDrawingContextImpl? _skiaContext;
@@ -52,7 +53,7 @@ namespace RoadCaptain.App.Shared.Controls
             get => null;
             set
             {
-                if(value is { Index: { } })
+                if(value is { Index: not null })
                 {
                     _renderOperation.RiderPosition = value;
 
@@ -104,6 +105,19 @@ namespace RoadCaptain.App.Shared.Controls
             set
             {
                 _renderOperation.ZoomWindowDistance = value;
+                
+                InvalidateVisual();
+            }
+        }
+
+        public bool ZoomToClimb
+        {
+            get => _renderOperation.ZoomToClimb;
+            set
+            {
+                if (value == _renderOperation.ZoomToClimb) return;
+                
+                _renderOperation.ZoomToClimb = value;
                 
                 InvalidateVisual();
             }
