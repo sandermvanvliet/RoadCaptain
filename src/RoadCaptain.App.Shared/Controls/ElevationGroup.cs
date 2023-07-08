@@ -15,7 +15,7 @@ namespace RoadCaptain.App.Shared.Controls
         }
 
         public List<TrackPoint> Points { get; } = new();
-        public double Grade { get; set; }
+        public int Grade { get; set; }
         public SKPath? Path { get; set; }
     }
 }

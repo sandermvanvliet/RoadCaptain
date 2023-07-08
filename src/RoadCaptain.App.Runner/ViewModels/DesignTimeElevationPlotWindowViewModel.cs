@@ -49,15 +49,15 @@ namespace RoadCaptain.App.Runner.ViewModels
         {
             var segment1Point1 = new TrackPoint(0, 0, 0, ZwiftWorldId.Watopia);
             var segment1Point2 = segment1Point1.ProjectTo(90, 100, 20);
-            var segment1Point3 = segment1Point2.ProjectTo(90, 100, 40);
+            var segment1Point3 = segment1Point2.ProjectTo(90, 100, 20);
             
-            var segment2Point1 = segment1Point3.ProjectTo(90, 100, 50);
-            var segment2Point2 = segment2Point1.ProjectTo(90, 100, 60);
-            var segment2Point3 = segment2Point2.ProjectTo(90, 100, 60);
+            var segment2Point1 = segment1Point3.ProjectTo(90, 100, 90);
+            var segment2Point2 = segment2Point1.ProjectTo(90, 100, 100);
+            var segment2Point3 = segment2Point2.ProjectTo(90, 100, 90);
             
-            var segment3Point1 = segment2Point3.ProjectTo(90, 100, 45);
-            var segment3Point2 = segment3Point1.ProjectTo(90, 100, 30);
-            var segment3Point3 = segment3Point2.ProjectTo(90, 100, 25);
+            var segment3Point1 = segment2Point3.ProjectTo(90, 100, 75);
+            var segment3Point2 = segment3Point1.ProjectTo(90, 100, 70);
+            var segment3Point3 = segment3Point2.ProjectTo(90, 100, 50);
 
             _segments = new List<Segment>
             {

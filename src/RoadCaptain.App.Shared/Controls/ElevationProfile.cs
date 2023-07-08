@@ -13,7 +13,7 @@ namespace RoadCaptain.App.Shared.Controls
 {
     public class ElevationProfile : UserControl
     {
-        private readonly ElevationProfileRenderOperation _renderOperation;
+        private readonly ElevationPlotLayeredRenderOperation _renderOperation;
         public static readonly DirectProperty<ElevationProfile, PlannedRoute?> RouteProperty = AvaloniaProperty.RegisterDirect<ElevationProfile, PlannedRoute?>(nameof(Route), map => map.Route, (map, value) => map.Route = value);
         public static readonly DirectProperty<ElevationProfile, List<Segment>?> SegmentsProperty = AvaloniaProperty.RegisterDirect<ElevationProfile, List<Segment>?>(nameof(Segments), map => map.Segments, (map, value) => map.Segments = value);
         public static readonly DirectProperty<ElevationProfile, TrackPoint?> RiderPositionProperty = AvaloniaProperty.RegisterDirect<ElevationProfile, TrackPoint?>(nameof(RiderPosition), map => map.RiderPosition, (map, value) => map.RiderPosition = value);
@@ -127,7 +127,7 @@ namespace RoadCaptain.App.Shared.Controls
         {
             Background = new SolidColorBrush(Colors.Transparent);
 
-            _renderOperation = new ElevationProfileRenderOperation();
+            _renderOperation = new ElevationPlotLayeredRenderOperation();
         }
 
         public override void Render(DrawingContext context)

@@ -240,14 +240,14 @@ namespace RoadCaptain.App.Shared.Controls
                 }
                 else if (Math.Abs(currentGroup.Grade - (-1)) < 0.1)
                 {
-                    currentGroup.Grade = grade;
+                    currentGroup.Grade = (int)grade;
                 }
                 else if (Math.Abs(currentGroup.Grade - grade) > 0.1 && currentGroup.Points.Count > 1)
                 {
                     var lastPointOfLastGroup = currentGroup.Points.Last();
                     currentGroup = new ElevationGroup
                     {
-                        Grade = grade
+                        Grade = (int)grade
                     };
                     currentGroup.Points.Add(lastPointOfLastGroup);
                     _elevationGroups.Add(currentGroup);
