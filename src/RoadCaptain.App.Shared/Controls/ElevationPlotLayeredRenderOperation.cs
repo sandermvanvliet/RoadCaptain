@@ -130,6 +130,12 @@ namespace RoadCaptain.App.Shared.Controls
                     // Reset
                     _previousIndex = 0;
                 }
+                else if(_elevationProfile != null)
+                {
+                    _renderParameters =
+                        RenderParameters.From(RenderMode, Bounds, _elevationProfile, RiderPosition, Markers);
+                    _elevationProfile.CalculatePathsForElevationGroups(_renderParameters);
+                }
             }
         }
 
