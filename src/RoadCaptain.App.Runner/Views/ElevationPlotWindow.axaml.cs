@@ -52,7 +52,6 @@ namespace RoadCaptain.App.Runner.Views
             _viewModel = DataContext as ElevationPlotWindowViewModel ?? throw new Exception("");
             
             this.Bind(_viewModel.ToggleElevationPlotCommand).To(Key.E).WithPlatformModifier();
-            this.Bind(_viewModel.ToggleRenderModeCommand).To(Key.M).WithPlatformModifier();
         }
 
         private void GameStateReceived(GameState gameState)

@@ -3,6 +3,7 @@
 // See LICENSE or https://choosealicense.com/licenses/artistic-2.0/
 
 using System.Collections.Generic;
+using System.Linq;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Media;
@@ -69,7 +70,7 @@ namespace RoadCaptain.App.Shared.Controls
             get => _renderOperation.Markers;
             set
             {
-                _renderOperation.Markers = value ?? new List<Segment>();
+                _renderOperation.Markers = (value ?? new List<Segment>()).Where(m => m.Type == SegmentType.Climb).ToList();
 
                 InvalidateVisual();
             }

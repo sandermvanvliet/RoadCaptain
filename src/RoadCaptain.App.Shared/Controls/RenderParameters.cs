@@ -92,7 +92,8 @@ namespace RoadCaptain.App.Shared.Controls
                 return null;
             }
             
-            var segmentContainingRiderPosition = markers.SingleOrDefault(m => m.Contains(riderPosition));
+            // TODO: Fix segment direction?
+            var segmentContainingRiderPosition = markers.FirstOrDefault(m => m.Contains(riderPosition));
 
             if (segmentContainingRiderPosition == null)
             {

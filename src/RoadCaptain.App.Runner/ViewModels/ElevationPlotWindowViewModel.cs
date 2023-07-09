@@ -41,25 +41,15 @@ namespace RoadCaptain.App.Runner.ViewModels
             _ => true);
 
         public ICommand ToggleRenderModeCommand => new AsyncRelayCommand(
-            _ => ToggleRenderMode(),
-            _ => true);
+            parameter => ToggleRenderMode(parameter as RenderMode? ?? RenderMode.All),
+            parameter => parameter is RenderMode);
 
-        private Task<CommandResult> ToggleRenderMode()
+        private Task<CommandResult> ToggleRenderMode(RenderMode renderMode)
         {
-            var renderMode = _renderMode;
-
-            renderMode = renderMode switch
-            {
-                RenderMode.Unknown => RenderMode.All,
-                RenderMode.All => RenderMode.Moving,
-                RenderMode.Moving => RenderMode.MovingSegment,
-                RenderMode.MovingSegment => RenderMode.AllSegment,
-                RenderMode.AllSegment => RenderMode.All,
-                _ => throw new ArgumentOutOfRangeException()
-            };
-
             _userPreferences.ElevationPlotRenderMode = renderMode.ToString();
             _userPreferences.Save();
+
+            RenderMode = renderMode;
             
             return Task.FromResult(CommandResult.Success());
         }
@@ -105,6 +95,8 @@ namespace RoadCaptain.App.Runner.ViewModels
                         color = "#0000CC";
                         break;
                     case RenderMode.MovingSegment:
+                        color = "#FFCC00";
+                        break;
                     case RenderMode.AllSegment:
                         color = "#00CC00";
                         break;
