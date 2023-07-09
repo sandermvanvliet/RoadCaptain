@@ -17,10 +17,23 @@ Read more about how it works on [the RoadCaptain site](https://roadcaptain.nl/fe
 ### Runner
 
 - **Windows only** Zwift credentials will now be stored securely in the Credential Manager instead of keeping them in memory only. This reduces the amount of times you'll need to log in to Zwift
-- The color scheme of the elevation plot has been changed to provide much clearer indication of the grade
+
+#### Elevation plot
+
+When riding hit <kbd>CTRL</kbd> + <kbd>E</kbd> / <kbd>META</kbd> + <kbd>E</kbd> to toggle the Elevation Plot window. This will allow you to see the elevation and grade of the route you are riding which helps you to plan your effort much easier than having to squint at the elevation plot for the entire route.
+
+The Elevation Plot window has a few different modes:
+
+- Show all: This shows the elevation profile for the entire route, an orange marker shows your position.
+- Moving-window: This shows the elevation profile from your current position to the next 500m.
+
+You can also enable KOM segment auto-zoom which will show the elevation profile of the KOM segment when you are on that segment. This is great for pacing and planning a KOM attack! This mode works with both the _Show all_ and _Moving-window_ modes. When you complete the segment the elevation plot switches back to the mode you originally chose.
+
+You can toggle the mode by clicking the elevation plot window and using <kbd>CTRL</kbd> + <kbd>M</kbd> / <kbd>META</kbd> + <kbd>M</kbd>.
+
+#### Bug fixes
+
 - Resue the route after connection was lost. This should fix the remaining issue in [#107](https://github.com/sandermvanvliet/RoadCaptain/issues/107)
-- Add the ability to show the elevation plot for the current route by pressing <kbd>CTRL</kbd> + <kdb>E</kbd> / <kbd>META</kdb> + <kbd>E</kbd>
-- The elevation plot now shows a view of the next 950m which helps you plan your effort much easier than having to squint at the elevation plot for the entire route.
 - Fixed a bug where a crash would occur because the map animation would continue running when the rider is already in-game.
 - Fixed a bug where hitting <kbd>CTRL</kbd> + <kbd>X</kbd> / <kbd>META</kbd> + <kbd>X</kbd> in the in-game window when you are not yet in a game would not return to the main window.
 

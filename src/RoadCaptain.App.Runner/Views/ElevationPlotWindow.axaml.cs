@@ -16,13 +16,15 @@ namespace RoadCaptain.App.Runner.Views
 {
     public partial class ElevationPlotWindow : Window
     {
-        private ElevationPlotWindowViewModel _viewModel;
+        private ElevationPlotWindowViewModel? _viewModel;
 
+        // ReSharper disable once UnusedMember.Global because this is only used by the Avalonia designer
         public ElevationPlotWindow()
         {
             InitializeComponent();
         }
 
+        // ReSharper disable once UnusedMember.Global because this is called by the IoC container
         public ElevationPlotWindow(IGameStateReceiver gameStateReceiver, IUserPreferences userPreferences)
         {
             this.UseWindowStateTracking(
@@ -50,11 +52,12 @@ namespace RoadCaptain.App.Runner.Views
             _viewModel = DataContext as ElevationPlotWindowViewModel ?? throw new Exception("");
             
             this.Bind(_viewModel.ToggleElevationPlotCommand).To(Key.E).WithPlatformModifier();
+            this.Bind(_viewModel.ToggleRenderModeCommand).To(Key.M).WithPlatformModifier();
         }
 
         private void GameStateReceived(GameState gameState)
         {
-            _viewModel.UpdateGameState(gameState);
+            _viewModel?.UpdateGameState(gameState);
         }
 
         private void InputElement_OnPointerPressed(object? sender, PointerPressedEventArgs e)

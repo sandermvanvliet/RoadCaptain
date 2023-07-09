@@ -2,11 +2,15 @@
 // Licensed under Artistic License 2.0
 // See LICENSE or https://choosealicense.com/licenses/artistic-2.0/
 
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Avalonia.Media;
 using ReactiveUI;
 using RoadCaptain.App.Shared.Commands;
+using RoadCaptain.App.Shared.Controls;
 using RoadCaptain.GameStates;
 using RoadCaptain.Ports;
 
@@ -18,22 +22,45 @@ namespace RoadCaptain.App.Runner.ViewModels
         private TrackPoint? _riderPosition;
         private readonly IWindowService _windowService;
         private readonly IUserPreferences _userPreferences;
+        private RenderMode _renderMode = RenderMode.All;
 
         public ElevationPlotWindowViewModel(ISegmentStore segmentStore, IWindowService windowService, IUserPreferences userPreferences)
         {
             _segmentStore = segmentStore;
             _windowService = windowService;
             _userPreferences = userPreferences;
-
-            ToggleElevationPlotCommand = new AsyncRelayCommand(
-                _ => ToggleElevationPlot(),
-                _ => true);
+            
+            if (!string.IsNullOrEmpty(_userPreferences.ElevationPlotRenderMode) && Enum.TryParse<RenderMode>(_userPreferences.ElevationPlotRenderMode, out var renderMode))
+            {
+                _renderMode = renderMode;
+            } 
         }
 
-        private Task<CommandResult> ToggleElevationPlot()
-        {
-            _windowService.ToggleElevationPlot(null, false);
+        public ICommand ToggleElevationPlotCommand => new AsyncRelayCommand(
+            _ => ToggleElevationPlot(),
+            _ => true);
 
+        public ICommand ToggleRenderModeCommand => new AsyncRelayCommand(
+            _ => ToggleRenderMode(),
+            _ => true);
+
+        private Task<CommandResult> ToggleRenderMode()
+        {
+            var renderMode = _renderMode;
+
+            renderMode = renderMode switch
+            {
+                RenderMode.Unknown => RenderMode.All,
+                RenderMode.All => RenderMode.Moving,
+                RenderMode.Moving => RenderMode.MovingSegment,
+                RenderMode.MovingSegment => RenderMode.AllSegment,
+                RenderMode.AllSegment => RenderMode.All,
+                _ => throw new ArgumentOutOfRangeException()
+            };
+
+            _userPreferences.ElevationPlotRenderMode = renderMode.ToString();
+            _userPreferences.Save();
+            
             return Task.FromResult(CommandResult.Success());
         }
 
@@ -53,18 +80,46 @@ namespace RoadCaptain.App.Runner.ViewModels
             }
         }
 
-        public int ZoomWindowDistance
+        public RenderMode RenderMode
         {
-            get => _userPreferences.ElevationPlotRangeInMeters.GetValueOrDefault(1000);
+            get => _renderMode;
+            set
+            {
+                if (value == _renderMode) return;
+                
+                _renderMode = value;
+
+                this.RaisePropertyChanged();
+            }
         }
 
-        public bool ZoomOnCurrentPosition
+        public Brush BorderColor
         {
-            get => _userPreferences.ElevationProfileZoomOnPosition.GetValueOrDefault();
+            get
+            {
+                var color = "#cccccc";
+                
+                switch (RenderMode)
+                {
+                    case RenderMode.Moving:
+                        color = "#0000CC";
+                        break;
+                    case RenderMode.MovingSegment:
+                    case RenderMode.AllSegment:
+                        color = "#00CC00";
+                        break;
+                }
+
+                return new SolidColorBrush(Color.Parse(color));
+            }
         }
 
-        public ICommand ToggleElevationPlotCommand { get; }
-        public bool ZoomToClimb { get; set; } = true;
+        private Task<CommandResult> ToggleElevationPlot()
+        {
+            _windowService.ToggleElevationPlot(null, false);
+
+            return Task.FromResult(CommandResult.Success());
+        }
 
         public void UpdateGameState(GameState gameState)
         {

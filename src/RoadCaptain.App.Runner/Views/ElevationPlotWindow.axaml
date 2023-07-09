@@ -29,7 +29,8 @@
 	<Border
         CornerRadius="20"
         Background="#FFFFFF"
-        BorderBrush="#cccccc"
+        BorderBrush="{Binding Path=BorderColor}"
+        BorderThickness="4"
         Padding="8,4,0,0">
 		<controls:ElevationProfile
 		  Segments="{Binding Path=Segments}"
@@ -40,9 +41,7 @@
           HorizontalAlignment="Stretch"
           VerticalAlignment="Stretch"
           Margin="0,4,8,8"
-          ZoomOnCurrentPosition="{Binding Path=ZoomOnCurrentPosition}"
-          ZoomWindowDistance="{Binding Path=ZoomWindowDistance}"
-		  ZoomToClimb="{Binding Path=ZoomToClimb}"
+		  RenderMode="{Binding Path=RenderMode}"
   />
 	</Border>
 </Window>

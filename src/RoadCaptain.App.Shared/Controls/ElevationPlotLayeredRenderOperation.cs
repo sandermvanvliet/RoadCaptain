@@ -1,4 +1,8 @@
-﻿#nullable enable
+// Copyright (c) 2023 Sander van Vliet
+// Licensed under Artistic License 2.0
+// See LICENSE or https://choosealicense.com/licenses/artistic-2.0/
+
+#nullable enable
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -23,7 +27,7 @@ namespace RoadCaptain.App.Shared.Controls
         private int _zoomWindowMetersAhead;
         private CalculatedElevationProfile? _elevationProfile;
         private RenderParameters? _renderParameters;
-        private RenderMode _renderMode = RenderMode.AllSegment;
+        private RenderMode _renderMode = RenderMode.All;
         private readonly SKFont _defaultFont = new(SKTypeface.Default);
         private readonly SKPaint[] _paintForGrade = {
             SkiaPaints.ElevationPlotGradeZeroPaint,
@@ -67,7 +71,7 @@ namespace RoadCaptain.App.Shared.Controls
             _font = new SKFont { Size = 16, Embolden = true };
             var glyphs = _textPaint.GetGlyphs("K");
             _font.MeasureText(glyphs, out var textBounds);
-            _komLetterOffsetX = textBounds.Width / 2;
+            _komLetterOffsetX = (textBounds.Width / 2) + 1;
             _komLetterOffsetY = textBounds.Height / 2;
         }
 

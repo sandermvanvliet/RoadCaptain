@@ -1,4 +1,8 @@
-﻿using System.Collections.Generic;
+// Copyright (c) 2023 Sander van Vliet
+// Licensed under Artistic License 2.0
+// See LICENSE or https://choosealicense.com/licenses/artistic-2.0/
+
+using System.Collections.Generic;
 using RoadCaptain.GameStates;
 using RoadCaptain.Ports;
 
@@ -9,7 +13,6 @@ namespace RoadCaptain.App.Runner.ViewModels
         public DesignTimeElevationPlotWindowViewModel() 
             : base(new StubSegmentStore(), new DesignTimeWindowService(), new DummyUserPreferences
             {
-                ElevationProfileZoomOnPosition = true
             })
         {
             var plannedRoute = new PlannedRoute
