@@ -37,7 +37,7 @@ namespace RoadCaptain
         public Segment? Segment { get; set; }
         
         [JsonIgnore]
-        // RadiusOfEartheSharper disable once UnusedMember.Global because this is only used to look up a point using Garmin BaseCamp
+        // ReSharper disable once UnusedMember.Global because this is only used to look up a point using Garmin BaseCamp
         public string CoordinatesDecimal =>
             $"S{(Latitude * -1).ToString("0.00000", CultureInfo.InvariantCulture)}° E{Longitude.ToString("0.00000", CultureInfo.InvariantCulture)}°";
 
@@ -109,39 +109,18 @@ namespace RoadCaptain
         
         public TrackPoint ProjectTo(double bearingInDegrees, double distanceInMeters, int? altitude = null)
         {
-            /*
-def get_point_at_distance(lat1, lon1, d, bearing, R=6371):
-    """
-    lat: initial latitude, in degrees
-    lon: initial longitude, in degrees
-    d: target distance from initial
-    bearing: (true) heading in degrees
-    R: optional radius of sphere, defaults to mean radius of earth
-
-    Returns new lat/lon coordinate {d}km from initial, in degrees
-    """
-    lat1 = radians(lat1)
-    lon1 = radians(lon1)
-    a = radians(bearing)
-    lat2 = asin(sin(lat1) * cos(d/R) + cos(lat1) * sin(d/R) * cos(a))
-    lon2 = lon1 + atan2(
-        sin(a) * sin(d/R) * cos(lat1),
-        cos(d/R) - sin(lat1) * sin(lat2)
-    )
-    return (degrees(lat2), degrees(lon2),)
-    */
-
+            var distanceInKilometers = distanceInMeters / 1000;
             var latRadians = DegreesToRadians(Latitude);
             var lonRadians = DegreesToRadians(Longitude);
             var bearingInRadians = DegreesToRadians(bearingInDegrees);
 
-            var newLatRadians = Math.Asin(Math.Sin(latRadians) * Math.Cos(distanceInMeters / RadiusOfEarth) +
-                                          Math.Cos(latRadians) * Math.Sin(distanceInMeters / RadiusOfEarth) *
+            var newLatRadians = Math.Asin(Math.Sin(latRadians) * Math.Cos(distanceInKilometers / RadiusOfEarth) +
+                                          Math.Cos(latRadians) * Math.Sin(distanceInKilometers / RadiusOfEarth) *
                                           Math.Cos(bearingInRadians));
 
             var newLonRadians = lonRadians + Math.Atan2(
-                Math.Sin(bearingInRadians) * Math.Sin(distanceInMeters / RadiusOfEarth) * Math.Cos(latRadians),
-                Math.Cos(distanceInMeters / RadiusOfEarth) - Math.Sin(latRadians) * Math.Sin(newLatRadians));
+                Math.Sin(bearingInRadians) * Math.Sin(distanceInKilometers / RadiusOfEarth) * Math.Cos(latRadians),
+                Math.Cos(distanceInKilometers / RadiusOfEarth) - Math.Sin(latRadians) * Math.Sin(newLatRadians));
 
             return new TrackPoint(
                 RadToDegree * newLatRadians,
@@ -172,6 +151,16 @@ def get_point_at_distance(lat1, lon1, d, bearing, R=6371):
             }
 
             if (ReferenceEquals(this, other))
+            {
+                return true;
+            }
+
+            if (double.IsNaN(Latitude) &&
+                double.IsNaN(Longitude) &&
+                double.IsNaN(Altitude) &&
+                double.IsNaN(other.Latitude) &&
+                double.IsNaN(other.Longitude) &&
+                double.IsNaN(other.Altitude))
             {
                 return true;
             }

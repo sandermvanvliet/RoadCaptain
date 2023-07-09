@@ -1,5 +1,5 @@
-﻿using System;
-using System.Collections;
+﻿#nullable enable
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -21,10 +21,9 @@ namespace RoadCaptain.App.Shared.Controls
         private int _previousIndex;
         private int _zoomWindowMetersBehind;
         private int _zoomWindowMetersAhead;
-        private List<SkiaSharp.SKSurface> _layers = new List<SKSurface>();
-        private CalculatedElevationProfile _elevationProfile;
-        private RenderParameters _renderParameters;
-        private RenderMode _renderMode = RenderMode.All;
+        private CalculatedElevationProfile? _elevationProfile;
+        private RenderParameters? _renderParameters;
+        private RenderMode _renderMode = RenderMode.Moving;
         private readonly SKFont _defaultFont = new(SKTypeface.Default);
         private readonly SKPaint[] _paintForGrade = {
             SkiaPaints.ElevationPlotGradeZeroPaint,
@@ -39,6 +38,19 @@ namespace RoadCaptain.App.Shared.Controls
             SkiaPaints.ElevationPlotGradeEightPaint,
             SkiaPaints.ElevationPlotGradeTenPaint
         };
+        private IEnumerable<Segment>? _climbMarkersOnRoute;
+        private readonly SKPaint _finishLinePaint;
+        private readonly SKPaint _circlePaint;
+        private readonly SKPaint _finishCirclePaint;
+        private readonly SKPaint _squarePaint;
+        private readonly SKPaint _squarePaintAlternate;
+        private readonly SKPaint _textPaint;
+        private readonly SKPaint _fillPaint;
+        private readonly SKPaint _linePaint;
+        private readonly SKFont _font;
+        private readonly float _komLetterOffsetX;
+        private readonly float _komLetterOffsetY;
+        private readonly SKPaint _distanceLinePaint;
 
         public ElevationPlotLayeredRenderOperation()
         {
@@ -50,26 +62,14 @@ namespace RoadCaptain.App.Shared.Controls
             _finishCirclePaint = new SKPaint { Color = SKColor.Parse("#000000"), IsAntialias = true, Style = SKPaintStyle.Stroke, StrokeWidth = 3 };
             _squarePaint = new SKPaint { Color = SKColor.Parse("#000000"), Style = SKPaintStyle.Fill };
             _squarePaintAlternate = new SKPaint { Color = SKColor.Parse("#FFFFFF"), Style = SKPaintStyle.Fill };
+            _distanceLinePaint = new SKPaint { Color = SKColor.Parse("#999999"), IsAntialias = true, Style = SKPaintStyle.Stroke, StrokeWidth = 2, PathEffect = SKPathEffect.CreateDash(new [] { 4f, 2f}, 4)};
             
             _font = new SKFont { Size = 16, Embolden = true };
             var glyphs = _textPaint.GetGlyphs("K");
             _font.MeasureText(glyphs, out var textBounds);
-            _KOMLetterOffsetX = textBounds.Width / 2;
-            _KOMLetterOffsetY = textBounds.Height / 2;
+            _komLetterOffsetX = textBounds.Width / 2;
+            _komLetterOffsetY = textBounds.Height / 2;
         }
-
-        private IEnumerable<Segment>? _climbMarkersOnRoute;
-        private readonly SKPaint _finishLinePaint;
-        private readonly SKPaint _circlePaint;
-        private readonly SKPaint _finishCirclePaint;
-        private readonly SKPaint _squarePaint;
-        private readonly SKPaint _squarePaintAlternate;
-        private readonly SKPaint _textPaint;
-        private readonly SKPaint _fillPaint;
-        private readonly SKPaint _linePaint;
-        private readonly SKFont _font;
-        private readonly float _KOMLetterOffsetX;
-        private readonly float _KOMLetterOffsetY;
 
         public PlannedRoute? Route
         {
@@ -168,17 +168,20 @@ namespace RoadCaptain.App.Shared.Controls
 
             canvas.Clear(CanvasBackgroundColor);
 
-            if (Bounds is not { Width: > 0 }) return;
+            if (Bounds is not { Width: > 0 })
+            {
+                return;
+            }
+
+            if (_renderParameters == null || _elevationProfile == null)
+            {
+                return;
+            }
 
             RenderElevationProfile(canvas, _renderParameters, _elevationProfile);
             RenderElevationLines(canvas, _renderParameters, _elevationProfile);
             RenderSegmentMarkers(canvas, _renderParameters, Markers, _elevationProfile);
             RenderRiderPosition(canvas, _renderParameters, _elevationProfile);
-            
-            if (RenderMode == RenderMode.Moving)
-            {
-                RenderDistanceLines(canvas);
-            }
         }
 
         private void RenderElevationProfile(SKCanvas canvas, RenderParameters renderParameters, CalculatedElevationProfile elevationProfile)
@@ -188,7 +191,7 @@ namespace RoadCaptain.App.Shared.Controls
             canvas.Scale(1, -1);
             
             // Because we flipped, we also need to translate
-            canvas.Translate(0, -_renderParameters.PlotHeight);
+            canvas.Translate(renderParameters.TranslateX, -renderParameters.PlotHeight);
             
             foreach (var group in elevationProfile.ElevationGroups)
             {
@@ -235,7 +238,7 @@ namespace RoadCaptain.App.Shared.Controls
             canvas.Scale(1, -1);
             
             // Because we flipped, we also need to translate
-            canvas.Translate(0, -_renderParameters.PlotHeight);
+            canvas.Translate(renderParameters.TranslateX, -renderParameters.PlotHeight);
             
             var climbMarkersOnRoute = _climbMarkersOnRoute;
 
@@ -320,7 +323,7 @@ namespace RoadCaptain.App.Shared.Controls
             canvas.DrawCircle(startPoint, radius, _fillPaint);
             canvas.DrawCircle(startPoint, radius, _circlePaint);
 
-            canvas.DrawText("K", startPoint.X - _KOMLetterOffsetX, startPoint.Y + _KOMLetterOffsetY, _font, _textPaint);
+            canvas.DrawText("K", startPoint.X - _komLetterOffsetX, startPoint.Y + _komLetterOffsetY, _font, _textPaint);
 
             canvas.DrawLine(x, y + radius, x, (float)(Bounds.Height), _linePaint );
         }
@@ -332,27 +335,29 @@ namespace RoadCaptain.App.Shared.Controls
             canvas.Scale(1, -1);
             
             // Because we flipped, we also need to translate
-            canvas.Translate(0, -_renderParameters.PlotHeight);
+            canvas.Translate(renderParameters.TranslateX, -renderParameters.PlotHeight);
+            
+            SKPoint? riderPositionPoint = null;
             
             if (RiderPosition != null && elevationProfile.Points.Any())
             {
-                SKPoint? riderPositionPoint = null;
-                
                 for (var index = _previousIndex; index < elevationProfile.Points.Length; index++)
                 {
-                    if (elevationProfile.Points[index].Equals(RiderPosition))
+                    if (!elevationProfile.Points[index].Equals(RiderPosition))
                     {
-                        riderPositionPoint = new SKPoint(
-                            (float)(elevationProfile.Points[index].DistanceOnSegment / renderParameters.MetersPerPixel),
-                           renderParameters.CalculateYFromAltitude(RiderPosition.Altitude));
-                            
-                        // RiderPosition always moves forward, so
-                        // store this value and pick up from there
-                        // on the next update.
-                        _previousIndex = index;
-
-                        break;
+                        continue;
                     }
+                    
+                    riderPositionPoint = new SKPoint(
+                        (float)(elevationProfile.Points[index].DistanceOnSegment / renderParameters.MetersPerPixel),
+                        renderParameters.CalculateYFromAltitude(RiderPosition.Altitude));
+                            
+                    // RiderPosition always moves forward, so
+                    // store this value and pick up from there
+                    // on the next update.
+                    _previousIndex = index;
+
+                    break;
                 }
                 
                 if (riderPositionPoint != null)
@@ -366,6 +371,11 @@ namespace RoadCaptain.App.Shared.Controls
             
             // Back to normal
             canvas.Restore();
+            
+            if (RenderMode == RenderMode.Moving && riderPositionPoint != null)
+            {
+                RenderDistanceLines(canvas, renderParameters, riderPositionPoint.Value);
+            }
         }
 
         private static void DrawCircleMarker(SKCanvas canvas, SKPoint point, SKPaint fill)
@@ -374,9 +384,38 @@ namespace RoadCaptain.App.Shared.Controls
             canvas.DrawCircle(point, CircleMarkerRadius - SkiaPaints.CircleMarkerPaint.StrokeWidth, fill);
         }
 
-        private void RenderDistanceLines(SKCanvas canvas)
+        private void RenderDistanceLines(
+            SKCanvas canvas, 
+            RenderParameters renderParameters,
+            SKPoint riderPositionPoint)
         {
+            canvas.Save();
             
+            // Because we flipped, we also need to translate
+            canvas.Translate(renderParameters.TranslateX, 0);
+
+
+            var metersPerStep = 100;
+            var step = metersPerStep / renderParameters.MetersPerPixel;
+            var numberOfSteps = (int)Math.Round((double)RenderParameters.MetersToShowInMovingWindow / metersPerStep, 0, MidpointRounding.ToZero);
+            for (var i = 1; i <= numberOfSteps; i++)
+            {
+                var x = riderPositionPoint.X + (i * step);
+                
+                canvas.DrawLine(
+                    (float)x,
+                    0,
+                    (float)x,
+                    (float)(Bounds.Height),
+                    _distanceLinePaint);
+
+                var text = (i * 100).ToString(CultureInfo.InvariantCulture) + "m";
+                    
+                var correctedAltitudeOffset = (float)(Bounds.Height - renderParameters.CalculateYFromAltitude(0));
+                canvas.DrawText(text, (float)(x + 5), correctedAltitudeOffset, _defaultFont, SkiaPaints.ElevationLineTextPaint);
+            }
+
+            canvas.Restore();
         }
 
         public bool Equals(ICustomDrawOperation? other)

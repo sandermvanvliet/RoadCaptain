@@ -22,15 +22,13 @@ namespace RoadCaptain.App.Runner.ViewModels
             plannedRoute.RouteSegmentSequence.Add(new SegmentSequence("segment-1", SegmentDirection.AtoB, SegmentSequenceType.Regular));
             plannedRoute.RouteSegmentSequence.Add(new SegmentSequence("segment-2", SegmentDirection.AtoB, SegmentSequenceType.Regular));
             plannedRoute.RouteSegmentSequence.Add(new SegmentSequence("segment-3", SegmentDirection.AtoB, SegmentSequenceType.Regular));
-            plannedRoute.EnteredSegment("segment-1");
-            plannedRoute.EnteredSegment("segment-2");
             
             UpdateRoute(plannedRoute);
             UpdateGameState(
                 new OnRouteState(
                     123,
                     456, 
-                    Segments![1].Points[0], 
+                    Segments![1].Points[2], 
                     Segments![1],
                     plannedRoute,
                     SegmentDirection.AtoB, 
@@ -107,6 +105,8 @@ namespace RoadCaptain.App.Runner.ViewModels
                     trackPoint.Segment = segment;
                     trackPoint.Index = index++;
                 }
+
+                segment.CalculateDistances();
             }
 
             var climb1Point1 = segment1Point2.Clone();
@@ -139,6 +139,8 @@ namespace RoadCaptain.App.Runner.ViewModels
                     trackPoint.Segment = segment;
                     trackPoint.Index = index++;
                 }
+
+                segment.CalculateDistances();
             }
         }
         public List<Segment> LoadSegments(World world, SportType sport)
