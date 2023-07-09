@@ -28,7 +28,7 @@ namespace RoadCaptain.App.Runner.ViewModels
                 new OnRouteState(
                     123,
                     456, 
-                    Segments![1].Points[2], 
+                    Segments![1].Points[0], 
                     Segments![1],
                     plannedRoute,
                     SegmentDirection.AtoB, 

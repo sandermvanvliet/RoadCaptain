@@ -23,7 +23,7 @@ namespace RoadCaptain.App.Shared.Controls
         private int _zoomWindowMetersAhead;
         private CalculatedElevationProfile? _elevationProfile;
         private RenderParameters? _renderParameters;
-        private RenderMode _renderMode = RenderMode.Moving;
+        private RenderMode _renderMode = RenderMode.AllSegment;
         private readonly SKFont _defaultFont = new(SKTypeface.Default);
         private readonly SKPaint[] _paintForGrade = {
             SkiaPaints.ElevationPlotGradeZeroPaint,
