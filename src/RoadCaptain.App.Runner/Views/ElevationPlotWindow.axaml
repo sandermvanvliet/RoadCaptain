@@ -10,9 +10,10 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:controls="clr-namespace:RoadCaptain.App.Shared.Controls;assembly=RoadCaptain.App.Shared"
         xmlns:viewModels="clr-namespace:RoadCaptain.App.Runner.ViewModels"
+        xmlns:converters="clr-namespace:RoadCaptain.App.Shared.Converters;assembly=RoadCaptain.App.Shared"
         mc:Ignorable="d"
         x:Class="RoadCaptain.App.Runner.Views.ElevationPlotWindow"
-        Title="Elevation plot"
+        Title="elevation profile"
         Activated="WindowBase_OnActivated"
         PointerPressed="InputElement_OnPointerPressed"
         Width="600"
@@ -26,6 +27,9 @@
     <Window.DataContext>
         <viewModels:DesignTimeElevationPlotWindowViewModel />
     </Window.DataContext>
+    <Window.Resources>
+        <converters:PredicateConverter x:Key="PredicateConverter" />
+    </Window.Resources>
     <Border
         CornerRadius="20"
         Background="#FFFFFF"
@@ -65,12 +69,27 @@
                             </Setter.Value>
                         </Setter>
                     </Style>
+                    <Style Selector="Button.isActive">
+                        <Setter Property="Background" Value="#1192CC" />
+                    </Style>
+                    <Style Selector="Button.isActiveSegment">
+                        <Setter Property="Background" Value="#FF06B025" />
+                    </Style>
                 </StackPanel.Styles>
-                <TextBlock Text="{Binding Path=RenderMode,StringFormat=Mode: \{0\}}" Margin="0,0,4,0" VerticalAlignment="Center" FontWeight="Bold" />
-                <Button Content="A" Command="{Binding Path=ToggleRenderModeCommand}" CommandParameter="{x:Static controls:RenderMode.All}" />
-                <Button Content="AS" Command="{Binding Path=ToggleRenderModeCommand}" CommandParameter="{x:Static controls:RenderMode.AllSegment}" />
-                <Button Content="M" Command="{Binding Path=ToggleRenderModeCommand}" CommandParameter="{x:Static controls:RenderMode.Moving}" />
-                <Button Content="MS" Command="{Binding Path=ToggleRenderModeCommand}" CommandParameter="{x:Static controls:RenderMode.MovingSegment}" />
+                <Button Content="A"
+                        ToolTip.Tip="Show the elevation profile for the entire route"
+                        Command="{Binding Path=ToggleRenderModeCommand}" CommandParameter="{x:Static controls:RenderMode.All}" 
+                        Classes.isActive="{Binding Path=RenderMode, Converter={StaticResource PredicateConverter},ConverterParameter={x:Static controls:RenderMode.All}}"
+                        Classes.isActiveSegment="{Binding Path=RenderMode, Converter={StaticResource PredicateConverter},ConverterParameter={x:Static controls:RenderMode.AllSegment}}"/>
+                <Button Content="M"
+                        ToolTip.Tip="Show the elevation profile for the next 500m"
+                        Command="{Binding Path=ToggleRenderModeCommand}" CommandParameter="{x:Static controls:RenderMode.Moving}" 
+                        Classes.isActive="{Binding Path=RenderMode, Converter={StaticResource PredicateConverter},ConverterParameter={x:Static controls:RenderMode.Moving}}"
+                        Classes.isActiveSegment="{Binding Path=RenderMode, Converter={StaticResource PredicateConverter},ConverterParameter={x:Static controls:RenderMode.MovingSegment}}"/>
+                <CheckBox Content="KOM zoom" 
+                          Margin="4,0,0,0"
+                          ToolTip.Tip="Show elevation profile for the current KOM segment"
+                          Command="{Binding Path=ToggleKomZoomCommand}" />
             </StackPanel>
         </Panel>
     </Border>

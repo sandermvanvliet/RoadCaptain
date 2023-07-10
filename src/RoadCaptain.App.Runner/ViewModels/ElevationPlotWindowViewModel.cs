@@ -4,7 +4,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Avalonia.Media;
@@ -44,15 +43,43 @@ namespace RoadCaptain.App.Runner.ViewModels
             parameter => ToggleRenderMode(parameter as RenderMode? ?? RenderMode.All),
             parameter => parameter is RenderMode);
 
+        public ICommand ToggleKomZoomCommand => new AsyncRelayCommand(
+            _ => ToggleKomZoom(),
+            _ => true);
+
         private Task<CommandResult> ToggleRenderMode(RenderMode renderMode)
         {
-            _userPreferences.ElevationPlotRenderMode = renderMode.ToString();
-            _userPreferences.Save();
-
+            if (renderMode == RenderMode.All && RenderMode == RenderMode.MovingSegment)
+            {
+                renderMode = RenderMode.AllSegment;
+            }
+            if (renderMode == RenderMode.Moving && RenderMode == RenderMode.AllSegment)
+            {
+                renderMode = RenderMode.MovingSegment;
+            }
+            
             RenderMode = renderMode;
             
             return Task.FromResult(CommandResult.Success());
         }
+
+        private Task<CommandResult> ToggleKomZoom()
+        {
+            var renderMode = RenderMode;
+            
+            renderMode = renderMode switch
+            {
+                RenderMode.All => RenderMode.AllSegment,
+                RenderMode.Moving => RenderMode.MovingSegment,
+                RenderMode.AllSegment => RenderMode.All,
+                RenderMode.MovingSegment => RenderMode.Moving,
+                _ => renderMode
+            };
+
+            RenderMode = renderMode;
+
+            return Task.FromResult(CommandResult.Success());
+        }   
 
         public PlannedRoute? Route { get; private set; }
 
@@ -78,6 +105,9 @@ namespace RoadCaptain.App.Runner.ViewModels
                 if (value == _renderMode) return;
                 
                 _renderMode = value;
+                
+                _userPreferences.ElevationPlotRenderMode = _renderMode.ToString();
+                _userPreferences.Save();
 
                 this.RaisePropertyChanged();
             }

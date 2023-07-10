@@ -6,6 +6,7 @@
         <entry key="src/RoadCaptain.App.RouteBuilder/Views/MainWindow.axaml" value="src/RoadCaptain.App.RouteBuilder/RoadCaptain.App.RouteBuilder.csproj" />
         <entry key="src/RoadCaptain.App.RouteBuilder/Views/OpenRouteDialog.axaml" value="src/RoadCaptain.App.RouteBuilder/RoadCaptain.App.RouteBuilder.csproj" />
         <entry key="src/RoadCaptain.App.Runner/Views/ElevationPlotWindow.axaml" value="src/RoadCaptain.App.Runner/RoadCaptain.App.Runner.csproj" />
+        <entry key="src/RoadCaptain.App.Runner/Views/InGameNavigationWIndow.axaml" value="src/RoadCaptain.App.Runner/RoadCaptain.App.Runner.csproj" />
         <entry key="src/RoadCaptain.App.Runner/Views/MainWindow.axaml" value="src/RoadCaptain.App.Runner/RoadCaptain.App.Runner.csproj" />
         <entry key="src/RoadCaptain.App.Runner/Views/SelectRouteWindow.axaml" value="src/RoadCaptain.App.Runner/RoadCaptain.App.Runner.csproj" />
       </map>
