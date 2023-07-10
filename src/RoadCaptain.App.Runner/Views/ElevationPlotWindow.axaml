@@ -46,7 +46,7 @@
                 HorizontalAlignment="Stretch"
                 VerticalAlignment="Stretch"
                 Margin="0,4,8,8"
-                RenderMode="{Binding Path=RenderMode}" />
+                RenderMode="{Binding Path=RenderMode}"/>
             <StackPanel Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0,0,8,0">
                 <StackPanel.Styles>
                     <Style Selector="Button">
@@ -88,6 +88,7 @@
                         Classes.isActiveSegment="{Binding Path=RenderMode, Converter={StaticResource PredicateConverter},ConverterParameter={x:Static controls:RenderMode.MovingSegment}}"/>
                 <CheckBox Content="KOM zoom" 
                           Margin="4,0,0,0"
+                          Background="White"
                           ToolTip.Tip="Show elevation profile for the current KOM segment"
                           Command="{Binding Path=ToggleKomZoomCommand}" />
             </StackPanel>
