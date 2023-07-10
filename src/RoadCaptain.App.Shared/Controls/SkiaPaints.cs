@@ -47,7 +47,7 @@ namespace RoadCaptain.App.Shared.Controls
         public static readonly SKPaint ClimbSegmentPaint = new()
             { Color = SKColor.Parse("#FF6A00"), Style = SKPaintStyle.Stroke, StrokeWidth = 6, IsAntialias = true };
 
-        // Elevation plot colors generated using ColorBrewer2: https://colorbrewer2.org/#type=sequential&scheme=YlOrRd&n=5
+        // Elevation profile colors generated using ColorBrewer2: https://colorbrewer2.org/#type=sequential&scheme=YlOrRd&n=5
         public static readonly SKPaint ElevationProfileGradeZeroPaint = new() { Color = SKColor.Parse("#ffffb2"), Style = SKPaintStyle.StrokeAndFill, StrokeWidth = 2, IsAntialias = true }; // blue
         public static readonly SKPaint ElevationProfileGradeThreePaint = new() { Color = SKColor.Parse("#fecc5c"), Style = SKPaintStyle.StrokeAndFill, StrokeWidth = 2, IsAntialias = true }; // green
         public static readonly SKPaint ElevationProfileGradeFivePaint = new() { Color = SKColor.Parse("#fd8d3c"), Style = SKPaintStyle.StrokeAndFill, StrokeWidth = 2, IsAntialias = true }; // yellow

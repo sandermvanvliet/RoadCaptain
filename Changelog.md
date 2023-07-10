@@ -12,24 +12,24 @@ Read more about how it works on [the RoadCaptain site](https://roadcaptain.nl/fe
 
 - Add a menu item to go to the documentation on roadcaptain.nl
 - It is now possible to import a route from [Zwift Map](https://zwiftmap.com/) into Route Builder. This saves you a lot of work to rebuild a route to make it work for RoadCaptain.
-- The color scheme of the elevation plot has been changed to provide much clearer indication of the grade
+- The color scheme of the elevation profile has been changed to provide much clearer indication of the grade
 
 ### Runner
 
 - **Windows only** Zwift credentials will now be stored securely in the Credential Manager instead of keeping them in memory only. This reduces the amount of times you'll need to log in to Zwift
 
-#### Elevation plot
+#### Elevation profile
 
-When riding hit <kbd>CTRL</kbd> + <kbd>E</kbd> / <kbd>META</kbd> + <kbd>E</kbd> to toggle the Elevation Plot window. This will allow you to see the elevation and grade of the route you are riding which helps you to plan your effort much easier than having to squint at the elevation plot for the entire route.
+When riding hit <kbd>CTRL</kbd> + <kbd>E</kbd> / <kbd>META</kbd> + <kbd>E</kbd> to toggle the Elevation Plot window. This will allow you to see the elevation and grade of the route you are riding which helps you to plan your effort much easier than having to squint at the elevation profile for the entire route.
 
 The Elevation Plot window has a few different modes:
 
 - Show all: This shows the elevation profile for the entire route, an orange marker shows your position.
 - Moving-window: This shows the elevation profile from your current position to the next 500m.
 
-You can also enable KOM segment auto-zoom which will show the elevation profile of the KOM segment when you are on that segment. This is great for pacing and planning a KOM attack! This mode works with both the _Show all_ and _Moving-window_ modes. When you complete the segment the elevation plot switches back to the mode you originally chose.
+You can also enable KOM segment auto-zoom which will show the elevation profile of the KOM segment when you are on that segment. This is great for pacing and planning a KOM attack! This mode works with both the _Show all_ and _Moving-window_ modes. When you complete the segment the elevation profile switches back to the mode you originally chose.
 
-You can toggle the mode by clicking the elevation plot window and using <kbd>CTRL</kbd> + <kbd>M</kbd> / <kbd>META</kbd> + <kbd>M</kbd>.
+You can toggle the mode by clicking the elevation profile window and using <kbd>CTRL</kbd> + <kbd>M</kbd> / <kbd>META</kbd> + <kbd>M</kbd>.
 
 #### Bug fixes
 
@@ -42,8 +42,8 @@ You can toggle the mode by clicking the elevation plot window and using <kbd>CTR
 ### Runner
 
 - Resue the route after connection was lost. This should fix the remaining issue in [#107](https://github.com/sandermvanvliet/RoadCaptain/issues/107)
-- Add the ability to show the elevation plot for the current route by pressing <kbd>CTRL</kbd> + <kdb>E</kbd> / <kbd>META</kdb> + <kbd>E</kbd>
-- The elevation plot now shows a view of the next 950m which helps you plan your effort much easier than having to squint at the elevation plot for the entire route.
+- Add the ability to show the elevation profile for the current route by pressing <kbd>CTRL</kbd> + <kdb>E</kbd> / <kbd>META</kdb> + <kbd>E</kbd>
+- The elevation profile now shows a view of the next 950m which helps you plan your effort much easier than having to squint at the elevation profile for the entire route.
 - Fixed a bug where a crash would occur because the map animation would continue running when the rider is already in-game.
 - Fixed a bug where hitting <kbd>CTRL</kbd> + <kbd>X</kbd> / <kbd>META</kbd> + <kbd>X</kbd> in the in-game window when you are not yet in a game would not return to the main window.
 
@@ -74,8 +74,8 @@ There have also been a bunch of tweaks to the user interface to provide more and
 - Show sprints, KOMs and Strava segments along the route on the main screen and improved the styling of the KOM and sprint segments on the map to make it look more "Zwifty" [#51](https://github.com/sandermvanvliet/RoadCaptain/issues/51)
 ![Screenshot of Road Captain route builder showing special segments](./images/routebuilder-markers.png)
 - Spawn point now show the direction so it's easier to understand in which direction you can build a route [#48](https://github.com/sandermvanvliet/RoadCaptain/issues/48), [#49](https://github.com/sandermvanvliet/RoadCaptain/issues/49): ![Direction marker on spawn point segment](./images/spawn-point-direction.png)
-- The elevation plot now has colorized grade indications so you can see more easily how hard the cilmbs are! ![Color grading on elevation plot](./images/route-builder-grades.png)
-- The show climbs, show sprints and show elevation plot check boxes are now stored in the user preferences.
+- The elevation profile now has colorized grade indications so you can see more easily how hard the cilmbs are! ![Color grading on elevation profile](./images/route-builder-grades.png)
+- The show climbs, show sprints and show elevation profile check boxes are now stored in the user preferences.
 - Building loops has been improved so you don't get the "do you want to make a loop" question too often (and sometimes wrongly!)
 
 ### Runner
@@ -118,7 +118,7 @@ A Tour de France special: France is now available to plan routes!
 
 Get into the TDF2022 mood by riding your custom routes in France. Allez Allez!
 
-It's also time for some new features in Route Builder: you can now see the elevation plot of your route and planning a route with a loop has become much easier 👍 See below for details!
+It's also time for some new features in Route Builder: you can now see the elevation profile of your route and planning a route with a loop has become much easier 👍 See below for details!
 
 ### Important note
 
@@ -141,7 +141,7 @@ This happens even when using the official Zwift Companion app, it looks like Zwi
 ### Route Builder
 
 - Show "What is new" dialog when opening Runner after installation or upgrade. This dialog will only be shown once. [#80](https://github.com/sandermvanvliet/RoadCaptain/issues/80)
-- You can now show an elevation plot of your route using the "Show elevation plot" toggle, KOM segments are visible too when those are enabled on the map [#31](https://github.com/sandermvanvliet/RoadCaptain/issues/31)
+- You can now show an elevation profile of your route using the "Show elevation profile" toggle, KOM segments are visible too when those are enabled on the map [#31](https://github.com/sandermvanvliet/RoadCaptain/issues/31)
 - Planning a route with a loop is now much better! Route Builder supports building a loop that has a lead-in before a loop. When creating the route, Route Builder will ask you whether you want to create a loop when the last added segment connects to your route. In the route segment list you can see the lead-in and the segments that form the loop: ![Route Builder showing a loop](./images/route-builder-loop.png) [#95](https://github.com/sandermvanvliet/RoadCaptain/issues/95)
 - The route name text box at the bottom of the segment list has been removed. You can now set the name of the route when saving it: ![Save route dialog screenshot](./images/route-builder-save-dialog.png) [#9](https://github.com/sandermvanvliet/RoadCaptain/issues/9)
 

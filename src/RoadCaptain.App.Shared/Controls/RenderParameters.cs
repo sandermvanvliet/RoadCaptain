@@ -51,8 +51,8 @@ namespace RoadCaptain.App.Shared.Controls
             
             // Depending on which mode we want:
             // - All: Based on the total length of the route and the width of the screen, calculate how many meters 1 pixel is
-            // - Moving: Based on the width of the screen, calculate how many meters 1 pixel is when that width means 500m. The elevation plot moves with the rider but only ever shows 500m in the viewport
-            // - Segment: Based on the width of the screen and the length of the segment, calculate how many meters 1 pixel is. The elevation plot shows only the segment, the rider position moves along the segment
+            // - Moving: Based on the width of the screen, calculate how many meters 1 pixel is when that width means 500m. The elevation profile moves with the rider but only ever shows 500m in the viewport
+            // - Segment: Based on the width of the screen and the length of the segment, calculate how many meters 1 pixel is. The elevation profile shows only the segment, the rider position moves along the segment
             // 
             // The 'Segment' mode is split into:
             // - AllSegment
