@@ -116,7 +116,7 @@
 					Cursor="Hand"
 					MapObjectSelected="ZwiftMap_OnMapObjectSelected"
 					VerticalAlignment="Top"
-					Classes.narrowHeight="{Binding Path=ShowElevationPlot}" />
+					Classes.narrowHeight="{Binding Path=ShowElevationProfile}" />
 
 				<sharedControls:ElevationProfile
 					Height="250"
@@ -127,7 +127,7 @@
 					RiderPosition="{Binding Path=RiderPosition}"
 					ShowClimbs="{Binding Path=ShowClimbs}"
 					Markers="{Binding Path=Markers}"
-					IsVisible="{Binding Path=ShowElevationPlot}"
+					IsVisible="{Binding Path=ShowElevationProfile}"
 					RenderMode="All"
             />
 			</Panel>
@@ -288,7 +288,7 @@
 				<StackPanel Orientation="Horizontal">
 					<CheckBox Content="Show KOMs" VerticalAlignment="Center" Margin="8,0,0,0" IsChecked="{Binding Path=ShowClimbs}" ToolTip.Tip="Show the KOM start (red) and finish (green) markers on the map" IsVisible="{Binding Path=Route.ReadyToBuild}" />
 					<CheckBox Content="Show Sprints" VerticalAlignment="Center" Margin="8,0,0,0" IsChecked="{Binding Path=ShowSprints}" ToolTip.Tip="Show the sprint segments on the map" IsVisible="{Binding Path=Route.ReadyToBuild}" />
-					<CheckBox Content="Show elevation plot" VerticalAlignment="Center" Margin="8,0,0,0" IsChecked="{Binding Path=ShowElevationPlot}" ToolTip.Tip="Show the elevation plot for the current route" IsVisible="{Binding Path=Route.ReadyToBuild}" />
+					<CheckBox Content="Show elevation plot" VerticalAlignment="Center" Margin="8,0,0,0" IsChecked="{Binding Path=ShowElevationProfile}" ToolTip.Tip="Show the elevation plot for the current route" IsVisible="{Binding Path=Route.ReadyToBuild}" />
 				</StackPanel>
 				<StackPanel Orientation="Horizontal">
 					<Button Content="+" Click="ZoomIn_Click" ToolTip.Tip="Zoom in" IsEnabled="{Binding Path=Route.ReadyToBuild}" IsVisible="{Binding Path=Route.ReadyToBuild}" Classes="toolbar" />

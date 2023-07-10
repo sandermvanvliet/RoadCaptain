@@ -46,10 +46,10 @@ namespace RoadCaptain.App.Shared.UserPreferences
         public CapturedWindowLocation? RouteBuilderLocation { get; set; }
         public bool ShowSprints { get; set; }
         public bool ShowClimbs { get; set; }
-        public bool ShowElevationPlot { get; set; }
-        public CapturedWindowLocation? ElevationPlotWindowLocation { get; set; }
-        public bool ShowElevationPlotInGame { get; set; }
-        public string? ElevationPlotRenderMode { get; set; }
+        public bool ShowElevationProfile { get; set; }
+        public CapturedWindowLocation? ElevationProfileWindowLocation { get; set; }
+        public bool ShowElevationProfileInGame { get; set; }
+        public string? ElevationProfileRenderMode { get; set; }
 
         public void Load()
         {
@@ -76,10 +76,10 @@ namespace RoadCaptain.App.Shared.UserPreferences
                     LastOpenedVersion = storageObject.LastOpenedVersion ?? new Version(0, 0, 0, 0);
                     ShowClimbs = storageObject.ShowClimbs;
                     ShowSprints = storageObject.ShowSprints;
-                    ShowElevationPlot = storageObject.ShowElevationPlot;
-                    ElevationPlotWindowLocation = storageObject.ElevationPlotWindowLocation;
-                    ShowElevationPlotInGame = storageObject.ShowElevationPlotInGame;
-                    ElevationPlotRenderMode = storageObject.ElevationPlotRenderMode;
+                    ShowElevationProfile = storageObject.ShowElevationProfile;
+                    ElevationProfileWindowLocation = storageObject.ElevationProfileWindowLocation;
+                    ShowElevationProfileInGame = storageObject.ShowElevationProfileInGame;
+                    ElevationProfileRenderMode = storageObject.ElevationProfileRenderMode;
                 }
             }
             catch
@@ -110,10 +110,10 @@ namespace RoadCaptain.App.Shared.UserPreferences
                 LastOpenedVersion = GetType().Assembly.GetName().Version ?? new Version(0, 0, 0, 0),
                 ShowClimbs = ShowClimbs,
                 ShowSprints = ShowSprints,
-                ShowElevationPlot = ShowElevationPlot,
-                ElevationPlotWindowLocation = ElevationPlotWindowLocation,
-                ShowElevationPlotInGame = ShowElevationPlotInGame,
-                ElevationPlotRenderMode = ElevationPlotRenderMode,
+                ShowElevationProfile = ShowElevationProfile,
+                ElevationProfileWindowLocation = ElevationProfileWindowLocation,
+                ShowElevationProfileInGame = ShowElevationProfileInGame,
+                ElevationProfileRenderMode = ElevationProfileRenderMode,
             };
 
             var serializedContents = JsonConvert.SerializeObject(storageObject, Formatting.Indented, _serializerSettings);

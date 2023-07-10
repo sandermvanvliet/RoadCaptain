@@ -15,7 +15,7 @@ using SkiaSharp;
 
 namespace RoadCaptain.App.Shared.Controls
 {
-    public class ElevationPlotLayeredRenderOperation: ICustomDrawOperation
+    public class ElevationProfileLayeredRenderOperation: ICustomDrawOperation
     {
         private static readonly SKColor CanvasBackgroundColor = SKColor.Parse("#FFFFFF");
         private const int CircleMarkerRadius = 10;
@@ -30,17 +30,17 @@ namespace RoadCaptain.App.Shared.Controls
         private RenderMode _renderMode = RenderMode.All;
         private readonly SKFont _defaultFont = new(SKTypeface.Default);
         private readonly SKPaint[] _paintForGrade = {
-            SkiaPaints.ElevationPlotGradeZeroPaint,
-            SkiaPaints.ElevationPlotGradeZeroPaint,
-            SkiaPaints.ElevationPlotGradeZeroPaint,
-            SkiaPaints.ElevationPlotGradeThreePaint,
-            SkiaPaints.ElevationPlotGradeThreePaint,
-            SkiaPaints.ElevationPlotGradeFivePaint,
-            SkiaPaints.ElevationPlotGradeFivePaint,
-            SkiaPaints.ElevationPlotGradeFivePaint,
-            SkiaPaints.ElevationPlotGradeEightPaint,
-            SkiaPaints.ElevationPlotGradeEightPaint,
-            SkiaPaints.ElevationPlotGradeTenPaint
+            SkiaPaints.ElevationProfileGradeZeroPaint,
+            SkiaPaints.ElevationProfileGradeZeroPaint,
+            SkiaPaints.ElevationProfileGradeZeroPaint,
+            SkiaPaints.ElevationProfileGradeThreePaint,
+            SkiaPaints.ElevationProfileGradeThreePaint,
+            SkiaPaints.ElevationProfileGradeFivePaint,
+            SkiaPaints.ElevationProfileGradeFivePaint,
+            SkiaPaints.ElevationProfileGradeFivePaint,
+            SkiaPaints.ElevationProfileGradeEightPaint,
+            SkiaPaints.ElevationProfileGradeEightPaint,
+            SkiaPaints.ElevationProfileGradeTenPaint
         };
         private IEnumerable<Segment>? _climbMarkersOnRoute;
         private readonly SKPaint _finishLinePaint;
@@ -56,7 +56,7 @@ namespace RoadCaptain.App.Shared.Controls
         private readonly float _komLetterOffsetY;
         private readonly SKPaint _distanceLinePaint;
 
-        public ElevationPlotLayeredRenderOperation()
+        public ElevationProfileLayeredRenderOperation()
         {
             _textPaint = new SKPaint { Color = SKColor.Parse("#FFFFFF"), IsAntialias = true, Style = SKPaintStyle.Fill };
             _fillPaint = new SKPaint { Color = SKColor.Parse("#fc4119"), IsAntialias = true, Style = SKPaintStyle.Fill };

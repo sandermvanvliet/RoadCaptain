@@ -44,7 +44,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
         private bool _showSprints;
         private Segment? _highlightedSegment;
         private bool _haveCheckedLastOpenedVersion;
-        private bool _showElevationPlot;
+        private bool _showElevationProfile;
         private Segment? _highlightedMarker;
         private readonly IApplicationFeatures _applicationFeatures;
         private readonly ConvertZwiftMapRouteUseCase _convertUseCase;
@@ -61,7 +61,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             _convertUseCase = new ConvertZwiftMapRouteUseCase(worldStore, segmentStore);
             _showClimbs = _userPreferences.ShowClimbs;
             _showSprints = _userPreferences.ShowSprints;
-            _showElevationPlot = _userPreferences.ShowElevationPlot;
+            _showElevationProfile = _userPreferences.ShowElevationProfile;
 
             Model = new MainWindowModel();
             _worlds = worldStore.LoadWorlds().Select(world => new WorldViewModel(world)).ToArray();
@@ -357,14 +357,14 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             }
         }
 
-        public bool ShowElevationPlot
+        public bool ShowElevationProfile
         {
-            get => _showElevationPlot;
+            get => _showElevationProfile;
             set
             {
-                if (value == _showElevationPlot) return;
-                _showElevationPlot = value;
-                _userPreferences.ShowElevationPlot = _showElevationPlot;
+                if (value == _showElevationProfile) return;
+                _showElevationProfile = value;
+                _userPreferences.ShowElevationProfile = _showElevationProfile;
                 _userPreferences.Save();
                 this.RaisePropertyChanged();
             }

@@ -71,7 +71,7 @@ namespace RoadCaptain.App.Runner
             throw new System.NotImplementedException();
         }
 
-        public void ToggleElevationPlot(PlannedRoute? plannedRoute, bool? show)
+        public void ToggleElevationProfile(PlannedRoute? plannedRoute, bool? show)
         {
             throw new System.NotImplementedException();
         }

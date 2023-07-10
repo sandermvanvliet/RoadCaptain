@@ -12,7 +12,7 @@
         xmlns:viewModels="clr-namespace:RoadCaptain.App.Runner.ViewModels"
         xmlns:converters="clr-namespace:RoadCaptain.App.Shared.Converters;assembly=RoadCaptain.App.Shared"
         mc:Ignorable="d"
-        x:Class="RoadCaptain.App.Runner.Views.ElevationPlotWindow"
+        x:Class="RoadCaptain.App.Runner.Views.ElevationProfileWindow"
         Title="elevation profile"
         Activated="WindowBase_OnActivated"
         PointerPressed="InputElement_OnPointerPressed"
@@ -25,7 +25,7 @@
         CanResize="False"
         Icon="avares://RoadCaptain.App.Shared/icon.png">
     <Window.DataContext>
-        <viewModels:DesignTimeElevationPlotWindowViewModel />
+        <viewModels:DesignTimeElevationProfileWindowViewModel />
     </Window.DataContext>
     <Window.Resources>
         <converters:PredicateConverter x:Key="PredicateConverter" />

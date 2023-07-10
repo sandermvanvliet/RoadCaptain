@@ -8,9 +8,9 @@ using RoadCaptain.Ports;
 
 namespace RoadCaptain.App.Runner.ViewModels
 {
-    public class DesignTimeElevationPlotWindowViewModel : ElevationPlotWindowViewModel
+    public class DesignTimeElevationProfileWindowViewModel : ElevationProfileWindowViewModel
     {
-        public DesignTimeElevationPlotWindowViewModel() 
+        public DesignTimeElevationProfileWindowViewModel() 
             : base(new StubSegmentStore(), new DesignTimeWindowService(), new DummyUserPreferences
             {
             })

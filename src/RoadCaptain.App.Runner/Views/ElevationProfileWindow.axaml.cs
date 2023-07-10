@@ -14,24 +14,24 @@ using RoadCaptain.Ports;
 
 namespace RoadCaptain.App.Runner.Views
 {
-    public partial class ElevationPlotWindow : Window
+    public partial class ElevationProfileWindow : Window
     {
-        private ElevationPlotWindowViewModel? _viewModel;
+        private ElevationProfileWindowViewModel? _viewModel;
 
         // ReSharper disable once UnusedMember.Global because this is only used by the Avalonia designer
-        public ElevationPlotWindow()
+        public ElevationProfileWindow()
         {
             InitializeComponent();
         }
 
         // ReSharper disable once UnusedMember.Global because this is called by the IoC container
-        public ElevationPlotWindow(IGameStateReceiver gameStateReceiver, IUserPreferences userPreferences)
+        public ElevationProfileWindow(IGameStateReceiver gameStateReceiver, IUserPreferences userPreferences)
         {
             this.UseWindowStateTracking(
-                userPreferences.ElevationPlotWindowLocation,
+                userPreferences.ElevationProfileWindowLocation,
                 newWindowLocation =>
                 {
-                    userPreferences.ElevationPlotWindowLocation = newWindowLocation;
+                    userPreferences.ElevationProfileWindowLocation = newWindowLocation;
                     userPreferences.Save();
                 });
 
@@ -49,9 +49,9 @@ namespace RoadCaptain.App.Runner.Views
             // Remove event handler to ensure this is only called once
             Activated -= WindowBase_OnActivated;
 
-            _viewModel = DataContext as ElevationPlotWindowViewModel ?? throw new Exception("");
+            _viewModel = DataContext as ElevationProfileWindowViewModel ?? throw new Exception("");
             
-            this.Bind(_viewModel.ToggleElevationPlotCommand).To(Key.E).WithPlatformModifier();
+            this.Bind(_viewModel.ToggleElevationProfileCommand).To(Key.E).WithPlatformModifier();
         }
 
         private void GameStateReceived(GameState gameState)

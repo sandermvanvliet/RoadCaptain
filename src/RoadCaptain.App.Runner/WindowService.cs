@@ -21,30 +21,30 @@ namespace RoadCaptain.App.Runner
         {
         }
 
-        public void ToggleElevationPlot(PlannedRoute? plannedRoute, bool? show)
+        public void ToggleElevationProfile(PlannedRoute? plannedRoute, bool? show)
         {
-            var elevationPlot = CurrentWindow!.OwnedWindows.OfType<ElevationPlotWindow>().SingleOrDefault();
+            var ElevationProfile = CurrentWindow!.OwnedWindows.OfType<ElevationProfileWindow>().SingleOrDefault();
             var userPreferences = Resolve<IUserPreferences>();
 
-            if (elevationPlot != null)
+            if (ElevationProfile != null)
             {
-                elevationPlot.Close();
-                userPreferences.ShowElevationPlotInGame = false;
+                ElevationProfile.Close();
+                userPreferences.ShowElevationProfileInGame = false;
                 userPreferences.Save();
             }
             else if(plannedRoute != null)
             {
-                elevationPlot = Resolve<ElevationPlotWindow>();
+                ElevationProfile = Resolve<ElevationProfileWindow>();
                 
-                var viewModel = Resolve<ElevationPlotWindowViewModel>();
+                var viewModel = Resolve<ElevationProfileWindowViewModel>();
                 viewModel.UpdateRoute(plannedRoute);
 
-                elevationPlot.DataContext = viewModel;
+                ElevationProfile.DataContext = viewModel;
                 
-                userPreferences.ShowElevationPlotInGame = true;
+                userPreferences.ShowElevationProfileInGame = true;
                 userPreferences.Save();
 
-                elevationPlot.Show(CurrentWindow);
+                ElevationProfile.Show(CurrentWindow);
             }
         }
 

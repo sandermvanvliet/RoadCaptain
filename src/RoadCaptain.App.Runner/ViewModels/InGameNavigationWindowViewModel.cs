@@ -49,14 +49,14 @@ namespace RoadCaptain.App.Runner.ViewModels
                 _ => EndActivity(),
                 _ => true);
 
-            ToggleElevationPlotCommand = new AsyncRelayCommand(
-                show => ToggleElevationPlot(show as bool?),
+            ToggleElevationProfileCommand = new AsyncRelayCommand(
+                show => ToggleElevationProfile(show as bool?),
                 _ => true);
         }
 
         public InGameWindowModel Model { get; }
         public ICommand EndActivityCommand { get; }
-        public ICommand ToggleElevationPlotCommand { get; }
+        public ICommand ToggleElevationProfileCommand { get; }
 
         public void UpdateGameState(GameState gameState)
         {
@@ -300,9 +300,9 @@ namespace RoadCaptain.App.Runner.ViewModels
             return Task.FromResult(CommandResult.Success());
         }
 
-        private Task<CommandResult> ToggleElevationPlot(bool? show)
+        private Task<CommandResult> ToggleElevationProfile(bool? show)
         {
-            _windowService.ToggleElevationPlot(Model.Route, show);
+            _windowService.ToggleElevationProfile(Model.Route, show);
 
             return Task.FromResult(CommandResult.Success());
         }

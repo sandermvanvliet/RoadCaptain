@@ -15,7 +15,7 @@ using RoadCaptain.Ports;
 
 namespace RoadCaptain.App.Runner.ViewModels
 {
-    public class ElevationPlotWindowViewModel : ViewModelBase
+    public class ElevationProfileWindowViewModel : ViewModelBase
     {
         private readonly ISegmentStore _segmentStore;
         private TrackPoint? _riderPosition;
@@ -23,20 +23,20 @@ namespace RoadCaptain.App.Runner.ViewModels
         private readonly IUserPreferences _userPreferences;
         private RenderMode _renderMode = RenderMode.All;
 
-        public ElevationPlotWindowViewModel(ISegmentStore segmentStore, IWindowService windowService, IUserPreferences userPreferences)
+        public ElevationProfileWindowViewModel(ISegmentStore segmentStore, IWindowService windowService, IUserPreferences userPreferences)
         {
             _segmentStore = segmentStore;
             _windowService = windowService;
             _userPreferences = userPreferences;
             
-            if (!string.IsNullOrEmpty(_userPreferences.ElevationPlotRenderMode) && Enum.TryParse<RenderMode>(_userPreferences.ElevationPlotRenderMode, out var renderMode))
+            if (!string.IsNullOrEmpty(_userPreferences.ElevationProfileRenderMode) && Enum.TryParse<RenderMode>(_userPreferences.ElevationProfileRenderMode, out var renderMode))
             {
                 _renderMode = renderMode;
             } 
         }
 
-        public ICommand ToggleElevationPlotCommand => new AsyncRelayCommand(
-            _ => ToggleElevationPlot(),
+        public ICommand ToggleElevationProfileCommand => new AsyncRelayCommand(
+            _ => ToggleElevationProfile(),
             _ => true);
 
         public ICommand ToggleRenderModeCommand => new AsyncRelayCommand(
@@ -106,7 +106,7 @@ namespace RoadCaptain.App.Runner.ViewModels
                 
                 _renderMode = value;
                 
-                _userPreferences.ElevationPlotRenderMode = _renderMode.ToString();
+                _userPreferences.ElevationProfileRenderMode = _renderMode.ToString();
                 _userPreferences.Save();
 
                 this.RaisePropertyChanged();
@@ -136,9 +136,9 @@ namespace RoadCaptain.App.Runner.ViewModels
             }
         }
 
-        private Task<CommandResult> ToggleElevationPlot()
+        private Task<CommandResult> ToggleElevationProfile()
         {
-            _windowService.ToggleElevationPlot(null, false);
+            _windowService.ToggleElevationProfile(null, false);
 
             return Task.FromResult(CommandResult.Success());
         }

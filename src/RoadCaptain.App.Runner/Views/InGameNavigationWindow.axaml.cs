@@ -61,13 +61,13 @@ namespace RoadCaptain.App.Runner.Views
             
             _viewModel = DataContext as InGameNavigationWindowViewModel ?? throw new Exception("");
 
-            if (_userPreferences.ShowElevationPlotInGame)
+            if (_userPreferences.ShowElevationProfileInGame)
             {
-                _viewModel.ToggleElevationPlotCommand.Execute(_userPreferences.ShowElevationPlotInGame);
+                _viewModel.ToggleElevationProfileCommand.Execute(_userPreferences.ShowElevationProfileInGame);
             }
             
             this.Bind(_viewModel.EndActivityCommand).To(Key.X).WithPlatformModifier();
-            this.Bind(_viewModel.ToggleElevationPlotCommand).To(Key.E).WithPlatformModifier();
+            this.Bind(_viewModel.ToggleElevationProfileCommand).To(Key.E).WithPlatformModifier();
         }
 
         private void GameStateReceived(GameState gameState)

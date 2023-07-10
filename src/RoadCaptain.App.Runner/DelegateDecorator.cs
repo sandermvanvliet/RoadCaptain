@@ -81,9 +81,9 @@ namespace RoadCaptain.App.Runner
             await InvokeIfNeededAsync(() => _decorated.ShowWhatIsNewDialog(release));
         }
 
-        public void ToggleElevationPlot(PlannedRoute? plannedRoute, bool? show)
+        public void ToggleElevationProfile(PlannedRoute? plannedRoute, bool? show)
         {
-            InvokeIfNeeded(() => _decorated.ToggleElevationPlot(plannedRoute, show));
+            InvokeIfNeeded(() => _decorated.ToggleElevationProfile(plannedRoute, show));
         }
 
         public Task<RouteModel?> ShowSelectRouteDialog()

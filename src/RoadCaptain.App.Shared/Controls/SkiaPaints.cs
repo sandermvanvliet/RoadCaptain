@@ -47,15 +47,12 @@ namespace RoadCaptain.App.Shared.Controls
         public static readonly SKPaint ClimbSegmentPaint = new()
             { Color = SKColor.Parse("#FF6A00"), Style = SKPaintStyle.Stroke, StrokeWidth = 6, IsAntialias = true };
 
-        public static readonly SKPaint ElevationPlotPaint = new()
-            { Color = SKColor.Parse("#000000"), Style = SKPaintStyle.Stroke, StrokeWidth = 2, IsAntialias = true };
-        
         // Elevation plot colors generated using ColorBrewer2: https://colorbrewer2.org/#type=sequential&scheme=YlOrRd&n=5
-        public static readonly SKPaint ElevationPlotGradeZeroPaint = new() { Color = SKColor.Parse("#ffffb2"), Style = SKPaintStyle.StrokeAndFill, StrokeWidth = 2, IsAntialias = true }; // blue
-        public static readonly SKPaint ElevationPlotGradeThreePaint = new() { Color = SKColor.Parse("#fecc5c"), Style = SKPaintStyle.StrokeAndFill, StrokeWidth = 2, IsAntialias = true }; // green
-        public static readonly SKPaint ElevationPlotGradeFivePaint = new() { Color = SKColor.Parse("#fd8d3c"), Style = SKPaintStyle.StrokeAndFill, StrokeWidth = 2, IsAntialias = true }; // yellow
-        public static readonly SKPaint ElevationPlotGradeEightPaint = new() { Color = SKColor.Parse("#f03b20"), Style = SKPaintStyle.StrokeAndFill, StrokeWidth = 2, IsAntialias = true }; // orange
-        public static readonly SKPaint ElevationPlotGradeTenPaint = new() { Color = SKColor.Parse("#bd0026"), Style = SKPaintStyle.StrokeAndFill, StrokeWidth = 2, IsAntialias = true }; // red
+        public static readonly SKPaint ElevationProfileGradeZeroPaint = new() { Color = SKColor.Parse("#ffffb2"), Style = SKPaintStyle.StrokeAndFill, StrokeWidth = 2, IsAntialias = true }; // blue
+        public static readonly SKPaint ElevationProfileGradeThreePaint = new() { Color = SKColor.Parse("#fecc5c"), Style = SKPaintStyle.StrokeAndFill, StrokeWidth = 2, IsAntialias = true }; // green
+        public static readonly SKPaint ElevationProfileGradeFivePaint = new() { Color = SKColor.Parse("#fd8d3c"), Style = SKPaintStyle.StrokeAndFill, StrokeWidth = 2, IsAntialias = true }; // yellow
+        public static readonly SKPaint ElevationProfileGradeEightPaint = new() { Color = SKColor.Parse("#f03b20"), Style = SKPaintStyle.StrokeAndFill, StrokeWidth = 2, IsAntialias = true }; // orange
+        public static readonly SKPaint ElevationProfileGradeTenPaint = new() { Color = SKColor.Parse("#bd0026"), Style = SKPaintStyle.StrokeAndFill, StrokeWidth = 2, IsAntialias = true }; // red
 
         public static readonly SKPaint ElevationLinePaint = new()
             { Color = SKColor.Parse("#0000ff").WithAlpha((byte)(0xFF * 0.75)), Style = SKPaintStyle.Stroke, StrokeWidth = 1, PathEffect = SKPathEffect.CreateDash(new [] { 4f, 4f}, 1),IsAntialias = true };

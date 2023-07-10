@@ -14,6 +14,6 @@ namespace RoadCaptain.App.Runner
         void ShowInGameWindow(InGameNavigationWindowViewModel viewModel);
         Task<TokenResponse?> ShowLogInDialog(Window owner);
         void ShowMainWindow();
-        void ToggleElevationPlot(PlannedRoute? plannedRoute, bool? show);
+        void ToggleElevationProfile(PlannedRoute? plannedRoute, bool? show);
     }
 }

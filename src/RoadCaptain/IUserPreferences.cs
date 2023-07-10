@@ -18,10 +18,10 @@ namespace RoadCaptain
         CapturedWindowLocation? RouteBuilderLocation { get; set; }
         bool ShowSprints { get; set; }
         bool ShowClimbs { get; set; }
-        bool ShowElevationPlot { get; set; }
-        CapturedWindowLocation? ElevationPlotWindowLocation { get; set; }
-        bool ShowElevationPlotInGame { get; set; }
-        string? ElevationPlotRenderMode { get; set; }
+        bool ShowElevationProfile { get; set; }
+        CapturedWindowLocation? ElevationProfileWindowLocation { get; set; }
+        bool ShowElevationProfileInGame { get; set; }
+        string? ElevationProfileRenderMode { get; set; }
         void Load();
         void Save();
     }

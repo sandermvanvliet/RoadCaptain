@@ -19,10 +19,10 @@ namespace RoadCaptain.App.Runner
         public CapturedWindowLocation? RouteBuilderLocation { get; set; }
         public bool ShowSprints { get; set; }
         public bool ShowClimbs { get; set; }
-        public bool ShowElevationPlot { get; set; }
-        public CapturedWindowLocation? ElevationPlotWindowLocation { get; set; }
-        public bool ShowElevationPlotInGame { get; set; }
-        public string? ElevationPlotRenderMode { get; set; }
+        public bool ShowElevationProfile { get; set; }
+        public CapturedWindowLocation? ElevationProfileWindowLocation { get; set; }
+        public bool ShowElevationProfileInGame { get; set; }
+        public string? ElevationProfileRenderMode { get; set; }
 
         public void Load()
         {
