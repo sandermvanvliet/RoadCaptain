@@ -96,6 +96,20 @@
 
 				})();
 
+	// Title anchors
+	$('span.title-anchor')
+		.each((index, element) => {
+			$(element).on('click', () => {
+				const textToCopy = window.location.href.replace(window.location.hash, '') + '#' + $(element).closest('a').attr('name');
+				navigator.clipboard.writeText(textToCopy).then(
+					function() {
+					  window.alert("I've copied the link to this section to the clipboard for you");
+					}, 
+					function() {
+					  window.alert("Something went wrong while I tried to copy the link to the clipboard. Sorry!");
+					});
+			});
+		})
 	// Smooth scroll.
 		$('.smooth-scroll').scrolly();
 		$('.smooth-scroll-middle').scrolly({ anchor: 'middle' });

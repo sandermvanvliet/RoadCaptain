@@ -1,7 +1,7 @@
 <!-- Items -->
 <section class="wrapper style1 align-center" id="{{ .id }}">
     <div class="inner"  style="text-align: left">
-        {{ with .title }}<h2 style="text-align:center">{{ . }}</h2>{{ end }}
+        <h2 style="text-align:center"><a name="{{ .id }}"><span class="title-anchor icon fal fa-link"></span></a>{{ .title }}</h2>
         <div class="items {{ .style }} supportedPlatforms" style="text-align: center">
             {{ range .items }}
                 {{ partial "supportedPlatform" . }}

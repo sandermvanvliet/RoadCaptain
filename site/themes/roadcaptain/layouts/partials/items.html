@@ -1,7 +1,7 @@
 <!-- Items -->
 <section class="wrapper style1 align-center" id="{{ .id }}">
     <div class="inner">
-        {{ with .title }}<h2>{{ . }}</h2>{{ end }}
+        <h2><a name="{{ .id }}"><span class="title-anchor icon fal fa-link"></span></a>{{ .title }}</h2>
         {{ with .content }}<p>{{ . | safeHTML }}</p>{{ end }}
         <div class="items {{ .style }}">
             {{ range .items }}

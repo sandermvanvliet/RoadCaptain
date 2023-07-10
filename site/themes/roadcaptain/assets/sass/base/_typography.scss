@@ -232,6 +232,19 @@
 		hr {
 			border-bottom-color: _palette($p, border);
 		}
+
+		span.title-anchor {
+			font-size: 60%;
+			padding-right: 0.2em;
+			vertical-align: middle;
+			margin-top: -0.2em;
+			color: #999999;
+		}
+
+		span.title-anchor:hover {
+			color: #000000;
+			cursor: pointer;
+		}
 	}
 
 	@include color-typography;
