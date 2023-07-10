@@ -19,7 +19,6 @@ namespace RoadCaptain.App.Shared.Controls
         public static readonly DirectProperty<ElevationProfile, List<Segment>?> SegmentsProperty = AvaloniaProperty.RegisterDirect<ElevationProfile, List<Segment>?>(nameof(Segments), map => map.Segments, (map, value) => map.Segments = value);
         public static readonly DirectProperty<ElevationProfile, TrackPoint?> RiderPositionProperty = AvaloniaProperty.RegisterDirect<ElevationProfile, TrackPoint?>(nameof(RiderPosition), map => map.RiderPosition, (map, value) => map.RiderPosition = value);
         public static readonly DirectProperty<ElevationProfile, List<Segment>?> MarkersProperty = AvaloniaProperty.RegisterDirect<ElevationProfile, List<Segment>?>(nameof(Markers), map => map.Markers, (map, value) => map.Markers = value);
-        public static readonly DirectProperty<ElevationProfile, bool> ShowClimbsProperty = AvaloniaProperty.RegisterDirect<ElevationProfile, bool>(nameof(ShowClimbs), map => map.ShowClimbs, (map, value) => map.ShowClimbs = value);
         public static readonly DirectProperty<ElevationProfile, RenderMode> RenderModeProperty = AvaloniaProperty.RegisterDirect<ElevationProfile, RenderMode>(nameof(RenderMode), map => map.RenderMode, (map, value) => map.RenderMode = value);
         
         private RenderTargetBitmap? _renderTarget;
@@ -72,52 +71,6 @@ namespace RoadCaptain.App.Shared.Controls
             {
                 _renderOperation.Markers = (value ?? new List<Segment>()).Where(m => m.Type == SegmentType.Climb).ToList();
 
-                InvalidateVisual();
-            }
-        }
-
-        public bool ShowClimbs
-        {
-            get => _renderOperation.ShowClimbs;
-            set
-            {
-                _renderOperation.ShowClimbs = value;
-
-                InvalidateVisual();
-            }
-        }
-
-        public bool ZoomOnCurrentPosition
-        {
-            get => _renderOperation.ZoomOnCurrentPosition;
-            set
-            {
-                _renderOperation.ZoomOnCurrentPosition = value;
-
-                InvalidateVisual();
-            }
-        }
-
-        public int ZoomWindowDistance
-        {
-            get => _renderOperation.ZoomWindowDistance;
-            set
-            {
-                _renderOperation.ZoomWindowDistance = value;
-                
-                InvalidateVisual();
-            }
-        }
-
-        public bool ZoomToClimb
-        {
-            get => _renderOperation.ZoomToClimb;
-            set
-            {
-                if (value == _renderOperation.ZoomToClimb) return;
-                
-                _renderOperation.ZoomToClimb = value;
-                
                 InvalidateVisual();
             }
         }

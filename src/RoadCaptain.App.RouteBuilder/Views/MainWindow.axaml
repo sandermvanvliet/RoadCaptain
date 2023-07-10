@@ -125,7 +125,6 @@
 					Segments="{Binding Path=Segments}"
 					Route="{Binding Path=Route,Mode=OneWay,Converter={StaticResource RouteViewModelConverter}}"
 					RiderPosition="{Binding Path=RiderPosition}"
-					ShowClimbs="{Binding Path=ShowClimbs}"
 					Markers="{Binding Path=Markers}"
 					IsVisible="{Binding Path=ShowElevationProfile}"
 					RenderMode="All"

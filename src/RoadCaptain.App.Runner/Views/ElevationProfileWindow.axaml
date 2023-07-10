@@ -41,7 +41,6 @@
                 Segments="{Binding Path=Segments}"
                 Route="{Binding Path=Route}"
                 RiderPosition="{Binding Path=RiderPosition}"
-                ShowClimbs="True"
                 Markers="{Binding Path=Markers}"
                 HorizontalAlignment="Stretch"
                 VerticalAlignment="Stretch"

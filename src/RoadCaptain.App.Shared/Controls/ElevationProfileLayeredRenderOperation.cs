@@ -23,8 +23,6 @@ namespace RoadCaptain.App.Shared.Controls
         private PlannedRoute? _route;
         private TrackPoint? _riderPosition;
         private int _previousIndex;
-        private int _zoomWindowMetersBehind;
-        private int _zoomWindowMetersAhead;
         private CalculatedElevationProfile? _elevationProfile;
         private RenderParameters? _renderParameters;
         private RenderMode _renderMode = RenderMode.All;
@@ -94,9 +92,16 @@ namespace RoadCaptain.App.Shared.Controls
             {
                 if (_bounds == value) return;
                 _bounds = value;
-                _elevationProfile = CalculatedElevationProfile.From(Route, Segments);
-                _renderParameters = RenderParameters.From(RenderMode, Bounds, _elevationProfile, RiderPosition, Markers);
-                _elevationProfile.CalculatePathsForElevationGroups(_renderParameters);
+                if (_elevationProfile != null)
+                {
+                    _renderParameters = RenderParameters.From(RenderMode, Bounds, _elevationProfile, RiderPosition, Markers);
+                    _elevationProfile.CalculatePathsForElevationGroups(_renderParameters);
+                }
+                else
+                {
+                    // Clear render parameters
+                    _renderParameters = null;
+                }
             }
         }
 
@@ -111,12 +116,18 @@ namespace RoadCaptain.App.Shared.Controls
                 }
                 
                 _renderMode = value;
-                
-                _renderParameters = RenderParameters.From(RenderMode, Bounds, _elevationProfile, RiderPosition, Markers);
+
+                if (_elevationProfile != null)
+                {
+                    _renderParameters = RenderParameters.From(RenderMode, Bounds, _elevationProfile, RiderPosition, Markers);
+                    _elevationProfile.CalculatePathsForElevationGroups(_renderParameters);
+                }
             }
         }
 
         public List<Segment>? Segments { get; set; }
+        
+        public List<Segment>? Markers { get; set; }
 
         public TrackPoint? RiderPosition
         {
@@ -138,24 +149,6 @@ namespace RoadCaptain.App.Shared.Controls
                 }
             }
         }
-
-        public bool ShowClimbs { get; set; }
-        public List<Segment>? Markers { get; set; }
-        public bool ZoomOnCurrentPosition { get; set; }
-
-        public int ZoomWindowDistance
-        {
-            get => _zoomWindowMetersBehind + _zoomWindowMetersAhead;
-            set
-            {
-                var x = (int)Math.Round(value * 0.05, 0, MidpointRounding.AwayFromZero);
-
-                _zoomWindowMetersBehind = x;
-                _zoomWindowMetersAhead = value - x;
-            }
-        }
-
-        public bool ZoomToClimb { get; set; }
 
         public void Dispose()
         {

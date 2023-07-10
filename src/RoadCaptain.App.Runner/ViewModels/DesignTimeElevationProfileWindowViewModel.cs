@@ -3,6 +3,7 @@
 // See LICENSE or https://choosealicense.com/licenses/artistic-2.0/
 
 using System.Collections.Generic;
+using RoadCaptain.App.Shared.Controls;
 using RoadCaptain.GameStates;
 using RoadCaptain.Ports;
 
@@ -38,6 +39,8 @@ namespace RoadCaptain.App.Runner.ViewModels
                     0,
                     0,
                     0));
+            
+            RenderMode = RenderMode.Moving;
         }
     }
 
