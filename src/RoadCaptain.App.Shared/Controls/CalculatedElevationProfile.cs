@@ -20,8 +20,8 @@ namespace RoadCaptain.App.Shared.Controls
         public ImmutableList<int> ElevationLines { get; }
         public ImmutableArray<TrackPoint> Points { get; }
 
-        private CalculatedElevationProfile(
-            IEnumerable<ElevationGroup> elevationGroups,
+        private CalculatedElevationProfile(IEnumerable<ElevationGroup> elevationGroups,
+            List<TrackPoint> trackPoints,
             double minAltitude,
             double maxAltitude,
             double totalDistance)
@@ -33,7 +33,7 @@ namespace RoadCaptain.App.Shared.Controls
             AltitudeDelta = minAltitude < 0 ? -minAltitude + maxAltitude : maxAltitude;
             ElevationGroups = elevationGroups.ToImmutableList();
             ElevationLines = CalculateElevationLines();
-            Points = ElevationGroups.SelectMany(eg => eg.Points).ToImmutableArray();
+            Points = trackPoints.ToImmutableArray();// ElevationGroups.SelectMany(eg => eg.Points).ToImmutableArray();
         }
 
         private ImmutableList<int> CalculateElevationLines()
@@ -79,6 +79,7 @@ namespace RoadCaptain.App.Shared.Controls
 
         private static CalculatedElevationProfile Empty => new(
             new List<ElevationGroup>(),
+            new List<TrackPoint>(),
             0,
             0,
             0
@@ -162,6 +163,7 @@ namespace RoadCaptain.App.Shared.Controls
             
             var elevationGroups = new List<ElevationGroup>();
             ElevationGroup? currentGroup = null;
+            var overallIndex = 0;
 
             foreach (var point in routePoints)
             {
@@ -176,7 +178,7 @@ namespace RoadCaptain.App.Shared.Controls
                     DistanceFromLast = distanceFromLast,
                     DistanceOnSegment = distanceOnRoute,
                     Segment = point.Segment, // Copy 
-                    Index = point.Index // Copy
+                    Index = overallIndex++ // Recalculate this
                 };
 
                 var grade = previousPoint == null
@@ -214,8 +216,9 @@ namespace RoadCaptain.App.Shared.Controls
             
             return new CalculatedElevationProfile(
                 elevationGroups,
-                minAltitude,
-                maxAltitude,
+                trackPoints,
+                minAltitude, 
+                maxAltitude, 
                 trackPoints[^1].DistanceOnSegment /* we can cheat here as we've already calculated it above */);
         }
 

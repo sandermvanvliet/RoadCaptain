@@ -377,5 +377,10 @@ namespace RoadCaptain
 
             return false;
         }
+
+        public override string ToString()
+        {
+            return $"segment {Id}";
+        }
     }
 }

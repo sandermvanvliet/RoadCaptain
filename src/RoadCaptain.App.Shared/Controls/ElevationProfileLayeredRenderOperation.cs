@@ -40,7 +40,7 @@ namespace RoadCaptain.App.Shared.Controls
             SkiaPaints.ElevationProfileGradeEightPaint,
             SkiaPaints.ElevationProfileGradeTenPaint
         };
-        private IEnumerable<Segment>? _climbMarkersOnRoute;
+        private List<(Segment Climb, TrackPoint Start, TrackPoint Finish)> _climbMarkersOnRoute;
         private readonly SKPaint _finishLinePaint;
         private readonly SKPaint _circlePaint;
         private readonly SKPaint _finishCirclePaint;
@@ -79,10 +79,84 @@ namespace RoadCaptain.App.Shared.Controls
             set
             {
                 _route = value;
-                _elevationProfile = CalculatedElevationProfile.From(_route, Segments);
-                _renderParameters = RenderParameters.From(RenderMode, Bounds, _elevationProfile, RiderPosition, Markers);
-                _elevationProfile.CalculatePathsForElevationGroups(_renderParameters);
+
+                if (_route != null && Markers != null && Segments != null)
+                {
+                    _elevationProfile = CalculatedElevationProfile.From(_route, Segments);
+                    _renderParameters =
+                        RenderParameters.From(RenderMode, Bounds, _elevationProfile, RiderPosition, Markers);
+                    _elevationProfile.CalculatePathsForElevationGroups(_renderParameters);
+
+                    _climbMarkersOnRoute = CalculateClimbMarkers(_route, Markers.Where(m => m.Type == SegmentType.Climb).ToList(), Segments);
+                }
+                else
+                {
+                    // Reset everything
+                    _elevationProfile = null;
+                    _renderParameters = null;
+                    _climbMarkersOnRoute = new List<(Segment Climb, TrackPoint Start, TrackPoint Finish)>();
+                }
             }
+        }
+
+        public static List<(Segment Climb, TrackPoint Start, TrackPoint Finish)> CalculateClimbMarkers(PlannedRoute plannedRoute, List<Segment> markers, List<Segment> segments)
+        {
+            var elevationProfile = CalculatedElevationProfile.From(plannedRoute, segments);
+            
+            var result = new List<(Segment Climb, TrackPoint Start, TrackPoint Finish)>();
+            Segment? currentClimb = null;
+            TrackPoint? start = null;
+
+            var index = 0;
+            while (index < elevationProfile.Points.Length)
+            {
+                var point = elevationProfile.Points[index];
+
+                if (currentClimb == null)
+                {
+                    var climb = markers.SingleOrDefault(m => m.A.IsCloseTo(point));
+
+                    if (climb != null)
+                    {
+                        currentClimb = climb;
+                        start = point;
+                    }
+                    else
+                    {
+                        index++;
+                        continue;
+                    }
+                }
+
+                while (index < elevationProfile.Points.Length)
+                {
+                    var nextPoint = elevationProfile.Points[index];
+                    // Check if this point is still on the climb
+                    if (currentClimb.Contains(nextPoint))
+                    {
+                        index++;
+                        continue;
+                    }
+                   
+                    // Check if the last point was close to the end of the segment
+                    if (currentClimb.B.IsCloseTo(elevationProfile.Points[index - 1]))
+                    {
+                        // Yup, add this climb
+                        result.Add((
+                            currentClimb,
+                            start,
+                            finish: elevationProfile.Points[index - 1]
+                        ));
+                    }
+
+                    currentClimb = null;
+                    start = null;
+
+                    break;
+                }
+            }
+
+            return result;
         }
 
         public Rect Bounds
@@ -231,7 +305,7 @@ namespace RoadCaptain.App.Shared.Controls
             List<Segment>? markers,
             CalculatedElevationProfile elevationProfile)
         {
-            if (markers == null || !markers.Any())
+            if (_climbMarkersOnRoute == null)
             {
                 return;
             }
@@ -242,37 +316,13 @@ namespace RoadCaptain.App.Shared.Controls
             
             // Because we flipped, we also need to translate
             canvas.Translate(renderParameters.TranslateX, -renderParameters.PlotHeight);
-            
-            var climbMarkersOnRoute = _climbMarkersOnRoute;
 
-            if (climbMarkersOnRoute == null)
+            foreach (var climbMarker in _climbMarkersOnRoute)
             {
-                var climbMarkers = markers.Where(m => m.Type == SegmentType.Climb).ToList();
-
-                _climbMarkersOnRoute = climbMarkersOnRoute = elevationProfile
-                    .Points
-                    .Select(point => new
-                    {
-                        Point = point,
-                        Marker = climbMarkers.FirstOrDefault(m => m.Contains(point))
-                    })
-                    .Where(x => x.Marker != null)
-                    .GroupBy(x => x.Marker!.Id, x => x.Marker!, (_, values) => values.First())
-                    .ToList();
+                DrawStartMarker(canvas, climbMarker.Start, renderParameters);
+                DrawFinishFlag(canvas, climbMarker.Finish, renderParameters);
             }
 
-            foreach (var climbMarker in climbMarkersOnRoute)
-            {
-                var closestA = elevationProfile.GetClosestPointOnRoute(climbMarker.A);
-                var closestB = elevationProfile.GetClosestPointOnRoute(climbMarker.B);
-
-                if (closestA != null && closestB != null && closestA.DistanceOnSegment < closestB.DistanceOnSegment)
-                {
-                    DrawStartMarker(canvas, closestA, renderParameters);
-                    DrawFinishFlag(canvas, closestB, renderParameters);
-                }
-            }
-            
             // Back to normal
             canvas.Restore();
         }
