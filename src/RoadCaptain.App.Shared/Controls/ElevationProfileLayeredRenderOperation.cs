@@ -40,14 +40,15 @@ namespace RoadCaptain.App.Shared.Controls
             SkiaPaints.ElevationProfileGradeEightPaint,
             SkiaPaints.ElevationProfileGradeTenPaint
         };
-        private List<(Segment Climb, TrackPoint Start, TrackPoint Finish)> _climbMarkersOnRoute;
+        private List<(Segment Climb, TrackPoint Start, TrackPoint Finish)> _climbMarkersOnRoute = new();
         private readonly SKPaint _finishLinePaint;
         private readonly SKPaint _circlePaint;
         private readonly SKPaint _finishCirclePaint;
         private readonly SKPaint _squarePaint;
         private readonly SKPaint _squarePaintAlternate;
         private readonly SKPaint _textPaint;
-        private readonly SKPaint _fillPaint;
+        private readonly SKPaint _fillPaintClimb;
+        private readonly SKPaint _fillPaintSprint;
         private readonly SKPaint _linePaint;
         private readonly SKFont _font;
         private readonly float _komLetterOffsetX;
@@ -57,7 +58,8 @@ namespace RoadCaptain.App.Shared.Controls
         public ElevationProfileLayeredRenderOperation()
         {
             _textPaint = new SKPaint { Color = SKColor.Parse("#FFFFFF"), IsAntialias = true, Style = SKPaintStyle.Fill };
-            _fillPaint = new SKPaint { Color = SKColor.Parse("#fc4119"), IsAntialias = true, Style = SKPaintStyle.Fill };
+            _fillPaintClimb = new SKPaint { Color = SKColor.Parse("#fc4119"), IsAntialias = true, Style = SKPaintStyle.Fill };
+            _fillPaintSprint = new SKPaint { Color = SKColor.Parse("#56A91D"), IsAntialias = true, Style = SKPaintStyle.Fill };
             _linePaint = new SKPaint { Color = SKColor.Parse("#fc4119"), IsAntialias = true, Style = SKPaintStyle.Stroke, StrokeWidth = 2, PathEffect = SKPathEffect.CreateDash(new [] { 4f, 2f}, 4) };
             _finishLinePaint = new SKPaint { Color = SKColor.Parse("#000000"), IsAntialias = true, Style = SKPaintStyle.Stroke, StrokeWidth = 2, PathEffect = SKPathEffect.CreateDash(new [] { 4f, 2f}, 4) };
             _circlePaint = new SKPaint { Color = SKColor.Parse("#FFFFFF"), IsAntialias = true, Style = SKPaintStyle.Stroke, StrokeWidth = 3 };
@@ -85,7 +87,7 @@ namespace RoadCaptain.App.Shared.Controls
                     _elevationProfile = CalculatedElevationProfile.From(_route, Segments);
                     _renderParameters = RenderParameters.From(RenderMode, Bounds, _elevationProfile, RiderPosition, Markers);
                     _elevationProfile.CalculatePathsForElevationGroups(_renderParameters);
-                    _climbMarkersOnRoute = PlannedRouteUtils.CalculateClimbMarkers(Markers, _elevationProfile.Points);
+                    _climbMarkersOnRoute = PlannedRoute.CalculateClimbMarkers(Markers, _elevationProfile.Points);
                 }
                 else
                 {
@@ -195,7 +197,7 @@ namespace RoadCaptain.App.Shared.Controls
 
             RenderElevationProfile(canvas, _renderParameters, _elevationProfile);
             RenderElevationLines(canvas, _renderParameters, _elevationProfile);
-            RenderSegmentMarkers(canvas, _renderParameters, Markers, _elevationProfile);
+            RenderSegmentMarkers(canvas, _renderParameters);
             RenderRiderPosition(canvas, _renderParameters, _elevationProfile);
         }
 
@@ -239,15 +241,8 @@ namespace RoadCaptain.App.Shared.Controls
         
         private void RenderSegmentMarkers(
             SKCanvas canvas,
-            RenderParameters renderParameters, 
-            List<Segment>? markers,
-            CalculatedElevationProfile elevationProfile)
+            RenderParameters renderParameters)
         {
-            if (_climbMarkersOnRoute == null)
-            {
-                return;
-            }
-            
             // Flip the canvas because otherwise the elevation is upside down
             canvas.Save();
             canvas.Scale(1, -1);
@@ -257,7 +252,7 @@ namespace RoadCaptain.App.Shared.Controls
 
             foreach (var climbMarker in _climbMarkersOnRoute)
             {
-                DrawStartMarker(canvas, climbMarker.Start, renderParameters);
+                DrawStartMarker(canvas, climbMarker.Start, renderParameters, climbMarker.Climb.Type);
                 DrawFinishFlag(canvas, climbMarker.Finish, renderParameters);
             }
 
@@ -305,16 +300,26 @@ namespace RoadCaptain.App.Shared.Controls
             canvas.DrawCircle(x + boundsMidX, y + boundsMidX, boundsMidX + squareSize, _circlePaint);
         }
 
-        private void DrawStartMarker(SKCanvas canvas, TrackPoint climbMarkerPoint, RenderParameters renderParameters)
+        private void DrawStartMarker(SKCanvas canvas, TrackPoint climbMarkerPoint, RenderParameters renderParameters,
+            SegmentType segmentType)
         {
             const float radius = 12f;
+
+            var markerText = segmentType == SegmentType.Climb
+                ? "K"
+                : "S";
+            
+            var fillPaint = segmentType == SegmentType.Climb
+                ? _fillPaintClimb
+                : _fillPaintSprint;
+
             var x = (float)(climbMarkerPoint.DistanceOnSegment / renderParameters.MetersPerPixel);
             const float y = 1.5f * radius;
             var startPoint = new SKPoint(x, y);
-            canvas.DrawCircle(startPoint, radius, _fillPaint);
+            canvas.DrawCircle(startPoint, radius, fillPaint);
             canvas.DrawCircle(startPoint, radius, _circlePaint);
 
-            canvas.DrawText("K", startPoint.X - _komLetterOffsetX, startPoint.Y + _komLetterOffsetY, _font, _textPaint);
+            canvas.DrawText(markerText, startPoint.X - _komLetterOffsetX, startPoint.Y + _komLetterOffsetY, _font, _textPaint);
 
             canvas.DrawLine(x, y + radius, x, (float)(Bounds.Height), _linePaint );
         }

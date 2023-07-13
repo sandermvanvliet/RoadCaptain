@@ -69,7 +69,9 @@ namespace RoadCaptain.App.Shared.Controls
             get => _renderOperation.Markers;
             set
             {
-                _renderOperation.Markers = (value ?? new List<Segment>()).Where(m => m.Type == SegmentType.Climb).ToList();
+                _renderOperation.Markers = (value ?? new List<Segment>())
+                    .Where(m => m.Type == SegmentType.Climb || m.Type == SegmentType.Sprint)
+                    .ToList();
 
                 InvalidateVisual();
             }

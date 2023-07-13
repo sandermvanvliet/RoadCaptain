@@ -483,11 +483,14 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             }
 
             var segments = _segmentStore.LoadSegments(World, Sport);
-            var markers = _segmentStore.LoadMarkers(World).Where(m => m.Type == SegmentType.Climb).ToList();
+            var markers = _segmentStore
+                .LoadMarkers(World)
+                .Where(m => m.Type == SegmentType.Climb || m.Type == SegmentType.Sprint)
+                .ToList();
 
             var routePoints = GetTrackPoints(segments);
 
-            Markers = PlannedRouteUtils
+            Markers = PlannedRoute
                 .CalculateClimbMarkers(markers, routePoints)
                 .Select(c => new MarkerViewModel(c.Climb))
                 .ToList();

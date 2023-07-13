@@ -114,7 +114,7 @@ namespace RoadCaptain.App.Shared.Tests.Unit.Controls
 
         private static List<(Segment Climb, TrackPoint Start, TrackPoint Finish)> CalculateClimbMarkers(PlannedRoute plannedRoute, List<Segment> markers, List<Segment> segments)
         {
-            return PlannedRouteUtils.CalculateClimbMarkers(markers, CalculatedElevationProfile.From(plannedRoute, segments).Points);
+            return PlannedRoute.CalculateClimbMarkers(markers, CalculatedElevationProfile.From(plannedRoute, segments).Points);
         }
 
         private void BuildSegmentsAndMarkers()
