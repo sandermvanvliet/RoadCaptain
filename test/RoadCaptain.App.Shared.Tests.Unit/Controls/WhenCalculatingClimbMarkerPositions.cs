@@ -112,9 +112,9 @@ namespace RoadCaptain.App.Shared.Tests.Unit.Controls
             climbMarkers[2].Climb.Id.Should().Be("climb-1");
         }
 
-        private List<(Segment Climb, TrackPoint Start, TrackPoint Finish)> CalculateClimbMarkers(PlannedRoute plannedRoute, List<Segment> markers, List<Segment> segments)
+        private static List<(Segment Climb, TrackPoint Start, TrackPoint Finish)> CalculateClimbMarkers(PlannedRoute plannedRoute, List<Segment> markers, List<Segment> segments)
         {
-            return ElevationProfileLayeredRenderOperation.CalculateClimbMarkers(plannedRoute, markers, segments);
+            return PlannedRouteUtils.CalculateClimbMarkers(markers, CalculatedElevationProfile.From(plannedRoute, segments).Points);
         }
 
         private void BuildSegmentsAndMarkers()

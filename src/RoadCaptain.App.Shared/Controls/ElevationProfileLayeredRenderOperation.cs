@@ -83,11 +83,9 @@ namespace RoadCaptain.App.Shared.Controls
                 if (_route != null && Markers != null && Segments != null)
                 {
                     _elevationProfile = CalculatedElevationProfile.From(_route, Segments);
-                    _renderParameters =
-                        RenderParameters.From(RenderMode, Bounds, _elevationProfile, RiderPosition, Markers);
+                    _renderParameters = RenderParameters.From(RenderMode, Bounds, _elevationProfile, RiderPosition, Markers);
                     _elevationProfile.CalculatePathsForElevationGroups(_renderParameters);
-
-                    _climbMarkersOnRoute = CalculateClimbMarkers(_route, Markers.Where(m => m.Type == SegmentType.Climb).ToList(), Segments);
+                    _climbMarkersOnRoute = PlannedRouteUtils.CalculateClimbMarkers(Markers, _elevationProfile.Points);
                 }
                 else
                 {
@@ -97,66 +95,6 @@ namespace RoadCaptain.App.Shared.Controls
                     _climbMarkersOnRoute = new List<(Segment Climb, TrackPoint Start, TrackPoint Finish)>();
                 }
             }
-        }
-
-        public static List<(Segment Climb, TrackPoint Start, TrackPoint Finish)> CalculateClimbMarkers(PlannedRoute plannedRoute, List<Segment> markers, List<Segment> segments)
-        {
-            var elevationProfile = CalculatedElevationProfile.From(plannedRoute, segments);
-            
-            var result = new List<(Segment Climb, TrackPoint Start, TrackPoint Finish)>();
-            Segment? currentClimb = null;
-            TrackPoint? start = null;
-
-            var index = 0;
-            while (index < elevationProfile.Points.Length)
-            {
-                var point = elevationProfile.Points[index];
-
-                if (currentClimb == null)
-                {
-                    var climb = markers.SingleOrDefault(m => m.A.IsCloseTo(point));
-
-                    if (climb != null)
-                    {
-                        currentClimb = climb;
-                        start = point;
-                    }
-                    else
-                    {
-                        index++;
-                        continue;
-                    }
-                }
-
-                while (index < elevationProfile.Points.Length)
-                {
-                    var nextPoint = elevationProfile.Points[index];
-                    // Check if this point is still on the climb
-                    if (currentClimb.Contains(nextPoint))
-                    {
-                        index++;
-                        continue;
-                    }
-                   
-                    // Check if the last point was close to the end of the segment
-                    if (currentClimb.B.IsCloseTo(elevationProfile.Points[index - 1]))
-                    {
-                        // Yup, add this climb
-                        result.Add((
-                            currentClimb,
-                            start,
-                            finish: elevationProfile.Points[index - 1]
-                        ));
-                    }
-
-                    currentClimb = null;
-                    start = null;
-
-                    break;
-                }
-            }
-
-            return result;
         }
 
         public Rect Bounds

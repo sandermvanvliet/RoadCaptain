@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Collections.ObjectModel;
 using System.Linq;
 using ReactiveUI;
@@ -323,13 +324,13 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
 
             IsTainted = isTainted;
 
-            DetermineMarkersForRoute();
-
             // Don't use the properties because we don't
             // want PropertyChanged to fire just yet.
             _name = plannedRoute.Name;
             _world = plannedRoute.World;
             _sport = plannedRoute.Sport;
+
+            DetermineMarkersForRoute();
 
             this.RaisePropertyChanged(nameof(Name));
             this.RaisePropertyChanged(nameof(World));
@@ -482,81 +483,17 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             }
 
             var segments = _segmentStore.LoadSegments(World, Sport);
-            var markers = _segmentStore.LoadMarkers(World);
-
-            var markersForRoute = new List<MarkerViewModel>();
+            var markers = _segmentStore.LoadMarkers(World).Where(m => m.Type == SegmentType.Climb).ToList();
 
             var routePoints = GetTrackPoints(segments);
 
-            // Determine bounding box of the route
-            var routeBoundingBox = BoundingBox.From(routePoints);
-
-            // Find markers that fall exactly inside the route bounding box
-            var markersOnRoute = markers
-                .Where(marker => routeBoundingBox.Overlaps(marker.BoundingBox))
+            Markers = PlannedRouteUtils
+                .CalculateClimbMarkers(markers, routePoints)
+                .Select(c => new MarkerViewModel(c.Climb))
                 .ToList();
-
-            foreach (var marker in markersOnRoute)
-            {
-                // For each marker try to follow the track
-                // along the planned route from the starting
-                // point of the marker. If it deviates more
-                // than 25m at any point it doesn't match
-                // with the route
-                var fullMatch = true;
-
-                int? previousRoutePointIndex = null;
-
-                foreach (var markerTrackPoint in marker.Points)
-                {
-                    var point = markerTrackPoint;
-
-                    var closestOnRoute = routePoints
-                        .Where(trackPoint => trackPoint.IsCloseTo(point))
-                        .Select(trackPoint => new
-                        {
-                            TrackPoint = trackPoint,
-                            Distance = trackPoint.DistanceTo(markerTrackPoint)
-                        })
-                        .MinBy(x => x.Distance);
-
-                    if (closestOnRoute == null)
-                    {
-                        fullMatch = false;
-                        break;
-                    }
-
-                    if (closestOnRoute.Distance > 25)
-                    {
-                        fullMatch = false;
-                        break;
-                    }
-
-                    if (previousRoutePointIndex == null)
-                    {
-                        previousRoutePointIndex = closestOnRoute.TrackPoint.Index;
-                    }
-                    else if (closestOnRoute.TrackPoint.Index < previousRoutePointIndex.Value)
-                    {
-                        fullMatch = false;
-                        break;
-                    }
-                    else
-                    {
-                        previousRoutePointIndex = closestOnRoute.TrackPoint.Index;
-                    }
-                }
-
-                if (fullMatch)
-                {
-                    markersForRoute.Add(new MarkerViewModel(marker));
-                }
-            }
-
-            Markers = markersForRoute;
         }
 
-        private List<TrackPoint> GetTrackPoints(List<Segment> segments)
+        private ImmutableArray<TrackPoint> GetTrackPoints(List<Segment> segments)
         {
             var trackPointsForRoute = new List<TrackPoint>();
             var routeTrackPointIndex = 0;
@@ -580,7 +517,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
                 }
             }
 
-            return trackPointsForRoute;
+            return trackPointsForRoute.ToImmutableArray();
         }
     }
 }
