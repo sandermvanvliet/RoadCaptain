@@ -3,6 +3,7 @@
 // See LICENSE or https://choosealicense.com/licenses/artistic-2.0/
 
 using System.Collections.Generic;
+using System.Linq;
 using RoadCaptain.App.Shared.Controls;
 using RoadCaptain.GameStates;
 using RoadCaptain.Ports;
@@ -27,7 +28,6 @@ namespace RoadCaptain.App.Runner.ViewModels
             plannedRoute.RouteSegmentSequence.Add(new SegmentSequence("segment-2", SegmentDirection.AtoB, SegmentSequenceType.Regular));
             plannedRoute.RouteSegmentSequence.Add(new SegmentSequence("segment-3", SegmentDirection.AtoB, SegmentSequenceType.Regular));
             
-            UpdateRoute(plannedRoute);
             UpdateGameState(
                 new OnRouteState(
                     123,
@@ -40,7 +40,7 @@ namespace RoadCaptain.App.Runner.ViewModels
                     0,
                     0));
             
-            RenderMode = RenderMode.Moving;
+            RenderMode = RenderMode.All;
         }
     }
 
@@ -73,9 +73,7 @@ namespace RoadCaptain.App.Runner.ViewModels
                 })
                 {
                     Id = "segment-1",
-                    Name = "Segment 1",
-                    Type = SegmentType.Segment,
-                    Sport = SportType.Cycling
+                    Name = "Segment 1"
                 },
                 new(new List<TrackPoint>
                 {
@@ -85,9 +83,7 @@ namespace RoadCaptain.App.Runner.ViewModels
                 })
                 {
                     Id = "segment-2",
-                    Name = "Segment 2",
-                    Type = SegmentType.Segment,
-                    Sport = SportType.Cycling
+                    Name = "Segment 2"
                 },
                 new(new List<TrackPoint>
                 {
@@ -98,57 +94,80 @@ namespace RoadCaptain.App.Runner.ViewModels
                 {
                     Id = "segment-3",
                     Name = "Segment 3",
-                    Type = SegmentType.Segment,
-                    Sport = SportType.Cycling
                 },
             };
 
             foreach (var segment in _segments)
             {
-                var index = 0;
-                foreach (var trackPoint in segment.Points)
-                {
-                    trackPoint.Segment = segment;
-                    trackPoint.Index = index++;
-                }
-
+                segment.Type = SegmentType.Segment;
+                segment.Sport = SportType.Cycling;
                 segment.CalculateDistances();
             }
 
-            var climb1Point1 = segment1Point2.Clone();
-            var climb1Point2 = segment1Point3.Clone();
-            var climb1Point3 = segment2Point1.Clone();
-            var climb1Point4 = segment2Point2.Clone();
+            var reversedSegments = _segments
+                .Select(ReverseSegment)
+                .ToList();
 
+            _segments.AddRange(reversedSegments);
+            
             _markers = new List<Segment>
             {
                 new(new List<TrackPoint>
                 {
-                    climb1Point1,
-                    climb1Point2,
-                    climb1Point3,
-                    climb1Point4
+                    Clone(segment1Point2),
+                    Clone(segment1Point3),
+                    Clone(segment2Point1),
+                    Clone(segment2Point2)
                 })
                 {
                     Id = "climb-1",
                     Name = "Climb 1",
                     Type = SegmentType.Climb,
                     Sport = SportType.Cycling
+                },
+                new(new List<TrackPoint>
+                {
+                    Clone(segment2Point2),
+                    Clone(segment2Point1),
+                    Clone(segment1Point3),
+                    Clone(segment1Point2),
+                })
+                {
+                    Id = "climb-1-rev",
+                    Name = "Climb 1 reverse"
                 }
             };
 
-            foreach (var segment in _markers)
+            foreach (var marker in _markers)
             {
-                var index = 0;
-                foreach (var trackPoint in segment.Points)
-                {
-                    trackPoint.Segment = segment;
-                    trackPoint.Index = index++;
-                }
-
-                segment.CalculateDistances();
+                marker.Type = SegmentType.Climb;
+                marker.Sport = SportType.Cycling;
+                marker.CalculateDistances();
             }
         }
+        
+
+        private static Segment ReverseSegment(Segment input)
+        {
+            var reverseSegment = new Segment(
+                input.Points.AsEnumerable().Reverse().Select(Clone).ToList())
+            {
+                Id = input.Id + "-rev",
+                Name = input.Name + " reverse",
+                Type = input.Type,
+                Sport = input.Sport
+            };
+            
+            reverseSegment.CalculateDistances();
+
+            return reverseSegment;
+        }
+
+        private static TrackPoint Clone(TrackPoint input)
+        {
+            return new TrackPoint(input.Latitude, input.Longitude, input.Altitude, input.WorldId);
+        }
+        
         public List<Segment> LoadSegments(World world, SportType sport)
         {
             return _segments;

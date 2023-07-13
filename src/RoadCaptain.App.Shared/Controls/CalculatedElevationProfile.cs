@@ -231,11 +231,11 @@ namespace RoadCaptain.App.Shared.Controls
                     .Points
                     .Select(point => new SKPoint(
                         (float)(point.DistanceOnSegment / renderParameters.MetersPerPixel), 
-                        renderParameters.CalculateYFromAltitude(point.Altitude)))
+                        renderParameters.PlotHeight - renderParameters.CalculateYFromAltitude(point.Altitude)))
                     .ToList();
 
-                points.Insert(0, new SKPoint(points[0].X, 0));
-                points.Add(new SKPoint(points.Last().X, 0));
+                points.Insert(0, new SKPoint(points[0].X, renderParameters.PlotHeight));
+                points.Add(new SKPoint(points.Last().X, renderParameters.PlotHeight));
                 path.AddPoly(points.ToArray());
                 group.Path = path;
             }

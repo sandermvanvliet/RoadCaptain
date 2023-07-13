@@ -169,13 +169,13 @@ namespace RoadCaptain.App.Runner.ViewModels
             var segments = _segmentStore.LoadSegments(route.World!, route.Sport);
             var markers = _segmentStore.LoadMarkers(route.World!);
 
-            Route = route;
             Segments = segments;
             Markers = markers;
+            Route = route;
 
-            this.RaisePropertyChanged(nameof(Route));
             this.RaisePropertyChanged(nameof(Markers));
             this.RaisePropertyChanged(nameof(Segments));
+            this.RaisePropertyChanged(nameof(Route));
         }
     }
 }

@@ -136,6 +136,13 @@ namespace RoadCaptain.App.Shared.Controls
                     _renderParameters = RenderParameters.From(RenderMode, Bounds, _elevationProfile, RiderPosition, Markers);
                     _elevationProfile.CalculatePathsForElevationGroups(_renderParameters);
                 }
+                else if (_route != null && Markers != null && Segments != null)
+                {
+                    _elevationProfile = CalculatedElevationProfile.From(_route, Segments);
+                    _renderParameters = RenderParameters.From(RenderMode, Bounds, _elevationProfile, RiderPosition, Markers);
+                    _elevationProfile.CalculatePathsForElevationGroups(_renderParameters);
+                    _climbMarkersOnRoute = PlannedRoute.CalculateClimbMarkers(Markers, _elevationProfile.Points);
+                }
             }
         }
 
@@ -205,10 +212,9 @@ namespace RoadCaptain.App.Shared.Controls
         {
             // Flip the canvas because otherwise the elevation is upside down
             canvas.Save();
-            canvas.Scale(1, -1);
             
             // Because we flipped, we also need to translate
-            canvas.Translate(renderParameters.TranslateX, -renderParameters.PlotHeight);
+            canvas.Translate(renderParameters.TranslateX, 0);
             
             foreach (var group in elevationProfile.ElevationGroups)
             {
@@ -245,10 +251,9 @@ namespace RoadCaptain.App.Shared.Controls
         {
             // Flip the canvas because otherwise the elevation is upside down
             canvas.Save();
-            canvas.Scale(1, -1);
             
             // Because we flipped, we also need to translate
-            canvas.Translate(renderParameters.TranslateX, -renderParameters.PlotHeight);
+            canvas.Translate(renderParameters.TranslateX, 0);
 
             foreach (var climbMarker in _climbMarkersOnRoute)
             {
@@ -319,7 +324,9 @@ namespace RoadCaptain.App.Shared.Controls
             canvas.DrawCircle(startPoint, radius, fillPaint);
             canvas.DrawCircle(startPoint, radius, _circlePaint);
 
-            canvas.DrawText(markerText, startPoint.X - _komLetterOffsetX, startPoint.Y + _komLetterOffsetY, _font, _textPaint);
+            var komLetterOffsetX = _komLetterOffsetX - (segmentType == SegmentType.Climb ? 0 : 1);
+            
+            canvas.DrawText(markerText, startPoint.X - komLetterOffsetX, startPoint.Y + _komLetterOffsetY, _font, _textPaint);
 
             canvas.DrawLine(x, y + radius, x, (float)(Bounds.Height), _linePaint );
         }
@@ -328,10 +335,9 @@ namespace RoadCaptain.App.Shared.Controls
         {
             // Flip the canvas because otherwise the elevation is upside down
             canvas.Save();
-            canvas.Scale(1, -1);
             
             // Because we flipped, we also need to translate
-            canvas.Translate(renderParameters.TranslateX, -renderParameters.PlotHeight);
+            canvas.Translate(renderParameters.TranslateX, 0);
             
             SKPoint? riderPositionPoint = null;
             
@@ -346,7 +352,7 @@ namespace RoadCaptain.App.Shared.Controls
                     
                     riderPositionPoint = new SKPoint(
                         (float)(elevationProfile.Points[index].DistanceOnSegment / renderParameters.MetersPerPixel),
-                        renderParameters.CalculateYFromAltitude(RiderPosition.Altitude));
+                        renderParameters.PlotHeight - renderParameters.CalculateYFromAltitude(RiderPosition.Altitude));
                             
                     // RiderPosition always moves forward, so
                     // store this value and pick up from there
@@ -387,9 +393,7 @@ namespace RoadCaptain.App.Shared.Controls
         {
             canvas.Save();
             
-            // Because we flipped, we also need to translate
             canvas.Translate(renderParameters.TranslateX, 0);
-
 
             var metersPerStep = 100;
             var step = metersPerStep / renderParameters.MetersPerPixel;
