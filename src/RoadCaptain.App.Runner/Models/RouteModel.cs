@@ -32,7 +32,7 @@ namespace RoadCaptain.App.Runner.Models
 
             model.Markers = PlannedRoute
                 .CalculateClimbMarkers(
-                    markers,
+                    markers.Where(m => m.Type == SegmentType.Climb || m.Type == SegmentType.Sprint).ToList(),
                     plannedRoute.TrackPoints.ToImmutableArray())
                 .Select(marker => new MarkerViewModel(marker.Segment))
                 .ToList();
