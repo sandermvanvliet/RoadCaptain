@@ -202,7 +202,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
                 ? GetZwiftRouteName(Sequence.First())
                 : "Route starting at " + Sequence.First().SegmentId;
 
-            var route = new PlannedRoute
+            var plannedRoute = new PlannedRoute
             {
                 ZwiftRouteName = zwiftRouteName,
                 Name = Name,
@@ -210,21 +210,24 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
                 Sport = Sport
             };
 
-            if (string.IsNullOrEmpty(route.Name))
+            if (string.IsNullOrEmpty(plannedRoute.Name))
             {
-                route.Name = $"RoadCaptain route starting on {route.ZwiftRouteName}";
+                plannedRoute.Name = $"RoadCaptain route starting on {plannedRoute.ZwiftRouteName}";
             }
 
-            if (string.IsNullOrEmpty(route.ZwiftRouteName))
+            if (string.IsNullOrEmpty(plannedRoute.ZwiftRouteName))
             {
                 throw new Exception(
                     $"Unable to determine Zwift route name for segment {Sequence.First().SegmentName} and direction {Sequence.First().Direction}");
             }
 
-            route
+            plannedRoute
                 .RouteSegmentSequence
                 .AddRange(Sequence.Select(s => s.Model).ToList());
-            return route;
+
+            plannedRoute.CalculateMetrics(_segmentStore.LoadSegments(plannedRoute.World, plannedRoute.Sport));
+
+            return plannedRoute;
         }
 
         private string GetZwiftRouteName(SegmentSequenceViewModel startingSegment)
@@ -482,45 +485,23 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
                 return;
             }
 
-            var segments = _segmentStore.LoadSegments(World, Sport);
+            var plannedRoute = AsPlannedRoute();
+
+            if (plannedRoute == null)
+            {
+                Markers = new List<MarkerViewModel>();
+                return;
+            }
+
             var markers = _segmentStore
                 .LoadMarkers(World)
                 .Where(m => m.Type == SegmentType.Climb || m.Type == SegmentType.Sprint)
                 .ToList();
 
-            var routePoints = GetTrackPoints(segments);
-
             Markers = PlannedRoute
-                .CalculateClimbMarkers(markers, routePoints)
-                .Select(c => new MarkerViewModel(c.Climb))
+                .CalculateClimbMarkers(markers, plannedRoute.TrackPoints.ToImmutableArray())
+                .Select(marker => new MarkerViewModel(marker.Segment))
                 .ToList();
-        }
-
-        private ImmutableArray<TrackPoint> GetTrackPoints(List<Segment> segments)
-        {
-            var trackPointsForRoute = new List<TrackPoint>();
-            var routeTrackPointIndex = 0;
-
-            foreach (var seq in Sequence)
-            {
-                var segment = segments.Single(s => s.Id == seq.SegmentId);
-
-                var points = segment.Points.AsEnumerable();
-
-                if (seq.Direction == SegmentDirection.BtoA)
-                {
-                    points = points.Reverse();
-                }
-                
-                foreach (var point in points)
-                {
-                    var segmentPoint = point.Clone();
-                    segmentPoint.Index = routeTrackPointIndex++;
-                    trackPointsForRoute.Add(segmentPoint);
-                }
-            }
-
-            return trackPointsForRoute.ToImmutableArray();
         }
     }
 }

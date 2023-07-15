@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using FluentAssertions;
 using RoadCaptain.App.Shared.Controls;
@@ -56,7 +55,7 @@ namespace RoadCaptain.App.Shared.Tests.Unit.Controls
                 _segments);
 
             climbMarkers.Should().NotBeEmpty();
-            climbMarkers[0].Climb.Id.Should().Be("climb-1");
+            climbMarkers[0].Segment.Id.Should().Be("climb-1");
         }
 
         [Fact]
@@ -68,8 +67,8 @@ namespace RoadCaptain.App.Shared.Tests.Unit.Controls
                 _segments);
 
             climbMarkers.Should().HaveCount(2);
-            climbMarkers[0].Climb.Id.Should().Be("climb-1");
-            climbMarkers[1].Climb.Id.Should().Be("climb-1");
+            climbMarkers[0].Segment.Id.Should().Be("climb-1");
+            climbMarkers[1].Segment.Id.Should().Be("climb-1");
         }
 
         [Fact]
@@ -94,8 +93,8 @@ namespace RoadCaptain.App.Shared.Tests.Unit.Controls
                 _segments);
 
             climbMarkers.Should().HaveCount(2);
-            climbMarkers[0].Climb.Id.Should().Be("climb-1");
-            climbMarkers[1].Climb.Id.Should().Be("climb-1-rev");
+            climbMarkers[0].Segment.Id.Should().Be("climb-1");
+            climbMarkers[1].Segment.Id.Should().Be("climb-1-rev");
         }
 
         [Fact]
@@ -107,12 +106,12 @@ namespace RoadCaptain.App.Shared.Tests.Unit.Controls
                 _segments);
 
             climbMarkers.Should().HaveCount(3);
-            climbMarkers[0].Climb.Id.Should().Be("climb-1");
-            climbMarkers[1].Climb.Id.Should().Be("climb-1-rev");
-            climbMarkers[2].Climb.Id.Should().Be("climb-1");
+            climbMarkers[0].Segment.Id.Should().Be("climb-1");
+            climbMarkers[1].Segment.Id.Should().Be("climb-1-rev");
+            climbMarkers[2].Segment.Id.Should().Be("climb-1");
         }
 
-        private static List<(Segment Climb, TrackPoint Start, TrackPoint Finish)> CalculateClimbMarkers(PlannedRoute plannedRoute, List<Segment> markers, List<Segment> segments)
+        private static List<(Segment Segment, TrackPoint Start, TrackPoint Finish)> CalculateClimbMarkers(PlannedRoute plannedRoute, List<Segment> markers, List<Segment> segments)
         {
             return PlannedRoute.CalculateClimbMarkers(markers, CalculatedElevationProfile.From(plannedRoute, segments).Points);
         }
@@ -182,10 +181,10 @@ namespace RoadCaptain.App.Shared.Tests.Unit.Controls
             {
                 new(new List<TrackPoint>
                 {
-                    Clone(segment1Point2),
-                    Clone(segment1Point3),
-                    Clone(segment2Point1),
-                    Clone(segment2Point2)
+                    TrackPoint.FromTrackPoint(segment1Point2),
+                    TrackPoint.FromTrackPoint(segment1Point3),
+                    TrackPoint.FromTrackPoint(segment2Point1),
+                    TrackPoint.FromTrackPoint(segment2Point2)
                 })
                 {
                     Id = "climb-1",
@@ -195,10 +194,10 @@ namespace RoadCaptain.App.Shared.Tests.Unit.Controls
                 },
                 new(new List<TrackPoint>
                 {
-                    Clone(segment2Point2),
-                    Clone(segment2Point1),
-                    Clone(segment1Point3),
-                    Clone(segment1Point2),
+                    TrackPoint.FromTrackPoint(segment2Point2),
+                    TrackPoint.FromTrackPoint(segment2Point1),
+                    TrackPoint.FromTrackPoint(segment1Point3),
+                    TrackPoint.FromTrackPoint(segment1Point2),
                 })
                 {
                     Id = "climb-1-rev",
@@ -217,7 +216,7 @@ namespace RoadCaptain.App.Shared.Tests.Unit.Controls
         private static Segment ReverseSegment(Segment input)
         {
             var reverseSegment = new Segment(
-                input.Points.AsEnumerable().Reverse().Select(Clone).ToList())
+                input.Points.AsEnumerable().Reverse().Select(input1 => TrackPoint.FromTrackPoint(input1)).ToList())
             {
                 Id = input.Id + "-rev",
                 Name = input.Name + " reverse",
@@ -228,11 +227,6 @@ namespace RoadCaptain.App.Shared.Tests.Unit.Controls
             reverseSegment.CalculateDistances();
 
             return reverseSegment;
-        }
-
-        private static TrackPoint Clone(TrackPoint input)
-        {
-            return new TrackPoint(input.Latitude, input.Longitude, input.Altitude, input.WorldId);
         }
     }
 }

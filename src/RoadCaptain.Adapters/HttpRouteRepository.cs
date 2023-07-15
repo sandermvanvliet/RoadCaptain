@@ -124,10 +124,10 @@ namespace RoadCaptain.Adapters
 
             if (!response.IsSuccessStatusCode)
             {
-                throw new Exception($"Unable to search for routes, received an non-successful response: {response.StatusCode.ToString()}");
+                throw new Exception($"Unable to search for routes, received an non-successful response: {response.StatusCode}");
             }
             
-            using var textReader = new StreamReader(await response.Content.ReadAsStreamAsync());
+            using var textReader = new StreamReader(await response.Content.ReadAsStreamAsync(tokenSource.Token));
             await using var jsonTextReader = new JsonTextReader(textReader);
             var routeModels = _serializer.Deserialize<RouteModel[]>(jsonTextReader);
 
@@ -155,7 +155,7 @@ namespace RoadCaptain.Adapters
                 throw new ArgumentException("A valid token is required for this route repository");
             }
 
-            var createRouteModel = new CreateRouteModel(plannedRoute, segments);
+            var createRouteModel = new CreateRouteModel(plannedRoute);
 
             var builder = new UriBuilder
             {
@@ -178,7 +178,7 @@ namespace RoadCaptain.Adapters
                     throw new Exception("You're not authorized to store a route on this repository");
                 }
                 
-                throw new Exception($"Unable to store route, received an non-successful response: {response.StatusCode.ToString()}");
+                throw new Exception($"Unable to store route, received an non-successful response: {response.StatusCode}");
             }
             
             using var textReader = new StreamReader(await response.Content.ReadAsStreamAsync());

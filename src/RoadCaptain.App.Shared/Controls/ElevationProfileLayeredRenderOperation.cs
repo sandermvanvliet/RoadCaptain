@@ -40,7 +40,7 @@ namespace RoadCaptain.App.Shared.Controls
             SkiaPaints.ElevationProfileGradeEightPaint,
             SkiaPaints.ElevationProfileGradeTenPaint
         };
-        private List<(Segment Climb, TrackPoint Start, TrackPoint Finish)> _climbMarkersOnRoute = new();
+        private List<(Segment Segment, TrackPoint Start, TrackPoint Finish)> _climbMarkersOnRoute = new();
         private readonly SKPaint _finishLinePaint;
         private readonly SKPaint _circlePaint;
         private readonly SKPaint _finishCirclePaint;
@@ -94,7 +94,7 @@ namespace RoadCaptain.App.Shared.Controls
                     // Reset everything
                     _elevationProfile = null;
                     _renderParameters = null;
-                    _climbMarkersOnRoute = new List<(Segment Climb, TrackPoint Start, TrackPoint Finish)>();
+                    _climbMarkersOnRoute = new List<(Segment Segment, TrackPoint Start, TrackPoint Finish)>();
                 }
             }
         }
@@ -257,7 +257,7 @@ namespace RoadCaptain.App.Shared.Controls
 
             foreach (var climbMarker in _climbMarkersOnRoute)
             {
-                DrawStartMarker(canvas, climbMarker.Start, renderParameters, climbMarker.Climb.Type);
+                DrawStartMarker(canvas, climbMarker.Start, renderParameters, climbMarker.Segment.Type);
                 DrawFinishFlag(canvas, climbMarker.Finish, renderParameters);
             }
 

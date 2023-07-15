@@ -3,15 +3,13 @@
 // See LICENSE or https://choosealicense.com/licenses/artistic-2.0/
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using Newtonsoft.Json;
 
 namespace RoadCaptain.Adapters
 {
     internal class CreateRouteModel
     {
-        public CreateRouteModel(PlannedRoute plannedRoute, List<Segment> segments)
+        public CreateRouteModel(PlannedRoute plannedRoute)
         {
             if (plannedRoute.World == null || string.IsNullOrEmpty(plannedRoute.World.Id))
             {
@@ -33,49 +31,9 @@ namespace RoadCaptain.Adapters
             ZwiftRouteName = plannedRoute.ZwiftRouteName;
             IsLoop = plannedRoute.IsLoop;
             Serialized = RouteStoreToDisk.SerializeAsJson(plannedRoute, Formatting.None);
-            CalculateTotalAscentAndDescent(plannedRoute, segments);
-        }
-
-        private void CalculateTotalAscentAndDescent(PlannedRoute route, List<Segment> segments)
-        {
-            double totalAscent = 0;
-            double totalDescent = 0;
-            double totalDistance = 0;
-
-            var pointsOnRoute = route.GetTrackPoints(segments);
-
-            TrackPoint? previous = null;
-
-            foreach (var point in pointsOnRoute)
-            {
-                if (previous == null)
-                {
-                    previous = point;
-                    continue;
-                }
-
-                var altitudeDelta = point.Altitude - previous.Altitude;
-                if (altitudeDelta > 0)
-                {
-                    totalAscent += altitudeDelta;
-                }
-                else if (altitudeDelta < 0)
-                {
-                    totalDescent += Math.Abs(altitudeDelta);
-                }
-
-                totalDistance += TrackPoint.GetDistanceFromLatLonInMeters(
-                    previous.Latitude, 
-                    previous.Longitude,
-                    point.Latitude, 
-                    point.Longitude);
-
-                previous = point;
-            }
-
-            Distance = (decimal)Math.Round(totalDistance / 1000, 1);
-            Ascent = (decimal)totalAscent;
-            Descent = (decimal)totalDescent;
+            Ascent = (decimal)plannedRoute.Ascent;
+            Descent = (decimal)plannedRoute.Descent;
+            Distance = (decimal)Math.Round(plannedRoute.Distance / 1000, 1, MidpointRounding.AwayFromZero);
         }
 
         public string Serialized { get; }

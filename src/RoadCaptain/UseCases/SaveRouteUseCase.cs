@@ -40,6 +40,9 @@ namespace RoadCaptain.UseCases
 
                 var segments = _segmentStore.LoadSegments(saveRouteCommand.Route.World!, saveRouteCommand.Route.Sport);
 
+                // Ensure we do this just before saving so that we have accurate information
+                saveRouteCommand.Route.CalculateMetrics(segments);
+
                 await repository.StoreAsync(saveRouteCommand.Route, saveRouteCommand.Token, segments);
             }
             else if (!string.IsNullOrEmpty(saveRouteCommand.OutputFilePath))

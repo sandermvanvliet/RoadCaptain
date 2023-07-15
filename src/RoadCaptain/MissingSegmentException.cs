@@ -4,7 +4,7 @@
 
 using System;
 
-namespace RoadCaptain.App.Runner.Models
+namespace RoadCaptain
 {
     public class MissingSegmentException : Exception
     {

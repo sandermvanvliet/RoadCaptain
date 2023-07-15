@@ -174,6 +174,8 @@ namespace RoadCaptain.Adapters
             {
                 CreateDirectory(_settings.Directory);
             }
+            
+            plannedRoute.CalculateMetrics(segments);
 
             var storageModel = new RouteModel
             {
@@ -182,61 +184,20 @@ namespace RoadCaptain.Adapters
                 ZwiftRouteName = plannedRoute.ZwiftRouteName,
                 IsLoop = plannedRoute.IsLoop,
                 RepositoryName = Name,
-                Serialized = RouteStoreToDisk.SerializeAsJson(plannedRoute, Formatting.None)
+                Serialized = RouteStoreToDisk.SerializeAsJson(plannedRoute, Formatting.None),
+                Ascent = (decimal)plannedRoute.Ascent,
+                Descent = (decimal)plannedRoute.Descent,
+                Distance = (decimal)Math.Round(plannedRoute.Distance / 1000, 1, MidpointRounding.AwayFromZero)
             };
-            
-            CalculateTotalAscentAndDescent(storageModel, plannedRoute, segments);
 
             var routeNameForFile = storageModel.Name!.Replace(" ", "").ToLower();
 
             var serialized = JsonConvert.SerializeObject(storageModel, JsonSettings);
-            var path = Path.Combine(_settings.Directory!, FileNamePattern.Replace("*", routeNameForFile));
+            var path = Path.Combine(_settings.Directory, FileNamePattern.Replace("*", routeNameForFile));
 
             await WriteAllTextAsync(path, serialized);
 
             return storageModel;
-        }
-
-        private static void CalculateTotalAscentAndDescent(RouteModel routeModel, PlannedRoute route, List<Segment> segments)
-        {
-            double totalAscent = 0;
-            double totalDescent = 0;
-            double totalDistance = 0;
-
-            var pointsOnRoute = route.GetTrackPoints(segments);
-
-            TrackPoint? previous = null;
-
-            foreach (var point in pointsOnRoute)
-            {
-                if (previous == null)
-                {
-                    previous = point;
-                    continue;
-                }
-
-                var altitudeDelta = point.Altitude - previous.Altitude;
-                if (altitudeDelta > 0)
-                {
-                    totalAscent += altitudeDelta;
-                }
-                else if (altitudeDelta < 0)
-                {
-                    totalDescent += Math.Abs(altitudeDelta);
-                }
-
-                totalDistance += TrackPoint.GetDistanceFromLatLonInMeters(
-                    previous.Latitude, 
-                    previous.Longitude,
-                    point.Latitude, 
-                    point.Longitude);
-
-                previous = point;
-            }
-
-            routeModel.Distance = (decimal)Math.Round(totalDistance / 1000, 1);
-            routeModel.Ascent = (decimal)totalAscent;
-            routeModel.Descent = (decimal)totalDescent;
         }
 
         protected virtual void CreateDirectory(string settingsDirectory)
@@ -251,7 +212,7 @@ namespace RoadCaptain.Adapters
 
         protected virtual string[] GetFilesFromDirectory()
         {
-            return Directory.GetFiles(_settings.Directory!, FileNamePattern, SearchOption.TopDirectoryOnly);
+            return Directory.GetFiles(_settings.Directory, FileNamePattern, SearchOption.TopDirectoryOnly);
         }
 
         protected virtual Task WriteAllTextAsync(string path, string serialized)

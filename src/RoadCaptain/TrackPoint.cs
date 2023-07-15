@@ -57,6 +57,11 @@ namespace RoadCaptain
             };
         }
 
+        public static TrackPoint FromTrackPoint(TrackPoint input)
+        {
+            return new TrackPoint(input.Latitude, input.Longitude, input.Altitude, input.WorldId);
+        }
+
         public bool IsCloseTo(TrackPoint point)
         {
             // 0.00013 degrees equivalent to 15 meters between degrees at latitude -11 

@@ -48,7 +48,7 @@ namespace RoadCaptain
             }
         }
 
-        [JsonIgnore] public string? StartingSegmentId => RouteSegmentSequence[0].SegmentId;
+        [JsonIgnore] public string StartingSegmentId => RouteSegmentSequence[0].SegmentId;
         [JsonIgnore] public string? CurrentSegmentId => CurrentSegmentSequence?.SegmentId;
         [JsonIgnore] public string? NextSegmentId => NextSegmentSequence?.SegmentId;
         [JsonIgnore] public TurnDirection TurnToNextSegment => CurrentSegmentSequence?.TurnToNextSegment ?? TurnDirection.None;
@@ -108,6 +108,11 @@ namespace RoadCaptain
         }
 
         public SportType Sport { get; set; } = SportType.Unknown;
+        
+        public double Distance { get; private set; }
+        public double Descent { get; private set; }
+        public double Ascent { get; private set; }
+        public ImmutableList<TrackPoint> TrackPoints { get; private set; } = ImmutableList<TrackPoint>.Empty;
 
         public RouteMoveResult EnteredSegment(string segmentId)
         {
@@ -170,41 +175,70 @@ namespace RoadCaptain
             HasCompleted = true;
         }
 
-        public List<TrackPoint> GetTrackPoints(List<Segment> segments)
+        public void CalculateMetrics(List<Segment> segments)
         {
             var trackPointsForRoute = new List<TrackPoint>();
             var routeTrackPointIndex = 0;
+            TrackPoint? previous = null;
+            var totalDistance = 0d;
+            var totalAscent = 0d;
+            var totalDescent = 0d;
 
             foreach (var seq in RouteSegmentSequence)
             {
-                var segment = segments.Single(s => s.Id == seq.SegmentId);
-                
-                if (seq.Direction == SegmentDirection.AtoB)
+                var segment = segments.SingleOrDefault(s => s.Id == seq.SegmentId);
+                if (segment == null)
                 {
-                    foreach (var trackPoint in segment.Points)
-                    {
-                        var segmentPoint = trackPoint.Clone();
-                        segmentPoint.Index = routeTrackPointIndex++;
-                        trackPointsForRoute.Add(segmentPoint);
-                    }
+                    throw new MissingSegmentException(seq.SegmentId);
                 }
-                else
+
+                var segmentPoints = segment.Points.AsEnumerable();
+
+                if (seq.Direction == SegmentDirection.BtoA)
                 {
-                    for (var index = segment.Points.Count - 1; index >= 0; index--)
+                    segmentPoints = segmentPoints.Reverse();
+                }
+
+                foreach (var trackPoint in segmentPoints)
+                {
+                    var segmentPoint = trackPoint.Clone();
+
+                    var distanceFromLast = previous == null
+                        ? 0
+                        : TrackPoint.GetDistanceFromLatLonInMeters(previous.Latitude, previous.Longitude,
+                            segmentPoint.Latitude, segmentPoint.Longitude);
+
+                    totalDistance += distanceFromLast;
+
+                    segmentPoint.Index = routeTrackPointIndex++;
+                    segmentPoint.DistanceOnSegment = totalDistance;
+                    segmentPoint.DistanceFromLast = distanceFromLast;
+                    trackPointsForRoute.Add(segmentPoint);
+
+                    var altitudeDelta = previous == null ? 0 : segmentPoint.Altitude - previous.Altitude;
+
+                    if (altitudeDelta > 0)
                     {
-                        var segmentPoint = segment.Points[index].Clone();
-                        segmentPoint.Index = routeTrackPointIndex++;
-                        trackPointsForRoute.Add(segmentPoint);
+                        totalAscent += altitudeDelta;
                     }
+                    else if (altitudeDelta < 0)
+                    {
+                        totalDescent += Math.Abs(altitudeDelta);
+                    }
+
+                    previous = segmentPoint;
                 }
             }
-            
-            return trackPointsForRoute;
+
+            Ascent = totalAscent;
+            Descent = totalDescent;
+            Distance = totalDistance;
+            TrackPoints = trackPointsForRoute.ToImmutableList();
         }
 
-        public static List<(Segment Climb, TrackPoint Start, TrackPoint Finish)> CalculateClimbMarkers(List<Segment> markers, ImmutableArray<TrackPoint> routePoints)
+        public static List<(Segment Segment, TrackPoint Start, TrackPoint Finish)> CalculateClimbMarkers(List<Segment> markers, ImmutableArray<TrackPoint> routePoints)
         {
-            var result = new List<(Segment Climb, TrackPoint Start, TrackPoint Finish)>();
+            var result = new List<(Segment Segment, TrackPoint Start, TrackPoint Finish)>();
             Segment? currentClimb = null;
             TrackPoint? start = null;
 
@@ -245,8 +279,8 @@ namespace RoadCaptain
                         // Yup, add this climb
                         result.Add((
                             currentClimb,
-                            start,
-                            finish: routePoints[index - 1]
+                            start!,
+                            routePoints[index - 1]
                         ));
                     }
 

@@ -7,22 +7,24 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Threading;
 using FluentAssertions;
-using RoadCaptain.App.Runner.Models;
 using Xunit;
 
 namespace RoadCaptain.App.Runner.Tests.Unit.Models
 {
     public class WhenCreatingRouteModel
     {
-        private List<Segment> _segments = new();
-        private List<Segment> _markers = new();
+        private readonly List<Segment> _segments = new();
+        private readonly List<Segment> _markers = new();
 
         public WhenCreatingRouteModel()
         {
+            var trackPointSeg1Point1 = new TrackPoint(1, 2, 0);
+            var trackPointSeg1Point2 = trackPointSeg1Point1.ProjectTo(90, 100, 100);
+
             _segments.Add(new Segment(new List<TrackPoint>
             {
-                new(1, 2, 0) {DistanceFromLast = 0, DistanceOnSegment = 0, Index = 0},
-                new(1, 3, 100) { DistanceFromLast = 100, DistanceOnSegment = 100, Index = 1},
+                trackPointSeg1Point1,
+                trackPointSeg1Point2
             })
             {
                 Id = "seg-1",
