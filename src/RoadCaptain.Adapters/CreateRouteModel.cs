@@ -42,22 +42,35 @@ namespace RoadCaptain.Adapters
             double totalDescent = 0;
             double totalDistance = 0;
 
-            foreach (var sequence in route.RouteSegmentSequence)
+            var pointsOnRoute = route.GetTrackPoints(segments);
+
+            TrackPoint? previous = null;
+
+            foreach (var point in pointsOnRoute)
             {
-                var segment = segments.Single(s => s.Id == sequence.SegmentId);
-
-                if (sequence.Direction == SegmentDirection.AtoB)
+                if (previous == null)
                 {
-                    totalAscent += segment.Ascent;
-                    totalDescent += segment.Descent;
-                }
-                else
-                {
-                    totalAscent += segment.Descent;
-                    totalDescent += segment.Ascent;
+                    previous = point;
+                    continue;
                 }
 
-                totalDistance += segment.Distance;
+                var altitudeDelta = point.Altitude - previous.Altitude;
+                if (altitudeDelta > 0)
+                {
+                    totalAscent += altitudeDelta;
+                }
+                else if (altitudeDelta < 0)
+                {
+                    totalDescent += Math.Abs(altitudeDelta);
+                }
+
+                totalDistance += TrackPoint.GetDistanceFromLatLonInMeters(
+                    previous.Latitude, 
+                    previous.Longitude,
+                    point.Latitude, 
+                    point.Longitude);
+
+                previous = point;
             }
 
             Distance = (decimal)Math.Round(totalDistance / 1000, 1);
