@@ -160,6 +160,11 @@ namespace RoadCaptain.Adapters.Tests.Unit.RouteStorage
 
             throw new FileNotFoundException();
         }
+
+        protected override string[] GetFilesFromDirectory()
+        {
+            return StoredFiles.Keys.ToArray();
+        }
     }
     public class StubPathProvider : IPathProvider
     {
