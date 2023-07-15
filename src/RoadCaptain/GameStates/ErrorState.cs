@@ -28,13 +28,6 @@ namespace RoadCaptain.GameStates
             Exception = exception;
         }
 
-        public ErrorState(Exception exception, uint riderId)
-        {
-            Message = exception.Message;
-            Exception = exception;
-            RiderId = riderId;
-        }
-
         public override uint RiderId { get; }
 
         [JsonProperty]
