@@ -278,7 +278,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
 
         public void Initialize()
         {
-            Repositories = _retrieveRepositoryNamesUseCase.Execute(new RetrieveRepositoryNameCommand(RetrieveRepositoriesIntent.Store)).ToImmutableList();
+            Repositories = _retrieveRepositoryNamesUseCase.Execute(new RetrieveRepositoryNamesCommand(RetrieveRepositoriesIntent.Store)).ToImmutableList();
         }
     }
 }

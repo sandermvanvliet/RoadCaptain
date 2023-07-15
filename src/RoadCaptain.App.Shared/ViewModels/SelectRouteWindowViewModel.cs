@@ -89,7 +89,7 @@ namespace RoadCaptain.App.Shared.ViewModels
 
         public void Initialize()
         {
-            Repositories = _retrieveRepositoryNamesUseCase.Execute(new RetrieveRepositoryNameCommand(RetrieveRepositoriesIntent.Retrieve));
+            Repositories = _retrieveRepositoryNamesUseCase.Execute(new RetrieveRepositoryNamesCommand(RetrieveRepositoriesIntent.Retrieve));
             var allWorlds = new World { Id = "all", Name = "All" };
             AvailableWorlds = new[] { allWorlds }
                 .Concat(_worldStore.LoadWorlds())

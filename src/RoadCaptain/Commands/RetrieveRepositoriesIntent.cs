@@ -6,6 +6,7 @@ namespace RoadCaptain.Commands
 {
     public enum RetrieveRepositoriesIntent
     {
+        Unknown,
         Retrieve,
         Store
     }

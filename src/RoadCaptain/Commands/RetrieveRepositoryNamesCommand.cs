@@ -4,9 +4,9 @@
 
 namespace RoadCaptain.Commands
 {
-    public class RetrieveRepositoryNameCommand
+    public class RetrieveRepositoryNamesCommand
     {
-        public RetrieveRepositoryNameCommand(RetrieveRepositoriesIntent intent)
+        public RetrieveRepositoryNamesCommand(RetrieveRepositoriesIntent intent)
         {
             Intent = intent;
         }

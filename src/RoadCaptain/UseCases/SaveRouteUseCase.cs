@@ -33,7 +33,7 @@ namespace RoadCaptain.UseCases
                 if (repository == null)
                 {
                     throw new Exception(
-                        $"Unable to find a repository with the name '{saveRouteCommand.RepositoryName}");
+                        $"Unable to find a repository with the name '{saveRouteCommand.RepositoryName}'");
                 }
 
                 saveRouteCommand.Route.Name = saveRouteCommand.RouteName;

@@ -19,7 +19,7 @@ namespace RoadCaptain.UseCases
             _routeRepositories = routeRepositories;
         }
 
-        public string[] Execute(RetrieveRepositoryNameCommand command)
+        public string[] Execute(RetrieveRepositoryNamesCommand command)
         {
             var repositories = command.Intent switch
             {
