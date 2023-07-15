@@ -6,7 +6,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Net.Http;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using RoadCaptain.Ports;
@@ -16,18 +15,20 @@ namespace RoadCaptain.Adapters
     internal class LocalDirectoryRouteRepository : IRouteRepository
     {
         private const string FileNamePattern = "roadcaptain-route-*.json";
-        private readonly LocalDirectoryRouteRepositorySettings _settings;
         private static readonly JsonSerializerSettings JsonSettings = new();
-        private readonly JsonSerializer _serializer;
         private readonly MonitoringEvents _monitoringEvents;
         private readonly RouteStoreToDisk _routeStoreToDisk;
+        private readonly LocalDirectoryRouteRepositorySettings _settings;
 
-        public LocalDirectoryRouteRepository(LocalDirectoryRouteRepositorySettings settings, MonitoringEvents monitoringEvents, RouteStoreToDisk routeStoreToDisk)
+        public LocalDirectoryRouteRepository(
+            LocalDirectoryRouteRepositorySettings settings,
+            MonitoringEvents monitoringEvents,
+            RouteStoreToDisk routeStoreToDisk)
         {
             _settings = settings;
             _monitoringEvents = monitoringEvents;
             _routeStoreToDisk = routeStoreToDisk;
-            _serializer = JsonSerializer.Create(JsonSettings);
+            JsonSerializer.Create(JsonSettings);
             Name = _settings.Name;
         }
 
@@ -41,11 +42,11 @@ namespace RoadCaptain.Adapters
                 return Task.FromResult(false);
             }
 
-            if (!Directory.Exists(_settings.Directory))
+            if (!DirectoryExists(_settings.Directory))
             {
-                Directory.CreateDirectory(_settings.Directory);
+                CreateDirectory(_settings.Directory);
             }
-            
+
             return Task.FromResult(true);
         }
 
@@ -68,21 +69,20 @@ namespace RoadCaptain.Adapters
                 throw new Exception("Route repository is not configured correctly");
             }
 
-            if (!Directory.Exists(_settings.Directory))
+            if (!DirectoryExists(_settings.Directory))
             {
-                Directory.CreateDirectory(_settings.Directory);
+                CreateDirectory(_settings.Directory);
             }
-            
-            var routeFiles = Directory.GetFiles(_settings.Directory!, FileNamePattern, SearchOption.TopDirectoryOnly);
+
+            var routeFiles = GetFilesFromDirectory();
             var routeModels = new List<RouteModel>();
 
             foreach (var file in routeFiles)
             {
                 try
                 {
-                    using var textReader = new StreamReader(File.OpenRead(file));
-                    await using var jsonTextReader = new JsonTextReader(textReader);
-                    var routeModel = _serializer.Deserialize<RouteModel>(jsonTextReader);
+                    var serialized = await ReadAllTextAsync(file);
+                    var routeModel = JsonConvert.DeserializeObject<RouteModel>(serialized, JsonSettings);
 
                     if (routeModel != null)
                     {
@@ -103,25 +103,27 @@ namespace RoadCaptain.Adapters
                     _monitoringEvents.Error(e, "Unable to deserialize route model from file '{File}'", file);
                 }
             }
-            
+
             var query = routeModels.AsQueryable();
 
             if (!string.IsNullOrEmpty(world))
             {
-                query = query.Where(route => string.Equals(route.World, world, StringComparison.InvariantCultureIgnoreCase));
+                query = query.Where(route =>
+                    string.Equals(route.World, world, StringComparison.InvariantCultureIgnoreCase));
             }
-            
+
             if (!string.IsNullOrEmpty(name))
             {
-                query = query.Where(route => string.Equals(route.Name, name, StringComparison.InvariantCultureIgnoreCase));
+                query = query.Where(route =>
+                    string.Equals(route.Name, name, StringComparison.InvariantCultureIgnoreCase));
             }
-            
+
             if (!string.IsNullOrEmpty(zwiftRouteName))
             {
                 query = query.Where(route =>
                     string.Equals(route.ZwiftRouteName, zwiftRouteName, StringComparison.InvariantCultureIgnoreCase));
             }
-            
+
             if (minDistance is > 0)
             {
                 query = query.Where(route => route.Distance >= minDistance.Value);
@@ -153,7 +155,7 @@ namespace RoadCaptain.Adapters
                 query = query.Where(route => route.Descent <= maxDescent.Value);
             }
 
-            if (isLoop is { })
+            if (isLoop is not null)
             {
                 query = query.Where(route => route.IsLoop == isLoop);
             }
@@ -161,13 +163,18 @@ namespace RoadCaptain.Adapters
             return query.ToArray();
         }
 
+        protected virtual async Task<string> ReadAllTextAsync(string file)
+        {
+            return await File.ReadAllTextAsync(file);
+        }
+
         public async Task<RouteModel> StoreAsync(PlannedRoute plannedRoute, string? token, List<Segment> segments)
         {
-            if (!Directory.Exists(_settings.Directory))
+            if (!DirectoryExists(_settings.Directory))
             {
-                Directory.CreateDirectory(_settings.Directory);
+                CreateDirectory(_settings.Directory);
             }
-            
+
             var storageModel = new RouteModel
             {
                 Name = plannedRoute.Name,
@@ -177,15 +184,79 @@ namespace RoadCaptain.Adapters
                 RepositoryName = Name,
                 Serialized = RouteStoreToDisk.SerializeAsJson(plannedRoute, Formatting.None)
             };
+            
+            CalculateTotalAscentAndDescent(storageModel, plannedRoute, segments);
 
             var routeNameForFile = storageModel.Name!.Replace(" ", "").ToLower();
 
             var serialized = JsonConvert.SerializeObject(storageModel, JsonSettings);
             var path = Path.Combine(_settings.Directory!, FileNamePattern.Replace("*", routeNameForFile));
-            
-            await File.WriteAllTextAsync(path, serialized);
+
+            await WriteAllTextAsync(path, serialized);
 
             return storageModel;
+        }
+
+        private static void CalculateTotalAscentAndDescent(RouteModel routeModel, PlannedRoute route, List<Segment> segments)
+        {
+            double totalAscent = 0;
+            double totalDescent = 0;
+            double totalDistance = 0;
+
+            var pointsOnRoute = route.GetTrackPoints(segments);
+
+            TrackPoint? previous = null;
+
+            foreach (var point in pointsOnRoute)
+            {
+                if (previous == null)
+                {
+                    previous = point;
+                    continue;
+                }
+
+                var altitudeDelta = point.Altitude - previous.Altitude;
+                if (altitudeDelta > 0)
+                {
+                    totalAscent += altitudeDelta;
+                }
+                else if (altitudeDelta < 0)
+                {
+                    totalDescent += Math.Abs(altitudeDelta);
+                }
+
+                totalDistance += TrackPoint.GetDistanceFromLatLonInMeters(
+                    previous.Latitude, 
+                    previous.Longitude,
+                    point.Latitude, 
+                    point.Longitude);
+
+                previous = point;
+            }
+
+            routeModel.Distance = (decimal)Math.Round(totalDistance / 1000, 1);
+            routeModel.Ascent = (decimal)totalAscent;
+            routeModel.Descent = (decimal)totalDescent;
+        }
+
+        protected virtual void CreateDirectory(string settingsDirectory)
+        {
+            Directory.CreateDirectory(settingsDirectory);
+        }
+
+        protected virtual bool DirectoryExists(string settingsDirectory)
+        {
+            return Directory.Exists(settingsDirectory);
+        }
+
+        protected virtual string[] GetFilesFromDirectory()
+        {
+            return Directory.GetFiles(_settings.Directory!, FileNamePattern, SearchOption.TopDirectoryOnly);
+        }
+
+        protected virtual Task WriteAllTextAsync(string path, string serialized)
+        {
+            return File.WriteAllTextAsync(path, serialized);
         }
 
         private PlannedRoute? UpgradeIfNecessaryAndSerialize(string? routeModelSerialized)

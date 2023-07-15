@@ -181,9 +181,9 @@ namespace RoadCaptain
                 
                 if (seq.Direction == SegmentDirection.AtoB)
                 {
-                    for (var index = 0; index < segment.Points.Count; index++)
+                    foreach (var trackPoint in segment.Points)
                     {
-                        var segmentPoint = segment.Points[index].Clone();
+                        var segmentPoint = trackPoint.Clone();
                         segmentPoint.Index = routeTrackPointIndex++;
                         trackPointsForRoute.Add(segmentPoint);
                     }
