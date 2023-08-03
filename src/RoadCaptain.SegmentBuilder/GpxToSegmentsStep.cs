@@ -25,6 +25,11 @@ namespace RoadCaptain.SegmentBuilder
                 return;
             }
 
+            if(!Directory.Exists(Path.Combine(gpxDirectory, "segments")))
+            {
+                Directory.CreateDirectory(Path.Combine(gpxDirectory, "segments"));
+            }
+
             /*
                  * - Load the first route
                  * - Create a single segment from that route

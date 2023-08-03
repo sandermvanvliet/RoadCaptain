@@ -241,18 +241,55 @@
     "id": "london",
     "name": "London",
     "description": "",
-    "spawnPoints": [],
-    "status": "Unavailable",
+    "spawnPoints": [
+      {
+        "segmentId": "london-classique-rev-001-after-after",
+        "zwiftRouteName": "greater-london-flat (london)",
+        "direction": "BtoA",
+        "sport": "Cycling"
+      },
+      {
+        "segmentId": "london-classique-rev-001-before",
+        "zwiftRouteName": "classique-rev (london)",
+        "direction": "AtoB",
+        "sport": "Cycling"
+      },
+      {
+        "segmentId": "london-greater-london-8-001",
+        "zwiftRouteName": "greater-london-8 (london)",
+        "direction": "AtoB",
+        "sport": "Cycling"
+      },
+      {
+        "segmentId": "london-greater-london-8-004-after-after-after-after",
+        "zwiftRouteName": "greater-london-loop-rev (london)",
+        "direction": "BtoA",
+        "sport": "Cycling"
+      },
+      {
+        "segmentId": "london-greater-london-8-004-after-after-before",
+        "zwiftRouteName": "surrey-hills (london)",
+        "direction": "BtoA",
+        "sport": "Cycling"
+      },
+      {
+        "segmentId": "london-london-8-rev-001",
+        "zwiftRouteName": "london-8-rev (london)",
+        "direction": "AtoB",
+        "sport": "Cycling"
+      }
+    ],
+    "status": "Beta",
     "zwiftId": "London",
     "mapMostLeft": {
-      "isEmpty": true,
-      "x": 0.0,
-      "y": 0.0
+      "isEmpty": false,
+      "x": 452.0,
+      "y": 1341.0
     },
     "mapMostRight": {
-      "isEmpty": true,
-      "x": 0.0,
-      "y": 0.0
+      "isEmpty": false,
+      "x": 3884.0,
+      "y": 3328.0
     }
   },
   {

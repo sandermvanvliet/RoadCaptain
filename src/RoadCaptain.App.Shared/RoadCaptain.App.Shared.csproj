@@ -33,6 +33,7 @@
 
 	<ItemGroup>
 	  <None Remove="Assets\map-france.png" />
+	  <None Remove="Assets\map-london.png" />
 	  <None Remove="Assets\map-makuri_islands.png" />
 	  <None Remove="Assets\map-watopia.png" />
 	</ItemGroup>
