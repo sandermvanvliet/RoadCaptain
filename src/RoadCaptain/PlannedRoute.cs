@@ -25,6 +25,9 @@ namespace RoadCaptain
         public bool IsOnLastSegment => SegmentSequenceIndex == RouteSegmentSequence.Count - 1;
 
         [JsonIgnore]
+        public bool IsOnLoop => CurrentSegmentSequence is { Type: SegmentSequenceType.LoopStart or SegmentSequenceType.Loop or SegmentSequenceType.LoopEnd };
+
+        [JsonIgnore]
         public int SegmentSequenceIndex
         {
             get => _segmentSequenceIndex;
@@ -145,12 +148,10 @@ namespace RoadCaptain
                 {
                     SegmentSequenceIndex = NextSegmentSequence!.Index;
                     LoopCount++;
-                }
-                else
-                {
-                    SegmentSequenceIndex++;
+                    return RouteMoveResult.StartedNewLoop;
                 }
 
+                SegmentSequenceIndex++;
                 return RouteMoveResult.EnteredNextSegment;
             }
 
@@ -300,6 +301,7 @@ namespace RoadCaptain
         Unknown,
         StartedRoute,
         EnteredNextSegment,
-        CompletedRoute
+        CompletedRoute,
+        StartedNewLoop
     }
 }

@@ -25,6 +25,8 @@ namespace RoadCaptain.App.Runner.Models
         private double _totalDistance;
         private string _loopText = string.Empty;
         private int _currentSegmentIndex;
+        private bool _isOnLoop;
+        private double _loopDistance = 0;
 
         public InGameWindowModel(List<Segment> segments)
         {
@@ -101,7 +103,7 @@ namespace RoadCaptain.App.Runner.Models
 
         public double TotalDistance
         {
-            get => _totalDistance;
+            get => IsOnLoop ? _loopDistance : _totalDistance;
             set
             {
                 if (value.Equals(_totalDistance)) return;
@@ -178,6 +180,18 @@ namespace RoadCaptain.App.Runner.Models
 
         public int SegmentCount => Route?.RouteSegmentSequence.Count ?? 0;
 
+        public bool IsOnLoop
+        {
+            get => _isOnLoop;
+            set
+            {
+                if (value == _isOnLoop) return;
+                _isOnLoop = value;
+                this.RaisePropertyChanged();
+                this.RaisePropertyChanged(nameof(TotalDistance));
+            }
+        }
+
         private void InitializeRoute(PlannedRoute route)
         {
             if (route.CurrentSegmentSequence != null)
@@ -224,6 +238,7 @@ namespace RoadCaptain.App.Runner.Models
             double totalAscent = 0;
             double totalDescent = 0;
             double totalDistance = 0;
+            double loopDistance = 0;
 
             foreach (var sequence in route.RouteSegmentSequence)
             {
@@ -241,9 +256,15 @@ namespace RoadCaptain.App.Runner.Models
                 }
 
                 totalDistance += segment.Distance;
+                
+                if (sequence.Type is SegmentSequenceType.Loop or SegmentSequenceType.LoopEnd or SegmentSequenceType.LoopStart)
+                {
+                    loopDistance += segment.Distance;
+                }
             }
 
             TotalDistance = Math.Round(totalDistance / 1000, 1);
+            _loopDistance = Math.Round(loopDistance / 1000, 1);
             TotalAscent = totalAscent;
             TotalDescent = totalDescent;
         }

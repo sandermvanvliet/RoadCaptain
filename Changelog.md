@@ -17,7 +17,8 @@ Read more about how it works on [the RoadCaptain site](https://roadcaptain.nl/fe
 ### Runner
 
 - **Windows only** Zwift credentials will now be stored securely in the Credential Manager instead of keeping them in memory only. This reduces the amount of times you'll need to log in to Zwift
-
+- When entering a loop, the total distance is set to the distance of the loop.
+- 
 #### Elevation profile
 
 When riding hit <kbd>CTRL</kbd> + <kbd>E</kbd> / <kbd>META</kbd> + <kbd>E</kbd> to toggle the Elevation Plot window. This will allow you to see the elevation and grade of the route you are riding which helps you to plan your effort much easier than having to squint at the elevation profile for the entire route.
@@ -36,6 +37,7 @@ You can toggle the mode by clicking the elevation profile window and using <kbd>
 - Resue the route after connection was lost. This should fix the remaining issue in [#107](https://github.com/sandermvanvliet/RoadCaptain/issues/107)
 - Fixed a bug where a crash would occur because the map animation would continue running when the rider is already in-game.
 - Fixed a bug where hitting <kbd>CTRL</kbd> + <kbd>X</kbd> / <kbd>META</kbd> + <kbd>X</kbd> in the in-game window when you are not yet in a game would not return to the main window.
+- The progress bar now resets when you start a new loop (See [#117](https://github.com/sandermvanvliet/RoadCaptain/issues/117))
 
 ## 0.6.11.0
 

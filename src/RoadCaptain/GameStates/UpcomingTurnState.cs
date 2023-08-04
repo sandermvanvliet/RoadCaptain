@@ -246,7 +246,15 @@ namespace RoadCaptain.GameStates
 
             if (plannedRoute.NextSegmentId == segment.Id)
             {
-                plannedRoute.EnteredSegment(segment.Id);
+                var result = plannedRoute.EnteredSegment(segment.Id);
+
+                if (result == RouteMoveResult.StartedNewLoop)
+                {
+                    distance = 0;
+                    ascent = 0;
+                    descent = 0;
+                }
+
                 return new OnRouteState(
                     RiderId, 
                     ActivityId, 

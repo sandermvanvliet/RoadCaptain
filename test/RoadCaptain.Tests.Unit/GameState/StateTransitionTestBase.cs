@@ -83,7 +83,7 @@ namespace RoadCaptain.Tests.Unit.GameState
             Sport = SportType.Cycling
         };
 
-        protected readonly PlannedRoute Route = new()
+        protected virtual PlannedRoute Route { get; } = new()
         {
             RouteSegmentSequence =
             {
