@@ -121,6 +121,53 @@ namespace RoadCaptain.Tests.Unit
             _plannedRoute.OnLeadIn.Should().BeFalse();
         }
 
+        [Fact]
+        public void GivenNextSegmentOnSecondLoop_CurrentSegmentIsSegment2()
+        {
+            _plannedRoute.EnteredSegment("seg-0");
+            _plannedRoute.EnteredSegment("seg-1");
+            _plannedRoute.EnteredSegment("seg-2");
+            _plannedRoute.EnteredSegment("seg-3");
+            _plannedRoute.EnteredSegment("seg-4");
+            _plannedRoute.EnteredSegment(_plannedRoute.NextSegmentId!);
+
+            _plannedRoute
+                .CurrentSegmentSequence!
+                .SegmentId
+                .Should()
+                .Be("seg-2");
+        }
+
+        [Fact]
+        public void GivenNextSegmentOnSecondLoop_NextSegmentIsSegment3()
+        {
+            _plannedRoute.EnteredSegment("seg-0");
+            _plannedRoute.EnteredSegment("seg-1");
+            _plannedRoute.EnteredSegment("seg-2");
+            _plannedRoute.EnteredSegment("seg-3");
+            _plannedRoute.EnteredSegment("seg-4");
+            _plannedRoute.EnteredSegment(_plannedRoute.NextSegmentId!);
+
+            _plannedRoute
+                .NextSegmentSequence!
+                .SegmentId
+                .Should()
+                .Be("seg-3");
+        }
+
+        [Fact]
+        public void GivenNextSegmentOnSecondLoop_RouteIsNotOnLeadIn()
+        {
+            _plannedRoute.EnteredSegment("seg-0");
+            _plannedRoute.EnteredSegment("seg-1");
+            _plannedRoute.EnteredSegment("seg-2");
+            _plannedRoute.EnteredSegment("seg-3");
+            _plannedRoute.EnteredSegment("seg-4");
+            _plannedRoute.EnteredSegment(_plannedRoute.NextSegmentId!);
+
+            _plannedRoute.OnLeadIn.Should().BeFalse();
+        }
+
         public PlannedRouteTests()
         {
             _plannedRoute = new PlannedRoute
@@ -129,16 +176,11 @@ namespace RoadCaptain.Tests.Unit
                 World = new World { Id = "watopia", ZwiftId = ZwiftWorldId.Watopia },
                 RouteSegmentSequence =
                 {
-                    new SegmentSequence(direction: SegmentDirection.AtoB, nextSegmentId: "seg-1", segmentId: "seg-0",
-                        type: SegmentSequenceType.LeadIn, turnToNextSegment: TurnDirection.GoStraight),
-                    new SegmentSequence(direction: SegmentDirection.AtoB, nextSegmentId: "seg-2", segmentId: "seg-1",
-                        type: SegmentSequenceType.LeadIn, turnToNextSegment: TurnDirection.GoStraight),
-                    new SegmentSequence(direction: SegmentDirection.AtoB, nextSegmentId: "seg-3", segmentId: "seg-2",
-                        type: SegmentSequenceType.LoopStart, turnToNextSegment: TurnDirection.GoStraight),
-                    new SegmentSequence(direction: SegmentDirection.AtoB, nextSegmentId: "seg-4", segmentId: "seg-3",
-                        type: SegmentSequenceType.Loop, turnToNextSegment: TurnDirection.GoStraight),
-                    new SegmentSequence(direction: SegmentDirection.AtoB, nextSegmentId: "seg-2", segmentId: "seg-4",
-                        type: SegmentSequenceType.LoopEnd, turnToNextSegment: TurnDirection.GoStraight),
+                    new SegmentSequence(direction: SegmentDirection.AtoB, segmentId: "seg-0", nextSegmentId: "seg-1", type: SegmentSequenceType.LeadIn, turnToNextSegment: TurnDirection.GoStraight),
+                    new SegmentSequence(direction: SegmentDirection.AtoB, segmentId: "seg-1", nextSegmentId: "seg-2", type: SegmentSequenceType.LeadIn, turnToNextSegment: TurnDirection.GoStraight),
+                    new SegmentSequence(direction: SegmentDirection.AtoB, segmentId: "seg-2", nextSegmentId: "seg-3", type: SegmentSequenceType.LoopStart, turnToNextSegment: TurnDirection.GoStraight),
+                    new SegmentSequence(direction: SegmentDirection.AtoB, segmentId: "seg-3", nextSegmentId: "seg-4", type: SegmentSequenceType.Loop, turnToNextSegment: TurnDirection.GoStraight),
+                    new SegmentSequence(direction: SegmentDirection.AtoB, segmentId: "seg-4", nextSegmentId: "seg-2", type: SegmentSequenceType.LoopEnd, turnToNextSegment: TurnDirection.GoStraight),
                 }
             };
         }
