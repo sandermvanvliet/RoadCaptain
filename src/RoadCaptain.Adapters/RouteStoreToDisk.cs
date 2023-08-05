@@ -149,7 +149,10 @@ namespace RoadCaptain.Adapters
                     // correctly as all version 2 routes don't have that set.
                     if (plannedRoute.IsLoop)
                     {
-                        var firstSegmentSequence = plannedRoute.RouteSegmentSequence.First(seg => seg.Type == SegmentSequenceType.LoopStart || seg.Type == SegmentSequenceType.Loop);
+                        var firstSegmentSequence = plannedRoute.RouteSegmentSequence.FirstOrDefault(seg => seg.Type == SegmentSequenceType.LoopStart);
+                        // Handle any possible situation where we haven't done the Loop -> LoopStart conversion
+                        firstSegmentSequence ??= plannedRoute.RouteSegmentSequence.First(seg => seg.Type == SegmentSequenceType.Loop);
+
                         var lastSegmentSequence = plannedRoute.RouteSegmentSequence.Last();
 
                         var segments = _segmentStore.LoadSegments(plannedRoute.World, plannedRoute.Sport);
@@ -244,7 +247,9 @@ namespace RoadCaptain.Adapters
                     // correctly as all version 2 routes don't have that set.
                     if (plannedRoute.IsLoop)
                     {
-                        var firstSegmentSequence = plannedRoute.RouteSegmentSequence.First(seg => seg.Type == SegmentSequenceType.LoopStart || seg.Type == SegmentSequenceType.Loop);
+                        var firstSegmentSequence = plannedRoute.RouteSegmentSequence.FirstOrDefault(seg => seg.Type == SegmentSequenceType.LoopStart);
+                        // Handle any possible situation where we haven't done the Loop -> LoopStart conversion
+                        firstSegmentSequence ??= plannedRoute.RouteSegmentSequence.First(seg => seg.Type == SegmentSequenceType.Loop);
                         var lastSegmentSequence = plannedRoute.RouteSegmentSequence.Last();
 
                         var segments = _segmentStore.LoadSegments(plannedRoute.World, plannedRoute.Sport);
