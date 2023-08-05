@@ -7,7 +7,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using Avalonia;
 using ReactiveUI;
 using RoadCaptain.App.Runner.Models;
 using RoadCaptain.App.Shared.Commands;
@@ -186,7 +185,7 @@ namespace RoadCaptain.App.Runner.ViewModels
 
                             break;
                         }
-                    case CompletedRouteState completedRoute when !completedRoute.Route.IsLoop:
+                    case CompletedRouteState { Route.IsLoop: false } completedRoute:
                         {
                             HasRouteFinished = true;
 

@@ -26,7 +26,7 @@ namespace RoadCaptain.App.Runner.Models
         private string _loopText = string.Empty;
         private int _currentSegmentIndex;
         private bool _isOnLoop;
-        private double _loopDistance = 0;
+        private double _loopDistance;
 
         public InGameWindowModel(List<Segment> segments)
         {
