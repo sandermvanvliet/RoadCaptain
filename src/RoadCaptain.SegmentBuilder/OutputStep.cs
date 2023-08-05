@@ -13,6 +13,11 @@ namespace RoadCaptain.SegmentBuilder
     {
         public static void Run(List<Segment> segments, string gpxDirectory)
         {
+            if (!Directory.Exists(Path.Combine(gpxDirectory, "segments")))
+            {
+                Directory.CreateDirectory(Path.Combine(gpxDirectory, "segments"));
+            }
+
             foreach (var segment in segments)
             {
                 File.WriteAllText(Path.Combine(gpxDirectory, "segments", segment.Id + ".gpx"), segment.AsGpx());

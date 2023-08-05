@@ -23,31 +23,65 @@ namespace RoadCaptain.SegmentBuilder
 
                 Console.WriteLine($"Finding spawn point segment for {route.Slug}");
 
-                var trackPoint = route.TrackPoints[10];
+                // To make sure that we don't have the route matching
+                // at a right angle (for example) on another segment
+                // we take two points along the route.
+                var firstTrackPoint = route.TrackPoints[10];
+                var secondTrackPoint = route.TrackPoints[20];
 
-                var segment = segments.SingleOrDefault(s => s.Points.Any(p => TrackPointUtils.IsCloseTo(p, trackPoint)));
+                var segmentsCloseBy = segments
+                    .Select(s =>
+                    {
+                        var containsFirstTrackPoint = s.Contains(firstTrackPoint, out var firstMatch);
+                        var containsSecondTrackPoint = s.Contains(secondTrackPoint, out var secondMatch);
 
-                if (segment == null)
+                        var contains = containsFirstTrackPoint && containsSecondTrackPoint;
+
+                        return new
+                        {
+                            ContainsTrackPoints = contains,
+                            Segment = contains ? s : null,
+                            FirstTrackPointOnSegment = firstMatch,
+                            SecondTrackPointOnSegment =  secondMatch,
+                            // Only do distance to first one since we're only using it for ordering...
+                            Distance = contains ? firstMatch!.DistanceTo(firstTrackPoint) : (double?)null
+                        };
+                    })
+                    .Where(x => x.ContainsTrackPoints)
+                    .ToList();
+
+                var firstMatch = segmentsCloseBy.FirstOrDefault();
+
+                if (firstMatch == null)
                 {
-                    Console.WriteLine($"\tDid not find point {trackPoint.CoordinatesDecimal} on any segment");
+                    Console.WriteLine($"\tDid not find point {firstTrackPoint.CoordinatesDecimal} on any segment");
                     continue;
                 }
 
-                trackPoint = GetClosestPointOnSegment(segment, trackPoint);
-                var nextTrackPoint = GetClosestPointOnSegment(segment, route.TrackPoints[20]);
+                Segment segment;
 
-                Console.WriteLine($"\tFound point {trackPoint.CoordinatesDecimal} on segment {segment.Id}");
+                if (segmentsCloseBy.Count > 1)
+                {
+                    firstMatch = segmentsCloseBy.MinBy(x => x.Distance);
+                    segment = firstMatch!.Segment!;
+                }
+                else
+                {
+                    segment = firstMatch.Segment!;
+                }
+                
+                Console.WriteLine($"\tFound point {firstTrackPoint.CoordinatesDecimal} on segment {segment.Id} as {firstMatch.FirstTrackPointOnSegment!.CoordinatesDecimal}");
 
                 if (spawnPoints.Any(s => s.SegmentId == segment.Id))
                 {
                     Console.WriteLine($"\t{segment.Id} is already a spawn point");
                     continue;
                 }
-                
-                var direction = segment.DirectionOf(trackPoint, nextTrackPoint);
+
+                var direction = segment.DirectionOf(firstMatch.FirstTrackPointOnSegment, firstMatch.SecondTrackPointOnSegment!);
 
                 Console.WriteLine($"\tAdding spawn point for {route.Name} with direction {direction}");
-                
+
                 spawnPoints.Add(new SpawnPoint
                 {
                     SegmentId = segment.Id,
@@ -59,23 +93,7 @@ namespace RoadCaptain.SegmentBuilder
 
             File.WriteAllText(
                 Path.Combine(gpxDirectory, "segments", "spawnPoints.json"),
-                JsonConvert.SerializeObject(spawnPoints.OrderBy(s=>s.SegmentId).ToList(), Formatting.Indented, Program.SerializerSettings));
-        }
-
-        private static TrackPoint GetClosestPointOnSegment(Segment segment, TrackPoint trackPoint)
-        {
-            return segment
-                .Points
-                .Where(p => TrackPointUtils.IsCloseTo(p, trackPoint))
-                .Select(p => new
-                {
-                    Point = p,
-                    Distance = TrackPoint.GetDistanceFromLatLonInMeters(p.Latitude, p.Longitude,
-                        trackPoint.Latitude, trackPoint.Longitude)
-                })
-                .OrderBy(p => p.Distance)
-                .First()
-                .Point;
+                JsonConvert.SerializeObject(spawnPoints.OrderBy(s => s.SegmentId).ToList(), Formatting.Indented, Program.SerializerSettings));
         }
     }
 }
