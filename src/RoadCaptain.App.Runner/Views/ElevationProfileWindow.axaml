@@ -24,9 +24,9 @@
         TransparencyLevelHint="Transparent"
         CanResize="False"
         Icon="avares://RoadCaptain.App.Shared/icon.png">
-    <Window.DataContext>
+    <Design.DataContext>
         <viewModels:DesignTimeElevationProfileWindowViewModel />
-    </Window.DataContext>
+    </Design.DataContext>
     <Window.Resources>
         <converters:PredicateConverter x:Key="PredicateConverter" />
     </Window.Resources>
