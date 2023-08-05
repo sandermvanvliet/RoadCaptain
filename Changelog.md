@@ -13,6 +13,7 @@ Read more about how it works on [the RoadCaptain site](https://roadcaptain.nl/fe
 - Add a menu item to go to the documentation on roadcaptain.nl
 - It is now possible to import a route from [Zwift Map](https://zwiftmap.com/) into Route Builder. This saves you a lot of work to rebuild a route to make it work for RoadCaptain.
 - The color scheme of the elevation profile has been changed to provide much clearer indication of the grade
+- When creating a route, Route Builder no longer will attempt to create a loop for segments that join back on the previous segment. This especially happened for routes summiting on mountain tops in Watopia.
 
 ### Runner
 

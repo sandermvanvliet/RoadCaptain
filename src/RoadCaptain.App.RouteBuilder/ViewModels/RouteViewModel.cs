@@ -403,7 +403,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             }
         }
 
-        public (bool, int?, int?) IsPossibleLoop()
+        public (bool IsPossibleLoop, int? LoopStartIndex, int? LoopEndIndex) IsPossibleLoop()
         {
             if (Last == null || Sequence.Count() == 1 || Last.Type == SegmentSequenceType.LeadOut)
             {
@@ -441,6 +441,16 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
                     if(nextSegmentIds.Contains(segmentId))
                     {
                         connectingSegmentsOnRoute = Sequence.ToList()[connectingSegmentsOnRoute.SequenceNumber];
+                    }
+
+                    // For situations where the next segment is the one we came from
+                    // we don't want to create a loop. This happens on mountain tops
+                    // in Watopia where it makes no sense to create a loop because:
+                    // - We don't allow you to go back to the segment you're currently on
+                    // - You're already looping back the way you came up the mountain
+                    if (segmentId == Last.SegmentId)
+                    {
+                        return (false, null, null);
                     }
 
                     return (true, connectingSegmentsOnRoute.SequenceNumber - 1, Last.SequenceNumber - 1);
