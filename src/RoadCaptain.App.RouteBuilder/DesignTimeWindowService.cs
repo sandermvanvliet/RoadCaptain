@@ -74,7 +74,7 @@ namespace RoadCaptain.App.RouteBuilder
             throw new System.NotImplementedException();
         }
 
-        public Task<bool> ShowRouteLoopDialog()
+        public Task<(LoopMode Mode, int? NumberOfLoops)> ShowRouteLoopDialog()
         {
             throw new System.NotImplementedException();
         }

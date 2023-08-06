@@ -9,6 +9,9 @@ namespace RoadCaptain.App.Shared.Dialogs
         Unknown = 0,
         Cancel = 1,
         Abort = 2,
-        Ok = 4
+        Ok = 4,
+        Yes = 8,
+        No = 16,
+        Confirm = 32
     }
 }

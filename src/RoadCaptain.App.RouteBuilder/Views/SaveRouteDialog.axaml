@@ -11,7 +11,7 @@
         xmlns:viewModels="using:RoadCaptain.App.RouteBuilder.ViewModels"
         mc:Ignorable="d" Width="600" Height="270"
         x:Class="RoadCaptain.App.RouteBuilder.Views.SaveRouteDialog"
-        Title="SaveRouteDialog"
+        Title="Save route"
         Icon="avares://RoadCaptain.App.Shared/icon.png"
         Background="Transparent"
         TransparencyLevelHint="Transparent"

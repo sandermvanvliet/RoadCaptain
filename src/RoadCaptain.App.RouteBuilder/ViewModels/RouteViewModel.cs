@@ -23,6 +23,8 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
         private World? _world;
         private SportType _sport = SportType.Unknown;
         private List<MarkerViewModel> _markers = new();
+        private LoopMode _loopMode;
+        private int? _numberOfLoops;
 
         public RouteViewModel(IRouteStore routeStore, ISegmentStore segmentStore)
         {
@@ -39,7 +41,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
         public SegmentSequenceViewModel? Last => Sequence.LastOrDefault();
         public string? OutputFilePath { get; set; }
         public bool IsTainted { get; private set; }
-
+        
         public string Name
         {
             get => _name ?? string.Empty;
@@ -96,6 +98,28 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             {
                 if (Equals(value, _markers)) return;
                 _markers = value;
+                this.RaisePropertyChanged();
+            }
+        }
+
+        public LoopMode LoopMode
+        {
+            get => _loopMode;
+            set
+            {
+                if (value == _loopMode) return;
+                _loopMode = value;
+                this.RaisePropertyChanged();
+            }
+        }
+
+        public int? NumberOfLoops
+        {
+            get => _numberOfLoops;
+            set
+            {
+                if (value == _numberOfLoops) return;
+                _numberOfLoops = value;
                 this.RaisePropertyChanged();
             }
         }
@@ -207,7 +231,9 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
                 ZwiftRouteName = zwiftRouteName,
                 Name = Name,
                 World = World,
-                Sport = Sport
+                Sport = Sport,
+                LoopMode = LoopMode,
+                NumberOfLoops = NumberOfLoops
             };
 
             if (string.IsNullOrEmpty(plannedRoute.Name))
@@ -460,7 +486,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             return (false, null, null);
         }
 
-        public void MakeLoop(int startIndex, int endIndex)
+        public void MakeLoop(int startIndex, int endIndex, LoopMode mode, int? numberOfLoops)
         {
             var seqList = Sequence.ToList();
 
@@ -485,6 +511,8 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             }
 
             seqList[endIndex].Model.NextSegmentId = seqList[startIndex].SegmentId;
+            LoopMode = mode;
+            NumberOfLoops = numberOfLoops;
         }
 
         private void DetermineMarkersForRoute()

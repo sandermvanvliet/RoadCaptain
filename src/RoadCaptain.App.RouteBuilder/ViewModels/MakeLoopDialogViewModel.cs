@@ -2,57 +2,96 @@
 // Licensed under Artistic License 2.0
 // See LICENSE or https://choosealicense.com/licenses/artistic-2.0/
 
+using System;
+using System.Threading.Tasks;
+using System.Windows.Input;
 using ReactiveUI;
+using RoadCaptain.App.Shared.Commands;
+using RoadCaptain.App.Shared.Dialogs;
 
 namespace RoadCaptain.App.RouteBuilder.ViewModels
 {
     public class MakeLoopDialogViewModel : ViewModelBase
     {
-        private bool _shouldMakeLoop;
-        private LoopMode _loopMode;
-        private int? _loopCount;
+        private bool _noLoop;
+        private int? _numberOfLoops;
+        private bool _infiniteLoop;
+        private bool _constrainedLoop;
 
-        public bool ShouldMakeLoop
+        public MakeLoopDialogViewModel()
         {
-            get => _shouldMakeLoop;
+            CloseDialogCommand = new AsyncRelayCommand(
+                    param => CloseDialog(param is DialogResult result ? result : DialogResult.Unknown),
+                    _ => true)
+                .OnSuccess(_ => ShouldClose?.Invoke(this, EventArgs.Empty));
+        }
+
+        private Task<CommandResult> CloseDialog(DialogResult dialogResult)
+        {
+            DialogResult = dialogResult;
+            return Task.FromResult(CommandResult.Success());
+        }
+
+        public DialogResult DialogResult { get; set; }
+        public event EventHandler? ShouldClose;
+        
+        public bool NoLoop
+        {
+            get => _noLoop;
             set
             {
-                if (value == _shouldMakeLoop) return;
-                _shouldMakeLoop = value;
+                if (value == _noLoop) return;
+                _noLoop = value;
+                _infiniteLoop = !value;
+                _constrainedLoop = !value;
                 this.RaisePropertyChanged();
+                this.RaisePropertyChanged(nameof(InfiniteLoop));
+                this.RaisePropertyChanged(nameof(ConstrainedLoop));
             }
         }
 
-        public LoopMode LoopMode
+        public bool InfiniteLoop
         {
-            get => _loopMode;
+            get => _infiniteLoop;
             set
             {
-                if (value == _loopMode) return;
-                _loopMode = value;
+                if (value == _infiniteLoop) return;
+                _infiniteLoop = value;
+                _constrainedLoop = !value;
+                _noLoop = !value;
                 this.RaisePropertyChanged();
-
-                if (_loopMode == LoopMode.Infinite)
-                {
-                    LoopCount = null;
-                }
+                this.RaisePropertyChanged(nameof(ConstrainedLoop));
+                this.RaisePropertyChanged(nameof(NoLoop));
             }
         }
 
-        public int? LoopCount
+        public bool ConstrainedLoop
         {
-            get => _loopCount;
+            get => _constrainedLoop;
             set
             {
-                if (value == _loopCount) return;
-                _loopCount = value;
+                if (value == _constrainedLoop) return;
+                _constrainedLoop = value;
+                _infiniteLoop = !value;
+                _noLoop = !value;
+                this.RaisePropertyChanged();
+                this.RaisePropertyChanged(nameof(InfiniteLoop));
+                this.RaisePropertyChanged(nameof(NoLoop));
+            }
+        }
+
+        public int? NumberOfLoops
+        {
+            get => _numberOfLoops;
+            set
+            {
+                if (value == _numberOfLoops) return;
+                _numberOfLoops = value;
                 this.RaisePropertyChanged();
             }
         }
-    }
-
-    public class DesignTimeMakeLoopDialogViewModel : MakeLoopDialogViewModel
-    {
+        
+        public ICommand CloseDialogCommand { get; }
     }
 }
 

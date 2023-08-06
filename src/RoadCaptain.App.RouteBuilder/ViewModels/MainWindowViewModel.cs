@@ -499,9 +499,9 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             {
                 var shouldCreateLoop = await _windowService.ShowRouteLoopDialog();
 
-                if (shouldCreateLoop)
+                if (shouldCreateLoop.Mode is LoopMode.Infinite or LoopMode.Constrained)
                 {
-                    Route.MakeLoop(startIndex.Value, endIndex.Value);
+                    Route.MakeLoop(startIndex.Value, endIndex.Value, shouldCreateLoop.Mode, shouldCreateLoop.NumberOfLoops);
                     this.RaisePropertyChanged(nameof(Route));
                 }
             }

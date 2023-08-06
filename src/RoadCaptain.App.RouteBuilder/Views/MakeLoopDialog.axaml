@@ -9,11 +9,109 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:viewModels="clr-namespace:RoadCaptain.App.RouteBuilder.ViewModels"
-        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        xmlns:dialogs="clr-namespace:RoadCaptain.App.Shared.Dialogs;assembly=RoadCaptain.App.Shared"
+        mc:Ignorable="d" 
+        Width="600"
+        Height="270"
         x:Class="RoadCaptain.App.RouteBuilder.Views.MakeLoopDialog"
-        Title="MakeLoopDialog">
+        Title="Create loop?"
+        Background="Transparent"
+        TransparencyLevelHint="Transparent"
+        CanResize="False"
+        SystemDecorations="None"
+        WindowStartupLocation="CenterOwner"
+        Activated="WindowBase_OnActivated">
   <Design.DataContext>
       <viewModels:DesignTimeMakeLoopDialogViewModel />
   </Design.DataContext>
+	<Window.Styles>
+		<Style Selector="Button">
+			<Setter Property="Background" Value="#FF6141" />
+			<Setter Property="Foreground" Value="White" />
+			<Setter Property="Height" Value="32" />
+			<Setter Property="FontSize" Value="20" />
+			<Setter Property="FontWeight" Value="Bold" />
+			<Setter Property="BorderThickness" Value="0" />
+			<Setter Property="VerticalAlignment" Value="Center" />
+			<Setter Property="Cursor" Value="Hand" />
+			<Setter Property="Template">
+				<Setter.Value>
+					<ControlTemplate TargetType="Button">
+						<Border Name="borderZero" Background="{TemplateBinding Background}" CornerRadius="8" Padding="4,0,4,0">
+							<ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" Content="{TemplateBinding Content}" />
+						</Border>
+					</ControlTemplate>
+				</Setter.Value>
+			</Setter>
+		</Style>
+		<Style Selector="Button:disabled">
+			<Setter Property="Background" Value="LightGray" />
+		</Style>
+	</Window.Styles>
+	<Border BorderBrush="DarkGray" BorderThickness="1" CornerRadius="8" Opacity="1" Background="White">
+		<Grid Margin="4">
+			<Grid.RowDefinitions>
+				<RowDefinition Height="30" />
+				<!-- banner -->
+				<RowDefinition Height="*" />
+				<!-- main content-->
+				<RowDefinition Height="40" />
+				<!-- bottom button row -->
+			</Grid.RowDefinitions>
+
+			<StackPanel Orientation="Horizontal" Grid.Row="0">
+				<Image Source="avares://RoadCaptain.App.Shared/icon.png" Height="24" VerticalAlignment="Center" Margin="4,0,4,0" />
+				<TextBlock Text="Create loop?" FontWeight="ExtraBold" FontSize="24" VerticalAlignment="Center" Margin="0,1,0,0" />
+			</StackPanel>
+			<Button Content="X" Background="Red" Foreground="White" Grid.Row="0" HorizontalAlignment="Right" Width="40" Height="20" Margin="0,-3,-3,0" VerticalAlignment="Top"
+			        Command="{Binding Path=CloseDialogCommand}" CommandParameter="{x:Static dialogs:DialogResult.No}"
+			        FontSize="14">
+				<Button.Styles>
+					<Style Selector="Button">
+						<Setter Property="Template">
+							<Setter.Value>
+								<ControlTemplate TargetType="Button">
+									<Border Name="borderZero" Background="{TemplateBinding Background}" CornerRadius="0,8,0,0">
+										<ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" Content="{TemplateBinding Content}"/>
+									</Border>
+								</ControlTemplate>
+							</Setter.Value>
+						</Setter>
+					</Style>
+				</Button.Styles>
+			</Button>
+
+			<Grid Grid.Row="1" Margin="8,16,8,8">
+				<Grid.RowDefinitions>
+					<RowDefinition Height="30" />
+					<RowDefinition Height="30" />
+					<RowDefinition Height="30" />
+					<RowDefinition Height="30" />
+				</Grid.RowDefinitions>
+				
+				<TextBlock Grid.Row="0" Text="The segment connects back to the route, do you want to make it a loop?"/>
+				
+				<RadioButton Grid.Row="1" GroupName="LoopMode" IsChecked="{Binding Path=NoLoop}" Content="No" />
+				
+				<RadioButton Grid.Row="2" GroupName="LoopMode" IsChecked="{Binding Path=InfiniteLoop}" Content="Infinite (keep looping till you end the activity yourself)"/>
+				
+				<RadioButton Grid.Row="3" GroupName="LoopMode" IsChecked="{Binding Path=ConstrainedLoop}">
+					<StackPanel Orientation="Horizontal">
+						<TextBlock Text="Loop" Margin="0,0,8,0" /><NumericUpDown Value="{Binding Path=NumberOfLoops}" /><TextBlock Text="times" Margin="8,0,0,0" />
+					</StackPanel>
+				</RadioButton>
+			</Grid>
+
+			<!-- Bottom row -->
+			<Button
+				Grid.Row="2"
+				Content="Cancel" HorizontalAlignment="Right" Margin="2,4,4,2" VerticalAlignment="Center"
+				Command="{Binding Path=CloseDialogCommand}" CommandParameter="{x:Static dialogs:DialogResult.Cancel}" />
+			<Button
+                Grid.Row="2"
+                Content="Confirm" HorizontalAlignment="Right" Margin="2,4,4,2" VerticalAlignment="Center"
+                Command="{Binding Path=CloseDialogCommand}" CommandParameter="{x:Static dialogs:DialogResult.Confirm}" />
+		</Grid>
+	</Border>
 </Window>
 

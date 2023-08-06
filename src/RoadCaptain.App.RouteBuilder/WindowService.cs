@@ -23,8 +23,9 @@ using RouteViewModel = RoadCaptain.App.RouteBuilder.ViewModels.RouteViewModel;
 namespace RoadCaptain.App.RouteBuilder
 {
     public class WindowService : BaseWindowService, IWindowService
-    { 
-        public WindowService(IComponentContext componentContext, MonitoringEvents monitoringEvents) : base(componentContext, monitoringEvents)
+    {
+        public WindowService(IComponentContext componentContext, MonitoringEvents monitoringEvents) : base(
+            componentContext, monitoringEvents)
         {
         }
 
@@ -62,8 +63,8 @@ namespace RoadCaptain.App.RouteBuilder
                 DefaultExtension = "*.json",
                 Filters = new List<FileDialogFilter>
                 {
-                    new() { Extensions = new List<string>{"json"}, Name = "RoadCaptain route file (.json)"},
-                    new() { Extensions = new List<string>{"gpx"}, Name = "GPS Exchange Format (.gpx)"}
+                    new() { Extensions = new List<string> { "json" }, Name = "RoadCaptain route file (.json)" },
+                    new() { Extensions = new List<string> { "gpx" }, Name = "GPS Exchange Format (.gpx)" }
                 },
                 Title = "Save RoadCaptain route file",
                 InitialFileName = suggestedFileName
@@ -96,23 +97,42 @@ namespace RoadCaptain.App.RouteBuilder
         public async Task<MessageBoxResult> ShowClearRouteDialog()
         {
             return await MessageBox.ShowAsync(
-                    "This action will remove all segments from the current route. Are you sure?",
-                    "Clear route",
-                    MessageBoxButton.YesNo,
-                    CurrentWindow!,
-                    MessageBoxIcon.Question);
-        }
-
-        public async Task<bool> ShowRouteLoopDialog()
-        {
-            var result = await MessageBox.ShowAsync(
-                "The route ends on a connection to the first segment, do you want to make it a loop?",
-                "Create route loop",
+                "This action will remove all segments from the current route. Are you sure?",
+                "Clear route",
                 MessageBoxButton.YesNo,
                 CurrentWindow!,
                 MessageBoxIcon.Question);
+        }
 
-            return result == MessageBoxResult.Yes;
+        public async Task<(LoopMode Mode, int? NumberOfLoops)> ShowRouteLoopDialog()
+        {
+            var makeLoopDialog = Resolve<MakeLoopDialog>();
+            var makeLoopDialogViewModel = new MakeLoopDialogViewModel();
+            makeLoopDialog.DataContext = makeLoopDialogViewModel;
+
+            await makeLoopDialog.ShowDialog(CurrentWindow);
+
+            if (makeLoopDialog.DialogResult != DialogResult.Confirm)
+            {
+                return (LoopMode.Unknown, null);
+            }
+            
+            if (makeLoopDialogViewModel.NoLoop)
+            {
+                return (LoopMode.Unknown, null);
+            }
+
+            if (makeLoopDialogViewModel.InfiniteLoop)
+            {
+                return (LoopMode.Infinite, null);
+            }
+
+            if (makeLoopDialogViewModel.ConstrainedLoop)
+            {
+                return (LoopMode.Constrained, makeLoopDialogViewModel.NumberOfLoops);
+            }
+
+            return (LoopMode.Unknown, null);
         }
 
         public async Task ShowSaveRouteDialog(string? lastUsedFolder, RouteViewModel routeViewModel)
@@ -120,8 +140,8 @@ namespace RoadCaptain.App.RouteBuilder
             var saveRouteDialog = Resolve<SaveRouteDialog>();
 
             var viewModel = new SaveRouteDialogViewModel(
-                this, 
-                routeViewModel, 
+                this,
+                routeViewModel,
                 Resolve<RetrieveRepositoryNamesUseCase>(),
                 Resolve<SaveRouteUseCase>(),
                 Resolve<IZwiftCredentialCache>(),
@@ -136,7 +156,7 @@ namespace RoadCaptain.App.RouteBuilder
         public async Task<(PlannedRoute? PlannedRoute, string? RouteFilePath)> ShowOpenRouteDialog()
         {
             var openRouteDialog = Resolve<OpenRouteDialog>();
-    
+
             var viewModel = new OpenRouteDialogViewModel(
                 this,
                 Resolve<IUserPreferences>(),
@@ -146,8 +166,8 @@ namespace RoadCaptain.App.RouteBuilder
 
             await openRouteDialog.ShowDialog(CurrentWindow);
 
-            return openRouteDialog.DialogResult == DialogResult.Ok 
-                ? (viewModel.SelectedRoute?.PlannedRoute, viewModel.RouteFilePath) 
+            return openRouteDialog.DialogResult == DialogResult.Ok
+                ? (viewModel.SelectedRoute?.PlannedRoute, viewModel.RouteFilePath)
                 : (null, null);
         }
 
