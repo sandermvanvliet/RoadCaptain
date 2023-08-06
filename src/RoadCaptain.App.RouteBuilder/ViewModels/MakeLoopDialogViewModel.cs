@@ -42,11 +42,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             {
                 if (value == _noLoop) return;
                 _noLoop = value;
-                _infiniteLoop = !value;
-                _constrainedLoop = !value;
                 this.RaisePropertyChanged();
-                this.RaisePropertyChanged(nameof(InfiniteLoop));
-                this.RaisePropertyChanged(nameof(ConstrainedLoop));
             }
         }
 
@@ -57,11 +53,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             {
                 if (value == _infiniteLoop) return;
                 _infiniteLoop = value;
-                _constrainedLoop = !value;
-                _noLoop = !value;
                 this.RaisePropertyChanged();
-                this.RaisePropertyChanged(nameof(ConstrainedLoop));
-                this.RaisePropertyChanged(nameof(NoLoop));
             }
         }
 
@@ -72,11 +64,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             {
                 if (value == _constrainedLoop) return;
                 _constrainedLoop = value;
-                _infiniteLoop = !value;
-                _noLoop = !value;
                 this.RaisePropertyChanged();
-                this.RaisePropertyChanged(nameof(InfiniteLoop));
-                this.RaisePropertyChanged(nameof(NoLoop));
             }
         }
 

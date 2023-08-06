@@ -83,11 +83,16 @@
 
 			<Grid Grid.Row="1" Margin="8,16,8,8">
 				<Grid.RowDefinitions>
-					<RowDefinition Height="30" />
-					<RowDefinition Height="30" />
-					<RowDefinition Height="30" />
-					<RowDefinition Height="30" />
+					<RowDefinition Height="34" />
+					<RowDefinition Height="34" />
+					<RowDefinition Height="34" />
+					<RowDefinition Height="34" />
 				</Grid.RowDefinitions>
+				<Grid.Styles>
+					<Style Selector="TextBlock,TextBox,NumericUpDown">
+						<Setter Property="VerticalAlignment" Value="Center" />
+                    </Style>
+                </Grid.Styles>
 				
 				<TextBlock Grid.Row="0" Text="The segment connects back to the route, do you want to make it a loop?"/>
 				
@@ -97,7 +102,9 @@
 				
 				<RadioButton Grid.Row="3" GroupName="LoopMode" IsChecked="{Binding Path=ConstrainedLoop}">
 					<StackPanel Orientation="Horizontal">
-						<TextBlock Text="Loop" Margin="0,0,8,0" /><NumericUpDown Value="{Binding Path=NumberOfLoops}" /><TextBlock Text="times" Margin="8,0,0,0" />
+						<TextBlock Text="Loop" Margin="0,0,8,0" />
+                        <NumericUpDown Value="{Binding Path=NumberOfLoops}" Minimum="1" Increment="1" />
+                        <TextBlock Text="times" Margin="8,0,0,0" />
 					</StackPanel>
 				</RadioButton>
 			</Grid>
