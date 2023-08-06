@@ -103,7 +103,7 @@ namespace RoadCaptain.Tests.Unit.GameState
             ZwiftRouteName = "zwift test route name"
         };
 
-        protected readonly List<Segment> Segments = new()
+        protected List<Segment> Segments = new()
         {
             Segment1,
             Segment2,

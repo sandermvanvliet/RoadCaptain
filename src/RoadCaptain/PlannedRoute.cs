@@ -72,6 +72,25 @@ namespace RoadCaptain
                     // It _can_ be that it's the very first segment sequence
                     // however if you have a looped route with a lead-in 
                     // that won't be the case.
+
+                    if (LoopMode == LoopMode.Infinite)
+                    {
+                        return RouteSegmentSequence.First(seq => seq.Type == SegmentSequenceType.LoopStart);
+                    }
+
+                    // If we have done the amount of loops we want, break out
+                    if (LoopCount >= NumberOfLoops)
+                    {
+                        if (SegmentSequenceIndex < RouteSegmentSequence.Count - 1)
+                        {
+                            return RouteSegmentSequence[SegmentSequenceIndex + 1];
+                        }
+
+                        // We've done the amount of loops that was planned and
+                        // there is no lead-out after this.
+                        return null;
+                    }
+
                     return RouteSegmentSequence.First(seq => seq.Type == SegmentSequenceType.LoopStart);
                 }
 
@@ -89,6 +108,9 @@ namespace RoadCaptain
             RouteSegmentSequence.Count >= 2;
         [JsonIgnore] public int LoopCount { get; private set; } = 1;
         [JsonIgnore] public bool OnLeadIn => HasStarted && CurrentSegmentSequence!.Type == SegmentSequenceType.LeadIn;
+        [JsonIgnore] public bool OnLeadOut => HasStarted && CurrentSegmentSequence!.Type == SegmentSequenceType.LeadOut;
+        public int NumberOfLoops { get; set; }
+
 
         public List<SegmentSequence> RouteSegmentSequence { get; init; } = new();
 
@@ -116,6 +138,7 @@ namespace RoadCaptain
         public double Descent { get; private set; }
         public double Ascent { get; private set; }
         public ImmutableList<TrackPoint> TrackPoints { get; private set; } = ImmutableList<TrackPoint>.Empty;
+        public LoopMode LoopMode { get; set; } = LoopMode.Unknown;
 
         public RouteMoveResult EnteredSegment(string segmentId)
         {
@@ -294,14 +317,5 @@ namespace RoadCaptain
 
             return result;
         }
-    }
-
-    public enum RouteMoveResult
-    {
-        Unknown,
-        StartedRoute,
-        EnteredNextSegment,
-        CompletedRoute,
-        StartedNewLoop
     }
 }

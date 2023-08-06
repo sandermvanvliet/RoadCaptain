@@ -2,19 +2,42 @@
 // Licensed under Artistic License 2.0
 // See LICENSE or https://choosealicense.com/licenses/artistic-2.0/
 
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Newtonsoft.Json;
 
 namespace RoadCaptain.GameStates
 {
-    public sealed class OnRouteState : GameState
+    public sealed class OnLoopState : GameState
     {
         public const int RouteLockPositionRadius = 35;
-        public OnRouteState(uint riderId, ulong activityId, TrackPoint currentPosition, Segment segment,
-            PlannedRoute plannedRoute, SegmentDirection direction, double elapsedDistance, double elapsedAscent, double elapsedDescent)
 
+        public OnLoopState(
+            uint riderId, 
+            ulong activityId, 
+            TrackPoint currentPosition, 
+            Segment segment,
+            PlannedRoute plannedRoute, 
+            SegmentDirection direction, 
+            double elapsedDistance, 
+            double elapsedAscent,
+            double elapsedDescent) 
+            : this(riderId, activityId, currentPosition, segment, plannedRoute, direction, elapsedDistance, elapsedAscent, elapsedDescent, 1)
+        {
+        }
+
+        public OnLoopState(
+            uint riderId, 
+            ulong activityId, 
+            TrackPoint currentPosition, 
+            Segment segment,
+            PlannedRoute plannedRoute, 
+            SegmentDirection direction, 
+            double elapsedDistance, 
+            double elapsedAscent,
+            double elapsedDescent,
+            int loopCount) 
         {
             RiderId = riderId;
             ActivityId = activityId;
@@ -25,15 +48,20 @@ namespace RoadCaptain.GameStates
             ElapsedDistance = elapsedDistance;
             ElapsedAscent = elapsedAscent;
             ElapsedDescent = elapsedDescent;
+            LoopCount = loopCount;
         }
 
-        private OnRouteState(uint riderId, ulong activityId, TrackPoint currentPosition, Segment segment,
+        private OnLoopState(uint riderId, ulong activityId, TrackPoint currentPosition, Segment segment,
             PlannedRoute plannedRoute,
-            SegmentDirection direction, List<TurnDirection> turnDirections, double elapsedDistance, double elapsedAscent, double elapsedDescent)
-            : this(riderId, activityId, currentPosition, segment, plannedRoute, direction, elapsedDistance, elapsedAscent, elapsedDescent)
+            SegmentDirection direction, List<TurnDirection> turnDirections, double elapsedDistance, double elapsedAscent, double elapsedDescent,
+            int loopCount)
+            : this(riderId, activityId, currentPosition, segment, plannedRoute, direction, elapsedDistance, elapsedAscent, elapsedDescent, loopCount)
         {
             TurnCommands = turnDirections;
         }
+
+        [JsonProperty]
+        public int LoopCount { get; }
 
         [JsonProperty]
         public override uint RiderId { get; }
@@ -290,7 +318,7 @@ namespace RoadCaptain.GameStates
                     }
                 }
 
-                if (plannedRoute.CurrentSegmentSequence.Type is SegmentSequenceType.Loop
+                if (plannedRoute.CurrentSegmentSequence!.Type is SegmentSequenceType.Loop
                     or SegmentSequenceType.LoopStart or SegmentSequenceType.LoopEnd)
                 {
                     return new OnLoopState(RiderId, ActivityId, closestOnSegment, segment, plannedRoute, direction, distance, ascent, descent);
@@ -364,7 +392,7 @@ namespace RoadCaptain.GameStates
 
                 // Add the new list of turn directions to
                 // a new state.
-                return new OnRouteState(RiderId, ActivityId, CurrentPosition, CurrentSegment, Route, Direction, x, ElapsedDistance, ElapsedAscent, ElapsedDescent);
+                return new OnLoopState(RiderId, ActivityId, CurrentPosition, CurrentSegment, Route, Direction, x, ElapsedDistance, ElapsedAscent, ElapsedDescent, LoopCount);
             }
 
             return this;

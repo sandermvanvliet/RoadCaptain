@@ -9,7 +9,20 @@ namespace RoadCaptain.Tests.Unit
 {
     public class PlannedRouteTests
     {
-        private readonly PlannedRoute _plannedRoute;
+        private readonly PlannedRoute _plannedRoute = new()
+        {
+            Sport = SportType.Cycling,
+            World = new World { Id = "watopia", ZwiftId = ZwiftWorldId.Watopia },
+            RouteSegmentSequence =
+            {
+                new SegmentSequence(direction: SegmentDirection.AtoB, segmentId: "seg-0", nextSegmentId: "seg-1", type: SegmentSequenceType.LeadIn, turnToNextSegment: TurnDirection.GoStraight),
+                new SegmentSequence(direction: SegmentDirection.AtoB, segmentId: "seg-1", nextSegmentId: "seg-2", type: SegmentSequenceType.LeadIn, turnToNextSegment: TurnDirection.GoStraight),
+                new SegmentSequence(direction: SegmentDirection.AtoB, segmentId: "seg-2", nextSegmentId: "seg-3", type: SegmentSequenceType.LoopStart, turnToNextSegment: TurnDirection.GoStraight),
+                new SegmentSequence(direction: SegmentDirection.AtoB, segmentId: "seg-3", nextSegmentId: "seg-4", type: SegmentSequenceType.Loop, turnToNextSegment: TurnDirection.GoStraight),
+                new SegmentSequence(direction: SegmentDirection.AtoB, segmentId: "seg-4", nextSegmentId: "seg-2", type: SegmentSequenceType.LoopEnd, turnToNextSegment: TurnDirection.GoStraight),
+            },
+            NumberOfLoops = 5
+        };
         
         [Fact]
         public void SegmentZero()
@@ -168,21 +181,26 @@ namespace RoadCaptain.Tests.Unit
             _plannedRoute.OnLeadIn.Should().BeFalse();
         }
 
-        public PlannedRouteTests()
+        [Fact]
+        public void GivenLoopModeIsInfiniteAndOnLastSegment_NextSegmentIsLoopStart()
         {
-            _plannedRoute = new PlannedRoute
-            {
-                Sport = SportType.Cycling,
-                World = new World { Id = "watopia", ZwiftId = ZwiftWorldId.Watopia },
-                RouteSegmentSequence =
-                {
-                    new SegmentSequence(direction: SegmentDirection.AtoB, segmentId: "seg-0", nextSegmentId: "seg-1", type: SegmentSequenceType.LeadIn, turnToNextSegment: TurnDirection.GoStraight),
-                    new SegmentSequence(direction: SegmentDirection.AtoB, segmentId: "seg-1", nextSegmentId: "seg-2", type: SegmentSequenceType.LeadIn, turnToNextSegment: TurnDirection.GoStraight),
-                    new SegmentSequence(direction: SegmentDirection.AtoB, segmentId: "seg-2", nextSegmentId: "seg-3", type: SegmentSequenceType.LoopStart, turnToNextSegment: TurnDirection.GoStraight),
-                    new SegmentSequence(direction: SegmentDirection.AtoB, segmentId: "seg-3", nextSegmentId: "seg-4", type: SegmentSequenceType.Loop, turnToNextSegment: TurnDirection.GoStraight),
-                    new SegmentSequence(direction: SegmentDirection.AtoB, segmentId: "seg-4", nextSegmentId: "seg-2", type: SegmentSequenceType.LoopEnd, turnToNextSegment: TurnDirection.GoStraight),
-                }
-            };
+            _plannedRoute.NumberOfLoops = 2;
+            _plannedRoute.LoopMode = LoopMode.Infinite;
+
+            _plannedRoute.EnteredSegment("seg-0");
+            _plannedRoute.EnteredSegment("seg-1");
+
+            // Loop 1
+            _plannedRoute.EnteredSegment("seg-2");
+            _plannedRoute.EnteredSegment("seg-3");
+            _plannedRoute.EnteredSegment("seg-4");
+
+            // Loop 2
+            _plannedRoute.EnteredSegment("seg-2");
+            _plannedRoute.EnteredSegment("seg-3");
+            _plannedRoute.EnteredSegment("seg-4");
+
+            _plannedRoute.NextSegmentId!.Should().Be("seg-2");
         }
     }
 }
