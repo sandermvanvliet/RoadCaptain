@@ -153,7 +153,7 @@ namespace RoadCaptain.Adapters
                         // Handle any possible situation where we haven't done the Loop -> LoopStart conversion
                         firstSegmentSequence ??= plannedRoute.RouteSegmentSequence.First(seg => seg.Type == SegmentSequenceType.Loop);
 
-                        var lastSegmentSequence = plannedRoute.RouteSegmentSequence.Last();
+                        var lastSegmentSequence = plannedRoute.RouteSegmentSequence.Last(seg => seg.Type == SegmentSequenceType.LoopEnd);
 
                         var segments = _segmentStore.LoadSegments(plannedRoute.World, plannedRoute.Sport);
                         var lastSegment = segments.Single(s => s.Id == lastSegmentSequence.SegmentId);
@@ -257,7 +257,8 @@ namespace RoadCaptain.Adapters
                         var firstSegmentSequence = plannedRoute.RouteSegmentSequence.FirstOrDefault(seg => seg.Type == SegmentSequenceType.LoopStart);
                         // Handle any possible situation where we haven't done the Loop -> LoopStart conversion
                         firstSegmentSequence ??= plannedRoute.RouteSegmentSequence.First(seg => seg.Type == SegmentSequenceType.Loop);
-                        var lastSegmentSequence = plannedRoute.RouteSegmentSequence.Last();
+                        
+                        var lastSegmentSequence = plannedRoute.RouteSegmentSequence.Last(seg => seg.Type == SegmentSequenceType.LoopEnd);
 
                         var segments = _segmentStore.LoadSegments(plannedRoute.World, plannedRoute.Sport);
                         var lastSegment = segments.Single(s => s.Id == lastSegmentSequence.SegmentId);
