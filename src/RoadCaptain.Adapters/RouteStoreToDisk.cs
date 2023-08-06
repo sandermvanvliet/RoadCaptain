@@ -379,14 +379,14 @@ namespace RoadCaptain.Adapters
 
             var serialized = path.EndsWith(".gpx", StringComparison.InvariantCultureIgnoreCase)
                 ? SerializeAsGpx(route)
-                : SerializeAsJson(route, Formatting.Indented);
+                : SerializeAsJson(route);
 
             await File.WriteAllTextAsync(path, serialized);
         }
 
         internal static string SerializeAsJson(PlannedRoute route, Formatting formatting = Formatting.Indented)
         {
-            var versionedRoute = new PersistedRouteVersion2
+            var versionedRoute = new PersistedRouteVersion3
             {
                 RoadCaptainVersion = Assembly.GetExecutingAssembly().GetName().Version?.ToString(4) ?? throw new Exception("Unable to determine RoadCaptain version"),
                 Route = route
