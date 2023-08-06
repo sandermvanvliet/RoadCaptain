@@ -185,6 +185,28 @@ namespace RoadCaptain.App.Runner.ViewModels
 
                             break;
                         }
+                    case OnLoopState loopState:
+                    {
+                        if (Model.CurrentSegment?.SegmentId != loopState.Route.CurrentSegmentId)
+                        {
+                            // Moved to next segment on route
+                            UpdateRouteModel(loopState.Route);
+                        }
+
+                        if (Model.CurrentSegment != null)
+                        {
+                            Model.CurrentSegment.PointOnSegment = loopState.CurrentPosition;
+                        }
+
+                        Model.ElapsedAscent = loopState.ElapsedAscent;
+                        Model.ElapsedDescent = loopState.ElapsedDescent;
+                        Model.ElapsedDistance = loopState.ElapsedDistance;
+                        Model.CurrentSegmentIndex = loopState.Route.SegmentSequenceIndex + 1;
+
+                        CallToAction = null;
+
+                        break;
+                    }
                     case CompletedRouteState { Route.IsLoop: false } completedRoute:
                         {
                             HasRouteFinished = true;
