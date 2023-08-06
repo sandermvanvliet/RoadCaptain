@@ -22,6 +22,8 @@ namespace RoadCaptain.App.RouteBuilder.Tests.Unit
             var routeStore = new RouteStoreToDisk(segmentStore, worldStore);
 
             var expectedPlannedRoute = routeStore.LoadFrom("ImportedFromZwiftMap.json");
+            // We don't do loop detection on importing from Zwiftmap (yet anyway)
+            expectedPlannedRoute.LoopMode = LoopMode.Unknown;
 
             var useCase = new ConvertZwiftMapRouteUseCase(worldStore, segmentStore);
 

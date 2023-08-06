@@ -19,7 +19,7 @@ namespace RoadCaptain.Adapters
 {
     internal class RouteStoreToDisk : IRouteStore
     {
-        private static readonly JsonSerializerSettings RouteSerializationSettings = new()
+        internal static readonly JsonSerializerSettings RouteSerializationSettings = new()
         {
             ContractResolver = new CamelCasePropertyNamesContractResolver(),
             Converters = new List<JsonConverter>
@@ -165,6 +165,11 @@ namespace RoadCaptain.Adapters
                         var turnToNext = turns.Single(t => t.SegmentId == firstSegmentSequence.SegmentId);
 
                         lastSegmentSequence.TurnToNextSegment = turnToNext.Direction;
+
+                        // For routes created pre-0.7.0.0 we only support infinite loop mode
+                        // as there was no way to indicate how many times a loop should be 
+                        // followed.
+                        plannedRoute.LoopMode = LoopMode.Infinite;
                     }
 
                     // If the route contains a turn from:
@@ -201,13 +206,15 @@ namespace RoadCaptain.Adapters
                             "Route does not specify the RoadCaptain version it was created with, I can't determine what to do now");
                     }
 
-                    if (Version.Parse(deserialized.RoadCaptainVersion) > _currentVersion)
+                    var routeVersion = Version.Parse(deserialized.RoadCaptainVersion);
+
+                    if (routeVersion > _currentVersion)
                     {
                         throw new InvalidOperationException(
                             "Route was created with a newer version of RoadCaptain and that won't work");
                     }
 
-                    if (Version.Parse(deserialized.RoadCaptainVersion) < new Version(0, 6, 8, 0))
+                    if (routeVersion < new Version(0, 6, 8, 0))
                     {
                         throw new InvalidOperationException(
                             "The route file has version 3 but was created with a version of RoadCaptain that does not support version 3, did you manually change the file?");
@@ -231,7 +238,7 @@ namespace RoadCaptain.Adapters
                     plannedRoute = deserialized.Route;
 
                     // Routes created before 0.6.6.0 did not have a segment sequence type
-                    if (Version.Parse(deserialized.RoadCaptainVersion) < new Version(0, 6, 6, 0))
+                    if (routeVersion < new Version(0, 6, 6, 0))
                     {
                         SetSegmentSequenceType(plannedRoute);
                     }
@@ -262,6 +269,11 @@ namespace RoadCaptain.Adapters
                         var turnToNext = turns.Single(t => t.SegmentId == firstSegmentSequence.SegmentId);
 
                         lastSegmentSequence.TurnToNextSegment = turnToNext.Direction;
+
+                        if (routeVersion < new Version(0, 7, 0, 0))
+                        {
+                            plannedRoute.LoopMode = LoopMode.Infinite;
+                        }
                     }
                 }
                 else

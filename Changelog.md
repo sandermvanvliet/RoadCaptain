@@ -40,6 +40,10 @@ You can toggle the mode by clicking the elevation profile window and using <kbd>
 - Fixed a bug where hitting <kbd>CTRL</kbd> + <kbd>X</kbd> / <kbd>META</kbd> + <kbd>X</kbd> in the in-game window when you are not yet in a game would not return to the main window.
 - The progress bar now resets when you start a new loop (See [#117](https://github.com/sandermvanvliet/RoadCaptain/issues/117))
 
+#### Breaking changes
+
+- Routes that contain a loop and a lead-out will never exit the loop onto the lead-out. RoadCaptain versions pre-0.7.0.0 did not have any option to set the number of times a loop should be entered and therefore RoadCaptain can't determine when the loop segments are "done".
+
 ## 0.6.11.0
 
 ### Runner

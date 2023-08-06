@@ -109,7 +109,7 @@ namespace RoadCaptain
         [JsonIgnore] public int LoopCount { get; private set; } = 1;
         [JsonIgnore] public bool OnLeadIn => HasStarted && CurrentSegmentSequence!.Type == SegmentSequenceType.LeadIn;
         [JsonIgnore] public bool OnLeadOut => HasStarted && CurrentSegmentSequence!.Type == SegmentSequenceType.LeadOut;
-        public int NumberOfLoops { get; set; }
+        public int? NumberOfLoops { get; set; }
 
 
         public List<SegmentSequence> RouteSegmentSequence { get; init; } = new();
