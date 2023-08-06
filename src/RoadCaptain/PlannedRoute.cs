@@ -137,8 +137,9 @@ namespace RoadCaptain
         public double Distance { get; private set; }
         public double Descent { get; private set; }
         public double Ascent { get; private set; }
-        public ImmutableList<TrackPoint> TrackPoints { get; private set; } = ImmutableList<TrackPoint>.Empty;
         public LoopMode LoopMode { get; set; } = LoopMode.Unknown;
+        [JsonIgnore]
+        public ImmutableList<TrackPoint> TrackPoints { get; private set; } = ImmutableList<TrackPoint>.Empty;
 
         public RouteMoveResult EnteredSegment(string segmentId)
         {
@@ -254,9 +255,9 @@ namespace RoadCaptain
                 }
             }
 
-            Ascent = totalAscent;
-            Descent = totalDescent;
-            Distance = totalDistance;
+            Ascent = Math.Round(totalAscent, 0, MidpointRounding.AwayFromZero);
+            Descent = Math.Round(totalDescent, 0, MidpointRounding.AwayFromZero);
+            Distance = Distance = Math.Round(totalDistance, 1, MidpointRounding.AwayFromZero);
             TrackPoints = trackPointsForRoute.ToImmutableList();
         }
 
