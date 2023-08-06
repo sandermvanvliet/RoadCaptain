@@ -14,6 +14,8 @@ Read more about how it works on [the RoadCaptain site](https://roadcaptain.nl/fe
 - It is now possible to import a route from [Zwift Map](https://zwiftmap.com/) into Route Builder. This saves you a lot of work to rebuild a route to make it work for RoadCaptain.
 - The color scheme of the elevation profile has been changed to provide much clearer indication of the grade
 - When creating a route, Route Builder no longer will attempt to create a loop for segments that join back on the previous segment. This especially happened for routes summiting on mountain tops in Watopia.
+- When creating a route and Route Builder detects that you selected a segment that can create a loop, it will now ask you what type of loop you want. You can choose between _No loop_, _Infinite loop_ or _Constrained loop_ where the last one allows you to specify how many times you want to do the loop before exiting it:
+![Screenshot of the new make loop dialog](./images/make-loop-dialog.png)
 
 ### Runner
 
