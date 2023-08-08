@@ -104,10 +104,17 @@ namespace RoadCaptain.App.RouteBuilder
                 MessageBoxIcon.Question);
         }
 
-        public async Task<(LoopMode Mode, int? NumberOfLoops)> ShowRouteLoopDialog()
+        public async Task<(LoopMode Mode, int? NumberOfLoops)> ShowRouteLoopDialog(LoopMode? loopMode = null,
+            int? numberOfLoops = null)
         {
             var makeLoopDialog = Resolve<MakeLoopDialog>();
-            var makeLoopDialogViewModel = new MakeLoopDialogViewModel();
+            var makeLoopDialogViewModel = new MakeLoopDialogViewModel
+            {
+                NoLoop = true,
+                InfiniteLoop = loopMode == LoopMode.Infinite,
+                ConstrainedLoop = loopMode == LoopMode.Constrained,
+                NumberOfLoops = numberOfLoops
+            };
             makeLoopDialog.DataContext = makeLoopDialogViewModel;
 
             await makeLoopDialog.ShowDialog(CurrentWindow);

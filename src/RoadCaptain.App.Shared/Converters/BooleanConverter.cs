@@ -14,12 +14,17 @@ namespace RoadCaptain.App.Shared.Converters
         {
             if (value is bool boolean)
             {
-                if (parameter is string flip && flip == "invert")
+                if (parameter is string and "invert")
                 {
                     return !boolean;
                 }
 
                 return boolean;
+            }
+
+            if (value != null && parameter != null && value.GetType() == parameter.GetType())
+            {
+                return value.Equals(parameter);
             }
 
             return value;

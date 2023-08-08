@@ -15,8 +15,10 @@ Read more about how it works on [the RoadCaptain site](https://roadcaptain.nl/fe
 - The color scheme of the elevation profile has been changed to provide much clearer indication of the grade
 - When creating a route, Route Builder no longer will attempt to create a loop for segments that join back on the previous segment. This especially happened for routes summiting on mountain tops in Watopia.
 - When creating a route and Route Builder detects that you selected a segment that can create a loop, it will now ask you what type of loop you want. You can choose between _No loop_, _Infinite loop_ or _Constrained loop_ where the last one allows you to specify how many times you want to do the loop before exiting it:
-![Screenshot of the new make loop dialog](./images/make-loop-dialog.png)
+  <br />![Screenshot of the new make loop dialog](./images/make-loop-dialog.png)
 - When creating a route and the route already contains a loop, Route Builder now no longer asks to create a further loop
+- When creating a route with a loop, the segment list now indicates the loop mode (fixed number or infinite) and the number of loops: <br />![Screenshot of the segment list with the loop indicator](./images/loop-indicator.png)![Screenshot of the segment list with the loop indicator](./images/loop-indicator-infinite.png)<br />Clicking the indicator allows you to change the loop settings.
+
 
 ### Runner
 

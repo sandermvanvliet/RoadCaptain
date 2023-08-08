@@ -142,7 +142,37 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
                     _ => Route.World != null)
                 .SubscribeTo(this, () => Route.World);
 
+            ConfigureLoopCommand = new AsyncRelayCommand(
+                    _ => ConfigureLoop(),
+                    _ => Route.IsLoop)
+                .SubscribeTo(this, () => Route.Sequence)
+                .SubscribeTo(this, () => Route.IsLoop);
+
             Version = GetType().Assembly.GetName().Version?.ToString(4) ?? "0.0.0.0";
+        }
+
+
+        private async Task<CommandResult> ConfigureLoop()
+        {
+            var shouldCreateLoop = await _windowService.ShowRouteLoopDialog(Route.LoopMode, Route.NumberOfLoops);
+
+            if (shouldCreateLoop.Mode is LoopMode.Infinite or LoopMode.Constrained)
+            {
+                Route.LoopMode = shouldCreateLoop.Mode;
+                Route.NumberOfLoops = shouldCreateLoop.NumberOfLoops;
+                this.RaisePropertyChanged(nameof(Route));
+            }
+            else
+            {
+                // Clear the loop properties
+                foreach (var seq in Route.Sequence.Where(s => s.IsLoop))
+                {
+                    seq.Type = SegmentSequenceType.Regular;
+                }
+                this.RaisePropertyChanged(nameof(Route));
+            }
+
+            return CommandResult.Success();
         }
 
         private async Task<CommandResult> ResetWorldAndSport()
@@ -293,6 +323,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
         public ICommand SelectSportCommand { get; }
         public ICommand ResetDefaultSportCommand { get; }
         public ICommand ResetWorldCommand { get; }
+        public ICommand ConfigureLoopCommand { get; set; }
 
         public Segment? SelectedSegment
         {

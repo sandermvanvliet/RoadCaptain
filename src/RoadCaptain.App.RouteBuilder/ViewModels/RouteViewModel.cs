@@ -124,6 +124,14 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             }
         }
 
+        public bool IsLoop
+        {
+            get
+            {
+                return Sequence.Any(s => s.IsLoop);
+            }
+        }
+
         public void StartOn(Segment segment)
         {
             if (_world == null)
@@ -513,6 +521,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             seqList[endIndex].Model.NextSegmentId = seqList[startIndex].SegmentId;
             LoopMode = mode;
             NumberOfLoops = numberOfLoops;
+            this.RaisePropertyChanged(nameof(IsLoop));
         }
 
         private void DetermineMarkersForRoute()
