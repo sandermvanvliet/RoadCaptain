@@ -431,7 +431,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
 
         public (bool IsPossibleLoop, int? LoopStartIndex, int? LoopEndIndex) IsPossibleLoop()
         {
-            if (Last == null || Sequence.Count() == 1 || Last.Type == SegmentSequenceType.LeadOut)
+            if (Last == null || Sequence.Count() == 1 || Sequence.Any(s => s.IsLoop))
             {
                 return (false, null, null);
             }

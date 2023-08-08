@@ -114,8 +114,8 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             }
         }
 
-        public bool IsLoop => Model.Type == SegmentSequenceType.Loop || Model.Type == SegmentSequenceType.LoopStart || Model.Type == SegmentSequenceType.LoopEnd;
-        public bool IsLeadIn => Model.Type == SegmentSequenceType.LeadIn || Model.Type == SegmentSequenceType.LeadOut;
+        public bool IsLoop => Model.Type is SegmentSequenceType.Loop or SegmentSequenceType.LoopStart or SegmentSequenceType.LoopEnd;
+        public bool IsLeadIn => Model.Type is SegmentSequenceType.LeadIn or SegmentSequenceType.LeadOut;
         public int ColumnSpan => IsLoop || IsLeadIn ? 1 : 2;
 
         public string? LoopImage
