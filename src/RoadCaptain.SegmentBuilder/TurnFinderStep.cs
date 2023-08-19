@@ -9,25 +9,26 @@ using System.IO;
 using System.Linq;
 using Newtonsoft.Json;
 using RoadCaptain.Adapters;
+using Serilog;
 
 namespace RoadCaptain.SegmentBuilder
 {
-    internal class TurnFinderStep
+    internal class TurnFinderStep : Step
     {
-        public static void Run(List<Segment> segments, string gpxDirectory)
+        public override Context Run(Context context)
         {
             // Clear node turns from each segment to ensure
             // we're not stuck with some pre-existing turns
             // from before this step has run.
-            foreach (var segment in segments)
+            foreach (var segment in context.Segments)
             {
                 segment.NextSegmentsNodeA.Clear();
                 segment.NextSegmentsNodeB.Clear();
             }
 
-            GenerateTurns(segments);
+            GenerateTurns(context.Segments);
 
-            var turns = segments
+            var turns = context.Segments
                 .Select(segment => new SegmentTurns
                 {
                     SegmentId = segment.Id,
@@ -37,11 +38,13 @@ namespace RoadCaptain.SegmentBuilder
                 .ToList();
 
             File.WriteAllText(
-                Path.Combine(gpxDirectory, "segments", "turns.json"),
+                Path.Combine(context.GpxDirectory, "segments", "turns.json"),
                 JsonConvert.SerializeObject(turns.OrderBy(t => t.SegmentId).ToList(), Formatting.Indented, Program.SerializerSettings));
+
+            return context;
         }
 
-        private static void GenerateTurns(List<Segment> segments)
+        private void GenerateTurns(IEnumerable<Segment> segments)
         {
             foreach (var segment in segments)
             {
@@ -51,7 +54,7 @@ namespace RoadCaptain.SegmentBuilder
             }
         }
 
-        private static void FindOverlapsWithSegmentNode(List<Segment> segments, Segment segment, TrackPoint endPoint, List<Turn> endNode)
+        private void FindOverlapsWithSegmentNode(IEnumerable<Segment> segments, Segment segment, TrackPoint endPoint, List<Turn> endNode)
         {
             var radiusMeters = 25;
 
@@ -96,11 +99,11 @@ namespace RoadCaptain.SegmentBuilder
                     var existing = endNode.SingleOrDefault(n => n.Direction == turnDirection);
                     if (existing != null)
                     {
-                        Console.WriteLine($"Already have a turn for {turnDirection} which goes to {existing.SegmentId}");
+                        Logger.Information($"Already have a turn for {turnDirection} which goes to {existing.SegmentId}");
                     }
                     else
                     {
-                        Console.WriteLine($"Adding turn {turnDirection} to {overlap.Id}");
+                        Logger.Information($"Adding turn {turnDirection} to {overlap.Id}");
                         endNode.Add(new Turn(turnDirection, overlap.Id));
                     }
                 }
@@ -136,7 +139,7 @@ namespace RoadCaptain.SegmentBuilder
             return TurnDirection.GoStraight;
         }
 
-        public static List<Segment> OverlapsWith(TrackPoint point, List<Segment> segments, string currentSegmentId, int radiusMeters = 15)
+        public static List<Segment> OverlapsWith(TrackPoint point, IEnumerable<Segment> segments, string currentSegmentId, int radiusMeters = 15)
         {
             return segments
                 .Where(s => s.Id != currentSegmentId)
@@ -165,6 +168,10 @@ namespace RoadCaptain.SegmentBuilder
             }
 
             return turn;
+        }
+
+        public TurnFinderStep(ILogger logger) : base(logger)
+        {
         }
     }
 }

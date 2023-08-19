@@ -121,7 +121,9 @@ namespace RoadCaptain.SegmentBuilder
                             var bearingToOverlap = TrackPoint.Bearing(previousPoint,
                                 overlappingNewSegments.First().OverlappingPoints.First());
 
-                            if (Math.Abs(bearing - bearingToOverlap) < 1)
+                            var absoluteBearingDelta = Math.Abs(bearing - bearingToOverlap) % 180;
+
+                            if (absoluteBearingDelta is < 1)
                             {
                                 // Heading in the same direction
                                 currentSegment.Points.Add(currentPoint);

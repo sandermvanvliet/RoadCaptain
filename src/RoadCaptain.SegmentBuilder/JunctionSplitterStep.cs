@@ -2,19 +2,19 @@
 // Licensed under Artistic License 2.0
 // See LICENSE or https://choosealicense.com/licenses/artistic-2.0/
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
+using Serilog;
 
 namespace RoadCaptain.SegmentBuilder
 {
-    internal class JunctionSplitterStep
+    internal class JunctionSplitterStep : Step
     {
-        public static void Run(List<Segment> segments)
+        public override Context Run(Context context)
         {
-            var haveChanges = true;
+            var segments = context.Segments.ToList();
 
-            while (haveChanges)
+            while (true)
             {
                 var breakWithChange = false;
 
@@ -27,7 +27,7 @@ namespace RoadCaptain.SegmentBuilder
                             .ToList(),
                         segmentToAdjust.A);
 
-                    if (toRemove != null)
+                    if (toRemove != null && toAdd != null)
                     {
                         segments.Remove(toRemove);
                         segments.AddRange(toAdd);
@@ -42,7 +42,7 @@ namespace RoadCaptain.SegmentBuilder
                             .ToList(),
                         segmentToAdjust.B);
 
-                    if (toRemove != null)
+                    if (toRemove != null && toAdd != null)
                     {
                         segments.Remove(toRemove);
                         segments.AddRange(toAdd);
@@ -58,11 +58,13 @@ namespace RoadCaptain.SegmentBuilder
 
                 break;
             }
+
+            return new Context(segments, context.GpxDirectory);
         }
 
-        private static (Segment toRemove, List<Segment> toAdd) SplitJunctionNode(Segment segmentToAdjust, List<Segment> segmentsExceptSegmentToAdjust, TrackPoint endPoint)
+        private (Segment? toRemove, List<Segment>? toAdd) SplitJunctionNode(Segment segmentToAdjust, List<Segment> segmentsExceptSegmentToAdjust, TrackPoint endPoint)
         {
-            Console.WriteLine($"Splitting segment {segmentToAdjust.Id} at node {endPoint.CoordinatesDecimal} of {segmentToAdjust.Id}");
+            Logger.Information($"Splitting segment {segmentToAdjust.Id} at node {endPoint.CoordinatesDecimal} of {segmentToAdjust.Id}");
 
             var overlaps = segmentsExceptSegmentToAdjust
                     .Select(segment => new
@@ -78,26 +80,26 @@ namespace RoadCaptain.SegmentBuilder
 
             if (!overlaps.Any())
             {
-                Console.WriteLine("\tDid not find overlaps!");
+                Logger.Warning("Did not find overlaps!");
                 return (null, null);
             }
 
             if (overlaps.Count > 1)
             {
-                Console.WriteLine($"\tFound {overlaps.Count} overlaps but only expected 1!");
+                Logger.Warning($"Found {overlaps.Count} overlaps but only expected 1!");
                 return (null, null);
             }
 
             if (overlaps[0].OverlappingPoints.Count < 2)
             {
-                Console.WriteLine($"\tFound {overlaps[0].OverlappingPoints.Count} overlapping points but expected 2!");
+                Logger.Warning($"Found {overlaps[0].OverlappingPoints.Count} overlapping points but expected 2!");
                 return (null, null);
             }
 
             var overlap = overlaps.Single();
             var junctionSegment = overlap.Segment;
 
-            Console.WriteLine($"\tFound overlap with {junctionSegment.Id}");
+            Logger.Information($"Found overlap with {junctionSegment.Id}");
 
             var byDistance = overlap
                 .OverlappingPoints
@@ -120,7 +122,7 @@ namespace RoadCaptain.SegmentBuilder
 
             if (pointAfter.DistanceOnSegment < 100 || pointAfter.DistanceOnSegment > junctionSegment.Distance - 100)
             {
-                Console.WriteLine($"\tOverlap point is {pointAfter.DistanceOnSegment}m on segment but expected at least 100m from start or end of the segment");
+                Logger.Warning($"Overlap point is {pointAfter.DistanceOnSegment}m on segment but expected at least 100m from start or end of the segment");
                 return (null, null);
             }
 
@@ -130,6 +132,10 @@ namespace RoadCaptain.SegmentBuilder
             return (
                 junctionSegment, 
                 new List<Segment> { before, after });
+        }
+
+        public JunctionSplitterStep(ILogger logger) : base(logger)
+        {
         }
     }
 }

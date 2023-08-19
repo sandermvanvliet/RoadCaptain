@@ -2,21 +2,21 @@
 // Licensed under Artistic License 2.0
 // See LICENSE or https://choosealicense.com/licenses/artistic-2.0/
 
-using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using Serilog;
 
 namespace RoadCaptain.SegmentBuilder
 {
-    internal class SegmentSplitStep
+    internal class SegmentSplitStep : Step
     {
         // When splitting segments the overlap should be at least
         // this many meters along the segment to prevent the creation
         // of very short segments at three-way intersections for example.
         private const int MinimumDistanceAlongSegment = 100;
-
-        public static void Run(List<Segment> segments)
+        
+        public override Context Run(Context context)
         {
             /*
              * When we have a set of segments we can see where we have T-junctions,
@@ -25,18 +25,21 @@ namespace RoadCaptain.SegmentBuilder
              * For those matches we want to split up the larger segment.
              */
             var splitSteps = 1;
+            var segments = context.Segments.ToList();
 
             while (splitSteps++ < 30)
             {
-                Console.WriteLine($"\n========\nStarting segment split step: {splitSteps}\n");
+                Logger.Information($"\n========\nStarting segment split step: {splitSteps}\n");
                 if (!SplitSegmentsAndUpdateSegmentList(segments))
                 {
                     break;
                 }
             }
+
+            return new Context(segments, context.GpxDirectory);
         }
 
-        private static bool SplitSegmentsAndUpdateSegmentList(List<Segment> segments)
+        private bool SplitSegmentsAndUpdateSegmentList(List<Segment> segments)
         {
             var (toRemove, toAdd) = SplitSegmentsForOverlaps(segments);
 
@@ -44,24 +47,24 @@ namespace RoadCaptain.SegmentBuilder
             {
                 if (segments.Remove(segment))
                 {
-                    Console.WriteLine($"{segment.Id} was removed");
+                    Logger.Information($"{segment.Id} was removed");
                 }
                 else
                 {
-                    Console.WriteLine($"{segment.Id} was NOT found!");
+                    Logger.Information($"{segment.Id} was NOT found!");
                 }
             }
 
             foreach (var segment in toAdd)
             {
-                Console.WriteLine($"{segment.Id} was added");
+                Logger.Information($"{segment.Id} was added");
                 segments.Add(segment);
             }
 
             return toRemove.Any();
         }
 
-        private static (List<Segment> toRemove, List<Segment> toAdd) SplitSegmentsForOverlaps(List<Segment> segments)
+        private (List<Segment> toRemove, List<Segment> toAdd) SplitSegmentsForOverlaps(List<Segment> segments)
         {
             var toRemove = new List<Segment>();
             var toAdd = new List<Segment>();
@@ -75,7 +78,7 @@ namespace RoadCaptain.SegmentBuilder
                     if (overlap.DistanceOnSegment >= MinimumDistanceAlongSegment &&
                         overlap.Segment.B.DistanceOnSegment - overlap.DistanceOnSegment >= MinimumDistanceAlongSegment)
                     {
-                        Console.WriteLine(
+                        Logger.Information(
                             $"Found junction of start of {segment.Id} with {overlap.Segment.Id} {overlap.DistanceOnSegment:0}m along the segment");
 
                         var overlapIndex = overlap.Segment.Points.IndexOf(overlap);
@@ -84,7 +87,7 @@ namespace RoadCaptain.SegmentBuilder
                             Debugger.Break();
                         }
 
-                        Console.WriteLine($"Splitting {overlap.Segment.Id} at index {overlapIndex}");
+                        Logger.Information($"Splitting {overlap.Segment.Id} at index {overlapIndex}");
 
                         toRemove.Add(overlap.Segment);
 
@@ -112,7 +115,7 @@ namespace RoadCaptain.SegmentBuilder
                     if (overlap.DistanceOnSegment >= MinimumDistanceAlongSegment &&
                         overlap.Segment.B.DistanceOnSegment - overlap.DistanceOnSegment >= MinimumDistanceAlongSegment)
                     {
-                        Console.WriteLine(
+                        Logger.Information(
                             $"Found junction of end of {segment.Id} with {overlap.Segment.Id} {overlap.DistanceOnSegment:0}m along the segment");
 
                         var overlapIndex = overlap.Segment.Points.IndexOf(overlap);
@@ -121,7 +124,7 @@ namespace RoadCaptain.SegmentBuilder
                             Debugger.Break();
                         }
 
-                        Console.WriteLine($"Splitting {overlap.Segment.Id} at index {overlapIndex}");
+                        Logger.Information($"Splitting {overlap.Segment.Id} at index {overlapIndex}");
 
                         toRemove.Add(overlap.Segment);
 
@@ -171,6 +174,10 @@ namespace RoadCaptain.SegmentBuilder
                 .Where(points => points.Any())
                 .SelectMany(points => points)
                 .ToList();
+        }
+
+        public SegmentSplitStep(ILogger logger) : base(logger)
+        {
         }
     }
 }

@@ -2,26 +2,26 @@
 // Licensed under Artistic License 2.0
 // See LICENSE or https://choosealicense.com/licenses/artistic-2.0/
 
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Newtonsoft.Json;
+using Serilog;
 
 namespace RoadCaptain.SegmentBuilder
 {
-    internal class SpawnPointFinderStep
+    internal class SpawnPointFinderStep : Step
     {
-        public static void Run(List<Segment> segments, string gpxDirectory)
+        public override Context Run(Context context)
         {
             var spawnPoints = new List<SpawnPoint>();
 
-            var gpxFiles = Directory.GetFiles(gpxDirectory, "*.gpx");
+            var gpxFiles = Directory.GetFiles(context.GpxDirectory, "*.gpx");
             foreach (var filePath in gpxFiles)
             {
-                var route = Route.FromGpxFile(Path.Combine(gpxDirectory, filePath));
+                var route = Route.FromGpxFile(Path.Combine(context.GpxDirectory, filePath));
 
-                Console.WriteLine($"Finding spawn point segment for {route.Slug}");
+                Logger.Information($"Finding spawn point segment for {route.Slug}");
 
                 // To make sure that we don't have the route matching
                 // at a right angle (for example) on another segment
@@ -29,7 +29,7 @@ namespace RoadCaptain.SegmentBuilder
                 var firstTrackPoint = route.TrackPoints[10];
                 var secondTrackPoint = route.TrackPoints[20];
 
-                var segmentsCloseBy = segments
+                var segmentsCloseBy = context.Segments
                     .Select(s =>
                     {
                         var containsFirstTrackPoint = s.Contains(firstTrackPoint, out var firstMatch);
@@ -54,7 +54,7 @@ namespace RoadCaptain.SegmentBuilder
 
                 if (firstMatch == null)
                 {
-                    Console.WriteLine($"\tDid not find point {firstTrackPoint.CoordinatesDecimal} on any segment");
+                    Logger.Information($"Did not find point {firstTrackPoint.CoordinatesDecimal} on any segment");
                     continue;
                 }
 
@@ -70,17 +70,17 @@ namespace RoadCaptain.SegmentBuilder
                     segment = firstMatch.Segment!;
                 }
                 
-                Console.WriteLine($"\tFound point {firstTrackPoint.CoordinatesDecimal} on segment {segment.Id} as {firstMatch.FirstTrackPointOnSegment!.CoordinatesDecimal}");
+                Logger.Information($"Found point {firstTrackPoint.CoordinatesDecimal} on segment {segment.Id} as {firstMatch.FirstTrackPointOnSegment!.CoordinatesDecimal}");
 
                 if (spawnPoints.Any(s => s.SegmentId == segment.Id))
                 {
-                    Console.WriteLine($"\t{segment.Id} is already a spawn point");
+                    Logger.Warning($"{segment.Id} is already a spawn point");
                     continue;
                 }
 
                 var direction = segment.DirectionOf(firstMatch.FirstTrackPointOnSegment, firstMatch.SecondTrackPointOnSegment!);
 
-                Console.WriteLine($"\tAdding spawn point for {route.Name} with direction {direction}");
+                Logger.Information($"Adding spawn point for {route.Name} with direction {direction}");
 
                 spawnPoints.Add(new SpawnPoint
                 {
@@ -92,8 +92,14 @@ namespace RoadCaptain.SegmentBuilder
             }
 
             File.WriteAllText(
-                Path.Combine(gpxDirectory, "segments", "spawnPoints.json"),
+                Path.Combine(context.GpxDirectory, "segments", "spawnPoints.json"),
                 JsonConvert.SerializeObject(spawnPoints.OrderBy(s => s.SegmentId).ToList(), Formatting.Indented, Program.SerializerSettings));
+
+            return context;
+        }
+
+        public SpawnPointFinderStep(ILogger logger) : base(logger)
+        {
         }
     }
 }

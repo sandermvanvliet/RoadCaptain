@@ -5,16 +5,17 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Serilog;
 
 namespace RoadCaptain.SegmentBuilder
 {
-    internal class JunctionAlignmentStep
+    internal class JunctionAlignmentStep : Step
     {
-        public static void Run(List<Segment> segments)
+        public override Context Run(Context context)
         {
-            foreach (var segment in segments)
+            foreach (var segment in context.Segments)
             {
-                var segmentsExceptSegmentToAdjust = segments.Where(s => s.Id != segment.Id).ToList();
+                var segmentsExceptSegmentToAdjust = context.Segments.Where(s => s.Id != segment.Id).ToList();
 
                 AdjustNodeA(
                     segment,
@@ -24,11 +25,13 @@ namespace RoadCaptain.SegmentBuilder
                     segment,
                     segmentsExceptSegmentToAdjust);
             }
+
+            return context;
         }
 
-        private static void AdjustNodeA(Segment segmentToAdjust, List<Segment> segmentsExceptSegmentToAdjust)
+        private void AdjustNodeA(Segment segmentToAdjust, List<Segment> segmentsExceptSegmentToAdjust)
         {
-            Console.WriteLine($"Adjusting segment {segmentToAdjust.Id} node A");
+            Logger.Information($"Adjusting segment {segmentToAdjust.Id} node A");
 
             var overlaps = segmentsExceptSegmentToAdjust
                 .Select(segment => new
@@ -60,13 +63,13 @@ namespace RoadCaptain.SegmentBuilder
 
             if (!overlaps.Any())
             {
-                Console.WriteLine("\tDid not find overlaps!");
+                Logger.Warning("Did not find overlaps!");
                 return;
             }
             
             var junctionSegment = overlaps.OrderBy(overlap => overlap.ClosestPoint.Distance).First();
 
-            Console.WriteLine($"\tFound overlap with {junctionSegment.Segment.Id}");
+            Logger.Information($"Found overlap with {junctionSegment.Segment.Id}");
 
             var closestPoint = junctionSegment.ClosestPoint.Point;
 
@@ -126,15 +129,15 @@ namespace RoadCaptain.SegmentBuilder
             // Replace original endpoint with new one
             var originalA = segmentToAdjust.A.Clone();
             
-            Console.WriteLine($"\tReplacing {originalA.CoordinatesDecimal} with {newPoint.CoordinatesDecimal}");
+            Logger.Information($"Replacing {originalA.CoordinatesDecimal} with {newPoint.CoordinatesDecimal}");
 
             segmentToAdjust.Points.RemoveAt(0);
             segmentToAdjust.Points.Insert(0, newPoint);
         }
 
-        private static void AdjustNodeB(Segment segmentToAdjust, List<Segment> segmentsExceptSegmentToAdjust)
+        private void AdjustNodeB(Segment segmentToAdjust, List<Segment> segmentsExceptSegmentToAdjust)
         {
-            Console.WriteLine($"Adjusting segment {segmentToAdjust.Id} node B");
+            Logger.Information($"Adjusting segment {segmentToAdjust.Id} node B");
 
             var overlaps = segmentsExceptSegmentToAdjust
                 .Select(segment => new
@@ -161,13 +164,13 @@ namespace RoadCaptain.SegmentBuilder
 
             if (!overlaps.Any())
             {
-                Console.WriteLine("\tDid not find overlaps!");
+                Logger.Warning("Did not find overlaps!");
                 return;
             }
             
             var junctionSegment = overlaps.OrderBy(overlap => overlap.ClosestPoint.Distance).First();
 
-            Console.WriteLine($"\tFound overlap with {junctionSegment.Segment.Id}");
+            Logger.Information($"Found overlap with {junctionSegment.Segment.Id}");
 
             var closestPoint = junctionSegment.ClosestPoint.Point;
 
@@ -229,7 +232,7 @@ namespace RoadCaptain.SegmentBuilder
             // Replace original endpoint with new one
             var originalA = segmentToAdjust.B.Clone();
             
-            Console.WriteLine($"\tReplacing {originalA.CoordinatesDecimal} with {newPoint.CoordinatesDecimal}");
+            Logger.Information($"Replacing {originalA.CoordinatesDecimal} with {newPoint.CoordinatesDecimal}");
 
             segmentToAdjust.Points.RemoveAt(newPoint.Index.Value);
             segmentToAdjust.Points.Add( newPoint);
@@ -278,5 +281,10 @@ namespace RoadCaptain.SegmentBuilder
 
             return result;
         }
+
+        public JunctionAlignmentStep(ILogger logger) : base(logger)
+        {
+        }
+
     }
 }

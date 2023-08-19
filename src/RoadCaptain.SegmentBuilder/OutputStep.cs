@@ -2,25 +2,25 @@
 // Licensed under Artistic License 2.0
 // See LICENSE or https://choosealicense.com/licenses/artistic-2.0/
 
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Newtonsoft.Json;
+using Serilog;
 
 namespace RoadCaptain.SegmentBuilder
 {
-    internal class OutputStep
+    internal class OutputStep : Step
     {
-        public static void Run(List<Segment> segments, string gpxDirectory)
+        public override Context Run(Context context)
         {
-            if (!Directory.Exists(Path.Combine(gpxDirectory, "segments")))
+            if (!Directory.Exists(Path.Combine(context.GpxDirectory, "segments")))
             {
-                Directory.CreateDirectory(Path.Combine(gpxDirectory, "segments"));
+                Directory.CreateDirectory(Path.Combine(context.GpxDirectory, "segments"));
             }
 
-            foreach (var segment in segments)
+            foreach (var segment in context.Segments)
             {
-                File.WriteAllText(Path.Combine(gpxDirectory, "segments", segment.Id + ".gpx"), segment.AsGpx());
+                File.WriteAllText(Path.Combine(context.GpxDirectory, "segments", segment.Id + ".gpx"), segment.AsGpx());
 
                 // Clear turns from segments otherwise it blows up because
                 // loading the segments applies the turns to the segments
@@ -29,8 +29,14 @@ namespace RoadCaptain.SegmentBuilder
             }
 
             File.WriteAllText(
-                Path.Combine(gpxDirectory, "segments", "segments.json"),
-                JsonConvert.SerializeObject(segments.OrderBy(s=>s.Id).ToList(), Formatting.Indented, Program.SerializerSettings));
+                Path.Combine(context.GpxDirectory, "segments", "segments.json"),
+                JsonConvert.SerializeObject(context.Segments.OrderBy(s=>s.Id).ToList(), Formatting.Indented, Program.SerializerSettings));
+
+            return context;
+        }
+
+        public OutputStep(ILogger logger) : base(logger)
+        {
         }
     }
 }

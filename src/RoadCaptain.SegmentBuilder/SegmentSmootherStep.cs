@@ -2,14 +2,15 @@
 // Licensed under Artistic License 2.0
 // See LICENSE or https://choosealicense.com/licenses/artistic-2.0/
 
-using System;
 using System.Collections.Generic;
+using System.Linq;
+using Serilog;
 
 namespace RoadCaptain.SegmentBuilder
 {
-    internal class SegmentSmootherStep
+    internal class SegmentSmootherStep : Step
     {
-        public static void Run(List<Segment> segments)
+        public override Context Run(Context context)
         {
             // The original GPX files have track points that are the same location.
             // Because later on we always expect that there is a distance between
@@ -18,15 +19,17 @@ namespace RoadCaptain.SegmentBuilder
             // This step takes care of cleaning up those points from a segment and
             // recalculates distances and indexes accordingly.
 
-            foreach (var segment in segments)
-            {
-                SmoothSegment(segment);
-            }
+            var smoothedSegments = context
+                .Segments
+                .Select(SmoothSegment)
+                .ToList();
+
+            return new Context(smoothedSegments, context.GpxDirectory);
         }
 
-        private static void SmoothSegment(Segment segment)
+        private Segment SmoothSegment(Segment segment)
         {
-            Console.WriteLine($"Smoothing segment {segment.Id}");
+            Logger.Information("Smoothing segment {SegmentId}", segment.Id);
 
             var smoothedPoints = new List<TrackPoint>();
             TrackPoint previous = null;
@@ -47,19 +50,31 @@ namespace RoadCaptain.SegmentBuilder
                 }
                 else
                 {
-                    Console.WriteLine($"\tSkipping {point.CoordinatesDecimal}");
+                    Logger.Information("Skipping {CoordinatesDecimal}", point.CoordinatesDecimal);
                     numberOfPointsSkipped++;
                 }
             }
 
             if (numberOfPointsSkipped > 0)
             {
-                Console.WriteLine($"\tSkipped {numberOfPointsSkipped} points from this segment");
+                Logger.Information("Skipped {NumberOfPointsSkipped} points from this segment", numberOfPointsSkipped);
             }
 
-            segment.Points.Clear();
-            segment.Points.AddRange(smoothedPoints);
-            segment.CalculateDistances();
+            var smoothedSegment = new Segment(smoothedPoints)
+            {
+                Id = segment.Id,
+                Name = segment.Name,
+                NoSelectReason = segment.NoSelectReason,
+                Sport = segment.Sport,
+                Type = segment.Type
+            };
+            smoothedSegment.CalculateDistances();
+
+            return smoothedSegment;
+        }
+
+        public SegmentSmootherStep(ILogger logger) : base(logger)
+        {
         }
     }
 }

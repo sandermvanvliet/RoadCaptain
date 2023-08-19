@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
+using Serilog;
 
 namespace RoadCaptain.SegmentBuilder
 {
@@ -31,33 +32,41 @@ namespace RoadCaptain.SegmentBuilder
             }
         };
 
+        private readonly Step[] _steps;
+        private readonly ILogger _logger;
+
+        public Program()
+        {
+            _logger = new LoggerConfiguration()
+                .WriteTo.Console()
+                .CreateLogger();
+
+            _steps = new Step[]
+            {
+                new GpxToSegmentsStep(_logger),
+                new RemoveSegmentsShorterThan20Meters(_logger),
+                new SegmentSmootherStep(_logger),
+                new JunctionAlignmentStep(_logger),
+                new JunctionSplitterStep(_logger),
+                new TurnFinderStep(_logger),
+                new RemoveSegmentsShorterThan20Meters(_logger),
+                new OutputStep(_logger),
+                new SpawnPointFinderStep(_logger)
+            };
+        }
+        
         public void Run(string gpxDirectory)
         {
-            Console.WriteLine("\n==== STEP 1 ====");
-            GpxToSegmentsStep.Run(_segments, gpxDirectory);
-            
-            Console.WriteLine("\n==== STEP 2 ====");
-            CleanupStep.Run(_segments);
+            var context = new Context(new List<Segment>(), gpxDirectory);
 
-            SegmentSmootherStep.Run(_segments);
-            
-            Console.WriteLine("\n==== STEP 3 ====");
-            JunctionAlignmentStep.Run(_segments);
-            
-            Console.WriteLine("\n==== STEP 4 ====");
-            JunctionSplitterStep.Run(_segments);
-            
-            Console.WriteLine("\n==== STEP 5 ====");
-            TurnFinderStep.Run(_segments, gpxDirectory);
-            
-            Console.WriteLine("\n==== STEP 6 ====");
-            CleanupStep.Run(_segments);
-            
-            Console.WriteLine("\n==== STEP 7 ====");
-            OutputStep.Run(_segments, gpxDirectory);
-            
-            Console.WriteLine("\n==== STEP 8 ====");
-            SpawnPointFinderStep.Run(_segments, gpxDirectory);
+            for (var step = 0; step < _steps.Length; step++)
+            {
+                _logger.Information("=== STEP {Step}: {StepName} ====", step, _steps[step].GetType().Name);
+                
+                var newContext = _steps[step].Run(context);
+
+                context = newContext;
+            }
         }
     }
 }
