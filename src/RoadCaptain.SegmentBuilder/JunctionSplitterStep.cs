@@ -2,13 +2,14 @@
 // Licensed under Artistic License 2.0
 // See LICENSE or https://choosealicense.com/licenses/artistic-2.0/
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Serilog;
 
 namespace RoadCaptain.SegmentBuilder
 {
-    internal class JunctionSplitterStep : Step
+    internal class JunctionSplitterStep : BaseStep
     {
         public override Context Run(Context context)
         {
@@ -59,7 +60,7 @@ namespace RoadCaptain.SegmentBuilder
                 break;
             }
 
-            return new Context(segments, context.GpxDirectory);
+            return new Context(Step, segments, context.GpxDirectory);
         }
 
         private (Segment? toRemove, List<Segment>? toAdd) SplitJunctionNode(Segment segmentToAdjust, List<Segment> segmentsExceptSegmentToAdjust, TrackPoint endPoint)
@@ -80,7 +81,7 @@ namespace RoadCaptain.SegmentBuilder
 
             if (!overlaps.Any())
             {
-                Logger.Warning("Did not find overlaps!");
+                Logger.Information("Did not find overlaps");
                 return (null, null);
             }
 
@@ -122,7 +123,7 @@ namespace RoadCaptain.SegmentBuilder
 
             if (pointAfter.DistanceOnSegment < 100 || pointAfter.DistanceOnSegment > junctionSegment.Distance - 100)
             {
-                Logger.Warning($"Overlap point is {pointAfter.DistanceOnSegment}m on segment but expected at least 100m from start or end of the segment");
+                Logger.Warning("Overlap point is {Distance}m on segment but expected at least 100m from start or end of the segment", Math.Round(pointAfter.DistanceOnSegment, 1));
                 return (null, null);
             }
 
@@ -134,7 +135,7 @@ namespace RoadCaptain.SegmentBuilder
                 new List<Segment> { before, after });
         }
 
-        public JunctionSplitterStep(ILogger logger) : base(logger)
+        public JunctionSplitterStep(int step, ILogger logger) : base(logger, step)
         {
         }
     }

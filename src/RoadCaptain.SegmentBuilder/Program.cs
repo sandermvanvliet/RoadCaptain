@@ -18,21 +18,21 @@ namespace RoadCaptain.SegmentBuilder
         {
             var gpxDirectory = args.Length > 0 ? args[0] : @"C:\git\temp\zwift\zwift-makuri-islands-gpx";
 
-            new Program().Run(gpxDirectory);
+            //new Program().Run(gpxDirectory, 0, 3, gpxDirectory);
+            new Program().Run(gpxDirectory, 3, 4, gpxDirectory);
         }
-
-        private readonly List<Segment> _segments = new();
-
+        
         public static readonly JsonSerializerSettings SerializerSettings = new()
         {
             ContractResolver = new CamelCasePropertyNamesContractResolver(),
             Converters =
             {
                 new StringEnumConverter()
-            }
+            },
+            Formatting = Formatting.Indented
         };
 
-        private readonly Step[] _steps;
+        private readonly BaseStep[] _steps;
         private readonly ILogger _logger;
 
         public Program()
@@ -41,31 +41,54 @@ namespace RoadCaptain.SegmentBuilder
                 .WriteTo.Console()
                 .CreateLogger();
 
-            _steps = new Step[]
+            _steps = new BaseStep[]
             {
-                new GpxToSegmentsStep(_logger),
-                new RemoveSegmentsShorterThan20Meters(_logger),
-                new SegmentSmootherStep(_logger),
-                new JunctionAlignmentStep(_logger),
-                new JunctionSplitterStep(_logger),
-                new TurnFinderStep(_logger),
-                new RemoveSegmentsShorterThan20Meters(_logger),
-                new OutputStep(_logger),
-                new SpawnPointFinderStep(_logger)
+                new GpxToSegmentsStep(0, _logger),
+                new RemoveSegmentsShorterThan20Meters(1, _logger),
+                new SegmentSmootherStep(2, _logger),
+                new JunctionAlignmentStep(3, _logger),
+                new JunctionSplitterStep(4, _logger),
+                new TurnFinderStep(5, _logger),
+                new RemoveSegmentsShorterThan20Meters(6, _logger),
+                new OutputStep(7, _logger),
+                new SpawnPointFinderStep(8, _logger)
             };
         }
         
-        public void Run(string gpxDirectory)
+        public void Run(string gpxDirectory, int? runFromStep, int? runUntilStepInclusive, string contextPath)
         {
-            var context = new Context(new List<Segment>(), gpxDirectory);
+            runFromStep ??= 0;
+            runUntilStepInclusive ??= _steps.Length - 1;
 
-            for (var step = 0; step < _steps.Length; step++)
+            Context context;
+
+            if (runFromStep == 0)
+            {
+                context = new Context(0, new List<Segment>(), gpxDirectory);
+            }
+            else
+            {
+                context = Context.Load(runFromStep.Value, contextPath);
+                // We start from this step but we don't want to re-run it,
+                // so bump to the next step
+                runFromStep = runFromStep.Value + 1;
+            }
+
+            for (var step = runFromStep.Value; step <= runUntilStepInclusive.Value; step++)
             {
                 _logger.Information("=== STEP {Step}: {StepName} ====", step, _steps[step].GetType().Name);
                 
                 var newContext = _steps[step].Run(context);
 
+                if (newContext.GetHashCode() == context.GetHashCode())
+                {
+                    throw new InvalidOperationException(
+                        "The resulting context is exactly the same as the input context. Did you forget to create a new result context?");
+                }
+
                 context = newContext;
+
+                context.Persist(contextPath);
             }
         }
     }

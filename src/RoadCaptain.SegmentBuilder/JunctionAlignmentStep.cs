@@ -9,13 +9,15 @@ using Serilog;
 
 namespace RoadCaptain.SegmentBuilder
 {
-    internal class JunctionAlignmentStep : Step
+    internal class JunctionAlignmentStep : BaseStep
     {
         public override Context Run(Context context)
         {
-            foreach (var segment in context.Segments)
+            var segments = context.Segments.ToList();
+
+            foreach (var segment in segments)
             {
-                var segmentsExceptSegmentToAdjust = context.Segments.Where(s => s.Id != segment.Id).ToList();
+                var segmentsExceptSegmentToAdjust = segments.Where(s => s.Id != segment.Id).ToList();
 
                 AdjustNodeA(
                     segment,
@@ -26,7 +28,7 @@ namespace RoadCaptain.SegmentBuilder
                     segmentsExceptSegmentToAdjust);
             }
 
-            return context;
+            return new Context(Step, segments, context.GpxDirectory);
         }
 
         private void AdjustNodeA(Segment segmentToAdjust, List<Segment> segmentsExceptSegmentToAdjust)
@@ -282,7 +284,7 @@ namespace RoadCaptain.SegmentBuilder
             return result;
         }
 
-        public JunctionAlignmentStep(ILogger logger) : base(logger)
+        public JunctionAlignmentStep(int step, ILogger logger) : base(logger, step)
         {
         }
 

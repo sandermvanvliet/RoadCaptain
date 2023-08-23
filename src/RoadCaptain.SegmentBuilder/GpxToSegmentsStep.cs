@@ -11,7 +11,7 @@ using Serilog;
 
 namespace RoadCaptain.SegmentBuilder
 {
-    internal class GpxToSegmentsStep : Step
+    internal class GpxToSegmentsStep : BaseStep
     {
         public override Context Run(Context context)
         {
@@ -21,7 +21,7 @@ namespace RoadCaptain.SegmentBuilder
             {
                 var snapshotSegments = JsonConvert.DeserializeObject<List<Segment>>(File.ReadAllText(snapShotPath), Program.SerializerSettings);
 
-                return new Context(snapshotSegments!, context.GpxDirectory);
+                return new Context(Step, snapshotSegments!, context.GpxDirectory);
             }
 
             if(!Directory.Exists(Path.Combine(context.GpxDirectory, "segments")))
@@ -70,10 +70,10 @@ namespace RoadCaptain.SegmentBuilder
 
             File.WriteAllText(snapShotPath, JsonConvert.SerializeObject(segments, Program.SerializerSettings));
 
-            return new Context(segments, context.GpxDirectory);
+            return new Context(Step, segments, context.GpxDirectory);
         }
 
-        public GpxToSegmentsStep(ILogger logger) : base(logger)
+        public GpxToSegmentsStep(int step, ILogger logger) : base(logger, step)
         {
         }
     }

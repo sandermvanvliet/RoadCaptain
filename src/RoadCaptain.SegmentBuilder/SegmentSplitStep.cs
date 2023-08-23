@@ -9,7 +9,7 @@ using Serilog;
 
 namespace RoadCaptain.SegmentBuilder
 {
-    internal class SegmentSplitStep : Step
+    internal class SegmentSplitStep : BaseStep
     {
         // When splitting segments the overlap should be at least
         // this many meters along the segment to prevent the creation
@@ -36,7 +36,7 @@ namespace RoadCaptain.SegmentBuilder
                 }
             }
 
-            return new Context(segments, context.GpxDirectory);
+            return new Context(Step, segments, context.GpxDirectory);
         }
 
         private bool SplitSegmentsAndUpdateSegmentList(List<Segment> segments)
@@ -176,7 +176,7 @@ namespace RoadCaptain.SegmentBuilder
                 .ToList();
         }
 
-        public SegmentSplitStep(ILogger logger) : base(logger)
+        public SegmentSplitStep(int step, ILogger logger) : base(logger, step)
         {
         }
     }

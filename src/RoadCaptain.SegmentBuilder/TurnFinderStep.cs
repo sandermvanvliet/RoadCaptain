@@ -13,22 +13,24 @@ using Serilog;
 
 namespace RoadCaptain.SegmentBuilder
 {
-    internal class TurnFinderStep : Step
+    internal class TurnFinderStep : BaseStep
     {
         public override Context Run(Context context)
         {
+            var segments = context.Segments.ToList();
+
             // Clear node turns from each segment to ensure
             // we're not stuck with some pre-existing turns
             // from before this step has run.
-            foreach (var segment in context.Segments)
+            foreach (var segment in segments)
             {
                 segment.NextSegmentsNodeA.Clear();
                 segment.NextSegmentsNodeB.Clear();
             }
 
-            GenerateTurns(context.Segments);
+            GenerateTurns(segments);
 
-            var turns = context.Segments
+            var turns = segments
                 .Select(segment => new SegmentTurns
                 {
                     SegmentId = segment.Id,
@@ -41,10 +43,10 @@ namespace RoadCaptain.SegmentBuilder
                 Path.Combine(context.GpxDirectory, "segments", "turns.json"),
                 JsonConvert.SerializeObject(turns.OrderBy(t => t.SegmentId).ToList(), Formatting.Indented, Program.SerializerSettings));
 
-            return context;
+            return new Context(Step, segments, context.GpxDirectory);
         }
 
-        private void GenerateTurns(IEnumerable<Segment> segments)
+        private void GenerateTurns(List<Segment> segments)
         {
             foreach (var segment in segments)
             {
@@ -54,7 +56,7 @@ namespace RoadCaptain.SegmentBuilder
             }
         }
 
-        private void FindOverlapsWithSegmentNode(IEnumerable<Segment> segments, Segment segment, TrackPoint endPoint, List<Turn> endNode)
+        private void FindOverlapsWithSegmentNode(List<Segment> segments, Segment segment, TrackPoint endPoint, List<Turn> endNode)
         {
             var radiusMeters = 25;
 
@@ -170,7 +172,7 @@ namespace RoadCaptain.SegmentBuilder
             return turn;
         }
 
-        public TurnFinderStep(ILogger logger) : base(logger)
+        public TurnFinderStep(int step, ILogger logger) : base(logger, step)
         {
         }
     }

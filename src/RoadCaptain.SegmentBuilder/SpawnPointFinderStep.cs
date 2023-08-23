@@ -10,7 +10,7 @@ using Serilog;
 
 namespace RoadCaptain.SegmentBuilder
 {
-    internal class SpawnPointFinderStep : Step
+    internal class SpawnPointFinderStep : BaseStep
     {
         public override Context Run(Context context)
         {
@@ -95,10 +95,10 @@ namespace RoadCaptain.SegmentBuilder
                 Path.Combine(context.GpxDirectory, "segments", "spawnPoints.json"),
                 JsonConvert.SerializeObject(spawnPoints.OrderBy(s => s.SegmentId).ToList(), Formatting.Indented, Program.SerializerSettings));
 
-            return context;
+            return new Context(Step, context.Segments.ToList(), context.GpxDirectory);
         }
 
-        public SpawnPointFinderStep(ILogger logger) : base(logger)
+        public SpawnPointFinderStep(int step, ILogger logger) : base(logger, step)
         {
         }
     }

@@ -8,7 +8,7 @@ using Serilog;
 
 namespace RoadCaptain.SegmentBuilder
 {
-    internal class SegmentSmootherStep : Step
+    internal class SegmentSmootherStep : BaseStep
     {
         public override Context Run(Context context)
         {
@@ -24,7 +24,7 @@ namespace RoadCaptain.SegmentBuilder
                 .Select(SmoothSegment)
                 .ToList();
 
-            return new Context(smoothedSegments, context.GpxDirectory);
+            return new Context(Step, smoothedSegments, context.GpxDirectory);
         }
 
         private Segment SmoothSegment(Segment segment)
@@ -73,7 +73,7 @@ namespace RoadCaptain.SegmentBuilder
             return smoothedSegment;
         }
 
-        public SegmentSmootherStep(ILogger logger) : base(logger)
+        public SegmentSmootherStep(int step, ILogger logger) : base(logger, step)
         {
         }
     }

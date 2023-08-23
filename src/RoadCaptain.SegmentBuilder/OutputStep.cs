@@ -9,7 +9,7 @@ using Serilog;
 
 namespace RoadCaptain.SegmentBuilder
 {
-    internal class OutputStep : Step
+    internal class OutputStep : BaseStep
     {
         public override Context Run(Context context)
         {
@@ -18,7 +18,9 @@ namespace RoadCaptain.SegmentBuilder
                 Directory.CreateDirectory(Path.Combine(context.GpxDirectory, "segments"));
             }
 
-            foreach (var segment in context.Segments)
+            var segments = context.Segments.ToList();
+
+            foreach (var segment in segments)
             {
                 File.WriteAllText(Path.Combine(context.GpxDirectory, "segments", segment.Id + ".gpx"), segment.AsGpx());
 
@@ -30,12 +32,12 @@ namespace RoadCaptain.SegmentBuilder
 
             File.WriteAllText(
                 Path.Combine(context.GpxDirectory, "segments", "segments.json"),
-                JsonConvert.SerializeObject(context.Segments.OrderBy(s=>s.Id).ToList(), Formatting.Indented, Program.SerializerSettings));
+                JsonConvert.SerializeObject(segments.OrderBy(s=>s.Id).ToList(), Formatting.Indented, Program.SerializerSettings));
 
-            return context;
+            return new Context(Step, segments, context.GpxDirectory);
         }
 
-        public OutputStep(ILogger logger) : base(logger)
+        public OutputStep(int step, ILogger logger) : base(logger, step)
         {
         }
     }

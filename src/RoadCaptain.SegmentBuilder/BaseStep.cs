@@ -2,12 +2,14 @@ using Serilog;
 
 namespace RoadCaptain.SegmentBuilder
 {
-    internal abstract class Step
+    internal abstract class BaseStep
     {
+        protected int Step { get; }
         private readonly ILogger _logger;
 
-        protected Step(ILogger logger)
+        protected BaseStep(ILogger logger, int step)
         {
+            Step = step;
             _logger = logger;
         }
 

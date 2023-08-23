@@ -7,17 +7,16 @@ using Serilog;
 
 namespace RoadCaptain.SegmentBuilder
 {
-    internal class RemoveSegmentsShorterThan20Meters : Step
+    internal class RemoveSegmentsShorterThan20Meters : BaseStep
     {
-        public RemoveSegmentsShorterThan20Meters(ILogger logger) : base(logger)
+        public RemoveSegmentsShorterThan20Meters(int step, ILogger logger) : base(logger, step)
         {
         }
 
         public override Context Run(Context context)
         {
             // Remove very short segments
-            return new Context(
-                context
+            return new Context(Step, context
                     .Segments
                     .Where(segment => segment.Distance >= 20)
                     .ToList(),
