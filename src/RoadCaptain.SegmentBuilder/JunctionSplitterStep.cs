@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using Serilog;
 
@@ -21,11 +22,13 @@ namespace RoadCaptain.SegmentBuilder
 
                 foreach (var segmentToAdjust in segments)
                 {
+                    var segmentsExceptSegmentToAdjust = segments
+                        .Where(s => s.Id != segmentToAdjust.Id)
+                        .ToList();
+
                     var (toRemove, toAdd) = SplitJunctionNode(
                         segmentToAdjust,
-                        segments
-                            .Where(s => s.Id != segmentToAdjust.Id)
-                            .ToList(),
+                        segmentsExceptSegmentToAdjust,
                         segmentToAdjust.A);
 
                     if (toRemove != null && toAdd != null)
@@ -38,9 +41,7 @@ namespace RoadCaptain.SegmentBuilder
 
                     (toRemove, toAdd) = SplitJunctionNode(
                         segmentToAdjust,
-                        segments
-                            .Where(s => s.Id != segmentToAdjust.Id)
-                            .ToList(),
+                        segmentsExceptSegmentToAdjust,
                         segmentToAdjust.B);
 
                     if (toRemove != null && toAdd != null)
@@ -87,8 +88,53 @@ namespace RoadCaptain.SegmentBuilder
 
             if (overlaps.Count > 1)
             {
-                Logger.Warning($"Found {overlaps.Count} overlaps but only expected 1!");
-                return (null, null);
+                Logger.Information("Found {Count} overlaps, attempting to adjust for T-junctions...", overlaps.Count);
+
+                var beforeEndPoint = endPoint.Equals(segmentToAdjust.A)
+                    ? segmentToAdjust.Points[1]
+                    : segmentToAdjust.Points[^2];
+
+                var segmentBearing = TrackPoint.Bearing(
+                    endPoint,
+                    beforeEndPoint);
+
+                var temp = overlaps
+                    .Where(overlap => overlap.OverlappingPoints.Count > 1)
+                    .Select(overlap =>
+                        new
+                        {
+                            Overlap = overlap,
+                            OverlapBearing = TrackPoint.Bearing(
+                                overlap.OverlappingPoints[0],
+                                overlap.OverlappingPoints[^1])
+                        })
+                    .Select(x => new
+                    {
+                        x.Overlap,
+                        x.OverlapBearing,
+                        Difference = Math.Abs(segmentBearing - x.OverlapBearing)
+                    })
+                    .ToList();
+
+                var newOverlaps = temp
+                    .Where(x => x.Difference > 35)
+                    .Select(x => x.Overlap)
+                    .ToList();
+
+                if (newOverlaps.Count == overlaps.Count || newOverlaps.Count > 1)
+                {
+                    Logger.Warning("Unable to adjust for T-junctions, too many overlaps to split a junction");
+                    return (null, null);
+                }
+
+                if (newOverlaps.Count == 0)
+                {
+                    Logger.Warning("Unable to adjust for T-junction, got no overlaps left!");
+                    return (null, null);
+                }
+
+                overlaps = newOverlaps;
+                Logger.Information("Adjusted for a T-junction, got 1 segment left: {SegmentId}", overlaps[0].Segment.Id);
             }
 
             if (overlaps[0].OverlappingPoints.Count < 2)
@@ -121,7 +167,9 @@ namespace RoadCaptain.SegmentBuilder
                 (pointAfter, pointBefore) = (pointBefore, pointAfter);
             }
 
-            if (pointAfter.DistanceOnSegment < 100 || pointAfter.DistanceOnSegment > junctionSegment.Distance - 100)
+            var minimumDistanceOnSegment = 100;
+
+            if (pointAfter.DistanceOnSegment < minimumDistanceOnSegment || pointAfter.DistanceOnSegment > junctionSegment.Distance - minimumDistanceOnSegment)
             {
                 Logger.Warning("Overlap point is {Distance}m on segment but expected at least 100m from start or end of the segment", Math.Round(pointAfter.DistanceOnSegment, 1));
                 return (null, null);
