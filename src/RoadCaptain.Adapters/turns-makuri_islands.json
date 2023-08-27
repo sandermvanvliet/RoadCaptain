@@ -62,7 +62,8 @@
     },
     "turnsB": {
       "right": "makuri-islands-two-village-loop-002",
-      "goStraight": "makuri-islands-chain-chomper-001-after-after-after-after-before-after"
+      "goStraight": "makuri-islands-chain-chomper-001-after-after-after-after-before-after",
+      "left": "makuri-islands-two-village-loop-003"
     }
   },
   {
@@ -698,7 +699,8 @@
   {
     "segmentId": "makuri-islands-two-village-loop-002",
     "turnsA": {
-      "left": "makuri-islands-two-village-loop-003",
+      "left": "makuri-islands-chain-chomper-001-after-after-after-after-after",
+      "goStraight": "makuri-islands-two-village-loop-003",
       "right": "makuri-islands-chain-chomper-001-after-after-after-after-after"
     },
     "turnsB": {
@@ -711,11 +713,13 @@
     "segmentId": "makuri-islands-two-village-loop-003",
     "turnsA": {
       "left": "makuri-islands-chain-chomper-001-after-after-after-after-before-after",
-      "goStraight": "makuri-islands-two-village-loop-002"
+      "goStraight": "makuri-islands-two-village-loop-002",
+      "right": "makuri-islands-chain-chomper-001-after-after-after-after-before-before"
     },
     "turnsB": {
       "left": "makuri-islands-chain-chomper-001-after-after-after-after-after",
-      "right": "makuri-islands-two-village-loop-002"
+      "goStraight": "makuri-islands-two-village-loop-002",
+      "right": "makuri-islands-chain-chomper-001-after-after-after-after-before-after"
     }
   }
 ]
