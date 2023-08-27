@@ -444,7 +444,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             {
                 if (fromB != null)
                 {
-                    var newSegmentDirection = GetDirectionOnNewSegment(newSelectedSegment, lastSegment);
+                    var newSegmentDirection = GetDirectionOnNewSegment(newSelectedSegment, lastSegment, Route.Last.Direction);
 
                     Route.NextStep(fromB.Direction, fromB.SegmentId, newSelectedSegment, SegmentDirection.AtoB,
                         newSegmentDirection);
@@ -460,7 +460,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             {
                 if (fromA != null)
                 {
-                    var newSegmentDirection = GetDirectionOnNewSegment(newSelectedSegment, lastSegment);
+                    var newSegmentDirection = GetDirectionOnNewSegment(newSelectedSegment, lastSegment, Route.Last.Direction);
 
                     Route.NextStep(fromA.Direction, fromA.SegmentId, newSelectedSegment, SegmentDirection.BtoA,
                         newSegmentDirection);
@@ -481,7 +481,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
                         return commandResult;
                     }
 
-                    var newSegmentDirection = GetDirectionOnNewSegment(newSelectedSegment, lastSegment);
+                    var newSegmentDirection = GetDirectionOnNewSegment(newSelectedSegment, lastSegment, Route.Last.Direction);
 
                     Route.NextStep(fromA.Direction, fromA.SegmentId, newSelectedSegment, SegmentDirection.BtoA,
                         newSegmentDirection);
@@ -500,7 +500,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
                         return commandResult;
                     }
 
-                    var newSegmentDirection = GetDirectionOnNewSegment(newSelectedSegment, lastSegment);
+                    var newSegmentDirection = GetDirectionOnNewSegment(newSelectedSegment, lastSegment, Route.Last.Direction);
 
                     Route.NextStep(fromB.Direction, fromB.SegmentId, newSelectedSegment, SegmentDirection.AtoB,
                         newSegmentDirection);
@@ -579,15 +579,46 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             return CommandResult.Success();
         }
 
-        private static SegmentDirection GetDirectionOnNewSegment(Segment newSelectedSegment, Segment lastSegment)
+        private static SegmentDirection GetDirectionOnNewSegment(Segment newSelectedSegment, Segment lastSegment,
+            SegmentDirection segmentDirection)
         {
             var newSegmentDirection = SegmentDirection.Unknown;
 
-            if (newSelectedSegment.NextSegmentsNodeA.Any(s => s.SegmentId == lastSegment.Id))
+            var linkOnNodeA = newSelectedSegment.NextSegmentsNodeA.Any(s => s.SegmentId == lastSegment.Id);
+            var linkOnNodeB = newSelectedSegment.NextSegmentsNodeB.Any(s => s.SegmentId == lastSegment.Id);
+
+            if (linkOnNodeA && linkOnNodeB)
+            {
+                if (segmentDirection == SegmentDirection.AtoB)
+                {
+                    if (lastSegment.B.IsCloseTo(newSelectedSegment.A))
+                    {
+                        return SegmentDirection.AtoB;
+                    }
+
+                    if (lastSegment.B.IsCloseTo(newSelectedSegment.B))
+                    {
+                        return SegmentDirection.BtoA;
+                    }
+                }
+                else if (segmentDirection == SegmentDirection.BtoA)
+                {
+                    if (lastSegment.A.IsCloseTo(newSelectedSegment.A))
+                    {
+                        return SegmentDirection.AtoB;
+                    }
+
+                    if (lastSegment.A.IsCloseTo(newSelectedSegment.B))
+                    {
+                        return SegmentDirection.BtoA;
+                    }
+                }
+            }
+            else if (linkOnNodeA)
             {
                 newSegmentDirection = SegmentDirection.AtoB;
             }
-            else if (newSelectedSegment.NextSegmentsNodeB.Any(s => s.SegmentId == lastSegment.Id))
+            else if (linkOnNodeB)
             {
                 newSegmentDirection = SegmentDirection.BtoA;
             }

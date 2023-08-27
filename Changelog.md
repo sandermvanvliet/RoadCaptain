@@ -19,6 +19,9 @@ Read more about how it works on [the RoadCaptain site](https://roadcaptain.nl/fe
 - When creating a route and the route already contains a loop, Route Builder now no longer asks to create a further loop
 - When creating a route with a loop, the segment list now indicates the loop mode (fixed number or infinite) and the number of loops: <br />![Screenshot of the segment list with the loop indicator](./images/loop-indicator.png)![Screenshot of the segment list with the loop indicator](./images/loop-indicator-infinite.png)<br />Clicking the indicator allows you to change the loop settings.
 
+#### Bug fixes
+
+- Fixed a bug where the route direction would be incorrect for segments that connect back to themselves.
 
 ### Runner
 
