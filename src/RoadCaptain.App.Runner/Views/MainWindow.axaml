@@ -218,12 +218,13 @@
 						</Grid>
 					</Border>
 
-					<map:Map Grid.Column="1"
-                             Name="ZwiftMap"
-                             Margin="4,0,0,0"
-                             BorderThickness="1"
-                             BorderBrush="Black"
-                             AllowUserZoom="False"/>
+					<Border BorderThickness="1"
+                            BorderBrush="Black"
+                            Grid.Column="1"
+                            Margin="4,0,0,0">
+                        <map:Map Name="ZwiftMap" AllowUserZoom="False"/>
+                    </Border>
+
 				</Grid>
 
 				<!-- row 4 -->
