@@ -406,8 +406,8 @@
   {
     "segmentId": "watopia-big-foot-hills-004-after-before",
     "turnsA": {
-      "right": "watopia-tempus-fugit-002",
-      "goStraight": "watopia-big-foot-hills-004-before"
+      "goStraight": "watopia-big-foot-hills-004-before",
+      "right": "watopia-tempus-fugit-002"
     },
     "turnsB": {
       "goStraight": "watopia-big-foot-hills-004-after-after"
@@ -425,7 +425,8 @@
   {
     "segmentId": "watopia-big-foot-hills-004-after-after",
     "turnsA": {
-      "goStraight": "watopia-big-foot-hills-004-after-before"
+      "left": "watopia-big-foot-hills-004-after-before",
+      "goStraight": "watopia-tempus-fugit-002"
     },
     "turnsB": {
       "goStraight": "watopia-big-foot-hills-001-before-before"

@@ -22,12 +22,13 @@ Read more about how it works on [the RoadCaptain site](https://roadcaptain.nl/fe
 #### Bug fixes
 
 - Fixed a bug where the route direction would be incorrect for segments that connect back to themselves.
+- Fixed the turns for the Fuego Flats turnaround
 
 ### Runner
 
 - **Windows only** Zwift credentials will now be stored securely in the Credential Manager instead of keeping them in memory only. This reduces the amount of times you'll need to log in to Zwift
 - When entering a loop, the total distance is set to the distance of the loop.
-- 
+ 
 #### Elevation profile
 
 When riding hit <kbd>CTRL</kbd> + <kbd>E</kbd> / <kbd>META</kbd> + <kbd>E</kbd> to toggle the Elevation Plot window. This will allow you to see the elevation and grade of the route you are riding which helps you to plan your effort much easier than having to squint at the elevation profile for the entire route.
