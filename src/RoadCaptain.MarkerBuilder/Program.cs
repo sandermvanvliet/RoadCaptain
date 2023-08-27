@@ -15,8 +15,8 @@ namespace RoadCaptain.MarkerBuilder
     {
         public static void Main(string[] args)
         {
-            var poiFiles = Directory.GetFiles(@"C:\git\temp\zwift\zwift-france-gpx\special_segments", "*.gpx");
-            var world = "watopia";
+            var poiFiles = Directory.GetFiles(@"C:\git\temp\zwift\zwift-makuri-islands-gpx\special_segments", "*.gpx");
+            var world = "makuri-islands";
 
             var markers = poiFiles
                 .Select(file => Segment.FromGpx(File.ReadAllText(file)))
@@ -26,7 +26,7 @@ namespace RoadCaptain.MarkerBuilder
             {
                 segment.Name = segment.Name.Replace($"({world})", "", StringComparison.InvariantCultureIgnoreCase).Trim();
 
-                if (string.IsNullOrEmpty(segment.Id))
+                if (string.IsNullOrEmpty(segment.Id) || segment.Id == "(unknown)")
                 {
                     segment.Id = segment.Name.Replace(" ", "-").ToLower();
                 }
