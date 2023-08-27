@@ -223,6 +223,15 @@ namespace RoadCaptain.App.RouteBuilder.Views
                     ViewModel.SelectSegmentCommand.Execute(segment);
                 }
             }
+            if (e.MapObject is SpawnPointSegment spawnPointSegment)
+            {
+                var segment = ViewModel.Segments.SingleOrDefault(s => s.Id == spawnPointSegment.SegmentId);
+
+                if (segment != null)
+                {
+                    ViewModel.SelectSegmentCommand.Execute(segment);
+                }
+            }
         }
     }
 }

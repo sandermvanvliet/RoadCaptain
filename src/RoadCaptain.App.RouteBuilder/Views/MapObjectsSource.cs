@@ -67,6 +67,12 @@ namespace RoadCaptain.App.RouteBuilder.Views
             {
                 var seq = viewModelRoute.Sequence.FirstOrDefault(s => s.SegmentId == segment.SegmentId);
 
+                // Segments can only be selected when a spawn point has been selected as
+                // the first segment on a route. To ensure that the map control doesn't attempt
+                // to match on segments we can't select at all anyway we disable selection
+                // here.
+                segment.IsSelectable = routeHasSegments;
+
                 if (seq != null)
                 {
                     segment.IsLeadIn = seq.Type == SegmentSequenceType.LeadIn;
@@ -350,5 +356,11 @@ namespace RoadCaptain.App.RouteBuilder.Views
             stopwatch.Stop();
             Debug.WriteLine($"SetZwiftMap(): {stopwatch.ElapsedMilliseconds}ms");
         }
+    }
+
+    public enum SegmentSelectionMode
+    {
+        All,
+        OnlySpawnPoints
     }
 }

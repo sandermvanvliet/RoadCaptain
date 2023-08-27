@@ -54,7 +54,12 @@ namespace RoadCaptain.App.Shared.Controls
 
         public override string Name { get; }
         public override SKRect Bounds { get; }
-        public override bool IsSelectable { get; set; } = false;
+
+        public override bool IsSelectable
+        {
+            get => true;
+            set {}
+        }
         public string SegmentId { get; }
         public override bool IsVisible { get; set; } = true;
 
