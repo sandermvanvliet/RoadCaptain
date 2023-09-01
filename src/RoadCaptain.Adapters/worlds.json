@@ -289,12 +289,6 @@
         "zwiftRouteName": "greater-london-loop-rev (london)",
         "direction": "BtoA",
         "sport": "Cycling"
-      },
-      {
-        "segmentId": "london-london-8-rev-001",
-        "zwiftRouteName": "london-8-rev (london)",
-        "direction": "AtoB",
-        "sport": "Cycling"
       }
     ],
     "status": "Beta",
