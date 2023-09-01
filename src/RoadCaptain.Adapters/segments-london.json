@@ -1776,7 +1776,7 @@
         "worldId": null
       }
     ],
-    "sport": "Unknown",
+    "sport": "Cycling",
     "type": "Segment",
     "name": "london-classique-rev-001-after-after",
     "noSelectReason": null
@@ -2136,7 +2136,7 @@
         "worldId": null
       }
     ],
-    "sport": "Unknown",
+    "sport": "Cycling",
     "type": "Segment",
     "name": "london-classique-rev-001-after-before",
     "noSelectReason": null
@@ -2739,7 +2739,7 @@
         "worldId": null
       }
     ],
-    "sport": "Unknown",
+    "sport": "Cycling",
     "type": "Segment",
     "name": "london-classique-rev-001-before-after",
     "noSelectReason": null
@@ -3135,7 +3135,7 @@
         "worldId": null
       }
     ],
-    "sport": "Unknown",
+    "sport": "Cycling",
     "type": "Segment",
     "name": "london-classique-rev-001-before-before",
     "noSelectReason": null
@@ -5970,7 +5970,7 @@
         "worldId": null
       }
     ],
-    "sport": "Unknown",
+    "sport": "Cycling",
     "type": "Segment",
     "name": "london-greater-london-8-001",
     "noSelectReason": null
@@ -12216,7 +12216,7 @@
         "worldId": null
       }
     ],
-    "sport": "Unknown",
+    "sport": "Cycling",
     "type": "Segment",
     "name": "london-greater-london-8-002-after",
     "noSelectReason": null
@@ -12774,7 +12774,7 @@
         "worldId": null
       }
     ],
-    "sport": "Unknown",
+    "sport": "Cycling",
     "type": "Segment",
     "name": "london-greater-london-8-002-before",
     "noSelectReason": null
@@ -13413,7 +13413,7 @@
         "worldId": null
       }
     ],
-    "sport": "Unknown",
+    "sport": "Cycling",
     "type": "Segment",
     "name": "london-greater-london-8-004-after-after-after-after",
     "noSelectReason": null
@@ -14835,7 +14835,7 @@
         "worldId": null
       }
     ],
-    "sport": "Unknown",
+    "sport": "Cycling",
     "type": "Segment",
     "name": "london-greater-london-8-004-after-after-after-before",
     "noSelectReason": null
@@ -15006,7 +15006,7 @@
         "worldId": null
       }
     ],
-    "sport": "Unknown",
+    "sport": "Cycling",
     "type": "Segment",
     "name": "london-greater-london-8-004-after-after-before-after",
     "noSelectReason": null
@@ -19740,7 +19740,7 @@
         "worldId": null
       }
     ],
-    "sport": "Unknown",
+    "sport": "Cycling",
     "type": "Segment",
     "name": "london-greater-london-8-004-after-after-before-before",
     "noSelectReason": null
@@ -20253,7 +20253,7 @@
         "worldId": null
       }
     ],
-    "sport": "Unknown",
+    "sport": "Cycling",
     "type": "Segment",
     "name": "london-greater-london-8-004-after-before",
     "noSelectReason": null
@@ -20442,7 +20442,7 @@
         "worldId": null
       }
     ],
-    "sport": "Unknown",
+    "sport": "Cycling",
     "type": "Segment",
     "name": "london-greater-london-8-004-before-after",
     "noSelectReason": null
@@ -21351,7 +21351,7 @@
         "worldId": null
       }
     ],
-    "sport": "Unknown",
+    "sport": "Cycling",
     "type": "Segment",
     "name": "london-greater-london-8-004-before-before",
     "noSelectReason": null
@@ -22548,7 +22548,7 @@
         "worldId": null
       }
     ],
-    "sport": "Unknown",
+    "sport": "Cycling",
     "type": "Segment",
     "name": "london-greatest-london-flat-001",
     "noSelectReason": null
@@ -33753,7 +33753,7 @@
         "worldId": null
       }
     ],
-    "sport": "Unknown",
+    "sport": "Cycling",
     "type": "Segment",
     "name": "london-greatest-london-loop-rev-001",
     "noSelectReason": null
@@ -33987,7 +33987,7 @@
         "worldId": null
       }
     ],
-    "sport": "Unknown",
+    "sport": "Cycling",
     "type": "Segment",
     "name": "london-london-8-rev-001",
     "noSelectReason": null
