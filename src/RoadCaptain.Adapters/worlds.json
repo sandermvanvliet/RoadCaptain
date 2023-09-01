@@ -214,7 +214,7 @@
         "sport": "Cycling"
       }
     ],
-    "status": "Beta",
+    "status": "Available",
     "zwiftId": "MakuriIslands",
     "worldMostLeft": {
       "latitude": -10.80543,
@@ -400,7 +400,7 @@
         "sport": "Both"
       }
     ],
-    "status": "Beta",
+    "status": "Available",
     "zwiftId": "France",
     "worldMostLeft": {
       "latitude": -21.74424,
