@@ -270,37 +270,31 @@
         "segmentId": "london-classique-rev-001-after-after",
         "zwiftRouteName": "greater-london-flat (london)",
         "direction": "BtoA",
-        "sport": "Cycling"
+        "sport": "Unknown"
       },
       {
-        "segmentId": "london-classique-rev-001-before",
+        "segmentId": "london-classique-rev-001-before-before",
         "zwiftRouteName": "classique-rev (london)",
         "direction": "AtoB",
-        "sport": "Cycling"
+        "sport": "Unknown"
       },
       {
         "segmentId": "london-greater-london-8-001",
         "zwiftRouteName": "greater-london-8 (london)",
         "direction": "AtoB",
-        "sport": "Cycling"
+        "sport": "Unknown"
       },
       {
         "segmentId": "london-greater-london-8-004-after-after-after-after",
         "zwiftRouteName": "greater-london-loop-rev (london)",
         "direction": "BtoA",
-        "sport": "Cycling"
-      },
-      {
-        "segmentId": "london-greater-london-8-004-after-after-before",
-        "zwiftRouteName": "surrey-hills (london)",
-        "direction": "BtoA",
-        "sport": "Cycling"
+        "sport": "Unknown"
       },
       {
         "segmentId": "london-london-8-rev-001",
         "zwiftRouteName": "london-8-rev (london)",
         "direction": "AtoB",
-        "sport": "Cycling"
+        "sport": "Unknown"
       }
     ],
     "status": "Beta",

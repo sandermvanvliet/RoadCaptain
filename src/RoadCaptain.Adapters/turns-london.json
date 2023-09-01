@@ -6,14 +6,14 @@
       "right": "london-greater-london-8-002-before"
     },
     "turnsB": {
-      "goStraight": "london-classique-rev-001-before"
+      "goStraight": "london-classique-rev-001-before-before"
     }
   },
   {
     "segmentId": "london-classique-rev-001-after-before",
     "turnsA": {
       "right": "london-greater-london-8-001",
-      "goStraight": "london-classique-rev-001-before"
+      "goStraight": "london-classique-rev-001-before-after"
     },
     "turnsB": {
       "left": "london-greater-london-8-002-before",
@@ -21,13 +21,26 @@
     }
   },
   {
-    "segmentId": "london-classique-rev-001-before",
+    "segmentId": "london-classique-rev-001-before-after",
     "turnsA": {
-      "goStraight": "london-classique-rev-001-after-after"
+      "left": "london-greater-london-8-003",
+      "right": "london-greater-london-8-002-after",
+      "goStraight": "london-classique-rev-001-before-before"
     },
     "turnsB": {
       "left": "london-greater-london-8-001",
       "goStraight": "london-classique-rev-001-after-before"
+    }
+  },
+  {
+    "segmentId": "london-classique-rev-001-before-before",
+    "turnsA": {
+      "goStraight": "london-classique-rev-001-after-after"
+    },
+    "turnsB": {
+      "left": "london-greater-london-8-002-after",
+      "right": "london-greater-london-8-003",
+      "goStraight": "london-classique-rev-001-before-after"
     }
   },
   {
@@ -37,7 +50,7 @@
     },
     "turnsB": {
       "left": "london-classique-rev-001-after-before",
-      "right": "london-classique-rev-001-before"
+      "right": "london-classique-rev-001-before-after"
     }
   },
   {
@@ -47,6 +60,8 @@
       "goStraight": "london-greater-london-8-002-before"
     },
     "turnsB": {
+      "left": "london-classique-rev-001-before-after",
+      "right": "london-classique-rev-001-before-before",
       "goStraight": "london-greater-london-8-003"
     }
   },
@@ -64,6 +79,8 @@
   {
     "segmentId": "london-greater-london-8-003",
     "turnsA": {
+      "left": "london-classique-rev-001-before-before",
+      "right": "london-classique-rev-001-before-after",
       "goStraight": "london-greater-london-8-002-after"
     },
     "turnsB": {}
@@ -71,8 +88,7 @@
   {
     "segmentId": "london-greater-london-8-004-after-after-after-after",
     "turnsA": {
-      "left": "london-london-8-rev-001",
-      "right": "london-greater-london-8-004-after-after-after-before"
+      "goStraight": "london-greater-london-8-004-after-after-after-before"
     },
     "turnsB": {
       "goStraight": "london-greater-london-8-001"
@@ -81,23 +97,33 @@
   {
     "segmentId": "london-greater-london-8-004-after-after-after-before",
     "turnsA": {
-      "left": "london-greater-london-8-004-after-after-before",
+      "left": "london-greater-london-8-004-after-after-before-after",
       "right": "london-greatest-london-flat-001"
     },
     "turnsB": {
-      "left": "london-greater-london-8-004-after-after-after-after",
-      "right": "london-london-8-rev-001"
+      "goStraight": "london-greater-london-8-004-after-after-after-after"
     }
   },
   {
-    "segmentId": "london-greater-london-8-004-after-after-before",
+    "segmentId": "london-greater-london-8-004-after-after-before-after",
+    "turnsA": {
+      "left": "london-greatest-london-loop-rev-001",
+      "goStraight": "london-greater-london-8-004-after-after-before-before"
+    },
+    "turnsB": {
+      "left": "london-greatest-london-flat-001",
+      "right": "london-greater-london-8-004-after-after-after-before"
+    }
+  },
+  {
+    "segmentId": "london-greater-london-8-004-after-after-before-before",
     "turnsA": {
       "left": "london-greater-london-8-004-after-before",
       "right": "london-greatest-london-flat-001"
     },
     "turnsB": {
-      "left": "london-greatest-london-flat-001",
-      "right": "london-greater-london-8-004-after-after-after-before"
+      "right": "london-greatest-london-loop-rev-001",
+      "goStraight": "london-greater-london-8-004-after-after-before-after"
     }
   },
   {
@@ -108,7 +134,7 @@
     },
     "turnsB": {
       "left": "london-greatest-london-flat-001",
-      "right": "london-greater-london-8-004-after-after-before"
+      "right": "london-greater-london-8-004-after-after-before-before"
     }
   },
   {
@@ -144,37 +170,23 @@
   {
     "segmentId": "london-greatest-london-flat-001",
     "turnsA": {
-      "left": "london-greater-london-8-004-after-after-before",
+      "left": "london-greater-london-8-004-after-after-before-before",
       "right": "london-greater-london-8-004-after-before"
     },
     "turnsB": {
       "left": "london-greater-london-8-004-after-after-after-before",
-      "right": "london-greater-london-8-004-after-after-before"
+      "right": "london-greater-london-8-004-after-after-before-after"
     }
   },
   {
     "segmentId": "london-greatest-london-loop-rev-001",
     "turnsA": {
-      "goStraight": "london-surrey-hills-001"
+      "left": "london-greater-london-8-004-after-after-before-before",
+      "right": "london-greater-london-8-004-after-after-before-after"
     },
     "turnsB": {
       "left": "london-greater-london-8-004-before-before",
       "right": "london-greater-london-8-004-before-after"
     }
-  },
-  {
-    "segmentId": "london-london-8-rev-001",
-    "turnsA": {},
-    "turnsB": {
-      "left": "london-greater-london-8-004-after-after-after-before",
-      "right": "london-greater-london-8-004-after-after-after-after"
-    }
-  },
-  {
-    "segmentId": "london-surrey-hills-001",
-    "turnsA": {
-      "goStraight": "london-greatest-london-loop-rev-001"
-    },
-    "turnsB": {}
   }
 ]
