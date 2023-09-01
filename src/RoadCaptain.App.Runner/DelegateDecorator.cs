@@ -26,7 +26,7 @@ namespace RoadCaptain.App.Runner
 
         public async Task ShowAlreadyRunningDialog(string applicationName)
         {
-            await InvokeIfNeededAsync(() => ShowAlreadyRunningDialog(applicationName));
+            await InvokeIfNeededAsync(() => _decorated.ShowAlreadyRunningDialog(applicationName));
         }
 
         public async Task<string?> ShowOpenFileDialog(string? previousLocation, IDictionary<string, string> filters)
