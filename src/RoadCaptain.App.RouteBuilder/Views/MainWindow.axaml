@@ -170,11 +170,15 @@
 												</Border.Styles>
 												<Grid>
 													<Image Source="{Binding Path=Image,Converter={StaticResource BitmapConverter}}" Height="100" Stretch="Uniform" ClipToBounds="True" Margin="0"
-														   Classes.isSelected="{Binding Path=IsSelected}">
+														   Classes.isSelected="{Binding Path=IsSelected}"
+                                                           Classes.notAvailable="{Binding Path=CanSelect, Converter={StaticResource BooleanConverter}, ConverterParameter=invert}">
 														<Image.Styles>
 															<Style Selector="Image">
-																<Setter Property="Opacity" Value="0.5" />
+																<Setter Property="Opacity" Value="0.7" />
 															</Style>
+															<Style Selector="Image.notAvailable">
+																<Setter Property="Opacity" Value="0.2" />
+                                                            </Style>
 															<Style Selector="Image:pointerover">
 																<Setter Property="Opacity" Value="1"/>
 															</Style>
@@ -183,8 +187,27 @@
 															</Style>
 														</Image.Styles>
 													</Image>
-													<Border Margin="0" Height="24" VerticalAlignment="Top" HorizontalAlignment="Right" BorderBrush="#FF6141" BorderThickness="1,0,0,1" CornerRadius="0,5,0,5" Background="White">
-														<TextBlock Text="{Binding Path=Name}" FontWeight="Bold" FontSize="16" Foreground="Black" Padding="4,2,4,0"  />
+													<Border Margin="0" Height="24" VerticalAlignment="Top" HorizontalAlignment="Right" BorderThickness="1,0,0,1" CornerRadius="0,5,0,5" Background="White"
+                                                            Classes.notAvailable="{Binding Path=CanSelect, Converter={StaticResource BooleanConverter}, ConverterParameter=invert}">
+														<Border.Styles>
+															<Style Selector="Border">
+                                                                <Setter Property="BorderBrush" Value="#FF6141"/>
+                                                            </Style>
+															<Style Selector="Border.notAvailable">
+																<Setter Property="BorderBrush" Value="Gray" />
+                                                            </Style>
+                                                        </Border.Styles>
+                                                        <TextBlock Text="{Binding Path=Name}" FontWeight="Bold" FontSize="16" Padding="4,2,4,0" 
+                                                                   Classes.notAvailable="{Binding Path=CanSelect, Converter={StaticResource BooleanConverter}, ConverterParameter=invert}">
+															<TextBlock.Styles>
+																<Style Selector="TextBlock">
+																	<Setter Property="Foreground" Value="Black" />
+                                                                </Style>
+                                                                <Style Selector="TextBlock.notAvailable">
+																	<Setter Property="Foreground" Value="Gray"/>
+                                                                </Style>
+                                                            </TextBlock.Styles>
+                                                        </TextBlock>
 													</Border>
 													<Border Margin="0" Height="24" VerticalAlignment="Bottom" HorizontalAlignment="Left" BorderBrush="#FF6141" BorderThickness="0,1,1,0" CornerRadius="0,5,0,5" Background="White"
                                                             IsVisible="{Binding Path=IsBeta}">
