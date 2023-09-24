@@ -211,18 +211,18 @@ namespace RoadCaptain.Adapters
 
             if (commandType == CommandType.Unknown)
             {
-                _monitoringEvents.Warning($"Did not recognise command {numericalCommandType} ({description})");
+                _monitoringEvents.Warning($"Did not recognize command {numericalCommandType} ({description})");
             }
 
             Enqueue(new ZwiftCommandAvailableMessage(commandType.ToString(), sequenceNumber));
         }
 
-        protected virtual void OnRiderPosition(float latitude, float longitude, float altitude)
+        protected virtual void OnRiderPosition(float x, float y, float altitude)
         {
             Enqueue(new ZwiftRiderPositionMessage
             {
-                Latitude = latitude,
-                Longitude = longitude,
+                X = x,
+                Y = y,
                 Altitude = altitude
             });
         }

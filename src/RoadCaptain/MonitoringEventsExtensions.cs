@@ -3,6 +3,7 @@
 // See LICENSE or https://choosealicense.com/licenses/artistic-2.0/
 
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
@@ -46,13 +47,16 @@ namespace RoadCaptain
             monitoringEvents.Information("Waiting for inbound TCP connection");
         }
 
-        public static void RiderPositionReceived(this MonitoringEvents monitoringEvents, float latitude,
-            float longitude, float altitude)
+        public static void RiderPositionReceived(this MonitoringEvents monitoringEvents, GameCoordinate gameCoordinate, TrackPoint trackPoint)
         {
-            //monitoringEvents.Debug("Received rider position {Latitude} {Longitude} {Altitude}",
-            //    latitude.ToString("0.00000000", CultureInfo.InvariantCulture),
-            //    longitude.ToString("0.00000000", CultureInfo.InvariantCulture),
-            //    altitude.ToString("0.00000000", CultureInfo.InvariantCulture));
+            monitoringEvents.Debug("Received rider position {X} {Y} {Altitude} => {Latitude} {Longitude} {Altitude} {CoordinatesDecimal}",
+                gameCoordinate.X.ToString("0.00000000", CultureInfo.InvariantCulture),
+                gameCoordinate.Y.ToString("0.00000000", CultureInfo.InvariantCulture),
+                gameCoordinate.Altitude.ToString("0.00000000", CultureInfo.InvariantCulture),
+                trackPoint.Latitude,
+                trackPoint.Longitude,
+                trackPoint.Altitude,
+                trackPoint.CoordinatesDecimal);
         }
 
         public static void AvailableTurns(this MonitoringEvents monitoringEvents, List<TurnDirection> turns)

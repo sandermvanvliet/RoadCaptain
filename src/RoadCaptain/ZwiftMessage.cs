@@ -10,8 +10,8 @@ namespace RoadCaptain
 
     public sealed class ZwiftRiderPositionMessage : ZwiftMessage
     {
-        public float Latitude { get; init; }
-        public float Longitude { get; init; }
+        public float X { get; init; }
+        public float Y { get; init; }
         public float Altitude { get; init; }
     }
 

@@ -76,13 +76,15 @@ namespace RoadCaptain.UseCases
                 {
                     if (message is ZwiftRiderPositionMessage riderPosition)
                     {
-                        _monitoringEvents.RiderPositionReceived(riderPosition.Latitude, riderPosition.Longitude, riderPosition.Altitude);
-
                         // TODO: Figure out how to get the WorldId as quickly as possible and put it in the game state
                         var worldId = _route?.World?.ZwiftId ?? ZwiftWorldId.Unknown;
 
+                        var gameCoordinate = new GameCoordinate(riderPosition.X, riderPosition.Y, riderPosition.Altitude, worldId);
+
                         // Convert from Zwift game coordinates to a lat/lon coordinate
-                        var position = new GameCoordinate(riderPosition.Latitude, riderPosition.Longitude, riderPosition.Altitude, worldId).ToTrackPoint();
+                        var position = gameCoordinate.ToTrackPoint();
+                        
+                        _monitoringEvents.RiderPositionReceived(gameCoordinate, position);
 
                         // As long as there is no route loaded we cannot change the
                         // the state.
