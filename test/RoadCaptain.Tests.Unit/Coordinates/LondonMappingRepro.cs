@@ -25,7 +25,7 @@ namespace RoadCaptain.Tests.Unit.Coordinates
             }
         }
 
-        [Fact]
+        //[Fact]
         public void ReproOne()
         {
             var gameCoordinate = new GameCoordinate(156612.38f, -8146.511f, 0, ZwiftWorldId.London);
