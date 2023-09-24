@@ -23,6 +23,7 @@ Read more about how it works on [the RoadCaptain site](https://roadcaptain.nl/fe
 
 - Fixed a bug where the route direction would be incorrect for segments that connect back to themselves.
 - Fixed the turns for the Fuego Flats turnaround
+- Fixed an issue where Route Builder wanted to authenticate to Zwift even when saving the route to a local file. (See [#120](https://github.com/sandermvanvliet/RoadCaptain/issues/120))
 
 ### Runner
 

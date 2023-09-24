@@ -57,7 +57,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
                 await CloseWindow();
             })
             .OnFailure(async result =>
-                await _windowService.ShowErrorDialog($"Unable to save route: {result.Message}", null))
+                await _windowService.ShowErrorDialog($"Unable to save route: {result.Message}", _windowService.GetCurrentWindow()!))
             .SubscribeTo(this, () => SelectedRepository)
             .SubscribeTo(this, () => RouteName)
             .SubscribeTo(this, () => OutputFilePath);
@@ -65,12 +65,13 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
         public ICommand SelectFileCommand => new AsyncRelayCommand(
             _ => SelectFile(),
             _ => !string.IsNullOrEmpty(RouteName))
-            .OnSuccess(async _ =>
+            .OnSuccess(_ =>
             {
                 SelectedRepository = null;
+                return Task.CompletedTask;
             })
             .OnFailure(async result =>
-                await _windowService.ShowErrorDialog($"Unable to select a file to save to: {result.Message}", null))
+                await _windowService.ShowErrorDialog($"Unable to select a file to save to: {result.Message}", _windowService.GetCurrentWindow()!))
             .SubscribeTo(this, () => RouteName);
         
         private async Task<CommandResult> SaveRoute()
@@ -86,7 +87,12 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             
             try
             {
-                var token = await AuthenticateToZwiftAsync();
+                TokenResponse? token = null;
+
+                if(!string.IsNullOrEmpty(SelectedRepository))
+                {
+                    token = await AuthenticateToZwiftAsync();
+                }
                 
                 await _saveRouteUseCase.ExecuteAsync(new SaveRouteCommand(_route.AsPlannedRoute()!, RouteName, SelectedRepository, token?.AccessToken, OutputFilePath));
                 
