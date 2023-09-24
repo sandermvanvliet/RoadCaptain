@@ -226,6 +226,7 @@ jobs:
   update_site_releases:
     runs-on: ubuntu-latest
     needs: [create_release, build_win, build_macos-x64, build_macos-arm64]
+    if: ${{ always() && needs.build_win.result == 'success' && needs.build_macos-x64.result == 'success' }}
     steps:
     - uses: actions/checkout@v3
 
