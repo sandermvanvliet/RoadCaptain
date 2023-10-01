@@ -235,6 +235,8 @@ jobs:
       run: |
         previous_version=`sed -nr "s/.*prerelease%2F([0-9]\.[0-9]*\.[0-9]*\.[0-9]*).*$/\1/p" site/data/releases.yml  | head -n 1`
         sed -i "s/$previous_version/${{needs.create_release.outputs.version}}/g" site/data/releases.yml
+        git config user.email "roadcaptain@roadcaptain.nl"
+        git config user.name "Roadcaptain (bot)"
         git add site/data/releases.yml
         git commit -m "Update pre-release version on website"
         git push
