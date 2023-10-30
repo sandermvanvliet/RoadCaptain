@@ -3,10 +3,13 @@
   <component name="AvaloniaProject">
     <option name="projectPerEditor">
       <map>
+        <entry key="src/RoadCaptain.App.RouteBuilder/Views/BuildRoute.axaml" value="src/RoadCaptain.App.RouteBuilder/RoadCaptain.App.RouteBuilder.csproj" />
         <entry key="src/RoadCaptain.App.RouteBuilder/Views/MainWindow.axaml" value="src/RoadCaptain.App.RouteBuilder/RoadCaptain.App.RouteBuilder.csproj" />
         <entry key="src/RoadCaptain.App.RouteBuilder/Views/ManageRoutes.axaml" value="src/RoadCaptain.App.RouteBuilder/RoadCaptain.App.RouteBuilder.csproj" />
         <entry key="src/RoadCaptain.App.RouteBuilder/Views/OpenRouteDialog.axaml" value="src/RoadCaptain.App.RouteBuilder/RoadCaptain.App.RouteBuilder.csproj" />
+        <entry key="src/RoadCaptain.App.RouteBuilder/Views/RouteSegmentListView.axaml" value="src/RoadCaptain.App.RouteBuilder/RoadCaptain.App.RouteBuilder.csproj" />
         <entry key="src/RoadCaptain.App.RouteBuilder/Views/SaveRouteDialog.axaml" value="src/RoadCaptain.App.RouteBuilder/RoadCaptain.App.RouteBuilder.csproj" />
+        <entry key="src/RoadCaptain.App.RouteBuilder/Views/WorldSelector.axaml" value="src/RoadCaptain.App.RouteBuilder/RoadCaptain.App.RouteBuilder.csproj" />
         <entry key="src/RoadCaptain.App.Runner/Views/ElevationPlotWindow.axaml" value="src/RoadCaptain.App.Runner/RoadCaptain.App.Runner.csproj" />
         <entry key="src/RoadCaptain.App.Runner/Views/ElevationProfileWindow.axaml" value="src/RoadCaptain.App.Runner/RoadCaptain.App.Runner.csproj" />
         <entry key="src/RoadCaptain.App.Runner/Views/InGameNavigationWIndow.axaml" value="src/RoadCaptain.App.Runner/RoadCaptain.App.Runner.csproj" />

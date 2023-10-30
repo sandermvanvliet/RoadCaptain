@@ -87,9 +87,9 @@ namespace RoadCaptain.App.RouteBuilder.Views
                     break;
                 case nameof(ViewModel.Route):
                     // Ensure the last added segment is visible
-                    if (RouteListView.ItemCount > 0)
+                    if (RouteSegmentListView.RouteListView.ItemCount > 0)
                     {
-                        RouteListView.ScrollIntoView(RouteListView.ItemCount - 1);
+                        RouteSegmentListView.RouteListView.ScrollIntoView(RouteSegmentListView.RouteListView.ItemCount - 1);
                     }
 
                     // Redraw when the route changes so that the
@@ -150,44 +150,7 @@ namespace RoadCaptain.App.RouteBuilder.Views
         // not yet exist)
         // ReSharper disable UnusedMember.Local
         // ReSharper disable UnusedParameter.Local
-        private void RouteListView_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (e.AddedItems.Count == 1 && e.AddedItems[0] is SegmentSequenceViewModel viewModel && !string.IsNullOrEmpty(viewModel.SegmentId))
-            {
-                ViewModel.HighlightSegment(viewModel.SegmentId);
-            }
-            else
-            {
-                ViewModel.ClearSegmentHighlight();
-            }
-        }
 
-        private void MarkersOnRouteListBox_OnSelectionChanged(object? sender, SelectionChangedEventArgs e)
-        {
-            if (e.AddedItems.Count == 1 && e.AddedItems[0] is MarkerViewModel viewModel)
-            {
-                ViewModel.HighlightMarker(viewModel.Id);
-            }
-            else
-            {
-                ViewModel.ClearMarkerHighlight();
-            }
-        }
-
-        private void RouteListView_KeyUp(object sender, KeyEventArgs e)
-        {
-            if (sender is ListBox { SelectedItem: SegmentSequenceViewModel viewModel } && e.Key == Key.Delete)
-            {
-                if (viewModel == ViewModel.Route.Last)
-                {
-                    ViewModel.RemoveLastSegmentCommand.Execute(null);
-                    if (RouteListView.ItemCount > 0)
-                    {
-                        RouteListView.SelectedItem = RouteListView.Items.Cast<object>().Last();
-                    }
-                }
-            }
-        }
 
         private void ZoomIn_Click(object sender, RoutedEventArgs e)
         {
