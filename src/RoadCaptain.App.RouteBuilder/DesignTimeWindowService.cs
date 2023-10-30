@@ -59,6 +59,11 @@ namespace RoadCaptain.App.RouteBuilder
             throw new System.NotImplementedException();
         }
 
+        public Task<MessageBoxResult> ShowQuestionDialog(string title, string message)
+        {
+            throw new System.NotImplementedException();
+        }
+
         public Task<bool> ShowDefaultSportSelectionDialog(SportType sport)
         {
             throw new System.NotImplementedException();

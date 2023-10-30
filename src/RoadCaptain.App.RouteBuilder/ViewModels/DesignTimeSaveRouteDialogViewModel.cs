@@ -2,6 +2,7 @@
 // Licensed under Artistic License 2.0
 // See LICENSE or https://choosealicense.com/licenses/artistic-2.0/
 
+using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Threading.Tasks;
@@ -64,5 +65,9 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
 
         public string Name => "Local";
         public bool IsReadOnly => false;
+        public Task DeleteAsync(Uri routeUri)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -209,5 +209,10 @@ namespace RoadCaptain.Adapters
                 return null;
             }
         }
+        
+        public Task DeleteAsync(Uri routeUri)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

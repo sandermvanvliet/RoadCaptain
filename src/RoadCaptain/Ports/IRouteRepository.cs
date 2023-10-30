@@ -2,6 +2,7 @@
 // Licensed under Artistic License 2.0
 // See LICENSE or https://choosealicense.com/licenses/artistic-2.0/
 
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -29,5 +30,6 @@ namespace RoadCaptain.Ports
 
         string Name { get; }
         bool IsReadOnly { get; }
+        Task DeleteAsync(Uri routeUri);
     }
 }

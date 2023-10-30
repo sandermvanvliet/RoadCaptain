@@ -178,6 +178,16 @@ namespace RoadCaptain.App.RouteBuilder
                 : (null, null);
         }
 
+        public async Task<MessageBoxResult> ShowQuestionDialog(string title, string message)
+        {
+            return await MessageBox.ShowAsync(
+                message,
+                title,
+                MessageBoxButton.YesNo,
+                CurrentWindow!,
+                MessageBoxIcon.Question);
+        }
+
         public void ShowMainWindow(IApplicationLifetime applicationLifetime)
         {
             var desktopMainWindow = Resolve<MainWindow>();

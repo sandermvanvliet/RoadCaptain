@@ -70,6 +70,11 @@ namespace RoadCaptain.App.RouteBuilder
             return await InvokeIfNeededAsync(() => _decorated.ShowOpenRouteDialog());
         }
 
+        public async Task<MessageBoxResult> ShowQuestionDialog(string title, string message)
+        {
+        return await InvokeIfNeededAsync(() => _decorated.ShowQuestionDialog(title, message));
+        }
+
         public async Task<bool> ShowDefaultSportSelectionDialog(SportType sport)
         {
             return await InvokeIfNeededAsync(() => _decorated.ShowDefaultSportSelectionDialog(sport));

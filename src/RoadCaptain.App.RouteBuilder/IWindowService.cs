@@ -23,5 +23,6 @@ namespace RoadCaptain.App.RouteBuilder
         Window? GetCurrentWindow();
         Task<string?> ShowSaveFileDialog(string? previousLocation, string? suggestedFileName = null);
         Task<(PlannedRoute? PlannedRoute, string? RouteFilePath)> ShowOpenRouteDialog();
+        Task<MessageBoxResult> ShowQuestionDialog(string title, string message);
     }
 }

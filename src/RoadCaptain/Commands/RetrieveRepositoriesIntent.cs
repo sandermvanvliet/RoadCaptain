@@ -8,6 +8,7 @@ namespace RoadCaptain.Commands
     {
         Unknown,
         Retrieve,
-        Store
+        Store,
+        Manage
     }
 }

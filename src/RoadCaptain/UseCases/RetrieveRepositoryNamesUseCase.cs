@@ -24,6 +24,7 @@ namespace RoadCaptain.UseCases
             var repositories = command.Intent switch
             {
                 RetrieveRepositoriesIntent.Retrieve => new[] { "All" }.Concat(_routeRepositories.Select(r => r.Name)).ToArray(),
+                RetrieveRepositoriesIntent.Manage => new [] { "All"}.Concat(_routeRepositories.Where(r => !r.IsReadOnly).Select(r => r.Name)).ToArray(),
                 RetrieveRepositoriesIntent.Store => _routeRepositories.Where(r => !r.IsReadOnly).Select(r => r.Name).ToArray(),
                 _ => throw new ArgumentException("Invalid intent")
             };
