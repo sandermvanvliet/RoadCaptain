@@ -18,6 +18,29 @@
 
     <Application.Styles>
         <FluentTheme Mode="Light"/>
+        
+        <Style Selector="Button">
+	        <Setter Property="Background" Value="#FF6141" />
+	        <Setter Property="Foreground" Value="White" />
+	        <Setter Property="Height" Value="32" />
+	        <Setter Property="FontSize" Value="20" />
+	        <Setter Property="FontWeight" Value="Bold" />
+	        <Setter Property="BorderThickness" Value="0" />
+	        <Setter Property="VerticalAlignment" Value="Center" />
+	        <Setter Property="Cursor" Value="Hand" />
+	        <Setter Property="Template">
+		        <Setter.Value>
+			        <ControlTemplate TargetType="Button">
+				        <Border Name="borderZero" Background="{TemplateBinding Background}" CornerRadius="8" Padding="4,0,4,0">
+					        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" Content="{TemplateBinding Content}" />
+				        </Border>
+			        </ControlTemplate>
+		        </Setter.Value>
+	        </Setter>
+        </Style>
+        <Style Selector="Button:disabled">
+	        <Setter Property="Background" Value="LightGray" />
+        </Style>
     </Application.Styles>
 
     <Application.Resources>

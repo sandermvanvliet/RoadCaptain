@@ -28,40 +28,23 @@
 	</Design.DataContext>
 	<Window.Styles>
 		<Style Selector="Button.toolbar">
-			<Setter Property="Background" Value="#FF6141" />
-			<Setter Property="Foreground" Value="White" />
 			<Setter Property="Width" Value="40" />
-			<Setter Property="Height" Value="32" />
-			<Setter Property="FontSize" Value="20" />
 			<Setter Property="Margin" Value="4,0,0,2" />
-			<Setter Property="BorderThickness" Value="0" />
-			<Setter Property="VerticalAlignment" Value="Center" />
-			<Setter Property="VerticalContentAlignment" Value="Center" />
-			<Setter Property="Cursor" Value="Hand" />
-			<Setter Property="Template">
-				<Setter.Value>
-					<ControlTemplate TargetType="Button">
-						<Border Name="borderZero" Background="{TemplateBinding Background}" CornerRadius="5">
-							<ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" Content="{TemplateBinding Content}" />
-						</Border>
-					</ControlTemplate>
-				</Setter.Value>
-			</Setter>
 		</Style>
 		<Style Selector="Button.toolbar:disabled">
 			<Setter Property="Background" Value="DarkGray"/>
 		</Style>
 		<Style Selector="Button.link">
 			<Setter Property="Background" Value="Transparent" />
-			<Setter Property="Foreground" Value="White" />
-			<Setter Property="BorderThickness" Value="0" />
-			<Setter Property="VerticalAlignment" Value="Center" />
-			<Setter Property="Cursor" Value="Hand" />
 			<Setter Property="Padding" Value="0" />
+			<Setter Property="FontSize" Value="16" />
+			<Setter Property="FontWeight" Value="Normal" />
+			<Setter Property="Margin" Value="0" />
 		</Style>
 		<Style Selector="Button.world">
 			<Setter Property="Background" Value="White" />
 			<Setter Property="Cursor" Value="Hand" />
+			<Setter Property="Height" Value="100" />
 		</Style>
 		<Style Selector="Button.world:pointerover">
 			<Setter Property="Background" Value="#FF6141" />
@@ -226,7 +209,7 @@
 
 				<StackPanel Orientation="Horizontal" Grid.Row="2">
 					<TextBlock Text="Select a sport to build a route for:" FontSize="16" VerticalAlignment="Center" />
-					<Button Content="(reset default)" Classes="link" Foreground="Blue" VerticalAlignment="Center" Margin="8,2,0,0"
+					<Button Content="(reset default)" Classes="link" Foreground="Blue" VerticalAlignment="Center"
                             IsVisible="{Binding Path=HasDefaultSport}"
                             Command="{Binding Path=ResetDefaultSportCommand}"/>
 				</StackPanel>
