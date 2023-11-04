@@ -5,7 +5,6 @@
              xmlns:routeBuilder="clr-namespace:RoadCaptain.App.RouteBuilder"
              xmlns:viewModels="clr-namespace:RoadCaptain.App.RouteBuilder.ViewModels"
              xmlns:converters="clr-namespace:RoadCaptain.App.Shared.Converters;assembly=RoadCaptain.App.Shared"
-             xmlns:converters1="clr-namespace:RoadCaptain.App.RouteBuilder.Converters"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="RoadCaptain.App.RouteBuilder.Views.LandingPage"
              x:DataType="viewModels:LandingPageViewModel">
@@ -15,10 +14,7 @@
 
     <UserControl.Resources>
         <converters:BooleanConverter x:Key="BooleanConverter" />
-        <converters:ValueToBooleanConverter x:Key="ValueToBooleanConverter" />
         <converters:BitmapConverter x:Key="BitmapConverter" />
-        <converters:NullabilityConverter x:Key="NullabilityConverter" />
-        <converters1:RouteViewModelConverter x:Key="RouteViewModelConverter" />
     </UserControl.Resources>
     <UserControl.Styles>
         <Style Selector="Button.world">
@@ -48,7 +44,7 @@
                 <ItemsControl.ItemTemplate>
                     <DataTemplate DataType="{x:Type viewModels:WorldViewModel}">
                         <Button Classes="world"
-                                Command="{Binding Path=SelectWorldCommand,RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}"
+                                Command="{Binding $parent[Window].((viewModels:LandingPageViewModel)DataContext).SelectWorldCommand}"
                                 CommandParameter="{Binding}" Cursor="Hand">
                             <Button.Template>
                                 <ControlTemplate>
@@ -147,7 +143,7 @@
                 <ItemsControl.ItemTemplate>
                     <DataTemplate DataType="{x:Type viewModels:SportViewModel}">
                         <Button Classes="world"
-                                Command="{Binding Path=SelectSportCommand,RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}"
+                                Command="{Binding Path=$parent[Window].((viewModels:LandingPageViewModel)DataContext).SelectSportCommand}"
                                 CommandParameter="{Binding}" Cursor="Hand">
                             <Button.Template>
                                 <ControlTemplate>

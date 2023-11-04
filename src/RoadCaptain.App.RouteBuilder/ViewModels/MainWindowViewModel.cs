@@ -64,7 +64,8 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             var segmentStore1 = segmentStore;
             Route = new RouteViewModel(routeStore, segmentStore1);
             LandingPageViewModel = new LandingPageViewModel(worldStore, userPreferences, windowService);
-
+            RouteSegmentListViewModel = new RouteSegmentListViewModel(Route, windowService);
+            
             Route.PropertyChanged += (_, args) => HandleRoutePropertyChanged(segmentStore1, args);
 
             SelectDefaultSportFromPreferences();
@@ -101,14 +102,6 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
                 .OnSuccessWithMessage(_ => Model.StatusBarInfo("Added segment {0}", _.Message))
                 .OnFailure(_ => Model.StatusBarWarning(_.Message));
 
-            RemoveLastSegmentCommand = new RelayCommand(
-                    _ => RemoveLastSegment(),
-                    _ => Route.Sequence.Any())
-                .SubscribeTo(this, () => Route.Sequence)
-                .OnSuccess(_ => { Model.StatusBarInfo("Removed segment"); })
-                .OnSuccessWithMessage(_ => { Model.StatusBarInfo("Removed segment {0}", _.Message); })
-                .OnFailure(_ => Model.StatusBarWarning(_.Message));
-
             SimulateCommand = new RelayCommand(
                     _ => SimulateRoute(),
                     _ => Route.Sequence.Any())
@@ -123,37 +116,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
                     _ => Route.World != null)
                 .SubscribeTo(this, () => Route.World);
 
-            ConfigureLoopCommand = new AsyncRelayCommand(
-                    _ => ConfigureLoop(),
-                    _ => Route.IsLoop)
-                .SubscribeTo(this, () => Route.Sequence)
-                .SubscribeTo(this, () => Route.IsLoop);
-
             Version = GetType().Assembly.GetName().Version?.ToString(4) ?? "0.0.0.0";
-        }
-
-
-        private async Task<CommandResult> ConfigureLoop()
-        {
-            var shouldCreateLoop = await _windowService.ShowRouteLoopDialog(Route.LoopMode, Route.NumberOfLoops);
-
-            if (shouldCreateLoop.Mode is LoopMode.Infinite or LoopMode.Constrained)
-            {
-                Route.LoopMode = shouldCreateLoop.Mode;
-                Route.NumberOfLoops = shouldCreateLoop.NumberOfLoops;
-                this.RaisePropertyChanged(nameof(Route));
-            }
-            else
-            {
-                // Clear the loop properties
-                foreach (var seq in Route.Sequence.Where(s => s.IsLoop))
-                {
-                    seq.Type = SegmentSequenceType.Regular;
-                }
-                this.RaisePropertyChanged(nameof(Route));
-            }
-
-            return CommandResult.Success();
         }
 
         private async Task<CommandResult> ResetWorldAndSport()
@@ -283,11 +246,9 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
         public ICommand OpenRouteCommand { get; }
         public ICommand ClearRouteCommand { get; }
         public ICommand SelectSegmentCommand { get; }
-        public ICommand RemoveLastSegmentCommand { get; }
         public ICommand SimulateCommand { get; }
         public ICommand OpenLinkCommand { get; set; }
         public ICommand ResetWorldCommand { get; }
-        public ICommand ConfigureLoopCommand { get; set; }
 
         public LandingPageViewModel LandingPageViewModel { get; }
 
@@ -509,25 +470,6 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             commandResult = new CommandResult { Result = Result.NotExecuted };
 
             return true;
-        }
-
-        private CommandResult RemoveLastSegment()
-        {
-            if (!Route.Sequence.Any())
-            {
-                return CommandResult.Failure("Can't remove segment because the route does not have any segments");
-            }
-
-            var lastSegment = Route.RemoveLast();
-
-            SelectedSegment = null;
-
-            if (lastSegment != null)
-            {
-                return CommandResult.SuccessWithMessage(lastSegment.SegmentName);
-            }
-
-            return CommandResult.Success();
         }
 
         private static SegmentDirection GetDirectionOnNewSegment(Segment newSelectedSegment, Segment lastSegment,
@@ -828,6 +770,8 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
                 this.RaisePropertyChanged();
             }
         }
+
+        public RouteSegmentListViewModel RouteSegmentListViewModel { get; }
 
         public async Task CheckForNewVersion()
         {

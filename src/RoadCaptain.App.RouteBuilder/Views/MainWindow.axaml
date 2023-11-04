@@ -43,8 +43,7 @@
 	<Window.Resources>
 		<converters:BooleanConverter x:Key="BooleanConverter" />
 		<converters:ValueToBooleanConverter x:Key="ValueToBooleanConverter" />
-		<converters:BitmapConverter x:Key="BitmapConverter" />
-		<converters:NullabilityConverter x:Key="NullabilityConverter" />
+		<converters:NullabilityConverter x:Key="NullabilityConverter"></converters:NullabilityConverter>
 		<appConverters:RouteViewModelConverter x:Key="RouteViewModelConverter" />
 	</Window.Resources>
 	<DockPanel>
@@ -101,7 +100,7 @@
 			</Panel>
 			
 			<views:LandingPage Grid.Row="0" Grid.RowSpan="2" Grid.Column="1"
-			                   IsVisible="{Binding Path=Route.ReadyToBuild,Converter={StaticResource BooleanConverter},ConverterParameter=invert}"
+			                   IsVisible="{Binding RelativeSource={RelativeSource AncestorType=Window}, Path=DataContext.Route.ReadyToBuild,Converter={StaticResource BooleanConverter},ConverterParameter=invert}"
 			                   Margin="3,40,4,4" 
 			                   DataContext="{Binding LandingPageViewModel}"/>
 
@@ -145,7 +144,7 @@
 				</StackPanel>
 			</WrapPanel>
 
-			<views:RouteSegmentListView Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" Name="RouteSegmentListView" DataContext="{Binding}" />
+			<views:RouteSegmentListView Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" Name="RouteSegmentListView" DataContext="{Binding Path=RouteSegmentListViewModel}" />
 		</Grid>
 	</DockPanel>
 

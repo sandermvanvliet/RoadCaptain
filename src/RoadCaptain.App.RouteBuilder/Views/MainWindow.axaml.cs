@@ -62,7 +62,7 @@ namespace RoadCaptain.App.RouteBuilder.Views
             this.Bind(ViewModel.OpenRouteCommand).To(Key.O).WithPlatformModifier();
             this.Bind(ViewModel.SaveRouteCommand).To(Key.S).WithPlatformModifier();
             this.Bind(ViewModel.ClearRouteCommand).To(Key.R).WithPlatformModifier();
-            this.Bind(ViewModel.RemoveLastSegmentCommand).To(Key.Z).WithPlatformModifier();
+            this.Bind(ViewModel.RouteSegmentListViewModel.RemoveLastSegmentCommand).To(Key.Z).WithPlatformModifier();
 
             _mapObjectsSource = new MapObjectsSource(ZwiftMap);
         }
