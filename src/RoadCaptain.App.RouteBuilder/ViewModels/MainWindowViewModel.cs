@@ -35,10 +35,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
         private bool _haveCheckedVersion;
         private readonly IVersionChecker _versionChecker;
         private readonly IWindowService _windowService;
-        private readonly IWorldStore _worldStore;
         private readonly IUserPreferences _userPreferences;
-        private WorldViewModel[] _worlds;
-        private SportViewModel[] _sports;
         private List<Segment> _markers;
         private bool _showClimbs;
         private bool _showSprints;
@@ -55,7 +52,6 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             _segments = new List<Segment>();
             _versionChecker = versionChecker;
             _windowService = windowService;
-            _worldStore = worldStore;
             _userPreferences = userPreferences;
             _applicationFeatures = applicationFeatures;
             _convertUseCase = new ConvertZwiftMapRouteUseCase(worldStore, segmentStore);
@@ -64,11 +60,10 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             _showElevationProfile = _userPreferences.ShowElevationProfile;
 
             Model = new MainWindowModel();
-            _worlds = worldStore.LoadWorlds().Select(world => new WorldViewModel(world)).ToArray();
-            _sports = new[] { new SportViewModel(SportType.Cycling), new SportViewModel(SportType.Running) };
             _markers = new List<Segment>();
             var segmentStore1 = segmentStore;
             Route = new RouteViewModel(routeStore, segmentStore1);
+            LandingPageViewModel = new LandingPageViewModel(worldStore, userPreferences, windowService);
 
             Route.PropertyChanged += (_, args) => HandleRoutePropertyChanged(segmentStore1, args);
 
@@ -122,20 +117,6 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             OpenLinkCommand = new RelayCommand(
                 _ => OpenLink(_ as string ?? throw new ArgumentNullException(nameof(RelayCommand.CommandParameter))),
                 _ => !string.IsNullOrEmpty(_ as string));
-
-            SelectWorldCommand = new RelayCommand(
-                _ => SelectWorld(_ as WorldViewModel ??
-                                 throw new ArgumentNullException(nameof(RelayCommand.CommandParameter))),
-                _ => (_ as WorldViewModel)?.CanSelect ?? false);
-
-            SelectSportCommand = new AsyncRelayCommand(
-                _ => SelectSport(_ as SportViewModel ??
-                                 throw new ArgumentNullException(nameof(RelayCommand.CommandParameter))),
-                _ => _ is SportViewModel);
-
-            ResetDefaultSportCommand = new RelayCommand(
-                _ => ResetDefaultSport(),
-                _ => true);
 
             ResetWorldCommand = new AsyncRelayCommand(
                     _ => ResetWorldAndSport(),
@@ -204,7 +185,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
 
             Markers = new();
 
-            var selectedSport = Sports.SingleOrDefault(s => s.IsSelected);
+            var selectedSport = LandingPageViewModel.Sports.SingleOrDefault(s => s.IsSelected);
             if (selectedSport != null)
             {
                 selectedSport.IsSelected = false;
@@ -212,7 +193,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
                 SelectDefaultSportFromPreferences();
             }
 
-            var selectedWorld = Worlds.SingleOrDefault(s => s.IsSelected);
+            var selectedWorld = LandingPageViewModel.Worlds.SingleOrDefault(s => s.IsSelected);
             if (selectedWorld != null)
             {
                 selectedWorld.IsSelected = false;
@@ -223,26 +204,12 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             return CommandResult.Success();
         }
 
-        private CommandResult ResetDefaultSport()
-        {
-            _userPreferences.DefaultSport = null;
-            _userPreferences.Save();
-
-            foreach (var sport in _sports)
-            {
-                sport.IsDefault = false;
-            }
-
-            DefaultSport = null;
-
-            return CommandResult.Success();
-        }
-
         private void SelectDefaultSportFromPreferences()
         {
-            if (HasDefaultSport)
+            if (LandingPageViewModel.HasDefaultSport)
             {
-                var sport = Sports
+                var sport = LandingPageViewModel
+                    .Sports
                     .SingleOrDefault(s =>
                         (_userPreferences.DefaultSport ?? "").Equals(s.Sport.ToString(),
                             StringComparison.InvariantCultureIgnoreCase));
@@ -319,11 +286,10 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
         public ICommand RemoveLastSegmentCommand { get; }
         public ICommand SimulateCommand { get; }
         public ICommand OpenLinkCommand { get; set; }
-        public ICommand SelectWorldCommand { get; }
-        public ICommand SelectSportCommand { get; }
-        public ICommand ResetDefaultSportCommand { get; }
         public ICommand ResetWorldCommand { get; }
         public ICommand ConfigureLoopCommand { get; set; }
+
+        public LandingPageViewModel LandingPageViewModel { get; }
 
         public Segment? SelectedSegment
         {
@@ -344,21 +310,6 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
                 if (value == _highlightedMarker) return;
                 _highlightedMarker = value;
                 this.RaisePropertyChanged();
-            }
-        }
-
-        public bool HasDefaultSport => !string.IsNullOrEmpty(DefaultSport);
-
-        public string? DefaultSport
-        {
-            get => _userPreferences.DefaultSport;
-            private set
-            {
-                _userPreferences.DefaultSport = value;
-                _userPreferences.Save();
-
-                this.RaisePropertyChanged();
-                this.RaisePropertyChanged(nameof(HasDefaultSport));
             }
         }
 
@@ -739,62 +690,6 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             return CommandResult.Aborted();
         }
 
-        private CommandResult SelectWorld(WorldViewModel world)
-        {
-            if (string.IsNullOrEmpty(world.Id))
-            {
-                return CommandResult.Failure("Can't select the world because its id is empty");
-            }
-
-            Route.World = _worldStore.LoadWorldById(world.Id);
-
-            var currentSelected = Worlds.SingleOrDefault(w => w.IsSelected);
-            if (currentSelected != null)
-            {
-                currentSelected.IsSelected = false;
-            }
-
-            world.IsSelected = true;
-
-            if (Route.ReadyToBuild)
-            {
-                this.RaisePropertyChanged(nameof(Route));
-            }
-
-            return CommandResult.Success();
-        }
-
-        private async Task<CommandResult> SelectSport(SportViewModel sport)
-        {
-            Route.Sport = sport.Sport;
-
-            if (string.IsNullOrEmpty(_userPreferences.DefaultSport))
-            {
-                var result = await _windowService.ShowDefaultSportSelectionDialog(sport.Sport);
-
-                if (result)
-                {
-                    DefaultSport = sport.Sport.ToString();
-                    sport.IsDefault = true;
-                }
-            }
-
-            var currentSelected = Sports.SingleOrDefault(w => w.IsSelected);
-            if (currentSelected != null)
-            {
-                currentSelected.IsSelected = false;
-            }
-
-            sport.IsSelected = true;
-
-            if (Route.ReadyToBuild)
-            {
-                this.RaisePropertyChanged(nameof(Route));
-            }
-
-            return CommandResult.Success();
-        }
-
         private CommandResult SimulateRoute()
         {
             if (_simulationTask != null && SimulationState == SimulationState.Running)
@@ -900,28 +795,6 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             {
                 if (value == _changelogUri) return;
                 _changelogUri = value;
-                this.RaisePropertyChanged();
-            }
-        }
-
-        public WorldViewModel[] Worlds
-        {
-            get => _worlds;
-            set
-            {
-                if (value == _worlds) return;
-                _worlds = value;
-                this.RaisePropertyChanged();
-            }
-        }
-
-        public SportViewModel[] Sports
-        {
-            get => _sports;
-            set
-            {
-                if (value == _sports) return;
-                _sports = value;
                 this.RaisePropertyChanged();
             }
         }

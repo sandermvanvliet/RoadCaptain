@@ -1,0 +1,202 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:routeBuilder="clr-namespace:RoadCaptain.App.RouteBuilder"
+             xmlns:viewModels="clr-namespace:RoadCaptain.App.RouteBuilder.ViewModels"
+             xmlns:converters="clr-namespace:RoadCaptain.App.Shared.Converters;assembly=RoadCaptain.App.Shared"
+             xmlns:converters1="clr-namespace:RoadCaptain.App.RouteBuilder.Converters"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="RoadCaptain.App.RouteBuilder.Views.LandingPage"
+             x:DataType="viewModels:LandingPageViewModel">
+    <Design.DataContext>
+        <routeBuilder:DesignTimeLandingPageViewModel />
+    </Design.DataContext>
+
+    <UserControl.Resources>
+        <converters:BooleanConverter x:Key="BooleanConverter" />
+        <converters:ValueToBooleanConverter x:Key="ValueToBooleanConverter" />
+        <converters:BitmapConverter x:Key="BitmapConverter" />
+        <converters:NullabilityConverter x:Key="NullabilityConverter" />
+        <converters1:RouteViewModelConverter x:Key="RouteViewModelConverter" />
+    </UserControl.Resources>
+    <UserControl.Styles>
+        <Style Selector="Button.world">
+            <Setter Property="Background" Value="White" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Height" Value="100" />
+        </Style>
+        <Style Selector="Button.world:pointerover">
+            <Setter Property="Background" Value="{StaticResource ZwiftOrange}" />
+        </Style>
+    </UserControl.Styles>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="30" />
+            <RowDefinition Height="150" />
+        </Grid.RowDefinitions>
+        <TextBlock Text="Select a world to build a route for:" FontSize="16" Grid.Row="0" />
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+            <ItemsControl Items="{Binding Path=Worlds}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate DataType="{x:Type viewModels:WorldViewModel}">
+                        <Button Classes="world"
+                                Command="{Binding Path=SelectWorldCommand,RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}"
+                                CommandParameter="{Binding}" Cursor="Hand">
+                            <Button.Template>
+                                <ControlTemplate>
+                                    <Border Name="borderZero" Background="White" CornerRadius="5" BorderThickness="2"
+                                            Width="180" Height="100" Margin="8,8,8,8"
+                                            Classes.isSelected="{Binding Path=IsSelected}">
+                                        <Border.Styles>
+                                            <Style Selector="Border">
+                                                <Setter Property="BorderBrush" Value="#1192CC" />
+                                            </Style>
+                                            <Style Selector="Border:pointerover">
+                                                <Setter Property="BorderBrush" Value="{StaticResource ZwiftOrange}" />
+                                            </Style>
+                                            <Style Selector="Border.isSelected">
+                                                <Setter Property="BorderBrush" Value="{StaticResource ZwiftOrange}" />
+                                            </Style>
+                                        </Border.Styles>
+                                        <Grid>
+                                            <Image
+                                                Source="{Binding Path=Image,Converter={StaticResource BitmapConverter}}"
+                                                Height="100" Stretch="Uniform" ClipToBounds="True" Margin="0"
+                                                Classes.isSelected="{Binding Path=IsSelected}"
+                                                Classes.notAvailable="{Binding Path=CanSelect, Converter={StaticResource BooleanConverter}, ConverterParameter=invert}">
+                                                <Image.Styles>
+                                                    <Style Selector="Image">
+                                                        <Setter Property="Opacity" Value="0.7" />
+                                                    </Style>
+                                                    <Style Selector="Image.notAvailable">
+                                                        <Setter Property="Opacity" Value="0.2" />
+                                                    </Style>
+                                                    <Style Selector="Image:pointerover">
+                                                        <Setter Property="Opacity" Value="1" />
+                                                    </Style>
+                                                    <Style Selector="Image.isSelected">
+                                                        <Setter Property="Opacity" Value="1" />
+                                                    </Style>
+                                                </Image.Styles>
+                                            </Image>
+                                            <Border Margin="0" Height="24" VerticalAlignment="Top"
+                                                    HorizontalAlignment="Right" BorderThickness="1,0,0,1"
+                                                    CornerRadius="0,5,0,5" Background="White"
+                                                    Classes.notAvailable="{Binding Path=CanSelect, Converter={StaticResource BooleanConverter}, ConverterParameter=invert}">
+                                                <Border.Styles>
+                                                    <Style Selector="Border">
+                                                        <Setter Property="BorderBrush"
+                                                                Value="{StaticResource ZwiftOrange}" />
+                                                    </Style>
+                                                    <Style Selector="Border.notAvailable">
+                                                        <Setter Property="BorderBrush" Value="Gray" />
+                                                    </Style>
+                                                </Border.Styles>
+                                                <TextBlock Text="{Binding Path=Name}" FontWeight="Bold" FontSize="16"
+                                                           Padding="4,2,4,0"
+                                                           Classes.notAvailable="{Binding Path=CanSelect, Converter={StaticResource BooleanConverter}, ConverterParameter=invert}">
+                                                    <TextBlock.Styles>
+                                                        <Style Selector="TextBlock">
+                                                            <Setter Property="Foreground" Value="Black" />
+                                                        </Style>
+                                                        <Style Selector="TextBlock.notAvailable">
+                                                            <Setter Property="Foreground" Value="Gray" />
+                                                        </Style>
+                                                    </TextBlock.Styles>
+                                                </TextBlock>
+                                            </Border>
+                                            <Border Margin="0" Height="24" VerticalAlignment="Bottom"
+                                                    HorizontalAlignment="Left"
+                                                    BorderBrush="{StaticResource ZwiftOrange}"
+                                                    BorderThickness="0,1,1,0" CornerRadius="0,5,0,5" Background="White"
+                                                    IsVisible="{Binding Path=IsBeta}">
+                                                <TextBlock Text="BETA" FontWeight="Bold" FontSize="16"
+                                                           Foreground="Black" Padding="4,2,4,0" />
+                                            </Border>
+                                        </Grid>
+                                    </Border>
+                                </ControlTemplate>
+                            </Button.Template>
+                        </Button>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+
+        <StackPanel Orientation="Horizontal" Grid.Row="2">
+            <TextBlock Text="Select a sport to build a route for:" FontSize="16" VerticalAlignment="Center" />
+            <Button Content="(reset default)" Classes="link" Foreground="Blue" VerticalAlignment="Center"
+                    IsVisible="{Binding Path=HasDefaultSport}"
+                    Command="{Binding Path=ResetDefaultSportCommand}" />
+        </StackPanel>
+        <ScrollViewer Grid.Row="3" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+            <ItemsControl Items="{Binding Path=Sports}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate DataType="{x:Type viewModels:SportViewModel}">
+                        <Button Classes="world"
+                                Command="{Binding Path=SelectSportCommand,RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}"
+                                CommandParameter="{Binding}" Cursor="Hand">
+                            <Button.Template>
+                                <ControlTemplate>
+                                    <Border Name="borderZero" Background="White" CornerRadius="5" BorderThickness="2"
+                                            Width="180" Height="100" Margin="8,8,8,8"
+                                            Classes.isSelected="{Binding Path=IsSelected}">
+                                        <Border.Styles>
+                                            <Style Selector="Border">
+                                                <Setter Property="BorderBrush" Value="{StaticResource ZwiftBlue}" />
+                                            </Style>
+                                            <Style Selector="Border:pointerover">
+                                                <Setter Property="BorderBrush" Value="{StaticResource ZwiftOrange}" />
+                                            </Style>
+                                            <Style Selector="Border.isSelected">
+                                                <Setter Property="BorderBrush" Value="{StaticResource ZwiftOrange}" />
+                                            </Style>
+                                        </Border.Styles>
+                                        <Grid>
+                                            <Image Source="{Binding Path=Image}" Height="100" Stretch="Uniform"
+                                                   ClipToBounds="True" Margin="0"
+                                                   Classes.isSelected="{Binding Path=IsSelected}">
+                                                <Image.Styles>
+                                                    <Style Selector="Image">
+                                                        <Setter Property="Opacity" Value="0.5" />
+                                                    </Style>
+                                                    <Style Selector="Image:pointerover">
+                                                        <Setter Property="Opacity" Value="1" />
+                                                    </Style>
+                                                    <Style Selector="Image.isSelected">
+                                                        <Setter Property="Opacity" Value="1" />
+                                                    </Style>
+                                                </Image.Styles>
+                                            </Image>
+                                            <Border Margin="0" Height="28" VerticalAlignment="Top"
+                                                    HorizontalAlignment="Right"
+                                                    BorderBrush="{StaticResource ZwiftOrange}"
+                                                    BorderThickness="1,0,0,1" CornerRadius="0,5,0,5" Background="White"
+                                                    IsVisible="{Binding Path=IsDefault}">
+                                                <TextBlock Text="Default" FontSize="16" Foreground="Black"
+                                                           Padding="4,2,4,0" />
+                                            </Border>
+                                        </Grid>
+                                    </Border>
+                                </ControlTemplate>
+                            </Button.Template>
+                        </Button>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+    </Grid>
+</UserControl>
