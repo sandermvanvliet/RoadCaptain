@@ -26,38 +26,6 @@
         PointerPressed="InputElement_OnPointerPressed"
         Icon="avares://RoadCaptain.App.Shared/icon.png">
 	<Window.Styles>
-		<Style Selector="Button">
-			<Setter Property="Background" Value="#FF6141" />
-			<Setter Property="Foreground" Value="White" />
-			<Setter Property="Height" Value="32" />
-			<Setter Property="FontSize" Value="20" />
-			<Setter Property="FontWeight" Value="Bold" />
-			<Setter Property="BorderThickness" Value="0" />
-			<Setter Property="VerticalAlignment" Value="Center" />
-			<Setter Property="Cursor" Value="Hand" />
-			<Setter Property="Template">
-				<Setter.Value>
-					<ControlTemplate TargetType="Button">
-						<Border Name="borderZero" Background="{TemplateBinding Background}" CornerRadius="8" Padding="4,0,4,0">
-							<ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" Content="{TemplateBinding Content}" />
-						</Border>
-					</ControlTemplate>
-				</Setter.Value>
-			</Setter>
-		</Style>
-		<Style Selector="Button:disabled">
-			<Setter Property="Background" Value="LightGray"/>
-		</Style>
-		<Style Selector="Button.linkButton">
-			<Setter Property="Background" Value="White" />
-			<Setter Property="Foreground" Value="Blue" />
-			<Setter Property="BorderThickness" Value="0" />
-			<Setter Property="VerticalAlignment" Value="Center" />
-			<Setter Property="Cursor" Value="Hand" />
-			<Setter Property="Padding" Value="0" />
-			<Setter Property="FontSize" Value="14" />
-			<Setter Property="FontWeight" Value="Normal" />
-		</Style>
 		<Style Selector="TextBlock.routeDetails">
 			<Setter Property="TextTrimming" Value="CharacterEllipsis" />
 			<Setter Property="Padding" Value="4,0,0,0" />
@@ -242,7 +210,7 @@
 				<StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center" IsEnabled="True">
 					<TextBlock Text="Version:" VerticalAlignment="Center" />
 					<TextBlock Text="{Binding Path=Version}" Margin="4,0,0,0" VerticalAlignment="Center" />
-					<Button Content="Changelog (Github)" Margin="4,0,0,0" CommandParameter="{Binding Path=ChangelogUri}" Command="{Binding Path=OpenLinkCommand}" Classes="linkButton" />
+					<Button Content="Changelog (Github)" Margin="4,0,0,0" CommandParameter="{Binding Path=ChangelogUri}" Command="{Binding Path=OpenLinkCommand}" Classes="link" />
 				</StackPanel>
 				<Button Grid.Column="1"
                     Content="Let's Go!" HorizontalAlignment="Right"

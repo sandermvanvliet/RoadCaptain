@@ -101,7 +101,7 @@
                         <Setter Property="Padding" Value="8,0,8,0" />
                     </Style>
                     <Style Selector="ListBoxItem:pointerover /template/ ContentPresenter#PART_ContentPresenter">
-                        <Setter Property="Background" Value="#FF6141" />
+                        <Setter Property="Background" Value="{StaticResource ZwiftOrange}" />
                         <Setter Property="TextBlock.Foreground" Value="White" />
                     </Style>
                 </ListBox.Styles>

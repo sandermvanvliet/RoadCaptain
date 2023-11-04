@@ -13,7 +13,6 @@
         xmlns:sharedControls="clr-namespace:RoadCaptain.App.Shared.Controls;assembly=RoadCaptain.App.Shared"
         xmlns:appConverters="clr-namespace:RoadCaptain.App.RouteBuilder.Converters"
         xmlns:map="clr-namespace:Codenizer.Avalonia.Map;assembly=Codenizer.Avalonia.Map"
-        xmlns:roadCaptain="clr-namespace:RoadCaptain;assembly=RoadCaptain"
         xmlns:views="clr-namespace:RoadCaptain.App.RouteBuilder.Views"
         mc:Ignorable="d"
         x:Class="RoadCaptain.App.RouteBuilder.Views.MainWindow"
@@ -34,20 +33,13 @@
 		<Style Selector="Button.toolbar:disabled">
 			<Setter Property="Background" Value="DarkGray"/>
 		</Style>
-		<Style Selector="Button.link">
-			<Setter Property="Background" Value="Transparent" />
-			<Setter Property="Padding" Value="0" />
-			<Setter Property="FontSize" Value="16" />
-			<Setter Property="FontWeight" Value="Normal" />
-			<Setter Property="Margin" Value="0" />
-		</Style>
 		<Style Selector="Button.world">
 			<Setter Property="Background" Value="White" />
 			<Setter Property="Cursor" Value="Hand" />
 			<Setter Property="Height" Value="100" />
 		</Style>
 		<Style Selector="Button.world:pointerover">
-			<Setter Property="Background" Value="#FF6141" />
+			<Setter Property="Background" Value="{StaticResource ZwiftOrange}" />
 		</Style>
 		<Style Selector="map|Map">
 			<Setter Property="Margin" Value="0,0,0,0" />
@@ -146,10 +138,10 @@
 														<Setter Property="BorderBrush" Value="#1192CC" />
 													</Style>
 													<Style Selector="Border:pointerover">
-														<Setter Property="BorderBrush" Value="#FF6141"/>
+														<Setter Property="BorderBrush" Value="{StaticResource ZwiftOrange}"/>
 													</Style>
 													<Style Selector="Border.isSelected">
-														<Setter Property="BorderBrush" Value="#FF6141"/>
+														<Setter Property="BorderBrush" Value="{StaticResource ZwiftOrange}"/>
 													</Style>
 												</Border.Styles>
 												<Grid>
@@ -175,7 +167,7 @@
                                                             Classes.notAvailable="{Binding Path=CanSelect, Converter={StaticResource BooleanConverter}, ConverterParameter=invert}">
 														<Border.Styles>
 															<Style Selector="Border">
-                                                                <Setter Property="BorderBrush" Value="#FF6141"/>
+                                                                <Setter Property="BorderBrush" Value="{StaticResource ZwiftOrange}"/>
                                                             </Style>
 															<Style Selector="Border.notAvailable">
 																<Setter Property="BorderBrush" Value="Gray" />
@@ -193,7 +185,7 @@
                                                             </TextBlock.Styles>
                                                         </TextBlock>
 													</Border>
-													<Border Margin="0" Height="24" VerticalAlignment="Bottom" HorizontalAlignment="Left" BorderBrush="#FF6141" BorderThickness="0,1,1,0" CornerRadius="0,5,0,5" Background="White"
+													<Border Margin="0" Height="24" VerticalAlignment="Bottom" HorizontalAlignment="Left" BorderBrush="{StaticResource ZwiftOrange}" BorderThickness="0,1,1,0" CornerRadius="0,5,0,5" Background="White"
                                                             IsVisible="{Binding Path=IsBeta}">
 														<TextBlock Text="BETA" FontWeight="Bold" FontSize="16" Foreground="Black" Padding="4,2,4,0"  />
 													</Border>
@@ -230,13 +222,13 @@
 													Classes.isSelected="{Binding Path=IsSelected}">
 												<Border.Styles>
 													<Style Selector="Border">
-														<Setter Property="BorderBrush" Value="#1192CC" />
+														<Setter Property="BorderBrush" Value="{StaticResource ZwiftBlue}" />
 													</Style>
 													<Style Selector="Border:pointerover">
-														<Setter Property="BorderBrush" Value="#FF6141"/>
+														<Setter Property="BorderBrush" Value="{StaticResource ZwiftOrange}"/>
 													</Style>
 													<Style Selector="Border.isSelected">
-														<Setter Property="BorderBrush" Value="#FF6141"/>
+														<Setter Property="BorderBrush" Value="{StaticResource ZwiftOrange}"/>
 													</Style>
 												</Border.Styles>
 												<Grid>
@@ -254,7 +246,7 @@
 															</Style>
 														</Image.Styles>
 													</Image>
-													<Border Margin="0" Height="28" VerticalAlignment="Top" HorizontalAlignment="Right" BorderBrush="#FF6141" BorderThickness="1,0,0,1" CornerRadius="0,5,0,5" Background="White"
+													<Border Margin="0" Height="28" VerticalAlignment="Top" HorizontalAlignment="Right" BorderBrush="{StaticResource ZwiftOrange}" BorderThickness="1,0,0,1" CornerRadius="0,5,0,5" Background="White"
                                                             IsVisible="{Binding Path=IsDefault}">
 														<TextBlock Text="Default" FontSize="16" Foreground="Black" Padding="4,2,4,0"  />
 													</Border>

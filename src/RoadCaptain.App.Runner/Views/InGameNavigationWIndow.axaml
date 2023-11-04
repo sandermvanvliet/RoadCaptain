@@ -98,7 +98,7 @@
 					<ProgressBar Margin="0,0,10,0"
 								 HorizontalAlignment="Stretch"
 								 Height="18"
-								 Background="#C0C0C0" Foreground="#FF6141"
+								 Background="#C0C0C0" Foreground="{StaticResource ZwiftOrange}"
 								 Value="{Binding Path=Model.ElapsedDistance,FallbackValue=0, TargetNullValue=0,Mode=OneWay}"
 								 Minimum="0"
 								 Maximum="{Binding Path=Model.TotalDistance,FallbackValue=0, TargetNullValue=0,Mode=OneWay}"

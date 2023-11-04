@@ -108,9 +108,9 @@
 									<Button.Template>
 										<ControlTemplate>
 											<Border
-												BorderBrush="#FF6141"
+												BorderBrush="{StaticResource ZwiftOrange}"
 												BorderThickness="4"
-												Background="#FF6141"
+												Background="{StaticResource ZwiftOrange}"
 												CornerRadius="25"
 												Padding="6,0,6,0">
 												<StackPanel>

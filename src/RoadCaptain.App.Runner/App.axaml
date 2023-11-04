@@ -17,5 +17,6 @@
 
     <Application.Styles>
         <FluentTheme Mode="Light" />
+        <StyleInclude Source="avares://RoadCaptain.App.Shared/Styles/Shared.axaml" />
     </Application.Styles>
 </Application>
