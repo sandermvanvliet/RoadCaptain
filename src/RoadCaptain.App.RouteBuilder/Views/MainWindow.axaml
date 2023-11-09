@@ -10,9 +10,6 @@
         xmlns:converters="clr-namespace:RoadCaptain.App.Shared.Converters;assembly=RoadCaptain.App.Shared"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:sharedControls="clr-namespace:RoadCaptain.App.Shared.Controls;assembly=RoadCaptain.App.Shared"
-        xmlns:appConverters="clr-namespace:RoadCaptain.App.RouteBuilder.Converters"
-        xmlns:map="clr-namespace:Codenizer.Avalonia.Map;assembly=Codenizer.Avalonia.Map"
         xmlns:views="clr-namespace:RoadCaptain.App.RouteBuilder.Views"
         mc:Ignorable="d"
         x:Class="RoadCaptain.App.RouteBuilder.Views.MainWindow"
@@ -25,26 +22,8 @@
 	<Design.DataContext>
 		<viewModels:DesignTimeMainWindowViewModel />
 	</Design.DataContext>
-	<Window.Styles>
-		<Style Selector="Button.toolbar">
-			<Setter Property="Width" Value="40" />
-			<Setter Property="Margin" Value="4,0,0,2" />
-		</Style>
-		<Style Selector="Button.toolbar:disabled">
-			<Setter Property="Background" Value="DarkGray"/>
-		</Style>
-		<Style Selector="map|Map">
-			<Setter Property="Margin" Value="0,0,0,0" />
-		</Style>
-		<Style Selector="map|Map.narrowHeight">
-			<Setter Property="Margin" Value="0,0,0,250" />
-		</Style>
-	</Window.Styles>
 	<Window.Resources>
 		<converters:BooleanConverter x:Key="BooleanConverter" />
-		<converters:ValueToBooleanConverter x:Key="ValueToBooleanConverter" />
-		<converters:NullabilityConverter x:Key="NullabilityConverter"></converters:NullabilityConverter>
-		<appConverters:RouteViewModelConverter x:Key="RouteViewModelConverter" />
 	</Window.Resources>
 	<DockPanel>
 		<Grid
@@ -67,84 +46,19 @@
 			</StackPanel>
 		</Grid>
 		<Grid Margin="0,2,2,0">
-			<Grid.ColumnDefinitions>
-				<ColumnDefinition Width="300" />
-				<ColumnDefinition />
-			</Grid.ColumnDefinitions>
-			<Grid.RowDefinitions>
-				<RowDefinition Height="34"/>
-				<RowDefinition Height="*" />
-			</Grid.RowDefinitions>
-
-			<Panel IsVisible="{Binding Path=Route.ReadyToBuild}"
-                  Grid.Row="1" Grid.Column="1"
-                  VerticalAlignment="Stretch">
-				<map:Map
-					Name="ZwiftMap"
-					Cursor="Hand"
-					MapObjectSelected="ZwiftMap_OnMapObjectSelected"
-					VerticalAlignment="Top"
-					Classes.narrowHeight="{Binding Path=ShowElevationProfile}" />
-
-				<sharedControls:ElevationProfile
-					Height="250"
-					VerticalAlignment="Bottom"
-					HorizontalAlignment="Stretch"
-					Segments="{Binding Path=Segments}"
-					Route="{Binding Path=Route,Mode=OneWay,Converter={StaticResource RouteViewModelConverter}}"
-					RiderPosition="{Binding Path=RiderPosition}"
-					Markers="{Binding Path=Markers}"
-					IsVisible="{Binding Path=ShowElevationProfile}"
-					RenderMode="All"
-            />
-			</Panel>
-			
-			<views:LandingPage Grid.Row="0" Grid.RowSpan="2" Grid.Column="1"
+			<views:LandingPage 
 			                   IsVisible="{Binding RelativeSource={RelativeSource AncestorType=Window}, Path=DataContext.Route.ReadyToBuild,Converter={StaticResource BooleanConverter},ConverterParameter=invert}"
 			                   Margin="3,40,4,4" 
 			                   DataContext="{Binding LandingPageViewModel}"/>
 
-			<WrapPanel Grid.Row="0" Grid.Column="1"
-                        VerticalAlignment="Top"
-                        HorizontalAlignment="Left"
-                        Orientation="Horizontal"
-                        Background="White"
-                        Margin="4,0,0,0">
-				<Button Command="{Binding Path=SimulateCommand}" Cursor="Hand"
-                        Classes="toolbar"
-                        Classes.simulationRunning="{Binding Path=SimulationState,Converter={StaticResource ValueToBooleanConverter},ConverterParameter=Running}">
-					<Button.Styles>
-						<Style Selector="Button">
-							<Setter Property="Content" Value="▶️" />
-						</Style>
-						<Style Selector="Button.simulationRunning">
-							<Setter Property="Content" Value="⏸️" />
-						</Style>
-					</Button.Styles>
-				</Button>
-				<Button Content="🚮" Command="{Binding Path=ClearRouteCommand}" ToolTip.Tip="Clear route" Classes="toolbar" />
-				<Button Content="🌐" Command="{Binding Path=ResetWorldCommand}" ToolTip.Tip="Select world and sport" Classes="toolbar" />
-				<Button Content="💾" Command="{Binding Path=SaveRouteCommand}" ToolTip.Tip="Save route" Classes="toolbar" />
-				<Button Content="📂" Command="{Binding Path=OpenRouteCommand}" ToolTip.Tip="Open route" Classes="toolbar" />
-				<Button Content="⭯" Command="{Binding Path=RemoveLastSegmentCommand}" ToolTip.Tip="Remove last segment" Classes="toolbar"/>
-				<StackPanel Orientation="Horizontal">
-					<CheckBox Content="Show KOMs" VerticalAlignment="Center" Margin="8,0,0,0" IsChecked="{Binding Path=ShowClimbs}" ToolTip.Tip="Show the KOM start (red) and finish (green) markers on the map" IsVisible="{Binding Path=Route.ReadyToBuild}" />
-					<CheckBox Content="Show Sprints" VerticalAlignment="Center" Margin="8,0,0,0" IsChecked="{Binding Path=ShowSprints}" ToolTip.Tip="Show the sprint segments on the map" IsVisible="{Binding Path=Route.ReadyToBuild}" />
-					<CheckBox Content="Show elevation profile" VerticalAlignment="Center" Margin="8,0,0,0" IsChecked="{Binding Path=ShowElevationProfile}" ToolTip.Tip="Show the elevation profile for the current route" IsVisible="{Binding Path=Route.ReadyToBuild}" />
-				</StackPanel>
-				<StackPanel Orientation="Horizontal">
-					<Button Content="+" Click="ZoomIn_Click" ToolTip.Tip="Zoom in" IsEnabled="{Binding Path=Route.ReadyToBuild}" IsVisible="{Binding Path=Route.ReadyToBuild}" Classes="toolbar" />
-					<Button Content="-" Click="ZoomOut_Click" ToolTip.Tip="Zoom out" IsEnabled="{Binding Path=Route.ReadyToBuild}" IsVisible="{Binding Path=Route.ReadyToBuild}" Classes="toolbar" />
-					<Button Click="ResetZoom_Click" ToolTip.Tip="Fit to screen" IsEnabled="{Binding Path=Route.ReadyToBuild}" IsVisible="{Binding Path=Route.ReadyToBuild}" Classes="toolbar">
-                        <Image Source="../Assets/four-arrows-outward.png" Margin="2" />
-					</Button>
-					<Button Click="ZoomRoute_Click" ToolTip.Tip="Fit to route" IsEnabled="{Binding Path=Route.ReadyToBuild}" IsVisible="{Binding Path=Route.ReadyToBuild}" Classes="toolbar">
-                        <Image Source="../Assets/four-arrows-inward.png" Margin="2" />
-                    </Button>
-				</StackPanel>
-			</WrapPanel>
-
-			<views:RouteSegmentListView Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" Name="RouteSegmentListView" DataContext="{Binding Path=RouteSegmentListViewModel}" />
+			
+			<views:BuildRoute 
+			                  VerticalAlignment="Top"
+			                  HorizontalAlignment="Left"
+			                  Background="White"
+			                  Margin="4,0,0,0" 
+			                  IsVisible="{Binding Path=Route.ReadyToBuild}"
+			                  DataContext="{Binding Path=BuildRouteViewModel}" />
 		</Grid>
 	</DockPanel>
 

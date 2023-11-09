@@ -20,30 +20,9 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
                     _ => Route.IsLoop)
                 .SubscribeTo(this, () => Route.Sequence)
                 .SubscribeTo(this, () => Route.IsLoop);
-
-            RemoveLastSegmentCommand = new RelayCommand(
-                    _ => RemoveLastSegment(),
-                    _ => Route.Sequence.Any())
-                .SubscribeTo(this, () => Route.Sequence)
-                .OnSuccess(_ =>
-                {
-                    // TODO: fix me
-                    //Model.StatusBarInfo("Removed segment");
-                })
-                .OnSuccessWithMessage(_ =>
-                {
-                    // TODO: fix me
-                    //Model.StatusBarInfo("Removed segment {0}", _.Message);
-                })
-                .OnFailure(_ =>
-                {
-                    // TODO: fix me
-                    //Model.StatusBarWarning(_.Message);
-                });
         }
         public RouteViewModel Route { get; }
         public ICommand ConfigureLoopCommand { get; }
-        public ICommand RemoveLastSegmentCommand { get; }
 
 
         private async Task<CommandResult> ConfigureLoop()
@@ -64,26 +43,6 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
                     seq.Type = SegmentSequenceType.Regular;
                 }
                 this.RaisePropertyChanged(nameof(Route));
-            }
-
-            return CommandResult.Success();
-        }
-
-        private CommandResult RemoveLastSegment()
-        {
-            if (!Route.Sequence.Any())
-            {
-                return CommandResult.Failure("Can't remove segment because the route does not have any segments");
-            }
-
-            var lastSegment = Route.RemoveLast();
-
-            // TODO: fix me
-            //SelectedSegment = null;
-
-            if (lastSegment != null)
-            {
-                return CommandResult.SuccessWithMessage(lastSegment.SegmentName);
             }
 
             return CommandResult.Success();

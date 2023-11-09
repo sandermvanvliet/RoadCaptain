@@ -33,8 +33,6 @@
                                Foreground="White" FontWeight="Bold" VerticalAlignment="Bottom" />
                     <TextBlock Text="km" FontSize="16" Foreground="White" FontWeight="Bold" VerticalAlignment="Bottom"
                                Padding="2,0,0,2" />
-                    <TextBlock Text="{Binding Path=Route.LoopMode}" />
-                    <TextBlock Text="{Binding Path=Route.NumberOfLoops}" />
                 </StackPanel>
 
                 <StackPanel Orientation="Horizontal" Height="18">
@@ -144,7 +142,8 @@
                                         Background="{StaticResource ZwiftOrange}"
                                         CornerRadius="25"
                                         Padding="6,0,6,0"
-                                        DataContext="{Binding RelativeSource={RelativeSource AncestorType=Window}, Path=DataContext}">
+                                        DataContext="{Binding RelativeSource={RelativeSource AncestorType=Window}, Path=DataContext}"
+                                        x:DataType="viewModels:RouteSegmentListViewModel">
                                         <StackPanel>
                                             <TextBlock
                                                 HorizontalAlignment="Center"

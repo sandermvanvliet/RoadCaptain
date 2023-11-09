@@ -21,7 +21,8 @@ namespace RoadCaptain.App.RouteBuilder.Tests.Unit
         [DebuggerStepThrough]
         public async Task<CommandResult> CallAddSegmentToRoute(Segment segment)
         {
-            return await SelectSegment(segment);
+             BuildRouteViewModel.SelectSegmentCommand.Execute(segment);
+             return CommandResult.Success();
         }
     }
 }

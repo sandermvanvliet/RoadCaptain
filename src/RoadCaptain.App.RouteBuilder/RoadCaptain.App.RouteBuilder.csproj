@@ -10,6 +10,7 @@
 
 		<!-- Ignore translations -->
 		<SatelliteResourceLanguages>en</SatelliteResourceLanguages>
+		<AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
 	</PropertyGroup>
 
 	<ItemGroup>

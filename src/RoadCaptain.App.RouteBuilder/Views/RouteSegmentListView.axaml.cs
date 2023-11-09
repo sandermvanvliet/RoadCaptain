@@ -23,7 +23,8 @@ namespace RoadCaptain.App.RouteBuilder.Views
             {
                 if (viewModel == ViewModel.Route.Last)
                 {
-                    ViewModel.RemoveLastSegmentCommand.Execute(null);
+                    // TODO: fixme
+                    //ViewModel.RemoveLastSegmentCommand.Execute(null);
                     if (RouteListView.ItemCount > 0)
                     {
                         RouteListView.SelectedItem = RouteListView.Items.Cast<object>().Last();

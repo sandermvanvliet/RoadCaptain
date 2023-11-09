@@ -1,0 +1,806 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.IO;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Windows.Input;
+using ReactiveUI;
+using RoadCaptain.App.RouteBuilder.Models;
+using RoadCaptain.App.RouteBuilder.UseCases;
+using RoadCaptain.App.Shared.Commands;
+using RoadCaptain.App.Shared.Dialogs;
+using RoadCaptain.Ports;
+
+namespace RoadCaptain.App.RouteBuilder.ViewModels
+{
+    public class BuildRouteViewModel : ViewModelBase
+    {
+        private Segment? _selectedSegment;
+        private Segment? _highlightedSegment;
+        private Segment? _highlightedMarker;
+        private List<Segment> _segments = new();
+        private List<Segment> _markers = new();
+        private TrackPoint? _riderPosition;
+        private SimulationState _simulationState = SimulationState.NotStarted;
+        private readonly IUserPreferences _userPreferences;
+        private bool _showClimbs;
+        private bool _showSprints;
+        private bool _showElevationProfile;
+        private readonly IWindowService _windowService;
+        private Task? _simulationTask;
+        private readonly ConvertZwiftMapRouteUseCase _convertUseCase;
+
+        public BuildRouteViewModel(RouteViewModel routeViewModel, IUserPreferences userPreferences,
+            IWindowService windowService, IWorldStore worldStore, ISegmentStore segmentStore, MainWindowModel mainWindowModel)
+        {
+            _userPreferences = userPreferences;
+            _windowService = windowService;
+            _showClimbs = _userPreferences.ShowClimbs;
+            _showSprints = _userPreferences.ShowSprints;
+            _showElevationProfile = _userPreferences.ShowElevationProfile;
+            _convertUseCase = new ConvertZwiftMapRouteUseCase(worldStore, segmentStore);
+            
+            //SelectDefaultSportFromPreferences();
+            
+            Route = routeViewModel;
+            Route.PropertyChanged += (_, args) => HandleRoutePropertyChanged(segmentStore, args);
+            
+            RouteSegmentListViewModel = new RouteSegmentListViewModel(Route, windowService);
+            
+            SaveRouteCommand = new AsyncRelayCommand(
+                    _ => SaveRoute(),
+                    _ => Route.Sequence.Any())
+                .SubscribeTo(this, () => Route.Sequence)
+                .OnSuccess(_ => mainWindowModel.StatusBarInfo("Route saved successfully"))
+                .OnSuccessWithMessage(_ => mainWindowModel.StatusBarInfo("Route saved successfully: {0}", _.Message))
+                .OnFailure(_ => mainWindowModel.StatusBarError("Failed to save route because: {0}", _.Message))
+                .OnNotExecuted(_ => mainWindowModel.StatusBarInfo("Route hasn't changed dit not need to not saved"));
+
+            OpenRouteCommand = new AsyncRelayCommand(
+                    _ => OpenRoute(),
+                    _ => true)
+                .OnSuccess(_ => mainWindowModel.StatusBarInfo("Route loaded successfully"))
+                .OnSuccessWithMessage(_ => mainWindowModel.StatusBarInfo(_.Message))
+                .OnFailure(_ => mainWindowModel.StatusBarError("Failed to load route because: {0}", _.Message));
+
+            ClearRouteCommand = new AsyncRelayCommand(
+                    _ => ClearRoute(),
+                    _ => Route.ReadyToBuild && Route.Sequence.Any())
+                .SubscribeTo(this, () => Route.Sequence)
+                .SubscribeTo(this, () => Route.ReadyToBuild)
+                .OnSuccess(_ => mainWindowModel.StatusBarInfo("Route cleared"))
+                .OnFailure(_ => mainWindowModel.StatusBarError("Failed to clear route because: {0}", _.Message));
+
+            SelectSegmentCommand = new AsyncRelayCommand(
+                    _ => SelectSegment(_ as Segment ??
+                                       throw new ArgumentNullException(nameof(RelayCommand.CommandParameter))),
+                    _ => true)
+                .OnSuccess(_ => mainWindowModel.StatusBarInfo("Added segment"))
+                .OnSuccessWithMessage(_ => mainWindowModel.StatusBarInfo("Added segment {0}", _.Message))
+                .OnFailure(_ => mainWindowModel.StatusBarWarning(_.Message));
+
+            SimulateCommand = new RelayCommand(
+                    _ => SimulateRoute(),
+                    _ => Route.Sequence.Any())
+                .SubscribeTo(this, () => Route.Sequence);
+
+            RemoveLastSegmentCommand = new RelayCommand(
+                    _ => RemoveLastSegment(),
+                    _ => Route.Sequence.Any())
+                .SubscribeTo(this, () => Route.Sequence)
+                .OnSuccess(_ =>
+                {
+                    // TODO: fix me
+                    //Model.StatusBarInfo("Removed segment");
+                })
+                .OnSuccessWithMessage(_ =>
+                {
+                    // TODO: fix me
+                    //Model.StatusBarInfo("Removed segment {0}", _.Message);
+                })
+                .OnFailure(_ =>
+                {
+                    // TODO: fix me
+                    //Model.StatusBarWarning(_.Message);
+                });
+
+            ResetWorldCommand = new AsyncRelayCommand(
+                    _ => ResetWorldAndSport(),
+                    _ => Route.World != null)
+                .SubscribeTo(this, () => Route.World);
+
+            ToggleShowClimbsCommand = new AsyncRelayCommand(async _ =>
+                {
+                    ShowClimbs = !ShowClimbs;
+                    return CommandResult.Success();
+                },
+                _ => Route.World != null);
+
+            ToggleShowSprintsCommand = new AsyncRelayCommand(async _ =>
+                {
+                    ShowSprints = !ShowSprints;
+                    return CommandResult.Success();
+                },
+                _ => Route.World != null);
+
+            ToggleShowElevationCommand = new AsyncRelayCommand(async _ =>
+                {
+                    ShowElevationProfile = !ShowElevationProfile;
+                    return CommandResult.Success();
+                },
+                _ => Route.World != null);
+        }
+        
+        public RouteViewModel Route { get; }
+        public RouteSegmentListViewModel RouteSegmentListViewModel { get; }
+        public ICommand SaveRouteCommand { get; }
+        public ICommand OpenRouteCommand { get; }
+        public ICommand ClearRouteCommand { get; }
+        public ICommand SelectSegmentCommand { get; }
+        public ICommand SimulateCommand { get; }
+        public ICommand RemoveLastSegmentCommand { get; }
+        public ICommand ResetWorldCommand { get; }
+        public ICommand ToggleShowClimbsCommand { get; }
+        public ICommand ToggleShowSprintsCommand { get; }
+        public ICommand ToggleShowElevationCommand { get; }
+
+        public bool ShowClimbs
+        {
+            get => _showClimbs;
+            set
+            {
+                if (value == _showClimbs) return;
+                _showClimbs = value;
+                _userPreferences.ShowClimbs = _showClimbs;
+                _userPreferences.Save();
+                this.RaisePropertyChanged();
+            }
+        }
+
+        public bool ShowSprints
+        {
+            get => _showSprints;
+            set
+            {
+                if (value == _showSprints) return;
+                _showSprints = value;
+                _userPreferences.ShowSprints = _showSprints;
+                _userPreferences.Save();
+                this.RaisePropertyChanged();
+            }
+        }
+
+        public bool ShowElevationProfile
+        {
+            get => _showElevationProfile;
+            set
+            {
+                if (value == _showElevationProfile) return;
+                _showElevationProfile = value;
+                _userPreferences.ShowElevationProfile = _showElevationProfile;
+                _userPreferences.Save();
+                this.RaisePropertyChanged();
+            }
+        }
+
+        public TrackPoint? RiderPosition
+        {
+            get => _riderPosition;
+            set
+            {
+                _riderPosition = value;
+                this.RaisePropertyChanged();
+            }
+        }
+
+        public SimulationState SimulationState
+        {
+            get => _simulationState;
+            set
+            {
+                _simulationState = value;
+                this.RaisePropertyChanged();
+            }
+        }
+
+        public List<Segment> Segments
+        {
+            get => _segments;
+            set
+            {
+                if (value == _segments)
+                {
+                    return;
+                }
+
+                _segments = value;
+                this.RaisePropertyChanged();
+            }
+        }
+
+        public List<Segment> Markers
+        {
+            get => _markers;
+            set
+            {
+                if (value == _markers)
+                {
+                    return;
+                }
+
+                _markers = value;
+
+                this.RaisePropertyChanged();
+            }
+        }
+
+        public Segment? HighlightedSegment
+        {
+            get => _highlightedSegment;
+            set
+            {
+                if (value == _highlightedSegment)
+                {
+                    return;
+                }
+
+                _highlightedSegment = value;
+                this.RaisePropertyChanged();
+            }
+        }
+
+        public Segment? SelectedSegment
+        {
+            get => _selectedSegment;
+            private set
+            {
+                if (value == _selectedSegment) return;
+                _selectedSegment = value;
+                this.RaisePropertyChanged();
+            }
+        }
+
+        public Segment? HighlightedMarker
+        {
+            get => _highlightedMarker;
+            private set
+            {
+                if (value == _highlightedMarker) return;
+                _highlightedMarker = value;
+                this.RaisePropertyChanged();
+            }
+        }
+
+        private async Task<CommandResult> ClearRoute()
+        {
+            if (Route.IsTainted)
+            {
+                var result = await _windowService.ShowClearRouteDialog();
+
+                if (result == MessageBoxResult.No)
+                {
+                    return CommandResult.Aborted();
+                }
+            }
+
+            var commandResult = Route.Clear();
+
+            SelectedSegment = null;
+            HighlightedSegment = null;
+            HighlightedMarker = null;
+
+            SimulationState = SimulationState.NotStarted;
+
+            this.RaisePropertyChanged(nameof(Route));
+
+            return commandResult;
+        }
+
+        private async Task<CommandResult> OpenRoute()
+        {
+            if (Route.IsTainted)
+            {
+                MessageBoxResult questionResult = await _windowService.ShowShouldSaveRouteDialog();
+
+                if (questionResult == MessageBoxResult.Cancel)
+                {
+                    return CommandResult.Aborted();
+                }
+
+                if (questionResult == MessageBoxResult.Yes)
+                {
+                    var saveResult = await SaveRoute();
+
+                    // If saving was not successful then return the
+                    // result of SaveRoute instead of proceeding.
+                    if (saveResult.Result != Result.Success)
+                    {
+                        return saveResult;
+                    }
+                }
+            }
+
+            var (plannedRoute, fileName) = await _windowService.ShowOpenRouteDialog();
+
+            if (plannedRoute != null)
+            {
+                Route.LoadFromPlannedRoute(plannedRoute);
+                
+                return CommandResult.Success();
+            }
+
+            if (fileName != null)
+            {
+                Route.OutputFilePath = fileName.EndsWith(".gpx")
+                    ? Path.ChangeExtension(fileName, ".json")
+                    : fileName;
+
+                _userPreferences.LastUsedFolder = Path.GetDirectoryName(Route.OutputFilePath);
+                _userPreferences.Save();
+
+                SelectedSegment = null;
+
+                try
+                {
+                    string? successMessage = null;
+
+                    if (fileName.EndsWith(".gpx"))
+                    {
+                        var convertedRoute = _convertUseCase.Execute(ZwiftMapRoute.FromGpxFile(fileName));
+                        Route.LoadFromPlannedRoute(convertedRoute, true);
+                        successMessage = $"Successfully imported ZwiftMap route: {Path.GetFileName(fileName)}";
+                    }
+                    else
+                    {
+                        Route.Load();
+                    }
+
+                    this.RaisePropertyChanged(nameof(Route));
+
+                    return successMessage == null
+                        ? CommandResult.Success()
+                        : CommandResult.SuccessWithMessage(successMessage);
+                }
+                catch (Exception e)
+                {
+                    return CommandResult.Failure(e.Message);
+                }
+            }
+
+            return CommandResult.Aborted();
+        }
+
+        private CommandResult SimulateRoute()
+        {
+            if (_simulationTask != null && SimulationState == SimulationState.Running)
+            {
+                SimulationState = SimulationState.Completed;
+                RiderPosition = null;
+                return CommandResult.Success();
+            }
+
+            _simulationTask = Task.Factory.StartNew(() =>
+            {
+                SimulationState = SimulationState.Running;
+
+                var routePoints = new List<TrackPoint>();
+
+                foreach (var seq in Route.Sequence)
+                {
+                    var points = _segments.Single(s => s.Id == seq.SegmentId).Points;
+
+                    if (seq.Direction == SegmentDirection.BtoA)
+                    {
+                        // Don't call Reverse() because that does an
+                        // in-place reverse and given that we're 
+                        // _referencing_ the list of points of the
+                        // segment that means that the actual segment
+                        // is modified. Reverse() does not return a
+                        // new IEnumerable<T>
+                        points = points.OrderByDescending(p => p.Index).ToList();
+                    }
+
+                    routePoints.AddRange(points);
+                }
+
+                var simulationIndex = 0;
+
+                while (SimulationState == SimulationState.Running && simulationIndex < routePoints.Count)
+                {
+                    RiderPosition = routePoints[simulationIndex++];
+                    Thread.Sleep(40);
+                }
+
+                SimulationState = SimulationState.Completed;
+                RiderPosition = null;
+            });
+
+            return CommandResult.Success();
+        }
+
+        private async Task<CommandResult> SaveRoute()
+        {
+            try
+            {
+                await _windowService.ShowSaveRouteDialog(_userPreferences.LastUsedFolder, Route);
+
+                return CommandResult.Success();
+            }
+            catch (Exception e)
+            {
+                return CommandResult.Failure("Failed to save route: " + e.Message);
+            }
+        }
+
+        public void Reset()
+        {
+            SelectedSegment = null;
+            HighlightedSegment = null;
+            HighlightedMarker = null;
+
+            SimulationState = SimulationState.NotStarted;
+
+            Segments = new List<Segment>();
+
+            Markers = new();
+        }
+
+        protected async Task<CommandResult> SelectSegment(Segment newSelectedSegment)
+        {
+            var segmentId = newSelectedSegment.Id;
+
+            // 1. Figure out if this is the first segment on the route, if so add it to the route and set the selection to the new segment
+            if (!Route.Sequence.Any())
+            {
+                if (!Route.IsSpawnPointSegment(segmentId))
+                {
+                    return CommandResult.Failure(
+                        $"{newSelectedSegment.Name} is not a spawn point, we can't start here unfortunately");
+                }
+
+                Route.StartOn(newSelectedSegment);
+
+                SelectedSegment = newSelectedSegment;
+
+                return CommandResult.SuccessWithMessage(newSelectedSegment.Name);
+            }
+
+            // Prevent selecting the same segment again
+#pragma warning disable CS8602 // Because the check on Route.Sequence.Any() already ensures that Route.Last can't be null
+            if (Route.Last.SegmentId == segmentId)
+#pragma warning restore CS8602
+            {
+                return CommandResult.Aborted();
+            }
+
+            if (!string.IsNullOrEmpty(newSelectedSegment.NoSelectReason))
+            {
+                return CommandResult.Failure(newSelectedSegment.NoSelectReason);
+            }
+
+            // 2. Figure out if the newly selected segment is reachable from the last segment
+            var lastSegment = Segments.Single(s => s.Id == Route.Last.SegmentId);
+
+            var fromA = lastSegment.NextSegmentsNodeA.SingleOrDefault(t => t.SegmentId == newSelectedSegment.Id);
+            var fromB = lastSegment.NextSegmentsNodeB.SingleOrDefault(t => t.SegmentId == newSelectedSegment.Id);
+
+            if (Route.Last.Direction == SegmentDirection.AtoB)
+            {
+                if (fromB != null)
+                {
+                    var newSegmentDirection = GetDirectionOnNewSegment(newSelectedSegment, lastSegment, Route.Last.Direction);
+
+                    Route.NextStep(fromB.Direction, fromB.SegmentId, newSelectedSegment, SegmentDirection.AtoB,
+                        newSegmentDirection);
+
+                    SelectedSegment = newSelectedSegment;
+
+                    await CheckForPossibleLoop();
+
+                    return CommandResult.SuccessWithMessage(newSelectedSegment.Name);
+                }
+            }
+            else if (Route.Last.Direction == SegmentDirection.BtoA)
+            {
+                if (fromA != null)
+                {
+                    var newSegmentDirection = GetDirectionOnNewSegment(newSelectedSegment, lastSegment, Route.Last.Direction);
+
+                    Route.NextStep(fromA.Direction, fromA.SegmentId, newSelectedSegment, SegmentDirection.BtoA,
+                        newSegmentDirection);
+
+                    SelectedSegment = newSelectedSegment;
+
+                    await CheckForPossibleLoop();
+
+                    return CommandResult.SuccessWithMessage(newSelectedSegment.Name);
+                }
+            }
+            else if (Route.Last.Direction == SegmentDirection.Unknown)
+            {
+                if (fromA != null)
+                {
+                    if (!IsValidSpawnPointProgression(out var commandResult, SegmentDirection.BtoA))
+                    {
+                        return commandResult;
+                    }
+
+                    var newSegmentDirection = GetDirectionOnNewSegment(newSelectedSegment, lastSegment, Route.Last.Direction);
+
+                    Route.NextStep(fromA.Direction, fromA.SegmentId, newSelectedSegment, SegmentDirection.BtoA,
+                        newSegmentDirection);
+
+                    SelectedSegment = newSelectedSegment;
+
+                    await CheckForPossibleLoop();
+
+                    return CommandResult.SuccessWithMessage(newSelectedSegment.Name);
+                }
+
+                if (fromB != null)
+                {
+                    if (!IsValidSpawnPointProgression(out var commandResult, SegmentDirection.AtoB))
+                    {
+                        return commandResult;
+                    }
+
+                    var newSegmentDirection = GetDirectionOnNewSegment(newSelectedSegment, lastSegment, Route.Last.Direction);
+
+                    Route.NextStep(fromB.Direction, fromB.SegmentId, newSelectedSegment, SegmentDirection.AtoB,
+                        newSegmentDirection);
+
+                    SelectedSegment = newSelectedSegment;
+
+                    await CheckForPossibleLoop();
+
+                    return CommandResult.SuccessWithMessage(newSelectedSegment.Name);
+                }
+            }
+
+            if (Route.Sequence.Count() == 1)
+            {
+                return CommandResult.Failure("Spawn point does not support the direction of the selected segment");
+            }
+
+            return CommandResult.Failure(
+                "Did not find a connection between the last segment and the selected segment");
+        }
+
+        private async Task CheckForPossibleLoop()
+        {
+            var (isLoop, startIndex, endIndex) = Route.IsPossibleLoop();
+
+            if (isLoop && startIndex.HasValue && endIndex.HasValue)
+            {
+                var shouldCreateLoop = await _windowService.ShowRouteLoopDialog();
+
+                if (shouldCreateLoop.Mode is LoopMode.Infinite or LoopMode.Constrained)
+                {
+                    Route.MakeLoop(startIndex.Value, endIndex.Value, shouldCreateLoop.Mode, shouldCreateLoop.NumberOfLoops);
+                    this.RaisePropertyChanged(nameof(Route));
+                }
+            }
+        }
+
+        private bool IsValidSpawnPointProgression(out CommandResult commandResult, SegmentDirection segmentDirection)
+        {
+            if (Route.World != null && Route.Sequence.Count() == 1 && Route.World.SpawnPoints != null)
+            {
+                var startSegmentSequence = Route.Sequence.First();
+                if (!Route.World.SpawnPoints.Any(sp =>
+                        sp.SegmentId == startSegmentSequence.SegmentId &&
+                        sp.Direction == segmentDirection))
+                {
+                    {
+                        commandResult =
+                            CommandResult.Failure("Spawn point does not support the direction of the selected segment");
+                        return false;
+                    }
+                }
+            }
+
+            commandResult = new CommandResult { Result = Result.NotExecuted };
+
+            return true;
+        }
+
+        private static SegmentDirection GetDirectionOnNewSegment(Segment newSelectedSegment, Segment lastSegment,
+            SegmentDirection segmentDirection)
+        {
+            var newSegmentDirection = SegmentDirection.Unknown;
+
+            var linkOnNodeA = newSelectedSegment.NextSegmentsNodeA.Any(s => s.SegmentId == lastSegment.Id);
+            var linkOnNodeB = newSelectedSegment.NextSegmentsNodeB.Any(s => s.SegmentId == lastSegment.Id);
+
+            if (linkOnNodeA && linkOnNodeB)
+            {
+                if (segmentDirection == SegmentDirection.AtoB)
+                {
+                    if (lastSegment.B.IsCloseTo(newSelectedSegment.A))
+                    {
+                        return SegmentDirection.AtoB;
+                    }
+
+                    if (lastSegment.B.IsCloseTo(newSelectedSegment.B))
+                    {
+                        return SegmentDirection.BtoA;
+                    }
+                }
+                else if (segmentDirection == SegmentDirection.BtoA)
+                {
+                    if (lastSegment.A.IsCloseTo(newSelectedSegment.A))
+                    {
+                        return SegmentDirection.AtoB;
+                    }
+
+                    if (lastSegment.A.IsCloseTo(newSelectedSegment.B))
+                    {
+                        return SegmentDirection.BtoA;
+                    }
+                }
+            }
+            else if (linkOnNodeA)
+            {
+                newSegmentDirection = SegmentDirection.AtoB;
+            }
+            else if (linkOnNodeB)
+            {
+                newSegmentDirection = SegmentDirection.BtoA;
+            }
+
+            return newSegmentDirection;
+        }
+
+        public void HighlightSegment(string segmentId)
+        {
+            if (string.IsNullOrEmpty(segmentId))
+            {
+                HighlightedSegment = null;
+            }
+            else
+            {
+                HighlightedSegment = Segments.SingleOrDefault(s => s.Id == segmentId);
+            }
+        }
+
+        public void HighlightMarker(string markerId)
+        {
+            if (string.IsNullOrEmpty(markerId))
+            {
+                HighlightedSegment = null;
+            }
+            else
+            {
+                HighlightedMarker = Markers.SingleOrDefault(s => s.Id == markerId);
+            }
+        }
+
+        public void ClearSegmentHighlight()
+        {
+            HighlightedSegment = null;
+        }
+
+        public void ClearMarkerHighlight()
+        {
+            HighlightedMarker = null;
+        }
+
+        private void HandleRoutePropertyChanged(ISegmentStore segmentStore, PropertyChangedEventArgs args)
+        {
+            if (args.PropertyName == nameof(Route.World))
+            {
+                if (Route.World == null)
+                {
+                    Segments = new List<Segment>();
+                }
+
+                TryLoadSegmentsForWorldAndSport(segmentStore);
+            }
+
+            if (args.PropertyName == nameof(Route.Sport))
+            {
+                if (Route.Sport == SportType.Unknown)
+                {
+                    Segments = new List<Segment>();
+                }
+
+                TryLoadSegmentsForWorldAndSport(segmentStore);
+            }
+
+            if (args.PropertyName == nameof(Route.Sequence))
+            {
+                this.RaisePropertyChanged(nameof(Route));
+            }
+        }
+
+        private void TryLoadSegmentsForWorldAndSport(ISegmentStore segmentStore)
+        {
+            if (Route.World != null && Route.Sport != SportType.Unknown)
+            {
+                Segments = segmentStore.LoadSegments(Route.World, Route.Sport);
+                Markers = segmentStore.LoadMarkers(Route.World);
+            }
+        }
+
+        private CommandResult RemoveLastSegment()
+        {
+            if (!Route.Sequence.Any())
+            {
+                return CommandResult.Failure("Can't remove segment because the route does not have any segments");
+            }
+
+            var lastSegment = Route.RemoveLast();
+
+            SelectedSegment = null;
+
+            if (lastSegment != null)
+            {
+                return CommandResult.SuccessWithMessage(lastSegment.SegmentName);
+            }
+
+            return CommandResult.Success();
+        }
+
+        private async Task<CommandResult> ResetWorldAndSport()
+        {
+            // TODO: fixme 
+            // if (Route.IsTainted)
+            // {
+            //     var result = await _windowService.ShowShouldSaveRouteDialog();
+            //
+            //     if (result == MessageBoxResult.Cancel)
+            //     {
+            //         return CommandResult.Aborted();
+            //     }
+            //
+            //     if (result == MessageBoxResult.Yes)
+            //     {
+            //         BuildRouteViewModel.SaveRouteCommand.Execute(null);
+            //     }
+            // }
+            //
+            // Route.Reset();
+            // Reset();    
+            //
+            // var selectedSport = LandingPageViewModel.Sports.SingleOrDefault(s => s.IsSelected);
+            // if (selectedSport != null)
+            // {
+            //     selectedSport.IsSelected = false;
+            //
+            //     SelectDefaultSportFromPreferences();
+            // }
+            //
+            // var selectedWorld = LandingPageViewModel.Worlds.SingleOrDefault(s => s.IsSelected);
+            // if (selectedWorld != null)
+            // {
+            //     selectedWorld.IsSelected = false;
+            // }
+            //
+            // this.RaisePropertyChanged(nameof(Route));
+
+            return CommandResult.Success();
+        }
+
+        private void SelectDefaultSportFromPreferences()
+        {
+            // TODO: fixme
+            // if (LandingPageViewModel.HasDefaultSport)
+            // {
+            //     var sport = LandingPageViewModel
+            //         .Sports
+            //         .SingleOrDefault(s =>
+            //             (_userPreferences.DefaultSport ?? "").Equals(s.Sport.ToString(),
+            //                 StringComparison.InvariantCultureIgnoreCase));
+            //
+            //     if (sport != null)
+            //     {
+            //         sport.IsSelected = true;
+            //         sport.IsDefault = true;
+            //         Route.Sport = sport.Sport;
+            //     }
+            // }
+        }
+    }
+}

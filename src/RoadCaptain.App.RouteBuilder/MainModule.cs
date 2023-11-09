@@ -34,18 +34,19 @@ namespace RoadCaptain.App.RouteBuilder
                 .AsSelf();
 
             string? platformAssemblyPath = null;
+            var thisAssemblyLocation = Path.GetDirectoryName(GetType().Assembly.Location);
 
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
-                platformAssemblyPath = Path.Combine(Environment.CurrentDirectory, "RoadCaptain.App.Windows.dll");
+                platformAssemblyPath = Path.Combine(thisAssemblyLocation, "RoadCaptain.App.Windows.dll");
             }
             else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
             {
-                platformAssemblyPath = Path.Combine(Environment.CurrentDirectory, "RoadCaptain.App.Linux.dll");
+                platformAssemblyPath = Path.Combine(thisAssemblyLocation, "RoadCaptain.App.Linux.dll");
             }
             else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
             {
-                platformAssemblyPath = Path.Combine(Environment.CurrentDirectory, "RoadCaptain.App.MacOs.dll");
+                platformAssemblyPath = Path.Combine(thisAssemblyLocation, "RoadCaptain.App.MacOs.dll");
             }
 
             if (!string.IsNullOrEmpty(platformAssemblyPath))
