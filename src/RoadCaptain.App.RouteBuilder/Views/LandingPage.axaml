@@ -21,6 +21,8 @@
             <Setter Property="Background" Value="White" />
             <Setter Property="Cursor" Value="Hand" />
             <Setter Property="Height" Value="100" />
+            <Setter Property="Width" Value="180" />
+            <Setter Property="Margin" Value="8,8, 0,0" />
         </Style>
         <Style Selector="Button.world:pointerover">
             <Setter Property="Background" Value="{StaticResource ZwiftOrange}" />
@@ -44,12 +46,11 @@
                 <ItemsControl.ItemTemplate>
                     <DataTemplate DataType="{x:Type viewModels:WorldViewModel}">
                         <Button Classes="world"
-                                Command="{Binding $parent[Window].((viewModels:LandingPageViewModel)DataContext).SelectWorldCommand}"
-                                CommandParameter="{Binding}" Cursor="Hand">
+                                Command="{Binding $parent[UserControl].((viewModels:LandingPageViewModel)DataContext).SelectWorldCommand}"
+                                CommandParameter="{Binding}">
                             <Button.Template>
                                 <ControlTemplate>
                                     <Border Name="borderZero" Background="White" CornerRadius="5" BorderThickness="2"
-                                            Width="180" Height="100" Margin="8,8,8,8"
                                             Classes.isSelected="{Binding Path=IsSelected}">
                                         <Border.Styles>
                                             <Style Selector="Border">
@@ -143,7 +144,7 @@
                 <ItemsControl.ItemTemplate>
                     <DataTemplate DataType="{x:Type viewModels:SportViewModel}">
                         <Button Classes="world"
-                                Command="{Binding Path=$parent[Window].((viewModels:LandingPageViewModel)DataContext).SelectSportCommand}"
+                                Command="{Binding $parent[UserControl].((viewModels:LandingPageViewModel)DataContext).SelectSportCommand}"
                                 CommandParameter="{Binding}" Cursor="Hand">
                             <Button.Template>
                                 <ControlTemplate>
