@@ -149,7 +149,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
         public bool ShowClimbs
         {
             get => _showClimbs;
-            set
+            private set
             {
                 if (value == _showClimbs) return;
                 _showClimbs = value;
@@ -162,7 +162,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
         public bool ShowSprints
         {
             get => _showSprints;
-            set
+            private set
             {
                 if (value == _showSprints) return;
                 _showSprints = value;
@@ -175,7 +175,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
         public bool ShowElevationProfile
         {
             get => _showElevationProfile;
-            set
+            private set
             {
                 if (value == _showElevationProfile) return;
                 _showElevationProfile = value;
