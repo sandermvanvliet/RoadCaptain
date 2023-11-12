@@ -14,6 +14,8 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
         private SportViewModel[] _sports;
         private readonly IUserPreferences _userPreferences;
         private readonly IWindowService _windowService;
+        private SportViewModel? _selectedSport;
+        private WorldViewModel? _selectedWorld;
 
         public LandingPageViewModel(IWorldStore worldStore, IUserPreferences userPreferences, IWindowService windowService)
         {
@@ -45,7 +47,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
         public WorldViewModel[] Worlds
         {
             get => _worlds;
-            set
+            private set
             {
                 if (value == _worlds) return;
                 _worlds = value;
@@ -56,10 +58,34 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
         public SportViewModel[] Sports
         {
             get => _sports;
-            set
+            private set
             {
                 if (value == _sports) return;
                 _sports = value;
+                this.RaisePropertyChanged();
+            }
+        }
+
+        public WorldViewModel? SelectedWorld
+        {
+            get => _selectedWorld;
+            private set
+            {
+                if (value == _selectedWorld) return;
+                
+                _selectedWorld = value;
+                this.RaisePropertyChanged();
+            }
+        }
+
+        public SportViewModel? SelectedSport
+        {
+            get => _selectedSport;
+            private set
+            {
+                if (value == _selectedSport) return;
+                
+                _selectedSport = value;
                 this.RaisePropertyChanged();
             }
         }
@@ -79,15 +105,14 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             }
         }
 
-        private async Task<CommandResult> SelectWorld(WorldViewModel world)
+        private Task<CommandResult> SelectWorld(WorldViewModel world)
         {
             if (string.IsNullOrEmpty(world.Id))
             {
-                return CommandResult.Failure("Can't select the world because its id is empty");
+                return Task.FromResult<CommandResult>(CommandResult.Failure("Can't select the world because its id is empty"));
             }
 
-            // TODO: fixme
-            // Route.World = _worldStore.LoadWorldById(world.Id);
+            SelectedWorld = world;
 
             var currentSelected = Worlds.SingleOrDefault(w => w.IsSelected);
             if (currentSelected != null)
@@ -97,19 +122,12 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
 
             world.IsSelected = true;
 
-            // TODO: fixme
-            // if (Route.ReadyToBuild)
-            // {
-            //     this.RaisePropertyChanged(nameof(Route));
-            // }
-
-            return CommandResult.Success();
+            return Task.FromResult(CommandResult.Success());
         }
 
         private async Task<CommandResult> SelectSport(SportViewModel sport)
         {
-            // TODO: fixme
-            // Route.Sport = sport.Sport;
+            SelectedSport = sport;
 
             if (string.IsNullOrEmpty(_userPreferences.DefaultSport))
             {
@@ -130,12 +148,6 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
 
             sport.IsSelected = true;
 
-            // TODO: fixme
-            // if (Route.ReadyToBuild)
-            // {
-            //     this.RaisePropertyChanged(nameof(Route));
-            // }
-
             return CommandResult.Success();
         }
 
@@ -150,6 +162,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             }
 
             DefaultSport = null;
+            SelectedSport = null;
 
             return CommandResult.Success();
         }

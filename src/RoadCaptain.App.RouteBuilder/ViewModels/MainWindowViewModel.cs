@@ -36,6 +36,21 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             Model = new MainWindowModel();
             Route = new RouteViewModel(routeStore, segmentStore);
             LandingPageViewModel = new LandingPageViewModel(worldStore, userPreferences, windowService);
+            LandingPageViewModel.PropertyChanged += (sender, args) =>
+            {
+                switch (args.PropertyName)
+                {
+                    case nameof(LandingPageViewModel.SelectedWorld):
+                    case nameof(LandingPageViewModel.SelectedSport):
+                        if (LandingPageViewModel is { SelectedSport: not null, SelectedWorld: not null })
+                        {
+                            Route.World = worldStore.LoadWorldById(LandingPageViewModel.SelectedWorld.Id);
+                            Route.Sport = LandingPageViewModel.SelectedSport.Sport;
+                        }
+                        break;
+                }
+            };
+            
             BuildRouteViewModel = new BuildRouteViewModel(Route, userPreferences, windowService, worldStore, segmentStore, Model);
 
             OpenLinkCommand = new RelayCommand(
