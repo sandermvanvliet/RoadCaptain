@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using ReactiveUI;
 using RoadCaptain.App.RouteBuilder.Models;
+using RoadCaptain.App.RouteBuilder.Services;
 using CommandResult = RoadCaptain.App.Shared.Commands.CommandResult;
 using RelayCommand = RoadCaptain.App.Shared.Commands.RelayCommand;
 using RoadCaptain.Ports;
@@ -26,7 +27,8 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
         private readonly IApplicationFeatures _applicationFeatures;
 
         public MainWindowViewModel(IRouteStore routeStore, ISegmentStore segmentStore, IVersionChecker versionChecker,
-            IWindowService windowService, IWorldStore worldStore, IUserPreferences userPreferences, IApplicationFeatures applicationFeatures)
+            IWindowService windowService, IWorldStore worldStore, IUserPreferences userPreferences,
+            IApplicationFeatures applicationFeatures, IStatusBarService statusBarService)
         {
             _versionChecker = versionChecker;
             _windowService = windowService;
@@ -51,13 +53,15 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
                 }
             };
             
-            BuildRouteViewModel = new BuildRouteViewModel(Route, userPreferences, windowService, worldStore, segmentStore, Model);
+            BuildRouteViewModel = new BuildRouteViewModel(Route, userPreferences, windowService, worldStore, segmentStore, statusBarService);
 
             OpenLinkCommand = new RelayCommand(
                 _ => OpenLink(_ as string ?? throw new ArgumentNullException(nameof(RelayCommand.CommandParameter))),
                 param => !string.IsNullOrEmpty(param as string));
 
             Version = GetType().Assembly.GetName().Version?.ToString(4) ?? "0.0.0.0";
+            
+            statusBarService.Subscribe(message => Model.StatusBarInfo(message), message => Model.StatusBarWarning(message), message => Model.StatusBarError(message));
         }
 
         public MainWindowModel Model { get; }

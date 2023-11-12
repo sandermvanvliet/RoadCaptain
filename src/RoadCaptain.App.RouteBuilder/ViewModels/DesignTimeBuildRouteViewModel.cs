@@ -2,7 +2,7 @@
 using Autofac;
 using Avalonia.Threading;
 using Microsoft.Extensions.Configuration;
-using RoadCaptain.App.RouteBuilder.Models;
+using RoadCaptain.App.RouteBuilder.Services;
 using RoadCaptain.Ports;
 using Serilog.Core;
 
@@ -27,7 +27,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             new WindowService(Container, Container.Resolve<MonitoringEvents>()), 
             Container.Resolve<IWorldStore>(),
             Container.Resolve<ISegmentStore>(),
-            new MainWindowModel()
+            new StatusBarService()
             )
         {
             Route.OutputFilePath = @"C:\git\RoadCaptain\test\RoadCaptain.Tests.Unit\GameState\Repro\Rebel.Route-Italian.Villa.Sprint.Loop.json";

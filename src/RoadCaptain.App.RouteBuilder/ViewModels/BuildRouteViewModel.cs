@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using ReactiveUI;
 using RoadCaptain.App.RouteBuilder.Models;
+using RoadCaptain.App.RouteBuilder.Services;
 using RoadCaptain.App.RouteBuilder.UseCases;
 using RoadCaptain.App.Shared.Commands;
 using RoadCaptain.App.Shared.Dialogs;
@@ -33,16 +34,15 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
         private readonly ConvertZwiftMapRouteUseCase _convertUseCase;
 
         public BuildRouteViewModel(RouteViewModel routeViewModel, IUserPreferences userPreferences,
-            IWindowService windowService, IWorldStore worldStore, ISegmentStore segmentStore, MainWindowModel mainWindowModel)
+            IWindowService windowService, IWorldStore worldStore, ISegmentStore segmentStore, IStatusBarService statusBarService)
         {
             _userPreferences = userPreferences;
             _windowService = windowService;
+            var statusBarService1 = statusBarService;
             _showClimbs = _userPreferences.ShowClimbs;
             _showSprints = _userPreferences.ShowSprints;
             _showElevationProfile = _userPreferences.ShowElevationProfile;
             _convertUseCase = new ConvertZwiftMapRouteUseCase(worldStore, segmentStore);
-            
-            //SelectDefaultSportFromPreferences();
             
             Route = routeViewModel;
             Route.PropertyChanged += (_, args) => HandleRoutePropertyChanged(segmentStore, args);
@@ -53,33 +53,33 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
                     _ => SaveRoute(),
                     _ => Route.Sequence.Any())
                 .SubscribeTo(this, () => Route.Sequence)
-                .OnSuccess(_ => mainWindowModel.StatusBarInfo("Route saved successfully"))
-                .OnSuccessWithMessage(_ => mainWindowModel.StatusBarInfo("Route saved successfully: {0}", _.Message))
-                .OnFailure(_ => mainWindowModel.StatusBarError("Failed to save route because: {0}", _.Message))
-                .OnNotExecuted(_ => mainWindowModel.StatusBarInfo("Route hasn't changed dit not need to not saved"));
+                .OnSuccess(_ => statusBarService1.Info("Route saved successfully"))
+                .OnSuccessWithMessage(_ => statusBarService1.Info($"Route saved successfully: {_.Message}"))
+                .OnFailure(_ => statusBarService1.Error($"Failed to save route because: {_.Message}"))
+                .OnNotExecuted(_ => statusBarService1.Info("Route hasn't changed dit not need to not saved"));
 
             OpenRouteCommand = new AsyncRelayCommand(
                     _ => OpenRoute(),
                     _ => true)
-                .OnSuccess(_ => mainWindowModel.StatusBarInfo("Route loaded successfully"))
-                .OnSuccessWithMessage(_ => mainWindowModel.StatusBarInfo(_.Message))
-                .OnFailure(_ => mainWindowModel.StatusBarError("Failed to load route because: {0}", _.Message));
+                .OnSuccess(_ => statusBarService1.Info("Route loaded successfully"))
+                .OnSuccessWithMessage(_ => statusBarService1.Info(_.Message))
+                .OnFailure(_ => statusBarService1.Error($"Failed to load route because: {_.Message}"));
 
             ClearRouteCommand = new AsyncRelayCommand(
                     _ => ClearRoute(),
                     _ => Route.ReadyToBuild && Route.Sequence.Any())
                 .SubscribeTo(this, () => Route.Sequence)
                 .SubscribeTo(this, () => Route.ReadyToBuild)
-                .OnSuccess(_ => mainWindowModel.StatusBarInfo("Route cleared"))
-                .OnFailure(_ => mainWindowModel.StatusBarError("Failed to clear route because: {0}", _.Message));
+                .OnSuccess(_ => statusBarService1.Info("Route cleared"))
+                .OnFailure(_ => statusBarService1.Error($"Failed to clear route because: {_.Message}"));
 
             SelectSegmentCommand = new AsyncRelayCommand(
                     _ => SelectSegment(_ as Segment ??
                                        throw new ArgumentNullException(nameof(RelayCommand.CommandParameter))),
                     _ => true)
-                .OnSuccess(_ => mainWindowModel.StatusBarInfo("Added segment"))
-                .OnSuccessWithMessage(_ => mainWindowModel.StatusBarInfo("Added segment {0}", _.Message))
-                .OnFailure(_ => mainWindowModel.StatusBarWarning(_.Message));
+                .OnSuccess(_ => statusBarService1.Info("Added segment"))
+                .OnSuccessWithMessage(_ => statusBarService1.Info($"Added segment {_.Message}"))
+                .OnFailure(_ => statusBarService1.Warning(_.Message));
 
             SimulateCommand = new RelayCommand(
                     _ => SimulateRoute(),
@@ -90,21 +90,9 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
                     _ => RemoveLastSegment(),
                     _ => Route.Sequence.Any())
                 .SubscribeTo(this, () => Route.Sequence)
-                .OnSuccess(_ =>
-                {
-                    // TODO: fix me
-                    //Model.StatusBarInfo("Removed segment");
-                })
-                .OnSuccessWithMessage(_ =>
-                {
-                    // TODO: fix me
-                    //Model.StatusBarInfo("Removed segment {0}", _.Message);
-                })
-                .OnFailure(_ =>
-                {
-                    // TODO: fix me
-                    //Model.StatusBarWarning(_.Message);
-                });
+                .OnSuccess(_ => statusBarService1.Info("Removed segment"))
+                .OnSuccessWithMessage(result => statusBarService1.Info($"Removed segment {result.Message}"))
+                .OnFailure(result => statusBarService1.Warning(result.Message));
 
             ResetWorldCommand = new AsyncRelayCommand(
                     _ => ResetWorldAndSport(),

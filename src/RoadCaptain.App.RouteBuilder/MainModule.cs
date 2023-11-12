@@ -9,6 +9,7 @@ using System.Runtime.InteropServices;
 using Autofac;
 using Autofac.Core.Activators.Reflection;
 using Avalonia.Controls;
+using RoadCaptain.App.RouteBuilder.Services;
 using RoadCaptain.App.RouteBuilder.ViewModels;
 using Module = Autofac.Module;
 
@@ -25,6 +26,7 @@ namespace RoadCaptain.App.RouteBuilder
             
             // Single instance because we keep track of the active window
             builder.RegisterType<WindowService>().As<IWindowService>().SingleInstance();
+            builder.RegisterType<StatusBarService>().As<IStatusBarService>().SingleInstance();
             builder.RegisterDecorator<DelegateDecorator, IWindowService>();
 
             builder

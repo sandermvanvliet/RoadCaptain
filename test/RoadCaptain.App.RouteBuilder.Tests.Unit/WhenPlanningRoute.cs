@@ -7,6 +7,7 @@ using System.Linq;
 using Autofac;
 using FluentAssertions;
 using RoadCaptain.Adapters;
+using RoadCaptain.App.RouteBuilder.Services;
 using RoadCaptain.App.RouteBuilder.ViewModels;
 using RoadCaptain.App.Shared.Commands;
 using Xunit;
@@ -33,7 +34,8 @@ namespace RoadCaptain.App.RouteBuilder.Tests.Unit
                 new StubWindowService(new ContainerBuilder().Build(), new NopMonitoringEvents()),
                 _worldStore,
                 new TestUserPreferences(),
-                new DummyApplicationFeatures());
+                new DummyApplicationFeatures(), 
+                new StatusBarService());
         }
 
         private void GivenWorldAndSport(string worldId, SportType sportType)
