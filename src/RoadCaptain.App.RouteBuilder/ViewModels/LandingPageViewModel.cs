@@ -23,7 +23,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             _windowService = windowService;
 
             _worlds = worldStore.LoadWorlds().Select(world => new WorldViewModel(world)).ToArray();
-            _sports = new[] { new SportViewModel(SportType.Cycling), new SportViewModel(SportType.Running) };
+            _sports = new[] { new SportViewModel(SportType.Cycling, DefaultSport), new SportViewModel(SportType.Running, DefaultSport) };
             
             SelectWorldCommand = new AsyncRelayCommand(
                 _ => SelectWorld(_ as WorldViewModel ??

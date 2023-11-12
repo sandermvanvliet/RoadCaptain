@@ -15,9 +15,15 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
         private bool _isDefault;
         public SportType Sport { get; }
 
-        public SportViewModel(SportType sport)
+        public SportViewModel(SportType sport, string? defaultSport)
         {
             Sport = sport;
+            
+            if (sport.ToString() == defaultSport)
+            {
+                IsSelected = true;
+                IsDefault = true;
+            }
         }
         
         public bool IsSelected
