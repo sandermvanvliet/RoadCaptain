@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -7,6 +8,7 @@ using Avalonia.Interactivity;
 using Codenizer.Avalonia.Map;
 using RoadCaptain.App.RouteBuilder.ViewModels;
 using RoadCaptain.App.Shared.Controls;
+using InvalidOperationException = System.InvalidOperationException;
 using Point = Avalonia.Point;
 
 namespace RoadCaptain.App.RouteBuilder.Views
@@ -14,10 +16,10 @@ namespace RoadCaptain.App.RouteBuilder.Views
     public partial class BuildRoute : UserControl
     {
         private readonly MapObjectsSource _mapObjectsSource;
-        
+        private BuildRouteViewModel _viewModel = default!;
+
         public BuildRoute()
         {
-            ViewModel = (DataContext as BuildRouteViewModel)!; // Suppressed because it's initialized from XAML
             
             InitializeComponent();
             
@@ -25,29 +27,25 @@ namespace RoadCaptain.App.RouteBuilder.Views
             ZwiftMap.LogDiagnostics = false;
 
             _mapObjectsSource = new MapObjectsSource(ZwiftMap);
-            
-            //ViewModel.PropertyChanged += BuildRouteViewModelPropertyChanged;
         }
-
-        private BuildRouteViewModel ViewModel { get; }
 
         private void BuildRouteViewModelPropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
             switch (e.PropertyName)
             {
-                case nameof(ViewModel.SelectedSegment):
+                case nameof(_viewModel.SelectedSegment):
                     // Reset any manually selected item in the list
                     using (ZwiftMap.BeginUpdate())
                     {
-                        ViewModel.ClearSegmentHighlight();
+                        _viewModel.ClearSegmentHighlight();
 
-                        _mapObjectsSource.SynchronizeRouteSegmentsOnZwiftMap(ViewModel.Route);
+                        _mapObjectsSource.SynchronizeRouteSegmentsOnZwiftMap(_viewModel.Route);
                     }
                     break;
-                case nameof(ViewModel.HighlightedSegment):
-                    _mapObjectsSource.HighlightOnZwiftMap(ViewModel.HighlightedSegment);
+                case nameof(_viewModel.HighlightedSegment):
+                    _mapObjectsSource.HighlightOnZwiftMap(_viewModel.HighlightedSegment);
                     break;
-                case nameof(ViewModel.Route):
+                case nameof(_viewModel.Route):
                     // Ensure the last added segment is visible
                     if (RouteSegmentListView.RouteListView.ItemCount > 0)
                     {
@@ -58,17 +56,17 @@ namespace RoadCaptain.App.RouteBuilder.Views
                     // route path is painted correctly
                     using (ZwiftMap.BeginUpdate())
                     {
-                        _mapObjectsSource.SetZwiftMap(ViewModel.Route, ViewModel.Segments, ViewModel.Markers);
-                        _mapObjectsSource.SynchronizeRouteSegmentsOnZwiftMap(ViewModel.Route);
+                        _mapObjectsSource.SetZwiftMap(_viewModel.Route, _viewModel.Segments, _viewModel.Markers);
+                        _mapObjectsSource.SynchronizeRouteSegmentsOnZwiftMap(_viewModel.Route);
                     }
 
                     break;
-                case nameof(ViewModel.RiderPosition):
+                case nameof(_viewModel.RiderPosition):
                     var routePath = ZwiftMap.MapObjects.OfType<RoutePath>().SingleOrDefault();
 
                     if (routePath != null)
                     {
-                        if (ViewModel.RiderPosition == null)
+                        if (_viewModel.RiderPosition == null)
                         {
                             routePath.Reset();
                             routePath.ShowFullPath = false;
@@ -83,11 +81,11 @@ namespace RoadCaptain.App.RouteBuilder.Views
                     InvalidateZwiftMap();
 
                     break;
-                case nameof(ViewModel.ShowClimbs):
-                    _mapObjectsSource.ToggleClimbs(ViewModel.ShowClimbs);
+                case nameof(_viewModel.ShowClimbs):
+                    _mapObjectsSource.ToggleClimbs(_viewModel.ShowClimbs);
                     break;
-                case nameof(ViewModel.ShowSprints):
-                    _mapObjectsSource.ToggleSprints(ViewModel.ShowSprints);
+                case nameof(_viewModel.ShowSprints):
+                    _mapObjectsSource.ToggleSprints(_viewModel.ShowSprints);
                     break;
             }
         }
@@ -122,22 +120,33 @@ namespace RoadCaptain.App.RouteBuilder.Views
         {
             if (e.MapObject is MapSegment mapSegment)
             {
-                var segment = ViewModel.Segments.SingleOrDefault(s => s.Id == mapSegment.SegmentId);
+                var segment = _viewModel.Segments.SingleOrDefault(s => s.Id == mapSegment.SegmentId);
 
                 if (segment != null)
                 {
-                    ViewModel.SelectSegmentCommand.Execute(segment);
+                    _viewModel.SelectSegmentCommand.Execute(segment);
                 }
             }
             if (e.MapObject is SpawnPointSegment spawnPointSegment)
             {
-                var segment = ViewModel.Segments.SingleOrDefault(s => s.Id == spawnPointSegment.SegmentId);
+                var segment = _viewModel.Segments.SingleOrDefault(s => s.Id == spawnPointSegment.SegmentId);
 
                 if (segment != null)
                 {
-                    ViewModel.SelectSegmentCommand.Execute(segment);
+                    _viewModel.SelectSegmentCommand.Execute(segment);
                 }
             }
+        }
+
+        private void StyledElement_OnInitialized(object? sender, EventArgs e)
+        {
+            if (DataContext == null)
+            {
+                throw new InvalidOperationException("Can't initialize when the DataContext is null");
+            }
+            
+            _viewModel = (BuildRouteViewModel)DataContext;
+            _viewModel.PropertyChanged += BuildRouteViewModelPropertyChanged;
         }
     }
 }

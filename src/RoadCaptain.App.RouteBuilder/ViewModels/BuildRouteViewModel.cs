@@ -734,23 +734,23 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
         private async Task<CommandResult> ResetWorldAndSport()
         {
             // TODO: fixme 
-            // if (Route.IsTainted)
-            // {
-            //     var result = await _windowService.ShowShouldSaveRouteDialog();
-            //
-            //     if (result == MessageBoxResult.Cancel)
-            //     {
-            //         return CommandResult.Aborted();
-            //     }
-            //
-            //     if (result == MessageBoxResult.Yes)
-            //     {
-            //         BuildRouteViewModel.SaveRouteCommand.Execute(null);
-            //     }
-            // }
-            //
-            // Route.Reset();
-            // Reset();    
+            if (Route.IsTainted)
+            {
+                var result = await _windowService.ShowShouldSaveRouteDialog();
+            
+                if (result == MessageBoxResult.Cancel)
+                {
+                    return CommandResult.Aborted();
+                }
+            
+                if (result == MessageBoxResult.Yes)
+                {
+                    SaveRouteCommand.Execute(null);
+                }
+            }
+            
+            Route.Reset();
+            Reset();
             //
             // var selectedSport = LandingPageViewModel.Sports.SingleOrDefault(s => s.IsSelected);
             // if (selectedSport != null)
@@ -769,26 +769,6 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             // this.RaisePropertyChanged(nameof(Route));
 
             return CommandResult.Success();
-        }
-
-        private void SelectDefaultSportFromPreferences()
-        {
-            // TODO: fixme
-            // if (LandingPageViewModel.HasDefaultSport)
-            // {
-            //     var sport = LandingPageViewModel
-            //         .Sports
-            //         .SingleOrDefault(s =>
-            //             (_userPreferences.DefaultSport ?? "").Equals(s.Sport.ToString(),
-            //                 StringComparison.InvariantCultureIgnoreCase));
-            //
-            //     if (sport != null)
-            //     {
-            //         sport.IsSelected = true;
-            //         sport.IsDefault = true;
-            //         Route.Sport = sport.Sport;
-            //     }
-            // }
         }
     }
 }

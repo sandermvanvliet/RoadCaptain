@@ -10,7 +10,8 @@
              xmlns:converters1="clr-namespace:RoadCaptain.App.RouteBuilder.Converters"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="RoadCaptain.App.RouteBuilder.Views.BuildRoute"
-             x:DataType="viewModels:BuildRouteViewModel">
+             x:DataType="viewModels:BuildRouteViewModel"
+             Initialized="StyledElement_OnInitialized">
     <Design.DataContext>
         <viewModels:DesignTimeBuildRouteViewModel />
     </Design.DataContext>
