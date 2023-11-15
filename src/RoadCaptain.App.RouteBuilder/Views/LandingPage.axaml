@@ -34,15 +34,79 @@
             <ColumnDefinition Width="400" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
-        <Grid Grid.Column="0">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="30" />
-                <RowDefinition Height="*" />
-                <RowDefinition Height="30" />
-                <RowDefinition Height="150" />
-            </Grid.RowDefinitions>
-            <TextBlock Text="Select a world to build a route for:" FontSize="16" Grid.Row="0" />
-            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+        <StackPanel Orientation="Vertical" Grid.Column="0">
+            <StackPanel Orientation="Horizontal" Margin="8,0,0,0">
+                <TextBlock Text="Select a sport to build a route for:" FontSize="16" VerticalAlignment="Center" />
+                <Button Content="(reset default)" Classes="link" Foreground="Blue" VerticalAlignment="Center"
+                        IsVisible="{Binding Path=HasDefaultSport}"
+                        Command="{Binding Path=ResetDefaultSportCommand}" />
+            </StackPanel>
+            <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                <ItemsControl Items="{Binding Path=Sports}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate DataType="{x:Type viewModels:SportViewModel}">
+                            <Button Classes="world"
+                                    Command="{Binding $parent[UserControl].((viewModels:LandingPageViewModel)DataContext).SelectSportCommand}"
+                                    CommandParameter="{Binding}" Cursor="Hand">
+                                <Button.Template>
+                                    <ControlTemplate>
+                                        <Border Name="borderZero" Background="White" CornerRadius="5"
+                                                BorderThickness="2"
+                                                Width="180" Height="100" Margin="8,8,8,8"
+                                                Classes.isSelected="{Binding Path=IsSelected}">
+                                            <Border.Styles>
+                                                <Style Selector="Border">
+                                                    <Setter Property="BorderBrush" Value="{StaticResource ZwiftBlue}" />
+                                                </Style>
+                                                <Style Selector="Border:pointerover">
+                                                    <Setter Property="BorderBrush" Value="{StaticResource ZwiftOrange}" />
+                                                </Style>
+                                                <Style Selector="Border.isSelected">
+                                                    <Setter Property="BorderBrush" Value="{StaticResource ZwiftOrange}" />
+                                                </Style>
+                                            </Border.Styles>
+                                            <Grid>
+                                                <Image Source="{Binding Path=Image}" Height="100" Stretch="Uniform"
+                                                       ClipToBounds="True" Margin="0"
+                                                       Classes.isSelected="{Binding Path=IsSelected}">
+                                                    <Image.Styles>
+                                                        <Style Selector="Image">
+                                                            <Setter Property="Opacity" Value="0.5" />
+                                                        </Style>
+                                                        <Style Selector="Image:pointerover">
+                                                            <Setter Property="Opacity" Value="1" />
+                                                        </Style>
+                                                        <Style Selector="Image.isSelected">
+                                                            <Setter Property="Opacity" Value="1" />
+                                                        </Style>
+                                                    </Image.Styles>
+                                                </Image>
+                                                <Border Margin="0" Height="28" VerticalAlignment="Top"
+                                                        HorizontalAlignment="Right"
+                                                        BorderBrush="{StaticResource ZwiftOrange}"
+                                                        BorderThickness="1,0,0,1" CornerRadius="0,5,0,5"
+                                                        Background="White"
+                                                        IsVisible="{Binding Path=IsDefault}">
+                                                    <TextBlock Text="Default" FontSize="16" Foreground="Black"
+                                                               Padding="4,2,4,0" />
+                                                </Border>
+                                            </Grid>
+                                        </Border>
+                                    </ControlTemplate>
+                                </Button.Template>
+                            </Button>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
+            
+            <TextBlock Text="Then, select a world to build a route for:" FontSize="16" Margin="8,8,0,0" />
+            <ScrollViewer Grid.Row="3" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
                 <ItemsControl Items="{Binding Path=Worlds}">
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
@@ -137,83 +201,15 @@
                 </ItemsControl>
             </ScrollViewer>
 
-            <StackPanel Orientation="Horizontal" Grid.Row="2">
-                <TextBlock Text="Select a sport to build a route for:" FontSize="16" VerticalAlignment="Center" />
-                <Button Content="(reset default)" Classes="link" Foreground="Blue" VerticalAlignment="Center"
-                        IsVisible="{Binding Path=HasDefaultSport}"
-                        Command="{Binding Path=ResetDefaultSportCommand}" />
-            </StackPanel>
-            <ScrollViewer Grid.Row="3" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
-                <ItemsControl Items="{Binding Path=Sports}">
-                    <ItemsControl.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <WrapPanel />
-                        </ItemsPanelTemplate>
-                    </ItemsControl.ItemsPanel>
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate DataType="{x:Type viewModels:SportViewModel}">
-                            <Button Classes="world"
-                                    Command="{Binding $parent[UserControl].((viewModels:LandingPageViewModel)DataContext).SelectSportCommand}"
-                                    CommandParameter="{Binding}" Cursor="Hand">
-                                <Button.Template>
-                                    <ControlTemplate>
-                                        <Border Name="borderZero" Background="White" CornerRadius="5"
-                                                BorderThickness="2"
-                                                Width="180" Height="100" Margin="8,8,8,8"
-                                                Classes.isSelected="{Binding Path=IsSelected}">
-                                            <Border.Styles>
-                                                <Style Selector="Border">
-                                                    <Setter Property="BorderBrush" Value="{StaticResource ZwiftBlue}" />
-                                                </Style>
-                                                <Style Selector="Border:pointerover">
-                                                    <Setter Property="BorderBrush" Value="{StaticResource ZwiftOrange}" />
-                                                </Style>
-                                                <Style Selector="Border.isSelected">
-                                                    <Setter Property="BorderBrush" Value="{StaticResource ZwiftOrange}" />
-                                                </Style>
-                                            </Border.Styles>
-                                            <Grid>
-                                                <Image Source="{Binding Path=Image}" Height="100" Stretch="Uniform"
-                                                       ClipToBounds="True" Margin="0"
-                                                       Classes.isSelected="{Binding Path=IsSelected}">
-                                                    <Image.Styles>
-                                                        <Style Selector="Image">
-                                                            <Setter Property="Opacity" Value="0.5" />
-                                                        </Style>
-                                                        <Style Selector="Image:pointerover">
-                                                            <Setter Property="Opacity" Value="1" />
-                                                        </Style>
-                                                        <Style Selector="Image.isSelected">
-                                                            <Setter Property="Opacity" Value="1" />
-                                                        </Style>
-                                                    </Image.Styles>
-                                                </Image>
-                                                <Border Margin="0" Height="28" VerticalAlignment="Top"
-                                                        HorizontalAlignment="Right"
-                                                        BorderBrush="{StaticResource ZwiftOrange}"
-                                                        BorderThickness="1,0,0,1" CornerRadius="0,5,0,5"
-                                                        Background="White"
-                                                        IsVisible="{Binding Path=IsDefault}">
-                                                    <TextBlock Text="Default" FontSize="16" Foreground="Black"
-                                                               Padding="4,2,4,0" />
-                                                </Border>
-                                            </Grid>
-                                        </Border>
-                                    </ControlTemplate>
-                                </Button.Template>
-                            </Button>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
-            </ScrollViewer>
-        </Grid>
+            
+        </StackPanel>
         <Grid Grid.Column="1">
             <Grid.RowDefinitions>
                 <RowDefinition Height="24" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
-            <TextBlock Text="Or select one of your routes" FontSize="16" />
-            <controls:RoutesList Grid.Row="1" DataContext="{Binding Path=MyRoutes}" Margin="0,4,4,4" RouteSelected="RoutesList_OnRouteSelected" />
+            <TextBlock Text="Or select one of your routes:" FontSize="16" Margin="4,4,0,8" />
+            <controls:RoutesList Grid.Row="1" DataContext="{Binding Path=MyRoutes}" Margin="0,4,4,8" RouteSelected="RoutesList_OnRouteSelected" />
         </Grid>
     </Grid>
 </UserControl>
