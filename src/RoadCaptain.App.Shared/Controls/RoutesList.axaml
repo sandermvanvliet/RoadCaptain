@@ -1,0 +1,91 @@
+﻿<UserControl x:Class="RoadCaptain.App.Shared.Controls.RoutesList"
+             xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:viewModels="clr-namespace:RoadCaptain.App.Shared.ViewModels"
+             Design.DataContext="{x:Static viewModels:DesignTimeRoutesListViewModel.Instance}">
+    <ListBox Name="RoutesListBox"
+             ZIndex="50"
+             HorizontalAlignment="Stretch"
+             Padding="0"
+             Margin="4"
+             Items="{Binding}"
+             BorderThickness="0"
+             ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+             ScrollViewer.VerticalScrollBarVisibility="Auto"
+             VerticalAlignment="Stretch"
+             DoubleTapped="RoutesListBox_OnDoubleTapped"
+             SelectionChanged="RoutesListBox_OnSelectionChanged">
+        <ListBox.Styles>
+            <Style Selector="ListBoxItem">
+                <Setter Property="Margin" Value="0" />
+                <Setter Property="Padding" Value="8,0,8,0" />
+            </Style>
+            <Style Selector="ListBoxItem:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+                <Setter Property="Background" Value="{StaticResource ZwiftOrange}" />
+                <Setter Property="TextBlock.Foreground" Value="White" />
+            </Style>
+        </ListBox.Styles>
+        <ListBox.ItemTemplate>
+            <DataTemplate DataType="viewModels:RouteViewModel">
+                <Grid Margin="0,0,0,4">
+                    <Grid.Resources>
+                        <Style Selector="TextBlock" x:Key="ListBoxItemStyle">
+                            <Setter Property="Foreground" Value="Black" />
+                            <Setter Property="FontWeight" Value="Bold" />
+                            <Setter Property="FontSize" Value="18" />
+                        </Style>
+                    </Grid.Resources>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="24" />
+                        <RowDefinition Height="24" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="45" />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+
+                    <Border Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" BorderBrush="Gray" BorderThickness="2"
+                            Background="White" CornerRadius="5" Margin="5,8,5,5"
+                            ToolTip.Tip="{Binding Path=WorldName}">
+                        <TextBlock Text="{Binding Path=WorldAbbreviation}" HorizontalAlignment="Center"
+                                   VerticalAlignment="Center" FontWeight="Bold" Foreground="Black" />
+                    </Border>
+
+                    <TextBlock Grid.Column="1" Grid.Row="0" Text="{Binding Path=Name}" HorizontalAlignment="Left"
+                               FontSize="20"
+                               Margin="0,4,0,0" />
+
+                    <StackPanel Grid.Column="1" Grid.Row="1" Orientation="Horizontal" Margin="0,0,0,0">
+                        <StackPanel Orientation="Horizontal" Height="18">
+                            <TextBlock Text="{Binding Path=Distance,StringFormat=\{0:0\}}" FontSize="16"
+                                       FontWeight="Bold" VerticalAlignment="Bottom" />
+                            <TextBlock Text="km" FontSize="10" FontWeight="Bold" VerticalAlignment="Bottom"
+                                       Padding="0,0,0,1.5" />
+
+                            <TextBlock Text="⛰" FontSize="15" Margin="8,-4,0,0" Padding="0"
+                                       FontWeight="ExtraBold"
+                                       ToolTip.Tip="{Binding Path=Descent,StringFormat=Descent \{0:0\}m}" />
+                            <TextBlock Text="{Binding Path=Ascent,StringFormat=\{0:0\}}" FontSize="16"
+                                       FontWeight="Bold" VerticalAlignment="Bottom" />
+                            <TextBlock Text="m" FontSize="10" FontWeight="Bold" VerticalAlignment="Bottom"
+                                       Padding="0,0,0,1.5" />
+
+                            <TextBlock Text="↻" FontWeight="Bold" Foreground="Green" FontSize="18"
+                                       IsVisible="{Binding Path=IsLoop}" Margin="4,-2,0,0"
+                                       ToolTip.Tip="This route is a loop" />
+
+                            <TextBlock Text="🚴🏾" FontSize="18" Margin="8,-6,0,0" ToolTip.Tip="Created by" />
+                            <TextBlock Text="{Binding Path=CreatorName}" ToolTip.Tip="Created by" />
+                        </StackPanel>
+                    </StackPanel>
+                    <StackPanel Grid.Column="1" Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right">
+                        <TextBlock Text="🌐" VerticalAlignment="Center" />
+                        <TextBlock
+                            Text="{Binding Path=RepositoryName}"
+                            VerticalAlignment="Center" Margin="2,0,0,0" />
+                    </StackPanel>
+                </Grid>
+            </DataTemplate>
+        </ListBox.ItemTemplate>
+    </ListBox>
+</UserControl>

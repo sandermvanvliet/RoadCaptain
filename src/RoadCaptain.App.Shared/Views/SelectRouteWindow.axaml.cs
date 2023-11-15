@@ -9,6 +9,7 @@ using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Avalonia.Threading;
+using RoadCaptain.App.Shared.Controls;
 using RoadCaptain.App.Shared.ViewModels;
 
 namespace RoadCaptain.App.Shared.Views
@@ -77,16 +78,6 @@ namespace RoadCaptain.App.Shared.Views
             }
         }
 
-        private void RoutesListBox_OnSelectionChanged(object? sender, SelectionChangedEventArgs e)
-        {
-            if (sender is not ListBox listBox)
-            {
-                return;
-            }
-
-            _viewModel.SelectedRoute = listBox.SelectedItem as RouteViewModel;
-        }
-
         private async void RepositoryComboBox_OnSelectionChanged(object? sender, SelectionChangedEventArgs e)
         {
             if (sender is not ComboBox comboBox)
@@ -102,20 +93,14 @@ namespace RoadCaptain.App.Shared.Views
             _viewModel.SearchRoutesCommand.Execute(repositoryName);
         }
 
-        private void RoutesListBox_OnDoubleTapped(object? sender, RoutedEventArgs e)
+        private void RoutesList_OnRouteSelected(object? sender, RouteSelectedEventArgs e)
         {
-            if (sender is not ListBox listBox)
+            _viewModel.SelectedRoute = e.Route;
+            
+            if (e.Intent == SelectionIntent.SelectAndChoose)
             {
-                return;
+                Close();
             }
-
-            if (listBox.SelectedItem is not RouteViewModel selectedRoute)
-            {
-                return;
-            }
-
-            _viewModel.SelectedRoute = selectedRoute;
-            this.Close();
         }
     }
 }

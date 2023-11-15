@@ -46,14 +46,4 @@
 	  <Folder Include="Models\" />
 	  <Folder Include="Views\" />
 	</ItemGroup>
-
-	<ItemGroup>
-	  <Compile Update="Dialogs\WhatIsNewWindow.axaml.cs">
-	    <DependentUpon>WhatIsNewWindow.axaml</DependentUpon>
-	  </Compile>
-	  <Compile Update="Views\SelectRouteWindow.axaml.cs">
-	    <DependentUpon>SelectRouteWindow.axaml</DependentUpon>
-	    <SubType>Code</SubType>
-	  </Compile>
-	</ItemGroup>
 </Project>

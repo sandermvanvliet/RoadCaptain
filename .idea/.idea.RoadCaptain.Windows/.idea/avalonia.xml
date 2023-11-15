@@ -19,9 +19,11 @@
         <entry key="src/RoadCaptain.App.Runner/Views/InGameNavigationWIndow.axaml" value="src/RoadCaptain.App.Runner/RoadCaptain.App.Runner.csproj" />
         <entry key="src/RoadCaptain.App.Runner/Views/MainWindow.axaml" value="src/RoadCaptain.App.Runner/RoadCaptain.App.Runner.csproj" />
         <entry key="src/RoadCaptain.App.Runner/Views/SelectRouteWindow.axaml" value="src/RoadCaptain.App.Runner/RoadCaptain.App.Runner.csproj" />
+        <entry key="src/RoadCaptain.App.Shared/Controls/RoutesList.axaml" value="src/RoadCaptain.App.RouteBuilder/RoadCaptain.App.RouteBuilder.csproj" />
         <entry key="src/RoadCaptain.App.Shared/Dialogs/AboutRoadCaptainDialog.axaml" value="src/RoadCaptain.App.RouteBuilder/RoadCaptain.App.RouteBuilder.csproj" />
         <entry key="src/RoadCaptain.App.Shared/Dialogs/UpdateAvailableWindow.axaml" value="src/RoadCaptain.App.RouteBuilder/RoadCaptain.App.RouteBuilder.csproj" />
         <entry key="src/RoadCaptain.App.Shared/Dialogs/WhatIsNewWindow.axaml" value="src/RoadCaptain.App.RouteBuilder/RoadCaptain.App.RouteBuilder.csproj" />
+        <entry key="src/RoadCaptain.App.Shared/RoutesList.axaml" value="src/RoadCaptain.App.RouteBuilder/RoadCaptain.App.RouteBuilder.csproj" />
         <entry key="src/RoadCaptain.App.Shared/Styles/Shared.axaml" value="src/RoadCaptain.App.RouteBuilder/RoadCaptain.App.RouteBuilder.csproj" />
         <entry key="src/RoadCaptain.App.Shared/Views/SelectRouteWindow.axaml" value="src/RoadCaptain.App.RouteBuilder/RoadCaptain.App.RouteBuilder.csproj" />
       </map>

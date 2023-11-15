@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 using ReactiveUI;
 using RoadCaptain.App.Shared.Commands;
 using RoadCaptain.App.Shared.Dialogs.ViewModels;
-using RoadCaptain.App.Shared.Views;
 using RoadCaptain.Commands;
 using RoadCaptain.Ports;
 using RoadCaptain.UseCases;
