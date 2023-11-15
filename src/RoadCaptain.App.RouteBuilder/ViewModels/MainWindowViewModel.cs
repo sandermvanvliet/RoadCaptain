@@ -4,14 +4,17 @@
 
 using System;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using ReactiveUI;
 using RoadCaptain.App.RouteBuilder.Models;
 using RoadCaptain.App.RouteBuilder.Services;
+using RoadCaptain.Commands;
 using CommandResult = RoadCaptain.App.Shared.Commands.CommandResult;
 using RelayCommand = RoadCaptain.App.Shared.Commands.RelayCommand;
 using RoadCaptain.Ports;
+using RoadCaptain.UseCases;
 
 namespace RoadCaptain.App.RouteBuilder.ViewModels
 {
@@ -25,19 +28,21 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
         private readonly IUserPreferences _userPreferences;
         private bool _haveCheckedLastOpenedVersion;
         private readonly IApplicationFeatures _applicationFeatures;
+        private readonly SearchRoutesUseCase _searchRoutesUseCase;
 
         public MainWindowViewModel(IRouteStore routeStore, ISegmentStore segmentStore, IVersionChecker versionChecker,
             IWindowService windowService, IWorldStore worldStore, IUserPreferences userPreferences,
-            IApplicationFeatures applicationFeatures, IStatusBarService statusBarService)
+            IApplicationFeatures applicationFeatures, IStatusBarService statusBarService, SearchRoutesUseCase searchRoutesUseCase)
         {
             _versionChecker = versionChecker;
             _windowService = windowService;
             _userPreferences = userPreferences;
             _applicationFeatures = applicationFeatures;
+            _searchRoutesUseCase = searchRoutesUseCase;
 
             Model = new MainWindowModel();
             Route = new RouteViewModel(routeStore, segmentStore);
-            LandingPageViewModel = new LandingPageViewModel(worldStore, userPreferences, windowService);
+            LandingPageViewModel = new LandingPageViewModel(worldStore, userPreferences, windowService, Array.Empty<Shared.ViewModels.RouteViewModel>());
             LandingPageViewModel.PropertyChanged += (sender, args) =>
             {
                 switch (args.PropertyName)
@@ -178,6 +183,14 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
                 _userPreferences.Save();
                 await _windowService.ShowWhatIsNewDialog(latestRelease.preRelease);
             }
+        }
+
+        public async Task LoadMyRoutes()
+        {
+            var currentUser = "Sander van Vliet [RoadCaptain]";
+            var result = await _searchRoutesUseCase.ExecuteAsync(new SearchRouteCommand("All", creator: currentUser));
+
+            LandingPageViewModel.MyRoutes = result.Select(r => new Shared.ViewModels.RouteViewModel(r)).ToArray();
         }
     }
 }

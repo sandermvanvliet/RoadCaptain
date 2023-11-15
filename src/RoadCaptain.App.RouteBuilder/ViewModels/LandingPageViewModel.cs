@@ -16,11 +16,13 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
         private readonly IWindowService _windowService;
         private SportViewModel? _selectedSport;
         private WorldViewModel? _selectedWorld;
+        private Shared.ViewModels.RouteViewModel[] _myRoutes = Array.Empty<Shared.ViewModels.RouteViewModel>();
 
-        public LandingPageViewModel(IWorldStore worldStore, IUserPreferences userPreferences, IWindowService windowService)
+        public LandingPageViewModel(IWorldStore worldStore, IUserPreferences userPreferences, IWindowService windowService, Shared.ViewModels.RouteViewModel[] myRoutes)
         {
             _userPreferences = userPreferences;
             _windowService = windowService;
+            MyRoutes = myRoutes;
 
             _worlds = worldStore.LoadWorlds().Select(world => new WorldViewModel(world)).ToArray();
             _sports = new[] { new SportViewModel(SportType.Cycling, DefaultSport), new SportViewModel(SportType.Running, DefaultSport) };
@@ -103,6 +105,18 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
 
                 this.RaisePropertyChanged();
                 this.RaisePropertyChanged(nameof(HasDefaultSport));
+            }
+        }
+
+        public Shared.ViewModels.RouteViewModel[] MyRoutes
+        {
+            get => _myRoutes;
+            set
+            {
+                if (value == _myRoutes) return;
+
+                _myRoutes = value;
+                this.RaisePropertyChanged();
             }
         }
 

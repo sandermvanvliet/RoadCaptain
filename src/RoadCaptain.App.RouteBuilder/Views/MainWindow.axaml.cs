@@ -3,6 +3,7 @@
 // See LICENSE or https://choosealicense.com/licenses/artistic-2.0/
 
 using System;
+using System.Windows.Forms;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
@@ -59,6 +60,7 @@ namespace RoadCaptain.App.RouteBuilder.Views
 
             Dispatcher.UIThread.InvokeAsync(() => ViewModel.CheckForNewVersion());
             Dispatcher.UIThread.InvokeAsync(() => ViewModel.CheckLastOpenedVersion());
+            Dispatcher.UIThread.InvokeAsync(() => ViewModel.LoadMyRoutes());
         }
     }
 }
