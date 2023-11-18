@@ -1,6 +1,5 @@
 ﻿using System;
 using RoadCaptain.App.RouteBuilder.ViewModels;
-using RoadCaptain.App.Shared.ViewModels;
 using RoadCaptain.Ports;
 
 namespace RoadCaptain.App.RouteBuilder
@@ -8,7 +7,7 @@ namespace RoadCaptain.App.RouteBuilder
     public class DesignTimeLandingPageViewModel : LandingPageViewModel
     {
         public DesignTimeLandingPageViewModel() 
-            : base(new DesignTimeWorldStore(), new DummyUserPreferences(), new DesignTimeWindowService(), DesignTimeRoutesListViewModel.Instance)
+            : base(new DesignTimeWorldStore(), new DummyUserPreferences(), new DesignTimeWindowService())
         {
         }
     }

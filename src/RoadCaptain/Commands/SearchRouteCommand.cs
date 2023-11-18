@@ -2,11 +2,14 @@
 // Licensed under Artistic License 2.0
 // See LICENSE or https://choosealicense.com/licenses/artistic-2.0/
 
+using System.Collections.Generic;
+using System.Collections.Immutable;
+
 namespace RoadCaptain.Commands
 {
     public class SearchRouteCommand
     {
-        public string Repository { get; }
+        public ImmutableArray<string> Repositories { get; }
         public string? World { get; }
         public string? Creator { get; }
         public string? Name { get; }
@@ -21,7 +24,27 @@ namespace RoadCaptain.Commands
         public string[]? KomSegments { get; }
         public string[]? SprintSegments { get; }
 
-        public SearchRouteCommand(string repository,
+        public SearchRouteCommand(
+            string repository,
+            string? world = null,
+            string? creator = null,
+            string? name = null,
+            string? zwiftRouteName = null,
+            int? minDistance = null,
+            int? maxDistance = null,
+            int? minAscent = null,
+            int? maxAscent = null,
+            int? minDescent = null,
+            int? maxDescent = null,
+            bool? isLoop = null,
+            string[]? komSegments = null,
+            string[]? sprintSegments = null)
+         : this(new [] { repository }, world, creator, name, zwiftRouteName, minDistance, maxDistance, minAscent, maxAscent, minDescent, maxDescent, isLoop, komSegments, sprintSegments)
+        {
+        }
+
+        public SearchRouteCommand(
+            IEnumerable<string> repositories,
             string? world = null,
             string? creator = null,
             string? name = null,
@@ -36,7 +59,7 @@ namespace RoadCaptain.Commands
             string[]? komSegments = null,
             string[]? sprintSegments = null)
         {
-            Repository = repository;
+            Repositories = repositories.ToImmutableArray();
             World = world;
             Creator = creator;
             Name = name;

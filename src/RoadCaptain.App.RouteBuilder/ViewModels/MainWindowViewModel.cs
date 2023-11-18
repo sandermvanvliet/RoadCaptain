@@ -29,20 +29,22 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
         private bool _haveCheckedLastOpenedVersion;
         private readonly IApplicationFeatures _applicationFeatures;
         private readonly SearchRoutesUseCase _searchRoutesUseCase;
+        private readonly RetrieveRepositoryNamesUseCase _retrieveRepositoryNamesUseCase;
 
         public MainWindowViewModel(IRouteStore routeStore, ISegmentStore segmentStore, IVersionChecker versionChecker,
             IWindowService windowService, IWorldStore worldStore, IUserPreferences userPreferences,
-            IApplicationFeatures applicationFeatures, IStatusBarService statusBarService, SearchRoutesUseCase searchRoutesUseCase)
+            IApplicationFeatures applicationFeatures, IStatusBarService statusBarService, SearchRoutesUseCase searchRoutesUseCase, RetrieveRepositoryNamesUseCase retrieveRepositoryNamesUseCase)
         {
             _versionChecker = versionChecker;
             _windowService = windowService;
             _userPreferences = userPreferences;
             _applicationFeatures = applicationFeatures;
             _searchRoutesUseCase = searchRoutesUseCase;
+            _retrieveRepositoryNamesUseCase = retrieveRepositoryNamesUseCase;
 
             Model = new MainWindowModel();
             Route = new RouteViewModel(routeStore, segmentStore);
-            LandingPageViewModel = new LandingPageViewModel(worldStore, userPreferences, windowService, Array.Empty<Shared.ViewModels.RouteViewModel>());
+            LandingPageViewModel = new LandingPageViewModel(worldStore, userPreferences, windowService);
             LandingPageViewModel.PropertyChanged += (sender, args) =>
             {
                 switch (args.PropertyName)
@@ -195,9 +197,12 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
         public async Task LoadMyRoutes()
         {
             var currentUser = "Sander van Vliet [RoadCaptain]";
-            var result = await _searchRoutesUseCase.ExecuteAsync(new SearchRouteCommand("All", creator: currentUser));
+            var repositories = _retrieveRepositoryNamesUseCase.Execute(new RetrieveRepositoryNamesCommand(RetrieveRepositoriesIntent.Manage));
+            var result = await _searchRoutesUseCase.ExecuteAsync(new SearchRouteCommand(repositories, creator: currentUser));
 
-            LandingPageViewModel.MyRoutes = result.Select(r => new Shared.ViewModels.RouteViewModel(r)).ToArray();
+            LandingPageViewModel.MyRoutes = result
+                .Select(r => new Shared.ViewModels.RouteViewModel(r))
+                .ToArray();
         }
     }
 }
