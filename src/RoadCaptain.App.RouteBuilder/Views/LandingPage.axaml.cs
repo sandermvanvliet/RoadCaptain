@@ -13,7 +13,9 @@ namespace RoadCaptain.App.RouteBuilder.Views
 
         private void RoutesList_OnRouteSelected(object? sender, RouteSelectedEventArgs e)
         {
-            // TODO
+            ViewModel.SelectedRoute = e.Route;
         }
+
+        private LandingPageViewModel ViewModel => (LandingPageViewModel)DataContext!;
     }
 }

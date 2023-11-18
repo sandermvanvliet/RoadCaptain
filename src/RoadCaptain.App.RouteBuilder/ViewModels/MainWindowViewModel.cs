@@ -55,6 +55,13 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
                             Route.Sport = LandingPageViewModel.SelectedSport.Sport;
                         }
                         break;
+                    case nameof(LandingPageViewModel.SelectedRoute):
+                        var plannedRoute = LandingPageViewModel.SelectedRoute?.AsRouteModel()?.PlannedRoute;
+                        if (plannedRoute != null)
+                        {
+                            Route.LoadFromPlannedRoute(plannedRoute);
+                        }
+                        break;
                 }
             };
             
