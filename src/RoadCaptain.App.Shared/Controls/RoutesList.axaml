@@ -23,6 +23,7 @@
             <Style Selector="ListBoxItem:pointerover /template/ ContentPresenter#PART_ContentPresenter">
                 <Setter Property="Background" Value="{StaticResource ZwiftOrange}" />
                 <Setter Property="TextBlock.Foreground" Value="White" />
+                <Setter Property="Cursor" Value="Hand" />
             </Style>
         </ListBox.Styles>
         <ListBox.ItemTemplate>
