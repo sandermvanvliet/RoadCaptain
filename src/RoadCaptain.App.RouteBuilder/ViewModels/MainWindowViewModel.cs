@@ -68,7 +68,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             BuildRouteViewModel = new BuildRouteViewModel(Route, userPreferences, windowService, worldStore, segmentStore, statusBarService);
 
             OpenLinkCommand = new RelayCommand(
-                _ => OpenLink(_ as string ?? throw new ArgumentNullException(nameof(RelayCommand.CommandParameter))),
+                link => OpenLink(link as string ?? throw new ArgumentNullException(nameof(RelayCommand.CommandParameter))),
                 param => !string.IsNullOrEmpty(param as string));
 
             Version = GetType().Assembly.GetName().Version?.ToString(4) ?? "0.0.0.0";
