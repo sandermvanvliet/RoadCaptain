@@ -218,7 +218,9 @@
                            VerticalAlignment="Center" />
             </Grid>
 
-            <controls:RoutesList Grid.Row="1" Grid.Column="1" DataContext="{Binding Path=Routes}" RouteSelected="RoutesList_OnRouteSelected" />
+            <controls:RoutesList Grid.Row="1" Grid.Column="1" 
+                                 Routes="{Binding Path=Routes}"
+                                 RouteSelected="RoutesList_OnRouteSelected" />
 
             <!-- Bottom button row -->
             <Grid Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2">

@@ -9,7 +9,7 @@ namespace RoadCaptain.App.RouteBuilder
         public DesignTimeLandingPageViewModel() 
             : base(new DesignTimeWorldStore(), new DummyUserPreferences(), new DesignTimeWindowService(), null!)
         {
-            InProgress = true;
+            InProgress = false;
         }
     }
 

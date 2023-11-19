@@ -207,25 +207,42 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="24" />
                 <RowDefinition Height="*" />
+                <RowDefinition Height="40" />
             </Grid.RowDefinitions>
             <TextBlock Grid.Row="0" Text="Or select one of your routes:" FontSize="16" Margin="4,6,0,6" />
             <Button Grid.Row="0" Content="🗘" ToolTip.Tip="Refresh" HorizontalAlignment="Right" Margin="4,8,4,4" Command="{Binding LoadMyRoutesCommand}" />
             <controls:RoutesList 
                 Grid.Row="1" 
                 Routes="{Binding Path=MyRoutes, Mode=OneWay}" 
-                Margin="0,0,4,8" 
+                Margin="0,0,4,0" 
                 SelectedRoute="{Binding SelectedRoute, Mode=TwoWay}" />
             <Grid
                 Grid.Row="1"
                   IsVisible="{Binding InProgress}"
                   Background="LightGray"
                   Opacity="0.7"
-                  Margin="0,0,4,8">
+                  Margin="0,0,4,0">
                 <TextBlock Text="Loading..."
                            HorizontalAlignment="Center"
                            VerticalAlignment="Center"
                            FontWeight="Bold"/>
             </Grid>
+            <StackPanel 
+                Grid.Row="2"
+                Orientation="Horizontal">
+                <StackPanel.Styles>
+                    <Style Selector="TextBlock">
+                        <Setter Property="VerticalAlignment" Value="Center" />
+                        <Setter Property="Margin" Value="4,0,0,0" />
+                    </Style>
+                    <Style Selector="Button">
+                        <Setter Property="VerticalAlignment" Value="Center" />
+                        <Setter Property="Margin" Value="8,0,0,0" />
+                    </Style>
+                </StackPanel.Styles>
+                <TextBlock Text="Or open another route to use as a starter" />
+                <Button Content="Open" Command="{Binding Path=SearchRouteCommand}" />
+            </StackPanel>
         </Grid>
     </Grid>
 </UserControl>

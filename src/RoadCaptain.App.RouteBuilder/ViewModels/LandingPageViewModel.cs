@@ -51,6 +51,25 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
                 async _ => await LoadMyRoutes(),
                 _ => !InProgress)
                 .SubscribeTo(this, () => InProgress);
+
+            SearchRouteCommand = new AsyncRelayCommand(
+                async _ => await SearchRoute(),
+                _ => true);
+        }
+
+        private async Task<CommandResult> SearchRoute()
+        {
+            var result = await _windowService.ShowOpenRouteDialog();
+
+            if (result.PlannedRoute != null)
+            {
+                SelectedRoute = new Shared.ViewModels.RouteViewModel(new RouteModel
+                {
+                    PlannedRoute = result.PlannedRoute
+                });
+            }
+            
+            return CommandResult.Success();
         }
 
         private async Task<CommandResult> LoadMyRoutes()
@@ -91,6 +110,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
         public ICommand SelectSportCommand { get; }
         public ICommand ResetDefaultSportCommand { get; }
         public ICommand LoadMyRoutesCommand { get; }
+        public ICommand SearchRouteCommand { get; }
 
         public WorldViewModel[] Worlds
         {
