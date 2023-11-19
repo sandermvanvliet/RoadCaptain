@@ -21,7 +21,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
         private Shared.ViewModels.RouteViewModel[] _myRoutes = Array.Empty<Shared.ViewModels.RouteViewModel>();
         private Shared.ViewModels.RouteViewModel? _selectedRoute;
         private readonly SearchRoutesUseCase _searchRoutesUseCase;
-        private bool _inProgress;
+        private bool _inProgress = true;
 
         public LandingPageViewModel(IWorldStore worldStore, IUserPreferences userPreferences, IWindowService windowService, SearchRoutesUseCase searchRoutesUseCase)
         {
