@@ -15,6 +15,9 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
+using Polly;
+using Polly.Extensions.Http;
+using Polly.Retry;
 using RoadCaptain.Ports;
 
 namespace RoadCaptain.Adapters
@@ -31,6 +34,19 @@ namespace RoadCaptain.Adapters
                 new StringEnumConverter()
             }
         };
+
+        private static readonly IAsyncPolicy<HttpResponseMessage> RetryPolicy = GetRetryPolicy();
+        
+        static IAsyncPolicy<HttpResponseMessage> GetRetryPolicy()
+        {
+            return HttpPolicyExtensions
+                .HandleTransientHttpError()
+                .OrResult(msg => msg.StatusCode == System.Net.HttpStatusCode.NotFound)
+                .Or<OperationCanceledException>()
+                .WaitAndRetryAsync(6, retryAttempt => TimeSpan.FromSeconds(Math.Pow(2,
+                    retryAttempt)));
+        }
+        
         private readonly JsonSerializer _serializer;
         private readonly RouteStoreToDisk _routeStoreToDisk;
 
@@ -53,9 +69,11 @@ namespace RoadCaptain.Adapters
                 return false;
             }
 
-            using var request = new HttpRequestMessage(HttpMethod.Get, new Uri(_settings.Uri, "/2023-01/status"));
-
-            using var response = await _httpClient.SendAsync(request);
+            using var response = await RetryPolicy.ExecuteAsync(async () =>
+            {
+                using var request = new HttpRequestMessage(HttpMethod.Get, new Uri(_settings.Uri, "/2023-01/status"));
+                return await _httpClient.SendAsync(request);
+            });
 
             return response.IsSuccessStatusCode;
         }
@@ -116,17 +134,21 @@ namespace RoadCaptain.Adapters
                 Path = "/2023-01/routes",
                 Query = queryStringBuilder.ToString()
             };
-
-            using var request = new HttpRequestMessage(HttpMethod.Get, builder.Uri);
-
-            using var tokenSource = new CancellationTokenSource(TimeSpan.FromSeconds(3));
-            using var response = await _httpClient.SendAsync(request, HttpCompletionOption.ResponseContentRead, tokenSource.Token);
+            
+            using var response = await RetryPolicy.ExecuteAsync(async () =>
+            {
+                using var tokenSource = new CancellationTokenSource(TimeSpan.FromSeconds(3));
+                using var request = new HttpRequestMessage(HttpMethod.Get, builder.Uri);
+                return await _httpClient.SendAsync(request, HttpCompletionOption.ResponseContentRead,
+                    tokenSource.Token);
+            });
 
             if (!response.IsSuccessStatusCode)
             {
                 throw new Exception($"Unable to search for routes, received an non-successful response: {response.StatusCode}");
             }
-            
+
+            using var tokenSource = new CancellationTokenSource(TimeSpan.FromSeconds(3));
             using var textReader = new StreamReader(await response.Content.ReadAsStreamAsync(tokenSource.Token));
             await using var jsonTextReader = new JsonTextReader(textReader);
             var routeModels = _serializer.Deserialize<RouteModel[]>(jsonTextReader);
@@ -165,11 +187,13 @@ namespace RoadCaptain.Adapters
                 Path = "/2023-01/routes"
             };
             
-            using var request = new HttpRequestMessage(HttpMethod.Post, builder.Uri);
-            request.Content = new StringContent(JsonConvert.SerializeObject(createRouteModel, JsonSettings), Encoding.UTF8, "application/json");
-            request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
-
-            using var response = await _httpClient.SendAsync(request);
+            using var response = await RetryPolicy.ExecuteAsync(async () =>
+            {
+                using var request = new HttpRequestMessage(HttpMethod.Post, builder.Uri);
+                request.Content = new StringContent(JsonConvert.SerializeObject(createRouteModel, JsonSettings), Encoding.UTF8, "application/json");
+                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                return await _httpClient.SendAsync(request);
+            });
             
             if (!response.IsSuccessStatusCode)
             {
