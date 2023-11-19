@@ -25,7 +25,7 @@ namespace RoadCaptain.App.RouteBuilder.Tests.Unit
             IStatusBarService statusBarService,
             SearchRoutesUseCase searchRoutesUseCase,
             RetrieveRepositoryNamesUseCase retrieveRepositoryNamesUseCase)
-            : base(routeStore, segmentStore, versionChecker, windowService, worldStore, userPreferences, applicationFeatures, statusBarService, searchRoutesUseCase, retrieveRepositoryNamesUseCase)
+            : base(routeStore, segmentStore, versionChecker, windowService, worldStore, userPreferences, applicationFeatures, statusBarService, searchRoutesUseCase)
         {
         }
 

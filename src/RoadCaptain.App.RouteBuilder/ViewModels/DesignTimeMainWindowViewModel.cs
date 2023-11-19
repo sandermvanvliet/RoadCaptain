@@ -30,7 +30,6 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             new DummyUserPreferences(),
             new DummyApplicationFeatures(),
             new StatusBarService(),
-            null!,
             null!)
         {
             // Route.OutputFilePath = @"C:\git\RoadCaptain\test\RoadCaptain.Tests.Unit\GameState\Repro\Rebel.Route-Italian.Villa.Sprint.Loop.json";

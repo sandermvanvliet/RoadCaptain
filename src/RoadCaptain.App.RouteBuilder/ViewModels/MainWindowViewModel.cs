@@ -29,18 +29,16 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
         private bool _haveCheckedLastOpenedVersion;
         private readonly IApplicationFeatures _applicationFeatures;
         private readonly SearchRoutesUseCase _searchRoutesUseCase;
-        private readonly RetrieveRepositoryNamesUseCase _retrieveRepositoryNamesUseCase;
 
         public MainWindowViewModel(IRouteStore routeStore, ISegmentStore segmentStore, IVersionChecker versionChecker,
             IWindowService windowService, IWorldStore worldStore, IUserPreferences userPreferences,
-            IApplicationFeatures applicationFeatures, IStatusBarService statusBarService, SearchRoutesUseCase searchRoutesUseCase, RetrieveRepositoryNamesUseCase retrieveRepositoryNamesUseCase)
+            IApplicationFeatures applicationFeatures, IStatusBarService statusBarService, SearchRoutesUseCase searchRoutesUseCase)
         {
             _versionChecker = versionChecker;
             _windowService = windowService;
             _userPreferences = userPreferences;
             _applicationFeatures = applicationFeatures;
             _searchRoutesUseCase = searchRoutesUseCase;
-            _retrieveRepositoryNamesUseCase = retrieveRepositoryNamesUseCase;
 
             Model = new MainWindowModel();
             Route = new RouteViewModel(routeStore, segmentStore);
@@ -197,8 +195,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
         public async Task LoadMyRoutes()
         {
             var currentUser = "Sander van Vliet [RoadCaptain]";
-            var repositories = _retrieveRepositoryNamesUseCase.Execute(new RetrieveRepositoryNamesCommand(RetrieveRepositoriesIntent.Manage));
-            var result = await _searchRoutesUseCase.ExecuteAsync(new SearchRouteCommand(repositories, creator: currentUser));
+            var result = await _searchRoutesUseCase.ExecuteAsync(new SearchRouteCommand(RetrieveRepositoriesIntent.Manage, creator: currentUser));
 
             LandingPageViewModel.MyRoutes = result
                 .Select(r => new Shared.ViewModels.RouteViewModel(r))

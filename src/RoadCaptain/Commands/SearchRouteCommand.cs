@@ -9,7 +9,8 @@ namespace RoadCaptain.Commands
 {
     public class SearchRouteCommand
     {
-        public ImmutableArray<string> Repositories { get; }
+        public ImmutableArray<string> Repositories { get; } = ImmutableArray<string>.Empty;
+        public RetrieveRepositoriesIntent Intent { get; } = RetrieveRepositoriesIntent.Unknown;
         public string? World { get; }
         public string? Creator { get; }
         public string? Name { get; }
@@ -60,6 +61,38 @@ namespace RoadCaptain.Commands
             string[]? sprintSegments = null)
         {
             Repositories = repositories.ToImmutableArray();
+            World = world;
+            Creator = creator;
+            Name = name;
+            ZwiftRouteName = zwiftRouteName;
+            MinDistance = minDistance;
+            MaxDistance = maxDistance;
+            MinAscent = minAscent;
+            MaxAscent = maxAscent;
+            MinDescent = minDescent;
+            MaxDescent = maxDescent;
+            IsLoop = isLoop;
+            KomSegments = komSegments;
+            SprintSegments = sprintSegments;
+        }
+
+        public SearchRouteCommand(
+            RetrieveRepositoriesIntent intent,
+            string? world = null,
+            string? creator = null,
+            string? name = null,
+            string? zwiftRouteName = null,
+            int? minDistance = null,
+            int? maxDistance = null,
+            int? minAscent = null,
+            int? maxAscent = null,
+            int? minDescent = null,
+            int? maxDescent = null,
+            bool? isLoop = null,
+            string[]? komSegments = null,
+            string[]? sprintSegments = null)
+        {
+            Intent = intent;
             World = world;
             Creator = creator;
             Name = name;

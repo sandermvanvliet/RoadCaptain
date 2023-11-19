@@ -25,9 +25,16 @@ namespace RoadCaptain.UseCases
         public async Task<IEnumerable<RouteModel>> ExecuteAsync(SearchRouteCommand command)
         {
             var repositoriesToSearch = new List<IRouteRepository>();
+            
+            if (!command.Repositories.Any() && command.Intent != RetrieveRepositoriesIntent.Unknown)
+            {
+                var repositoryNames = new RetrieveRepositoryNamesUseCase(_routeRepositories)
+                    .Execute(new RetrieveRepositoryNamesCommand(command.Intent));
 
-            if (command.Repositories.Length == 1 &&
-                "all".Equals(command.Repositories[0], StringComparison.InvariantCultureIgnoreCase))
+                repositoriesToSearch = _routeRepositories.Where(r => repositoryNames.Contains(r.Name)).ToList();
+            }
+            else if (command.Repositories.Length == 1 &&
+                      "all".Equals(command.Repositories[0], StringComparison.InvariantCultureIgnoreCase))
             {
                 repositoriesToSearch.AddRange(_routeRepositories);
             }
