@@ -9,19 +9,13 @@ namespace RoadCaptain.App.Shared.Controls
 {
     public partial class RoutesList : UserControl
     {
-        public event EventHandler<RouteSelectedEventArgs> RouteSelected;
-        public static readonly DirectProperty<RoutesList, RouteViewModel?> SelectedRouteProperty = AvaloniaProperty.RegisterDirect<RoutesList, RouteViewModel?>(
-            nameof(SelectedRoute),
-            control => control.SelectedRoute, 
-            (control, value) => control.SelectedRoute = value);
-        
-        public static readonly DirectProperty<RoutesList, RouteViewModel[]> RoutesProperty = AvaloniaProperty.RegisterDirect<RoutesList, RouteViewModel[]>(
-            nameof(Routes),
-            control => control.Routes, 
-            (control, value) => control.Routes = value);
+        public event EventHandler<RouteSelectedEventArgs>? RouteSelected;
 
-        private RouteViewModel? _selectedRoute;
-        private RouteViewModel[] _routes = Array.Empty<RouteViewModel>();
+        public static readonly StyledProperty<RouteViewModel?> SelectedRouteProperty =
+            AvaloniaProperty.Register<RoutesList, RouteViewModel?>(nameof(SelectedRoute));
+
+        public static readonly StyledProperty<RouteViewModel[]> RoutesProperty =
+            AvaloniaProperty.Register<RoutesList, RouteViewModel[]>(nameof(Routes));
 
         public RoutesList()
         {
@@ -45,7 +39,6 @@ namespace RoadCaptain.App.Shared.Controls
                 return;
             }
 
-            SelectedRoute = selectedRoute;
             RouteSelected?.Invoke(this, new RouteSelectedEventArgs(selectedRoute, SelectionIntent.SelectAndChoose));
         }
 
@@ -61,27 +54,19 @@ namespace RoadCaptain.App.Shared.Controls
                 return;
             }
 
-            SelectedRoute = selectedRoute;
             RouteSelected?.Invoke(this, new RouteSelectedEventArgs(selectedRoute, SelectionIntent.Select));
         }
 
         public RouteViewModel? SelectedRoute
         {
-            get => _selectedRoute;
-            set
-            {
-                _selectedRoute = value;
-                if (value == null)
-                {
-                    this.Find<ListBox>("RoutesListBox").SelectedItem = null;
-                }
-            }
+            get => GetValue(SelectedRouteProperty);
+            set => SetValue(SelectedRouteProperty, value);
         }
 
         public RouteViewModel[] Routes
         {
-            get => _routes;
-            set => SetAndRaise(RoutesProperty, ref _routes, value);
+            get => GetValue(RoutesProperty);
+            set => SetValue(RoutesProperty, value);
         }
     }
 

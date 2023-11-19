@@ -15,7 +15,8 @@
              ScrollViewer.VerticalScrollBarVisibility="Auto"
              VerticalAlignment="Stretch"
              DoubleTapped="RoutesListBox_OnDoubleTapped"
-             SelectionChanged="RoutesListBox_OnSelectionChanged">
+             SelectionChanged="RoutesListBox_OnSelectionChanged"
+             SelectedItem="{Binding RelativeSource={RelativeSource AncestorType={x:Type controls:RoutesList}}, Path=SelectedRoute}">
         <ListBox.Styles>
             <Style Selector="ListBoxItem">
                 <Setter Property="Margin" Value="0" />
