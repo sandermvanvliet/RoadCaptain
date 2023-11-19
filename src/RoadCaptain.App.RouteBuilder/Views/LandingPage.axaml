@@ -210,7 +210,11 @@
             </Grid.RowDefinitions>
             <TextBlock Grid.Row="0" Text="Or select one of your routes:" FontSize="16" Margin="4,6,0,6" />
             <Button Grid.Row="0" Content="🗘" ToolTip.Tip="Refresh" HorizontalAlignment="Right" Margin="4,8,4,4" Command="{Binding LoadMyRoutesCommand}" />
-            <controls:RoutesList Grid.Row="1" DataContext="{Binding Path=MyRoutes}" Margin="0,0,4,8" RouteSelected="RoutesList_OnRouteSelected" />
+            <controls:RoutesList 
+                Grid.Row="1" 
+                Routes="{Binding Path=MyRoutes, Mode=OneWay}" 
+                Margin="0,0,4,8" 
+                SelectedRoute="{Binding SelectedRoute}" />
             <Grid
                 Grid.Row="1"
                   IsVisible="{Binding InProgress}"

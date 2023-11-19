@@ -40,6 +40,16 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
 
             Model = new MainWindowModel();
             Route = new RouteViewModel(routeStore, segmentStore);
+            Route.PropertyChanged += (sender, args) =>
+            {
+                switch (args.PropertyName)
+                {
+                    case nameof(Route.ReadyToBuild) when !Route.ReadyToBuild:
+                        LandingPageViewModel.SelectedRoute = null;
+                        break;
+                }
+            };
+            
             LandingPageViewModel = new LandingPageViewModel(worldStore, userPreferences, windowService, searchRoutesUseCase);
             LandingPageViewModel.PropertyChanged += (_, args) =>
             {

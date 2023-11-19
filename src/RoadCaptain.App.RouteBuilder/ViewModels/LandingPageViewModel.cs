@@ -63,9 +63,10 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             
                 var result = await _searchRoutesUseCase.ExecuteAsync(new SearchRouteCommand(RetrieveRepositoriesIntent.Manage, creator: currentUser));
 
-                MyRoutes = result
+                var theRoutes = result
                     .Select(r => new Shared.ViewModels.RouteViewModel(r))
                     .ToArray();
+                MyRoutes = theRoutes;
             
                 return CommandResult.Success();
             }
