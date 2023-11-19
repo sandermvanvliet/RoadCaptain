@@ -81,13 +81,7 @@ namespace RoadCaptain.App.Shared.Controls
         public RouteViewModel[] Routes
         {
             get => _routes;
-            set
-            {
-                _routes = value;
-                DataContext = value;
-
-                InvalidateVisual();
-            }
+            set => SetAndRaise(RoutesProperty, ref _routes, value);
         }
     }
 
