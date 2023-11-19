@@ -189,10 +189,5 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
                 await _windowService.ShowWhatIsNewDialog(latestRelease.preRelease);
             }
         }
-
-        public void LoadMyRoutes()
-        {
-            LandingPageViewModel.LoadMyRoutesCommand.Execute(null);
-        }
     }
 }

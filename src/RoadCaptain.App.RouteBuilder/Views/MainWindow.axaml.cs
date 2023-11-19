@@ -60,7 +60,7 @@ namespace RoadCaptain.App.RouteBuilder.Views
 
             Dispatcher.UIThread.InvokeAsync(() => ViewModel.CheckForNewVersion());
             Dispatcher.UIThread.InvokeAsync(() => ViewModel.CheckLastOpenedVersion());
-            Dispatcher.UIThread.InvokeAsync(() => ViewModel.LoadMyRoutes());
+            Dispatcher.UIThread.InvokeAsync(() => ViewModel.LandingPageViewModel.LoadMyRoutesCommand.Execute(null));
         }
     }
 }
