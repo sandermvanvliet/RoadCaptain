@@ -208,8 +208,20 @@
                 <RowDefinition Height="24" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
-            <TextBlock Text="Or select one of your routes:" FontSize="16" Margin="4,4,0,8" />
-            <controls:RoutesList Grid.Row="1" DataContext="{Binding Path=MyRoutes}" Margin="0,4,4,8" RouteSelected="RoutesList_OnRouteSelected" />
+            <TextBlock Grid.Row="0" Text="Or select one of your routes:" FontSize="16" Margin="4,6,0,6" />
+            <Button Grid.Row="0" Content="🗘" ToolTip.Tip="Refresh" HorizontalAlignment="Right" Margin="4,8,4,4" Command="{Binding LoadMyRoutesCommand}" />
+            <controls:RoutesList Grid.Row="1" DataContext="{Binding Path=MyRoutes}" Margin="0,0,4,8" RouteSelected="RoutesList_OnRouteSelected" />
+            <Grid
+                Grid.Row="1"
+                  IsVisible="{Binding InProgress}"
+                  Background="LightGray"
+                  Opacity="0.7"
+                  Margin="0,0,4,8">
+                <TextBlock Text="Loading..."
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center"
+                           FontWeight="Bold"/>
+            </Grid>
         </Grid>
     </Grid>
 </UserControl>

@@ -28,7 +28,6 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
         private readonly IUserPreferences _userPreferences;
         private bool _haveCheckedLastOpenedVersion;
         private readonly IApplicationFeatures _applicationFeatures;
-        private readonly SearchRoutesUseCase _searchRoutesUseCase;
 
         public MainWindowViewModel(IRouteStore routeStore, ISegmentStore segmentStore, IVersionChecker versionChecker,
             IWindowService windowService, IWorldStore worldStore, IUserPreferences userPreferences,
@@ -38,12 +37,11 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             _windowService = windowService;
             _userPreferences = userPreferences;
             _applicationFeatures = applicationFeatures;
-            _searchRoutesUseCase = searchRoutesUseCase;
 
             Model = new MainWindowModel();
             Route = new RouteViewModel(routeStore, segmentStore);
-            LandingPageViewModel = new LandingPageViewModel(worldStore, userPreferences, windowService);
-            LandingPageViewModel.PropertyChanged += (sender, args) =>
+            LandingPageViewModel = new LandingPageViewModel(worldStore, userPreferences, windowService, searchRoutesUseCase);
+            LandingPageViewModel.PropertyChanged += (_, args) =>
             {
                 switch (args.PropertyName)
                 {
@@ -192,14 +190,9 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             }
         }
 
-        public async Task LoadMyRoutes()
+        public void LoadMyRoutes()
         {
-            var currentUser = "Sander van Vliet [RoadCaptain]";
-            var result = await _searchRoutesUseCase.ExecuteAsync(new SearchRouteCommand(RetrieveRepositoriesIntent.Manage, creator: currentUser));
-
-            LandingPageViewModel.MyRoutes = result
-                .Select(r => new Shared.ViewModels.RouteViewModel(r))
-                .ToArray();
+            LandingPageViewModel.LoadMyRoutesCommand.Execute(null);
         }
     }
 }
