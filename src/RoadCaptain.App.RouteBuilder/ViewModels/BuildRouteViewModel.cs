@@ -594,35 +594,38 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
 
         private void HandleRoutePropertyChanged(ISegmentStore segmentStore, PropertyChangedEventArgs args)
         {
-            if (args.PropertyName == nameof(Route.World))
+            switch (args.PropertyName)
             {
-                if (Route.World == null)
+                case nameof(Route.World):
                 {
-                    Segments = new List<Segment>();
+                    if (Route.World == null)
+                    {
+                        Segments = new List<Segment>();
+                    }
+
+                    TryLoadSegmentsForWorldAndSport(segmentStore);
+                    break;
                 }
-
-                TryLoadSegmentsForWorldAndSport(segmentStore);
-            }
-
-            if (args.PropertyName == nameof(Route.Sport))
-            {
-                if (Route.Sport == SportType.Unknown)
+                case nameof(Route.Sport):
                 {
-                    Segments = new List<Segment>();
+                    if (Route.Sport == SportType.Unknown)
+                    {
+                        Segments = new List<Segment>();
+                    }
+
+                    TryLoadSegmentsForWorldAndSport(segmentStore);
+                    break;
                 }
-
-                TryLoadSegmentsForWorldAndSport(segmentStore);
-            }
-
-            if (args.PropertyName == nameof(Route.Sequence))
-            {
-                this.RaisePropertyChanged(nameof(Route));
+                case nameof(Route.ReadyToBuild):
+                case nameof(Route.Sequence):
+                    this.RaisePropertyChanged(nameof(Route));
+                    break;
             }
         }
 
         private void TryLoadSegmentsForWorldAndSport(ISegmentStore segmentStore)
         {
-            if (Route.World != null && Route.Sport != SportType.Unknown)
+            if (Route is { ReadyToBuild: true, World: not null } && Route.Sport != SportType.Unknown)
             {
                 Segments = segmentStore.LoadSegments(Route.World, Route.Sport);
                 Markers = segmentStore.LoadMarkers(Route.World);
@@ -650,7 +653,6 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
 
         private async Task<CommandResult> ResetWorldAndSport()
         {
-            // TODO: fixme 
             if (Route.IsTainted)
             {
                 var result = await _windowService.ShowShouldSaveRouteDialog();
@@ -668,22 +670,6 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             
             Route.Reset();
             Reset();
-            //
-            // var selectedSport = LandingPageViewModel.Sports.SingleOrDefault(s => s.IsSelected);
-            // if (selectedSport != null)
-            // {
-            //     selectedSport.IsSelected = false;
-            //
-            //     SelectDefaultSportFromPreferences();
-            // }
-            //
-            // var selectedWorld = LandingPageViewModel.Worlds.SingleOrDefault(s => s.IsSelected);
-            // if (selectedWorld != null)
-            // {
-            //     selectedWorld.IsSelected = false;
-            // }
-            //
-            // this.RaisePropertyChanged(nameof(Route));
 
             return CommandResult.Success();
         }

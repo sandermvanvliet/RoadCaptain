@@ -356,6 +356,11 @@ namespace RoadCaptain.App.RouteBuilder.Views
             stopwatch.Stop();
             Debug.WriteLine($"SetZwiftMap(): {stopwatch.ElapsedMilliseconds}ms");
         }
+
+        public void Clear()
+        {
+            _map.MapObjects.Clear();
+        }
     }
 
     public enum SegmentSelectionMode

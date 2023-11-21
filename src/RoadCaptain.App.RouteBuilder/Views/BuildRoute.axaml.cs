@@ -56,8 +56,15 @@ namespace RoadCaptain.App.RouteBuilder.Views
                     // route path is painted correctly
                     using (ZwiftMap.BeginUpdate())
                     {
-                        _mapObjectsSource.SetZwiftMap(_viewModel.Route, _viewModel.Segments, _viewModel.Markers);
-                        _mapObjectsSource.SynchronizeRouteSegmentsOnZwiftMap(_viewModel.Route);
+                        if (_viewModel.Route.ReadyToBuild && _viewModel.Segments.Any()) // Excluding markers here because they may not be available in Beta worlds
+                        {
+                            _mapObjectsSource.SetZwiftMap(_viewModel.Route, _viewModel.Segments, _viewModel.Markers);
+                            _mapObjectsSource.SynchronizeRouteSegmentsOnZwiftMap(_viewModel.Route);
+                        }
+                        else
+                        {
+                            _mapObjectsSource.Clear();
+                        }
                     }
 
                     break;
