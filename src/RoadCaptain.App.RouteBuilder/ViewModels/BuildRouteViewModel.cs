@@ -93,21 +93,24 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
                     ShowClimbs = !ShowClimbs;
                     return Task.FromResult(CommandResult.Success());
                 },
-                _ => Route.World != null);
+                _ => Route.World != null)
+                .SubscribeTo(this, () => Route);
 
             ToggleShowSprintsCommand = new AsyncRelayCommand(_ =>
                 {
                     ShowSprints = !ShowSprints;
                     return Task.FromResult(CommandResult.Success());
                 },
-                _ => Route.World != null);
+                _ => Route.World != null)
+                .SubscribeTo(this, () => Route);
 
             ToggleShowElevationCommand = new AsyncRelayCommand(_ =>
                 {
                     ShowElevationProfile = !ShowElevationProfile;
                     return Task.FromResult(CommandResult.Success());
                 },
-                _ => Route.World != null);
+                _ => Route.World != null)
+                .SubscribeTo(this, () => Route);
         }
         
         public RouteViewModel Route { get; }
