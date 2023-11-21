@@ -236,9 +236,9 @@
                         <Setter Property="Margin" Value="4,0,0,0" />
                     </Style>
                 </StackPanel.Styles>
-                <TextBlock Text="Or search a route to use as a starter" />
-                <Button Content="Search" Command="{Binding Path=SearchRouteCommand}" />
-                <TextBlock Text="or open a route from a file on your machine" />
+                <TextBlock Text="Or search a route to use as a starter" Margin="0,0,4,0" />
+                <Button Content="Search" Command="{Binding Path=SearchRouteCommand}" Margin="0,0,4,0" />
+                <TextBlock Text="or open a route from a file on your machine" Margin="0,0,4,0" />
                 <Button Content="Open" Command="{Binding Path=OpenRouteFromFileCommand}" />
             </StackPanel>
         </Grid>
