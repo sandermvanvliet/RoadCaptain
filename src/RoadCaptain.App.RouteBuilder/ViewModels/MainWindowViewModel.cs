@@ -74,7 +74,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
                 }
             };
             
-            BuildRouteViewModel = new BuildRouteViewModel(Route, userPreferences, windowService, worldStore, segmentStore, statusBarService);
+            BuildRouteViewModel = new BuildRouteViewModel(Route, userPreferences, windowService, segmentStore, statusBarService);
 
             OpenLinkCommand = new RelayCommand(
                 link => OpenLink(link as string ?? throw new ArgumentNullException(nameof(RelayCommand.CommandParameter))),

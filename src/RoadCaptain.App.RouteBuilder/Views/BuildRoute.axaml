@@ -87,7 +87,6 @@
             <Button Content="🌐" Command="{Binding Path=ResetWorldCommand}" ToolTip.Tip="Select world and sport"
                     Classes="toolbar" />
             <Button Content="💾" Command="{Binding Path=SaveRouteCommand}" ToolTip.Tip="Save route" Classes="toolbar" />
-            <Button Content="📂" Command="{Binding Path=OpenRouteCommand}" ToolTip.Tip="Open route" Classes="toolbar" />
             <Button Content="⭯" Command="{Binding Path=RemoveLastSegmentCommand}" ToolTip.Tip="Remove last segment"
                     Classes="toolbar" />
             <Button Content="⛰" Command="{Binding Path=ToggleShowClimbsCommand}" ToolTip.Tip="Show the KOM start (red) and finish (green) markers on the map" Classes="toolbar" />

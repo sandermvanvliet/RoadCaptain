@@ -24,8 +24,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
         public DesignTimeBuildRouteViewModel()
         : base(new RouteViewModel(Container.Resolve<IRouteStore>(), Container.Resolve<ISegmentStore>()),
             new DummyUserPreferences(),
-            new WindowService(Container, Container.Resolve<MonitoringEvents>()), 
-            Container.Resolve<IWorldStore>(),
+            new WindowService(Container, Container.Resolve<MonitoringEvents>()),
             Container.Resolve<ISegmentStore>(),
             new StatusBarService()
             )
