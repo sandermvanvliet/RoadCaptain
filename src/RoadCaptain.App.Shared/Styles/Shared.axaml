@@ -18,7 +18,7 @@
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
                     <Border Name="borderZero" Background="{TemplateBinding Background}" CornerRadius="8" Padding="4,0,4,0">
-                        <TextBlock Text="{TemplateBinding Content}" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="4,0,4,0" />
+                        <ContentPresenter Content="{TemplateBinding Content}" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="4,0,4,0" />
                     </Border>
                 </ControlTemplate>
             </Setter.Value>
