@@ -160,24 +160,6 @@ namespace RoadCaptain.App.RouteBuilder
             await saveRouteDialog.ShowDialog(CurrentWindow);
         }
 
-        public async Task<(PlannedRoute? PlannedRoute, string? RouteFilePath)> ShowOpenRouteDialog()
-        {
-            var openRouteDialog = Resolve<OpenRouteDialog>();
-
-            var viewModel = new OpenRouteDialogViewModel(
-                this,
-                Resolve<IUserPreferences>(),
-                Resolve<IRouteStore>());
-
-            openRouteDialog.DataContext = viewModel;
-
-            await openRouteDialog.ShowDialog(CurrentWindow);
-
-            return openRouteDialog.DialogResult == DialogResult.Ok
-                ? (viewModel.SelectedRoute?.PlannedRoute, viewModel.RouteFilePath)
-                : (null, null);
-        }
-
         public async Task<MessageBoxResult> ShowQuestionDialog(string title, string message)
         {
             return await MessageBox.ShowAsync(

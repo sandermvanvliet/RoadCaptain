@@ -65,11 +65,6 @@ namespace RoadCaptain.App.RouteBuilder
             return await InvokeIfNeededAsync(() => _decorated.ShowSaveFileDialog(previousLocation, suggestedFileName));
         }
 
-        public async Task<(PlannedRoute? PlannedRoute, string? RouteFilePath)> ShowOpenRouteDialog()
-        {
-            return await InvokeIfNeededAsync(() => _decorated.ShowOpenRouteDialog());
-        }
-
         public async Task<MessageBoxResult> ShowQuestionDialog(string title, string message)
         {
         return await InvokeIfNeededAsync(() => _decorated.ShowQuestionDialog(title, message));
