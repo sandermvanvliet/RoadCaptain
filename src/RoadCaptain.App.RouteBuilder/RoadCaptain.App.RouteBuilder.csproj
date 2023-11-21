@@ -65,6 +65,7 @@
 	</ItemGroup>
 	<ItemGroup>
 	  <Folder Include="Controls\" />
+	  <Folder Include="UseCases\" />
 	</ItemGroup>
 	<ItemGroup>
 	  <Compile Update="Views\OpenRouteDialog.axaml.cs">

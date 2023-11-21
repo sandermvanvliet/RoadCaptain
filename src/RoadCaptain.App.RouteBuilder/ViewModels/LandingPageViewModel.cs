@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -22,12 +23,14 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
         private Shared.ViewModels.RouteViewModel? _selectedRoute;
         private readonly SearchRoutesUseCase _searchRoutesUseCase;
         private bool _inProgress = true;
+        private readonly LoadRouteFromFileUseCase _loadRouteFromFileUseCase;
 
-        public LandingPageViewModel(IWorldStore worldStore, IUserPreferences userPreferences, IWindowService windowService, SearchRoutesUseCase searchRoutesUseCase)
+        public LandingPageViewModel(IWorldStore worldStore, IUserPreferences userPreferences, IWindowService windowService, SearchRoutesUseCase searchRoutesUseCase, LoadRouteFromFileUseCase loadRouteFromFileUseCase)
         {
             _userPreferences = userPreferences;
             _windowService = windowService;
             _searchRoutesUseCase = searchRoutesUseCase;
+            _loadRouteFromFileUseCase = loadRouteFromFileUseCase;
 
             _worlds = worldStore.LoadWorlds().Select(world => new WorldViewModel(world)).ToArray();
             _sports = new[] { new SportViewModel(SportType.Cycling, DefaultSport), new SportViewModel(SportType.Running, DefaultSport) };
@@ -54,20 +57,50 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
 
             SearchRouteCommand = new AsyncRelayCommand(
                 async _ => await SearchRoute(),
-                _ => true);
+                _ => !InProgress)
+                .SubscribeTo(this, () => InProgress);
+
+            OpenRouteFromFileCommand = new AsyncRelayCommand(
+                async _ => await OpenRouteFromFile(),
+                _ => !InProgress)
+                .SubscribeTo(this, () => InProgress);
+        }
+
+        private async Task<CommandResult> OpenRouteFromFile()
+        {
+            var filePath = await _windowService.ShowOpenFileDialog(
+                _userPreferences.LastUsedFolder,
+                new Dictionary<string, string>
+                {
+                    { "json", "RoadCaptain route file (.json)" },
+                    { "gpx", "GPS Exchange Format (.gpx)" }
+                });
+
+            if (string.IsNullOrEmpty(filePath))
+            {
+                return CommandResult.Aborted();
+            }
+
+            var plannedRoute = await _loadRouteFromFileUseCase.ExecuteAsync(new LoadFromFileCommand(filePath));
+
+            SelectedRoute = new Shared.ViewModels.RouteViewModel(new RouteModel
+            {
+                PlannedRoute = plannedRoute
+            });
+
+            return CommandResult.Success();
         }
 
         private async Task<CommandResult> SearchRoute()
         {
-            var result = await _windowService.ShowOpenRouteDialog();
+            var result = await _windowService.ShowSelectRouteDialog();
 
-            if (result.PlannedRoute != null)
+            if (result == null)
             {
-                SelectedRoute = new Shared.ViewModels.RouteViewModel(new RouteModel
-                {
-                    PlannedRoute = result.PlannedRoute
-                });
+                return CommandResult.Aborted();
             }
+            
+            SelectedRoute = new Shared.ViewModels.RouteViewModel(result);
             
             return CommandResult.Success();
         }
@@ -111,6 +144,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
         public ICommand ResetDefaultSportCommand { get; }
         public ICommand LoadMyRoutesCommand { get; }
         public ICommand SearchRouteCommand { get; }
+        public ICommand OpenRouteFromFileCommand { get; }
 
         public WorldViewModel[] Worlds
         {

@@ -31,13 +31,14 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
 
         public MainWindowViewModel(IRouteStore routeStore, ISegmentStore segmentStore, IVersionChecker versionChecker,
             IWindowService windowService, IWorldStore worldStore, IUserPreferences userPreferences,
-            IApplicationFeatures applicationFeatures, IStatusBarService statusBarService, SearchRoutesUseCase searchRoutesUseCase)
+            IApplicationFeatures applicationFeatures, IStatusBarService statusBarService,
+            SearchRoutesUseCase searchRoutesUseCase, LoadRouteFromFileUseCase loadRouteFromFileUseCase)
         {
             _versionChecker = versionChecker;
             _windowService = windowService;
             _userPreferences = userPreferences;
             _applicationFeatures = applicationFeatures;
-
+    
             Model = new MainWindowModel();
             Route = new RouteViewModel(routeStore, segmentStore);
             Route.PropertyChanged += (sender, args) =>
@@ -50,7 +51,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
                 }
             };
             
-            LandingPageViewModel = new LandingPageViewModel(worldStore, userPreferences, windowService, searchRoutesUseCase);
+            LandingPageViewModel = new LandingPageViewModel(worldStore, userPreferences, windowService, searchRoutesUseCase, loadRouteFromFileUseCase);
             LandingPageViewModel.PropertyChanged += (_, args) =>
             {
                 switch (args.PropertyName)

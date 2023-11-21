@@ -6,7 +6,7 @@
              xmlns:viewModels="clr-namespace:RoadCaptain.App.RouteBuilder.ViewModels"
              xmlns:converters="clr-namespace:RoadCaptain.App.Shared.Converters;assembly=RoadCaptain.App.Shared"
              xmlns:controls="clr-namespace:RoadCaptain.App.Shared.Controls;assembly=RoadCaptain.App.Shared"
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             mc:Ignorable="d" d:DesignWidth="1280" d:DesignHeight="1024"
              x:Class="RoadCaptain.App.RouteBuilder.Views.LandingPage"
              x:DataType="viewModels:LandingPageViewModel">
     <Design.DataContext>
@@ -235,13 +235,11 @@
                         <Setter Property="VerticalAlignment" Value="Center" />
                         <Setter Property="Margin" Value="4,0,0,0" />
                     </Style>
-                    <Style Selector="Button">
-                        <Setter Property="VerticalAlignment" Value="Center" />
-                        <Setter Property="Margin" Value="8,0,0,0" />
-                    </Style>
                 </StackPanel.Styles>
-                <TextBlock Text="Or open another route to use as a starter" />
-                <Button Content="Open" Command="{Binding Path=SearchRouteCommand}" />
+                <TextBlock Text="Or search a route to use as a starter" />
+                <Button Content="Search" Command="{Binding Path=SearchRouteCommand}" />
+                <TextBlock Text="or open a route from a file on your machine" />
+                <Button Content="Open" Command="{Binding Path=OpenRouteFromFileCommand}" />
             </StackPanel>
         </Grid>
     </Grid>

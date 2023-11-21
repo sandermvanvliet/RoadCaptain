@@ -9,10 +9,10 @@ using System.Windows.Input;
 using ReactiveUI;
 using RoadCaptain.App.RouteBuilder.Models;
 using RoadCaptain.App.RouteBuilder.Services;
-using RoadCaptain.App.RouteBuilder.UseCases;
 using RoadCaptain.App.Shared.Commands;
 using RoadCaptain.App.Shared.Dialogs;
 using RoadCaptain.Ports;
+using RoadCaptain.UseCases;
 
 namespace RoadCaptain.App.RouteBuilder.ViewModels
 {

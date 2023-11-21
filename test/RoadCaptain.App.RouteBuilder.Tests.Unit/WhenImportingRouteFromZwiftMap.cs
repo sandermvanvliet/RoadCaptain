@@ -7,7 +7,7 @@ using FluentAssertions;
 using RoadCaptain.Adapters;
 using Xunit;
 using RoadCaptain.App.RouteBuilder.Models;
-using RoadCaptain.App.RouteBuilder.UseCases;
+using RoadCaptain.UseCases;
 
 namespace RoadCaptain.App.RouteBuilder.Tests.Unit
 {

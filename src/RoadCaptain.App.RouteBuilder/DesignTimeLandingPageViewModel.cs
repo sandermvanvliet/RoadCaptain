@@ -7,7 +7,7 @@ namespace RoadCaptain.App.RouteBuilder
     public class DesignTimeLandingPageViewModel : LandingPageViewModel
     {
         public DesignTimeLandingPageViewModel() 
-            : base(new DesignTimeWorldStore(), new DummyUserPreferences(), new DesignTimeWindowService(), null!)
+            : base(new DesignTimeWorldStore(), new DummyUserPreferences(), new DesignTimeWindowService(), null!, null!)
         {
             InProgress = false;
         }

@@ -14,18 +14,17 @@ namespace RoadCaptain.App.RouteBuilder.Tests.Unit
 {
     public class TestableMainWindowViewModel : MainWindowViewModel
     {
-        public TestableMainWindowViewModel(
-            IRouteStore routeStore, 
+        public TestableMainWindowViewModel(IRouteStore routeStore,
             ISegmentStore segmentStore,
             IVersionChecker versionChecker,
-            IWindowService windowService, 
-            IWorldStore worldStore, 
+            IWindowService windowService,
+            IWorldStore worldStore,
             IUserPreferences userPreferences,
-            IApplicationFeatures applicationFeatures, 
+            IApplicationFeatures applicationFeatures,
             IStatusBarService statusBarService,
             SearchRoutesUseCase searchRoutesUseCase,
-            RetrieveRepositoryNamesUseCase retrieveRepositoryNamesUseCase)
-            : base(routeStore, segmentStore, versionChecker, windowService, worldStore, userPreferences, applicationFeatures, statusBarService, searchRoutesUseCase)
+            LoadRouteFromFileUseCase loadRouteFromFileUseCase)
+            : base(routeStore, segmentStore, versionChecker, windowService, worldStore, userPreferences, applicationFeatures, statusBarService, searchRoutesUseCase, loadRouteFromFileUseCase)
         {
         }
 

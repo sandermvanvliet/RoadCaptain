@@ -145,7 +145,7 @@
                               SelectionChanged="RepositoryComboBox_OnSelectionChanged"
                               PointerPressed="RoutesListBox_OnPointerPressed"
                               HorizontalAlignment="Stretch"
-                              Margin="4,0,34,0"/>
+                              Margin="4,0,42,0"/>
                     <Button Content="🗘"
                             ToolTip.Tip="Refresh repository"
                             IsEnabled="{Binding Path=SelectedItem, ElementName=RepositoryComboBox, Converter={StaticResource NullabilityConverter}}"

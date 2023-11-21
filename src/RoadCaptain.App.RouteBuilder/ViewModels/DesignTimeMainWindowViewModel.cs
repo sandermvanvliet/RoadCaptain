@@ -8,6 +8,7 @@ using Avalonia.Threading;
 using Microsoft.Extensions.Configuration;
 using RoadCaptain.App.RouteBuilder.Services;
 using RoadCaptain.Ports;
+using RoadCaptain.UseCases;
 using Serilog.Core;
 
 namespace RoadCaptain.App.RouteBuilder.ViewModels
@@ -30,7 +31,8 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             new DummyUserPreferences(),
             new DummyApplicationFeatures(),
             new StatusBarService(),
-            null!)
+            Container.Resolve<SearchRoutesUseCase>(),
+            Container.Resolve<LoadRouteFromFileUseCase>())
         {
             // Route.OutputFilePath = @"C:\git\RoadCaptain\test\RoadCaptain.Tests.Unit\GameState\Repro\Rebel.Route-Italian.Villa.Sprint.Loop.json";
             // Route.Load();
