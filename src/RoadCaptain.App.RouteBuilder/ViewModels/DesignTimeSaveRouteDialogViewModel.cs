@@ -22,7 +22,8 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
                 new SaveRouteUseCase(new [] { new StubRouteRepository() }, null, null),
                 new InMemoryZwiftCredentialCache(),
                 new DesignTimeZwiftStub(),
-                new DummyUserPreferences())
+                new DummyUserPreferences(), 
+                Array.Empty<IRouteRepository>())
         {
             Repositories = new[] { "All", "Local" }.ToImmutableList();
         }
@@ -65,6 +66,8 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
 
         public string Name => "Local";
         public bool IsReadOnly => false;
+        public bool RequiresAuthentication => false;
+
         public Task DeleteAsync(Uri routeUri)
         {
             throw new NotImplementedException();

@@ -86,7 +86,7 @@
                 <TextBlock Text="Save to:" Grid.Row="1" Grid.Column="0" Classes="field" />
 				<ComboBox Name="RepositoryComboBox" VerticalAlignment="Center"
 				          Items="{Binding Path=Repositories}"
-				          SelectedItem="{Binding Path=SelectedRepository}"
+				          SelectedItem="{Binding Path=SelectedRepositoryName}"
 				          PointerPressed="RoutesListBox_OnPointerPressed"
 				          HorizontalAlignment="Stretch"
 				          Grid.Row="1" Grid.Column="1"/>

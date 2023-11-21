@@ -157,6 +157,8 @@ namespace RoadCaptain.Adapters
 
         public string Name => "Zwift Insider - Rebel Routes";
         public bool IsReadOnly => true;
+        public bool RequiresAuthentication => false;
+
         public Task DeleteAsync(Uri routeUri)
         {
             throw new InvalidOperationException("Rebel Routes are baked into RoadCaptain and can't be deleted.");

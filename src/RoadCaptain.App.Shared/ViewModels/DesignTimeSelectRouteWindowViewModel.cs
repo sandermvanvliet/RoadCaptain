@@ -126,6 +126,8 @@ namespace RoadCaptain.App.Shared.ViewModels
 
         public string Name => "Local";
         public bool IsReadOnly => false;
+        public bool RequiresAuthentication => false;
+
         public Task DeleteAsync(Uri routeUri)
         {
             throw new NotImplementedException();
