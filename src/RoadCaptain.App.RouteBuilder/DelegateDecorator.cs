@@ -85,7 +85,8 @@ namespace RoadCaptain.App.RouteBuilder
             return await InvokeIfNeededAsync(() => _decorated.ShowClearRouteDialog());
         }
 
-        public async Task<(LoopMode Mode, int? NumberOfLoops)> ShowRouteLoopDialog(LoopMode? loopMode = null, int? numberOfLoops = null)
+        public async Task<(bool Success, LoopMode Mode, int? NumberOfLoops)> ShowRouteLoopDialog(
+            LoopMode? loopMode = null, int? numberOfLoops = null)
         {
             return await InvokeIfNeededAsync(() => _decorated.ShowRouteLoopDialog(loopMode, numberOfLoops));
         }

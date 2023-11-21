@@ -104,7 +104,7 @@ namespace RoadCaptain.App.RouteBuilder
                 MessageBoxIcon.Question);
         }
 
-        public async Task<(LoopMode Mode, int? NumberOfLoops)> ShowRouteLoopDialog(LoopMode? loopMode = null,
+        public async Task<(bool Success, LoopMode Mode, int? NumberOfLoops)> ShowRouteLoopDialog(LoopMode? loopMode = null,
             int? numberOfLoops = null)
         {
             var makeLoopDialog = Resolve<MakeLoopDialog>();
@@ -121,25 +121,25 @@ namespace RoadCaptain.App.RouteBuilder
 
             if (makeLoopDialog.DialogResult != DialogResult.Confirm)
             {
-                return (LoopMode.Unknown, null);
+                return (false, LoopMode.Unknown, null);
             }
             
             if (makeLoopDialogViewModel.NoLoop)
             {
-                return (LoopMode.Unknown, null);
+                return (true, LoopMode.Unknown, null);
             }
 
             if (makeLoopDialogViewModel.InfiniteLoop)
             {
-                return (LoopMode.Infinite, null);
+                return (true, LoopMode.Infinite, null);
             }
 
             if (makeLoopDialogViewModel.ConstrainedLoop)
             {
-                return (LoopMode.Constrained, makeLoopDialogViewModel.NumberOfLoops);
+                return (true, LoopMode.Constrained, makeLoopDialogViewModel.NumberOfLoops);
             }
 
-            return (LoopMode.Unknown, null);
+            return (true, LoopMode.Unknown, null);
         }
 
         public async Task ShowSaveRouteDialog(string? lastUsedFolder, RouteViewModel routeViewModel)

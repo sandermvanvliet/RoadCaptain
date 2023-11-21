@@ -109,6 +109,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             {
                 if (value == _loopMode) return;
                 _loopMode = value;
+                IsTainted = true;
                 this.RaisePropertyChanged();
             }
         }
@@ -120,6 +121,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             {
                 if (value == _numberOfLoops) return;
                 _numberOfLoops = value;
+                IsTainted = true;
                 this.RaisePropertyChanged();
             }
         }

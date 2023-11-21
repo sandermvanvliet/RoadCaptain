@@ -29,6 +29,11 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
         {
             var shouldCreateLoop = await _windowService.ShowRouteLoopDialog(Route.LoopMode, Route.NumberOfLoops);
 
+            if (!shouldCreateLoop.Success)
+            {
+                return CommandResult.Aborted();
+            }
+            
             if (shouldCreateLoop.Mode is LoopMode.Infinite or LoopMode.Constrained)
             {
                 Route.LoopMode = shouldCreateLoop.Mode;

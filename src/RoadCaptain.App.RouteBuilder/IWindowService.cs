@@ -17,7 +17,8 @@ namespace RoadCaptain.App.RouteBuilder
         Task<bool> ShowDefaultSportSelectionDialog(SportType sport);
         Task<MessageBoxResult> ShowShouldSaveRouteDialog();
         Task<MessageBoxResult> ShowClearRouteDialog();
-        Task<(LoopMode Mode, int? NumberOfLoops)> ShowRouteLoopDialog(LoopMode? loopMode = null, int? numberOfLoops = null);
+        Task<(bool Success, LoopMode Mode, int? NumberOfLoops)> ShowRouteLoopDialog(LoopMode? loopMode = null,
+            int? numberOfLoops = null);
         Task ShowSaveRouteDialog(string? lastUsedFolder, RouteViewModel routeViewModel);
         Task<TokenResponse?> ShowLogInDialog(Window owner);
         Window? GetCurrentWindow();
