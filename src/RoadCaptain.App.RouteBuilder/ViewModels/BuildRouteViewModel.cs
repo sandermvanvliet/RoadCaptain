@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -12,7 +11,6 @@ using RoadCaptain.App.RouteBuilder.Services;
 using RoadCaptain.App.Shared.Commands;
 using RoadCaptain.App.Shared.Dialogs;
 using RoadCaptain.Ports;
-using RoadCaptain.UseCases;
 
 namespace RoadCaptain.App.RouteBuilder.ViewModels
 {
@@ -31,10 +29,9 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
         private bool _showElevationProfile;
         private readonly IWindowService _windowService;
         private Task? _simulationTask;
-        private readonly ConvertZwiftMapRouteUseCase _convertUseCase;
 
         public BuildRouteViewModel(RouteViewModel routeViewModel, IUserPreferences userPreferences,
-            IWindowService windowService, IWorldStore worldStore, ISegmentStore segmentStore, IStatusBarService statusBarService)
+            IWindowService windowService, ISegmentStore segmentStore, IStatusBarService statusBarService)
         {
             _userPreferences = userPreferences;
             _windowService = windowService;
@@ -42,7 +39,6 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             _showClimbs = _userPreferences.ShowClimbs;
             _showSprints = _userPreferences.ShowSprints;
             _showElevationProfile = _userPreferences.ShowElevationProfile;
-            _convertUseCase = new ConvertZwiftMapRouteUseCase(worldStore, segmentStore);
             
             Route = routeViewModel;
             Route.PropertyChanged += (_, args) => HandleRoutePropertyChanged(segmentStore, args);
@@ -54,16 +50,9 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
                     _ => Route.Sequence.Any())
                 .SubscribeTo(this, () => Route.Sequence)
                 .OnSuccess(_ => statusBarService1.Info("Route saved successfully"))
-                .OnSuccessWithMessage(_ => statusBarService1.Info($"Route saved successfully: {_.Message}"))
-                .OnFailure(_ => statusBarService1.Error($"Failed to save route because: {_.Message}"))
+                .OnSuccessWithMessage(commandResult => statusBarService1.Info($"Route saved successfully: {commandResult.Message}"))
+                .OnFailure(commandResult => statusBarService1.Error($"Failed to save route because: {commandResult.Message}"))
                 .OnNotExecuted(_ => statusBarService1.Info("Route hasn't changed dit not need to not saved"));
-
-            OpenRouteCommand = new AsyncRelayCommand(
-                    _ => OpenRoute(),
-                    _ => true)
-                .OnSuccess(_ => statusBarService1.Info("Route loaded successfully"))
-                .OnSuccessWithMessage(_ => statusBarService1.Info(_.Message))
-                .OnFailure(_ => statusBarService1.Error($"Failed to load route because: {_.Message}"));
 
             ClearRouteCommand = new AsyncRelayCommand(
                     _ => ClearRoute(),
@@ -71,15 +60,15 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
                 .SubscribeTo(this, () => Route.Sequence)
                 .SubscribeTo(this, () => Route.ReadyToBuild)
                 .OnSuccess(_ => statusBarService1.Info("Route cleared"))
-                .OnFailure(_ => statusBarService1.Error($"Failed to clear route because: {_.Message}"));
+                .OnFailure(commandResult => statusBarService1.Error($"Failed to clear route because: {commandResult.Message}"));
 
             SelectSegmentCommand = new AsyncRelayCommand(
-                    _ => SelectSegment(_ as Segment ??
+                    parameter => SelectSegment(parameter as Segment ??
                                        throw new ArgumentNullException(nameof(RelayCommand.CommandParameter))),
                     _ => true)
                 .OnSuccess(_ => statusBarService1.Info("Added segment"))
-                .OnSuccessWithMessage(_ => statusBarService1.Info($"Added segment {_.Message}"))
-                .OnFailure(_ => statusBarService1.Warning(_.Message));
+                .OnSuccessWithMessage(commandResult => statusBarService1.Info($"Added segment {commandResult.Message}"))
+                .OnFailure(commandResult => statusBarService1.Warning(commandResult.Message));
 
             SimulateCommand = new RelayCommand(
                     _ => SimulateRoute(),
@@ -88,7 +77,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
 
             RemoveLastSegmentCommand = new RelayCommand(
                     _ => RemoveLastSegment(),
-                    _ => Route.Sequence.Any())
+                    _ => Route.IsTainted)
                 .SubscribeTo(this, () => Route.Sequence)
                 .OnSuccess(_ => statusBarService1.Info("Removed segment"))
                 .OnSuccessWithMessage(result => statusBarService1.Info($"Removed segment {result.Message}"))
@@ -99,24 +88,24 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
                     _ => Route.World != null)
                 .SubscribeTo(this, () => Route.World);
 
-            ToggleShowClimbsCommand = new AsyncRelayCommand(async _ =>
+            ToggleShowClimbsCommand = new AsyncRelayCommand(_ =>
                 {
                     ShowClimbs = !ShowClimbs;
-                    return CommandResult.Success();
+                    return Task.FromResult(CommandResult.Success());
                 },
                 _ => Route.World != null);
 
-            ToggleShowSprintsCommand = new AsyncRelayCommand(async _ =>
+            ToggleShowSprintsCommand = new AsyncRelayCommand(_ =>
                 {
                     ShowSprints = !ShowSprints;
-                    return CommandResult.Success();
+                    return Task.FromResult(CommandResult.Success());
                 },
                 _ => Route.World != null);
 
-            ToggleShowElevationCommand = new AsyncRelayCommand(async _ =>
+            ToggleShowElevationCommand = new AsyncRelayCommand(_ =>
                 {
                     ShowElevationProfile = !ShowElevationProfile;
-                    return CommandResult.Success();
+                    return Task.FromResult(CommandResult.Success());
                 },
                 _ => Route.World != null);
         }
@@ -124,7 +113,6 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
         public RouteViewModel Route { get; }
         public RouteSegmentListViewModel RouteSegmentListViewModel { get; }
         public ICommand SaveRouteCommand { get; }
-        public ICommand OpenRouteCommand { get; }
         public ICommand ClearRouteCommand { get; }
         public ICommand SelectSegmentCommand { get; }
         public ICommand SimulateCommand { get; }
@@ -284,80 +272,6 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             this.RaisePropertyChanged(nameof(Route));
 
             return commandResult;
-        }
-
-        private async Task<CommandResult> OpenRoute()
-        {
-            if (Route.IsTainted)
-            {
-                MessageBoxResult questionResult = await _windowService.ShowShouldSaveRouteDialog();
-
-                if (questionResult == MessageBoxResult.Cancel)
-                {
-                    return CommandResult.Aborted();
-                }
-
-                if (questionResult == MessageBoxResult.Yes)
-                {
-                    var saveResult = await SaveRoute();
-
-                    // If saving was not successful then return the
-                    // result of SaveRoute instead of proceeding.
-                    if (saveResult.Result != Result.Success)
-                    {
-                        return saveResult;
-                    }
-                }
-            }
-
-            var (plannedRoute, fileName) = await _windowService.ShowOpenRouteDialog();
-
-            if (plannedRoute != null)
-            {
-                Route.LoadFromPlannedRoute(plannedRoute);
-                
-                return CommandResult.Success();
-            }
-
-            if (fileName != null)
-            {
-                Route.OutputFilePath = fileName.EndsWith(".gpx")
-                    ? Path.ChangeExtension(fileName, ".json")
-                    : fileName;
-
-                _userPreferences.LastUsedFolder = Path.GetDirectoryName(Route.OutputFilePath);
-                _userPreferences.Save();
-
-                SelectedSegment = null;
-
-                try
-                {
-                    string? successMessage = null;
-
-                    if (fileName.EndsWith(".gpx"))
-                    {
-                        var convertedRoute = _convertUseCase.Execute(ZwiftMapRoute.FromGpxFile(fileName));
-                        Route.LoadFromPlannedRoute(convertedRoute, true);
-                        successMessage = $"Successfully imported ZwiftMap route: {Path.GetFileName(fileName)}";
-                    }
-                    else
-                    {
-                        Route.Load();
-                    }
-
-                    this.RaisePropertyChanged(nameof(Route));
-
-                    return successMessage == null
-                        ? CommandResult.Success()
-                        : CommandResult.SuccessWithMessage(successMessage);
-                }
-                catch (Exception e)
-                {
-                    return CommandResult.Failure(e.Message);
-                }
-            }
-
-            return CommandResult.Aborted();
         }
 
         private CommandResult SimulateRoute()

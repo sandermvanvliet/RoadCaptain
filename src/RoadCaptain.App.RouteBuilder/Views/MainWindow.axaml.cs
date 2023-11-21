@@ -45,7 +45,6 @@ namespace RoadCaptain.App.RouteBuilder.Views
             this.AttachDevTools();
 #endif
             
-            this.Bind(ViewModel.BuildRouteViewModel.OpenRouteCommand).To(Key.O).WithPlatformModifier();
             this.Bind(ViewModel.BuildRouteViewModel.SaveRouteCommand).To(Key.S).WithPlatformModifier();
             this.Bind(ViewModel.BuildRouteViewModel.ClearRouteCommand).To(Key.R).WithPlatformModifier();
             this.Bind(ViewModel.BuildRouteViewModel.RemoveLastSegmentCommand).To(Key.Z).WithPlatformModifier();
