@@ -19,7 +19,8 @@
         SystemDecorations="None"
         WindowStartupLocation="CenterOwner"
         Activated="WindowBase_OnActivated"
-        PointerPressed="InputElement_OnPointerPressed">
+        PointerPressed="InputElement_OnPointerPressed"
+        x:DataType="viewModels:SaveRouteDialogViewModel">
 	<Design.DataContext>
 		<viewModels:DesignTimeSaveRouteDialogViewModel />
 	</Design.DataContext>

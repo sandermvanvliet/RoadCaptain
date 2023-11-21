@@ -20,7 +20,8 @@
         CanResize="False"
         SystemDecorations="None"
         WindowStartupLocation="CenterOwner"
-        Activated="WindowBase_OnActivated">
+        Activated="WindowBase_OnActivated"
+        x:DataType="viewModels:MakeLoopDialogViewModel">
   <Design.DataContext>
       <viewModels:DesignTimeMakeLoopDialogViewModel />
   </Design.DataContext>
