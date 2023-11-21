@@ -366,6 +366,8 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             _name = plannedRoute.Name;
             _world = plannedRoute.World;
             _sport = plannedRoute.Sport;
+            _loopMode = plannedRoute.LoopMode;
+            _numberOfLoops = plannedRoute.NumberOfLoops;
 
             DetermineMarkersForRoute();
 
@@ -377,6 +379,8 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             this.RaisePropertyChanged(nameof(TotalAscent));
             this.RaisePropertyChanged(nameof(TotalDescent));
             this.RaisePropertyChanged(nameof(ReadyToBuild));
+            this.RaisePropertyChanged(nameof(LoopMode));
+            this.RaisePropertyChanged(nameof(NumberOfLoops));
         }
 
         public SegmentSequenceViewModel? RemoveLast()

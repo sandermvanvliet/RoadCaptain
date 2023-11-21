@@ -9,12 +9,10 @@ namespace RoadCaptain.App.RouteBuilder.Views
     {
         public RouteSegmentListView()
         {
-            ViewModel = (DataContext as RouteSegmentListViewModel)!; // Suppressed because it's initialized from XAML
-            
             InitializeComponent();
         }
 
-        private RouteSegmentListViewModel ViewModel { get; }
+        private RouteSegmentListViewModel ViewModel => (RouteSegmentListViewModel) DataContext;
 
         private void RouteListView_KeyUp(object sender, KeyEventArgs e)
         {
