@@ -190,7 +190,7 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.MainWindow
                 _credentialCache,
                 new NopMonitoringEvents(),
                 new DummyApplicationFeatures(),
-                new Zwift(null));
+                new Zwift(null!));
 
             mainWindowViewModel.Initialize().GetAwaiter().GetResult();
             

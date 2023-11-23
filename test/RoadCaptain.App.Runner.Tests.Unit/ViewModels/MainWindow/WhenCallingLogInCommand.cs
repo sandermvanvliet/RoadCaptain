@@ -45,7 +45,7 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.MainWindow
                 _credentialCache,
                 new NopMonitoringEvents(),
                 new DummyApplicationFeatures(),
-                new Zwift(null));
+                new Zwift(null!));
             
             // This is required so that we can call new Window() below.
             var avaloniaDependencyResolver = new AvaloniaLocator();

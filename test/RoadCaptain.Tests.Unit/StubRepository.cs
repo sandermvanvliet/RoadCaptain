@@ -27,7 +27,7 @@ namespace RoadCaptain.Tests.Unit
             return Task.FromResult(true);
         }
 
-        public async Task<RouteModel[]> SearchAsync(string? world = null, string? creator = null, string? name = null, string? zwiftRouteName = null,
+        public Task<RouteModel[]> SearchAsync(string? world = null, string? creator = null, string? name = null, string? zwiftRouteName = null,
             int? minDistance = null, int? maxDistance = null, int? minAscent = null, int? maxAscent = null,
             int? minDescent = null, int? maxDescent = null, bool? isLoop = null, string[]? komSegments = null,
             string[]? sprintSegments = null)
@@ -42,7 +42,7 @@ namespace RoadCaptain.Tests.Unit
                 .Select(number => new RouteModel { Name = "Route " + number })
                 .ToArray();
 
-            return routes;
+            return Task.FromResult(routes);
         }
 
         public Task<RouteModel> StoreAsync(PlannedRoute plannedRoute, string? token, List<Segment> segments)

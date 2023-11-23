@@ -49,7 +49,10 @@ namespace RoadCaptain.Tests.Unit.Coordinates
         }
 
         //[Fact]
+        // ReSharper disable once UnusedMember.Global
+#pragma warning disable xUnit1013
         public void ReproOne()
+#pragma warning restore xUnit1013
         {
             var gameCoordinate = new GameCoordinate(156612.38f, -8146.511f, 0, ZwiftWorldId.London);
 
@@ -60,7 +63,10 @@ namespace RoadCaptain.Tests.Unit.Coordinates
         }
 
         //[Fact]
+        // ReSharper disable once UnusedMember.Global
+#pragma warning disable xUnit1013
         public void ReproOneReverse()
+#pragma warning restore xUnit1013
         {
             var latitude = 51.502428f;
             var longitude = -0.145476f;
@@ -137,7 +143,6 @@ namespace RoadCaptain.Tests.Unit.Coordinates
 
         private static GameCoordinate Translate(int worldId, float f, float f2)
         {
-            GameCoordinate mapPosition;
             float x = 0;
             float y = 0;
             double d = 0;

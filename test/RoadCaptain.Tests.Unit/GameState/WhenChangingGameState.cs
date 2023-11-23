@@ -519,7 +519,9 @@ namespace RoadCaptain.Tests.Unit.GameState
         // Ignore in build
         //[Fact]
         // ReSharper disable once UnusedMember.Global
+#pragma warning disable xUnit1013
         public void OverlappingSegmentMatch()
+#pragma warning restore xUnit1013
         {
             // This test verifies that segments that cross each other
             // don't cause the state to jump back and forth between
