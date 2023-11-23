@@ -9,7 +9,6 @@ using FluentAssertions;
 using RoadCaptain.Adapters;
 using RoadCaptain.App.RouteBuilder.Services;
 using RoadCaptain.App.RouteBuilder.ViewModels;
-using RoadCaptain.App.Shared.Commands;
 using Xunit;
 
 namespace RoadCaptain.App.RouteBuilder.Tests.Unit
@@ -20,6 +19,8 @@ namespace RoadCaptain.App.RouteBuilder.Tests.Unit
         private readonly SegmentStore _segmentStore;
         private List<Segment>? _segments;
         private readonly WorldStoreToDisk _worldStore;
+        private string? _lastStatusBarMessage;
+        private string? _lastStatusBarLevel;
 
         public WhenPlanningRoute()
         {
@@ -27,6 +28,23 @@ namespace RoadCaptain.App.RouteBuilder.Tests.Unit
             var worldStore = new WorldStoreToDisk();
 
             _worldStore = worldStore;
+            var statusBarService = new StatusBarService();
+            statusBarService.Subscribe(info =>
+                {
+                    _lastStatusBarMessage = info;
+                    _lastStatusBarLevel = "info";
+                },
+                warning =>
+                {
+                    _lastStatusBarMessage = warning;
+                    _lastStatusBarLevel = "warning";
+                },
+                error =>
+                {
+                    _lastStatusBarMessage = error;
+                    _lastStatusBarLevel = "error";
+                });
+            
             _viewModel = new TestableMainWindowViewModel(
                 new RouteStoreToDisk(_segmentStore, _worldStore),
                 _segmentStore,
@@ -35,7 +53,7 @@ namespace RoadCaptain.App.RouteBuilder.Tests.Unit
                 _worldStore,
                 new TestUserPreferences(),
                 new DummyApplicationFeatures(), 
-                new StatusBarService(),
+                statusBarService,
                 null!, null!);
         }
 
@@ -72,20 +90,15 @@ namespace RoadCaptain.App.RouteBuilder.Tests.Unit
             GivenWorldAndSport("watopia", SportType.Cycling);
 
             _viewModel.CallAddSegmentToRoute(GetSegmentById("watopia-beach-island-loop-001")); // This segment only has AtoB as a valid spawn direction
-            var result = _viewModel.CallAddSegmentToRoute(GetSegmentById("watopia-bambino-fondo-001-after-after-after-after-before-after"));
+            _viewModel.CallAddSegmentToRoute(GetSegmentById("watopia-bambino-fondo-001-after-after-after-after-before-after"));
 
-            result
-                .Result
-                .Should()
-                .Be(Result.Failure);
-
-            result
-                .Should()
-                .BeOfType<CommandResultWithMessage>()
-                .Which
-                .Message
+            _lastStatusBarMessage
                 .Should()
                 .Be("Spawn point does not support the direction of the selected segment");
+
+            _lastStatusBarLevel
+                .Should()
+                .Be("warning");
         }
 
         [Fact]
@@ -94,18 +107,11 @@ namespace RoadCaptain.App.RouteBuilder.Tests.Unit
             GivenWorldAndSport("watopia", SportType.Running);
 
             _viewModel.CallAddSegmentToRoute(GetSegmentById("watopia-5k-loop-001-after-after-before-after")); // This segment only has AtoB as a valid spawn direction
-            var result = _viewModel.CallAddSegmentToRoute(GetSegmentById("watopia-5k-loop-001-after-after-after"));
+            _viewModel.CallAddSegmentToRoute(GetSegmentById("watopia-5k-loop-001-after-after-after"));
 
-            result
-                .Result
-                .Should()
-                .Be(Result.Failure);
+            _lastStatusBarLevel.Should().Be("warning");
 
-            result
-                .Should()
-                .BeOfType<CommandResultWithMessage>()
-                .Which
-                .Message
+            _lastStatusBarMessage
                 .Should()
                 .Be("Spawn point does not support the direction of the selected segment");
         }
@@ -116,20 +122,15 @@ namespace RoadCaptain.App.RouteBuilder.Tests.Unit
             GivenWorldAndSport("watopia", SportType.Cycling);
 
             _viewModel.CallAddSegmentToRoute(GetSegmentById("watopia-beach-island-loop-001")); // This segment only has AtoB as a valid spawn direction
-            var result = _viewModel.CallAddSegmentToRoute(GetSegmentById("watopia-bambino-fondo-004-before-after"));
+            _viewModel.CallAddSegmentToRoute(GetSegmentById("watopia-bambino-fondo-004-before-after"));
 
-            result
-                .Result
+            _lastStatusBarLevel
                 .Should()
-                .Be(Result.SuccessWithMessage);
+                .Be("info");
 
-            result
+            _lastStatusBarMessage
                 .Should()
-                .BeOfType<CommandResultWithMessage>()
-                .Which
-                .Message
-                .Should()
-                .Be("Volcano circuit 3");
+                .Be("Added segment Volcano circuit 3");
         }
 
         [Fact]
@@ -138,20 +139,15 @@ namespace RoadCaptain.App.RouteBuilder.Tests.Unit
             GivenWorldAndSport("watopia", SportType.Cycling);
 
             _viewModel.CallAddSegmentToRoute(GetSegmentById("watopia-beach-island-loop-001")); // This segment only has AtoB as a valid spawn direction
-            var result = _viewModel.CallAddSegmentToRoute(GetSegmentById("watopia-bambino-fondo-004-after-before"));
+            _viewModel.CallAddSegmentToRoute(GetSegmentById("watopia-bambino-fondo-004-after-before"));
 
-            result
-                .Result
+            _lastStatusBarLevel
                 .Should()
-                .Be(Result.SuccessWithMessage);
+                .Be("info");
 
-            result
+            _lastStatusBarMessage
                 .Should()
-                .BeOfType<CommandResultWithMessage>()
-                .Which
-                .Message
-                .Should()
-                .Be("Volcano circuit 1");
+                .Be("Added segment Volcano circuit 1");
         }
 
         [Fact]

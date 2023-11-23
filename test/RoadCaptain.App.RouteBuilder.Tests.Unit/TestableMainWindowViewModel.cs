@@ -31,8 +31,8 @@ namespace RoadCaptain.App.RouteBuilder.Tests.Unit
         [DebuggerStepThrough]
         public CommandResult CallAddSegmentToRoute(Segment segment)
         {
-             BuildRouteViewModel.SelectSegmentCommand.Execute(segment);
-             return CommandResult.Success();
+            BuildRouteViewModel.SelectSegmentCommand.Execute(segment);
+            return CommandResult.Success();
         }
     }
 }
