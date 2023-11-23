@@ -36,7 +36,10 @@ namespace RoadCaptain.App.Runner
 
         public static void RouteLoaded(this MonitoringEvents monitoringEvents, PlannedRoute route)
         {
-            monitoringEvents.Information("Loaded route {RouteName}, Zwift route: {ZwiftRoute} ({ZwiftWorld})", route.Name, route.ZwiftRouteName, route.World.Name);
+            monitoringEvents.Information("Loaded route {RouteName}, Zwift route: {ZwiftRoute} ({ZwiftWorld})",
+                route.Name ?? "(unknown)",
+                route.ZwiftRouteName ?? "(unknown)",
+                route.World?.Name ?? "(unknown)");
         }
     }
 }

@@ -70,14 +70,21 @@ namespace RoadCaptain.App.Runner.ViewModels
                 {
                     case LoggedInState:
                     case ReadyToGoState:
-                        CallToAction = new CallToActionViewModel(
+                        if (Model.Route?.World != null)
+                        {
+                            CallToAction = new CallToActionViewModel(
                                 "Waiting for Zwift...",
                                 $"Start Zwift and start {GetActivityFromSport()} in {Model.Route.World.Name} on route: {Model.Route.ZwiftRouteName}");
+                        }
+
                         break;
                     case ConnectedToZwiftState:
-                        CallToAction = new CallToActionViewModel(
+                        if (Model.Route?.World != null)
+                        {
+                            CallToAction = new CallToActionViewModel(
                                 "Connected with Zwift",
                                 $"Start {GetActivityFromSport()} in {Model.Route.World.Name} on route: {Model.Route.ZwiftRouteName}");
+                        }
                         break;
                     case WaitingForConnectionState when GameState.IsInGame(_previousState):
                         CallToAction = new CallToActionViewModel(
@@ -85,9 +92,12 @@ namespace RoadCaptain.App.Runner.ViewModels
                                 string.Empty);
                         break;
                     case WaitingForConnectionState:
-                        CallToAction = new CallToActionViewModel(
+                        if (Model.Route?.World != null)
+                        {
+                            CallToAction = new CallToActionViewModel(
                                 "Waiting for Zwift...",
                                 $"Start Zwift and start {GetActivityFromSport()} in {Model.Route.World.Name} on route: {Model.Route.ZwiftRouteName}");
+                        }
                         break;
                     case InGameState:
                         CallToAction = new CallToActionViewModel(
@@ -100,19 +110,23 @@ namespace RoadCaptain.App.Runner.ViewModels
                             "Keep pedaling!");
                         break;
                     case OnSegmentState segmentState:
-                        if (!Model.Route.HasStarted && Model.Route.RouteSegmentSequence[0].Direction != segmentState.Direction && segmentState.Direction != SegmentDirection.Unknown)
+                        if (Model.Route?.World != null)
                         {
-                            CallToAction = new CallToActionViewModel(
-                                "Riding to start of route",
-                                "Heading the wrong way! Make a U-turn!");
+                            if (!Model.Route.HasStarted &&
+                                Model.Route.RouteSegmentSequence[0].Direction != segmentState.Direction &&
+                                segmentState.Direction != SegmentDirection.Unknown)
+                            {
+                                CallToAction = new CallToActionViewModel(
+                                    "Riding to start of route",
+                                    "Heading the wrong way! Make a U-turn!");
+                            }
+                            else
+                            {
+                                CallToAction = new CallToActionViewModel(
+                                    "Riding to start of route",
+                                    "Keep pedaling!");
+                            }
                         }
-                        else
-                        {
-                            CallToAction = new CallToActionViewModel(
-                                "Riding to start of route",
-                                "Keep pedaling!");
-                        }
-
                         break;
                     case IncorrectConnectionSecretState:
                         CallToAction = new CallToActionViewModel(
@@ -128,8 +142,8 @@ namespace RoadCaptain.App.Runner.ViewModels
                         break;
                     case LostRouteLockState lostRouteState:
                         var instructionText = "Try to make a u-turn to return to the route";
-                        
-                        if (lostRouteState.Route.CurrentSegmentSequence.Direction != lostRouteState.Direction)
+                        // If CurrentSegmentSequence is null here we deserve to blow up
+                        if (lostRouteState.Route.CurrentSegmentSequence!.Direction != lostRouteState.Direction)
                         {
                             instructionText = "Heading the wrong way! Make a U-turn to resume the route!";
                         }

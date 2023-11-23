@@ -53,7 +53,16 @@ namespace RoadCaptain.App.Runner.Views
                 }
             };
 
-            gameStateReceiver.ReceiveRoute(route => viewModel.Route = Models.RouteModel.From(route, _segmentStore.LoadSegments(route.World, route.Sport), _segmentStore.LoadMarkers(route.World)));
+            gameStateReceiver.ReceiveRoute(route =>
+            {
+                if(route.World != null)
+                {
+                    viewModel.Route = Models.RouteModel.From(
+                        route,
+                        _segmentStore.LoadSegments(route.World, route.Sport),
+                        _segmentStore.LoadMarkers(route.World));
+                }
+            });
             gameStateReceiver.ReceiveGameState(viewModel.UpdateGameState);
 
             _animationTimer = new Timer(100);
@@ -103,7 +112,7 @@ namespace RoadCaptain.App.Runner.Views
             {
                 ZwiftMap.MapObjects.Clear();
 
-                if (route?.World == null || route.PlannedRoute == null)
+                if (route?.World?.Id == null || route.PlannedRoute == null)
                 {
                     return;
                 }

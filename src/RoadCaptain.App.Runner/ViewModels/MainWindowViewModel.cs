@@ -145,6 +145,11 @@ namespace RoadCaptain.App.Runner.ViewModels
             {
                 var plannedRoute = _routeStore.LoadFrom(routePath);
 
+                if (plannedRoute.World == null)
+                {
+                    throw new Exception("Route world was empty, I can't load it properly");
+                }
+
                 RoutePath = routePath;
 
                 _userPreferences.LastUsedFolder = Path.GetDirectoryName(RoutePath);
@@ -170,7 +175,10 @@ namespace RoadCaptain.App.Runner.ViewModels
                         plannedRoute.Sport),
                     _segmentStore.LoadMarkers(plannedRoute.World));
 
-                _gameStateDispatcher.RouteSelected(Route!.PlannedRoute);
+                if (Route.PlannedRoute != null)
+                {
+                    _gameStateDispatcher.RouteSelected(Route!.PlannedRoute);
+                }
             }
             catch (FileNotFoundException)
             {
@@ -185,9 +193,19 @@ namespace RoadCaptain.App.Runner.ViewModels
         {
             try
             {
+                if (routeModel.PlannedRoute == null)
+                {
+                    throw new Exception("Planned route was empty, can't load it properly");
+                }
+
+                if (routeModel.PlannedRoute.World == null)
+                {
+                    throw new Exception("Planned route world was empty, can't load it properly");
+                }
+                
                 var plannedRoute = routeModel.PlannedRoute;
 
-                RoutePath = routeModel.Uri.ToString();
+                RoutePath = routeModel.Uri?.ToString() ?? "(unknown)";
 
                 _userPreferences.LastUsedFolder = Path.GetDirectoryName(RoutePath);
                 _userPreferences.Save();
@@ -212,7 +230,7 @@ namespace RoadCaptain.App.Runner.ViewModels
                         plannedRoute.Sport),
                     _segmentStore.LoadMarkers(plannedRoute.World));
 
-                _gameStateDispatcher.RouteSelected(Route!.PlannedRoute);
+                _gameStateDispatcher.RouteSelected(plannedRoute /* this is the same as what's in Route.PlannedRoute but without the nullability annotation... */);
             }
             catch (FileNotFoundException)
             {
@@ -403,7 +421,7 @@ namespace RoadCaptain.App.Runner.ViewModels
             var currentVersion = System.Version.Parse(Version);
             var latestRelease = _versionChecker.GetLatestRelease();
 
-            if (latestRelease.official.Version > currentVersion)
+            if (latestRelease.official?.Version > currentVersion)
             {
                 await _windowService.ShowNewVersionDialog(latestRelease.official);
             }
@@ -429,14 +447,14 @@ namespace RoadCaptain.App.Runner.ViewModels
             var latestRelease = _versionChecker.GetLatestRelease();
 
             // If there is a newer version available don't display anything
-            if (latestRelease.official.Version > thisVersion)
+            if (latestRelease.official?.Version > thisVersion)
             {
                 return;
             }
 
             // If this version is newer than the previous one shown and it's
             // the latest version then show the what is new dialog
-            if (thisVersion > previousVersion && thisVersion == latestRelease.official.Version)
+            if (thisVersion > previousVersion && thisVersion == latestRelease.official?.Version)
             {
                 // Update the current version so that the next time this won't be shown
                 _userPreferences.Save();
