@@ -16,7 +16,7 @@ namespace RoadCaptain.UseCases
             _routeStore = routeStore;
         }
 
-        public async Task<PlannedRoute> ExecuteAsync(LoadFromFileCommand command)
+        public PlannedRoute Execute(LoadFromFileCommand command)
         {
             if (string.IsNullOrEmpty(command.Path))
             {

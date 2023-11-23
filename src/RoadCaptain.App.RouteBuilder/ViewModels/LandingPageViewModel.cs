@@ -81,7 +81,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
                 return CommandResult.Aborted();
             }
 
-            var plannedRoute = await _loadRouteFromFileUseCase.ExecuteAsync(new LoadFromFileCommand(filePath));
+            var plannedRoute = _loadRouteFromFileUseCase.Execute(new LoadFromFileCommand(filePath));
 
             SelectedRoute = new Shared.ViewModels.RouteViewModel(new RouteModel
             {

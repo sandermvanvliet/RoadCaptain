@@ -220,15 +220,15 @@ namespace RoadCaptain.Adapters
                             "The route file has version 3 but was created with a version of RoadCaptain that does not support version 3, did you manually change the file?");
                     }
 
+                    if (deserialized.Route.WorldId == null)
+                    {
+                        throw new InvalidOperationException("Expected route to have a WorldId but it didn't have one");
+                    }
+
                     if (routeVersion < new Version(0, 7, 0, 0) && deserialized.Route.WorldId.StartsWith("makuri"))
                     {
                         throw new InvalidOperationException(
                             "Segments for Makuri Islands changed too much since version 0.7.0.0 to automatically upgrade to this version of RoadCaptain. Please rebuild your route in Route Builder");
-                    }
-
-                    if (deserialized.Route.WorldId == null)
-                    {
-                        throw new InvalidOperationException("Expected route to have a WorldId but it didn't have one");
                     }
 
                     deserialized.Route.World = _worldStore.LoadWorldById(deserialized.Route.WorldId);

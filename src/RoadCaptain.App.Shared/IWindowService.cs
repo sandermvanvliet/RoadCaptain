@@ -12,7 +12,7 @@ namespace RoadCaptain.App.Shared
     public interface IWindowService
     {
         Task ShowErrorDialog(string message);
-        Task ShowErrorDialog(string message, Window owner);
+        Task ShowErrorDialog(string message, Window? owner);
         void SetLifetime(IApplicationLifetime applicationLifetime);
         void Shutdown(int exitCode);
         Window? CurrentWindow { get; }

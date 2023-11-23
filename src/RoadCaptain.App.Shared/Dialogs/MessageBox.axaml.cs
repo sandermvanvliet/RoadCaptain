@@ -44,7 +44,7 @@ namespace RoadCaptain.App.Shared.Dialogs
             string message,
             string title,
             MessageBoxButton buttons,
-            Window owner, 
+            Window? owner, 
             MessageBoxIcon icon = MessageBoxIcon.Information)
         {
             var messageBox = new MessageBox

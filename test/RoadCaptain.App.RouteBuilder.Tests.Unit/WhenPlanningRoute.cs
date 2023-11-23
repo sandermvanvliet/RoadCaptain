@@ -57,8 +57,8 @@ namespace RoadCaptain.App.RouteBuilder.Tests.Unit
         {
             GivenWorldAndSport("watopia", SportType.Cycling);
 
-            _viewModel.CallAddSegmentToRoute(GetSegmentById(startingSegmentId)).GetAwaiter().GetResult();
-            _viewModel.CallAddSegmentToRoute(GetSegmentById(nextSegmentId)).GetAwaiter().GetResult();
+            _viewModel.CallAddSegmentToRoute(GetSegmentById(startingSegmentId));
+            _viewModel.CallAddSegmentToRoute(GetSegmentById(nextSegmentId));
 
             _viewModel.Route.Sequence.First().Direction.Should().Be(expectedFirstSequenceDirection);
             _viewModel.Route.Sequence.Skip(1).First().Direction.Should().Be(expectedSecondSequenceDirection);
@@ -69,8 +69,8 @@ namespace RoadCaptain.App.RouteBuilder.Tests.Unit
         {
             GivenWorldAndSport("watopia", SportType.Cycling);
 
-            _viewModel.CallAddSegmentToRoute(GetSegmentById("watopia-beach-island-loop-001")).GetAwaiter().GetResult(); // This segment only has AtoB as a valid spawn direction
-            var result = _viewModel.CallAddSegmentToRoute(GetSegmentById("watopia-bambino-fondo-001-after-after-after-after-before-after")).GetAwaiter().GetResult();
+            _viewModel.CallAddSegmentToRoute(GetSegmentById("watopia-beach-island-loop-001")); // This segment only has AtoB as a valid spawn direction
+            var result = _viewModel.CallAddSegmentToRoute(GetSegmentById("watopia-bambino-fondo-001-after-after-after-after-before-after"));
 
             result
                 .Result
@@ -91,8 +91,8 @@ namespace RoadCaptain.App.RouteBuilder.Tests.Unit
         {
             GivenWorldAndSport("watopia", SportType.Running);
 
-            _viewModel.CallAddSegmentToRoute(GetSegmentById("watopia-5k-loop-001-after-after-before-after")).GetAwaiter().GetResult(); // This segment only has AtoB as a valid spawn direction
-            var result = _viewModel.CallAddSegmentToRoute(GetSegmentById("watopia-5k-loop-001-after-after-after")).GetAwaiter().GetResult();
+            _viewModel.CallAddSegmentToRoute(GetSegmentById("watopia-5k-loop-001-after-after-before-after")); // This segment only has AtoB as a valid spawn direction
+            var result = _viewModel.CallAddSegmentToRoute(GetSegmentById("watopia-5k-loop-001-after-after-after"));
 
             result
                 .Result
@@ -113,8 +113,8 @@ namespace RoadCaptain.App.RouteBuilder.Tests.Unit
         {
             GivenWorldAndSport("watopia", SportType.Cycling);
 
-            _viewModel.CallAddSegmentToRoute(GetSegmentById("watopia-beach-island-loop-001")).GetAwaiter().GetResult(); // This segment only has AtoB as a valid spawn direction
-            var result = _viewModel.CallAddSegmentToRoute(GetSegmentById("watopia-bambino-fondo-004-before-after")).GetAwaiter().GetResult();
+            _viewModel.CallAddSegmentToRoute(GetSegmentById("watopia-beach-island-loop-001")); // This segment only has AtoB as a valid spawn direction
+            var result = _viewModel.CallAddSegmentToRoute(GetSegmentById("watopia-bambino-fondo-004-before-after"));
 
             result
                 .Result
@@ -135,8 +135,8 @@ namespace RoadCaptain.App.RouteBuilder.Tests.Unit
         {
             GivenWorldAndSport("watopia", SportType.Cycling);
 
-            _viewModel.CallAddSegmentToRoute(GetSegmentById("watopia-beach-island-loop-001")).GetAwaiter().GetResult(); // This segment only has AtoB as a valid spawn direction
-            var result = _viewModel.CallAddSegmentToRoute(GetSegmentById("watopia-bambino-fondo-004-after-before")).GetAwaiter().GetResult();
+            _viewModel.CallAddSegmentToRoute(GetSegmentById("watopia-beach-island-loop-001")); // This segment only has AtoB as a valid spawn direction
+            var result = _viewModel.CallAddSegmentToRoute(GetSegmentById("watopia-bambino-fondo-004-after-before"));
 
             result
                 .Result
@@ -157,7 +157,7 @@ namespace RoadCaptain.App.RouteBuilder.Tests.Unit
         {
             GivenWorldAndSport("watopia", SportType.Cycling);
 
-            _viewModel.CallAddSegmentToRoute(GetSegmentById("watopia-bambino-fondo-004-before-before")).GetAwaiter().GetResult();
+            _viewModel.CallAddSegmentToRoute(GetSegmentById("watopia-bambino-fondo-004-before-before"));
 
             _viewModel
                 .Route
@@ -173,7 +173,7 @@ namespace RoadCaptain.App.RouteBuilder.Tests.Unit
         {
             GivenWorldAndSport("watopia", SportType.Cycling);
             
-            _viewModel.CallAddSegmentToRoute(GetSegmentById("watopia-bambino-fondo-001-after-after-after-after-after-before")).GetAwaiter().GetResult();
+            _viewModel.CallAddSegmentToRoute(GetSegmentById("watopia-bambino-fondo-001-after-after-after-after-after-before"));
 
             _viewModel
                 .Route
@@ -189,7 +189,7 @@ namespace RoadCaptain.App.RouteBuilder.Tests.Unit
         {
             GivenWorldAndSport("watopia", SportType.Cycling);
             
-            _viewModel.CallAddSegmentToRoute(GetSegmentById("watopia-beach-island-loop-001")).GetAwaiter().GetResult();
+            _viewModel.CallAddSegmentToRoute(GetSegmentById("watopia-beach-island-loop-001"));
 
             _viewModel
                 .Route

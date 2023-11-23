@@ -16,7 +16,7 @@ namespace RoadCaptain.App.Shared
             return Task.CompletedTask;
         }
 
-        public Task ShowErrorDialog(string message, Window owner)
+        public Task ShowErrorDialog(string message, Window? owner)
         {
             throw new System.NotImplementedException();
         }

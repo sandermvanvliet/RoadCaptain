@@ -28,7 +28,7 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels
         public List<Type> ShownWindows { get; } = new();
         public RouteModel? ShowSelectRouteDialogResult { get; set; }
 
-        public Task ShowErrorDialog(string message, Window owner)
+        public Task ShowErrorDialog(string message, Window? owner)
         {
             throw new NotImplementedException();
         }

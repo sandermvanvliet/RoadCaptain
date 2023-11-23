@@ -44,7 +44,7 @@ namespace RoadCaptain.App.Runner
             return await InvokeIfNeededAsync(() => _decorated.ShowLogInDialog(owner));
         }
 
-        public async Task ShowErrorDialog(string message, Window owner)
+        public async Task ShowErrorDialog(string message, Window? owner)
         {
             await InvokeIfNeededAsync(() => _decorated.ShowErrorDialog(message, owner));
         }

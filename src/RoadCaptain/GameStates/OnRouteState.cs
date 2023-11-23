@@ -290,6 +290,12 @@ namespace RoadCaptain.GameStates
                     }
                 }
 
+                if (plannedRoute.CurrentSegmentSequence == null)
+                {
+                    throw new InvalidStateTransitionException(
+                        "Attempting to transition to OnRoute or OnLoop states but the current segment of the route is null");
+                }
+                
                 if (plannedRoute.CurrentSegmentSequence.Type is SegmentSequenceType.Loop
                     or SegmentSequenceType.LoopStart or SegmentSequenceType.LoopEnd)
                 {

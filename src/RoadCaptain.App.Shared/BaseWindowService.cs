@@ -117,7 +117,7 @@ namespace RoadCaptain.App.Shared
             await ShowErrorDialog(message, CurrentWindow ?? throw new ArgumentNullException(nameof(CurrentWindow)));
         }
 
-        public virtual async Task ShowErrorDialog(string message, Window owner)
+        public virtual async Task ShowErrorDialog(string message, Window? owner)
         {
             await MessageBox.ShowAsync(
                 message,

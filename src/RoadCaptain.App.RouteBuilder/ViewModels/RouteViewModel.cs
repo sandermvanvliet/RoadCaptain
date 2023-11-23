@@ -261,7 +261,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
                 .RouteSegmentSequence
                 .AddRange(Sequence.Select(s => s.Model).ToList());
 
-            plannedRoute.CalculateMetrics(_segmentStore.LoadSegments(plannedRoute.World, plannedRoute.Sport));
+            plannedRoute.CalculateMetrics(_segmentStore.LoadSegments(plannedRoute.World! /* This is assigned above */, plannedRoute.Sport));
 
             return plannedRoute;
         }
@@ -345,6 +345,11 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
 
         public void LoadFromPlannedRoute(PlannedRoute plannedRoute, bool isTainted = false)
         {
+            if (plannedRoute?.World == null)
+            {
+                throw new ArgumentException("Route doesn't have a world set and that means I can't load it");
+            }
+            
             var segments = _segmentStore.LoadSegments(plannedRoute.World, plannedRoute.Sport);
 
             _sequence.Clear();
