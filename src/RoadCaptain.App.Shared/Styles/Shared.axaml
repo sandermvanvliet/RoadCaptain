@@ -1,4 +1,10 @@
-﻿<Styles xmlns="https://github.com/avaloniaui"
+<!--
+// Copyright (c) 2023 Sander van Vliet
+// Licensed under Artistic License 2.0
+// See LICENSE or https://choosealicense.com/licenses/artistic-2.0/
+-->
+
+<Styles xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <Styles.Resources>
         <SolidColorBrush x:Key="ZwiftOrange" Color="#FF6141" />
@@ -36,3 +42,4 @@
         <Setter Property="Margin" Value="0" />
     </Style>
 </Styles>
+
