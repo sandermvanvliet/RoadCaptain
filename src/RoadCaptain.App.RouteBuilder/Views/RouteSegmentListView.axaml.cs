@@ -46,11 +46,11 @@ namespace RoadCaptain.App.RouteBuilder.Views
         {
             switch (propChangedArgs.PropertyName)
             {
-                case nameof(ViewModel.SelectedSegmentSequence):
-                    SelectedSegment = ViewModel!.SelectedSegmentSequence?.Segment;
+                case nameof(_viewModel.SelectedSegmentSequence):
+                    SelectedSegment = _viewModel!.SelectedSegmentSequence?.Segment;
                     break;
-                case nameof(ViewModel.SelectedMarker):
-                    SelectedMarkerId = ViewModel!.SelectedMarker?.Id;
+                case nameof(_viewModel.SelectedMarker):
+                    SelectedMarkerId = _viewModel!.SelectedMarker?.Id;
                     break;
             }
         }
@@ -67,19 +67,17 @@ namespace RoadCaptain.App.RouteBuilder.Views
             set => SetValue(SelectedMarkerIdProperty, value);
         }
 
-        public RouteSegmentListViewModel? ViewModel => DataContext as RouteSegmentListViewModel;
-
         private void RouteListView_KeyUp(object sender, KeyEventArgs e)
         {
             if (sender is ListBox { SelectedItem: SegmentSequenceViewModel viewModel } && e.Key == Key.Delete)
             {
-                if (viewModel == ViewModel!.Route.Last)
+                if (viewModel == _viewModel!.Route.Last)
                 {
-                    // TODO: fixme
-                    //ViewModel.RemoveLastSegmentCommand.Execute(null);
+                    _viewModel.RemoveLastSegmentCommand.Execute(null);
                     if (RouteListView.ItemCount > 0)
                     {
                         RouteListView.SelectedItem = RouteListView.Items.Cast<object>().Last();
+                        RouteListView.Focus();
                     }
                 }
             }

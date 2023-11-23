@@ -26,9 +26,16 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
                     _ => Route.IsLoop)
                 .SubscribeTo(this, () => Route.Sequence)
                 .SubscribeTo(this, () => Route.IsLoop);
+
+            RemoveLastSegmentCommand = new RelayCommand(
+                _ => RemoveLastSegment(),
+                    _ => Route.Sequence.Any())
+                .SubscribeTo(this, () => Route);
         }
+        
         public RouteViewModel Route { get; }
         public ICommand ConfigureLoopCommand { get; }
+        public ICommand RemoveLastSegmentCommand { get; }
 
         public SegmentSequenceViewModel? SelectedSegmentSequence
         {
@@ -77,6 +84,25 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
                     seq.Type = SegmentSequenceType.Regular;
                 }
                 this.RaisePropertyChanged(nameof(Route));
+            }
+
+            return CommandResult.Success();
+        }
+
+        private CommandResult RemoveLastSegment()
+        {
+            if (!Route.Sequence.Any())
+            {
+                return CommandResult.Failure("Can't remove segment because the route does not have any segments");
+            }
+
+            var lastSegment = Route.RemoveLast();
+
+            SelectedSegmentSequence = null;
+
+            if (lastSegment != null)
+            {
+                return CommandResult.SuccessWithMessage(lastSegment.SegmentName);
             }
 
             return CommandResult.Success();
