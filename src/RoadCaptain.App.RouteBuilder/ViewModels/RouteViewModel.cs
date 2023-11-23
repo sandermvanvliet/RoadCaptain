@@ -227,7 +227,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
 
         public PlannedRoute? AsPlannedRoute()
         {
-            if (!Sequence.Any())
+            if (!Sequence.Any() || World == null || Sport == SportType.Unknown)
             {
                 return null;
             }
