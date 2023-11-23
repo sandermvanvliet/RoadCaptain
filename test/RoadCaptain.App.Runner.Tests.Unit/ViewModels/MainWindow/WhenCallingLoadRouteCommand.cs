@@ -65,7 +65,9 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.MainWindow
         public void GivenUserSelectedRoute_RoutePathIsSet()
         {
             _viewModel.RoutePath = null;
-            _windowService.ShowSelectRouteDialogResult = new RouteModel { Uri = new Uri("file:///c:/temp/someroute.json")};
+            _windowService.ShowSelectRouteDialogResult = new RouteModel { 
+                PlannedRoute = new PlannedRoute { World = new World { Id = "watopia" }},
+                Uri = new Uri("file:///c:/temp/someroute.json")};
 
             LoadRoute();
 
@@ -90,7 +92,11 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.MainWindow
         public void GivenUserSelectedFile_WindowTitleIsUpdatedWithRouteFileName()
         {
             _viewModel.RoutePath = null;
-            _windowService.ShowSelectRouteDialogResult = new RouteModel { Uri = new Uri("file:///c:/temp/someroute.json")};
+            _windowService.ShowSelectRouteDialogResult = new RouteModel
+            {
+                PlannedRoute = new PlannedRoute { World = new World { Id = "watopia" }},
+                Uri = new Uri("file:///c:/temp/someroute.json")
+            };
 
             LoadRoute();
 

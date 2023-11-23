@@ -13,20 +13,14 @@ namespace RoadCaptain.Tests.Unit.UseCases
     public class WhenSearchingForRoutes
     {
         [Fact]
-        public void GivenSpecificRepositoryNameAndItDoesNotExist_ExceptionIsThrown()
+        public void GivenSpecificRepositoryNameAndItDoesNotExist_RepositoryIsIgnored()
         {
             var command = new SearchRouteCommand("REPOSITORY DOES NOT EXIST");
             var useCase = new SearchRoutesUseCase(new[] { new StubRepository() }, new NopMonitoringEvents());
 
-            var action = () => useCase.ExecuteAsync(command).GetAwaiter().GetResult();
+            var results = useCase.ExecuteAsync(command).GetAwaiter().GetResult();
 
-            action
-                .Should()
-                .Throw<Exception>()
-                .Which
-                .Message
-                .Should()
-                .Be("Could not find a route repository with the name 'REPOSITORY DOES NOT EXIST'");
+            results.Should().BeEmpty();
         }
 
         [Fact]
