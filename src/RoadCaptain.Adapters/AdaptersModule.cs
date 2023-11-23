@@ -141,7 +141,11 @@ namespace RoadCaptain.Adapters
                 {
                     var settings = new HttpRouteRepositorySettings(childSection);
                     builder
-                        .Register<IRouteRepository>(componentContext => new HttpRouteRepository(new HttpClient(), settings, componentContext.Resolve<RouteStoreToDisk>()))
+                        .Register<IRouteRepository>(componentContext => new HttpRouteRepository(
+                            new HttpClient(), 
+                            settings, 
+                            componentContext.Resolve<RouteStoreToDisk>(), 
+                            componentContext.Resolve<ISecurityTokenProvider>()))
                         .As<IRouteRepository>()
                         .SingleInstance();
                 }

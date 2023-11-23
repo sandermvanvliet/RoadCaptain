@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
+using RoadCaptain.App.Shared.Models;
 
 namespace RoadCaptain.App.Shared
 {
@@ -53,6 +54,16 @@ namespace RoadCaptain.App.Shared
         }
 
         public Task<RouteModel?> ShowSelectRouteDialog()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public Task<TokenResponse?> ShowLogInDialog(Window owner)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public Window? GetCurrentWindow()
         {
             throw new System.NotImplementedException();
         }

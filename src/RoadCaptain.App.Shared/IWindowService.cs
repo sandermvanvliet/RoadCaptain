@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
+using RoadCaptain.App.Shared.Models;
 
 namespace RoadCaptain.App.Shared
 {
@@ -21,5 +22,7 @@ namespace RoadCaptain.App.Shared
         Task ShowNewVersionDialog(Release release);
         Task ShowWhatIsNewDialog(Release release);
         Task<RouteModel?> ShowSelectRouteDialog();
+        Task<TokenResponse?> ShowLogInDialog(Window owner);
+        Window? GetCurrentWindow();
     }
 }

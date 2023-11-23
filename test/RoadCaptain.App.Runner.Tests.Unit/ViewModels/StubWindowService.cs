@@ -110,5 +110,10 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels
             LogInDialogInvocations++;
             return Task.FromResult(LogInDialogResult);
         }
+
+        public Window? GetCurrentWindow()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

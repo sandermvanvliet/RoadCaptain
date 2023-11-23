@@ -25,7 +25,11 @@ namespace RoadCaptain.App.RouteBuilder
                 .SingleInstance();
             
             // Single instance because we keep track of the active window
-            builder.RegisterType<WindowService>().As<IWindowService>().SingleInstance();
+            builder.RegisterType<WindowService>()
+                .As<IWindowService>()
+                .As<Shared.IWindowService>()
+                .SingleInstance();
+            
             builder.RegisterType<StatusBarService>().As<IStatusBarService>().SingleInstance();
             builder.RegisterDecorator<DelegateDecorator, IWindowService>();
 

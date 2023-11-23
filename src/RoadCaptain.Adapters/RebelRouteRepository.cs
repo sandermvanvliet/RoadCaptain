@@ -157,7 +157,7 @@ namespace RoadCaptain.Adapters
             return routeModels;
         }
 
-        public Task<RouteModel> StoreAsync(PlannedRoute plannedRoute, string? token, List<Segment> segments)
+        public Task<RouteModel> StoreAsync(PlannedRoute plannedRoute, List<Segment> segments)
         {
             throw new InvalidOperationException("Rebel route repository is read-only");
         }
@@ -166,7 +166,7 @@ namespace RoadCaptain.Adapters
         public bool IsReadOnly => true;
         public bool RequiresAuthentication => false;
 
-        public Task DeleteAsync(Uri routeUri, string? securityToken)
+        public Task DeleteAsync(Uri routeUri)
         {
             throw new InvalidOperationException("Rebel Routes are baked into RoadCaptain and can't be deleted.");
         }

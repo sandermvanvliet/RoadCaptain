@@ -6,7 +6,6 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Threading.Tasks;
-using RoadCaptain.App.Shared;
 using RoadCaptain.Ports;
 using RoadCaptain.UseCases;
 
@@ -20,8 +19,6 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
                 new RouteViewModel(null!, null!), 
                 new RetrieveRepositoryNamesUseCase(new [] { new StubRouteRepository() }), 
                 new SaveRouteUseCase(new [] { new StubRouteRepository() }, null!, null!),
-                new InMemoryZwiftCredentialCache(),
-                new DesignTimeZwiftStub(),
                 new DummyUserPreferences(), 
                 Array.Empty<IRouteRepository>())
         {
@@ -59,7 +56,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             });
         }
 
-        public Task<RouteModel> StoreAsync(PlannedRoute plannedRoute, string? token, List<Segment> segments)
+        public Task<RouteModel> StoreAsync(PlannedRoute plannedRoute, List<Segment> segments)
         {
             throw new System.NotImplementedException();
         }
@@ -68,7 +65,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
         public bool IsReadOnly => false;
         public bool RequiresAuthentication => false;
 
-        public Task DeleteAsync(Uri routeUri, string? securityToken)
+        public Task DeleteAsync(Uri routeUri)
         {
             throw new NotImplementedException();
         }

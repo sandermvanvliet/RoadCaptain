@@ -24,6 +24,11 @@ namespace RoadCaptain.App.Runner
             throw new System.NotImplementedException();
         }
 
+        public Window? GetCurrentWindow()
+        {
+            throw new System.NotImplementedException();
+        }
+
         public Task ShowErrorDialog(string message, Window? owner)
         {
             throw new System.NotImplementedException();

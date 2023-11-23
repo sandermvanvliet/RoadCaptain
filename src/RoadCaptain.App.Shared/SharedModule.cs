@@ -18,9 +18,12 @@ namespace RoadCaptain.App.Shared
             builder.RegisterType<WhatIsNewWindow>().AsSelf();
             builder.RegisterType<CompileTimeFeatures>().As<IApplicationFeatures>();
             builder.RegisterType<PlatformPaths>().As<IPathProvider>();
-            builder.RegisterType<BaseWindowService>().As<IWindowService>();
             builder.RegisterType<SelectRouteWindow>().AsSelf();
             builder.RegisterType<SelectRouteWindowViewModel>().AsSelf();
+            
+            // This requires that the depending apps register
+            // the shared IWindowService too...
+            builder.RegisterType<AppSecurityTokenProvider>().As<ISecurityTokenProvider>();
         }
     }
 }

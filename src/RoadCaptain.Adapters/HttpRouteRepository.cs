@@ -49,12 +49,18 @@ namespace RoadCaptain.Adapters
         
         private readonly JsonSerializer _serializer;
         private readonly RouteStoreToDisk _routeStoreToDisk;
+        private readonly ISecurityTokenProvider _securityTokenProvider;
 
-        public HttpRouteRepository(HttpClient httpClient, HttpRouteRepositorySettings settings, RouteStoreToDisk routeStoreToDisk)
+        public HttpRouteRepository(
+            HttpClient httpClient, 
+            HttpRouteRepositorySettings settings, 
+            RouteStoreToDisk routeStoreToDisk,
+            ISecurityTokenProvider securityTokenProvider)
         {
             _httpClient = httpClient;
             _settings = settings;
             _routeStoreToDisk = routeStoreToDisk;
+            _securityTokenProvider = securityTokenProvider;
             _serializer = JsonSerializer.Create(JsonSettings);
             Name = _settings.Name;
         }
@@ -172,8 +178,10 @@ namespace RoadCaptain.Adapters
             return Array.Empty<RouteModel>();
         }
 
-        public async Task<RouteModel> StoreAsync(PlannedRoute plannedRoute, string? token, List<Segment> segments)
+        public async Task<RouteModel> StoreAsync(PlannedRoute plannedRoute, List<Segment> segments)
         {
+            var token = await _securityTokenProvider.GetSecurityTokenForPurposeAsync(TokenPurpose.RouteRepositoryAccess);
+            
             if (string.IsNullOrEmpty(token))
             {
                 throw new ArgumentException("A valid token is required for this route repository");
@@ -236,8 +244,10 @@ namespace RoadCaptain.Adapters
             }
         }
         
-        public async Task DeleteAsync(Uri routeUri, string? securityToken)
+        public async Task DeleteAsync(Uri routeUri)
         {
+            var securityToken = await _securityTokenProvider.GetSecurityTokenForPurposeAsync(TokenPurpose.RouteRepositoryAccess);
+            
             if (string.IsNullOrEmpty(securityToken))
             {
                 throw new ArgumentException("A security token is required to delete a route");

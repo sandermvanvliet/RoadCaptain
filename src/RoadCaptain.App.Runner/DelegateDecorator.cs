@@ -44,6 +44,11 @@ namespace RoadCaptain.App.Runner
             return await InvokeIfNeededAsync(() => _decorated.ShowLogInDialog(owner));
         }
 
+        public Window? GetCurrentWindow()
+        {
+            return InvokeIfNeeded(() => _decorated.GetCurrentWindow());
+        }
+
         public async Task ShowErrorDialog(string message, Window? owner)
         {
             await InvokeIfNeededAsync(() => _decorated.ShowErrorDialog(message, owner));
@@ -120,6 +125,18 @@ namespace RoadCaptain.App.Runner
             else
             {
                 action();
+            }
+        }
+
+        private TValue InvokeIfNeeded<TValue>(Func<TValue> action)
+        {
+            if (!_dispatcher.CheckAccess())
+            {
+                return _dispatcher.InvokeAsync(action).GetAwaiter().GetResult();
+            }
+            else
+            {
+                return action();
             }
         }
     }

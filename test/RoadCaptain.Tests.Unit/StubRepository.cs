@@ -48,7 +48,7 @@ namespace RoadCaptain.Tests.Unit
             return routes;
         }
 
-        public Task<RouteModel> StoreAsync(PlannedRoute plannedRoute, string? token, List<Segment> segments)
+        public Task<RouteModel> StoreAsync(PlannedRoute plannedRoute, List<Segment> segments)
         {
             StoredRoutes.Add(plannedRoute);
             return Task.FromResult(new RouteModel());
@@ -60,7 +60,7 @@ namespace RoadCaptain.Tests.Unit
         public bool IsReadOnly => false;
         public bool RequiresAuthentication => false;
 
-        public Task DeleteAsync(Uri routeUri, string? securityToken)
+        public Task DeleteAsync(Uri routeUri)
         {
             throw new NotImplementedException();
         }

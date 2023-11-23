@@ -20,8 +20,6 @@ namespace RoadCaptain.App.RouteBuilder
         Task<(bool Success, LoopMode Mode, int? NumberOfLoops)> ShowRouteLoopDialog(LoopMode? loopMode = null,
             int? numberOfLoops = null);
         Task ShowSaveRouteDialog(string? lastUsedFolder, RouteViewModel routeViewModel);
-        Task<TokenResponse?> ShowLogInDialog(Window owner);
-        Window? GetCurrentWindow();
         Task<string?> ShowSaveFileDialog(string? previousLocation, string? suggestedFileName = null);
         Task<MessageBoxResult> ShowQuestionDialog(string title, string message);
     }

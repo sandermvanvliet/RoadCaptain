@@ -29,9 +29,12 @@ namespace RoadCaptain.App.Shared.Controls
         {
             InitializeComponent();
 
-            DataContextChanged += (sender, args) =>
+            DataContextChanged += (_, _) =>
             {
-                Routes = DataContext as RouteViewModel[];
+                if (DataContext is RouteViewModel[] routes)
+                {
+                    Routes = routes;
+                }
             };
         }
 

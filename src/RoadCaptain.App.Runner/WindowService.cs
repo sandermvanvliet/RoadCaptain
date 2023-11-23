@@ -79,19 +79,5 @@ namespace RoadCaptain.App.Runner
 
             SwapWindows(inGameWindow);
         }
-
-        public async Task<TokenResponse?> ShowLogInDialog(Window owner)
-        {
-            var zwiftLoginWindow = Resolve<ZwiftLoginWindowBase>();
-
-            zwiftLoginWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
-
-            if (await ShowDialog(zwiftLoginWindow) ?? false)
-            {
-                return zwiftLoginWindow.TokenResponse;
-            }
-
-            return null;
-        }
     }
 }

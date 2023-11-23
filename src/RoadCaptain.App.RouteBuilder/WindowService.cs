@@ -29,25 +29,6 @@ namespace RoadCaptain.App.RouteBuilder
         {
         }
 
-        public virtual async Task<TokenResponse?> ShowLogInDialog(Window owner)
-        {
-            var zwiftLoginWindow = Resolve<ZwiftLoginWindowBase>();
-
-            zwiftLoginWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
-
-            if (await ShowDialog(zwiftLoginWindow) ?? false)
-            {
-                return zwiftLoginWindow.TokenResponse;
-            }
-
-            return null;
-        }
-
-        public Window? GetCurrentWindow()
-        {
-            return CurrentWindow;
-        }
-
         public async Task<string?> ShowSaveFileDialog(string? previousLocation, string? suggestedFileName = null)
         {
             var initialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
@@ -151,8 +132,6 @@ namespace RoadCaptain.App.RouteBuilder
                 routeViewModel,
                 Resolve<RetrieveRepositoryNamesUseCase>(),
                 Resolve<SaveRouteUseCase>(),
-                Resolve<IZwiftCredentialCache>(),
-                Resolve<IZwift>(),
                 Resolve<IUserPreferences>(),
                 Resolve<IEnumerable<IRouteRepository>>());
 

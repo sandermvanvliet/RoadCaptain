@@ -26,11 +26,11 @@ namespace RoadCaptain.Ports
             string[]? komSegments = null,
             string[]? sprintSegments = null);
 
-        Task<RouteModel> StoreAsync(PlannedRoute plannedRoute, string? token, List<Segment> segments);
+        Task<RouteModel> StoreAsync(PlannedRoute plannedRoute, List<Segment> segments);
 
         string Name { get; }
         bool IsReadOnly { get; }
         bool RequiresAuthentication { get; }
-        Task DeleteAsync(Uri routeUri, string? securityToken);
+        Task DeleteAsync(Uri routeUri);
     }
 }

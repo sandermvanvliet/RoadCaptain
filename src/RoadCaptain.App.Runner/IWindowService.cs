@@ -12,7 +12,6 @@ namespace RoadCaptain.App.Runner
     public interface IWindowService : RoadCaptain.App.Shared.IWindowService
     {
         void ShowInGameWindow(InGameNavigationWindowViewModel viewModel);
-        Task<TokenResponse?> ShowLogInDialog(Window owner);
         void ShowMainWindow();
         void ToggleElevationProfile(PlannedRoute? plannedRoute, bool? show);
     }

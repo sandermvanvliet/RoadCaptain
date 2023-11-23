@@ -177,7 +177,7 @@ namespace RoadCaptain.Adapters
             return await File.ReadAllTextAsync(file);
         }
 
-        public async Task<RouteModel> StoreAsync(PlannedRoute plannedRoute, string? token, List<Segment> segments)
+        public async Task<RouteModel> StoreAsync(PlannedRoute plannedRoute, List<Segment> segments)
         {
             if (!DirectoryExists(_settings.Directory))
             {
@@ -246,7 +246,7 @@ namespace RoadCaptain.Adapters
             }
         }
 
-        public Task DeleteAsync(Uri routeUri, string? securityToken)
+        public Task DeleteAsync(Uri routeUri)
         {
             if (!File.Exists(routeUri.ToString()))
             {

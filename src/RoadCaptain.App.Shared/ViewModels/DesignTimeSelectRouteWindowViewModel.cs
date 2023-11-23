@@ -117,7 +117,7 @@ namespace RoadCaptain.App.Shared.ViewModels
             });
         }
 
-        public Task<RouteModel> StoreAsync(PlannedRoute plannedRoute, string? token, List<Segment> segments)
+        public Task<RouteModel> StoreAsync(PlannedRoute plannedRoute, List<Segment> segments)
         {
             throw new System.NotImplementedException();
         }
@@ -126,7 +126,7 @@ namespace RoadCaptain.App.Shared.ViewModels
         public bool IsReadOnly => false;
         public bool RequiresAuthentication => false;
 
-        public Task DeleteAsync(Uri routeUri, string? securityToken)
+        public Task DeleteAsync(Uri routeUri)
         {
             throw new NotImplementedException();
         }

@@ -12,11 +12,12 @@ using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using RoadCaptain.App.Shared.Dialogs;
 using RoadCaptain.App.Shared.Dialogs.ViewModels;
+using RoadCaptain.App.Shared.Models;
 using RoadCaptain.App.Shared.Views;
 
 namespace RoadCaptain.App.Shared
 {
-    public class BaseWindowService : IWindowService
+    public abstract class BaseWindowService : IWindowService
     {
         private readonly IComponentContext _componentContext;
         private readonly MonitoringEvents _monitoringEvents;
@@ -172,6 +173,25 @@ namespace RoadCaptain.App.Shared
         {
             window.Close();
             CurrentWindow = null;
+        }
+
+        public async Task<TokenResponse?> ShowLogInDialog(Window owner)
+        {
+            var zwiftLoginWindow = Resolve<ZwiftLoginWindowBase>();
+
+            zwiftLoginWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+
+            if (await ShowDialog(zwiftLoginWindow) ?? false)
+            {
+                return zwiftLoginWindow.TokenResponse;
+            }
+
+            return null;
+        }
+
+        public virtual Window? GetCurrentWindow()
+        {
+            return CurrentWindow;
         }
     }
 }

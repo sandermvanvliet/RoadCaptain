@@ -8,11 +8,8 @@ using System.Collections.Immutable;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using Microsoft.IdentityModel.JsonWebTokens;
 using ReactiveUI;
-using RoadCaptain.App.Shared;
 using RoadCaptain.App.Shared.Commands;
-using RoadCaptain.App.Shared.Models;
 using RoadCaptain.Commands;
 using RoadCaptain.Ports;
 using RoadCaptain.UseCases;
@@ -27,8 +24,6 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
         private string? _selectedRepositoryName;
         private readonly RetrieveRepositoryNamesUseCase _retrieveRepositoryNamesUseCase;
         private readonly SaveRouteUseCase _saveRouteUseCase;
-        private readonly IZwiftCredentialCache _credentialCache;
-        private readonly IZwift _zwift;
         private readonly IUserPreferences _userPreferences;
         private readonly IEnumerable<IRouteRepository> _repositories;
         private string? _outputFilePath;
@@ -38,8 +33,6 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             RouteViewModel route,
             RetrieveRepositoryNamesUseCase retrieveRepositoryNamesUseCase, 
             SaveRouteUseCase saveRouteUseCase, 
-            IZwiftCredentialCache credentialCache, 
-            IZwift zwift, 
             IUserPreferences userPreferences,
             IEnumerable<IRouteRepository> repositories)
         {
@@ -47,8 +40,6 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             _route = route;
             _retrieveRepositoryNamesUseCase = retrieveRepositoryNamesUseCase;
             _saveRouteUseCase = saveRouteUseCase;
-            _credentialCache = credentialCache;
-            _zwift = zwift;
             _userPreferences = userPreferences;
             _repositories = repositories;
         }
@@ -92,8 +83,6 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             
             try
             {
-                TokenResponse? token = null;
-
                 if(!string.IsNullOrEmpty(SelectedRepositoryName))
                 {
                     var repository = _repositories.SingleOrDefault(r => r.Name == SelectedRepositoryName);
@@ -103,14 +92,9 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
                         throw new InvalidOperationException(
                             "I don't know what happened but a repository name was selected that I can't find...");
                     }
-
-                    if (repository.RequiresAuthentication)
-                    {
-                        token = await AuthenticateToZwiftAsync();
-                    }
                 }
                 
-                await _saveRouteUseCase.ExecuteAsync(new SaveRouteCommand(_route.AsPlannedRoute()!, RouteName, SelectedRepositoryName, token?.AccessToken, OutputFilePath));
+                await _saveRouteUseCase.ExecuteAsync(new SaveRouteCommand(_route.AsPlannedRoute()!, RouteName, SelectedRepositoryName, OutputFilePath));
                 
                 _route.Save();
                 
@@ -150,86 +134,6 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
                 
                 this.RaisePropertyChanged();
             }
-        }
-
-        private async Task<TokenResponse?> AuthenticateToZwiftAsync()
-        {
-            var tokenResponse = await _credentialCache.LoadAsync();
-
-            if (tokenResponse != null)
-            {
-                if (!string.IsNullOrEmpty(tokenResponse.AccessToken))
-                {
-                    var accessToken = new JsonWebToken(tokenResponse.AccessToken);
-
-                    if (accessToken.ValidTo < DateTime.UtcNow.AddHours(1))
-                    {
-                        if (!string.IsNullOrEmpty(tokenResponse.RefreshToken))
-                        {
-                            var refreshToken = new JsonWebToken(tokenResponse.RefreshToken);
-
-                            if (refreshToken.ValidTo < DateTime.UtcNow.AddHours(1))
-                            {
-                                tokenResponse = null;
-                            }
-                            else
-                            {
-                                try
-                                {
-                                    var refreshedTokens = await _zwift.RefreshTokenAsync(tokenResponse.RefreshToken);
-
-                                    tokenResponse = new TokenResponse
-                                    {
-                                        AccessToken = refreshedTokens.AccessToken,
-                                        RefreshToken = refreshedTokens.RefreshToken,
-                                        ExpiresIn = (long)refreshedTokens.ExpiresOn.Subtract(DateTime.UtcNow).TotalSeconds,
-                                        UserProfile = tokenResponse.UserProfile
-                                    };
-
-                                    await _credentialCache.StoreAsync(tokenResponse);
-                                }
-                                catch
-                                {
-                                    tokenResponse = null;
-                                }
-                            }
-                        }
-                        else
-                        {
-                            tokenResponse = null;
-                        }
-                    }
-                }
-                else
-                {
-                    tokenResponse = null;
-                }
-            }
-
-            if (tokenResponse != null)
-            {
-                return tokenResponse;
-            }
-
-            var currentWindow = _windowService.GetCurrentWindow();
-            if (currentWindow == null)
-            {
-                throw new InvalidOperationException(
-                    "Unable to determine what the current window and I can't parent a dialog to an unknown window");
-            }
-
-            tokenResponse = await _windowService.ShowLogInDialog(currentWindow);
-
-            if (tokenResponse != null &&
-                !string.IsNullOrEmpty(tokenResponse.AccessToken))
-            {
-                // Keep this in memory so that when the app navigates
-                // from the in-game window to the main window the user
-                // remains logged in.
-                await _credentialCache.StoreAsync(tokenResponse);
-            }
-
-            return tokenResponse;
         }
 
         public string? RouteName

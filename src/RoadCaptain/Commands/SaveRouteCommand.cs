@@ -4,26 +4,9 @@
 
 namespace RoadCaptain.Commands
 {
-    public class SaveRouteCommand
-    {
-        public PlannedRoute Route { get; }
-        public string RouteName { get; }
-        public string? RepositoryName { get; }
-        public string? Token { get; }
-        public string? OutputFilePath { get; }
-
-        public SaveRouteCommand(
-            PlannedRoute route, 
-            string routeName,
-            string? repositoryName, 
-            string? token,
-            string? outputFilePath)
-        {
-            Route = route;
-            RouteName = routeName;
-            RepositoryName = repositoryName;
-            Token = token;
-            OutputFilePath = outputFilePath;
-        }
-    }
+    public record SaveRouteCommand(
+        PlannedRoute Route, 
+        string RouteName,
+        string? RepositoryName,
+        string? OutputFilePath);
 }

@@ -31,7 +31,7 @@ namespace RoadCaptain.UseCases
                     "Attempted to delete a route on a repository that I don't know about. Can't delete this route.");
             }
             
-            await routeRepository.DeleteAsync(deleteRouteCommand.RouteUri, "DEADBEEF");
+            await routeRepository.DeleteAsync(deleteRouteCommand.RouteUri);
         }
     }
 }
