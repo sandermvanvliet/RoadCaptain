@@ -11,14 +11,15 @@ namespace RoadCaptain.App.Shared
     {
         private TokenResponse? _cachedCredentials;
 
-        public async Task StoreAsync(TokenResponse tokenResponse)
+        public Task StoreAsync(TokenResponse tokenResponse)
         {
             _cachedCredentials = tokenResponse;
+            return Task.CompletedTask;
         }
 
-        public async Task<TokenResponse?> LoadAsync()
+        public Task<TokenResponse?> LoadAsync()
         {
-            return _cachedCredentials;
+            return Task.FromResult(_cachedCredentials);
         }
     }
 }

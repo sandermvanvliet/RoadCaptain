@@ -17,9 +17,9 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
         public DesignTimeSaveRouteDialogViewModel()
             : base(
                 new DesignTimeWindowService(),
-                new RouteViewModel(null, null), 
+                new RouteViewModel(null!, null!), 
                 new RetrieveRepositoryNamesUseCase(new [] { new StubRouteRepository() }), 
-                new SaveRouteUseCase(new [] { new StubRouteRepository() }, null, null),
+                new SaveRouteUseCase(new [] { new StubRouteRepository() }, null!, null!),
                 new InMemoryZwiftCredentialCache(),
                 new DesignTimeZwiftStub(),
                 new DummyUserPreferences(), 

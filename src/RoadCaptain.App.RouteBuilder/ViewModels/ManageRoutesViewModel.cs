@@ -27,10 +27,15 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
 
         public AsyncRelayCommand DeleteRouteCommand => new AsyncRelayCommand(
             parameter => DeleteRouteAsync((parameter as Shared.ViewModels.RouteViewModel)!),
-            parameter => parameter is Shared.ViewModels.RouteViewModel);
+            parameter => parameter is Shared.ViewModels.RouteViewModel routeViewModel && routeViewModel.Uri != null);
 
         private async Task<CommandResult> DeleteRouteAsync(Shared.ViewModels.RouteViewModel parameter)
         {
+            if (parameter.Uri == null)
+            {
+                return CommandResult.Failure("The route URI is empty and I don't know where to go to delete it");
+            }
+            
             var result = await _windowService.ShowQuestionDialog(
                 "Delete route?",
                 $"Are you sure you want to delete the route {parameter.Name}?");

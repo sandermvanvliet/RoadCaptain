@@ -78,7 +78,7 @@ namespace RoadCaptain.App.Shared.Views
             }
         }
 
-        private async void RepositoryComboBox_OnSelectionChanged(object? sender, SelectionChangedEventArgs e)
+        private void RepositoryComboBox_OnSelectionChanged(object? sender, SelectionChangedEventArgs e)
         {
             if (sender is not ComboBox comboBox)
             {

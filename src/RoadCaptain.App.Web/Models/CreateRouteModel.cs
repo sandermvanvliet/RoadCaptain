@@ -12,7 +12,7 @@ namespace RoadCaptain.App.Web.Models
         public decimal Ascent { get; set; }
         public decimal Descent { get; set; }
         public bool IsLoop { get; set; }
-        public string World { get; set; }
+        public string? World { get; set; }
         public string? Serialized { get; set; }
     }
 }

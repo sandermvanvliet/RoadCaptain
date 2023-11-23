@@ -38,6 +38,12 @@ namespace RoadCaptain.App.RouteBuilder
             string? platformAssemblyPath = null;
             var thisAssemblyLocation = Path.GetDirectoryName(GetType().Assembly.Location);
 
+            if (string.IsNullOrEmpty(thisAssemblyLocation))
+            {
+                throw new Exception(
+                    "Unable to determine the location of the RoadCaptain Route Builder assembly which means I can't initialize properly");
+            }
+            
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
                 platformAssemblyPath = Path.Combine(thisAssemblyLocation, "RoadCaptain.App.Windows.dll");

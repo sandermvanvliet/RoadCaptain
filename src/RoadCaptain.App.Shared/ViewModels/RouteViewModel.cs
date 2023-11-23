@@ -95,10 +95,10 @@ namespace RoadCaptain.App.Shared.ViewModels
         public bool IsLoop { get; }
         public string? Serialized { get; }
         public string RepositoryName { get; }
-        public Uri Uri { get; set; }
+        public Uri? Uri { get; set; }
         public PlannedRoute? PlannedRoute { get; set; }
         public string? World { get; set; }
-        public string WorldAbbreviation { get; }
+        public string? WorldAbbreviation { get; }
 
         public RouteModel? AsRouteModel()
         {

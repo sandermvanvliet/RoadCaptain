@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using Avalonia.Controls;
 using Avalonia.Input;
 using RoadCaptain.App.RouteBuilder.ViewModels;
@@ -12,7 +13,19 @@ namespace RoadCaptain.App.RouteBuilder.Views
             InitializeComponent();
         }
 
-        private RouteSegmentListViewModel ViewModel => (RouteSegmentListViewModel) DataContext;
+        private RouteSegmentListViewModel ViewModel
+        {
+            get
+            {
+                if (DataContext is RouteSegmentListViewModel viewModel)
+                {
+                    return viewModel;
+                }
+
+                throw new Exception(
+                    "DataContext hasn't been initialized correctly, expected a RouteSegmentListViewModel but got null or something totally different");
+            }
+        }
 
         private void RouteListView_KeyUp(object sender, KeyEventArgs e)
         {

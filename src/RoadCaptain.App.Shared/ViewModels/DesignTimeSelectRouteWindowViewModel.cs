@@ -69,8 +69,6 @@ namespace RoadCaptain.App.Shared.ViewModels
                 })
             };
         }
-
-        public RoutesListViewModel RoutesList { get; }
     }
     public class StubWorldStore : IWorldStore
     {
