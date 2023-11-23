@@ -22,5 +22,6 @@ namespace RoadCaptain
         public Uri? Uri { get; set; }
         public PlannedRoute? PlannedRoute { get; set; }
         public string? World { get; set; }
+        public bool IsReadOnly { get; set; }
     }
 }

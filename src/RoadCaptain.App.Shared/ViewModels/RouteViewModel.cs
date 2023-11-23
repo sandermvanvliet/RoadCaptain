@@ -26,7 +26,9 @@ namespace RoadCaptain.App.Shared.ViewModels
             World = routeModel.World;
             WorldName = WorldNameOf(routeModel.World);
             WorldAbbreviation = Abbreviate(routeModel.World);
+            IsReadOnly = routeModel.IsReadOnly;
         }
+
 
         private string? WorldNameOf(string? world)
         {
@@ -99,6 +101,7 @@ namespace RoadCaptain.App.Shared.ViewModels
         public PlannedRoute? PlannedRoute { get; set; }
         public string? World { get; set; }
         public string? WorldAbbreviation { get; }
+        public bool IsReadOnly { get; set; }
 
         public RouteModel? AsRouteModel()
         {
@@ -116,7 +119,8 @@ namespace RoadCaptain.App.Shared.ViewModels
                 Serialized = Serialized,
                 RepositoryName = RepositoryName,
                 Uri = Uri,
-                PlannedRoute = PlannedRoute
+                PlannedRoute = PlannedRoute,
+                IsReadOnly = IsReadOnly
             };
         }
     }

@@ -32,7 +32,8 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             new DummyApplicationFeatures(),
             new StatusBarService(),
             Container.Resolve<SearchRoutesUseCase>(),
-            Container.Resolve<LoadRouteFromFileUseCase>())
+            Container.Resolve<LoadRouteFromFileUseCase>(), 
+            Container.Resolve<DeleteRouteUseCase>())
         {
             // Route.OutputFilePath = @"C:\git\RoadCaptain\test\RoadCaptain.Tests.Unit\GameState\Repro\Rebel.Route-Italian.Villa.Sprint.Loop.json";
             // Route.Load();

@@ -52,20 +52,31 @@ namespace RoadCaptain.UseCases
             
             foreach (var repository in repositoriesToSearch)
             {
-                tasks.Add(repository.SearchAsync(
-                    "all".Equals(command.World, StringComparison.InvariantCultureIgnoreCase) ? null : command.World,
-                    command.Creator,
-                    command.Name,
-                    command.ZwiftRouteName,
-                    command.MinDistance,
-                    command.MaxDistance,
-                    command.MinAscent,
-                    command.MaxAscent,
-                    command.MinDescent,
-                    command.MaxDescent,
-                    command.IsLoop,
-                    command.KomSegments,
-                    command.SprintSegments));
+                Task<RouteModel[]> task;
+                
+                try
+                {
+                    task = repository.SearchAsync(
+                        "all".Equals(command.World, StringComparison.InvariantCultureIgnoreCase) ? null : command.World,
+                        command.Creator,
+                        command.Name,
+                        command.ZwiftRouteName,
+                        command.MinDistance,
+                        command.MaxDistance,
+                        command.MinAscent,
+                        command.MaxAscent,
+                        command.MinDescent,
+                        command.MaxDescent,
+                        command.IsLoop,
+                        command.KomSegments,
+                        command.SprintSegments);
+                }
+                catch (Exception e)
+                {
+                    task = Task.FromException<RouteModel[]>(e);
+                }
+                
+                tasks.Add(task);
             }
 
             try

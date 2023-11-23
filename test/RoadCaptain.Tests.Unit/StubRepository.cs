@@ -60,7 +60,7 @@ namespace RoadCaptain.Tests.Unit
         public bool IsReadOnly => false;
         public bool RequiresAuthentication => false;
 
-        public Task DeleteAsync(Uri routeUri)
+        public Task DeleteAsync(Uri routeUri, string? securityToken)
         {
             throw new NotImplementedException();
         }

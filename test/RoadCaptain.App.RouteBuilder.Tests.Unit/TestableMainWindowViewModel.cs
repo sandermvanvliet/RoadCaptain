@@ -23,8 +23,9 @@ namespace RoadCaptain.App.RouteBuilder.Tests.Unit
             IApplicationFeatures applicationFeatures,
             IStatusBarService statusBarService,
             SearchRoutesUseCase searchRoutesUseCase,
-            LoadRouteFromFileUseCase loadRouteFromFileUseCase)
-            : base(routeStore, segmentStore, versionChecker, windowService, worldStore, userPreferences, applicationFeatures, statusBarService, searchRoutesUseCase, loadRouteFromFileUseCase)
+            LoadRouteFromFileUseCase loadRouteFromFileUseCase, 
+            DeleteRouteUseCase deleteRouteUseCase)
+            : base(routeStore, segmentStore, versionChecker, windowService, worldStore, userPreferences, applicationFeatures, statusBarService, searchRoutesUseCase, loadRouteFromFileUseCase, deleteRouteUseCase)
         {
         }
 

@@ -221,7 +221,8 @@
                 Grid.Row="1" 
                 Routes="{Binding Path=MyRoutes, Mode=OneWay}" 
                 Margin="0,0,4,0" 
-                SelectedRoute="{Binding SelectedRoute, Mode=TwoWay}" />
+                SelectedRoute="{Binding SelectedRoute, Mode=TwoWay}"
+                DeleteRoute="{Binding DeleteRouteCommand, Mode=OneWay}"/>
             <Grid
                 Grid.Row="1"
                   IsVisible="{Binding InProgress}"

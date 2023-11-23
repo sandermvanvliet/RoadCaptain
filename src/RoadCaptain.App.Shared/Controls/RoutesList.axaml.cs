@@ -3,6 +3,7 @@
 // See LICENSE or https://choosealicense.com/licenses/artistic-2.0/
 
 using System;
+using System.Windows.Input;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
@@ -21,9 +22,17 @@ namespace RoadCaptain.App.Shared.Controls
         public static readonly StyledProperty<RouteViewModel[]> RoutesProperty =
             AvaloniaProperty.Register<RoutesList, RouteViewModel[]>(nameof(Routes));
 
+        public static readonly StyledProperty<ICommand?> DeleteRouteProperty =
+            AvaloniaProperty.Register<RoutesList, ICommand?>(nameof(DeleteRoute));
+
         public RoutesList()
         {
             InitializeComponent();
+
+            DataContextChanged += (sender, args) =>
+            {
+                Routes = DataContext as RouteViewModel[];
+            };
         }
 
         private void InitializeComponent()
@@ -71,6 +80,12 @@ namespace RoadCaptain.App.Shared.Controls
         {
             get => GetValue(RoutesProperty);
             set => SetValue(RoutesProperty, value);
+        }
+
+        public ICommand? DeleteRoute
+        {
+            get => GetValue(DeleteRouteProperty);
+            set => SetValue(DeleteRouteProperty, value);
         }
     }
 

@@ -54,7 +54,7 @@ namespace RoadCaptain.App.RouteBuilder.Tests.Unit
                 new TestUserPreferences(),
                 new DummyApplicationFeatures(), 
                 statusBarService,
-                null!, null!);
+                null!, null!, null!);
         }
 
         private void GivenWorldAndSport(string worldId, SportType sportType)

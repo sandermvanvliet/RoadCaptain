@@ -31,6 +31,6 @@ namespace RoadCaptain.Ports
         string Name { get; }
         bool IsReadOnly { get; }
         bool RequiresAuthentication { get; }
-        Task DeleteAsync(Uri routeUri);
+        Task DeleteAsync(Uri routeUri, string? securityToken);
     }
 }

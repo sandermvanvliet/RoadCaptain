@@ -29,10 +29,18 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
         private bool _haveCheckedLastOpenedVersion;
         private readonly IApplicationFeatures _applicationFeatures;
 
-        public MainWindowViewModel(IRouteStore routeStore, ISegmentStore segmentStore, IVersionChecker versionChecker,
-            IWindowService windowService, IWorldStore worldStore, IUserPreferences userPreferences,
-            IApplicationFeatures applicationFeatures, IStatusBarService statusBarService,
-            SearchRoutesUseCase searchRoutesUseCase, LoadRouteFromFileUseCase loadRouteFromFileUseCase)
+        public MainWindowViewModel(
+            IRouteStore routeStore, 
+            ISegmentStore segmentStore, 
+            IVersionChecker versionChecker,
+            IWindowService windowService, 
+            IWorldStore worldStore, 
+            IUserPreferences userPreferences,
+            IApplicationFeatures applicationFeatures,
+            IStatusBarService statusBarService,
+            SearchRoutesUseCase searchRoutesUseCase, 
+            LoadRouteFromFileUseCase loadRouteFromFileUseCase,
+            DeleteRouteUseCase deleteRouteUseCase)
         {
             _versionChecker = versionChecker;
             _windowService = windowService;
@@ -51,7 +59,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
                 }
             };
             
-            LandingPageViewModel = new LandingPageViewModel(worldStore, userPreferences, windowService, searchRoutesUseCase, loadRouteFromFileUseCase);
+            LandingPageViewModel = new LandingPageViewModel(worldStore, userPreferences, windowService, searchRoutesUseCase, loadRouteFromFileUseCase, deleteRouteUseCase);
             LandingPageViewModel.PropertyChanged += (_, args) =>
             {
                 switch (args.PropertyName)

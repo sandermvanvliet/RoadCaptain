@@ -9,7 +9,31 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:viewModels="clr-namespace:RoadCaptain.App.Shared.ViewModels"
              xmlns:controls="clr-namespace:RoadCaptain.App.Shared.Controls"
-             Design.DataContext="{x:Static viewModels:DesignTimeRoutesListViewModel.Instance}">
+             Design.DataContext="{x:Static viewModels:DesignTimeRoutesListViewModel.Instance}"
+             Design.Width="800" Design.Height="800">
+    <UserControl.Styles>
+        <Style Selector="Button.delete">
+            <Setter Property="Background" Value="White" />
+            <Setter Property="HorizontalAlignment" Value="Right" />
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="Width" Value="20" />
+            <Setter Property="Height" Value="24" />
+            <Setter Property="Margin" Value="0" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <ContentPresenter Content="{TemplateBinding Content}" HorizontalAlignment="Center"
+                                              VerticalAlignment="Center" Margin="0,0,0,2" Padding="0" />
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style Selector="Button.delete:disabled">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+    </UserControl.Styles>
     <ListBox Name="RoutesListBox"
              ZIndex="50"
              HorizontalAlignment="Stretch"
@@ -87,6 +111,12 @@
                             <TextBlock Text="{Binding Path=CreatorName}" ToolTip.Tip="Created by" />
                         </StackPanel>
                     </StackPanel>
+                    <Button Grid.Column="1" Grid.Row="0" 
+                            Content="🗑" 
+                            Classes="delete" 
+                            Command="{Binding DeleteRoute, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=controls:RoutesList}}" 
+                            CommandParameter="{Binding}"
+                            ToolTip.Tip="Delete this route" />
                     <StackPanel Grid.Column="1" Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right">
                         <TextBlock Text="🌐" VerticalAlignment="Center" />
                         <TextBlock

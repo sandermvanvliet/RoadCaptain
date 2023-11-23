@@ -97,12 +97,19 @@ namespace RoadCaptain.Adapters
                 query = query.Where(route => route.Descent <= maxDescent.Value);
             }
 
-            if (isLoop is { })
+            if (isLoop is not null)
             {
                 query = query.Where(route => route.IsLoop == isLoop);
             }
 
-            return query.ToArray();
+            return query
+                .ToArray()
+                .Select(r =>
+                {
+                    r.IsReadOnly = IsReadOnly;
+                    return r;
+                })
+                .ToArray();
         }
 
         private async Task<List<RouteModel>> LoadRouteModels(string path)
@@ -159,7 +166,7 @@ namespace RoadCaptain.Adapters
         public bool IsReadOnly => true;
         public bool RequiresAuthentication => false;
 
-        public Task DeleteAsync(Uri routeUri)
+        public Task DeleteAsync(Uri routeUri, string? securityToken)
         {
             throw new InvalidOperationException("Rebel Routes are baked into RoadCaptain and can't be deleted.");
         }

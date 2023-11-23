@@ -163,6 +163,7 @@ namespace RoadCaptain.Adapters
                         r.Uri = new Uri(_settings.Uri, $"2023-01/routes/{r.Id}");
                         r.PlannedRoute = UpgradeIfNecessaryAndSerialize(r.Serialized);
                         r.World = r.PlannedRoute?.WorldId;
+                        r.IsReadOnly = IsReadOnly;
                         return r;
                     })
                     .ToArray();
@@ -235,9 +236,30 @@ namespace RoadCaptain.Adapters
             }
         }
         
-        public Task DeleteAsync(Uri routeUri)
+        public async Task DeleteAsync(Uri routeUri, string? securityToken)
         {
-            throw new NotImplementedException();
+            if (string.IsNullOrEmpty(securityToken))
+            {
+                throw new ArgumentException("A security token is required to delete a route");
+            }
+
+            var response = await RetryPolicy.ExecuteAsync(async () =>
+            {
+                var request = new HttpRequestMessage(HttpMethod.Delete, routeUri);
+
+                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", securityToken);
+
+                using var tokenSource = new CancellationTokenSource(TimeSpan.FromSeconds(3));
+                
+                return await _httpClient.SendAsync(request, tokenSource.Token);
+            });
+
+            if (!response.IsSuccessStatusCode)
+            {
+                var message = $"HTTP error {(int)response.StatusCode} {response.ReasonPhrase}";
+                
+                throw new Exception($"Unable to delete route: {message}");
+            }
         }
     }
 }

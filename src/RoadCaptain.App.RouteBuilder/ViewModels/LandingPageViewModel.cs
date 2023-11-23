@@ -28,13 +28,21 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
         private readonly SearchRoutesUseCase _searchRoutesUseCase;
         private bool _inProgress = true;
         private readonly LoadRouteFromFileUseCase _loadRouteFromFileUseCase;
+        private readonly DeleteRouteUseCase _deleteRouteUseCase;
 
-        public LandingPageViewModel(IWorldStore worldStore, IUserPreferences userPreferences, IWindowService windowService, SearchRoutesUseCase searchRoutesUseCase, LoadRouteFromFileUseCase loadRouteFromFileUseCase)
+        public LandingPageViewModel(
+            IWorldStore worldStore, 
+            IUserPreferences userPreferences, 
+            IWindowService windowService, 
+            SearchRoutesUseCase searchRoutesUseCase, 
+            LoadRouteFromFileUseCase loadRouteFromFileUseCase, 
+            DeleteRouteUseCase deleteRouteUseCase)
         {
             _userPreferences = userPreferences;
             _windowService = windowService;
             _searchRoutesUseCase = searchRoutesUseCase;
             _loadRouteFromFileUseCase = loadRouteFromFileUseCase;
+            _deleteRouteUseCase = deleteRouteUseCase;
 
             _worlds = worldStore.LoadWorlds().Select(world => new WorldViewModel(world)).ToArray();
             _sports = new[] { new SportViewModel(SportType.Cycling, DefaultSport), new SportViewModel(SportType.Running, DefaultSport) };
@@ -68,6 +76,33 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
                 async _ => await OpenRouteFromFile(),
                 _ => !InProgress)
                 .SubscribeTo(this, () => InProgress);
+
+            DeleteRouteCommand = new AsyncRelayCommand(
+                async route => await DeleteRouteAsync(route as Shared.ViewModels.RouteViewModel),
+                parameter => parameter is Shared.ViewModels.RouteViewModel routeViewModel &&
+                             routeViewModel.Uri != null &&
+                             !routeViewModel.IsReadOnly)
+                .OnSuccess(async _ => await LoadMyRoutes())
+                .OnFailure(async result => await _windowService.ShowErrorDialog(result.Message));
+        }
+
+        private async Task<CommandResult> DeleteRouteAsync(Shared.ViewModels.RouteViewModel? route)
+        {
+            if (route?.Uri == null)
+            {
+                return CommandResult.Failure("Route does not have an URI and I don't know where to go to delete it");
+            }
+            
+            try
+            {
+                await _deleteRouteUseCase.ExecuteAsync(new DeleteRouteCommand(route.Uri, route.RepositoryName));
+
+                return CommandResult.Success();
+            }
+            catch (Exception e)
+            {
+                return CommandResult.Failure(e.Message);
+            }
         }
 
         private async Task<CommandResult> OpenRouteFromFile()
@@ -149,6 +184,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
         public ICommand LoadMyRoutesCommand { get; }
         public ICommand SearchRouteCommand { get; }
         public ICommand OpenRouteFromFileCommand { get; }
+        public ICommand DeleteRouteCommand { get; }
 
         public WorldViewModel[] Worlds
         {

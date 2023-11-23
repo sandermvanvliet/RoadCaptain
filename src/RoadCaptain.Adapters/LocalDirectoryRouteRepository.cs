@@ -14,7 +14,7 @@ namespace RoadCaptain.Adapters
 {
     internal class LocalDirectoryRouteRepository : IRouteRepository
     {
-        private const string FileNamePattern = "roadcaptain-route-*.json";
+        private const string FILE_NAME_PATTERN = "roadcaptain-route-*.json";
         private static readonly JsonSerializerSettings JsonSettings = new();
         private readonly MonitoringEvents _monitoringEvents;
         private readonly RouteStoreToDisk _routeStoreToDisk;
@@ -92,6 +92,7 @@ namespace RoadCaptain.Adapters
                         routeModel.PlannedRoute = UpgradeIfNecessaryAndSerialize(routeModel.Serialized);
                         routeModel.World = routeModel.PlannedRoute?.WorldId;
                         routeModel.CreatorName = "You";
+                        routeModel.IsReadOnly = IsReadOnly;
                         routeModels.Add(routeModel);
                     }
                     else
@@ -161,7 +162,14 @@ namespace RoadCaptain.Adapters
                 query = query.Where(route => route.IsLoop == isLoop);
             }
 
-            return query.ToArray();
+            return query
+                .ToArray()
+                .Select(r =>
+                {
+                    r.IsReadOnly = IsReadOnly;
+                    return r;
+                })
+                .ToArray();
         }
 
         protected virtual async Task<string> ReadAllTextAsync(string file)
@@ -175,7 +183,7 @@ namespace RoadCaptain.Adapters
             {
                 CreateDirectory(_settings.Directory);
             }
-            
+
             plannedRoute.CalculateMetrics(segments);
 
             var storageModel = new RouteModel
@@ -194,7 +202,7 @@ namespace RoadCaptain.Adapters
             var routeNameForFile = storageModel.Name!.Replace(" ", "").ToLower();
 
             var serialized = JsonConvert.SerializeObject(storageModel, JsonSettings);
-            var path = Path.Combine(_settings.Directory, FileNamePattern.Replace("*", routeNameForFile));
+            var path = Path.Combine(_settings.Directory, FILE_NAME_PATTERN.Replace("*", routeNameForFile));
 
             await WriteAllTextAsync(path, serialized);
 
@@ -213,7 +221,7 @@ namespace RoadCaptain.Adapters
 
         protected virtual string[] GetFilesFromDirectory()
         {
-            return Directory.GetFiles(_settings.Directory, FileNamePattern, SearchOption.TopDirectoryOnly);
+            return Directory.GetFiles(_settings.Directory, FILE_NAME_PATTERN, SearchOption.TopDirectoryOnly);
         }
 
         protected virtual Task WriteAllTextAsync(string path, string serialized)
@@ -237,10 +245,24 @@ namespace RoadCaptain.Adapters
                 return null;
             }
         }
-        
-        public Task DeleteAsync(Uri routeUri)
+
+        public Task DeleteAsync(Uri routeUri, string? securityToken)
         {
-            throw new NotImplementedException();
+            if (!File.Exists(routeUri.ToString()))
+            {
+                throw new Exception("The route you're trying to delete apparently doesn't exist on disk");
+            }
+
+            try
+            {
+                File.Delete(routeUri.ToString());
+            }
+            catch (UnauthorizedAccessException e)
+            {
+                throw new Exception("Sorry, you don't have permission to delete this route", e);
+            }
+
+            return Task.CompletedTask;
         }
     }
 }
