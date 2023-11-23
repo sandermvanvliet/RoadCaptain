@@ -13,9 +13,11 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
     public class RouteSegmentListViewModel : ViewModelBase
     {
         private readonly IWindowService _windowService;
+        private SegmentSequenceViewModel? _selectedSegmentSequence;
+        private MarkerViewModel? _selectedMarker;
 
         public RouteSegmentListViewModel(RouteViewModel route, IWindowService windowService)
-        {
+        {   
             Route = route;
             _windowService = windowService;
 
@@ -28,6 +30,29 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
         public RouteViewModel Route { get; }
         public ICommand ConfigureLoopCommand { get; }
 
+        public SegmentSequenceViewModel? SelectedSegmentSequence
+        {
+            get => _selectedSegmentSequence;
+            set
+            {
+                if (value == _selectedSegmentSequence) return;
+                
+                _selectedSegmentSequence = value;
+                this.RaisePropertyChanged();
+            }
+        }
+
+        public MarkerViewModel? SelectedMarker
+        {
+            get => _selectedMarker;
+            set
+            {
+                if (value == _selectedMarker) return;
+
+                _selectedMarker = value;
+                this.RaisePropertyChanged();
+            }
+        }
 
         private async Task<CommandResult> ConfigureLoop()
         {

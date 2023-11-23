@@ -1,4 +1,4 @@
-<!--
+﻿<!--
 // Copyright (c) 2023 Sander van Vliet
 // Licensed under Artistic License 2.0
 // See LICENSE or https://choosealicense.com/licenses/artistic-2.0/
@@ -64,8 +64,9 @@
                  ScrollViewer.VerticalScrollBarVisibility="Auto"
                  VerticalAlignment="Stretch"
                  Name="RouteListView"
-                 SelectionChanged="RouteListView_OnSelectionChanged"
-                 KeyUp="RouteListView_KeyUp">
+                 KeyUp="RouteListView_KeyUp"
+                 SelectionMode="Single"
+                 SelectedItem="{Binding Path=SelectedSegmentSequence}">
             <ListBox.Styles>
                 <Style Selector="ListBoxItem">
                     <Setter Property="Margin" Value="0" />
@@ -188,7 +189,8 @@
                      VerticalAlignment="Stretch"
                      BorderThickness="0"
                      Items="{Binding Path=Route.Markers}"
-                     SelectionChanged="MarkersOnRouteListBox_OnSelectionChanged">
+                     SelectionMode="Single"
+                     SelectedItem="{Binding Path=SelectedMarker, Mode=TwoWay}">
                 <ListBox.Styles>
                     <Style Selector="ListBoxItem">
                         <Setter Property="Margin" Value="0" />
