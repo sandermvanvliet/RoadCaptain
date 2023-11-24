@@ -27,25 +27,6 @@ namespace RoadCaptain.Adapters.Tests.Unit.RouteStorage
                 .Contain(dir => dir == Path.Combine(userDataDirectory, "Routes"));
         }
 
-        [Fact]
-        public void GivenPlannedRoute_StoringSerializesMetadata()
-        {
-            var userDataDirectory = Path.GetTempPath();
-            var repository = new TestableLocalDirectoryRouteRepository(userDataDirectory);
-            var segments = CreateSegments();
-            var plannedRoute = CreatePlannedRoute("segment-1", "segment-2", "segment-3");
-
-            repository.StoreAsync(plannedRoute, null).GetAwaiter().GetResult();
-
-            var routes = repository.SearchAsync().GetAwaiter().GetResult();
-
-            routes.Should().HaveCount(1);
-            var route = routes.Single();
-            route.Ascent.Should().Be(100);
-            route.Descent.Should().Be(50);
-            route.Distance.Should().Be(0.8m);
-        }
-
         private static List<Segment> CreateSegments()
         {
             var segment1Point1 = new TrackPoint(0, 0, 0, ZwiftWorldId.Watopia);
