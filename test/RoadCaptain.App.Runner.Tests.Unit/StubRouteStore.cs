@@ -35,7 +35,7 @@ namespace RoadCaptain.App.Runner.Tests.Unit
             throw new FileNotFoundException();
         }
 
-        public Task Store(PlannedRoute route, string path)
+        public Task<Uri> StoreAsync(PlannedRoute route, string path)
         {
             throw new NotImplementedException();
         }

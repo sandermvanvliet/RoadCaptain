@@ -33,9 +33,11 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             new StatusBarService()
             )
         {
-            Route.OutputFilePath = @"C:\git\RoadCaptain\test\RoadCaptain.Tests.Unit\GameState\Repro\Rebel.Route-Italian.Villa.Sprint.Loop.json";
-            Route.Load();
-            Route.LoopMode = LoopMode.Infinite;
+            var plannedRoute = Container.Resolve<IRouteStore>().LoadFrom(@"C:\git\RoadCaptain\test\RoadCaptain.Tests.Unit\GameState\Repro\Rebel.Route-Italian.Villa.Sprint.Loop.json");
+            Route.LoadFromRouteModel(new RouteModel
+            {
+                PlannedRoute = plannedRoute
+            });
             Route.Markers.Add(new MarkerViewModel(new Segment(new List<TrackPoint>()){ Id = "test", Name="Test", Type = SegmentType.Climb, Sport = SportType.Cycling}));
             Route.Markers.Add(new MarkerViewModel(new Segment(new List<TrackPoint>()){ Id = "test", Name="Test", Type = SegmentType.Climb, Sport = SportType.Cycling}));
             Route.Markers.Add(new MarkerViewModel(new Segment(new List<TrackPoint>()){ Id = "test", Name="Test", Type = SegmentType.Climb, Sport = SportType.Cycling}));

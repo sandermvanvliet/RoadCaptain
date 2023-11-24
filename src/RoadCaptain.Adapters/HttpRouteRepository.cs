@@ -189,7 +189,7 @@ namespace RoadCaptain.Adapters
             return Array.Empty<RouteModel>();
         }
 
-        public async Task<RouteModel> StoreAsync(PlannedRoute plannedRoute, List<Segment> segments)
+        public async Task<RouteModel> StoreAsync(PlannedRoute plannedRoute, Uri? routeUri)
         {
             var token = await _securityTokenProvider.GetSecurityTokenForPurposeAsync(TokenPurpose.RouteRepositoryAccess, TokenPromptBehaviour.Prompt);
             
@@ -200,17 +200,30 @@ namespace RoadCaptain.Adapters
 
             var createRouteModel = new CreateRouteModel(plannedRoute);
 
-            var builder = new UriBuilder
-            {
-                Scheme = _settings.Uri.Scheme,
-                Host = _settings.Uri.Host,
-                Port = _settings.Uri.Port,
-                Path = "/2023-01/routes"
-            };
+            HttpMethod httpMethod;
             
+            if (routeUri == null)
+            {
+                httpMethod = HttpMethod.Post;
+                
+                var builder = new UriBuilder
+                {
+                    Scheme = _settings.Uri.Scheme,
+                    Host = _settings.Uri.Host,
+                    Port = _settings.Uri.Port,
+                    Path = "/2023-01/routes"
+                };
+                
+                routeUri = builder.Uri;
+            }
+            else
+            {
+                httpMethod = HttpMethod.Put;
+            }
+
             using var response = await RetryPolicy.ExecuteAsync(async () =>
             {
-                using var request = new HttpRequestMessage(HttpMethod.Post, builder.Uri);
+                using var request = new HttpRequestMessage(httpMethod, routeUri);
                 request.Content = new StringContent(JsonConvert.SerializeObject(createRouteModel, JsonSettings), Encoding.UTF8, "application/json");
                 request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
                 return await _httpClient.SendAsync(request);

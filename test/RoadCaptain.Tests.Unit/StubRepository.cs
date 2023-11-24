@@ -48,7 +48,7 @@ namespace RoadCaptain.Tests.Unit
             return routes;
         }
 
-        public Task<RouteModel> StoreAsync(PlannedRoute plannedRoute, List<Segment> segments)
+        public Task<RouteModel> StoreAsync(PlannedRoute plannedRoute, Uri? routeUri)
         {
             StoredRoutes.Add(plannedRoute);
             return Task.FromResult(new RouteModel());

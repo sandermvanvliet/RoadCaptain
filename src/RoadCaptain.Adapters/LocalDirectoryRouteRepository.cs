@@ -177,14 +177,12 @@ namespace RoadCaptain.Adapters
             return await File.ReadAllTextAsync(file);
         }
 
-        public async Task<RouteModel> StoreAsync(PlannedRoute plannedRoute, List<Segment> segments)
+        public async Task<RouteModel> StoreAsync(PlannedRoute plannedRoute, Uri? routeUri)
         {
             if (!DirectoryExists(_settings.Directory))
             {
                 CreateDirectory(_settings.Directory);
             }
-
-            plannedRoute.CalculateMetrics(segments);
 
             var storageModel = new RouteModel
             {

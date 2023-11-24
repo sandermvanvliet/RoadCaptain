@@ -73,10 +73,10 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
                         }
                         break;
                     case nameof(LandingPageViewModel.SelectedRoute):
-                        var plannedRoute = LandingPageViewModel.SelectedRoute?.AsRouteModel()?.PlannedRoute;
-                        if (plannedRoute != null)
+                        var routeModel = LandingPageViewModel.SelectedRoute?.AsRouteModel();
+                        if (routeModel != null)
                         {
-                            Route.LoadFromPlannedRoute(plannedRoute);
+                            Route.LoadFromRouteModel(routeModel);
                         }
                         break;
                 }

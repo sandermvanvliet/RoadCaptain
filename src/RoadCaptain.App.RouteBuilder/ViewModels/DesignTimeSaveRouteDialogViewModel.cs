@@ -3,7 +3,6 @@
 // See LICENSE or https://choosealicense.com/licenses/artistic-2.0/
 
 using System;
-using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Threading.Tasks;
 using RoadCaptain.Ports;
@@ -56,7 +55,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             });
         }
 
-        public Task<RouteModel> StoreAsync(PlannedRoute plannedRoute, List<Segment> segments)
+        public Task<RouteModel> StoreAsync(PlannedRoute plannedRoute, Uri? routeUri)
         {
             throw new System.NotImplementedException();
         }

@@ -124,6 +124,14 @@ namespace RoadCaptain.App.Web.Adapters
                 throw new InvalidOperationException("Route not found");
             }
 
+            route.Serialized = updateModel.Serialized;
+            route.Distance = updateModel.Distance;
+            route.Descent = updateModel.Descent;
+            route.Ascent = updateModel.Ascent;
+            route.IsLoop = updateModel.IsLoop;
+            route.ZwiftRouteName = updateModel.ZwiftRouteName;
+            route.Name = updateModel.Name;
+
             _roadCaptainDataContext.SaveChanges();
 
             return RouteModelFrom(route);

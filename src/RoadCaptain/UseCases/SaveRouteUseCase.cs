@@ -24,7 +24,7 @@ namespace RoadCaptain.UseCases
             _routeStore = routeStore;
         }
         
-        public async Task ExecuteAsync(SaveRouteCommand saveRouteCommand)
+        public async Task<Uri> ExecuteAsync(SaveRouteCommand saveRouteCommand)
         {
             if (!string.IsNullOrEmpty(saveRouteCommand.RepositoryName))
             {
@@ -43,17 +43,16 @@ namespace RoadCaptain.UseCases
                 // Ensure we do this just before saving so that we have accurate information
                 saveRouteCommand.Route.CalculateMetrics(segments);
 
-                await repository.StoreAsync(saveRouteCommand.Route, segments);
+                return (await repository.StoreAsync(saveRouteCommand.Route, saveRouteCommand.RouteUri)).Uri!;
             }
-            else if (!string.IsNullOrEmpty(saveRouteCommand.OutputFilePath))
+
+            if (!string.IsNullOrEmpty(saveRouteCommand.OutputFilePath))
             {
-                await _routeStore.Store(saveRouteCommand.Route, saveRouteCommand.OutputFilePath);
+                return await _routeStore.StoreAsync(saveRouteCommand.Route, saveRouteCommand.OutputFilePath);
             }
-            else
-            {
-                throw new ArgumentException(
-                    "Neither a repository name or a local file was provided and I can't save the route because I need one of those");
-            }
+
+            throw new ArgumentException(
+                "Neither a repository name or a local file was provided and I can't save the route because I need one of those");
         }
     }
 }

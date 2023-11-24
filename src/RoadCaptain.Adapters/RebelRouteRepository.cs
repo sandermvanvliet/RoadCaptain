@@ -157,7 +157,7 @@ namespace RoadCaptain.Adapters
             return routeModels;
         }
 
-        public Task<RouteModel> StoreAsync(PlannedRoute plannedRoute, List<Segment> segments)
+        public Task<RouteModel> StoreAsync(PlannedRoute plannedRoute, Uri? routeUri)
         {
             throw new InvalidOperationException("Rebel route repository is read-only");
         }

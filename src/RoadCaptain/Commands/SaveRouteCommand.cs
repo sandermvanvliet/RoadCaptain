@@ -2,11 +2,13 @@
 // Licensed under Artistic License 2.0
 // See LICENSE or https://choosealicense.com/licenses/artistic-2.0/
 
+using System;
+
 namespace RoadCaptain.Commands
 {
-    public record SaveRouteCommand(
-        PlannedRoute Route, 
+    public record SaveRouteCommand(PlannedRoute Route,
         string RouteName,
         string? RepositoryName,
-        string? OutputFilePath);
+        string? OutputFilePath, 
+        Uri? RouteUri);
 }

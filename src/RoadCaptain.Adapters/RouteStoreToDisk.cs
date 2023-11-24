@@ -371,7 +371,7 @@ namespace RoadCaptain.Adapters
             return false;
         }
 
-        public async Task Store(PlannedRoute route, string path)
+        public async Task<Uri> StoreAsync(PlannedRoute route, string path)
         {
             // Ensure that segment sequences have at least
             // the type regular if it's not been set.
@@ -388,6 +388,8 @@ namespace RoadCaptain.Adapters
                 : SerializeAsJson(route);
 
             await File.WriteAllTextAsync(path, serialized);
+
+            return new Uri(path);
         }
 
         internal static string SerializeAsJson(PlannedRoute route, Formatting formatting = Formatting.Indented)

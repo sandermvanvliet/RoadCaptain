@@ -29,7 +29,7 @@ namespace RoadCaptain.App.RouteBuilder.Tests.Unit
 
             var result = useCase.Execute(ZwiftMapRoute.FromGpxFile("zwiftmap-route.gpx"));
 
-            routeStore.Store(result, @"c:\temp\result.json");
+            routeStore.StoreAsync(result, @"c:\temp\result.json").GetAwaiter().GetResult();
             result.Should().BeEquivalentTo(expectedPlannedRoute);
         }
     }

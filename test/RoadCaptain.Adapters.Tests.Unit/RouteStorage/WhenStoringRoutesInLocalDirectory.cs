@@ -35,7 +35,7 @@ namespace RoadCaptain.Adapters.Tests.Unit.RouteStorage
             var segments = CreateSegments();
             var plannedRoute = CreatePlannedRoute("segment-1", "segment-2", "segment-3");
 
-            repository.StoreAsync(plannedRoute, segments).GetAwaiter().GetResult();
+            repository.StoreAsync(plannedRoute, null).GetAwaiter().GetResult();
 
             var routes = repository.SearchAsync().GetAwaiter().GetResult();
 

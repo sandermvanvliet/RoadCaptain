@@ -22,7 +22,6 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
         private RouteViewModel _route;
         private ImmutableList<string>? _repositoryNames;
         private string? _selectedRepositoryName;
-        private readonly RetrieveRepositoryNamesUseCase _retrieveRepositoryNamesUseCase;
         private readonly SaveRouteUseCase _saveRouteUseCase;
         private readonly IUserPreferences _userPreferences;
         private readonly IEnumerable<IRouteRepository> _repositories;
@@ -38,10 +37,11 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
         {
             _windowService = windowService;
             _route = route;
-            _retrieveRepositoryNamesUseCase = retrieveRepositoryNamesUseCase;
             _saveRouteUseCase = saveRouteUseCase;
             _userPreferences = userPreferences;
             _repositories = repositories;
+            Repositories = retrieveRepositoryNamesUseCase.Execute(new RetrieveRepositoryNamesCommand(RetrieveRepositoriesIntent.Store)).ToImmutableList();
+            SelectedRepositoryName = route.RepositoryName;
         }
 
         public ICommand SaveRouteCommand => new AsyncRelayCommand(
@@ -93,10 +93,20 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
                             "I don't know what happened but a repository name was selected that I can't find...");
                     }
                 }
+
+                var uri = _route.Uri;
+
+                // If the user selects a different repository we need to clear the 
+                // route URI because otherwise we'd attempt to update it...
+                if (SelectedRepositoryName != _route.RepositoryName)
+                {
+                    uri = null;
+                }
                 
-                await _saveRouteUseCase.ExecuteAsync(new SaveRouteCommand(_route.AsPlannedRoute()!, RouteName, SelectedRepositoryName, OutputFilePath));
+                var routeUri = await _saveRouteUseCase.ExecuteAsync(new SaveRouteCommand(_route.AsPlannedRoute()!, RouteName, SelectedRepositoryName, OutputFilePath, uri));
                 
-                _route.Save();
+                // Populate the URI and repository name onto the route as if we loaded it from there
+                _route.Save(routeUri, SelectedRepositoryName);
                 
                 return CommandResult.Success();
             }
@@ -204,7 +214,6 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
 
         public void Initialize()
         {
-            Repositories = _retrieveRepositoryNamesUseCase.Execute(new RetrieveRepositoryNamesCommand(RetrieveRepositoriesIntent.Store)).ToImmutableList();
         }
     }
 }

@@ -17,7 +17,7 @@ namespace RoadCaptain.Tests.Unit.UseCases
         [Fact]
         public void GivenUnknownRepositoryName_ExceptionIsThrown()
         {
-            var command = new SaveRouteCommand(new PlannedRoute(), "NOT IMPORTANT", "REPOSITORY DOES NOT EXIST", "NOT IMPORTANT");
+            var command = new SaveRouteCommand(new PlannedRoute(), "NOT IMPORTANT", "REPOSITORY DOES NOT EXIST", "NOT IMPORTANT", null);
             var useCase = new SaveRouteUseCase(Array.Empty<IRouteRepository>(), new SegmentStore(), new StubRouteStore());
 
             var action = () => useCase.ExecuteAsync(command).GetAwaiter().GetResult();
@@ -34,7 +34,7 @@ namespace RoadCaptain.Tests.Unit.UseCases
         [Fact]
         public void GivenCommandHasNoRepositoryNameAndNoFileName_ExceptionIsThrown()
         {
-            var command = new SaveRouteCommand(new PlannedRoute(), "NOT IMPORTANT", null, null);
+            var command = new SaveRouteCommand(new PlannedRoute(), "NOT IMPORTANT", null, null, null);
             var useCase = new SaveRouteUseCase(Array.Empty<IRouteRepository>(), new SegmentStore(), new StubRouteStore());
 
             var action = () => useCase.ExecuteAsync(command).GetAwaiter().GetResult();
@@ -51,7 +51,7 @@ namespace RoadCaptain.Tests.Unit.UseCases
         [Fact]
         public void GivenCommandHasOnlyFileNameSpecified_RouteIsSavedToDisk()
         {
-            var command = new SaveRouteCommand(new PlannedRoute(), "NOT IMPORTANT", null, "c:\\temp\\route.json");
+            var command = new SaveRouteCommand(new PlannedRoute(), "NOT IMPORTANT", null, "c:\\temp\\route.json", null);
             var stubRouteStore = new StubRouteStore();
             var useCase = new SaveRouteUseCase(Array.Empty<IRouteRepository>(), new SegmentStore(), stubRouteStore);
 
@@ -66,7 +66,7 @@ namespace RoadCaptain.Tests.Unit.UseCases
         [Fact]
         public void GivenCommandHasRepositoryNameAndFileName_RouteIsSavedToRepository()
         {
-            var command = new SaveRouteCommand(new PlannedRoute(), "NOT IMPORTANT", "TEST", "c:\\temp\\route.json");
+            var command = new SaveRouteCommand(new PlannedRoute(), "NOT IMPORTANT", "TEST", "c:\\temp\\route.json", null);
             var stubRouteStore = new StubRouteStore();
             var stubRepository = new StubRepository();
             var useCase = new SaveRouteUseCase(new[] { stubRepository }, new StubSegmentStore(), stubRouteStore);

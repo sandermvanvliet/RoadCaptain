@@ -41,6 +41,9 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
         public SegmentSequenceViewModel? Last => Sequence.LastOrDefault();
         public string? OutputFilePath { get; set; }
         public bool IsTainted { get; private set; }
+
+        public string? RepositoryName { get; private set; }
+        public Uri? Uri { get; private set; } 
         
         public string Name
         {
@@ -220,9 +223,11 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             this.RaisePropertyChanged(nameof(TotalDescent));
         }
 
-        public void Save()
+        public void Save(Uri routeUri, string? repositoryName)
         {
             IsTainted = false;
+            Uri = routeUri;
+            RepositoryName = repositoryName;
         }
 
         public PlannedRoute? AsPlannedRoute()
@@ -306,19 +311,23 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             IsTainted = false;
             Name = string.Empty;
             Markers.Clear();
+            RepositoryName = null;
+            Uri = null;
 
             this.RaisePropertyChanged(nameof(Sequence));
             this.RaisePropertyChanged(nameof(TotalDistance));
             this.RaisePropertyChanged(nameof(TotalAscent));
             this.RaisePropertyChanged(nameof(TotalDescent));
             this.RaisePropertyChanged(nameof(Markers));
+            this.RaisePropertyChanged(nameof(Uri));
+            this.RaisePropertyChanged(nameof(RepositoryName));
 
             return CommandResult.Success();
         }
 
         public bool IsSpawnPointSegment(string segmentId)
         {
-            if (_world == null || _world.SpawnPoints == null)
+            if (_world?.SpawnPoints == null)
             {
                 return false;
             }
@@ -326,24 +335,15 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             return _world.SpawnPoints.Any(spawnPoint => spawnPoint.SegmentId == segmentId && (spawnPoint.Sport == SportType.Both || spawnPoint.Sport == Sport));
         }
 
-        public void Load()
+        public void LoadFromRouteModel(RouteModel routeModel)
         {
-            if (string.IsNullOrEmpty(OutputFilePath))
-            {
-                throw new ArgumentException("Cannot load the route because no path was provided", nameof(OutputFilePath));
-            }
+            LoadFromPlannedRoute(routeModel.PlannedRoute!);
 
-            var plannedRoute = _routeStore.LoadFrom(OutputFilePath);
-            
-            if (plannedRoute.World == null)
-            {
-                throw new ArgumentException("Cannot load the route because the route has no world selected", nameof(World));
-            }
-
-            LoadFromPlannedRoute(plannedRoute);
+            Uri = routeModel.Uri;
+            RepositoryName = routeModel.RepositoryName;
         }
 
-        public void LoadFromPlannedRoute(PlannedRoute plannedRoute, bool isTainted = false)
+        private void LoadFromPlannedRoute(PlannedRoute plannedRoute, bool isTainted = false)
         {
             if (plannedRoute?.World == null)
             {

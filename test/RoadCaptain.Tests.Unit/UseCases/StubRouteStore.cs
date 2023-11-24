@@ -26,10 +26,10 @@ namespace RoadCaptain.Tests.Unit.UseCases
             throw new Exception("Route not fond");
         }
 
-        public Task Store(PlannedRoute route, string path)
+        public Task<Uri> StoreAsync(PlannedRoute route, string path)
         {
             StoredRoutes.Add(path, route);
-            return Task.CompletedTask;
+            return Task.FromResult(new Uri(path));
         }
 
         public Dictionary<string, PlannedRoute> StoredRoutes { get; } = new();
