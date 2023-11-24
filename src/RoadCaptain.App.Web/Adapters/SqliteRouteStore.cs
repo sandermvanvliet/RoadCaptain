@@ -113,15 +113,21 @@ namespace RoadCaptain.App.Web.Adapters
             }
         }
 
-        public Models.RouteModel Update(long id, UpdateRouteModel updateModel)
+        public Models.RouteModel Update(long id, UpdateRouteModel updateModel, User currentUser)
         {
             var route = _roadCaptainDataContext
                 .Routes
+                .Include(route => route.User)
                 .SingleOrDefault(r => r.Id == id);
 
             if (route == null)
             {
                 throw new InvalidOperationException("Route not found");
+            }
+
+            if (route.User?.Id != currentUser.Id)
+            {
+                throw new UnauthorizedException("You are not the owner of this route which means you can't change it");
             }
 
             route.Serialized = updateModel.Serialized;
@@ -145,6 +151,14 @@ namespace RoadCaptain.App.Web.Adapters
             _roadCaptainDataContext.SaveChanges();
 
             return RouteModelFrom(route);
+        }
+
+        public bool Exists(long id)
+        {
+            return _roadCaptainDataContext
+                .Routes
+                .AsNoTracking()
+                .Any(r => r.Id == id);
         }
 
         private static Models.RouteModel RouteModelFrom(Route route)

@@ -46,7 +46,7 @@ namespace RoadCaptain.App.Web.Controllers
             return _routeStore.Search(world, creator, name, zwiftRouteName, minDistance, maxDistance, minAscent, maxAscent, minDescent, maxDescent, isLoop, komSegments, sprintSegments);
         }
 
-        [HttpGet("{id}", Name = "GetRouteById")]
+        [HttpGet("{id:long}", Name = "GetRouteById")]
         public IActionResult GetRouteById([FromRoute] long id)
         {
             if (id < 1)
@@ -64,7 +64,7 @@ namespace RoadCaptain.App.Web.Controllers
             return Ok(route);
         }
 
-        [HttpDelete("{id}", Name = "DeleteRouteById")]
+        [HttpDelete("{id:long}", Name = "DeleteRouteById")]
         [Authorize(Policy = "ZwiftUserPolicy")]
         public IActionResult DeleteRouteById([FromRoute] long id)
         {
@@ -87,11 +87,30 @@ namespace RoadCaptain.App.Web.Controllers
             return Ok(_routeStore.Store(createRoute, user));
         }
 
-        [HttpPut("{id}", Name = "UpdateRouteById")]
+        [HttpPut("{id:long}", Name = "UpdateRouteById")]
         [Authorize(Policy = "ZwiftUserPolicy")]
         public IActionResult UpdateRouteById([FromRoute] long id, [FromBody] UpdateRouteModel updateRoute)
         {
-            return Ok(_routeStore.Update(id, updateRoute));
+            if (!_routeStore.Exists(id))
+            {
+                return NotFound();
+            }
+
+            var currentUser = _userStore.GetOrCreate(User);
+
+            if (currentUser == null)
+            {
+                return Unauthorized();
+            }
+
+            try
+            {
+                return Ok(_routeStore.Update(id, updateRoute, currentUser));
+            }
+            catch (UnauthorizedException e)
+            {
+                return Unauthorized(e.Message);
+            }
         }
     }
 }

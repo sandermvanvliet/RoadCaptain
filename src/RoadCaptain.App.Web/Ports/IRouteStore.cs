@@ -26,8 +26,9 @@ namespace RoadCaptain.App.Web.Ports
 
         Models.RouteModel? GetById(long id);
         void Delete(long id);
-        Models.RouteModel Update(long id, UpdateRouteModel updateModel);
+        Models.RouteModel Update(long id, UpdateRouteModel updateModel, User currentUser);
         Models.RouteModel Store(CreateRouteModel createModel, User user);
+        bool Exists(long id);
     }
 }
 
