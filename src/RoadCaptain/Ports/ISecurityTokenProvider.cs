@@ -4,6 +4,6 @@ namespace RoadCaptain.Ports
 {
     public interface ISecurityTokenProvider
     {
-        Task<string?> GetSecurityTokenForPurposeAsync(TokenPurpose purpose);
+        Task<string?> GetSecurityTokenForPurposeAsync(TokenPurpose purpose, TokenPromptBehaviour promptBehaviour);
     }
 }

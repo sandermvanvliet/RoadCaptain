@@ -19,7 +19,9 @@ namespace RoadCaptain.App.Shared
             _zwift = zwift;
         }
         
-        public async Task<string?> GetSecurityTokenForPurposeAsync(TokenPurpose purpose)
+        public async Task<string?> GetSecurityTokenForPurposeAsync(
+            TokenPurpose purpose,
+            TokenPromptBehaviour promptBehaviour)
         {
             if (purpose == TokenPurpose.Unknown)
             {
@@ -28,7 +30,7 @@ namespace RoadCaptain.App.Shared
 
             if (purpose is TokenPurpose.RouteRepositoryAccess or TokenPurpose.ZwiftGameAccess)
             {
-                var cachedCredentials = await AuthenticateToZwiftAsync();
+                var cachedCredentials = await AuthenticateToZwiftAsync(promptBehaviour);
 
                 return cachedCredentials?.AccessToken;
             }
@@ -36,7 +38,7 @@ namespace RoadCaptain.App.Shared
             throw new ArgumentException("Won't provide a token for an unsupported purpose");
         }
         
-        private async Task<TokenResponse?> AuthenticateToZwiftAsync()
+        private async Task<TokenResponse?> AuthenticateToZwiftAsync(TokenPromptBehaviour tokenPromptBehaviour)
         {
             var tokenResponse = await _credentialCache.LoadAsync();
 
@@ -90,7 +92,7 @@ namespace RoadCaptain.App.Shared
                 }
             }
 
-            if (tokenResponse != null)
+            if (tokenResponse != null || tokenPromptBehaviour == TokenPromptBehaviour.DoNotPrompt)
             {
                 return tokenResponse;
             }

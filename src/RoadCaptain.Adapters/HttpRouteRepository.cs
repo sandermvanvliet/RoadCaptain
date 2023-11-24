@@ -141,11 +141,22 @@ namespace RoadCaptain.Adapters
                 Path = "/2023-01/routes",
                 Query = queryStringBuilder.ToString()
             };
+
+            var securityToken = await _securityTokenProvider.GetSecurityTokenForPurposeAsync(
+                TokenPurpose.RouteRepositoryAccess, 
+                TokenPromptBehaviour.DoNotPrompt);
             
             using var response = await RetryPolicy.ExecuteAsync(async () =>
             {
                 using var tokenSource = new CancellationTokenSource(TimeSpan.FromSeconds(3));
                 using var request = new HttpRequestMessage(HttpMethod.Get, builder.Uri);
+                
+                // We don't require one, but it's nice to have one
+                if (!string.IsNullOrEmpty(securityToken))
+                {
+                    request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", securityToken);
+                }
+                
                 return await _httpClient.SendAsync(request, HttpCompletionOption.ResponseContentRead,
                     tokenSource.Token);
             });
@@ -180,7 +191,7 @@ namespace RoadCaptain.Adapters
 
         public async Task<RouteModel> StoreAsync(PlannedRoute plannedRoute, List<Segment> segments)
         {
-            var token = await _securityTokenProvider.GetSecurityTokenForPurposeAsync(TokenPurpose.RouteRepositoryAccess);
+            var token = await _securityTokenProvider.GetSecurityTokenForPurposeAsync(TokenPurpose.RouteRepositoryAccess, TokenPromptBehaviour.Prompt);
             
             if (string.IsNullOrEmpty(token))
             {
@@ -246,7 +257,7 @@ namespace RoadCaptain.Adapters
         
         public async Task DeleteAsync(Uri routeUri)
         {
-            var securityToken = await _securityTokenProvider.GetSecurityTokenForPurposeAsync(TokenPurpose.RouteRepositoryAccess);
+            var securityToken = await _securityTokenProvider.GetSecurityTokenForPurposeAsync(TokenPurpose.RouteRepositoryAccess, TokenPromptBehaviour.Prompt);
             
             if (string.IsNullOrEmpty(securityToken))
             {
