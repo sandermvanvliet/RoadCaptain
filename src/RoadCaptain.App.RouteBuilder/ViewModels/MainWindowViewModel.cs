@@ -55,6 +55,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
                 {
                     case nameof(Route.ReadyToBuild) when !Route.ReadyToBuild && LandingPageViewModel != null:
                         LandingPageViewModel.SelectedRoute = null;
+                        LandingPageViewModel.LoadMyRoutesCommand.Execute(null);
                         break;
                 }
             };

@@ -25,6 +25,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
         private List<MarkerViewModel> _markers = new();
         private LoopMode _loopMode;
         private int? _numberOfLoops;
+        private bool _isReadOnly;
 
         public RouteViewModel(IRouteStore routeStore, ISegmentStore segmentStore)
         {
@@ -134,6 +135,17 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             get
             {
                 return Sequence.Any(s => s.IsLoop);
+            }
+        }
+
+        public bool IsReadOnly
+        {
+            get => _isReadOnly;
+            private set
+            {
+                if (value == _isReadOnly) return;
+                _isReadOnly = value;
+                this.RaisePropertyChanged();
             }
         }
 
@@ -341,6 +353,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
 
             Uri = routeModel.Uri;
             RepositoryName = routeModel.RepositoryName;
+            IsReadOnly = routeModel.IsReadOnly;
         }
 
         private void LoadFromPlannedRoute(PlannedRoute plannedRoute, bool isTainted = false)

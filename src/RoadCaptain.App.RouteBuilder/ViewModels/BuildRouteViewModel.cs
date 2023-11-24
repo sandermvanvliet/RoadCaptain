@@ -50,8 +50,9 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             
             SaveRouteCommand = new AsyncRelayCommand(
                     _ => SaveRoute(),
-                    _ => Route.Sequence.Any())
+                    _ => !Route.IsReadOnly && Route.Sequence.Any())
                 .SubscribeTo(this, () => Route.Sequence)
+                .SubscribeTo(this, () => Route.IsReadOnly)
                 .OnSuccess(_ => statusBarService.Info("Route saved successfully"))
                 .OnSuccessWithMessage(commandResult => statusBarService.Info($"Route saved successfully: {commandResult.Message}"))
                 .OnFailure(commandResult => statusBarService.Error($"Failed to save route because: {commandResult.Message}"))

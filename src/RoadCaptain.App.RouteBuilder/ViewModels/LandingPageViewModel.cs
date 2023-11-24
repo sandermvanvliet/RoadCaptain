@@ -124,7 +124,11 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
 
             SelectedRoute = new Shared.ViewModels.RouteViewModel(new RouteModel
             {
-                PlannedRoute = plannedRoute
+                PlannedRoute = plannedRoute,
+                // We can safely set this because when a user is opening
+                // files from their local machine they're allowed to edit them
+                Uri = new Uri(filePath),
+                RepositoryName = null
             });
 
             return CommandResult.Success();
@@ -138,6 +142,10 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             {
                 return CommandResult.Aborted();
             }
+            
+            // TODO: Do something clever where we retain these values if the user actually owns this route...
+            result.Uri = null;
+            result.RepositoryName = null;
             
             SelectedRoute = new Shared.ViewModels.RouteViewModel(result);
             
