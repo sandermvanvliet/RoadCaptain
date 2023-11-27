@@ -10,6 +10,22 @@ Read more about how it works on [the RoadCaptain site](https://roadcaptain.nl/fe
 
 ### Route Builder
 
+The Route Builder main screen got an overhaul which makes it easier to manage routes that you created earlier. 
+When you start Route Builder you'll be presented with the sport & world selection as well as a list of all the routes you've created:
+
+![Route Builder landing page](./images/route-builder-landing.png)
+
+That means that you can now quickly:
+
+- Create a new route
+- Choose to edit one of your existing routes
+- Search a route created by someone else from the list at roadcaptain.nl
+- Open a route file from your local disk (importing a route from [Zwift Map](https://zwiftmap.com/) also works!)
+
+You can now also delete a route by clicking the trash can icon.
+
+#### And these other changes
+
 - Add a menu item to go to the documentation on roadcaptain.nl
 - It is now possible to import a route from [Zwift Map](https://zwiftmap.com/) into Route Builder. This saves you a lot of work to rebuild a route to make it work for RoadCaptain.
 - The color scheme of the elevation profile has been changed to provide much clearer indication of the grade
@@ -18,6 +34,7 @@ Read more about how it works on [the RoadCaptain site](https://roadcaptain.nl/fe
   <br />![Screenshot of the new make loop dialog](./images/make-loop-dialog.png)
 - When creating a route and the route already contains a loop, Route Builder now no longer asks to create a further loop
 - When creating a route with a loop, the segment list now indicates the loop mode (fixed number or infinite) and the number of loops: <br />![Screenshot of the segment list with the loop indicator](./images/loop-indicator.png)![Screenshot of the segment list with the loop indicator](./images/loop-indicator-infinite.png)<br />Clicking the indicator allows you to change the loop settings.
+- Route Builder now asks you where to save your route, this can be a local file, your local repository or the shared route repository at roadcaptain.nl:<br />![Screenshot of save dialog](./images/route-builder-save-dialog-share.png)
 
 #### World updates
 
