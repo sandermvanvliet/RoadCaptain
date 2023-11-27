@@ -5,6 +5,9 @@ theme = "roadcaptain"
 
 disableKinds = ["taxonomy", "taxonomyTerm", "section"]
 
+[security]
+  [security.funcs]
+    getenv = ['GIT_COMMIT_SHA_SHORT']
 
 ## -----------------------------------------------
 ## Site Parameters
