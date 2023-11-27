@@ -38,10 +38,19 @@
 			</Grid.ColumnDefinitions>
 			<TextBlock Margin="6,2,0,0"
                        Text="{Binding Path=Model.StatusBarText, FallbackValue=Ready,TargetNullValue=Ready}"
-                       Foreground="{Binding Path=Model.StatusBarForeground,FallbackValue={x:Static Brushes.White}}" VerticalAlignment="Center" />
-			<StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Right" IsEnabled="True">
+                       Foreground="{Binding Path=Model.StatusBarForeground,FallbackValue={x:Static Brushes.White}}" 
+                       VerticalAlignment="Center" 
+                       HorizontalAlignment="Left"/>
+			<StackPanel Grid.Column="1" 
+			            Orientation="Horizontal" 
+			            VerticalAlignment="Center" 
+			            HorizontalAlignment="Right" 
+			            IsEnabled="True"
+			            Width="160">
 				<TextBlock Text="Version:" Foreground="White" VerticalAlignment="Center" />
-				<Button Content="{Binding Path=Version}" Margin="4,0,2,0" CommandParameter="{Binding Path=ChangelogUri}" Command="{Binding Path=OpenLinkCommand}" Classes="link" VerticalAlignment="Center" />
+				<Button Content="{Binding Path=Version}" Margin="4,0,2,0" CommandParameter="{Binding Path=ChangelogUri}" Command="{Binding Path=OpenLinkCommand}" Classes="link" 
+				        VerticalAlignment="Center"
+				        FontSize="14"/>
 				<TextBlock Text="🔗" Margin="0,0,4,0" VerticalAlignment="Center" />
 			</StackPanel>
 		</Grid>
