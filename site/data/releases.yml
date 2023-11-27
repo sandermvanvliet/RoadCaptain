@@ -27,7 +27,7 @@ content: |
       </tr>
       <tr>
         <td><span style="font-style:italic">Preview release</span></td>
-        <td>0.7.0.0 - <a href="https://github.com/sandermvanvliet/RoadCaptain/releases/tag/prerelease%2F0.7.0.5">Changelog</a></td>
+        <td>0.7.0.5 - <a href="https://github.com/sandermvanvliet/RoadCaptain/releases/tag/prerelease%2F0.7.0.5">Changelog</a></td>
         <td>
           <a href="https://github.com/sandermvanvliet/RoadCaptain/releases/download/prerelease%2F0.7.0.5/RoadCaptain_0.7.0.5.msi" /><i class="fab fa-windows"></i> Windows</a> | 
           <a href="https://github.com/sandermvanvliet/RoadCaptain/releases/download/prerelease%2F0.7.0.5/RoadCaptain-0.7.0.5-osx-x64.dmg"><i class="fab fa-apple"></i> MacOS</a> |
