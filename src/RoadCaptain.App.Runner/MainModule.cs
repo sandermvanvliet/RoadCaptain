@@ -24,7 +24,10 @@ namespace RoadCaptain.App.Runner
                 .SingleInstance();
             
             // Single instance because we keep track of the active window
-            builder.RegisterType<WindowService>().As<IWindowService>().SingleInstance();
+            builder.RegisterType<WindowService>()
+                .As<IWindowService>()
+                .As<Shared.IWindowService>()
+                .SingleInstance();
             builder.RegisterDecorator<DelegateDecorator, IWindowService>();
 
             string? platformAssemblyPath = null;
