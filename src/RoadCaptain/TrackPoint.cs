@@ -38,8 +38,21 @@ namespace RoadCaptain
         
         [JsonIgnore]
         // ReSharper disable once UnusedMember.Global because this is only used to look up a point using Garmin BaseCamp
-        public string CoordinatesDecimal =>
-            $"S{(Latitude * -1).ToString("0.00000", CultureInfo.InvariantCulture)}° E{Longitude.ToString("0.00000", CultureInfo.InvariantCulture)}°";
+        public string CoordinatesDecimal
+        {
+            get
+            {
+                switch (WorldId)
+                {
+                    case ZwiftWorldId.London:
+                        return
+                            $"N{Latitude.ToString("0.00000", CultureInfo.InvariantCulture)}° W{(Longitude * -1).ToString("0.00000", CultureInfo.InvariantCulture)}°";
+                    default:
+                        return
+                            $"S{(Latitude * -1).ToString("0.00000", CultureInfo.InvariantCulture)}° E{Longitude.ToString("0.00000", CultureInfo.InvariantCulture)}°";
+                }
+            }
+        }
 
         public override string ToString()
         {

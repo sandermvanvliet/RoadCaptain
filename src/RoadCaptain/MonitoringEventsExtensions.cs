@@ -52,7 +52,7 @@ namespace RoadCaptain
             monitoringEvents.Debug("Received rider position {X} {Y} {Altitude} => {Latitude} {Longitude} {Altitude} {CoordinatesDecimal}",
                 gameCoordinate.X.ToString("0.00000000", CultureInfo.InvariantCulture),
                 gameCoordinate.Y.ToString("0.00000000", CultureInfo.InvariantCulture),
-                gameCoordinate.Altitude.ToString("0.00000000", CultureInfo.InvariantCulture),
+                gameCoordinate.Z.ToString("0.00000000", CultureInfo.InvariantCulture),
                 trackPoint.Latitude,
                 trackPoint.Longitude,
                 trackPoint.Altitude,

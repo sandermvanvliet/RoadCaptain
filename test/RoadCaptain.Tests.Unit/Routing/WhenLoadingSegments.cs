@@ -42,7 +42,7 @@ namespace RoadCaptain.Tests.Unit.Routing
 
             var result = actualGame.ToTrackPoint();
 
-            var expected = new TrackPoint(-11.64490d, 166.95293d, 9365.3, ZwiftWorldId.Watopia);
+            var expected = new TrackPoint(-11.64490d, 166.95293d, 0, ZwiftWorldId.Watopia);
 
             result
                 .Should()
