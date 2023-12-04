@@ -38,7 +38,7 @@ You can now also delete a route by clicking the trash can icon.
 
 #### World updates
 
-- London is now available to build routes! Unfortunately, due to an issue with coordinate conversions, you can't yet ride them. See [#17](https://github.com/sandermvanvliet/RoadCaptain/issues/17) for updates
+- [London] is now available in Beta. See [#17](https://github.com/sandermvanvliet/RoadCaptain/issues/17) for updates
 - [Makuri Islands] The Urakazi segments are now available to build and ride.
 - [Makuri Islands] Makuri Islands is out of beta!
 
