@@ -81,9 +81,11 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
                 async route => await DeleteRouteAsync(route as Shared.ViewModels.RouteViewModel),
                 parameter => parameter is Shared.ViewModels.RouteViewModel routeViewModel &&
                              routeViewModel.Uri != null &&
-                             !routeViewModel.IsReadOnly)
+                             !routeViewModel.IsReadOnly &&
+                             !InProgress)
                 .OnSuccess(async _ => await LoadMyRoutes())
-                .OnFailure(async result => await _windowService.ShowErrorDialog(result.Message));
+                .OnFailure(async result => await _windowService.ShowErrorDialog(result.Message))
+                .SubscribeTo(this, () => InProgress);
         }
 
         private async Task<CommandResult> DeleteRouteAsync(Shared.ViewModels.RouteViewModel? route)
@@ -92,9 +94,11 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             {
                 return CommandResult.Failure("Route does not have an URI and I don't know where to go to delete it");
             }
-            
+
             try
             {
+                InProgress = true;
+
                 await _deleteRouteUseCase.ExecuteAsync(new DeleteRouteCommand(route.Uri, route.RepositoryName));
 
                 return CommandResult.Success();
@@ -102,6 +106,10 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             catch (Exception e)
             {
                 return CommandResult.Failure(e.Message);
+            }
+            finally
+            {
+                InProgress = false;
             }
         }
 
