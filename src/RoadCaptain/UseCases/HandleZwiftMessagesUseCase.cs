@@ -79,7 +79,7 @@ namespace RoadCaptain.UseCases
                         // TODO: Figure out how to get the WorldId as quickly as possible and put it in the game state
                         var worldId = _route?.World?.ZwiftId ?? ZwiftWorldId.Unknown;
 
-                        var gameCoordinate = new GameCoordinate(riderPosition.X, riderPosition.Y, riderPosition.Altitude, worldId);
+                        var gameCoordinate = new GameCoordinate(riderPosition.X, riderPosition.Y, riderPosition.Z, worldId);
 
                         // Convert from Zwift game coordinates to a lat/lon coordinate
                         var position = gameCoordinate.ToTrackPoint();
