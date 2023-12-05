@@ -12,7 +12,7 @@ namespace RoadCaptain
     {
         public float X { get; init; }
         public float Y { get; init; }
-        public float Altitude { get; init; }
+        public float Z { get; init; }
     }
 
     public sealed class ZwiftCommandAvailableMessage : ZwiftMessage

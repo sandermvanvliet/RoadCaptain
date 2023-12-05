@@ -49,7 +49,7 @@ namespace RoadCaptain
 
         public static void RiderPositionReceived(this MonitoringEvents monitoringEvents, GameCoordinate gameCoordinate, TrackPoint trackPoint)
         {
-            monitoringEvents.Debug("Received rider position {X} {Y} {Altitude} => {Latitude} {Longitude} {Altitude} {CoordinatesDecimal}",
+            monitoringEvents.Debug("Received rider position {X} {Y} {Z} => {Latitude} {Longitude} {Altitude} {CoordinatesDecimal}",
                 gameCoordinate.X.ToString("0.00000000", CultureInfo.InvariantCulture),
                 gameCoordinate.Y.ToString("0.00000000", CultureInfo.InvariantCulture),
                 gameCoordinate.Z.ToString("0.00000000", CultureInfo.InvariantCulture),

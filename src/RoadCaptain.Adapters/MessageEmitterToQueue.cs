@@ -223,7 +223,7 @@ namespace RoadCaptain.Adapters
             {
                 X = x,
                 Y = y,
-                Altitude = altitude
+                Z = altitude
             });
         }
 
