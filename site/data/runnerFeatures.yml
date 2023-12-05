@@ -8,8 +8,7 @@ items:
   - name: "Route sharing"
     content: "Share routes you've created with other RoadCaptain users"
     style: "solid style2 major fa-share-square"
-    feature: "route-sharing"
-    beta: true
+    feature: "route-sharing#roadcaptain-runner"
     
   - name: "Zwift secure authentication"
     content: "Authenticate via the official Zwift login. RoadCaptain won't see your credentials"
@@ -40,3 +39,9 @@ items:
   - name: "Rebel Routes"
     content: "Pick any of the Rebel Routes built by <a href=\"https://zwiftinsider.com/rebel-routes/\">Zwift Insider</a>"
     style: "solid style2 major fa-route"
+
+  # feature item loop
+  - name : "Elevation"
+    content : "Use the elevation profile to see the profile of your route and the grade of the climbs"
+    style : "solid style2 major fa-chart-bar"
+    feature: "elevation-profile#roadcaptain-runner"

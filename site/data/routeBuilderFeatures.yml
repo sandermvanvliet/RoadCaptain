@@ -9,7 +9,6 @@ items:
     content: "Share routes you've created with other RoadCaptain users"
     style: "solid style2 major fa-share-square"
     feature: "route-sharing"
-    beta: true
 
   # feature item loop
   - name : "Elevation"
@@ -64,3 +63,7 @@ items:
   - name: "Running"
     content: "Using Zwift for running? Running segments are supported too!"
     style: "solid style2 major fa-running"
+
+  - name: "Import"
+    content: "Import routes built with ZwiftMap.com"
+    style: "solid style2 major fa-file-import"

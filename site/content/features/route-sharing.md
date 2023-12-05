@@ -30,7 +30,7 @@ When you choose to save a route to a repository you can choose to store it in yo
 
 ![Screenshot of the new save file dialog showing the repository options](/images/route-sharing-step-2-repository.png)
 
-Once the route has been saved, you can easily find it again by using the _Open route_ action and search for it in the repository you selected:
+Once the route has been saved, you can easily find it again on the main screen of Route Builder which lists all the routes you've created:
 
 ![Screenshot of the search route dialog](/images/route-sharing-step-3-search.png)
 
@@ -59,6 +59,6 @@ The list of routes gives you a quick idea of how long it is, ascent (and descent
 
 ## Feedback
 
-Route Sharing is a pre-release feature and there may be some sharp edges.
+Route Sharing is a brand new feature and there may be some sharp edges.
 
 Any feedback is greatly appreciated, head over to [the feedback discussion](https://github.com/sandermvanvliet/RoadCaptain/discussions/116) on GitHub to shrae your feedback!
