@@ -180,7 +180,7 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.MainWindow
         {
             var routeStore = new StubRouteStore();
 
-            var mainWindowViewModel = new MainWindowViewModel(configuration, 
+            var mainWindowViewModel = new MainWindowViewModel(configuration,
                 appSettings ?? new DummyUserPreferences(),
                 new StubWindowService(),
                 _gameStateDispatcher,
@@ -190,7 +190,8 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.MainWindow
                 _credentialCache,
                 new NopMonitoringEvents(),
                 new DummyApplicationFeatures(),
-                new Zwift(null!));
+                new Zwift(null!),
+                new PlatformPaths());
 
             mainWindowViewModel.Initialize().GetAwaiter().GetResult();
             

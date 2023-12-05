@@ -46,7 +46,8 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.MainWindow
                 new NoZwiftCredentialCache(),
                 new NopMonitoringEvents(),
                 new DummyApplicationFeatures(),
-                new Zwift(null!));
+                new Zwift(null!),
+                new PlatformPaths());
         }
 
 

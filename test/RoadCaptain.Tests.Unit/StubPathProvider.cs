@@ -13,5 +13,10 @@ namespace RoadCaptain.Tests.Unit
         {
             return Path.GetTempPath();
         }
+
+        public string? RouteBuilderExecutable()
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

@@ -86,6 +86,11 @@ namespace RoadCaptain.Adapters.Tests.Unit.RouteStorage
         {
             return _userDataDirectory;
         }
+
+        public string? RouteBuilderExecutable()
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }
 
