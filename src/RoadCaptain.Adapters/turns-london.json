@@ -50,7 +50,8 @@
     },
     "turnsB": {
       "left": "london-classique-rev-001-after-before",
-      "right": "london-classique-rev-001-before-after"
+      "right": "london-classique-rev-001-before-after",
+      "goStraight": "london-greater-london-8-002-after"
     }
   },
   {
@@ -61,8 +62,8 @@
     },
     "turnsB": {
       "left": "london-classique-rev-001-before-after",
-      "right": "london-classique-rev-001-before-before",
-      "goStraight": "london-greater-london-8-003"
+      "right": "london-classique-rev-001-after-before",
+      "goStraight": "london-greater-london-8-001"
     }
   },
   {
