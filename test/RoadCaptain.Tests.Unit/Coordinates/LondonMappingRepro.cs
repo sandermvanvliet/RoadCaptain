@@ -2,27 +2,44 @@
 // Licensed under Artistic License 2.0
 // See LICENSE or https://choosealicense.com/licenses/artistic-2.0/
 
+using System.Diagnostics;
 using FluentAssertions;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace RoadCaptain.Tests.Unit.Coordinates
 {
     public class LondonMappingRepro
     {
         [Fact]
-        public void LondonRegressionTest()
+        public void ThisIsTheRightMapping()
         {
-            // Note to self: don't ever change this
-            
-            var a = 156612.37500000f;
-            var b = -8146.51123000f;
-            var c = 10324.1376953125f;
-            
-            var real = new GameCoordinate(a, b, c, ZwiftWorldId.London).ToTrackPoint();
+            var inputY = -53141.75781f;
+            var inputX = 315245.5f;
+            var expectedLat = 51.50649f;
+            var expectedLon = -0.12252f;
 
-            real.CoordinatesDecimal.Should().Be("N51.50263° W0.14537°");
-            real.Latitude.Should().BeApproximately(51.50263f, 0.000002f);
-            real.Longitude.Should().BeApproximately(-0.14537f, 0.000001f);
+            var trackPoint = Calculate(-inputY, inputX);
+            
+            trackPoint.Latitude.Should().BeApproximately(expectedLat, 0.00001);
+            trackPoint.Longitude.Should().BeApproximately(expectedLon, 0.00001);
+            trackPoint.CoordinatesDecimal.Should().Be("N51.50648° W0.12252°");
+
+            var trackPointReal = new GameCoordinate(inputX, inputY, 0, ZwiftWorldId.London).ToTrackPoint();
+
+            trackPointReal.Should().Be(trackPoint);
+        }
+
+        private static TrackPoint Calculate(float a, float b)
+        {
+            // London flips inputs
+            var latitudeAsCentimetersFromOrigin = a + 572999216.4279556;
+            var latitude = latitudeAsCentimetersFromOrigin * 8.988093472576876E-06 * 0.01;
+
+            var longitudeAsCentimetersFromOrigin = b + -1165514.8567129374;
+            var longitude = longitudeAsCentimetersFromOrigin * 1.4409163767062611E-05 * 0.01;
+                
+            return new TrackPoint(latitude, longitude, 0, ZwiftWorldId.London);
         }
     }
 }

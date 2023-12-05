@@ -23,6 +23,11 @@ namespace RoadCaptain
             WorldId = worldId;
         }
 
+        public override string ToString()
+        {
+            return $"X: {X} Y: {Y} Z: {Z}";
+        }
+
         public bool Equals(GameCoordinate other)
         {
             return X.Equals(other.X) && Y.Equals(other.Y) && Z.Equals(other.Z);
@@ -69,7 +74,7 @@ namespace RoadCaptain
             if (WorldId == ZwiftWorldId.London)
             {
                 // London flips inputs
-                var latitudeAsCentimetersFromOrigin = Z + 572999216.4279556;
+                var latitudeAsCentimetersFromOrigin = (-Y) + 572999216.4279556;
                 var latitude = latitudeAsCentimetersFromOrigin * 8.988093472576876E-06 * 0.01;
 
                 var longitudeAsCentimetersFromOrigin = X + -1165514.8567129374;
