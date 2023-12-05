@@ -52,6 +52,7 @@ You can now also delete a route by clicking the trash can icon.
 
 - **Windows only** Zwift credentials will now be stored securely in the Credential Manager instead of keeping them in memory only. This reduces the amount of times you'll need to log in to Zwift
 - When entering a loop, the total distance is set to the distance of the loop.
+- Introduced a button to start the Route Builder
  
 #### Elevation profile
 
