@@ -9,6 +9,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:viewModels="clr-namespace:RoadCaptain.App.Shared.ViewModels"
              xmlns:controls="clr-namespace:RoadCaptain.App.Shared.Controls"
+             xmlns:converters="clr-namespace:RoadCaptain.App.Shared.Converters"
              Design.DataContext="{x:Static viewModels:DesignTimeRoutesListViewModel.Instance}"
              Design.Width="800" Design.Height="800">
     <UserControl.Styles>
@@ -34,6 +35,9 @@
             <Setter Property="IsVisible" Value="False" />
         </Style>
     </UserControl.Styles>
+    <UserControl.Resources>
+        <converters:NullabilityConverter x:Key="NullabilityConverter" />
+    </UserControl.Resources>
     <ListBox Name="RoutesListBox"
              ZIndex="50"
              HorizontalAlignment="Stretch"
@@ -116,7 +120,8 @@
                             Classes="delete" 
                             Command="{Binding DeleteRoute, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=controls:RoutesList}}" 
                             CommandParameter="{Binding}"
-                            ToolTip.Tip="Delete this route" />
+                            ToolTip.Tip="Delete this route"
+                            IsVisible="{Binding DeleteRoute,  RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=controls:RoutesList}, Converter={StaticResource NullabilityConverter}}"/>
                     <StackPanel Grid.Column="1" Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right">
                         <TextBlock Text="🌐" VerticalAlignment="Center" />
                         <TextBlock
