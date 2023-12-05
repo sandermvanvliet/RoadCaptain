@@ -7,6 +7,7 @@ namespace RoadCaptain.Ports
     public interface IPathProvider
     {
         string GetUserDataDirectory();
+        string? RouteBuilderExecutable();
     }
 }
 

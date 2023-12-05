@@ -111,9 +111,11 @@
 				<!-- row 2 -->
 				<StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="1" Margin="4,0,0,0">
 					<Button Content="Search" Margin="0,2,4,0" VerticalAlignment="Center" Command="{Binding Path=SearchRouteCommand}" />
-					<TextBlock Text="a route or"  VerticalAlignment="Center" FontSize="16" />
+					<TextBlock Text="a route"  VerticalAlignment="Center" FontSize="16" />
 					<Button Content="Open" Margin="8,2,4,0" VerticalAlignment="Center" Command="{Binding Path=LoadRouteCommand}" />
 					<TextBlock Text="a route from a local file" VerticalAlignment="Center" FontSize="16" />
+					<Button Content="Build" Margin="8,2,4,0" VerticalAlignment="Center" Command="{Binding Path=BuildRouteCommand}" />
+					<TextBlock Text="a new route" VerticalAlignment="Center" FontSize="16" />
 				</StackPanel>
 
 				<!-- row 3 -->

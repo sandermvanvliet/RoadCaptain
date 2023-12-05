@@ -49,6 +49,7 @@ namespace RoadCaptain.App.Runner.ViewModels
         private bool _haveCheckedLastOpenedVersion;
         private readonly IApplicationFeatures _applicationFeatures;
         private IZwift _zwift;
+        private IPathProvider _pathProvider;
 
         public MainWindowViewModel(Configuration configuration,
             IUserPreferences userPreferences,
@@ -60,7 +61,7 @@ namespace RoadCaptain.App.Runner.ViewModels
             IZwiftCredentialCache credentialCache, 
             MonitoringEvents monitoringEvents, 
             IApplicationFeatures applicationFeatures, 
-            IZwift zwift)
+            IZwift zwift, IPathProvider pathProvider)
         {
             _configuration = configuration;
             _userPreferences = userPreferences;
@@ -72,6 +73,7 @@ namespace RoadCaptain.App.Runner.ViewModels
             _credentialCache = credentialCache;
             _applicationFeatures = applicationFeatures;
             _zwift = zwift;
+            _pathProvider = pathProvider;
 
 
             try
@@ -516,19 +518,13 @@ namespace RoadCaptain.App.Runner.ViewModels
         private Task<CommandResult> LaunchRouteBuilder()
 #pragma warning restore CS1998
         {
-            var assemblyLocation = GetType().Assembly.Location;
-            var installationDirectory = Path.GetDirectoryName(assemblyLocation);
+            var routeBuilderPath = _pathProvider.RouteBuilderExecutable();
 
-            if (!string.IsNullOrEmpty(installationDirectory))
+            if (!string.IsNullOrEmpty(routeBuilderPath) && File.Exists(routeBuilderPath))
             {
-                var routeBuilderPath = Path.Combine(installationDirectory, "RoadCaptain.RouteBuilder.exe");
+                Process.Start(routeBuilderPath, "--from-runner");
 
-                if (File.Exists(routeBuilderPath))
-                {
-                    Process.Start(routeBuilderPath);
-
-                    return Task.FromResult(CommandResult.Success());
-                }
+                return Task.FromResult(CommandResult.Success());
             }
 
             return Task.FromResult<CommandResult>(CommandResult.Failure("Could not locate RoadCaptain Route Builder"));
