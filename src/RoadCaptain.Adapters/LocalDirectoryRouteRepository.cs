@@ -246,14 +246,16 @@ namespace RoadCaptain.Adapters
 
         public Task DeleteAsync(Uri routeUri)
         {
-            if (!File.Exists(routeUri.ToString()))
+            var routeUriAbsolutePath = Uri.UnescapeDataString(routeUri.AbsolutePath);
+            
+            if (!File.Exists(routeUriAbsolutePath))
             {
                 throw new Exception("The route you're trying to delete apparently doesn't exist on disk");
             }
 
             try
             {
-                File.Delete(routeUri.ToString());
+                File.Delete(routeUriAbsolutePath);
             }
             catch (UnauthorizedAccessException e)
             {
