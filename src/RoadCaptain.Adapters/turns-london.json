@@ -61,9 +61,9 @@
       "goStraight": "london-greater-london-8-002-before"
     },
     "turnsB": {
-      "left": "london-classique-rev-001-before-after",
-      "right": "london-classique-rev-001-after-before",
-      "goStraight": "london-greater-london-8-001"
+      "left": "london-greater-london-8-001",
+      "right": "london-classique-rev-001-before-before",
+      "goStraight": "london-classique-rev-001-after-before"
     }
   },
   {
