@@ -1,6 +1,6 @@
 ﻿# Changelog
 
-## 0.7.0.0
+## 0.7.0.6
 
 This release adds a new feature that brings the social aspect of Zwift to RoadCaptain: _route sharing_!
 
