@@ -1,5 +1,14 @@
 ﻿# Changelog
 
+## 0.7.0.7
+
+### Route Builder
+
+#### Bug fixes
+
+- [London] Updated the spawn points and removed event-only spawn points
+- Fixed an issue where the app would crash when loading an invalid route
+
 ## 0.7.0.6
 
 This release adds a new feature that brings the social aspect of Zwift to RoadCaptain: _route sharing_!
