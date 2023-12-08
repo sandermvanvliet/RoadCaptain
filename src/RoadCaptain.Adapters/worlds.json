@@ -268,25 +268,31 @@
     "spawnPoints": [
       {
         "segmentId": "london-classique-rev-001-after-after",
-        "zwiftRouteName": "greater-london-flat (london)",
+        "zwiftRouteName": "Greater London FLat",
         "direction": "BtoA",
         "sport": "Cycling"
       },
       {
-        "segmentId": "london-classique-rev-001-before-before",
-        "zwiftRouteName": "classique-rev (london)",
-        "direction": "AtoB",
-        "sport": "Cycling"
-      },
-      {
         "segmentId": "london-greater-london-8-001",
-        "zwiftRouteName": "greater-london-8 (london)",
+        "zwiftRouteName": "Greater London 8",
         "direction": "AtoB",
         "sport": "Cycling"
       },
       {
         "segmentId": "london-greater-london-8-004-after-after-after-after",
         "zwiftRouteName": "greater-london-loop-rev (london)",
+        "direction": "BtoA",
+        "sport": "Cycling"
+      },
+      {
+        "segmentId": "london-greater-london-8-004-after-after-after-after",
+        "zwiftRouteName": "London 8",
+        "direction": "AtoB",
+        "sport": "Cycling" 
+      },
+      {
+        "segmentId": "london-greater-london-8-004-after-after-before-before",
+        "zwiftRouteName": "Surrey Hills",
         "direction": "BtoA",
         "sport": "Cycling"
       }
