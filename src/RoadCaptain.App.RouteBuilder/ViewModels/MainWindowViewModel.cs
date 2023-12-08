@@ -77,7 +77,15 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
                         var routeModel = LandingPageViewModel.SelectedRoute?.AsRouteModel();
                         if (routeModel != null)
                         {
-                            Route.LoadFromRouteModel(routeModel);
+                            try
+                            {
+                                Route.LoadFromRouteModel(routeModel);
+                                statusBarService.Info("Loaded route successfully");
+                            }
+                            catch (Exception e)
+                            {
+                                statusBarService.Error($"Unable to load route: {e.Message}");
+                            }
                         }
                         break;
                 }
