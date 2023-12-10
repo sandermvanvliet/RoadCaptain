@@ -137,6 +137,7 @@ namespace RoadCaptain.App.Web.Adapters
             route.IsLoop = updateModel.IsLoop;
             route.ZwiftRouteName = updateModel.ZwiftRouteName;
             route.Name = updateModel.Name;
+            route.Hash = HashUtilities.HashAsHexString(updateModel.Serialized!);
 
             _roadCaptainDataContext.SaveChanges();
 
@@ -186,6 +187,29 @@ namespace RoadCaptain.App.Web.Adapters
                         Ids = ids.ToArray()
                     })
                 .ToDictionary(x => x.Hash, x => x.Ids);
+        }
+
+        public Models.RouteModel[] GetRoutesWithoutHashes()
+        {
+            return _roadCaptainDataContext
+                .Routes
+                .Include(route => route.User)
+                .AsNoTracking()
+                .Where(route => route.Hash == "(not yet calculated)")
+                .ToArray()
+                .Select(RouteModelFrom)
+                .ToArray();
+        }
+
+        public Models.RouteModel[] GetAllRoutes()
+        {
+            return _roadCaptainDataContext
+                .Routes
+                .Include(route => route.User)
+                .AsNoTracking()
+                .ToArray()
+                .Select(RouteModelFrom)
+                .ToArray();
         }
 
         private static Models.RouteModel RouteModelFrom(Route route)

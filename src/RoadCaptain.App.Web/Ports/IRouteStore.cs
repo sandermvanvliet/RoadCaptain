@@ -4,6 +4,7 @@
 
 using RoadCaptain.App.Web.Adapters.EntityFramework;
 using RoadCaptain.App.Web.Models;
+using Route = RoadCaptain.App.Web.Adapters.EntityFramework.Route;
 
 namespace RoadCaptain.App.Web.Ports
 {
@@ -30,6 +31,8 @@ namespace RoadCaptain.App.Web.Ports
         Models.RouteModel Store(CreateRouteModel createModel, User user);
         bool Exists(long id);
         Dictionary<string, long[]> FindDuplicates();
+        Models.RouteModel[] GetRoutesWithoutHashes();
+        Models.RouteModel[] GetAllRoutes();
     }
 }
 

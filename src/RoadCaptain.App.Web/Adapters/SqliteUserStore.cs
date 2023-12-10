@@ -3,6 +3,7 @@
 // See LICENSE or https://choosealicense.com/licenses/artistic-2.0/
 
 using System.Security.Claims;
+using Microsoft.EntityFrameworkCore;
 using RoadCaptain.App.Web.Adapters.EntityFramework;
 using RoadCaptain.App.Web.Ports;
 
@@ -41,6 +42,14 @@ namespace RoadCaptain.App.Web.Adapters
             }
 
             return user;
+        }
+
+        public User? GetByName(string name)
+        {
+            return _roadCaptainDataContext
+                .Users
+                .AsNoTracking()
+                .SingleOrDefault(user => user.Name == name);
         }
     }
 }

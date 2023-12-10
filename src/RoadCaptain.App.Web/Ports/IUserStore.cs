@@ -10,5 +10,6 @@ namespace RoadCaptain.App.Web.Ports
     public interface IUserStore
     {
         User? GetOrCreate(ClaimsPrincipal principal);
+        User? GetByName(string name);
     }
 }

@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using RoadCaptain.App.Web.Adapters;
 using RoadCaptain.App.Web.Adapters.EntityFramework;
 using RoadCaptain.App.Web.Ports;
+using RoadCaptain.App.Web.UseCases;
 
 namespace RoadCaptain.App.Web
 {
@@ -50,6 +51,11 @@ WHERE NOT EXISTS(SELECT 1 FROM __EFMigrationsHistory WHERE MigrationId = '202312
 
                     args.Instance.Database.Migrate();
                 });
+
+            builder
+                .RegisterType<RecalculateHashes>()
+                .AsSelf()
+                .InstancePerLifetimeScope();
         }
     }
 }
