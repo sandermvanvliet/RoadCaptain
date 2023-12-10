@@ -29,6 +29,7 @@ namespace RoadCaptain.App.Web.Ports
         Models.RouteModel Update(long id, UpdateRouteModel updateModel, User currentUser);
         Models.RouteModel Store(CreateRouteModel createModel, User user);
         bool Exists(long id);
+        Dictionary<string, long[]> FindDuplicates();
     }
 }
 

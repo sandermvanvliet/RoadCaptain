@@ -2,6 +2,7 @@
 // Licensed under Artistic License 2.0
 // See LICENSE or https://choosealicense.com/licenses/artistic-2.0/
 
+using System.Security.Claims;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -64,6 +65,15 @@ namespace RoadCaptain.App.Web
                         {
                             configurePolicy.AuthenticationSchemes = new List<string> { JwtBearerDefaults.AuthenticationScheme} ;
                             configurePolicy.RequireAuthenticatedUser();
+                        });
+                    
+                    configure.AddPolicy(
+                        "AdministratorPolicy",
+                        configurePolicy =>
+                        {
+                            configurePolicy.AuthenticationSchemes = new List<string> { JwtBearerDefaults.AuthenticationScheme} ;
+                            configurePolicy.RequireAuthenticatedUser();
+                            configurePolicy.RequireClaim("name", "Sander van Vliet [RoadCaptain]");
                         });
                 });
 

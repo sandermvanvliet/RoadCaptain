@@ -2,6 +2,7 @@
 // Licensed under Artistic License 2.0
 // See LICENSE or https://choosealicense.com/licenses/artistic-2.0/
 
+using System.Security.Cryptography;
 using Microsoft.EntityFrameworkCore;
 using RoadCaptain.App.Web.Adapters.EntityFramework;
 using RoadCaptain.App.Web.Models;
@@ -159,6 +160,41 @@ namespace RoadCaptain.App.Web.Adapters
                 .Routes
                 .AsNoTracking()
                 .Any(r => r.Id == id);
+        }
+
+        public Dictionary<string, long[]> FindDuplicates()
+        {
+            var allRoutes = _roadCaptainDataContext
+                .Routes
+                .Select(r => new
+                {
+                    r.Id,
+                    r.Serialized
+                })
+                .ToList();
+
+            string HashIt(string serialized)
+            {
+                var serializedBytes = System.Text.Encoding.UTF8.GetBytes(serialized);
+                var hashBytes = SHA256.HashData(serializedBytes);
+
+                return Convert.ToHexString(hashBytes);
+            }
+
+            return allRoutes
+                .Select(x => new
+                {
+                    x.Id,
+                    Hash = HashIt(x.Serialized)
+                })
+                .GroupBy(x => x.Hash,
+                    x => x.Id,
+                    (hash, ids) => new
+                    {
+                        Hash = hash,
+                        Ids = ids.ToArray()
+                    })
+                .ToDictionary(x => x.Hash, x => x.Ids);
         }
 
         private static Models.RouteModel RouteModelFrom(Route route)
