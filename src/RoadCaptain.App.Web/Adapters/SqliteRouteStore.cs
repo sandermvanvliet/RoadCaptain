@@ -2,7 +2,6 @@
 // Licensed under Artistic License 2.0
 // See LICENSE or https://choosealicense.com/licenses/artistic-2.0/
 
-using System.Security.Cryptography;
 using Microsoft.EntityFrameworkCore;
 using RoadCaptain.App.Web.Adapters.EntityFramework;
 using RoadCaptain.App.Web.Models;
@@ -173,19 +172,11 @@ namespace RoadCaptain.App.Web.Adapters
                 })
                 .ToList();
 
-            string HashIt(string serialized)
-            {
-                var serializedBytes = System.Text.Encoding.UTF8.GetBytes(serialized);
-                var hashBytes = SHA256.HashData(serializedBytes);
-
-                return Convert.ToHexString(hashBytes);
-            }
-
             return allRoutes
                 .Select(x => new
                 {
                     x.Id,
-                    Hash = HashIt(x.Serialized)
+                    Hash = HashUtilities.HashAsHexString(x.Serialized ?? "null")
                 })
                 .GroupBy(x => x.Hash,
                     x => x.Id,
@@ -214,7 +205,7 @@ namespace RoadCaptain.App.Web.Adapters
             };
         }
 
-        private Route RouteStorageModelFrom(CreateRouteModel createModel, User user)
+        private static Route RouteStorageModelFrom(CreateRouteModel createModel, User user)
         {
             return new Route
             {
@@ -225,7 +216,8 @@ namespace RoadCaptain.App.Web.Adapters
                 Distance = createModel.Distance,
                 IsLoop = createModel.IsLoop,
                 ZwiftRouteName = createModel.ZwiftRouteName,
-                Serialized = createModel.Serialized
+                Serialized = createModel.Serialized,
+                Hash = HashUtilities.HashAsHexString(createModel.Serialized!)
             };
         }
     }

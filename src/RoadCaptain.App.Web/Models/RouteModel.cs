@@ -16,5 +16,6 @@ namespace RoadCaptain.App.Web.Models
         public decimal Descent { get; set; }
         public bool IsLoop { get; set; }
         public string? Serialized { get; set; }
+        public string Hash { get; set; } = "(unknown)";
     }
 }

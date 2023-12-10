@@ -17,5 +17,6 @@ namespace RoadCaptain.App.Web.Adapters.EntityFramework
         public bool IsLoop { get; set; }
         public string? Serialized { get; set; }
         public string? World { get; set; }
+        public string Hash { get; set; } = "(not yet calculated)";
     }
 }

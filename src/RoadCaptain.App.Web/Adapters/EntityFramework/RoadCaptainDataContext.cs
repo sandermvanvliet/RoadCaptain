@@ -63,6 +63,12 @@ namespace RoadCaptain.App.Web.Adapters.EntityFramework
 
             modelBuilder
                 .Entity<Route>()
+                .Property(r => r.Hash)
+                .HasDefaultValue("(not yet calculated)")
+                .IsRequired();
+
+            modelBuilder
+                .Entity<Route>()
                 .Property(r => r.UserId)
                 .IsRequired();
 
