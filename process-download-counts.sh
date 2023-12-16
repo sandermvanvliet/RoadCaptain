@@ -1,0 +1,1 @@
+jq '[.[] | select(.prerelease == false) | .assets[] |  {name: .name, content_type: .content_type, download_count: .download_count}]' roadcaptain-releases.json > download-counts.json
