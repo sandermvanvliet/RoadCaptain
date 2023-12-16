@@ -225,7 +225,8 @@ namespace RoadCaptain.App.Web.Adapters
                 Distance = route.Distance,
                 IsLoop = route.IsLoop,
                 ZwiftRouteName = route.ZwiftRouteName,
-                Serialized = route.Serialized
+                Serialized = route.Serialized,
+                Hash = route.Hash
             };
         }
 

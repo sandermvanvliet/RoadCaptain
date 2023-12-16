@@ -40,6 +40,15 @@ namespace RoadCaptain.App.Web
                     try
                     {
                         args.Instance.Database.ExecuteSqlRaw(
+                            @"create table if not exists main.__EFMigrationsHistory
+(
+    MigrationId    TEXT not null
+        constraint PK___EFMigrationsHistory
+            primary key,
+    ProductVersion TEXT not null
+);");
+                        
+                        args.Instance.Database.ExecuteSqlRaw(
                             @"INSERT INTO __EFMigrationsHistory
 SELECT '20231210130249_InitialSchema', '7.0.3'
 WHERE NOT EXISTS(SELECT 1 FROM __EFMigrationsHistory WHERE MigrationId = '20231210130249_InitialSchema')");
