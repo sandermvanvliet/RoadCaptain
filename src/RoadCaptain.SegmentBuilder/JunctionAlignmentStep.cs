@@ -106,7 +106,7 @@ namespace RoadCaptain.SegmentBuilder
                 return;
             }
 
-            var interpolateStart = junctionSegment.Segment.Points[newPointIndex - 1];
+            var interpolateStart = junctionSegment.Segment.Points[Math.Max(newPointIndex - 1, 0)];
             var interpolateEnd = junctionSegment.Segment.Points[newPointIndex + 1];
 
             var interpolatedPoints = Interpolate(interpolateStart, newPoint, 5)

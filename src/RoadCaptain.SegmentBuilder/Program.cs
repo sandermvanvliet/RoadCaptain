@@ -16,9 +16,9 @@ namespace RoadCaptain.SegmentBuilder
 
         static void Main(string[] args)
         {
-            var gpxDirectory = args.Length > 0 ? args[0] : @"C:\git\temp\zwift\zwift-london-gpx";
+            var gpxDirectory = args.Length > 0 ? args[0] : @"C:\git\temp\zwift\zwift-watopia-gpx";
 
-            new Program().Run(gpxDirectory, null, null, gpxDirectory);
+            new Program().Run(gpxDirectory, 2, null, gpxDirectory);
         }
         
         public static readonly JsonSerializerSettings SerializerSettings = new()
