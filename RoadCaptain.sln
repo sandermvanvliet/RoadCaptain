@@ -68,6 +68,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RoadCaptain.App.Windows", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RoadCaptain.App.Windows.Tests.Unit", "test\RoadCaptain.App.Windows.Tests.Unit\RoadCaptain.App.Windows.Tests.Unit.csproj", "{10C5D4C5-B32C-4A89-8658-0FBD237B9212}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RoadCaptain.ZwiftRouteDownloader", "src\RoadCaptain.ZwiftRouteDownloader\RoadCaptain.ZwiftRouteDownloader.csproj", "{1CA26D30-D02F-4412-B5E6-B51AE1C9E30A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -455,6 +457,24 @@ Global
 		{10C5D4C5-B32C-4A89-8658-0FBD237B9212}.ReleaseFull|x64.Build.0 = Release|Any CPU
 		{10C5D4C5-B32C-4A89-8658-0FBD237B9212}.ReleaseFull|x86.ActiveCfg = Release|Any CPU
 		{10C5D4C5-B32C-4A89-8658-0FBD237B9212}.ReleaseFull|x86.Build.0 = Release|Any CPU
+		{1CA26D30-D02F-4412-B5E6-B51AE1C9E30A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1CA26D30-D02F-4412-B5E6-B51AE1C9E30A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1CA26D30-D02F-4412-B5E6-B51AE1C9E30A}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{1CA26D30-D02F-4412-B5E6-B51AE1C9E30A}.Debug|x64.Build.0 = Debug|Any CPU
+		{1CA26D30-D02F-4412-B5E6-B51AE1C9E30A}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{1CA26D30-D02F-4412-B5E6-B51AE1C9E30A}.Debug|x86.Build.0 = Debug|Any CPU
+		{1CA26D30-D02F-4412-B5E6-B51AE1C9E30A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1CA26D30-D02F-4412-B5E6-B51AE1C9E30A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1CA26D30-D02F-4412-B5E6-B51AE1C9E30A}.Release|x64.ActiveCfg = Release|Any CPU
+		{1CA26D30-D02F-4412-B5E6-B51AE1C9E30A}.Release|x64.Build.0 = Release|Any CPU
+		{1CA26D30-D02F-4412-B5E6-B51AE1C9E30A}.Release|x86.ActiveCfg = Release|Any CPU
+		{1CA26D30-D02F-4412-B5E6-B51AE1C9E30A}.Release|x86.Build.0 = Release|Any CPU
+		{1CA26D30-D02F-4412-B5E6-B51AE1C9E30A}.ReleaseFull|Any CPU.ActiveCfg = Debug|Any CPU
+		{1CA26D30-D02F-4412-B5E6-B51AE1C9E30A}.ReleaseFull|Any CPU.Build.0 = Debug|Any CPU
+		{1CA26D30-D02F-4412-B5E6-B51AE1C9E30A}.ReleaseFull|x64.ActiveCfg = Debug|Any CPU
+		{1CA26D30-D02F-4412-B5E6-B51AE1C9E30A}.ReleaseFull|x64.Build.0 = Debug|Any CPU
+		{1CA26D30-D02F-4412-B5E6-B51AE1C9E30A}.ReleaseFull|x86.ActiveCfg = Debug|Any CPU
+		{1CA26D30-D02F-4412-B5E6-B51AE1C9E30A}.ReleaseFull|x86.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -482,6 +502,7 @@ Global
 		{C7138ABD-C070-4569-990E-FD46B2EF2AC8} = {BEA7E74A-4BB1-47E5-864C-8F017CD224BB}
 		{8EE0D688-892B-447E-93B6-B8DC75EDEA45} = {BEA7E74A-4BB1-47E5-864C-8F017CD224BB}
 		{10C5D4C5-B32C-4A89-8658-0FBD237B9212} = {E3C458CE-58E7-4E56-BC08-A5AA17B898B1}
+		{1CA26D30-D02F-4412-B5E6-B51AE1C9E30A} = {BEA7E74A-4BB1-47E5-864C-8F017CD224BB}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {EFDBED01-0D64-4ACF-89AA-107DDFD90387}

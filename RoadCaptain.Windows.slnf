@@ -13,6 +13,7 @@
       "src\\RoadCaptain.SegmentBuilder\\RoadCaptain.SegmentBuilder.csproj",
       "src\\RoadCaptain.SegmentSerializer\\RoadCaptain.SegmentSerializer.csproj",
       "src\\RoadCaptain.SegmentSplitter\\RoadCaptain.SegmentSplitter.csproj",
+      "src\\RoadCaptain.ZwiftRouteDownloader\\RoadCaptain.ZwiftRouteDownloader.csproj",
       "src\\RoadCaptain\\RoadCaptain.csproj",
       "test\\RoadCaptain.Adapters.Tests.Unit\\RoadCaptain.Adapters.Tests.Unit.csproj",
       "test\\RoadCaptain.App.RouteBuilder.Tests.Unit\\RoadCaptain.App.RouteBuilder.Tests.Unit.csproj",
