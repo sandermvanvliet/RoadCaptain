@@ -64,30 +64,11 @@ namespace RoadCaptain.ZwiftRouteDownloader
 
             foreach (var route in routesForWorld)
             {
-                if (!File.Exists(GpxFileNameOf(route)))
-                {
-                    Console.Write($"Downloading GPX of {route.Name}...");
-                    try
-                    {
-                        if (route.StravaSegmentId.HasValue)
-                        {
-                            await DownloadRoute(route);
-                            Console.WriteLine(" [OK]");
-                        }
-                        else
-                        {
-                            Console.WriteLine(" [SKIP] Route doesn't have a Strava segment id");
-                        }
-                    }
-                    catch (Exception e)
-                    {
-                        Console.WriteLine($" [FAILED] {e.Message}");
-                    }
-                }
-                else
-                {
-                    Console.WriteLine($" [SKIP] Route has already been downloaded");
-                }
+                await ExecuteWithFeedbackAsync(
+                    async () => await DownloadRoute(route),
+                    () => File.Exists(GpxFileNameOf(route)),
+                    $"Downloading GPX of {route.Name}...",
+                    "Route has already been downloaded");
             }
         }
 
@@ -106,10 +87,12 @@ namespace RoadCaptain.ZwiftRouteDownloader
         private async Task DownloadSegments()
         {
             Console.WriteLine("Downloading segments");
+
+            var segmentOutputDirectory = Path.Combine(_outputDirectory, "special_segments");
             
-            if (!Directory.Exists(_outputDirectory))
+            if (!Directory.Exists(segmentOutputDirectory))
             {
-                Directory.CreateDirectory(_outputDirectory);
+                Directory.CreateDirectory(segmentOutputDirectory);
             }
 
             var segmentsPath = Path.Combine(_zwiftDataRepositoryPath, "data", "segments.mjs");
@@ -121,23 +104,43 @@ namespace RoadCaptain.ZwiftRouteDownloader
 
             foreach (var segment in routesOnWorld)
             {
-                if (!File.Exists(GpxFileNameOf(segment)))
+                await ExecuteWithFeedbackAsync(
+                        async () => await DownloadSegment(segment, segmentOutputDirectory),
+                        () => File.Exists(GpxFileNameOf(segment)),
+                        $"Downloading GPX of {segment.Name}...",
+                        "Segment has already been downloaded");
+            }
+        }
+
+        private async Task ExecuteWithFeedbackAsync(Func<Task> action, Func<bool> skipPredicate, string actionTitle, string skipMessage)
+        {
+            Console.Write(actionTitle + (actionTitle.EndsWith(" ") ? "" : " "));
+            
+            if (!skipPredicate())
+            {
+                try
                 {
-                    Console.Write($"Downloading GPX of {segment.Name}...");
-                    try
-                    {
-                        await DownloadSegment(segment);
-                        Console.WriteLine(" [OK]");
-                    }
-                    catch (Exception e)
-                    {
-                        Console.WriteLine($" [FAILED] {e.Message}");
-                    }
+                    await action();
+
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.Write(" [OK]");
+                    Console.ResetColor();
+                    Console.WriteLine();
                 }
-                else
+                catch (Exception e)
                 {
-                    Console.WriteLine($" [SKIP] Segment has already been downloaded");
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.Write(" [FAILED] ");
+                    Console.ResetColor();
+                    Console.WriteLine(e.Message);
                 }
+            }
+            else
+            {
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.Write(" [SKIP] ");
+                Console.ResetColor();
+                Console.WriteLine(skipMessage);
             }
         }
 
@@ -154,7 +157,7 @@ namespace RoadCaptain.ZwiftRouteDownloader
             await File.WriteAllTextAsync(Path.Combine(_outputDirectory, GpxFileNameOf(route)), gpx);
         }
 
-        private async Task DownloadSegment(Segment segment)
+        private async Task DownloadSegment(Segment segment, string outputDirectory)
         {
             var url = $"https://www.strava.com/stream/segments/{segment.StravaSegmentId}?streams[]=latlng&streams[]=altitude";
 
@@ -164,7 +167,7 @@ namespace RoadCaptain.ZwiftRouteDownloader
 
             var gpx = BuildGpx(segment, stravaSegment);
 
-            await File.WriteAllTextAsync(Path.Combine(_outputDirectory, GpxFileNameOf(segment)), gpx);
+            await File.WriteAllTextAsync(Path.Combine(outputDirectory, GpxFileNameOf(segment)), gpx);
         }
 
         private static string GpxFileNameOf(Route route)
