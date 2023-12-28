@@ -21,7 +21,7 @@ namespace RoadCaptain.SegmentBuilder
             {
                 var snapshotSegments = JsonConvert.DeserializeObject<List<Segment>>(File.ReadAllText(snapShotPath), Program.SerializerSettings);
 
-                return new Context(Step, snapshotSegments!, context.GpxDirectory);
+                return new Context(Step, snapshotSegments!, context.GpxDirectory, context.World);
             }
 
             if(!Directory.Exists(Path.Combine(context.GpxDirectory, "segments")))
@@ -70,7 +70,7 @@ namespace RoadCaptain.SegmentBuilder
 
             File.WriteAllText(snapShotPath, JsonConvert.SerializeObject(segments, Program.SerializerSettings));
 
-            return new Context(Step, segments, context.GpxDirectory);
+            return new Context(Step, segments, context.GpxDirectory, context.World);
         }
 
         public GpxToSegmentsStep(int step, ILogger logger) : base(logger, step)

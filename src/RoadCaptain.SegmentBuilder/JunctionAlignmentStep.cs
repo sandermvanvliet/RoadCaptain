@@ -28,7 +28,7 @@ namespace RoadCaptain.SegmentBuilder
                     segmentsExceptSegmentToAdjust);
             }
 
-            return new Context(Step, segments, context.GpxDirectory);
+            return new Context(Step, segments, context.GpxDirectory, context.World);
         }
 
         private void AdjustNodeA(Segment segmentToAdjust, List<Segment> segmentsExceptSegmentToAdjust)

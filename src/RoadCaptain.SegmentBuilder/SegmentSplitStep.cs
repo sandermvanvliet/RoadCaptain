@@ -36,7 +36,7 @@ namespace RoadCaptain.SegmentBuilder
                 }
             }
 
-            return new Context(Step, segments, context.GpxDirectory);
+            return new Context(Step, segments, context.GpxDirectory, context.World);
         }
 
         private bool SplitSegmentsAndUpdateSegmentList(List<Segment> segments)

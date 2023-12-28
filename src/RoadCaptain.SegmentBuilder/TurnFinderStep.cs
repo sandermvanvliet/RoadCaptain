@@ -40,10 +40,10 @@ namespace RoadCaptain.SegmentBuilder
                 .ToList();
 
             File.WriteAllText(
-                Path.Combine(context.GpxDirectory, "segments", "turns.json"),
+                Path.Combine(context.GpxDirectory, "segments", $"turns-{context.World}.json"),
                 JsonConvert.SerializeObject(turns.OrderBy(t => t.SegmentId).ToList(), Formatting.Indented, Program.SerializerSettings));
 
-            return new Context(Step, segments, context.GpxDirectory);
+            return new Context(Step, segments, context.GpxDirectory, context.World);
         }
 
         private void GenerateTurns(List<Segment> segments)

@@ -1,28 +1,27 @@
-// Copyright (c) 2023 Sander van Vliet
-// Licensed under Artistic License 2.0
-// See LICENSE or https://choosealicense.com/licenses/artistic-2.0/
-
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Serilog;
 
 namespace RoadCaptain.SegmentBuilder
 {
-    internal class RemoveSegmentsShorterThan20Meters : BaseStep
+    internal class RemoveSegmentsWithNoElevationChange : BaseStep
     {
-        public RemoveSegmentsShorterThan20Meters(int step, ILogger logger) : base(logger, step)
+        public RemoveSegmentsWithNoElevationChange(int step, ILogger logger) : base(logger, step)
         {
         }
 
         public override Context Run(Context context)
         {
+            // Remove segments that have no ascent or descent...
+            // The super flat ones which apparently don't have 
+            // any elevation data.
             var segments = new List<Segment>();
 
             foreach (var segment in context.Segments)
             {
-                if (segment.Distance < 20)
+                if (segment is { Ascent: 0, Descent: 0 })
                 {
-                    Logger.Warning("Segment {SegmentId} is only {Distance}m long and is too short", segment.Id, segment.Distance);
+                    Logger.Warning("Segment {SegmentId} does not have any elevation change", segment.Id);
                 }
                 else
                 {

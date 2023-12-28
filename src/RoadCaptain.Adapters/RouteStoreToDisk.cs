@@ -281,48 +281,14 @@ namespace RoadCaptain.Adapters
                         {
                             plannedRoute.LoopMode = LoopMode.Infinite;
                         }
-                    }
-                }
-                else if (schemaVersion == PersistedRouteVersion4.Version)
-                {
-                    var deserialized = JsonConvert.DeserializeObject<PersistedRouteVersion2>(
-                        serialized,
-                        RouteSerializationSettings);
 
-                    if (deserialized == null || deserialized.Route == null)
-                    {
-                        throw new InvalidOperationException("Failed to deserialize to a valid route object");
+                        if (routeVersion < new Version(0, 7, 0, 7))
+                        {
+                            // With version 0.7.0.9 we've added new segments to Watopia
+                            // and split a few which we need to correct for.
+                            
+                        }
                     }
-
-                    if (string.IsNullOrEmpty(deserialized.RoadCaptainVersion))
-                    {
-                        throw new InvalidOperationException(
-                            "Route does not specify the RoadCaptain version it was created with, I can't determine what to do now");
-                    }
-
-                    var routeVersion = Version.Parse(deserialized.RoadCaptainVersion);
-
-                    if (routeVersion > _currentVersion)
-                    {
-                        throw new InvalidOperationException(
-                            "Route was created with a newer version of RoadCaptain and that won't work");
-                    }
-
-                    if (routeVersion < new Version(0, 7, 0, 6))
-                    {
-                        throw new InvalidOperationException(
-                            "The route file has version 4 but was created with a version of RoadCaptain that does not support version 4, did you manually change the file?");
-                    }
-
-                    if (deserialized.Route.WorldId == null)
-                    {
-                        throw new InvalidOperationException("Expected route to have a WorldId but it didn't have one");
-                    }
-                    
-                    deserialized.Route.World = _worldStore.LoadWorldById(deserialized.Route.WorldId);
-                    
-                    // ReSharper disable once PossibleNullReferenceException
-                    plannedRoute = deserialized.Route;
                 }
                 else
                 {
@@ -435,7 +401,7 @@ namespace RoadCaptain.Adapters
 
         internal static string SerializeAsJson(PlannedRoute route, Formatting formatting = Formatting.Indented)
         {
-            var versionedRoute = new PersistedRouteVersion4
+            var versionedRoute = new PersistedRouteVersion3
             {
                 RoadCaptainVersion = Assembly.GetExecutingAssembly().GetName().Version?.ToString(4) ?? throw new Exception("Unable to determine RoadCaptain version"),
                 Route = route

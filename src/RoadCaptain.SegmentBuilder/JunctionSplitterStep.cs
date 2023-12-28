@@ -61,7 +61,7 @@ namespace RoadCaptain.SegmentBuilder
                 break;
             }
 
-            return new Context(Step, segments, context.GpxDirectory);
+            return new Context(Step, segments, context.GpxDirectory, context.World);
         }
 
         private (Segment? toRemove, List<Segment>? toAdd) SplitJunctionNode(Segment segmentToAdjust, List<Segment> segmentsExceptSegmentToAdjust, TrackPoint endPoint)

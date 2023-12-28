@@ -31,10 +31,10 @@ namespace RoadCaptain.SegmentBuilder
             }
 
             File.WriteAllText(
-                Path.Combine(context.GpxDirectory, "segments", "segments.json"),
+                Path.Combine(context.GpxDirectory, "segments", $"segments-{context.World}.json"),
                 JsonConvert.SerializeObject(segments.OrderBy(s=>s.Id).ToList(), Formatting.Indented, Program.SerializerSettings));
 
-            return new Context(Step, segments, context.GpxDirectory);
+            return new Context(Step, segments, context.GpxDirectory, context.World);
         }
 
         public OutputStep(int step, ILogger logger) : base(logger, step)

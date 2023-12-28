@@ -24,7 +24,7 @@ namespace RoadCaptain.SegmentBuilder
                 .Select(SmoothSegment)
                 .ToList();
 
-            return new Context(Step, smoothedSegments, context.GpxDirectory);
+            return new Context(Step, smoothedSegments, context.GpxDirectory, context.World);
         }
 
         private Segment SmoothSegment(Segment segment)

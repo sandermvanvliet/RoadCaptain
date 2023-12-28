@@ -11,16 +11,18 @@ namespace RoadCaptain.SegmentBuilder
 {
     internal class Context
     {
-        public Context(int step, List<Segment> segments, string gpxDirectory)
+        public Context(int step, List<Segment> segments, string gpxDirectory, string world)
         {
             Segments = segments.ToImmutableList();
             Step = step;
             GpxDirectory = gpxDirectory;
+            World = world;
         }
 
         public ImmutableList<Segment> Segments { get; }
         public int Step { get; }
         public string GpxDirectory { get; }
+        public string World { get; }
 
         public void Persist(string contextPath)
         {

@@ -2,7 +2,9 @@
 // Licensed under Artistic License 2.0
 // See LICENSE or https://choosealicense.com/licenses/artistic-2.0/
 
+using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.IO;
 using System.Linq;
 using Newtonsoft.Json;
@@ -21,7 +23,7 @@ namespace RoadCaptain.SegmentBuilder
             {
                 var route = Route.FromGpxFile(Path.Combine(context.GpxDirectory, filePath));
 
-                Logger.Information($"Finding spawn point segment for {route.Slug}");
+                Logger.Information("Finding spawn point segment for {RouteSlug}", route.Slug);
 
                 // To make sure that we don't have the route matching
                 // at a right angle (for example) on another segment
@@ -54,7 +56,7 @@ namespace RoadCaptain.SegmentBuilder
 
                 if (firstMatch == null)
                 {
-                    Logger.Information($"Did not find point {firstTrackPoint.CoordinatesDecimal} on any segment");
+                    Logger.Information("Did not find point {CoordinatesDecimal} on any segment", firstTrackPoint.CoordinatesDecimal);
                     continue;
                 }
 
@@ -70,17 +72,17 @@ namespace RoadCaptain.SegmentBuilder
                     segment = firstMatch.Segment!;
                 }
                 
-                Logger.Information($"Found point {firstTrackPoint.CoordinatesDecimal} on segment {segment.Id} as {firstMatch.FirstTrackPointOnSegment!.CoordinatesDecimal}");
+                Logger.Information("Found point {CoordinatesDecimal} on segment {SegmentId} as {CoordinatesOnSegment}", firstTrackPoint.CoordinatesDecimal, segment.Id, firstMatch.FirstTrackPointOnSegment!.CoordinatesDecimal);
 
                 if (spawnPoints.Any(s => s.SegmentId == segment.Id))
                 {
-                    Logger.Warning($"{segment.Id} is already a spawn point");
+                    Logger.Warning("{SegmentId} is already a spawn point", segment.Id);
                     continue;
                 }
 
                 var direction = segment.DirectionOf(firstMatch.FirstTrackPointOnSegment, firstMatch.SecondTrackPointOnSegment!);
 
-                Logger.Information($"Adding spawn point for {route.Name} with direction {direction}");
+                Logger.Information("Adding spawn point for {RouteName} with direction {Direction}", route.Name, direction);
 
                 spawnPoints.Add(new SpawnPoint
                 {
@@ -91,11 +93,64 @@ namespace RoadCaptain.SegmentBuilder
                 });
             }
 
-            File.WriteAllText(
-                Path.Combine(context.GpxDirectory, "segments", "spawnPoints.json"),
-                JsonConvert.SerializeObject(spawnPoints.OrderBy(s => s.SegmentId).ToList(), Formatting.Indented, Program.SerializerSettings));
+            var zwiftWorldId = Enum.Parse<ZwiftWorldId>(context.World);
+            var (worldMostLeft, worldMostRight) = CalculateLeftRight(context.Segments, zwiftWorldId);
 
-            return new Context(Step, context.Segments.ToList(), context.GpxDirectory);
+            File.WriteAllText(
+                Path.Combine(context.GpxDirectory, "segments", $"spawnPoints-{context.World}.json"),
+                JsonConvert.SerializeObject(
+                    new
+                    {
+                        id = context.World,
+                        worldMostLeft,
+                        worldMostRight,
+                        spawnPoints = spawnPoints.OrderBy(s => s.SegmentId).ToList()
+                    },
+                    Formatting.Indented,
+                    Program.SerializerSettings));
+
+            return new Context(Step, context.Segments.ToList(), context.GpxDirectory, context.World);
+        }
+
+        private (TrackPoint worldMostLeft, TrackPoint worldMostRight) CalculateLeftRight(
+            ImmutableList<Segment> segments, ZwiftWorldId zwiftWorldId)
+        {
+            var allPoints = segments.SelectMany(s => s.Points).ToList();
+
+            double? mapLeftLat = null;
+            double? mapLeftLon = null;
+            double? mapRightLat = null;
+            double? mapRightLon = null;
+            
+            foreach (var point in allPoints)
+            {
+                mapLeftLat = mapLeftLat.HasValue
+                    ? point.Latitude > mapLeftLat
+                        ? point.Latitude
+                        : mapLeftLat
+                    : point.Latitude;
+                
+                mapLeftLon = mapLeftLon.HasValue
+                    ? point.Longitude < mapLeftLon
+                        ? point.Longitude
+                        : mapLeftLon
+                    : point.Longitude;
+                
+                mapRightLat = mapRightLat.HasValue
+                    ? point.Latitude < mapRightLat
+                        ? point.Latitude
+                        : mapRightLat
+                    : point.Latitude;
+                
+                mapRightLon = mapRightLon.HasValue
+                    ? point.Longitude > mapRightLon
+                        ? point.Longitude
+                        : mapRightLon
+                    : point.Longitude;
+            }
+
+            return (new TrackPoint(mapLeftLat.Value, mapLeftLon.Value, 0, zwiftWorldId),
+                new TrackPoint(mapRightLat.Value, mapRightLon.Value, 0, zwiftWorldId));
         }
 
         public SpawnPointFinderStep(int step, ILogger logger) : base(logger, step)

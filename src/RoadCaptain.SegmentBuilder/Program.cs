@@ -16,9 +16,11 @@ namespace RoadCaptain.SegmentBuilder
 
         static void Main(string[] args)
         {
-            var gpxDirectory = args.Length > 0 ? args[0] : @"C:\git\temp\zwift\zwift-watopia-gpx";
+            var world = "watopia";
+            
+            var gpxDirectory = args.Length > 0 ? args[0] : $@"C:\git\temp\zwift\zwift-{world}-gpx";
 
-            new Program().Run(gpxDirectory, 2, null, gpxDirectory);
+            new Program().Run(gpxDirectory, null, null, gpxDirectory, world);
         }
         
         public static readonly JsonSerializerSettings SerializerSettings = new()
@@ -44,17 +46,20 @@ namespace RoadCaptain.SegmentBuilder
             {
                 new GpxToSegmentsStep(0, _logger),
                 new RemoveSegmentsShorterThan20Meters(1, _logger),
-                new SegmentSmootherStep(2, _logger),
-                new JunctionAlignmentStep(3, _logger),
-                new JunctionSplitterStep(4, _logger),
-                new TurnFinderStep(5, _logger),
-                new RemoveSegmentsShorterThan20Meters(6, _logger),
-                new OutputStep(7, _logger),
-                new SpawnPointFinderStep(8, _logger)
+                new RemoveSegmentsWithNoElevationChange(2, _logger),
+                new SegmentSmootherStep(3, _logger),
+                new JunctionAlignmentStep(4, _logger),
+                new JunctionSplitterStep(5, _logger),
+                new TurnFinderStep(6, _logger),
+                new RemoveSegmentsShorterThan20Meters(7, _logger),
+                new RemoveSegmentsWithFewPoints(8, _logger),
+                new OutputStep(9, _logger),
+                new SpawnPointFinderStep(10, _logger)
             };
         }
         
-        public void Run(string gpxDirectory, int? runFromStep, int? runUntilStepInclusive, string contextPath)
+        public void Run(string gpxDirectory, int? runFromStep, int? runUntilStepInclusive, string contextPath,
+            string world)
         {
             runFromStep ??= 0;
             runUntilStepInclusive ??= _steps.Length - 1;
@@ -63,7 +68,7 @@ namespace RoadCaptain.SegmentBuilder
 
             if (runFromStep == 0)
             {
-                context = new Context(0, new List<Segment>(), gpxDirectory);
+                context = new Context(0, new List<Segment>(), gpxDirectory, world);
             }
             else
             {
