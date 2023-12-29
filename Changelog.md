@@ -6,8 +6,14 @@
 
 #### Bug fixes
 
-- [London] Updated the spawn points and removed event-only spawn points
 - Fixed an issue where the app would crash when loading an invalid route
+- Prevent a route from being stored multiple times when uploading it to the Road Captain shared route repository
+
+#### World updates
+
+- [Watopia] Added the new segment from Fuego Flats to the Jungle
+- [Watopia] Added the new segment to the Climb Portal at the Volcano
+- [London] Updated the spawn points and removed event-only spawn points
 
 ## 0.7.0.6
 
