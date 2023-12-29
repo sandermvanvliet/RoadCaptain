@@ -139,7 +139,7 @@ namespace RoadCaptain.App.RouteBuilder.Tests.Unit
             GivenWorldAndSport("watopia", SportType.Cycling);
 
             _viewModel.CallAddSegmentToRoute(GetSegmentById("watopia-beach-island-loop-001")); // This segment only has AtoB as a valid spawn direction
-            _viewModel.CallAddSegmentToRoute(GetSegmentById("watopia-bambino-fondo-004-after-before"));
+            _viewModel.CallAddSegmentToRoute(GetSegmentById("watopia-bambino-fondo-004-after-before-before"));
 
             _lastStatusBarLevel
                 .Should()
@@ -147,7 +147,7 @@ namespace RoadCaptain.App.RouteBuilder.Tests.Unit
 
             _lastStatusBarMessage
                 .Should()
-                .Be("Added segment Volcano circuit 1");
+                .Be("Added segment Volcano circuit 1-before");
         }
 
         [Fact]

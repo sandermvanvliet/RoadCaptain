@@ -52,9 +52,6 @@
     <None Update="segments-watopia.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="segments-watopia.bin">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Update="turns-france.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
