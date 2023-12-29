@@ -53,8 +53,9 @@ namespace RoadCaptain.SegmentBuilder
                 new TurnFinderStep(6, _logger),
                 new RemoveSegmentsShorterThan20Meters(7, _logger),
                 new RemoveSegmentsWithFewPoints(8, _logger),
-                new OutputStep(9, _logger),
-                new SpawnPointFinderStep(10, _logger)
+                new JoinStraightConnections(9, _logger),
+                new OutputStep(10, _logger),
+                new SpawnPointFinderStep(11, _logger)
             };
         }
         

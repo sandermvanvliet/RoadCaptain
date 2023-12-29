@@ -11,6 +11,12 @@
         "sport": "Cycling"
       },
       {
+        "segmentId": "watopia-accelerate-to-elevate-001-before-after",
+        "zwiftRouteName": "serpentine-8 (watopia)",
+        "direction": "AtoB",
+        "sport": "Cycling"
+      },
+      {
         "segmentId": "watopia-accelerate-to-elevate-001-before-before-after",
         "zwiftRouteName": "coast-crusher (watopia)",
         "direction": "BtoA",
@@ -26,6 +32,12 @@
         "segmentId": "watopia-bambino-fondo-001-after-after-after-after-after",
         "zwiftRouteName": "beach-island-loop (watopia)",
         "direction": "BtoA",
+        "sport": "Cycling"
+      },
+      {
+        "segmentId": "watopia-bambino-fondo-001-after-after-after-after-after",
+        "zwiftRouteName": "bigger-loop (watopia)",
+        "direction": "AtoB",
         "sport": "Cycling"
       },
       {
@@ -59,6 +71,12 @@
         "sport": "Cycling"
       },
       {
+        "segmentId": "watopia-bambino-fondo-006-before-after",
+        "zwiftRouteName": "volcano-circuit-ccw (watopia)",
+        "direction": "AtoB",
+        "sport": "Cycling"
+      },
+      {
         "segmentId": "watopia-bambino-fondo-006-before-before",
         "zwiftRouteName": "the-mega-pretzel (watopia)",
         "direction": "BtoA",
@@ -75,54 +93,27 @@
         "zwiftRouteName": "repack-rush (watopia)",
         "direction": "AtoB",
         "sport": "Cycling"
-      },
-      {
-        "segmentId": "watopia-5k-loop-001-before-before",
-        "zwiftRouteName": "5k Loop",
-        "direction": "AtoB",
-        "sport": "Running"
-      },
-      {
-        "segmentId": "watopia-5k-loop-001-before-before",
-        "zwiftRouteName": "Chili Pepper Reverse",
-        "direction": "BtoA",
-        "sport": "Running"
-      },
-      {
-        "segmentId": "watopia-5k-loop-001-after-after-after",
-        "zwiftRouteName": "11.1 Ocean Boulevard",
-        "direction": "BtoA",
-        "sport": "Running"
-      },
-      {
-        "segmentId": "watopia-may-field-001",
-        "zwiftRouteName": "May Field",
-        "direction": "AtoB",
-        "sport": "Running"
-      },
-      {
-        "segmentId": "watopia-5k-loop-001-after-after-before-after",
-        "zwiftRouteName": "Run Path Reverse",
-        "direction": "BtoA",
-        "sport": "Running"
       }
     ],
     "status": "Available",
     "zwiftId": "Watopia",
     "worldMostLeft": {
       "latitude": -11.63462,
-      "longitude":  166.88756,
+      "longitude": 166.88756,
       "altitude": 0.0,
-      "distanceOnSegment": 0.0,
-      "distanceFromLast": 0.0
-    },
-    "worldMostRight": {
-      "latitude": -11.72034 ,
-      "longitude": 167.00276,
-      "altitude": 0.0,
+      "index": null,
       "distanceOnSegment": 0.0,
       "distanceFromLast": 0.0,
-      "coordinatesDecimal": "S11.64594� E167.00275�"
+      "worldId": "Watopia"
+    },
+    "worldMostRight": {
+      "latitude": -11.72034,
+      "longitude": 167.00276,
+      "altitude": 0.0,
+      "index": null,
+      "distanceOnSegment": 0.0,
+      "distanceFromLast": 0.0,
+      "worldId": "Watopia"
     },
     "mapMostLeft": {
       "isEmpty": false,

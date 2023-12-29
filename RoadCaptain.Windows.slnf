@@ -11,6 +11,7 @@
       "src\\RoadCaptain.App.Windows\\RoadCaptain.App.Windows.csproj",
       "src\\RoadCaptain.MarkerBuilder\\RoadCaptain.MarkerBuilder.csproj",
       "src\\RoadCaptain.SegmentBuilder\\RoadCaptain.SegmentBuilder.csproj",
+      "src\\RoadCaptain.SegmentJoiner\\RoadCaptain.SegmentJoiner.csproj",
       "src\\RoadCaptain.SegmentSerializer\\RoadCaptain.SegmentSerializer.csproj",
       "src\\RoadCaptain.SegmentSplitter\\RoadCaptain.SegmentSplitter.csproj",
       "src\\RoadCaptain.ZwiftRouteDownloader\\RoadCaptain.ZwiftRouteDownloader.csproj",

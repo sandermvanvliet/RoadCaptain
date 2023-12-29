@@ -6,6 +6,7 @@ using System;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Threading;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using RoadCaptain.Ports;
@@ -50,7 +51,8 @@ namespace RoadCaptain.Adapters
                 request.Headers.UserAgent.Add(new ProductInfoHeaderValue("RoadCaptain",
                     (GetType().Assembly.GetName().Version ?? new Version(0, 0)).ToString(4)));
 
-                var result = _client.SendAsync(request).GetAwaiter().GetResult();
+                using var tokenSource = new CancellationTokenSource(TimeSpan.FromSeconds(5));
+                var result = _client.SendAsync(request, tokenSource.Token).GetAwaiter().GetResult();
 
                 if (result.IsSuccessStatusCode)
                 {

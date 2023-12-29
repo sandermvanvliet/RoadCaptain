@@ -74,14 +74,15 @@ namespace RoadCaptain.SegmentBuilder
                 
                 Logger.Information("Found point {CoordinatesDecimal} on segment {SegmentId} as {CoordinatesOnSegment}", firstTrackPoint.CoordinatesDecimal, segment.Id, firstMatch.FirstTrackPointOnSegment!.CoordinatesDecimal);
 
-                if (spawnPoints.Any(s => s.SegmentId == segment.Id))
-                {
-                    Logger.Warning("{SegmentId} is already a spawn point", segment.Id);
-                    continue;
-                }
 
                 var direction = segment.DirectionOf(firstMatch.FirstTrackPointOnSegment, firstMatch.SecondTrackPointOnSegment!);
 
+                if (spawnPoints.Any(s => s.SegmentId == segment.Id && s.Direction == direction))
+                {
+                    Logger.Warning("{SegmentId} is already a spawn point for the direction {Direction}", segment.Id, direction);
+                    continue;
+                }
+                
                 Logger.Information("Adding spawn point for {RouteName} with direction {Direction}", route.Name, direction);
 
                 spawnPoints.Add(new SpawnPoint
@@ -93,7 +94,7 @@ namespace RoadCaptain.SegmentBuilder
                 });
             }
 
-            var zwiftWorldId = Enum.Parse<ZwiftWorldId>(context.World);
+            var zwiftWorldId = Enum.Parse<ZwiftWorldId>(context.World, true);
             var (worldMostLeft, worldMostRight) = CalculateLeftRight(context.Segments, zwiftWorldId);
 
             File.WriteAllText(

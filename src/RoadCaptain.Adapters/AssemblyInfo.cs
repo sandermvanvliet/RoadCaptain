@@ -10,5 +10,6 @@ using System.Runtime.CompilerServices;
 [assembly:InternalsVisibleTo("RoadCaptain.App.Runner.Tests.Unit")]
 [assembly:InternalsVisibleTo("RoadCaptain.App.RouteBuilder.Tests.Unit")]
 [assembly:InternalsVisibleTo("RoadCaptain.SegmentSplitter")]
+[assembly:InternalsVisibleTo("RoadCaptain.SegmentJoiner")]
 [assembly:InternalsVisibleTo("RoadCaptain.SegmentBuilder")]
 [assembly:InternalsVisibleTo("RoadCaptain.SegmentSerializer")]
