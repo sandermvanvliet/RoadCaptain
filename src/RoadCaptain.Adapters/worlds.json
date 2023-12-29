@@ -5,125 +5,129 @@
     "description": "",
     "spawnPoints": [
       {
-        "segmentId": "watopia-accelerate-to-elevate-001-before-after",
-        "zwiftRouteName": "jungle-circuit (watopia)",
-        "direction": "BtoA",
-        "sport": "Cycling"
-      },
-      {
-        "segmentId": "watopia-accelerate-to-elevate-001-before-after",
-        "zwiftRouteName": "serpentine-8 (watopia)",
+        "segmentId": "watopia-bambino-fondo-001-after-after-after-after-after-before",
+        "zwiftRouteName": "Big Loop",
         "direction": "AtoB",
-        "sport": "Cycling"
+        "sport": "Both"
       },
       {
-        "segmentId": "watopia-accelerate-to-elevate-001-before-before-after",
-        "zwiftRouteName": "coast-crusher (watopia)",
+        "segmentId": "watopia-bambino-fondo-001-after-after-after-after-after-before",
+        "zwiftRouteName": "Beach Island Loop",
         "direction": "BtoA",
-        "sport": "Cycling"
+        "sport": "Both"
       },
       {
-        "segmentId": "watopia-accelerate-to-elevate-001-before-before-before-before",
-        "zwiftRouteName": "accelerate-to-elevate (watopia)",
+        "segmentId": "watopia-bambino-fondo-001-after-after-after-after-after-after",
+        "zwiftRouteName": "Mountain Route",
         "direction": "AtoB",
-        "sport": "Cycling"
+        "sport": "Both"
       },
       {
-        "segmentId": "watopia-bambino-fondo-001-after-after-after-after-after",
-        "zwiftRouteName": "beach-island-loop (watopia)",
+        "segmentId": "watopia-bambino-fondo-001-after-after-after-after-after-after",
+        "zwiftRouteName": "Big Loop Reverse",
         "direction": "BtoA",
-        "sport": "Cycling"
+        "sport": "Both"
       },
       {
-        "segmentId": "watopia-bambino-fondo-001-after-after-after-after-after",
-        "zwiftRouteName": "bigger-loop (watopia)",
-        "direction": "AtoB",
-        "sport": "Cycling"
-      },
-      {
-        "segmentId": "watopia-bambino-fondo-001-after-after-after-after-before-before",
-        "zwiftRouteName": "seaside-sprint (watopia)",
+        "segmentId": "watopia-big-foot-hills-004-before",
+        "zwiftRouteName": "Muir and the mountain",
         "direction": "BtoA",
-        "sport": "Cycling"
+        "sport": "Both"
       },
       {
-        "segmentId": "watopia-bambino-fondo-001-before",
-        "zwiftRouteName": "medio-fondo (watopia)",
+        "segmentId": "watopia-big-foot-hills-004-before",
+        "zwiftRouteName": "Big Foot Hills",
         "direction": "AtoB",
-        "sport": "Cycling"
+        "sport": "Both"
+      },
+      {
+        "segmentId": "watopia-bambino-fondo-003-before-after",
+        "zwiftRouteName": "Jungle Circuit",
+        "direction": "AtoB",
+        "sport": "Both"
+      },
+      {
+        "segmentId": "watopia-beach-island-loop-001",
+        "zwiftRouteName": "Volcano Circuit",
+        "direction": "AtoB",
+        "sport": "Both"
+      },
+      {
+        "segmentId": "watopia-bambino-fondo-004-before-before",
+        "zwiftRouteName": "The Mega Pretzel",
+        "direction": "BtoA",
+        "sport": "Both"
+      },
+      {
+        "segmentId": "watopia-big-foot-hills-004-after-after",
+        "zwiftRouteName": "Triple Flat Loops",
+        "direction": "AtoB",
+        "sport": "Both"
       },
       {
         "segmentId": "watopia-bambino-fondo-004-before-after",
-        "zwiftRouteName": "road-to-sky (watopia)",
+        "zwiftRouteName": "Tour of Fire and Ice",
+        "direction": "BtoA",
+        "sport": "Both"
+      },
+      {
+        "segmentId": "watopia-5k-loop-001-before-before",
+        "zwiftRouteName": "5k Loop",
         "direction": "AtoB",
-        "sport": "Cycling"
+        "sport": "Running"
       },
       {
-        "segmentId": "watopia-bambino-fondo-005-after",
-        "zwiftRouteName": "shorelines-and-summits (watopia)",
+        "segmentId": "watopia-5k-loop-001-before-before",
+        "zwiftRouteName": "Chili Pepper Reverse",
         "direction": "BtoA",
-        "sport": "Cycling"
+        "sport": "Running"
       },
       {
-        "segmentId": "watopia-bambino-fondo-006-before-after",
-        "zwiftRouteName": "tour-of-fire-and-ice (watopia)",
+        "segmentId": "watopia-5k-loop-001-after-after-after",
+        "zwiftRouteName": "11.1 Ocean Boulevard",
         "direction": "BtoA",
-        "sport": "Cycling"
+        "sport": "Running"
       },
       {
-        "segmentId": "watopia-bambino-fondo-006-before-after",
-        "zwiftRouteName": "volcano-circuit-ccw (watopia)",
+        "segmentId": "watopia-may-field-001",
+        "zwiftRouteName": "May Field",
         "direction": "AtoB",
-        "sport": "Cycling"
+        "sport": "Running"
       },
       {
-        "segmentId": "watopia-bambino-fondo-006-before-before",
-        "zwiftRouteName": "the-mega-pretzel (watopia)",
+        "segmentId": "watopia-5k-loop-001-after-after-before-after",
+        "zwiftRouteName": "Run Path Reverse",
         "direction": "BtoA",
-        "sport": "Cycling"
-      },
-      {
-        "segmentId": "watopia-big-foot-hills-001-after-before",
-        "zwiftRouteName": "canopies-and-coastlines (watopia)",
-        "direction": "BtoA",
-        "sport": "Cycling"
-      },
-      {
-        "segmentId": "watopia-repack-rush-001",
-        "zwiftRouteName": "repack-rush (watopia)",
-        "direction": "AtoB",
-        "sport": "Cycling"
+        "sport": "Running"
       }
     ],
     "status": "Available",
     "zwiftId": "Watopia",
     "worldMostLeft": {
-      "latitude": -11.63462,
-      "longitude": 166.88756,
+      "latitude": -11.68401,
+      "longitude": 166.89304,
       "altitude": 0.0,
-      "index": null,
       "distanceOnSegment": 0.0,
       "distanceFromLast": 0.0,
-      "worldId": "Watopia"
+      "coordinatesDecimal": "S11.68401� E166.89304�"
     },
     "worldMostRight": {
-      "latitude": -11.72034,
-      "longitude": 167.00276,
+      "latitude": -11.64594,
+      "longitude": 167.00275,
       "altitude": 0.0,
-      "index": null,
       "distanceOnSegment": 0.0,
       "distanceFromLast": 0.0,
-      "worldId": "Watopia"
+      "coordinatesDecimal": "S11.64594� E167.00275�"
     },
     "mapMostLeft": {
       "isEmpty": false,
-      "x": 266.0,
-      "y": 232.0
+      "x": 531.0,
+      "y": 461.0
     },
     "mapMostRight": {
       "isEmpty": false,
-      "x": 3309.0,
-      "y": 2523.0
+      "x": 6618.0,
+      "y": 3586.0
     }
   },
   {
