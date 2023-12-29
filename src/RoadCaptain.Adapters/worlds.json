@@ -104,16 +104,15 @@
     "status": "Available",
     "zwiftId": "Watopia",
     "worldMostLeft": {
-      "latitude": -11.68401,
-      "longitude": 166.89304,
+      "latitude": -11.63462,
+      "longitude": 166.88756,
       "altitude": 0.0,
       "distanceOnSegment": 0.0,
-      "distanceFromLast": 0.0,
-      "coordinatesDecimal": "S11.68401� E166.89304�"
+      "distanceFromLast": 0.0
     },
     "worldMostRight": {
-      "latitude": -11.64594,
-      "longitude": 167.00275,
+      "latitude": -11.72034,
+      "longitude": 167.00276,
       "altitude": 0.0,
       "distanceOnSegment": 0.0,
       "distanceFromLast": 0.0,
@@ -121,13 +120,13 @@
     },
     "mapMostLeft": {
       "isEmpty": false,
-      "x": 531.0,
-      "y": 461.0
+      "x": 266.0,
+      "y": 232.0
     },
     "mapMostRight": {
       "isEmpty": false,
-      "x": 6618.0,
-      "y": 3586.0
+      "x": 3309.0,
+      "y": 2523.0
     }
   },
   {

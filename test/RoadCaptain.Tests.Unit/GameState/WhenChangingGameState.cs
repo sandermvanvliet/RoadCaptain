@@ -528,7 +528,7 @@ namespace RoadCaptain.Tests.Unit.GameState
             // those two segments.
             // This is an issue mostly in the Volcano on Watopia.
             var fileRoot = @"c:\git\RoadCaptain\src\RoadCaptain.Adapters";
-            var segmentStore = new SegmentStore(fileRoot);
+            var segmentStore = new SegmentStore(fileRoot, new NopMonitoringEvents());
             var segments = segmentStore.LoadSegments(new World() { Id = "watopia", ZwiftId = ZwiftWorldId.Watopia }, SportType.Cycling);
             var routeStore = new RouteStoreToDisk(segmentStore, new WorldStoreToDisk(fileRoot));
             var plannedRoute = routeStore.LoadFrom(@"C:\git\temp\zwift\RoadCaptain-troubleshoot\77-volcano-climb\DragonVsTitan.json.json");

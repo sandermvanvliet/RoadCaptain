@@ -28,13 +28,16 @@ namespace RoadCaptain.Adapters
             }
         };
 
-        public SegmentStore() : this(Path.GetDirectoryName(typeof(WorldStoreToDisk).Assembly.Location) ?? Environment.CurrentDirectory)
+        private readonly MonitoringEvents _monitoringEvents;
+
+        public SegmentStore(MonitoringEvents monitoringEvents) : this(Path.GetDirectoryName(typeof(WorldStoreToDisk).Assembly.Location) ?? Environment.CurrentDirectory, monitoringEvents)
         {
         }
 
-        internal SegmentStore(string fileRoot)
+        internal SegmentStore(string fileRoot, MonitoringEvents monitoringEvents)
         {
             _fileRoot = fileRoot;
+            _monitoringEvents = monitoringEvents;
         }
 
         public List<Segment> LoadSegments(World world, SportType sport)
@@ -50,8 +53,21 @@ namespace RoadCaptain.Adapters
 
             var emptyListOfSegments = new List<Segment>();
 
-            if ((!File.Exists(binarySegmentsPathForWorld) && !File.Exists(segmentsPathForWorld)) || !File.Exists(turnsPathForWorld))
+            var segmentsFileDoesNotExist = !File.Exists(binarySegmentsPathForWorld) && !File.Exists(segmentsPathForWorld);
+            var turnsFileDoesNotExist = !File.Exists(turnsPathForWorld);
+            
+            if (segmentsFileDoesNotExist || turnsFileDoesNotExist)
             {
+                if (segmentsFileDoesNotExist)
+                {
+                    _monitoringEvents.Error("Segments file for {World} does not exist", world);
+                }
+
+                if (turnsFileDoesNotExist)
+                {
+                    _monitoringEvents.Error("Turns file for {World} does not exist", world);
+                }
+                
                 LoadedSegments.TryAdd(CacheKey(sport, world), emptyListOfSegments);
                 return emptyListOfSegments;
             }
@@ -61,7 +77,15 @@ namespace RoadCaptain.Adapters
             if (File.Exists(binarySegmentsPathForWorld))
             {
                 using var reader = new BinaryReader(File.OpenRead(binarySegmentsPathForWorld), Encoding.UTF8, false);
-                segments = BinarySegmentSerializer.DeserializeSegments(reader);
+                try
+                {
+                    segments = BinarySegmentSerializer.DeserializeSegments(reader);
+                }
+                catch (Exception e)
+                {
+                    _monitoringEvents.Error(e, "Failed to deserialize segments for {World}", world);
+                    throw;
+                }
             }
             else
             {
@@ -166,6 +190,8 @@ namespace RoadCaptain.Adapters
                     }
                     using var writer = new BinaryWriter(File.OpenWrite(outputPath));
                     BinarySegmentSerializer.SerializeSegments(writer, segments);
+                    writer.Flush();
+                    writer.Close();
                 }
             }
         }

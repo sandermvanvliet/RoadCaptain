@@ -18,7 +18,7 @@ namespace RoadCaptain.Tests.Unit.UseCases
         public void GivenUnknownRepositoryName_ExceptionIsThrown()
         {
             var command = new SaveRouteCommand(new PlannedRoute(), "NOT IMPORTANT", "REPOSITORY DOES NOT EXIST", "NOT IMPORTANT", null);
-            var useCase = new SaveRouteUseCase(Array.Empty<IRouteRepository>(), new SegmentStore(), new StubRouteStore());
+            var useCase = new SaveRouteUseCase(Array.Empty<IRouteRepository>(), new SegmentStore(new NopMonitoringEvents()), new StubRouteStore());
 
             var action = () => useCase.ExecuteAsync(command).GetAwaiter().GetResult();
 
@@ -35,7 +35,7 @@ namespace RoadCaptain.Tests.Unit.UseCases
         public void GivenCommandHasNoRepositoryNameAndNoFileName_ExceptionIsThrown()
         {
             var command = new SaveRouteCommand(new PlannedRoute(), "NOT IMPORTANT", null, null, null);
-            var useCase = new SaveRouteUseCase(Array.Empty<IRouteRepository>(), new SegmentStore(), new StubRouteStore());
+            var useCase = new SaveRouteUseCase(Array.Empty<IRouteRepository>(), new SegmentStore(new NopMonitoringEvents()), new StubRouteStore());
 
             var action = () => useCase.ExecuteAsync(command).GetAwaiter().GetResult();
 
@@ -53,7 +53,7 @@ namespace RoadCaptain.Tests.Unit.UseCases
         {
             var command = new SaveRouteCommand(new PlannedRoute(), "NOT IMPORTANT", null, "c:\\temp\\route.json", null);
             var stubRouteStore = new StubRouteStore();
-            var useCase = new SaveRouteUseCase(Array.Empty<IRouteRepository>(), new SegmentStore(), stubRouteStore);
+            var useCase = new SaveRouteUseCase(Array.Empty<IRouteRepository>(), new SegmentStore(new NopMonitoringEvents()), stubRouteStore);
 
             useCase.ExecuteAsync(command).GetAwaiter().GetResult();
 

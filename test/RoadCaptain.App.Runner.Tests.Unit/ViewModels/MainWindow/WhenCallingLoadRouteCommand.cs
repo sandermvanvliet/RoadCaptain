@@ -28,7 +28,7 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.MainWindow
                 new InMemoryGameStateDispatcher(new NopMonitoringEvents(), new PlatformPaths()),
                 routeStore,
                 new StubVersionChecker(),
-                new SegmentStore(),
+                new SegmentStore(new Shared.NopMonitoringEvents()),
                 new NoZwiftCredentialCache(),
                 new NopMonitoringEvents(),
                 new DummyApplicationFeatures(),

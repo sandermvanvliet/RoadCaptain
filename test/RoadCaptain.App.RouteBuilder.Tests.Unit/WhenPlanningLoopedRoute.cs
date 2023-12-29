@@ -58,7 +58,7 @@ namespace RoadCaptain.App.RouteBuilder.Tests.Unit
 
         public WhenPlanningLoopedRoute()
         {
-            ISegmentStore segmentStore = new SegmentStore();
+            ISegmentStore segmentStore = new SegmentStore(new NopMonitoringEvents());
             var worldStore = new WorldStoreToDisk();
             var world = worldStore.LoadWorldById("watopia")!;
 

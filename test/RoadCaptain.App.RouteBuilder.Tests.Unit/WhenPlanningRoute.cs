@@ -24,7 +24,7 @@ namespace RoadCaptain.App.RouteBuilder.Tests.Unit
 
         public WhenPlanningRoute()
         {
-            _segmentStore = new SegmentStore();
+            _segmentStore = new SegmentStore(new NopMonitoringEvents());
             var worldStore = new WorldStoreToDisk();
 
             _worldStore = worldStore;

@@ -20,7 +20,7 @@ namespace RoadCaptain.Tests.Unit.GameState.Repro
         [Fact]
         public void HillyKOMBypassRebelRoute_DoesNotSkipSegment()
         {
-            var segments = new SegmentStore()
+            var segments = new SegmentStore(new NopMonitoringEvents())
                 .LoadSegments(
                     new World { Id = "watopia", ZwiftId = ZwiftWorldId.Watopia },
                     SportType.Cycling);
@@ -103,7 +103,7 @@ namespace RoadCaptain.Tests.Unit.GameState.Repro
         [Fact]
         public void StartingVolcanoClimb()
         {
-            var segmentStore = new SegmentStore();
+            var segmentStore = new SegmentStore(new NopMonitoringEvents());
             var routeStore = new RouteStoreToDisk(segmentStore, new WorldStoreToDisk());
             var segments = segmentStore
                 .LoadSegments(
@@ -167,7 +167,7 @@ namespace RoadCaptain.Tests.Unit.GameState.Repro
             // Italian villas.
             // What would happen was that RoadCaptain flipped quickly between on/off route
             // states.
-            var segmentStore = new SegmentStore();
+            var segmentStore = new SegmentStore(new NopMonitoringEvents());
             var routeStore = new RouteStoreToDisk(segmentStore, new WorldStoreToDisk());
             var segments = segmentStore
                 .LoadSegments(
@@ -223,7 +223,7 @@ namespace RoadCaptain.Tests.Unit.GameState.Repro
             // Italian villas.
             // What would happen was that RoadCaptain flipped quickly between on/off route
             // states.
-            var segmentStore = new SegmentStore();
+            var segmentStore = new SegmentStore(new NopMonitoringEvents());
             var routeStore = new RouteStoreToDisk(segmentStore, new WorldStoreToDisk());
             var segments = segmentStore
                 .LoadSegments(
@@ -279,7 +279,7 @@ namespace RoadCaptain.Tests.Unit.GameState.Repro
             // Italian villas.
             // What would happen was that RoadCaptain flipped quickly between on/off route
             // states.
-            var segmentStore = new SegmentStore();
+            var segmentStore = new SegmentStore(new NopMonitoringEvents());
             var routeStore = new RouteStoreToDisk(segmentStore, new WorldStoreToDisk());
             var segments = segmentStore
                 .LoadSegments(
@@ -324,7 +324,7 @@ namespace RoadCaptain.Tests.Unit.GameState.Repro
             // Italian villas.
             // What would happen was that RoadCaptain flipped quickly between on/off route
             // states.
-            var segmentStore = new SegmentStore();
+            var segmentStore = new SegmentStore(new NopMonitoringEvents());
             var routeStore = new RouteStoreToDisk(segmentStore, new WorldStoreToDisk());
             var segments = segmentStore
                 .LoadSegments(

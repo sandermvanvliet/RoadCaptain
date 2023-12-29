@@ -41,7 +41,7 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.MainWindow
                 _gameStateDispatcher,
                 routeStore,
                 new StubVersionChecker(), 
-                new SegmentStore(),
+                new SegmentStore(new NopMonitoringEvents()),
                 _credentialCache,
                 new NopMonitoringEvents(),
                 new DummyApplicationFeatures(),

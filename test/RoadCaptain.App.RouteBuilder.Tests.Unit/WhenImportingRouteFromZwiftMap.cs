@@ -17,7 +17,7 @@ namespace RoadCaptain.App.RouteBuilder.Tests.Unit
         public void GivenZwiftMapRoute_ItIsMappedToAPlannedRoute()
         {
             var fileRoot = Environment.CurrentDirectory;
-            var segmentStore = new SegmentStore(fileRoot);
+            var segmentStore = new SegmentStore(fileRoot, new Shared.NopMonitoringEvents());
             var worldStore = new WorldStoreToDisk(fileRoot);
             var routeStore = new RouteStoreToDisk(segmentStore, worldStore);
 

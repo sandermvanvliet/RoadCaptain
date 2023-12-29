@@ -90,7 +90,7 @@ namespace RoadCaptain.Tests.Unit.Routing
         [Fact]
         public void BoundingBoxesCalculated()
         {
-            var segmentStore = new SegmentStore();
+            var segmentStore = new SegmentStore(new NopMonitoringEvents());
 
             var segments = segmentStore.LoadSegments(new World { Id = "watopia", Name = "Watopia" }, SportType.Both);
 
@@ -103,7 +103,7 @@ namespace RoadCaptain.Tests.Unit.Routing
         [Fact]
         public void AllPointsOnEachSegmentAreWithinItsBoundingBox()
         {
-            var segmentStore = new SegmentStore();
+            var segmentStore = new SegmentStore(new NopMonitoringEvents());
 
             var segments = segmentStore.LoadSegments(new World { Id = "watopia", Name = "Watopia" }, SportType.Both);
 
@@ -123,7 +123,7 @@ namespace RoadCaptain.Tests.Unit.Routing
         [Fact]
         public void GivenWorldWithoutSegments_NoSegmentsAreReturned()
         {
-            var segmentStore = new SegmentStore();
+            var segmentStore = new SegmentStore(new NopMonitoringEvents());
 
             var segments = segmentStore.LoadSegments(new World { Id = "test", Name = "Test" }, SportType.Both);
 
@@ -135,7 +135,7 @@ namespace RoadCaptain.Tests.Unit.Routing
         [Fact]
         public void GivenWatopiaSegmentsAndSportIsBoth_AllSegmentsAreReturned()
         {
-            var segmentStore = new SegmentStore();
+            var segmentStore = new SegmentStore(new NopMonitoringEvents());
 
             var allSegments = segmentStore.LoadSegments(new World { Id = "watopia", Name = "Watopia" }, SportType.Both);
 

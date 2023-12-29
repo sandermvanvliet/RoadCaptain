@@ -34,7 +34,7 @@ namespace RoadCaptain.Adapters.Tests.Unit.RouteStorage
             : base(
                 new LocalDirectoryRouteRepositorySettings(new StubPathProvider(userDataDirectory)), 
                 new NopMonitoringEvents(), 
-                new RouteStoreToDisk(new SegmentStore(), new WorldStoreToDisk()))
+                new RouteStoreToDisk(new SegmentStore(new NopMonitoringEvents()), new WorldStoreToDisk()))
         {
         }
 

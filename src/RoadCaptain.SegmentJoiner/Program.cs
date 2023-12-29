@@ -18,7 +18,7 @@ var turnsFileName = args[1];
 var segmentOneId = args[2];
 var segmentTwoId = args[3];
 
-var segments = new SegmentStore().LoadSegments(new World() { Id = "watopia" }, SportType.Both);
+var segments = new SegmentStore(null!).LoadSegments(new World() { Id = "watopia" }, SportType.Both);
             
 var turns = 
     JsonConvert.DeserializeObject<List<SegmentTurns>>(File.ReadAllText(turnsFileName), serializerSettings);
