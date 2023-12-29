@@ -2,7 +2,7 @@
   "profiles": {
     "RoadCaptain.SegmentSplitter": {
       "commandName": "Project",
-      "commandLineArgs": "\"C:\\git\\RoadCaptain\\src\\RoadCaptain.Adapters\\segments-watopia.json\" \"C:\\git\\RoadCaptain\\src\\RoadCaptain.Adapters\\turns-watopia.json\" \"watopia-bambino-fondo-001-after-after-after-after-after\" \"S11.63552° E166.95162°\"",
+      "commandLineArgs": "\"C:\\git\\RoadCaptain\\src\\RoadCaptain.Adapters\\segments-watopia.json\" \"C:\\git\\RoadCaptain\\src\\RoadCaptain.Adapters\\turns-watopia.json\" \"watopia-bambino-fondo-003-after-after-before\" \"S11.69246° E166.93055°\"",
       "remoteDebugEnabled": false
     }
   }

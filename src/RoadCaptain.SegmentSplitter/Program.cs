@@ -61,6 +61,8 @@ namespace RoadCaptain.SegmentSplitter
             var beforeSplit = segmentToSplit.Slice("before", 0, sliceIndex);
             var afterSplit = segmentToSplit.Slice("after", sliceIndex);
 
+            Console.WriteLine($"Split {segmentToSplit.Id} into {beforeSplit.Id} and {afterSplit.Id}");
+            
             beforeSplit.CalculateDistances();
             afterSplit.CalculateDistances();
 

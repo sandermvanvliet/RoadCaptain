@@ -4,5 +4,5 @@
 
 using RoadCaptain.Adapters;
 
-var segmentStore = new SegmentStore(@"c:\git\RoadCaptain\src\RoadCaptain.Adapters");
+var segmentStore = new SegmentStore(@"c:\git\RoadCaptain\src\RoadCaptain.Adapters", null!);
 segmentStore.SerializeToBinary();
