@@ -3654,240 +3654,6 @@
     "noSelectReason": null
   },
   {
-    "id": "watopia-tempus-fugit-001",
-    "points": [
-      {
-        "latitude": -11.6622,
-        "longitude": 166.98343,
-        "altitude": 12.8,
-        "index": 0,
-        "distanceOnSegment": 0.0,
-        "distanceFromLast": 0.0,
-        "worldId": null
-      },
-      {
-        "latitude": -11.66238,
-        "longitude": 166.98334,
-        "altitude": 12.8,
-        "index": 1,
-        "distanceOnSegment": 22.8284381828172,
-        "distanceFromLast": 22.8284381828172,
-        "worldId": null
-      },
-      {
-        "latitude": -11.66258,
-        "longitude": 166.98332,
-        "altitude": 12.8,
-        "index": 2,
-        "distanceOnSegment": 45.3217332359921,
-        "distanceFromLast": 22.4932950531749,
-        "worldId": null
-      },
-      {
-        "latitude": -11.66279,
-        "longitude": 166.98334,
-        "altitude": 12.8,
-        "index": 3,
-        "distanceOnSegment": 67.9260661503667,
-        "distanceFromLast": 22.6043329143746,
-        "worldId": null
-      },
-      {
-        "latitude": -11.66298,
-        "longitude": 166.9834,
-        "altitude": 12.8,
-        "index": 4,
-        "distanceOnSegment": 90.9467306019041,
-        "distanceFromLast": 23.0206644515374,
-        "worldId": null
-      },
-      {
-        "latitude": -11.66317,
-        "longitude": 166.9835,
-        "altitude": 12.8,
-        "index": 5,
-        "distanceOnSegment": 113.7249695415414,
-        "distanceFromLast": 22.7782389396373,
-        "worldId": null
-      },
-      {
-        "latitude": -11.66333,
-        "longitude": 166.98361,
-        "altitude": 12.8,
-        "index": 6,
-        "distanceOnSegment": 135.9428037388599,
-        "distanceFromLast": 22.2178341973185,
-        "worldId": null
-      },
-      {
-        "latitude": -11.66346,
-        "longitude": 166.98376,
-        "altitude": 12.8,
-        "index": 7,
-        "distanceOnSegment": 158.1276378235731,
-        "distanceFromLast": 22.1848340847132,
-        "worldId": null
-      },
-      {
-        "latitude": -11.66355,
-        "longitude": 166.98395,
-        "altitude": 12.8,
-        "index": 8,
-        "distanceOnSegment": 180.183874228704,
-        "distanceFromLast": 22.0562364051309,
-        "worldId": null
-      },
-      {
-        "latitude": -11.6636,
-        "longitude": 166.98415,
-        "altitude": 12.8,
-        "index": 9,
-        "distanceOnSegment": 203.1116452323583,
-        "distanceFromLast": 22.9277710036543,
-        "worldId": null
-      },
-      {
-        "latitude": -11.66362,
-        "longitude": 166.98434,
-        "altitude": 12.8,
-        "index": 10,
-        "distanceOnSegment": 224.2043008562279,
-        "distanceFromLast": 21.0926556238696,
-        "worldId": null
-      },
-      {
-        "latitude": -11.66358,
-        "longitude": 166.98455,
-        "altitude": 12.8,
-        "index": 11,
-        "distanceOnSegment": 246.7390776611787,
-        "distanceFromLast": 22.5347768049508,
-        "worldId": null
-      },
-      {
-        "latitude": -11.66348,
-        "longitude": 166.98473,
-        "altitude": 12.8,
-        "index": 12,
-        "distanceOnSegment": 269.6857378384073,
-        "distanceFromLast": 22.9466601772286,
-        "worldId": null
-      },
-      {
-        "latitude": -11.66333,
-        "longitude": 166.98487,
-        "altitude": 12.8,
-        "index": 13,
-        "distanceOnSegment": 291.8010535935146,
-        "distanceFromLast": 22.1153157551073,
-        "worldId": null
-      },
-      {
-        "latitude": -11.66317,
-        "longitude": 166.98499,
-        "altitude": 12.8,
-        "index": 14,
-        "distanceOnSegment": 314.0188876837299,
-        "distanceFromLast": 22.2178340902153,
-        "worldId": null
-      },
-      {
-        "latitude": -11.66299,
-        "longitude": 166.9851,
-        "altitude": 12.8,
-        "index": 15,
-        "distanceOnSegment": 337.1378947927464,
-        "distanceFromLast": 23.1190071090165,
-        "worldId": null
-      },
-      {
-        "latitude": -11.6628,
-        "longitude": 166.98514,
-        "altitude": 12.8,
-        "index": 16,
-        "distanceOnSegment": 359.4294795586101,
-        "distanceFromLast": 22.2915847658637,
-        "worldId": null
-      },
-      {
-        "latitude": -11.6626,
-        "longitude": 166.98511,
-        "altitude": 12.8,
-        "index": 17,
-        "distanceOnSegment": 382.0667290215949,
-        "distanceFromLast": 22.6372494629848,
-        "worldId": null
-      },
-      {
-        "latitude": -11.66241,
-        "longitude": 166.98503,
-        "altitude": 12.8,
-        "index": 18,
-        "distanceOnSegment": 404.6138536804673,
-        "distanceFromLast": 22.5471246588724,
-        "worldId": null
-      },
-      {
-        "latitude": -11.66223,
-        "longitude": 166.98492,
-        "altitude": 12.8,
-        "index": 19,
-        "distanceOnSegment": 427.2949401171431,
-        "distanceFromLast": 22.6810864366758,
-        "worldId": null
-      },
-      {
-        "latitude": -11.66209,
-        "longitude": 166.9848,
-        "altitude": 12.8,
-        "index": 20,
-        "distanceOnSegment": 448.1812533902116,
-        "distanceFromLast": 20.8863132730685,
-        "worldId": null
-      },
-      {
-        "latitude": -11.66199,
-        "longitude": 166.98461,
-        "altitude": 12.8,
-        "index": 21,
-        "distanceOnSegment": 471.0167374868928,
-        "distanceFromLast": 22.8354840966812,
-        "worldId": null
-      },
-      {
-        "latitude": -11.6619,
-        "longitude": 166.98442,
-        "altitude": 12.8,
-        "index": 22,
-        "distanceOnSegment": 494.5396640646448,
-        "distanceFromLast": 23.522926577752,
-        "worldId": null
-      },
-      {
-        "latitude": -11.66175,
-        "longitude": 166.98429,
-        "altitude": 12.8,
-        "index": 23,
-        "distanceOnSegment": 516.0083707471777,
-        "distanceFromLast": 21.4687066825329,
-        "worldId": null
-      },
-      {
-        "latitude": -11.66155,
-        "longitude": 166.98426,
-        "altitude": 12.8,
-        "index": 24,
-        "distanceOnSegment": 538.2990467202898,
-        "distanceFromLast": 22.2906759731121,
-        "worldId": null
-      }
-    ],
-    "sport": "Both",
-    "type": "Segment",
-    "name": "Fuego Flats reverse B",
-    "noSelectReason": null
-  },
-  {
     "id": "watopia-tempus-fugit-002",
     "points": [
       {
@@ -74265,6 +74031,258 @@
     "sport": "Both",
     "type": "Segment",
     "name": "Volcano circuit 1-after",
+    "noSelectReason": null
+  },
+  {
+    "id": "watopia-tempus-fugit-001-before",
+    "points": [
+      {
+        "latitude": -11.6622,
+        "longitude": 166.98343,
+        "altitude": 12.8,
+        "index": 0,
+        "distanceOnSegment": 0.0,
+        "distanceFromLast": 0.0,
+        "worldId": null
+      },
+      {
+        "latitude": -11.66238,
+        "longitude": 166.98334,
+        "altitude": 12.8,
+        "index": 1,
+        "distanceOnSegment": 22.285921287289124,
+        "distanceFromLast": 22.285921287289124,
+        "worldId": null
+      },
+      {
+        "latitude": -11.66258,
+        "longitude": 166.98332,
+        "altitude": 12.8,
+        "index": 2,
+        "distanceOnSegment": 44.63130326993196,
+        "distanceFromLast": 22.345381982642834,
+        "worldId": null
+      },
+      {
+        "latitude": -11.66279,
+        "longitude": 166.98334,
+        "altitude": 12.8,
+        "index": 3,
+        "distanceOnSegment": 68.08359030038498,
+        "distanceFromLast": 23.452287030453025,
+        "worldId": null
+      },
+      {
+        "latitude": -11.66298,
+        "longitude": 166.9834,
+        "altitude": 12.8,
+        "index": 4,
+        "distanceOnSegment": 90.1979335101865,
+        "distanceFromLast": 22.114343209801515,
+        "worldId": null
+      },
+      {
+        "latitude": -11.66317,
+        "longitude": 166.9835,
+        "altitude": 12.8,
+        "index": 5,
+        "distanceOnSegment": 113.96643854596343,
+        "distanceFromLast": 23.76850503577693,
+        "worldId": null
+      },
+      {
+        "latitude": -11.66333,
+        "longitude": 166.98361,
+        "altitude": 12.8,
+        "index": 6,
+        "distanceOnSegment": 135.4145227330827,
+        "distanceFromLast": 21.44808418711927,
+        "worldId": null
+      },
+      {
+        "latitude": -11.66346,
+        "longitude": 166.98376,
+        "altitude": 12.8,
+        "index": 7,
+        "distanceOnSegment": 157.22699978303285,
+        "distanceFromLast": 21.812477049950164,
+        "worldId": null
+      },
+      {
+        "latitude": -11.66355,
+        "longitude": 166.98395,
+        "altitude": 12.8,
+        "index": 8,
+        "distanceOnSegment": 180.21091033077434,
+        "distanceFromLast": 22.98391054774148,
+        "worldId": null
+      },
+      {
+        "latitude": -11.6636,
+        "longitude": 166.98415,
+        "altitude": 12.8,
+        "index": 9,
+        "distanceOnSegment": 202.68911723619607,
+        "distanceFromLast": 22.478206905421736,
+        "worldId": null
+      },
+      {
+        "latitude": -11.66362,
+        "longitude": 166.98434,
+        "altitude": 12.8,
+        "index": 10,
+        "distanceOnSegment": 223.49908167592693,
+        "distanceFromLast": 20.809964439730855,
+        "worldId": null
+      },
+      {
+        "latitude": -11.66358,
+        "longitude": 166.98455,
+        "altitude": 12.8,
+        "index": 11,
+        "distanceOnSegment": 246.7963692670373,
+        "distanceFromLast": 23.29728759111037,
+        "worldId": null
+      }
+    ],
+    "sport": "Both",
+    "type": "Segment",
+    "name": "Fuego Flats reverse B-before",
+    "noSelectReason": null
+  },
+  {
+    "id": "watopia-tempus-fugit-001-after",
+    "points": [
+      {
+        "latitude": -11.66358,
+        "longitude": 166.98455,
+        "altitude": 12.8,
+        "index": 0,
+        "distanceOnSegment": 0.0,
+        "distanceFromLast": 0.0,
+        "worldId": null
+      },
+      {
+        "latitude": -11.66348,
+        "longitude": 166.98473,
+        "altitude": 12.8,
+        "index": 1,
+        "distanceOnSegment": 22.536060810754545,
+        "distanceFromLast": 22.536060810754545,
+        "worldId": null
+      },
+      {
+        "latitude": -11.66333,
+        "longitude": 166.98487,
+        "altitude": 12.8,
+        "index": 2,
+        "distanceOnSegment": 45.13325557718704,
+        "distanceFromLast": 22.597194766432494,
+        "worldId": null
+      },
+      {
+        "latitude": -11.66317,
+        "longitude": 166.98499,
+        "altitude": 12.8,
+        "index": 3,
+        "distanceOnSegment": 67.20803806873485,
+        "distanceFromLast": 22.074782491547804,
+        "worldId": null
+      },
+      {
+        "latitude": -11.66299,
+        "longitude": 166.9851,
+        "altitude": 12.8,
+        "index": 4,
+        "distanceOnSegment": 90.53394235173091,
+        "distanceFromLast": 23.325904282996067,
+        "worldId": null
+      },
+      {
+        "latitude": -11.6628,
+        "longitude": 166.98514,
+        "altitude": 12.8,
+        "index": 5,
+        "distanceOnSegment": 112.10536108162198,
+        "distanceFromLast": 21.571418729891064,
+        "worldId": null
+      },
+      {
+        "latitude": -11.6626,
+        "longitude": 166.98511,
+        "altitude": 12.8,
+        "index": 6,
+        "distanceOnSegment": 134.58303029813794,
+        "distanceFromLast": 22.47766921651595,
+        "worldId": null
+      },
+      {
+        "latitude": -11.66241,
+        "longitude": 166.98503,
+        "altitude": 12.8,
+        "index": 7,
+        "distanceOnSegment": 157.43581303781485,
+        "distanceFromLast": 22.852782739676922,
+        "worldId": null
+      },
+      {
+        "latitude": -11.66223,
+        "longitude": 166.98492,
+        "altitude": 12.8,
+        "index": 8,
+        "distanceOnSegment": 180.76173416562457,
+        "distanceFromLast": 23.32592112780971,
+        "worldId": null
+      },
+      {
+        "latitude": -11.66209,
+        "longitude": 166.9848,
+        "altitude": 12.8,
+        "index": 9,
+        "distanceOnSegment": 201.08687851572842,
+        "distanceFromLast": 20.32514435010383,
+        "worldId": null
+      },
+      {
+        "latitude": -11.66199,
+        "longitude": 166.98461,
+        "altitude": 12.8,
+        "index": 10,
+        "distanceOnSegment": 224.57638373127972,
+        "distanceFromLast": 23.489505215551304,
+        "worldId": null
+      },
+      {
+        "latitude": -11.6619,
+        "longitude": 166.98442,
+        "altitude": 12.8,
+        "index": 11,
+        "distanceOnSegment": 247.5603989601289,
+        "distanceFromLast": 22.98401522884918,
+        "worldId": null
+      },
+      {
+        "latitude": -11.66175,
+        "longitude": 166.98429,
+        "altitude": 12.8,
+        "index": 12,
+        "distanceOnSegment": 269.4376981718164,
+        "distanceFromLast": 21.877299211687475,
+        "worldId": null
+      },
+      {
+        "latitude": -11.66155,
+        "longitude": 166.98426,
+        "altitude": 12.8,
+        "index": 13,
+        "distanceOnSegment": 291.91536918375436,
+        "distanceFromLast": 22.477671011937947,
+        "worldId": null
+      }
+    ],
+    "sport": "Both",
+    "type": "Segment",
+    "name": "Fuego Flats reverse B-after",
     "noSelectReason": null
   }
 ]

@@ -427,17 +427,8 @@
       "goStraight": "watopia-big-foot-hills-004-after-after"
     },
     "turnsB": {
-      "left": "watopia-tempus-fugit-001",
+      "left": "watopia-tempus-fugit-001-before",
       "goStraight": "watopia-big-foot-hills-001-before-after"
-    }
-  },
-  {
-    "segmentId": "watopia-tempus-fugit-001",
-    "turnsA": {
-      "goStraight": "watopia-big-foot-hills-001-before-before"
-    },
-    "turnsB": {
-      "goStraight": "watopia-big-foot-hills-001-before-before"
     }
   },
   {
@@ -683,7 +674,10 @@
   },
   {
     "segmentId": "watopia-accelerate-to-elevate-001-before-before-after",
-    "turnsA": {},
+    "turnsA": {
+      "left": "watopia-tempus-fugit-001-before",
+      "right": "watopia-tempus-fugit-001-after"
+    },
     "turnsB": {
       "left": "watopia-bambino-fondo-003-after-after-before-before",
       "right": "watopia-bambino-fondo-003-after-after-before-after"
@@ -696,8 +690,8 @@
       "goStraight": "watopia-bambino-fondo-004-before-after"
     },
     "turnsB": {
-      "goStraight": "watopia-bambino-fondo-004-after-before-after",
-      "right": "climb-portal-001-before"
+      "right": "climb-portal-001-before",
+      "goStraight": "watopia-bambino-fondo-004-after-before-after"
     }
   },
   {
@@ -713,12 +707,30 @@
   },
   {
     "segmentId": "climb-portal-001-before",
-    "turnsA": {
-
-    },
+    "turnsA": {},
     "turnsB": {
       "left": "watopia-bambino-fondo-004-after-before-before",
       "right": "watopia-bambino-fondo-004-after-before-after"
+    }
+  },
+  {
+    "segmentId": "watopia-tempus-fugit-001-before",
+    "turnsA": {
+      "goStraight": "watopia-big-foot-hills-001-before-before"
+    },
+    "turnsB": {
+      "goStraight": "watopia-tempus-fugit-001-after"
+    }
+  },
+  {
+    "segmentId": "watopia-tempus-fugit-001-after",
+    "turnsA": {
+      "left": "watopia-accelerate-to-elevate-001-before-before-after",
+      "goStraight": "watopia-tempus-fugit-001-before"
+    },
+    "turnsB": {
+      "goStraight": "watopia-big-foot-hills-001-before-before",
+      "right": "watopia-accelerate-to-elevate-001-before-before-after"
     }
   }
 ]
