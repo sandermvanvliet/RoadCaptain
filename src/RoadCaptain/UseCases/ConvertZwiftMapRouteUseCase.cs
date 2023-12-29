@@ -175,6 +175,11 @@ namespace RoadCaptain.UseCases
                 result.RouteSegmentSequence[^1].Type = SegmentSequenceType.LoopEnd;
             }
 
+            for (var index = 0; index < result.RouteSegmentSequence.Count; index++)
+            {
+                result.RouteSegmentSequence[index].Index = index;
+            }
+
             return result;
         }
     }
