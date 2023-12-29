@@ -148,6 +148,11 @@ namespace RoadCaptain.App.Web.Adapters
         {
             var route = RouteStorageModelFrom(createModel, user);
 
+            if (_roadCaptainDataContext.Routes.Any(r => r.Hash == route.Hash && r.UserId == route.UserId))
+            {
+                throw new DuplicateRouteException();
+            }
+            
             _roadCaptainDataContext.Routes.Add(route);
             _roadCaptainDataContext.SaveChanges();
 

@@ -84,7 +84,19 @@ namespace RoadCaptain.App.Web.Controllers
                     (int)HttpStatusCode.BadRequest, "Invalid user"));
             }
 
-            return Ok(_routeStore.Store(createRoute, user));
+            try
+            {
+                return Ok(_routeStore.Store(createRoute, user));
+            }
+            catch (DuplicateRouteException e)
+            {
+                _monitoringEvents.Error(e, "Duplicate route exists");
+                
+                return Conflict(ProblemDetailsFactory.CreateProblemDetails(
+                    HttpContext,
+                    (int)HttpStatusCode.Conflict,
+                    "Duplicate route exists"));
+            }
         }
 
         [HttpPut("{id:long}", Name = "UpdateRouteById")]
