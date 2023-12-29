@@ -2,8 +2,8 @@
   {
     "segmentId": "watopia-bambino-fondo-001-after-before",
     "turnsA": {
-      "goStraight": "watopia-bambino-fondo-001-after-after-after-after-after-after",
-      "right": "watopia-chili-pepper-001"
+      "right": "watopia-chili-pepper-001",
+      "goStraight": "watopia-bambino-fondo-001-after-after-after-after-after-after"
     },
     "turnsB": {
       "left": "watopia-bambino-fondo-001-after-after-before-before-before",
@@ -115,8 +115,8 @@
       "goStraight": "watopia-bambino-fondo-001-after-after-after-before"
     },
     "turnsB": {
-      "goStraight": "watopia-bambino-fondo-001-after-after-after-after-before-after",
-      "right": "watopia-beach-island-loop-004"
+      "right": "watopia-beach-island-loop-004",
+      "goStraight": "watopia-bambino-fondo-001-after-after-after-after-before-after"
     }
   },
   {
@@ -256,8 +256,8 @@
   {
     "segmentId": "watopia-big-foot-hills-003-after",
     "turnsA": {
-      "goStraight": "watopia-big-loop-rev-001-after-after",
-      "left": "watopia-big-foot-hills-003-before"
+      "left": "watopia-big-foot-hills-003-before",
+      "goStraight": "watopia-big-loop-rev-001-after-after"
     },
     "turnsB": {
       "left": "watopia-bambino-fondo-001-after-after-before-before-after-after",
@@ -279,7 +279,7 @@
     "segmentId": "watopia-four-horsemen-003-before",
     "turnsA": {
       "left": "watopia-bambino-fondo-003-after-before-after",
-      "right": "watopia-bambino-fondo-003-after-after-before"
+      "right": "watopia-bambino-fondo-003-after-after-before-before"
     },
     "turnsB": {
       "goStraight": "watopia-four-horsemen-003-after"
@@ -302,25 +302,14 @@
     },
     "turnsB": {
       "right": "watopia-four-horsemen-003-before",
-      "goStraight": "watopia-bambino-fondo-003-after-after-before"
-    }
-  },
-  {
-    "segmentId": "watopia-bambino-fondo-003-after-after-before",
-    "turnsA": {
-      "left": "watopia-four-horsemen-003-before",
-      "goStraight": "watopia-bambino-fondo-003-after-before-after"
-    },
-    "turnsB": {
-      "left": "watopia-serpentine-8-001",
-      "goStraight": "watopia-bambino-fondo-003-after-after-after"
+      "goStraight": "watopia-bambino-fondo-003-after-after-before-before"
     }
   },
   {
     "segmentId": "watopia-serpentine-8-001",
     "turnsA": {
-      "right": "watopia-bambino-fondo-003-after-after-before",
-      "left": "watopia-bambino-fondo-003-after-after-after"
+      "left": "watopia-bambino-fondo-003-after-after-after",
+      "right": "watopia-bambino-fondo-003-after-after-before-after"
     },
     "turnsB": {
       "left": "watopia-bambino-fondo-003-after-before-after",
@@ -331,7 +320,7 @@
     "segmentId": "watopia-bambino-fondo-003-after-after-after",
     "turnsA": {
       "right": "watopia-serpentine-8-001",
-      "goStraight": "watopia-bambino-fondo-003-after-after-before"
+      "goStraight": "watopia-bambino-fondo-003-after-after-before-after"
     },
     "turnsB": {
       "right": "watopia-bambino-fondo-003-before-after",
@@ -406,8 +395,8 @@
   {
     "segmentId": "watopia-big-foot-hills-004-after-before",
     "turnsA": {
-      "goStraight": "watopia-big-foot-hills-004-before",
-      "right": "watopia-tempus-fugit-002"
+      "right": "watopia-tempus-fugit-002",
+      "goStraight": "watopia-big-foot-hills-004-before"
     },
     "turnsB": {
       "goStraight": "watopia-big-foot-hills-004-after-after"
@@ -492,8 +481,8 @@
   {
     "segmentId": "watopia-bambino-fondo-004-after-after",
     "turnsA": {
-      "goStraight": "watopia-beach-island-loop-002",
-      "right": "watopia-bambino-fondo-004-after-before"
+      "right": "watopia-bambino-fondo-004-after-before",
+      "goStraight": "watopia-beach-island-loop-002"
     },
     "turnsB": {
       "goStraight": "watopia-big-foot-hills-002"
@@ -656,29 +645,61 @@
       "goStraight": "watopia-bambino-fondo-001-after-after-after-after-before-after"
     },
     "turnsB": {
-      "goStraight": "watopia-bambino-fondo-001-after-after-after-after-after-after",
-      "right": "watopia-jons-route-001"
+      "right": "watopia-jons-route-001",
+      "goStraight": "watopia-bambino-fondo-001-after-after-after-after-after-after"
     }
   },
   {
     "segmentId": "watopia-bambino-fondo-001-after-after-after-after-after-after",
     "turnsA": {
-      "goStraight": "watopia-bambino-fondo-001-after-after-after-after-after-before",
-      "left": "watopia-jons-route-001"
+      "left": "watopia-jons-route-001",
+      "goStraight": "watopia-bambino-fondo-001-after-after-after-after-after-before"
     },
     "turnsB": {
-      "goStraight": "watopia-bambino-fondo-001-after-before",
-      "left": "watopia-chili-pepper-001"
+      "left": "watopia-chili-pepper-001",
+      "goStraight": "watopia-bambino-fondo-001-after-before"
     }
   },
   {
     "segmentId": "watopia-may-field-001",
     "turnsA": {
-      "goStraight": "watopia-may-field-001",
-      "right": "watopia-bambino-fondo-001-after-after-before-before-before"
+      "right": "watopia-bambino-fondo-001-after-after-before-before-before",
+      "goStraight": "watopia-may-field-001"
     },
     "turnsB": {
       "goStraight": "watopia-may-field-001"
+    }
+  },
+  {
+    "segmentId": "watopia-bambino-fondo-003-after-after-before-before",
+    "turnsA": {
+      "left": "watopia-four-horsemen-003-before",
+      "goStraight": "watopia-bambino-fondo-003-after-before-after"
+    },
+    "turnsB": {
+      "goStraight": "watopia-bambino-fondo-003-after-after-before-after",
+      "right": "watopia-accelerate-to-elevate-001-before-before-after"
+    }
+  },
+  {
+    "segmentId": "watopia-bambino-fondo-003-after-after-before-after",
+    "turnsA": {
+      "goStraight": "watopia-bambino-fondo-003-after-after-before-before",
+      "left": "watopia-accelerate-to-elevate-001-before-before-after"
+    },
+    "turnsB": {
+      "left": "watopia-serpentine-8-001",
+      "goStraight": "watopia-bambino-fondo-003-after-after-after"
+    }
+  },
+  {
+    "segmentId": "watopia-accelerate-to-elevate-001-before-before-after",
+    "turnsA": {
+
+    },
+    "turnsB": {
+      "left": "watopia-bambino-fondo-003-after-after-before-before",
+      "right": "watopia-bambino-fondo-003-after-after-before-after"
     }
   }
 ]
