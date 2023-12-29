@@ -281,12 +281,95 @@ namespace RoadCaptain.Adapters
                         {
                             plannedRoute.LoopMode = LoopMode.Infinite;
                         }
+                    }
 
-                        if (routeVersion < new Version(0, 7, 0, 7))
+                    if (routeVersion < new Version(0, 7, 0, 7))
+                    {
+                        // With version 0.7.0.9 we've added new segments to Watopia
+                        // and split a few which we need to correct for.
+
+                        void SplitSequence(List<SegmentSequence> newSequence, string segmentId, SegmentSequence sequence, int index)
                         {
-                            // With version 0.7.0.9 we've added new segments to Watopia
-                            // and split a few which we need to correct for.
-                            
+                            if (sequence.Direction == SegmentDirection.AtoB)
+                            {
+                                newSequence.Add(
+                                    new SegmentSequence(
+                                        $"{segmentId}-before",
+                                        sequence.Type, 
+                                        sequence.Direction,
+                                        index+1));
+                                newSequence[^1].TurnToNextSegment = TurnDirection.GoStraight;
+                                newSequence[^1].NextSegmentId = $"{segmentId}-after";
+                                
+                                newSequence.Add(
+                                    new SegmentSequence(
+                                        $"{segmentId}-after",
+                                        sequence.Type, 
+                                        sequence.Direction,
+                                        index+2));
+                                newSequence[^1].TurnToNextSegment = sequence.TurnToNextSegment;
+                                newSequence[^1].NextSegmentId = sequence.NextSegmentId;
+                            }
+                            else
+                            {
+                                newSequence.Add(
+                                    new SegmentSequence(
+                                        $"{segmentId}-after",
+                                        sequence.Type, 
+                                        sequence.Direction,
+                                        index+1));
+                                newSequence[^1].TurnToNextSegment = TurnDirection.GoStraight;
+                                newSequence[^1].NextSegmentId = $"{segmentId}-before";
+                                
+                                newSequence.Add(
+                                    new SegmentSequence(
+                                        $"{segmentId}-before",
+                                        sequence.Type, 
+                                        sequence.Direction,
+                                        index+2));
+                                newSequence[^1].TurnToNextSegment = sequence.TurnToNextSegment;
+                                newSequence[^1].NextSegmentId = sequence.NextSegmentId;
+                            }
+                        }
+                        
+                        var newSequence = new List<SegmentSequence>();
+                        var index = 0;
+                        var tainted = false;
+                        
+                        foreach (var sequence in plannedRoute.RouteSegmentSequence)
+                        {
+                            if (sequence.SegmentId == "watopia-bambino-fondo-003-after-after-before")
+                            {
+                                // 1: watopia-bambino-fondo-003-after-after-before is split
+                                SplitSequence(newSequence, "watopia-bambino-fondo-003-after-after-before", sequence, index);
+                                index += 2;
+                                tainted = true;
+                            }
+                            else if (sequence.SegmentId == "watopia-tempus-fugit-001")
+                            {
+                                // 2: watopia-tempus-fugit-001 is split
+                                SplitSequence(newSequence, "watopia-tempus-fugit-001", sequence, index);
+                                index += 2;
+                                tainted = true;
+                            }
+                            else if (sequence.SegmentId == "watopia-bambino-fondo-004-after-before")
+                            {
+                                // 3: watopia-bambino-fondo-004-after-before is split
+                                SplitSequence(newSequence, "watopia-bambino-fondo-004-after-before", sequence, index);
+                                index += 2;
+                                tainted = true;
+                            }
+                            else
+                            {
+                                sequence.Index = index++;
+                                newSequence.Add(sequence);
+                            }
+                        }
+
+                        if (tainted)
+                        {
+                            plannedRoute.RouteSegmentSequence.Clear();
+                            plannedRoute.RouteSegmentSequence.AddRange(newSequence);
                         }
                     }
                 }
