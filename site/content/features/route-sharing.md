@@ -61,4 +61,4 @@ The list of routes gives you a quick idea of how long it is, ascent (and descent
 
 Route Sharing is a brand new feature and there may be some sharp edges.
 
-Any feedback is greatly appreciated, head over to [the feedback discussion](https://github.com/sandermvanvliet/RoadCaptain/discussions/116) on GitHub to shrae your feedback!
+Any feedback is greatly appreciated, head over to [the feedback discussion](https://github.com/sandermvanvliet/RoadCaptain/discussions/116) on GitHub to share your feedback!
