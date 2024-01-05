@@ -34,21 +34,6 @@
   </Fragment>
   <Fragment>
     <ComponentGroup Id="RunnerComponents" Directory="INSTALLFOLDER">
-      <Component Id="Runner_autofac.app.runner.development.json" Guid="015d20c8-333b-4682-bcb7-641c881953f7">
-        <File Id="Runner_autofac.app.runner.development.json" Name="autofac.app.runner.development.json" Source="$(var.RoadCaptain.Runner_TargetDir)autofac.app.runner.development.json" />
-      </Component>
-      <Component Id="Runner_autofac.app.runner.json" Guid="5b70c697-4c5d-4b34-ae7e-5bb1ad4a5704">
-        <File Id="Runner_autofac.app.runner.json" Name="autofac.app.runner.json" Source="$(var.RoadCaptain.Runner_TargetDir)autofac.app.runner.json" />
-      </Component>
-      <Component Id="Runner_Microsoft.IdentityModel.JsonWebTokens.dll" Guid="a5995723-002f-440c-a131-6183edf3a58c">
-        <File Id="Runner_Microsoft.IdentityModel.JsonWebTokens.dll" Name="Microsoft.IdentityModel.JsonWebTokens.dll" Source="$(var.RoadCaptain.Runner_TargetDir)Microsoft.IdentityModel.JsonWebTokens.dll" />
-      </Component>
-      <Component Id="Runner_Microsoft.IdentityModel.Logging.dll" Guid="3321c08a-25ab-4552-9899-b37d59e9a09d">
-        <File Id="Runner_Microsoft.IdentityModel.Logging.dll" Name="Microsoft.IdentityModel.Logging.dll" Source="$(var.RoadCaptain.Runner_TargetDir)Microsoft.IdentityModel.Logging.dll" />
-      </Component>
-      <Component Id="Runner_Microsoft.IdentityModel.Tokens.dll" Guid="4c4c47d7-abab-4014-a731-93171bc172b3">
-        <File Id="Runner_Microsoft.IdentityModel.Tokens.dll" Name="Microsoft.IdentityModel.Tokens.dll" Source="$(var.RoadCaptain.Runner_TargetDir)Microsoft.IdentityModel.Tokens.dll" />
-      </Component>
       <Component Id="Runner_RoadCaptain.App.Runner.deps.json" Guid="e5a3fd28-728d-4d68-9338-2dd2410ee884">
         <File Id="Runner_RoadCaptain.App.Runner.deps.json" Name="RoadCaptain.App.Runner.deps.json" Source="$(var.RoadCaptain.Runner_TargetDir)RoadCaptain.App.Runner.deps.json" />
       </Component>
@@ -71,12 +56,6 @@
   </Fragment>
   <Fragment>
     <ComponentGroup Id="RouteBuilderComponents" Directory="INSTALLFOLDER">
-      <Component Id="RouteBuilder_autofac.app.routebuilder.development.json" Guid="0ee1ad35-6504-4abf-9977-aaf14d4f3090">
-        <File Id="RouteBuilder_autofac.app.routebuilder.development.json" Name="autofac.app.routebuilder.development.json" Source="$(var.RoadCaptain.RouteBuilder_TargetDir)autofac.app.routebuilder.development.json" />
-      </Component>
-      <Component Id="RouteBuilder_autofac.app.routebuilder.json" Guid="d148132a-2ca9-4213-be43-47dbf2fd8638">
-        <File Id="RouteBuilder_autofac.app.routebuilder.json" Name="autofac.app.routebuilder.json" Source="$(var.RoadCaptain.RouteBuilder_TargetDir)autofac.app.routebuilder.json" />
-      </Component>
       <Component Id="RouteBuilder_RoadCaptain.App.RouteBuilder.deps.json" Guid="959ecd76-9137-4488-b391-28316092205e">
         <File Id="RouteBuilder_RoadCaptain.App.RouteBuilder.deps.json" Name="RoadCaptain.App.RouteBuilder.deps.json" Source="$(var.RoadCaptain.RouteBuilder_TargetDir)RoadCaptain.App.RouteBuilder.deps.json" />
       </Component>
@@ -224,9 +203,6 @@
       </Component>
       <Component Id="Common_api.ms.win.crt.utility.l1.1.0.dll" Guid="49848af2-75a4-448e-9e3e-b5069517be13">
         <File Id="Common_api.ms.win.crt.utility.l1.1.0.dll" Name="api-ms-win-crt-utility-l1-1-0.dll" Source="$(var.RoadCaptain.Runner_TargetDir)api-ms-win-crt-utility-l1-1-0.dll" />
-      </Component>
-      <Component Id="Common_Autofac.Configuration.dll" Guid="21e19f36-278a-4b52-9fe1-fecafe3d0868">
-        <File Id="Common_Autofac.Configuration.dll" Name="Autofac.Configuration.dll" Source="$(var.RoadCaptain.Runner_TargetDir)Autofac.Configuration.dll" />
       </Component>
       <Component Id="Common_Autofac.dll" Guid="05a7565d-9241-4827-8ef8-c29e5d833f3d">
         <File Id="Common_Autofac.dll" Name="Autofac.dll" Source="$(var.RoadCaptain.Runner_TargetDir)Autofac.dll" />
@@ -458,9 +434,6 @@
       </Component>
       <Component Id="Common_mscordaccore.dll" Guid="ed1c05eb-f872-4186-bcdf-556fb2cb78e2">
         <File Id="Common_mscordaccore.dll" Name="mscordaccore.dll" Source="$(var.RoadCaptain.Runner_TargetDir)mscordaccore.dll" />
-      </Component>
-      <Component Id="Common_mscordaccore_amd64_amd64_6.0.522.21309.dll" Guid="414e8169-d882-4f2d-b0f6-c3eb6327cc4f">
-        <File Id="Common_mscordaccore_amd64_amd64_6.0.522.21309.dll" Name="mscordaccore_amd64_amd64_6.0.522.21309.dll" Source="$(var.RoadCaptain.Runner_TargetDir)mscordaccore_amd64_amd64_6.0.522.21309.dll" />
       </Component>
       <Component Id="Common_mscordbi.dll" Guid="3a6af31a-6640-4510-b35b-84b4a3b12382">
         <File Id="Common_mscordbi.dll" Name="mscordbi.dll" Source="$(var.RoadCaptain.Runner_TargetDir)mscordbi.dll" />
@@ -1190,6 +1163,69 @@
       </Component>
       <Component Id="Common_wpfgfx_cor3.dll" Guid="26835861-3865-4348-b643-bb693e8af385">
         <File Id="Common_wpfgfx_cor3.dll" Name="wpfgfx_cor3.dll" Source="$(var.RoadCaptain.Runner_TargetDir)wpfgfx_cor3.dll" />
+      </Component>
+      <Component Id="Common_appsettings.routerepositories.json" Guid="0b68527d-acda-437e-a9f4-73deb38151ca">
+        <File Id="Common_appsettings.routerepositories.json" Name="appsettings.routerepositories.json" Source="$(var.RoadCaptain.Runner_TargetDir)appsettings.routerepositories.json" />
+      </Component>
+      <Component Id="Common_BouncyCastle.Crypto.dll" Guid="c20af982-e8f2-4a1b-afc6-f302e4d92dea">
+        <File Id="Common_BouncyCastle.Crypto.dll" Name="BouncyCastle.Crypto.dll" Source="$(var.RoadCaptain.Runner_TargetDir)BouncyCastle.Crypto.dll" />
+      </Component>
+      <Component Id="Common_Codenizer.Avalonia.Map.dll" Guid="895bbec6-726f-47eb-a716-dbedaea77206">
+        <File Id="Common_Codenizer.Avalonia.Map.dll" Name="Codenizer.Avalonia.Map.dll" Source="$(var.RoadCaptain.Runner_TargetDir)Codenizer.Avalonia.Map.dll" />
+      </Component>
+      <Component Id="Common_markers.france.json" Guid="e6f2d56c-6ed9-4ea2-8d9f-b2762ed3543b">
+        <File Id="Common_markers.france.json" Name="markers-france.json" Source="$(var.RoadCaptain.Runner_TargetDir)markers-france.json" />
+      </Component>
+      <Component Id="Common_markers.makuri_islands.json" Guid="63d5fc8c-6aa7-4b89-8144-89064a6ff504">
+        <File Id="Common_markers.makuri_islands.json" Name="markers-makuri_islands.json" Source="$(var.RoadCaptain.Runner_TargetDir)markers-makuri_islands.json" />
+      </Component>
+      <Component Id="Common_Microsoft.IdentityModel.Abstractions.dll" Guid="5d4d1f85-c3c5-43ca-8370-da6b716c9c23">
+        <File Id="Common_Microsoft.IdentityModel.Abstractions.dll" Name="Microsoft.IdentityModel.Abstractions.dll" Source="$(var.RoadCaptain.Runner_TargetDir)Microsoft.IdentityModel.Abstractions.dll" />
+      </Component>
+      <Component Id="Common_Microsoft.IdentityModel.JsonWebTokens.dll" Guid="1312ec5f-e52f-4dd5-8b1f-b9abc0b22683">
+        <File Id="Common_Microsoft.IdentityModel.JsonWebTokens.dll" Name="Microsoft.IdentityModel.JsonWebTokens.dll" Source="$(var.RoadCaptain.Runner_TargetDir)Microsoft.IdentityModel.JsonWebTokens.dll" />
+      </Component>
+      <Component Id="Common_Microsoft.IdentityModel.Logging.dll" Guid="1ee36dd5-a225-4820-a911-49758fdd1596">
+        <File Id="Common_Microsoft.IdentityModel.Logging.dll" Name="Microsoft.IdentityModel.Logging.dll" Source="$(var.RoadCaptain.Runner_TargetDir)Microsoft.IdentityModel.Logging.dll" />
+      </Component>
+      <Component Id="Common_Microsoft.IdentityModel.Tokens.dll" Guid="8cebccb0-615a-4d77-a7b2-8d7440485fe1">
+        <File Id="Common_Microsoft.IdentityModel.Tokens.dll" Name="Microsoft.IdentityModel.Tokens.dll" Source="$(var.RoadCaptain.Runner_TargetDir)Microsoft.IdentityModel.Tokens.dll" />
+      </Component>
+      <Component Id="Common_mscordaccore_amd64_amd64_6.0.2523.51912.dll" Guid="4841ed26-59ec-42b7-802e-de507dd534f8">
+        <File Id="Common_mscordaccore_amd64_amd64_6.0.2523.51912.dll" Name="mscordaccore_amd64_amd64_6.0.2523.51912.dll" Source="$(var.RoadCaptain.Runner_TargetDir)mscordaccore_amd64_amd64_6.0.2523.51912.dll" />
+      </Component>
+      <Component Id="Common_Polly.dll" Guid="6626312a-94e1-4602-a467-efe7e4031d9a">
+        <File Id="Common_Polly.dll" Name="Polly.dll" Source="$(var.RoadCaptain.Runner_TargetDir)Polly.dll" />
+      </Component>
+      <Component Id="Common_Polly.Extensions.Http.dll" Guid="17f497dd-c93c-4a8a-a876-469bf2ae112e">
+        <File Id="Common_Polly.Extensions.Http.dll" Name="Polly.Extensions.Http.dll" Source="$(var.RoadCaptain.Runner_TargetDir)Polly.Extensions.Http.dll" />
+      </Component>
+      <Component Id="Common_segments.france.bin" Guid="e1fb0922-f71e-41c9-8c59-496a9dc096f9">
+        <File Id="Common_segments.france.bin" Name="segments-france.bin" Source="$(var.RoadCaptain.Runner_TargetDir)segments-france.bin" />
+      </Component>
+      <Component Id="Common_segments.france.json" Guid="6aaa44b6-4827-4b8f-8b0d-31a6be9a0fa2">
+        <File Id="Common_segments.france.json" Name="segments-france.json" Source="$(var.RoadCaptain.Runner_TargetDir)segments-france.json" />
+      </Component>
+      <Component Id="Common_segments.london.json" Guid="809d721a-71a6-46ba-923d-38097abc5e83">
+        <File Id="Common_segments.london.json" Name="segments-london.json" Source="$(var.RoadCaptain.Runner_TargetDir)segments-london.json" />
+      </Component>
+      <Component Id="Common_segments.makuri_islands.bin" Guid="289ca684-ec2b-44f8-900e-b370c63aecd7">
+        <File Id="Common_segments.makuri_islands.bin" Name="segments-makuri_islands.bin" Source="$(var.RoadCaptain.Runner_TargetDir)segments-makuri_islands.bin" />
+      </Component>
+      <Component Id="Common_System.Diagnostics.EventLog.Messages.dll" Guid="664819b3-c2d5-437e-b11c-2182dd3ba4e9">
+        <File Id="Common_System.Diagnostics.EventLog.Messages.dll" Name="System.Diagnostics.EventLog.Messages.dll" Source="$(var.RoadCaptain.Runner_TargetDir)System.Diagnostics.EventLog.Messages.dll" />
+      </Component>
+      <Component Id="Common_turns.france.json" Guid="cf6a7588-ca27-4b97-bfc1-35ee6a16febe">
+        <File Id="Common_turns.france.json" Name="turns-france.json" Source="$(var.RoadCaptain.Runner_TargetDir)turns-france.json" />
+      </Component>
+      <Component Id="Common_turns.london.json" Guid="ce69deeb-7ba8-450c-8ad1-52a27a3f2fc3">
+        <File Id="Common_turns.london.json" Name="turns-london.json" Source="$(var.RoadCaptain.Runner_TargetDir)turns-london.json" />
+      </Component>
+      <Component Id="Common_WindowsCredentialManager.dll" Guid="832ecf18-0518-4f65-8c30-b497ea5d3007">
+        <File Id="Common_WindowsCredentialManager.dll" Name="WindowsCredentialManager.dll" Source="$(var.RoadCaptain.Runner_TargetDir)WindowsCredentialManager.dll" />
+      </Component>
+      <Component Id="Common_WindowsCredentialManager.pdb" Guid="c37b3ac5-d0f1-4374-af65-89768b74daaf">
+        <File Id="Common_WindowsCredentialManager.pdb" Name="WindowsCredentialManager.pdb" Source="$(var.RoadCaptain.Runner_TargetDir)WindowsCredentialManager.pdb" />
       </Component>
     </ComponentGroup>
   </Fragment>
