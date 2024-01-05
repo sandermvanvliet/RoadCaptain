@@ -198,6 +198,26 @@ namespace RoadCaptain.App.RouteBuilder.Tests.Unit
                 .Be(SegmentDirection.AtoB);
         }
 
+        [Fact]
+        public void GitHubIssue126()
+        {
+            GivenWorldAndSport("watopia", SportType.Cycling);
+            
+            _viewModel.CallAddSegmentToRoute(GetSegmentById("watopia-bambino-fondo-001-after-after-after-after-after-after"));
+            _viewModel.CallAddSegmentToRoute(GetSegmentById("watopia-bambino-fondo-001-after-before"));
+            _viewModel.CallAddSegmentToRoute(GetSegmentById("watopia-bambino-fondo-002-before-before-before"));
+            _viewModel.CallAddSegmentToRoute(GetSegmentById("watopia-climbers-gambit-001"));
+            _viewModel.CallAddSegmentToRoute(GetSegmentById("watopia-bambino-fondo-002-before-before-after"));
+
+            _viewModel
+                .Route
+                .Sequence
+                .Last()
+                .Direction
+                .Should()
+                .Be(SegmentDirection.BtoA);
+        }
+
         private Segment GetSegmentById(string id)
         {
             return _segments!.Single(s => s.Id == id);

@@ -527,24 +527,29 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             {
                 if (segmentDirection == SegmentDirection.AtoB)
                 {
-                    if (lastSegment.B.IsCloseTo(newSelectedSegment.A))
+                    var distanceBtoA = lastSegment.B.DistanceTo(newSelectedSegment.A);
+                    var distanceBtoB = lastSegment.B.DistanceTo(newSelectedSegment.B);
+                    if (distanceBtoA < distanceBtoB)
                     {
                         return SegmentDirection.AtoB;
                     }
 
-                    if (lastSegment.B.IsCloseTo(newSelectedSegment.B))
+                    if (distanceBtoB < distanceBtoA)
                     {
                         return SegmentDirection.BtoA;
                     }
                 }
                 else if (segmentDirection == SegmentDirection.BtoA)
                 {
-                    if (lastSegment.A.IsCloseTo(newSelectedSegment.A))
+                    var distanceAtoA = lastSegment.A.DistanceTo(newSelectedSegment.A);
+                    var distanceAtoB = lastSegment.A.DistanceTo(newSelectedSegment.B);
+
+                    if (distanceAtoA < distanceAtoB)
                     {
                         return SegmentDirection.AtoB;
                     }
 
-                    if (lastSegment.A.IsCloseTo(newSelectedSegment.B))
+                    if (distanceAtoB < distanceAtoA)
                     {
                         return SegmentDirection.BtoA;
                     }
