@@ -9,6 +9,7 @@
 - Fixed an issue where the app would crash when loading an invalid route
 - Prevent a route from being stored multiple times when uploading it to the Road Captain shared route repository
 - Fixed an issue where the segment direction would be unknown when going from Zwift KOM bypass to Zwift KOM 2. See [#126](https://github.com/sandermvanvliet/RoadCaptain/issues/126)
+- Fixed an issue where you couldn't exit the loop at the end of Fuego Flats where the new beach segment begins.
 
 #### World updates
 
