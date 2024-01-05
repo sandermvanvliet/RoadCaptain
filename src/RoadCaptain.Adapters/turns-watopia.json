@@ -730,8 +730,8 @@
       "goStraight": "watopia-tempus-fugit-001-before"
     },
     "turnsB": {
-      "goStraight": "watopia-big-foot-hills-001-before-before",
-      "right": "watopia-accelerate-to-elevate-001-before-before-after"
+      "left": "watopia-big-foot-hills-001-before-after",
+      "right": "watopia-big-foot-hills-001-before-before"
     }
   }
 ]
