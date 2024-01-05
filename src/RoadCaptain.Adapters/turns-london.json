@@ -12,6 +12,7 @@
   {
     "segmentId": "london-classique-rev-001-after-before",
     "turnsA": {
+      "left": "london-classique-rev-001-before-before",
       "right": "london-greater-london-8-001",
       "goStraight": "london-classique-rev-001-before-after"
     },
