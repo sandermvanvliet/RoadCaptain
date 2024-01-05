@@ -1,0 +1,46 @@
+<!-- Items -->
+<section class="wrapper style1 align-center" id="{{ .id }}">
+    <div class="inner">
+        <h2><a name="{{ .id }}"><span class="title-anchor icon fal fa-link"></span></a>{{ .title }}</h2>
+        <p>
+            Installers are available for Windows and MacOS.<br /><br />
+            Typically you will want to download the RoadCaptain stable release. If you want to test out new features as they are worked on you can choose to install the preview release. 
+            However, the preview release will have some rough edges and the occasional bug.<br /><br />
+            See the <a href="#supportedPlatforms">supported platforms</a> for what is needed to run RoadCaptain.
+            <table>
+              <thead>
+                <tr>
+                  <th></th>
+                  <th>Version</th>
+                  <th>Installers</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Stable release</strong></td>
+                  <td>{{ .stable_version }} - <a href="https://github.com/sandermvanvliet/RoadCaptain/releases/tag/{{ .stable_version }}">Changelog</a></td>
+                  <td>
+                    <a href="https://github.com/sandermvanvliet/RoadCaptain/releases/download/{{ .stable_version }}/RoadCaptain_{{ .stable_version }}.msi" /><i class="fab fa-windows"></i> Windows</a> | 
+                    <a href="https://github.com/sandermvanvliet/RoadCaptain/releases/download/{{ .stable_version }}/RoadCaptain-{{ .stable_version }}-osx-x64.dmg"><i class="fab fa-apple"></i> MacOS</a> |
+                    <a href="#" style="color: grey;text-decoration:line-through"><i class="fab fa-linux"></i> Linux</a>
+                  </td>
+                </tr>
+                <tr>
+                  <td><span style="font-style:italic">Preview release</span></td>
+                  <td>{{.prerelease_version}} - <a href="https://github.com/sandermvanvliet/RoadCaptain/releases/tag/prerelease%2F{{.prerelease_version}}">Changelog</a></td>
+                  <td>
+                    <a href="https://github.com/sandermvanvliet/RoadCaptain/releases/download/prerelease%2F{{.prerelease_version}}/RoadCaptain_{{.prerelease_version}}.msi" /><i class="fab fa-windows"></i> Windows</a> | 
+                    <a href="https://github.com/sandermvanvliet/RoadCaptain/releases/download/prerelease%2F{{.prerelease_version}}/RoadCaptain-{{.prerelease_version}}-osx-x64.dmg"><i class="fab fa-apple"></i> MacOS</a> |
+                    <a href="#" style="color: grey;text-decoration:line-through"><i class="fab fa-linux"></i> Linux</a>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+        </p>
+        <div class="items {{ .style }}">
+            {{ range .items }}
+                {{ partial "item" . }}
+            {{ end }}
+        </div>
+    </div>
+</section>

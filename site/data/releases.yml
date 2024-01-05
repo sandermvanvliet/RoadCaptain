@@ -2,37 +2,5 @@
 style: "style1 content-align-center"
 id: "releases"
 title : "Releases"
-content: |
-  Installers are available for Windows and MacOS.<br /><br />
-  Typically you will want to download the RoadCaptain stable release. If you want to test out new features as they are worked on you can choose to install the preview release. 
-  However, the preview release will have some rough edges and the occasional bug.<br /><br />
-  See the <a href="#supportedPlatforms">supported platforms</a> for what is needed to run RoadCaptain.
-  <table>
-    <thead>
-      <tr>
-        <th></th>
-        <th>Version</th>
-        <th>Installers</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><strong>Stable release</strong></td>
-        <td>0.7.0.6 - <a href="https://github.com/sandermvanvliet/RoadCaptain/releases/tag/0.7.0.6">Changelog</a></td>
-        <td>
-          <a href="https://github.com/sandermvanvliet/RoadCaptain/releases/download/0.7.0.6/RoadCaptain_0.7.0.6.msi" /><i class="fab fa-windows"></i> Windows</a> | 
-          <a href="https://github.com/sandermvanvliet/RoadCaptain/releases/download/0.7.0.6/RoadCaptain-0.7.0.6-osx-x64.dmg"><i class="fab fa-apple"></i> MacOS</a> |
-          <a href="#" style="color: grey;text-decoration:line-through"><i class="fab fa-linux"></i> Linux</a>
-        </td>
-      </tr>
-      <tr>
-        <td><span style="font-style:italic">Preview release</span></td>
-        <td>0.7.0.6 - <a href="https://github.com/sandermvanvliet/RoadCaptain/releases/tag/prerelease%2F0.7.0.6">Changelog</a></td>
-        <td>
-          <a href="https://github.com/sandermvanvliet/RoadCaptain/releases/download/prerelease%2F0.7.0.6/RoadCaptain_0.7.0.6.msi" /><i class="fab fa-windows"></i> Windows</a> | 
-          <a href="https://github.com/sandermvanvliet/RoadCaptain/releases/download/prerelease%2F0.7.0.6/RoadCaptain-0.7.0.6-osx-x64.dmg"><i class="fab fa-apple"></i> MacOS</a> |
-          <a href="#" style="color: grey;text-decoration:line-through"><i class="fab fa-linux"></i> Linux</a>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+stable_version: 0.7.0.6
+prerelease_version: 0.7.1.0
