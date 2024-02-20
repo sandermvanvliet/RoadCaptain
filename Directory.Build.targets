@@ -1,9 +1,10 @@
 <Project>
-	<Target Name="DetermineInformationalVersion" BeforeTargets="BeforeBuild">
+	<Target Name="DetermineInformationalVersion" BeforeTargets="BeforeBuild" Condition="'$(GitSha)'==''">
 		<Exec Command="git rev-parse --short HEAD" 
 		      ConsoleToMSBuild="True" 
 		      EchoOff="True" 
-		      IgnoreExitCode="True">
+		      IgnoreExitCode="True"
+			  Condition="'$(GitSha)'==''">
 			<Output TaskParameter="ConsoleOutput" PropertyName="GitSha" />
 		</Exec>
 		<PropertyGroup>
