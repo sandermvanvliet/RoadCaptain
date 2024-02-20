@@ -18,12 +18,12 @@
 	<Import Project="..\..\AvaloniaReferences.props" />
 
 	<ItemGroup>
-		<PackageReference Include="Codenizer.Avalonia.Map" Version="0.3.0" />
-		<PackageReference Include="Markdown.Avalonia" Version="0.10.14" />
-		<PackageReference Include="Microsoft.IdentityModel.JsonWebTokens" Version="6.30.0" />
-		<PackageReference Include="ReactiveUI" Version="18.4.34" />
-		<PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="6.0.0" />
-		<PackageReference Include="Autofac" Version="7.0.1" />
+		<PackageReference Include="Codenizer.Avalonia.Map" />
+		<PackageReference Include="Markdown.Avalonia" />
+		<PackageReference Include="Microsoft.IdentityModel.JsonWebTokens" />
+		<PackageReference Include="ReactiveUI" />
+		<PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" />
+		<PackageReference Include="Autofac" />
 	</ItemGroup>
 
 	<ItemGroup>
