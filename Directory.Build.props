@@ -29,8 +29,8 @@
 		<RuntimeIdentifiers>$(RuntimeIdentifier)</RuntimeIdentifiers>
 
 		<!-- For non-Windows platforms always set to net6.0 -->
-		<TargetFramework Condition="'$(TargetFramework)'=='' And '$(RuntimeIdentifier)'!='win-x64'">net6.0</TargetFramework>
+		<TargetFramework Condition="'$(TargetFramework)'=='' And '$(RuntimeIdentifier)'!='win-x64'">net8.0</TargetFramework>
 		<!-- For Windows we need to change the target framework to net6.0-windows to ensure everything restores properly -->
-		<TargetFramework Condition="'$(TargetFramework)'=='' And '$(RuntimeIdentifier)'=='win-x64'">net6.0-windows</TargetFramework>
+		<TargetFramework Condition="'$(TargetFramework)'=='' And '$(RuntimeIdentifier)'=='win-x64'">net8.0-windows</TargetFramework>
 	</PropertyGroup>
 </Project>

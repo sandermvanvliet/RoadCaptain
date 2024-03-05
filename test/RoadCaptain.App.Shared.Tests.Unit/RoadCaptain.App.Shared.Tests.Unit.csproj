@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-      <TargetFramework>net6.0</TargetFramework>
+      <TargetFramework>net8.0</TargetFramework>
 	  <Nullable>enable</Nullable>
 
     <IsPackable>false</IsPackable>
@@ -27,7 +27,7 @@
 
   <ItemGroup>
     <Reference Include="Codenizer.Avalonia.Map">
-      <HintPath>..\..\..\MapTest\Codenizer.Avalonia.Map\bin\Debug\net6.0\Codenizer.Avalonia.Map.dll</HintPath>
+      <HintPath>..\..\..\MapTest\Codenizer.Avalonia.Map\bin\Debug\net8.0\Codenizer.Avalonia.Map.dll</HintPath>
     </Reference>
   </ItemGroup>
 
