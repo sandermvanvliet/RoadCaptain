@@ -140,7 +140,7 @@
                 <TextBlock Classes="filterLabel" Text="Route repository" />
                 <Grid HorizontalAlignment="Stretch">
                     <ComboBox Name="RepositoryComboBox" VerticalAlignment="Center"
-                              Items="{Binding Path=Repositories}"
+                              ItemsSource="{Binding Path=Repositories}"
                               SelectedItem="{Binding Path=FilterRepository}"
                               SelectionChanged="RepositoryComboBox_OnSelectionChanged"
                               PointerPressed="RoutesListBox_OnPointerPressed"
@@ -157,7 +157,7 @@
 
                 <TextBlock Classes="filterLabel" Text="World:" />
                 <ComboBox Name="World" Classes="filterInput"
-                          Items="{Binding Path=AvailableWorlds}"
+                          ItemsSource="{Binding Path=AvailableWorlds}"
                           PointerPressed="RoutesListBox_OnPointerPressed"
                           SelectedItem="{Binding Path=FilterWorld}">
                     <ComboBox.ItemTemplate>

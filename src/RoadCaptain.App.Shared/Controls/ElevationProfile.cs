@@ -22,7 +22,7 @@ namespace RoadCaptain.App.Shared.Controls
         public static readonly DirectProperty<ElevationProfile, RenderMode> RenderModeProperty = AvaloniaProperty.RegisterDirect<ElevationProfile, RenderMode>(nameof(RenderMode), map => map.RenderMode, (map, value) => map.RenderMode = value);
         
         private RenderTargetBitmap? _renderTarget;
-        private ISkiaDrawingContextImpl? _skiaContext;
+        private DrawingContext _drawingContext;
 
         public PlannedRoute? Route
         {
@@ -119,8 +119,8 @@ namespace RoadCaptain.App.Shared.Controls
         private void InitializeRenderTarget()
         {
             _renderTarget = new RenderTargetBitmap(new PixelSize((int)Bounds.Width, (int)Bounds.Height));
-            var context = _renderTarget.CreateDrawingContext(null);
-            _skiaContext = context as ISkiaDrawingContextImpl;
+
+            _drawingContext = _renderTarget.CreateDrawingContext();
         }
 
         protected override Size MeasureOverride(Size availableSize)
@@ -129,7 +129,7 @@ namespace RoadCaptain.App.Shared.Controls
             return availableSize;
         }
 
-        protected override void OnPropertyChanged<T>(AvaloniaPropertyChangedEventArgs<T> change)
+        protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
         {
             if (change.Property.Name == nameof(Bounds))
             {
@@ -151,10 +151,10 @@ namespace RoadCaptain.App.Shared.Controls
 
         private void RenderElevationProfile()
         {
-            if (_skiaContext != null)
-            {
-                _renderOperation.Render(_skiaContext);
-            }
+            // if (_drawingContext != null)
+            // {
+            //     _renderOperation.Render(_drawingContext);
+            // }
         }
     }
 }

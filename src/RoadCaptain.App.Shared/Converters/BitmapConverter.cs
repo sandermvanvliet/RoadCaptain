@@ -42,13 +42,7 @@ namespace RoadCaptain.App.Shared.Converters
                     uri = new Uri($"avares://{assemblyName}{rawUri}");
                 }
 
-                var assets = AvaloniaLocator.Current.GetService<IAssetLoader>();
-                if (assets == null)
-                {
-                    return null;
-                }
-
-                var asset = assets.Open(uri);
+                var asset = AssetLoader.Open(uri);
 
                 return new Bitmap(asset);
             }

@@ -6,6 +6,7 @@ using System;
 using System.Windows.Input;
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using RoadCaptain.App.Shared.ViewModels;
@@ -43,7 +44,7 @@ namespace RoadCaptain.App.Shared.Controls
             AvaloniaXamlLoader.Load(this);
         }
 
-        private void RoutesListBox_OnDoubleTapped(object? sender, RoutedEventArgs e)
+        private void RoutesListBox_OnDoubleTapped(object? sender, TappedEventArgs e)
         {
             if (sender is not ListBox listBox)
             {

@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -62,7 +63,7 @@ namespace RoadCaptain.Adapters
                 SecureRelayRequestPayload
                     .Replace("##IP##", ipAddress)
                     .Replace("##SECRET##", encodedConnectionSecret),
-                null);
+                Encoding.UTF8);
             
             request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
 

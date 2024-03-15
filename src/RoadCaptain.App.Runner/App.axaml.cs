@@ -91,11 +91,6 @@ namespace RoadCaptain.App.Runner
             base.OnFrameworkInitializationCompleted();
         }
 
-        protected override void LogBindingError(AvaloniaProperty property, Exception e)
-        {
-            _logger.Error(e, "Binding error on {PropertyName}", property.Name);
-        }
-
         private void App_OnStartup(object? sender, ControlledApplicationLifetimeStartupEventArgs e)
         {
             _monitoringEvents.ApplicationStarted();

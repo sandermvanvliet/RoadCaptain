@@ -9,7 +9,8 @@ using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Threading;
-using Serilog.Core;
+using Avalonia.Logging;
+using Logger = Serilog.Core.Logger;
 
 namespace RoadCaptain.App.RouteBuilder
 {
@@ -69,7 +70,7 @@ namespace RoadCaptain.App.RouteBuilder
         public static AppBuilder BuildAvaloniaApp()
             => AppBuilder.Configure<App>()
                 .UsePlatformDetect()
-                .LogToTrace()
+                .LogToTrace(LogEventLevel.Information)
                 .UseReactiveUI();
     }
 }

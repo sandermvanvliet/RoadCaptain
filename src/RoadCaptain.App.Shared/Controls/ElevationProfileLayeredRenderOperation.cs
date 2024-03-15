@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using Avalonia;
+using Avalonia.Media;
 using Avalonia.Platform;
 using Avalonia.Rendering.SceneGraph;
 using Avalonia.Skia;
@@ -181,9 +182,20 @@ namespace RoadCaptain.App.Shared.Controls
             return false;
         }
 
-        public void Render(IDrawingContextImpl context)
+        public void Render(ImmediateDrawingContext context)
         {
-            var canvas = (context as ISkiaDrawingContextImpl)?.SkCanvas;
+            // https://github.com/AvaloniaUI/Avalonia/blob/master/samples/RenderDemo/Pages/CustomSkiaPage.cs
+
+            var leaseFeature = context.TryGetFeature<ISkiaSharpApiLeaseFeature>();
+
+            if(leaseFeature == null)
+            {
+                return;
+            }
+            
+            using var lease = leaseFeature.Lease();
+
+            var canvas = lease.SkCanvas;
 
             if (canvas == null)
             {

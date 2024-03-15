@@ -18,14 +18,10 @@ namespace RoadCaptain.App.Shared.Controls
         {
             Name = $"worldMap-{worldId}";
             
-            var assetLoader = AvaloniaLocator.Current.GetService<IAssetLoader>();
-            if (assetLoader != null)
-            {
-                var stream = assetLoader.Open(new Uri($"avares://RoadCaptain.App.Shared/Assets/map-{worldId}.png"));
-                _image = SKImage.FromEncodedData(stream);
+            var stream = AssetLoader.Open(new Uri($"avares://RoadCaptain.App.Shared/Assets/map-{worldId}.png"));
+            _image = SKImage.FromEncodedData(stream);
 
-                Bounds = new SKRect(0, 0, _image.Width, _image.Height);
-            }
+            Bounds = new SKRect(0, 0, _image.Width, _image.Height);
         }
 
         protected override void RenderCore(SKCanvas canvas)

@@ -11,7 +11,7 @@ using RoadCaptain.App.Shared.Dialogs.ViewModels;
 
 namespace RoadCaptain.App.Shared.Dialogs
 {
-    public class MessageBox : Window
+    public partial class MessageBox : Window
     {
         public MessageBox()
         {

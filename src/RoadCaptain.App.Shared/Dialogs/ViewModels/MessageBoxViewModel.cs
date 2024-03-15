@@ -62,14 +62,8 @@ namespace RoadCaptain.App.Shared.Dialogs.ViewModels
 
         private Bitmap FromResource(string name)
         {
-            var assets = AvaloniaLocator.Current.GetService<IAssetLoader>();
-            if (assets == null)
-            {
-                throw new InvalidOperationException("Unable to retrieve Avalonia asset loader");
-            }
-
             var uri = new Uri($"avares://RoadCaptain.App.Shared/Assets/{name}.png");
-            var asset = assets.Open(uri);
+            var asset = AssetLoader.Open(uri);
 
             return new Bitmap(asset);
         }
