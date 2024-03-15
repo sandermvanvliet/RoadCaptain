@@ -37,10 +37,6 @@ namespace RoadCaptain.App.Runner.Views
 
             InitializeComponent();
 
-#if DEBUG
-            this.AttachDevTools();
-#endif
-
             gameStateReceiver.ReceiveGameState(GameStateReceived);
         }
 

@@ -25,7 +25,7 @@ namespace RoadCaptain.App.RouteBuilder.Views
 
         public RouteSegmentListView()
         {
-            InitializeComponent();
+            InitializeComponent(true);
 
             DataContextChanged += (_, _) =>
             {

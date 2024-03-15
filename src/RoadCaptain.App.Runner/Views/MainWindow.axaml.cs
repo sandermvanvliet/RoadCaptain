@@ -70,11 +70,7 @@ namespace RoadCaptain.App.Runner.Views
 
             DataContext = viewModel;
 
-            InitializeComponent();
-
-#if DEBUG
-            this.AttachDevTools();
-#endif
+            InitializeComponent(true);
 
             ZwiftMap.LogDiagnostics = false;
         }

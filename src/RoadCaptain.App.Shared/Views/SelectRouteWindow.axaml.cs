@@ -35,9 +35,6 @@ namespace RoadCaptain.App.Shared.Views
             DataContext = viewModel;
 
             InitializeComponent();
-#if DEBUG
-            this.AttachDevTools();
-#endif
         }
 
         public RouteModel? SelectedRoute => _viewModel.SelectedRoute?.AsRouteModel();
