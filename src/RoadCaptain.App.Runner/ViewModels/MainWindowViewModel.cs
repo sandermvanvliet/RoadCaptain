@@ -656,19 +656,12 @@ namespace RoadCaptain.App.Runner.ViewModels
                 }
             }
 
-            var assets = AvaloniaLocator.Current.GetService<IAssetLoader>();
-
-            if (assets == null)
-            {
-                return null;
-            }
-
             if (uri != null && uri.StartsWith("avares://"))
             {
-                return new Bitmap(assets.Open(new Uri(uri)));
+                return new Bitmap(AssetLoader.Open(new Uri(uri)));
             }
 
-            return new Bitmap(assets.Open(new Uri("avares://RoadCaptain.App.Shared/Assets/profile-default.png")));
+            return new Bitmap(AssetLoader.Open(new Uri("avares://RoadCaptain.App.Shared/Assets/profile-default.png")));
         }
 
         private CommandResult OpenLink(string url)

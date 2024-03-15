@@ -6,7 +6,8 @@
 
 <Application xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             x:Class="RoadCaptain.App.RouteBuilder.App">
+             x:Class="RoadCaptain.App.RouteBuilder.App"
+             RequestedThemeVariant="Light">
 	<Application.Name>RoadCaptain Route Builder</Application.Name>
 	<NativeMenu.Menu>
 		<NativeMenu>
@@ -16,7 +17,7 @@
 	</NativeMenu.Menu>
 
     <Application.Styles>
-        <FluentTheme Mode="Light"/>
+        <FluentTheme />
         <StyleInclude Source="avares://RoadCaptain.App.Shared/Styles/Shared.axaml" />
     </Application.Styles>
 

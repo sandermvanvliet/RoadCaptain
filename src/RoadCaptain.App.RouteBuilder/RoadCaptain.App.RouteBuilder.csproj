@@ -30,6 +30,7 @@
 		</None>
 	</ItemGroup>
 	<ItemGroup>
+		<PackageReference Include="Avalonia.Themes.Fluent" />
 		<PackageReference Include="Codenizer.Avalonia.Map" />
 		<PackageReference Include="JetBrains.Annotations" />
 		<PackageReference Include="Microsoft.IdentityModel.JsonWebTokens" />
