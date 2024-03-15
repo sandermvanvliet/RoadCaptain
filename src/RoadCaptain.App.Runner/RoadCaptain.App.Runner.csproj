@@ -32,10 +32,8 @@
 	<Import Project="..\..\AvaloniaReferences.props" />
 
 	<ItemGroup>
-		<PackageReference Include="Avalonia.Themes.Fluent" />
 		<PackageReference Include="Codenizer.Avalonia.Map" />
 		<PackageReference Include="JetBrains.Annotations" />
-		<PackageReference Include="XamlNameReferenceGenerator" />
 		<PackageReference Include="Autofac" />
 		<PackageReference Include="Autofac.Extensions.DependencyInjection" />
 		<PackageReference Include="Microsoft.Extensions.Configuration.Json" />

@@ -52,7 +52,6 @@
     <PackageVersion Include="System.IdentityModel.Tokens.Jwt" Version="7.3.1" />
     <PackageVersion Include="System.IO.Pipelines" Version="8.0.0" />
     <PackageVersion Include="WebViewControl-Avalonia" Version="2.106.7" />
-    <PackageVersion Include="XamlNameReferenceGenerator" Version="1.6.1" />
     <PackageVersion Include="xunit.runner.visualstudio" Version="2.5.7" />
     <PackageVersion Include="Xunit.StaFact" Version="1.1.11" />
     <PackageVersion Include="xunit" Version="2.7.0" />

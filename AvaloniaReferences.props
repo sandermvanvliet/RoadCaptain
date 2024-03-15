@@ -20,5 +20,6 @@
 		<PackageReference Include="Avalonia.Desktop" Condition="!Exists('vendor\AvaloniaUI\Avalonia.props')" />
 		<PackageReference Condition="'$(Configuration)' == 'Debug' And !Exists('vendor\AvaloniaUI\Avalonia.props')" Include="Avalonia.Diagnostics" />
 		<PackageReference Include="Avalonia.ReactiveUI" Condition="!Exists('vendor\AvaloniaUI\Avalonia.props')" />
+		<PackageReference Include="Avalonia.Themes.Fluent" />
 	</ItemGroup>
 </Project>
