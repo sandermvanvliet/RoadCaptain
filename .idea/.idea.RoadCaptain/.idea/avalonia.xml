@@ -3,7 +3,11 @@
   <component name="AvaloniaProject">
     <option name="projectPerEditor">
       <map>
+        <entry key="src/RoadCaptain.App.RouteBuilder/App.axaml" value="src/RoadCaptain.App.RouteBuilder/RoadCaptain.App.RouteBuilder.csproj" />
+        <entry key="src/RoadCaptain.App.RouteBuilder/Views/BuildRoute.axaml" value="src/RoadCaptain.App.RouteBuilder/RoadCaptain.App.RouteBuilder.csproj" />
+        <entry key="src/RoadCaptain.App.RouteBuilder/Views/LandingPage.axaml" value="src/RoadCaptain.App.RouteBuilder/RoadCaptain.App.RouteBuilder.csproj" />
         <entry key="src/RoadCaptain.App.RouteBuilder/Views/MainWindow.axaml" value="src/RoadCaptain.App.RouteBuilder/RoadCaptain.App.RouteBuilder.csproj" />
+        <entry key="src/RoadCaptain.App.RouteBuilder/Views/RouteSegmentListView.axaml" value="src/RoadCaptain.App.RouteBuilder/RoadCaptain.App.RouteBuilder.csproj" />
         <entry key="src/RoadCaptain.App.RouteBuilder/Views/SaveRouteDialog.axaml" value="src/RoadCaptain.App.RouteBuilder/RoadCaptain.App.RouteBuilder.csproj" />
         <entry key="src/RoadCaptain.App.Runner/Controls/CallToAction.axaml" value="src/RoadCaptain.App.Runner/RoadCaptain.App.Runner.csproj" />
         <entry key="src/RoadCaptain.App.Runner/Views/InGameNavigationWIndow.axaml" value="src/RoadCaptain.App.Runner/RoadCaptain.App.Runner.csproj" />

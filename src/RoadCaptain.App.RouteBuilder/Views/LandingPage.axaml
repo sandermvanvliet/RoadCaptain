@@ -43,7 +43,7 @@
         <StackPanel Orientation="Vertical" Grid.Column="0">
             <TextBlock Text="Select a sport to build a route for:" FontSize="16" VerticalAlignment="Center" Margin="8,0,0,0"/>
             <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
-                <ItemsControl Items="{Binding Path=Sports}">
+                <ItemsControl ItemsSource="{Binding Path=Sports}">
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
                             <WrapPanel />
@@ -114,7 +114,7 @@
             
             <TextBlock Text="Then, select a world to build a route for:" FontSize="16" Margin="8,8,0,0" />
             <ScrollViewer Grid.Row="3" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
-                <ItemsControl Items="{Binding Path=Worlds}">
+                <ItemsControl ItemsSource="{Binding Path=Worlds}">
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
                             <WrapPanel />

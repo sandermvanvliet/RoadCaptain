@@ -58,7 +58,7 @@
                  HorizontalAlignment="Stretch"
                  Padding="0"
                  Margin="0"
-                 Items="{Binding Path=Route.Sequence}"
+                 ItemsSource="{Binding Path=Route.Sequence}"
                  BorderThickness="0"
                  ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                  ScrollViewer.VerticalScrollBarVisibility="Auto"
@@ -139,7 +139,7 @@
                                 HorizontalAlignment="Right"
                                 VerticalAlignment="Top"
                                 Margin="0,4,4,0"
-                                Command="{Binding Path=DataContext.ConfigureLoopCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                Command="{Binding Path=$parent[UserControl].((viewModels:RouteSegmentListViewModel)DataContext).ConfigureLoopCommand}"
                                 IsVisible="{Binding Path=Type, Converter={StaticResource BooleanConverter}, ConverterParameter={x:Static roadCaptain:SegmentSequenceType.LoopStart}}">
                             <Button.Template>
                                 <ControlTemplate>
@@ -156,8 +156,8 @@
                                                 Foreground="White"
                                                 FontWeight="Bold"
                                                 ToolTip.Tip="This loop will be followed a number of times and then continue with the rest of the route"
-                                                Text="{Binding Path=DataContext.Route.NumberOfLoops, RelativeSource={RelativeSource AncestorType=UserControl}, FallbackValue=0, TargetNullValue=0}"
-                                                IsVisible="{Binding Path=DataContext.Route.LoopMode, RelativeSource={RelativeSource AncestorType=UserControl}, FallbackValue=false, TargetNullValue=false, Converter={StaticResource BooleanConverter}, ConverterParameter={x:Static roadCaptain:LoopMode.Constrained}}" />
+                                                Text="{Binding Path=$parent[UserControl].((viewModels:RouteSegmentListViewModel)DataContext).Route.NumberOfLoops, FallbackValue=0, TargetNullValue=0}"
+                                                IsVisible="{Binding Path=$parent[UserControl].((viewModels:RouteSegmentListViewModel)DataContext).Route.LoopMode, FallbackValue=false, TargetNullValue=false, Converter={StaticResource BooleanConverter}, ConverterParameter={x:Static roadCaptain:LoopMode.Constrained}}" />
                                             <TextBlock
                                                 HorizontalAlignment="Center"
                                                 VerticalAlignment="Center"
@@ -165,7 +165,7 @@
                                                 FontWeight="Bold"
                                                 Text="∞"
                                                 ToolTip.Tip="This is an infinite loop, you must end the activity yourself when you have had enough!"
-                                                IsVisible="{Binding Path=DataContext.Route.LoopMode, RelativeSource={RelativeSource AncestorType=UserControl}, FallbackValue=false, TargetNullValue=false, Converter={StaticResource BooleanConverter}, ConverterParameter={x:Static roadCaptain:LoopMode.Infinite}}" />
+                                                IsVisible="{Binding Path=$parent[UserControl].((viewModels:RouteSegmentListViewModel)DataContext).Route.LoopMode, FallbackValue=false, TargetNullValue=false, Converter={StaticResource BooleanConverter}, ConverterParameter={x:Static roadCaptain:LoopMode.Infinite}}" />
                                         </StackPanel>
                                     </Border>
                                 </ControlTemplate>
@@ -188,7 +188,7 @@
                      ScrollViewer.VerticalScrollBarVisibility="Auto"
                      VerticalAlignment="Stretch"
                      BorderThickness="0"
-                     Items="{Binding Path=Route.Markers}"
+                     ItemsSource="{Binding Path=Route.Markers}"
                      SelectionMode="Single"
                      SelectedItem="{Binding Path=SelectedMarker, Mode=TwoWay}">
                 <ListBox.Styles>

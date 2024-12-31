@@ -16,8 +16,7 @@
              xmlns:converters1="clr-namespace:RoadCaptain.App.RouteBuilder.Converters"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="RoadCaptain.App.RouteBuilder.Views.BuildRoute"
-             x:DataType="viewModels:BuildRouteViewModel"
-             Initialized="StyledElement_OnInitialized">
+             x:DataType="viewModels:BuildRouteViewModel">
     <Design.DataContext>
         <viewModels:DesignTimeBuildRouteViewModel />
     </Design.DataContext>
@@ -125,6 +124,6 @@
             Grid.Column="0"
             Name="RouteSegmentListView"
             DataContext="{Binding Path=RouteSegmentListViewModel}"
-            SelectedSegment="{Binding Path=DataContext.HighlightedSegment, Mode=TwoWay, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}"/>
+            SelectedSegment="{Binding Path=$parent[UserControl].((viewModels:BuildRouteViewModel)DataContext).HighlightedSegment, Mode=TwoWay}"/>
     </Grid>
 </UserControl>

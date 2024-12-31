@@ -56,7 +56,7 @@
 		</Grid>
 		<Grid Margin="0,2,2,0">
 			<views:LandingPage 
-			                   IsVisible="{Binding RelativeSource={RelativeSource AncestorType=Window}, Path=DataContext.Route.ReadyToBuild,Converter={StaticResource BooleanConverter},ConverterParameter=invert}"
+			                   IsVisible="{Binding RelativeSource={RelativeSource AncestorType=Window}, Path=DataContext.Route.ReadyToBuild, FallbackValue=False, Converter={StaticResource BooleanConverter},ConverterParameter=invert}"
 			                   Margin="3,40,4,4" 
 			                   DataContext="{Binding LandingPageViewModel}"/>
 

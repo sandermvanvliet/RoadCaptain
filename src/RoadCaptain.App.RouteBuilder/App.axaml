@@ -6,6 +6,7 @@
 
 <Application xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:routeBuilder="clr-namespace:RoadCaptain.App.RouteBuilder"
              x:Class="RoadCaptain.App.RouteBuilder.App"
              RequestedThemeVariant="Light">
 	<Application.Name>RoadCaptain Route Builder</Application.Name>
@@ -15,6 +16,10 @@
 			<NativeMenuItem Header="Documentation" Click="Documentation_OnClick" />
 		</NativeMenu>
 	</NativeMenu.Menu>
+	
+	<Application.DataTemplates>
+		<routeBuilder:ViewLocator />
+	</Application.DataTemplates>
 
     <Application.Styles>
         <FluentTheme />

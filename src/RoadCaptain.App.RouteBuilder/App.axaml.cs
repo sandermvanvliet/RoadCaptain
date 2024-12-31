@@ -21,6 +21,7 @@ using Serilog.Core;
 using RoadCaptain.App.Shared.Commands;
 using System.Runtime.InteropServices;
 using System.Security.Policy;
+using RoadCaptain.App.RouteBuilder.ViewModels;
 using RoadCaptain.App.Shared;
 
 namespace RoadCaptain.App.RouteBuilder
@@ -74,22 +75,13 @@ namespace RoadCaptain.App.RouteBuilder
 
         public override void OnFrameworkInitializationCompleted()
         {
-            if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop && desktop.MainWindow == null)
+            if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
             {
+                desktop.MainWindow = _container.Resolve<MainWindow>();
+                
                 _windowService.SetLifetime(desktop);
                 desktop.Startup += App_OnStartup;
                 desktop.Exit += App_OnExit;
-
-                if (Design.IsDesignMode)
-                {
-                    desktop.MainWindow = new MainWindow();
-                }
-                else
-                {
-                    _container
-                        .Resolve<IWindowService>()
-                        .ShowMainWindow(ApplicationLifetime);
-                }
             }
             
             base.OnFrameworkInitializationCompleted();
@@ -121,6 +113,8 @@ namespace RoadCaptain.App.RouteBuilder
 
             // Flush the logger
             _logger.Dispose();
+
+            e.ApplicationExitCode = 0;
         }
 
         private static bool IsRouteBuilderRunning()

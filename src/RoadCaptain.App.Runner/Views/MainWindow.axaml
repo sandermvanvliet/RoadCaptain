@@ -168,7 +168,7 @@
 
 							<ListBox Grid.Row="7" Grid.Column="1"
 									 Margin="4,0,0,0"
-									 Items="{Binding Path=Route.Markers}"
+									 ItemsSource="{Binding Path=Route.Markers}"
 									 Background="Transparent">
 								<ListBox.Styles>
 									<Style Selector="ListBoxItem">

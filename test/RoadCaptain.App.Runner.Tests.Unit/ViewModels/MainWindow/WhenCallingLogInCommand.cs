@@ -48,12 +48,12 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.MainWindow
                 new Zwift(null!),
                 new PlatformPaths());
             
-            // This is required so that we can call new Window() below.
-            var avaloniaDependencyResolver = new AvaloniaLocator();
-            var mock = new Mock<IWindowingPlatform>();
-            mock.Setup(_ => _.CreateWindow()).Returns(new Mock<IWindowImpl>().Object);
-            avaloniaDependencyResolver.Bind<IWindowingPlatform>().ToConstant(mock.Object);
-            AvaloniaLocator.Current = avaloniaDependencyResolver;
+            // // This is required so that we can call new Window() below.
+            // var avaloniaDependencyResolver = new AvaloniaLocator();
+            // var mock = new Mock<IWindowingPlatform>();
+            // mock.Setup(_ => _.CreateWindow()).Returns(new Mock<IWindowImpl>().Object);
+            // avaloniaDependencyResolver.Bind<IWindowingPlatform>().ToConstant(mock.Object);
+            // AvaloniaLocator.Current = avaloniaDependencyResolver;
         }
 
         [Fact]

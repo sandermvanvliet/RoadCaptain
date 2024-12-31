@@ -9,6 +9,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Threading;
+using Avalonia.Controls;
 using Avalonia.Logging;
 using Logger = Serilog.Core.Logger;
 
@@ -52,13 +53,14 @@ namespace RoadCaptain.App.RouteBuilder
                 Logger.Information("Starting RouteBuilder");
 
                 BuildAvaloniaApp()
-                    .StartWithClassicDesktopLifetime(args);
+                    .StartWithClassicDesktopLifetime(args, ShutdownMode.OnExplicitShutdown);
 
                 Logger.Information("RouteBuilder exiting");
             }
             catch (Exception ex)
             {
                 Logger.Fatal(ex, "Something went really wrong!");
+                Environment.ExitCode = 1;
             }
             finally
             {
@@ -67,6 +69,7 @@ namespace RoadCaptain.App.RouteBuilder
         }
 
         // Avalonia configuration, don't remove; also used by visual designer.
+        // ReSharper disable once MemberCanBePrivate.Global
         public static AppBuilder BuildAvaloniaApp()
             => AppBuilder.Configure<App>()
                 .UsePlatformDetect()

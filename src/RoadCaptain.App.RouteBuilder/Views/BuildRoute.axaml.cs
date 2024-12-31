@@ -148,11 +148,5 @@ namespace RoadCaptain.App.RouteBuilder.Views
                 }
             }
         }
-
-        private void StyledElement_OnInitialized(object? sender, EventArgs e)
-        {
-            _viewModel = (DataContext as BuildRouteViewModel) ?? throw new InvalidOperationException("Can't initialize when the DataContext is null");
-            _viewModel.PropertyChanged += BuildRouteViewModelPropertyChanged;
-        }
     }
 }

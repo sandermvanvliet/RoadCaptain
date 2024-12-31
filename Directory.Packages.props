@@ -6,14 +6,14 @@
     <PackageVersion Include="Autofac.Configuration" Version="6.0.0" />
     <PackageVersion Include="Autofac.Extensions.DependencyInjection" Version="8.0.0" />
     <PackageVersion Include="Autofac" Version="8.0.0" />
-    <PackageVersion Include="Avalonia.Desktop" Version="11.0.10" />
-    <PackageVersion Include="Avalonia.Diagnostics" Version="11.0.10" />
-    <PackageVersion Include="Avalonia.ReactiveUI" Version="11.0.10" />
-    <PackageVersion Include="Avalonia" Version="11.0.10" />
-    <PackageVersion Include="Avalonia.Themes.Fluent" Version="11.0.10" />
+    <PackageVersion Include="Avalonia.Desktop" Version="11.1.3" />
+    <PackageVersion Include="Avalonia.Diagnostics" Version="11.1.3" />
+    <PackageVersion Include="Avalonia.ReactiveUI" Version="11.1.3" />
+    <PackageVersion Include="Avalonia" Version="11.1.3" />
+    <PackageVersion Include="Avalonia.Themes.Fluent" Version="11.1.3" />
     <PackageVersion Include="BenchmarkDotNet" Version="0.13.12" />
     <PackageVersion Include="BouncyCastle.NetCore" Version="2.2.1" />
-    <PackageVersion Include="Codenizer.Avalonia.Map" Version="0.3.0" />
+    <PackageVersion Include="Codenizer.Avalonia.Map" Version="0.5.1" />
     <PackageVersion Include="Codenizer.HttpClient.Testable" Version="2.6.0" />
     <PackageVersion Include="coverlet.collector" Version="6.0.0" />
     <PackageVersion Include="FluentAssertions" Version="6.12.0" />
