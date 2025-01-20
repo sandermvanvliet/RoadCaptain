@@ -3,6 +3,7 @@
 // See LICENSE or https://choosealicense.com/licenses/artistic-2.0/
 
 using System;
+using System.Threading.Tasks;
 using FluentAssertions;
 using RoadCaptain.Adapters;
 using RoadCaptain.Commands;
@@ -49,13 +50,13 @@ namespace RoadCaptain.Tests.Unit.UseCases
         }
 
         [Fact]
-        public void GivenCommandHasOnlyFileNameSpecified_RouteIsSavedToDisk()
+        public async Task GivenCommandHasOnlyFileNameSpecified_RouteIsSavedToDisk()
         {
             var command = new SaveRouteCommand(new PlannedRoute(), "NOT IMPORTANT", null, "c:\\temp\\route.json", null);
             var stubRouteStore = new StubRouteStore();
             var useCase = new SaveRouteUseCase(Array.Empty<IRouteRepository>(), new SegmentStore(new NopMonitoringEvents()), stubRouteStore);
 
-            useCase.ExecuteAsync(command).GetAwaiter().GetResult();
+            await useCase.ExecuteAsync(command);
 
             stubRouteStore
                 .StoredRoutes
@@ -64,14 +65,14 @@ namespace RoadCaptain.Tests.Unit.UseCases
         }
 
         [Fact]
-        public void GivenCommandHasRepositoryNameAndFileName_RouteIsSavedToRepository()
+        public async Task GivenCommandHasRepositoryNameAndFileName_RouteIsSavedToRepository()
         {
             var command = new SaveRouteCommand(new PlannedRoute(), "NOT IMPORTANT", "TEST", "c:\\temp\\route.json", null);
             var stubRouteStore = new StubRouteStore();
             var stubRepository = new StubRepository();
             var useCase = new SaveRouteUseCase(new[] { stubRepository }, new StubSegmentStore(), stubRouteStore);
 
-            useCase.ExecuteAsync(command).GetAwaiter().GetResult();
+            await useCase.ExecuteAsync(command);
 
             stubRepository
                 .StoredRoutes

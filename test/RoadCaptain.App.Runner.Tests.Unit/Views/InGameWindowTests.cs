@@ -69,10 +69,13 @@ namespace RoadCaptain.App.Runner.Tests.Unit.Views
             Dispatcher.UIThread.InvokeAsync(() => { }, DispatcherPriority.SystemIdle);
             
             var windowContent = (window.Content as Grid);
+            windowContent.Should().NotBeNull();
             //TryScreenshotToClipboardAsync(windowContent).GetAwaiter().GetResult();
-            var secondRow = (windowContent.FindControl<Grid>("SecondRow"));
+            var secondRow = (windowContent!.FindControl<Grid>("SecondRow"));
 
-            secondRow
+            secondRow.Should().NotBeNull();
+
+            secondRow!
                 .IsVisible
                 .Should()
                 .BeFalse();
@@ -141,9 +144,10 @@ namespace RoadCaptain.App.Runner.Tests.Unit.Views
             var windowContent = (window.Content as Grid);
             windowContent.Should().NotBeNull();
             TryScreenshotToClipboardAsync(windowContent!).GetAwaiter().GetResult();
-            var secondRow = (windowContent.FindControl<Grid>("Placeholder"));
+            var secondRow = (windowContent!.FindControl<Grid>("Placeholder"));
+            secondRow.Should().NotBeNull();
 
-            secondRow
+            secondRow!
                 .IsVisible
                 .Should()
                 .BeTrue();
@@ -215,9 +219,10 @@ namespace RoadCaptain.App.Runner.Tests.Unit.Views
             var windowContent = (window.Content as Grid);
             windowContent.Should().NotBeNull();
             TryScreenshotToClipboardAsync(windowContent!).GetAwaiter().GetResult();
-            var secondRow = (windowContent.FindControl<StackPanel>("FinishFlag"));
+            var secondRow = (windowContent!.FindControl<StackPanel>("FinishFlag"));
+            secondRow.Should().NotBeNull();
 
-            secondRow
+            secondRow!
                 .IsVisible
                 .Should()
                 .BeTrue();
@@ -287,9 +292,10 @@ namespace RoadCaptain.App.Runner.Tests.Unit.Views
             var windowContent = (window.Content as Grid);
             windowContent.Should().NotBeNull();
             TryScreenshotToClipboardAsync(windowContent!).GetAwaiter().GetResult();
-            var secondRow = (windowContent.FindControl<StackPanel>("FinishFlag"));
+            var secondRow = (windowContent!.FindControl<StackPanel>("FinishFlag"));
+            secondRow.Should().NotBeNull();
 
-            secondRow
+            secondRow!
                 .IsVisible
                 .Should()
                 .BeFalse();

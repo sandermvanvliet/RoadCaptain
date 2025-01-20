@@ -6,6 +6,7 @@ using System;
 using System.Net;
 using System.Net.Http;
 using System.Threading;
+using System.Threading.Tasks;
 using Codenizer.HttpClient.Testable;
 using FluentAssertions;
 using RoadCaptain.Adapters;
@@ -70,15 +71,13 @@ namespace RoadCaptain.Tests.Unit
         }
 
         [Fact]
-        public void GivenAccessToken_RelayRequestIsSent()
+        public async Task GivenAccessToken_RelayRequestIsSent()
         {
-            _useCase.ExecuteAsync(new ConnectCommand
+            await _useCase.ExecuteAsync(new ConnectCommand
                     {
                         AccessToken = "supersecret",
                         ConnectionEncryptionSecret = new byte[] { 0x1 }
-                    })
-                .GetAwaiter()
-                .GetResult();
+                    });
 
             _handler
                 .Requests
@@ -87,7 +86,7 @@ namespace RoadCaptain.Tests.Unit
         }
 
         [Fact]
-        public void GivenInvalidAccessToken_InvalidCredentialsStateIsDispatched()
+        public async Task GivenInvalidAccessToken_InvalidCredentialsStateIsDispatched()
         {
             _handler
                 .RespondTo()
@@ -97,14 +96,12 @@ namespace RoadCaptain.Tests.Unit
 
             try
             {
-                _useCase
+                await _useCase
                     .ExecuteAsync(new ConnectCommand
                         {
                             AccessToken = "supersecret",
                             ConnectionEncryptionSecret = new byte[] { 0x1 }
-                        })
-                    .GetAwaiter()
-                    .GetResult();
+                        });
             }
             catch
             {

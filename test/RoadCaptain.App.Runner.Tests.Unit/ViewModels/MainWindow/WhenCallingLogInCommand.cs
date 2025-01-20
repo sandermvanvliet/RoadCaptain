@@ -5,6 +5,7 @@
 using System;
 using System.Net.Http;
 using System.Threading;
+using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Platform;
@@ -196,7 +197,7 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.MainWindow
         }
 
         [Fact]
-        public void GivenUserLoggedIn_CredentialsAreCached()
+        public async Task GivenUserLoggedIn_CredentialsAreCached()
         {
             _windowService.LogInDialogResult = new TokenResponse
             {
@@ -211,10 +212,8 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.MainWindow
 
             LogIn();
 
-            _credentialCache
-                .LoadAsync()
-                .GetAwaiter()
-                .GetResult()
+            var tokenResponse = await _credentialCache.LoadAsync();
+            tokenResponse
                 .Should()
                 .NotBeNull();
         }
