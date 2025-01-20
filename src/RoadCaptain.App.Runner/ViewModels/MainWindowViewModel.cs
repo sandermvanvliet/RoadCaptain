@@ -15,11 +15,12 @@ using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
 using Microsoft.IdentityModel.JsonWebTokens;
-using ReactiveUI;
+
 using RoadCaptain.App.Runner.Models;
 using RoadCaptain.App.Shared;
 using RoadCaptain.App.Shared.Commands;
 using RoadCaptain.App.Shared.Models;
+using RoadCaptain.App.Shared.ViewModels;
 using RoadCaptain.GameStates;
 using RoadCaptain.Ports;
 

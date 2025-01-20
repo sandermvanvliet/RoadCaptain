@@ -11,6 +11,7 @@ using Autofac.Core.Activators.Reflection;
 using Avalonia.Controls;
 using RoadCaptain.App.RouteBuilder.Services;
 using RoadCaptain.App.RouteBuilder.ViewModels;
+using RoadCaptain.App.Shared.ViewModels;
 using Module = Autofac.Module;
 
 namespace RoadCaptain.App.RouteBuilder

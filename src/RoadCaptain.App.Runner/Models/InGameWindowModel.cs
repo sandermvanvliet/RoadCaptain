@@ -5,8 +5,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using ReactiveUI;
+
 using RoadCaptain.App.Runner.ViewModels;
+using RoadCaptain.App.Shared.ViewModels;
 
 namespace RoadCaptain.App.Runner.Models
 {

@@ -5,6 +5,7 @@
 using System.Threading.Tasks;
 using Avalonia.Media;
 using Avalonia.Threading;
+using RoadCaptain.App.Shared.ViewModels;
 
 namespace RoadCaptain.App.Runner.ViewModels
 {

@@ -5,11 +5,11 @@
 using Autofac;
 using Autofac.Core.Activators.Reflection;
 using Avalonia.Controls;
-using RoadCaptain.App.Runner.ViewModels;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System;
 using System.IO;
+using RoadCaptain.App.Shared.ViewModels;
 using Module = Autofac.Module;
 
 namespace RoadCaptain.App.Runner

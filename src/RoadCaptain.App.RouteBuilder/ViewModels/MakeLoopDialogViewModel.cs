@@ -5,9 +5,10 @@
 using System;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using ReactiveUI;
+
 using RoadCaptain.App.Shared.Commands;
 using RoadCaptain.App.Shared.Dialogs;
+using RoadCaptain.App.Shared.ViewModels;
 
 namespace RoadCaptain.App.RouteBuilder.ViewModels
 {

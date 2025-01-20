@@ -6,9 +6,10 @@ using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using ReactiveUI;
+
 using RoadCaptain.App.RouteBuilder.Models;
 using RoadCaptain.App.RouteBuilder.Services;
+using RoadCaptain.App.Shared.ViewModels;
 using CommandResult = RoadCaptain.App.Shared.Commands.CommandResult;
 using RelayCommand = RoadCaptain.App.Shared.Commands.RelayCommand;
 using RoadCaptain.Ports;

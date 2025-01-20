@@ -3,7 +3,8 @@
 // See LICENSE or https://choosealicense.com/licenses/artistic-2.0/
 
 using System;
-using ReactiveUI;
+using RoadCaptain.App.Shared.ViewModels;
+
 
 namespace RoadCaptain.App.RouteBuilder.ViewModels
 {

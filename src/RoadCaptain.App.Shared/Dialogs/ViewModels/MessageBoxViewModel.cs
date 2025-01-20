@@ -6,6 +6,7 @@ using System;
 using Avalonia;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
+using RoadCaptain.App.Shared.ViewModels;
 
 namespace RoadCaptain.App.Shared.Dialogs.ViewModels
 {

@@ -8,8 +8,9 @@ using System.Collections.Immutable;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using ReactiveUI;
+
 using RoadCaptain.App.Shared.Commands;
+using RoadCaptain.App.Shared.ViewModels;
 using RoadCaptain.Commands;
 using RoadCaptain.Ports;
 using RoadCaptain.UseCases;

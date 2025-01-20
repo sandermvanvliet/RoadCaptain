@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Collections.ObjectModel;
 using System.Linq;
-using ReactiveUI;
+using RoadCaptain.App.Shared.ViewModels;
 using CommandResult = RoadCaptain.App.Shared.Commands.CommandResult;
 using RoadCaptain.Ports;
 

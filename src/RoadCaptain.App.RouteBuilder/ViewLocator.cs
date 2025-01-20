@@ -2,6 +2,7 @@ using System;
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
 using RoadCaptain.App.RouteBuilder.ViewModels;
+using RoadCaptain.App.Shared.ViewModels;
 
 namespace RoadCaptain.App.RouteBuilder
 {
