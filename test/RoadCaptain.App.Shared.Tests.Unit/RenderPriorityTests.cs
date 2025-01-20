@@ -15,11 +15,9 @@ namespace RoadCaptain.App.Shared.Tests.Unit
 {
     public class RenderPriorityTests
     {
-        static RenderPriorityTests()
+        public RenderPriorityTests()
         {
-            // We need to configure Avalonia before the AssetLoader is available to us for tests.
-            // As this can only be called once we need to do this in a static constructor.
-            AppBuilder.Configure<EmptyAvaloniaApplication>().UsePlatformDetect().SetupWithoutStarting();
+            EmptyAvaloniaApplication.EnsureInitializedForTesting();
         }
         
         [Fact]
@@ -96,9 +94,5 @@ namespace RoadCaptain.App.Shared.Tests.Unit
         {
             return new WorldMap("watopia");
         }
-    }
-
-    public class EmptyAvaloniaApplication : Application
-    {
     }
 }
