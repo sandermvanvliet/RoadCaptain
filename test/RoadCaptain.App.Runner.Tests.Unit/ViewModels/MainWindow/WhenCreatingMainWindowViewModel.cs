@@ -26,6 +26,8 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.MainWindow
 
         public WhenCreatingMainWindowViewModel()
         {
+            EmptyAvaloniaApplication.EnsureInitializedForTesting();
+            
             _gameStateDispatcher = new InMemoryGameStateDispatcher(new NopMonitoringEvents(), new PlatformPaths());
             _credentialCache = new InMemoryZwiftCredentialCache();
         }
