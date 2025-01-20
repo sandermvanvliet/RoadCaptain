@@ -4,6 +4,7 @@
 
 using System;
 using System.Linq;
+using Avalonia;
 using Codenizer.Avalonia.Map;
 using FluentAssertions;
 using RoadCaptain.App.Shared.Controls;
@@ -14,6 +15,13 @@ namespace RoadCaptain.App.Shared.Tests.Unit
 {
     public class RenderPriorityTests
     {
+        static RenderPriorityTests()
+        {
+            // We need to configure Avalonia before the AssetLoader is available to us for tests.
+            // As this can only be called once we need to do this in a static constructor.
+            AppBuilder.Configure<EmptyAvaloniaApplication>().UsePlatformDetect().SetupWithoutStarting();
+        }
+        
         [Fact]
         public void GivenWorldMapAndRoutePath_SequenceIsWorldMapRoutePath()
         {
@@ -88,5 +96,9 @@ namespace RoadCaptain.App.Shared.Tests.Unit
         {
             return new WorldMap("watopia");
         }
+    }
+
+    public class EmptyAvaloniaApplication : Application
+    {
     }
 }
