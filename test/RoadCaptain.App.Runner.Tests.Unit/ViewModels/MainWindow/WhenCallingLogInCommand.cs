@@ -8,6 +8,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Headless.XUnit;
 using Avalonia.Platform;
 using Codenizer.HttpClient.Testable;
 using FluentAssertions;
@@ -31,8 +32,6 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.MainWindow
 
         public WhenCallingLogInCommand()
         {
-            EmptyAvaloniaApplication.EnsureInitializedForTesting();
-            
             _windowService = new StubWindowService();
             _gameStateDispatcher = new InMemoryGameStateDispatcher(new NopMonitoringEvents(), new PlatformPaths());
             _credentialCache = new InMemoryZwiftCredentialCache();
@@ -59,7 +58,7 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.MainWindow
             // AvaloniaLocator.Current = avaloniaDependencyResolver;
         }
 
-        [Fact]
+        [AvaloniaFact]
         public void LogInDialogIsOpened()
         {
             LogIn();
@@ -70,7 +69,7 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.MainWindow
                 .Be(1);
         }
 
-        [Fact]
+        [AvaloniaFact]
         public void GivenLogInDialogIsCanceled_ZwiftAccessTokenRetainsOriginalValue()
         {
             _windowService.LogInDialogResult = null;
@@ -83,7 +82,7 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.MainWindow
                 .BeNull();
         }
 
-        [Fact]
+        [AvaloniaFact]
         public void GivenUserLogsInButTokenIsEmpty_ZwiftAccessTokenRetainsOriginalValue()
         {
             _windowService.LogInDialogResult = new TokenResponse();
@@ -96,7 +95,7 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.MainWindow
                 .BeNull();
         }
 
-        [Fact]
+        [AvaloniaFact]
         public void GivenUserLoggedIn_ZwiftAccessTokenIsSet()
         {
             _windowService.LogInDialogResult = new TokenResponse { AccessToken = "some token", UserProfile = new UserProfile() };
@@ -109,7 +108,7 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.MainWindow
                 .Be("some token");
         }
 
-        [Fact]
+        [AvaloniaFact]
         public void GivenUserLoggedIn_ZwiftNameIsSet()
         {
             _windowService.LogInDialogResult = new TokenResponse
@@ -131,7 +130,7 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.MainWindow
                 .Be("some name");
         }
 
-        [Fact]
+        [AvaloniaFact]
         public void GivenUserLoggedIn_ZwiftAvatarIsSet()
         {
             _windowService.LogInDialogResult = new TokenResponse
@@ -153,7 +152,7 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.MainWindow
                 .Be("someavatar");
         }
 
-        [Fact]
+        [AvaloniaFact]
         public void GivenUserLoggedIn_LoggedInToZwiftIsSet()
         {
             _windowService.LogInDialogResult = new TokenResponse
@@ -175,7 +174,7 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.MainWindow
                 .BeTrue();
         }
 
-        [Fact]
+        [AvaloniaFact]
         public void GivenUserLoggedIn_LoggedInStateIsDispatched()
         {
             _windowService.LogInDialogResult = new TokenResponse
@@ -198,7 +197,7 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.MainWindow
                 .BeOfType<LoggedInState>();
         }
 
-        [Fact]
+        [AvaloniaFact]
         public async Task GivenUserLoggedIn_CredentialsAreCached()
         {
             _windowService.LogInDialogResult = new TokenResponse

@@ -1,29 +1,22 @@
 using Avalonia;
+using Avalonia.Headless;
+using Avalonia.Markup.Xaml;
+
+[assembly: AvaloniaTestApplication(typeof(TestAppBuilder))]
+
+public class TestAppBuilder
+{
+    public static AppBuilder BuildAvaloniaApp() => AppBuilder.Configure<RoadCaptain.App.Shared.Tests.Unit.EmptyAvaloniaApplication>()
+        .UseHeadless(new AvaloniaHeadlessPlatformOptions());
+}
 
 namespace RoadCaptain.App.Shared.Tests.Unit
 {
     public class EmptyAvaloniaApplication : Application
     {
-        private static AppBuilder? _appBuilder;
-        private static readonly object SyncRoot = new();
-
-        public static void EnsureInitializedForTesting()
+        public override void Initialize()
         {
-            if (_appBuilder != null)
-            {
-                return;
-            }
-
-            lock (SyncRoot)
-            {
-                if (_appBuilder == null)
-                {
-                    _appBuilder = AppBuilder
-                        .Configure<EmptyAvaloniaApplication>()
-                        .UsePlatformDetect()
-                        .SetupWithoutStarting();
-                }
-            }
+            AvaloniaXamlLoader.Load(this);
         }
     }
 }

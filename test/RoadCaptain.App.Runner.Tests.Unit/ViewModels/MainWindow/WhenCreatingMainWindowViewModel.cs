@@ -5,6 +5,7 @@
 using System;
 using System.Net.Http;
 using System.Threading;
+using Avalonia.Headless.XUnit;
 using Codenizer.HttpClient.Testable;
 using FluentAssertions;
 using Microsoft.IdentityModel.JsonWebTokens;
@@ -26,13 +27,11 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.MainWindow
 
         public WhenCreatingMainWindowViewModel()
         {
-            EmptyAvaloniaApplication.EnsureInitializedForTesting();
-            
             _gameStateDispatcher = new InMemoryGameStateDispatcher(new NopMonitoringEvents(), new PlatformPaths());
             _credentialCache = new InMemoryZwiftCredentialCache();
         }
 
-        [Fact]
+        [AvaloniaFact]
         public void GivenConfigurationContainsPathToRouteAndFileDoesNotExist_RoutePathIsNotSet()
         {
             var routePath = "Some route path";
@@ -47,7 +46,7 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.MainWindow
                 .BeNullOrEmpty();
         }
 
-        [Fact]
+        [AvaloniaFact]
         public void GivenConfigurationDoesNotHaveRoutePathAndAppSettingsHasRoutePathAndFileDoesNotExist_RoutePathIsNotSet()
         {
             var appSettings = new DummyUserPreferences
@@ -62,7 +61,7 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.MainWindow
                 .BeNullOrEmpty();
         }
 
-        [Fact]
+        [AvaloniaFact]
         public void GivenConfigurationContainsPathToRouteAndFileExists_RoutePathIsSet()
         {
             var routePath = "someroute.json";
@@ -77,7 +76,7 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.MainWindow
                 .Be("someroute.json");
         }
 
-        [Fact]
+        [AvaloniaFact]
         public void GivenConfigurationDoesNotHaveRoutePathAndAppSettingsHasRoutePathAndFileExists_RoutePathIsSet()
         {
             var appSettings = new DummyUserPreferences
@@ -92,7 +91,7 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.MainWindow
                 .Be("someroute.json");
         }
 
-        [Fact]
+        [AvaloniaFact]
         public void GivenNoRoutePathInConfigurationOrSettings_RoutePathIsNull()
         {
             var configuration = new Configuration(null);
@@ -104,7 +103,7 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.MainWindow
                 .BeNull();
         }
 
-        [Fact]
+        [AvaloniaFact]
         public void GivenNoCachedCredentials_ZwiftAvatarUriIsSetToDefaultImage()
         {
             var configuration = new Configuration(null);
@@ -115,7 +114,7 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.MainWindow
                 .Be("avares://RoadCaptain.App.Shared/Assets/profile-default.png");
         }
 
-        [Fact]
+        [AvaloniaFact]
         public void GivenCachedCredentials_ZwiftNameIsSetToStoredToken()
         {
             var configuration = new Configuration(null);
@@ -127,7 +126,7 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.MainWindow
                 .Be("first last");
         }
 
-        [Fact]
+        [AvaloniaFact]
         public void GivenCachedCredentials_LoggedInToZwiftIsTrue()
         {
             var configuration = new Configuration(null)
@@ -141,7 +140,7 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.MainWindow
                 .BeTrue();
         }
 
-        [Fact]
+        [AvaloniaFact]
         public void GivenCachedCredentialsAndRouteSetInConfiguration_CanStartRouteIsTrue()
         {
             var configuration = new Configuration(null)
@@ -156,7 +155,7 @@ namespace RoadCaptain.App.Runner.Tests.Unit.ViewModels.MainWindow
                 .BeTrue();
         }
 
-        [Fact]
+        [AvaloniaFact]
         public void GivenCachedCredentials_LoggedInStateIsDispatched()
         {
             var configuration = new Configuration(null);

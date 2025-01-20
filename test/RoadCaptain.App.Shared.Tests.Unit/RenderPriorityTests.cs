@@ -5,6 +5,7 @@
 using System;
 using System.Linq;
 using Avalonia;
+using Avalonia.Headless.XUnit;
 using Codenizer.Avalonia.Map;
 using FluentAssertions;
 using RoadCaptain.App.Shared.Controls;
@@ -17,10 +18,9 @@ namespace RoadCaptain.App.Shared.Tests.Unit
     {
         public RenderPriorityTests()
         {
-            EmptyAvaloniaApplication.EnsureInitializedForTesting();
         }
         
-        [Fact]
+        [AvaloniaFact]
         public void GivenWorldMapAndRoutePath_SequenceIsWorldMapRoutePath()
         {
             var input = new[] { GivenWorldMap(), GivenRoutePath() };
@@ -34,7 +34,7 @@ namespace RoadCaptain.App.Shared.Tests.Unit
                 .ContainInOrder(typeof(WorldMap), typeof(RoutePath));
         }
 
-        [Fact]
+        [AvaloniaFact]
         public void GivenRoutePathAndWorldMap_SequenceIsWorldMapRoutePath()
         {
             var input = new[] { GivenRoutePath(), GivenWorldMap() };
@@ -48,7 +48,7 @@ namespace RoadCaptain.App.Shared.Tests.Unit
                 .ContainInOrder(typeof(WorldMap), typeof(RoutePath));
         }
 
-        [Fact]
+        [AvaloniaFact]
         public void GivenRoutePathAnMapSegment_SequenceIsMapSegmentRoutePath()
         {
             var input = new[] { GivenRoutePath(), GivenMapSegment() };
@@ -61,7 +61,7 @@ namespace RoadCaptain.App.Shared.Tests.Unit
                 .ContainInOrder(typeof(MapSegment), typeof(RoutePath));
         }
 
-        [Fact]
+        [AvaloniaFact]
         public void GivenSpawnPointAndMapSegment_SequenceIsMapSegmentSpawnPoint()
         {
             var input = new MapObject[] { GivenSpawnPointSegment(), GivenMapSegment() };
