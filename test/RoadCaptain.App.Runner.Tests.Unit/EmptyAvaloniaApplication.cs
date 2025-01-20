@@ -1,3 +1,4 @@
+using System;
 using Avalonia;
 
 namespace RoadCaptain.App.Runner.Tests.Unit
@@ -18,10 +19,17 @@ namespace RoadCaptain.App.Runner.Tests.Unit
             {
                 if (_appBuilder == null)
                 {
-                    _appBuilder = AppBuilder
-                        .Configure<EmptyAvaloniaApplication>()
-                        .UsePlatformDetect()
-                        .SetupWithoutStarting();
+                    try
+                    {
+                        _appBuilder = AppBuilder
+                            .Configure<EmptyAvaloniaApplication>()
+                            .UsePlatformDetect()
+                            .SetupWithoutStarting();
+                    }
+                    catch (InvalidOperationException)
+                    {
+                        // Nop
+                    }
                 }
             }
         }
