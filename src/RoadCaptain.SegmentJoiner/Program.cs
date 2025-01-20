@@ -27,6 +27,11 @@ var segments = new SegmentStore(null!).LoadSegments(new World() { Id = "watopia"
 var turns = 
     JsonConvert.DeserializeObject<List<SegmentTurns>>(File.ReadAllText(turnsFileName), serializerSettings);
 
+if (turns == null)
+{
+    throw new Exception($"Unable to deserialize turns from '{turnsFileName}'");
+}
+
 var segmentOne = segments.SingleOrDefault(s => s.Id == segmentOneId);
 
 if (segmentOne == null)
@@ -128,6 +133,16 @@ segments.Add(combinedSegment);
 
 var turnsOne = turns.SingleOrDefault(t => t.SegmentId == segmentOneId);
 var turnsTwo = turns.SingleOrDefault(t => t.SegmentId == segmentTwoId);
+
+if (turnsOne == null)
+{
+    throw new Exception($"Unable to find turn to segment '{segmentOneId}'");
+}
+
+if (turnsTwo == null)
+{
+    throw new Exception($"Unable to find turn to segment '{segmentTwoId}'");
+}
 
 turns.Remove(turnsOne);
 turns.Remove(turnsTwo);
