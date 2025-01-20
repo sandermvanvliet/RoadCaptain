@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using Autofac;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
+using Avalonia.Platform.Storage;
 using RoadCaptain.App.Shared.Dialogs;
 using RoadCaptain.App.Shared.Dialogs.ViewModels;
 using RoadCaptain.App.Shared.Models;
@@ -60,22 +61,24 @@ namespace RoadCaptain.App.Shared
             {
                 initialDirectory = previousLocation;
             }
-
-            var dialog = new OpenFileDialog
+            
+            if(CurrentWindow == null)
             {
-                Directory = initialDirectory,
-                AllowMultiple = false,
-                Filters = filters
-                    .Select(kv => new FileDialogFilter { Extensions = new List<string> { kv.Key }, Name = kv.Value })
-                    .ToList(),
-                Title = "Open RoadCaptain route file"
-            };
+                throw new InvalidOperationException("Attempting to show a dialog but the current window that we use as the owner is null and that just won't do");
+            }
 
-            var selectedFiles = await dialog.ShowAsync(CurrentWindow ?? throw new ArgumentNullException(nameof(CurrentWindow)));
+            var selectedFiles = await CurrentWindow.StorageProvider.OpenFilePickerAsync(
+                new FilePickerOpenOptions
+                {
+                    Title = "Open RoadCaptain route file",
+                    FileTypeFilter = filters.Select(f => new FilePickerFileType(f.Value) { Patterns = [f.Key] }).ToList().AsReadOnly(),
+                    SuggestedStartLocation = await CurrentWindow.StorageProvider.TryGetFolderFromPathAsync(initialDirectory),
+                    AllowMultiple = false
+                });
 
-            if (selectedFiles != null && selectedFiles.Any())
+            if (selectedFiles.Any())
             {
-                return selectedFiles.First();
+                return selectedFiles.First().Path.ToString();
             }
 
             return null;

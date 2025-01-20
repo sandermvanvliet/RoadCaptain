@@ -5,10 +5,12 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using Autofac;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
+using Avalonia.Platform.Storage;
 using RoadCaptain.App.RouteBuilder.ViewModels;
 using RoadCaptain.App.RouteBuilder.Views;
 using RoadCaptain.App.Shared;
@@ -37,21 +39,26 @@ namespace RoadCaptain.App.RouteBuilder
             {
                 initialDirectory = previousLocation;
             }
-
-            var dialog = new SaveFileDialog
+            
+            if(CurrentWindow == null)
             {
-                Directory = initialDirectory,
-                DefaultExtension = "*.json",
-                Filters = new List<FileDialogFilter>
-                {
-                    new() { Extensions = new List<string> { "json" }, Name = "RoadCaptain route file (.json)" },
-                    new() { Extensions = new List<string> { "gpx" }, Name = "GPS Exchange Format (.gpx)" }
-                },
-                Title = "Save RoadCaptain route file",
-                InitialFileName = suggestedFileName
-            };
+                throw new InvalidOperationException("Attempting to show a dialog but the current window that we use as the owner is null and that just won't do");
+            }
 
-            return await dialog.ShowAsync(CurrentWindow!);
+            var selectedFiles = await CurrentWindow.StorageProvider.OpenFilePickerAsync(
+                new FilePickerOpenOptions
+                {
+                    Title = "Open RoadCaptain route file",
+                    FileTypeFilter = [
+                        new FilePickerFileType("RoadCaptaion route file (.json)") { Patterns = [ "*.json"]},
+                        new FilePickerFileType("GPS Exchange Format (.gpx)") { Patterns = [ "*.gpx"]}
+                    ],
+                    SuggestedStartLocation = await CurrentWindow.StorageProvider.TryGetFolderFromPathAsync(initialDirectory),
+                    AllowMultiple = false,
+                    SuggestedFileName = suggestedFileName
+                });
+
+            return selectedFiles.FirstOrDefault()?.Path.ToString();
         }
 
         public async Task<bool> ShowDefaultSportSelectionDialog(SportType sport)
