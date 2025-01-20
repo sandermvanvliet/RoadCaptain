@@ -3,7 +3,6 @@
 // See LICENSE or https://choosealicense.com/licenses/artistic-2.0/
 
 using Avalonia;
-using Avalonia.ReactiveUI;
 using System;
 using System.Diagnostics;
 using System.IO;
@@ -70,8 +69,7 @@ namespace RoadCaptain.App.Runner
         public static AppBuilder BuildAvaloniaApp()
             => AppBuilder.Configure<App>()
                 .UsePlatformDetect()
-                .LogToTrace(LogEventLevel.Information)
-                .UseReactiveUI();
+                .LogToTrace(LogEventLevel.Information);
     }
 }
 

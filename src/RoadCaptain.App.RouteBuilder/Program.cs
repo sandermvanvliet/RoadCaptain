@@ -3,12 +3,9 @@
 // See LICENSE or https://choosealicense.com/licenses/artistic-2.0/
 
 using Avalonia;
-using Avalonia.ReactiveUI;
 using System;
-using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
-using System.Threading;
 using Avalonia.Controls;
 using Avalonia.Logging;
 using Logger = Serilog.Core.Logger;
@@ -73,8 +70,7 @@ namespace RoadCaptain.App.RouteBuilder
         public static AppBuilder BuildAvaloniaApp()
             => AppBuilder.Configure<App>()
                 .UsePlatformDetect()
-                .LogToTrace(LogEventLevel.Information)
-                .UseReactiveUI();
+                .LogToTrace(LogEventLevel.Information);
     }
 }
 
