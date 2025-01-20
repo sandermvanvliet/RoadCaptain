@@ -32,7 +32,7 @@ namespace RoadCaptain.SegmentBuilder
             Logger.Information("Smoothing segment {SegmentId}", segment.Id);
 
             var smoothedPoints = new List<TrackPoint>();
-            TrackPoint previous = null;
+            TrackPoint? previous = null;
             var numberOfPointsSkipped = 0;
 
             foreach (var point in segment.Points)

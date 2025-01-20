@@ -150,8 +150,8 @@ namespace RoadCaptain.SegmentBuilder
                     : point.Longitude;
             }
 
-            return (new TrackPoint(mapLeftLat.Value, mapLeftLon.Value, 0, zwiftWorldId),
-                new TrackPoint(mapRightLat.Value, mapRightLon.Value, 0, zwiftWorldId));
+            return (new TrackPoint(mapLeftLat!.Value, mapLeftLon!.Value, 0, zwiftWorldId),
+                new TrackPoint(mapRightLat!.Value, mapRightLon!.Value, 0, zwiftWorldId));
         }
 
         public SpawnPointFinderStep(int step, ILogger logger) : base(logger, step)

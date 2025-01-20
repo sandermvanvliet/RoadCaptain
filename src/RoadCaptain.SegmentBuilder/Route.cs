@@ -15,16 +15,24 @@ namespace RoadCaptain.SegmentBuilder
     {
         private const string GpxNamespace = "http://www.topografix.com/GPX/1/1";
 
-        public string Name { get; set; }
-        public List<TrackPoint> TrackPoints { get; set; }
-        public string Slug { get; set; }
-        public string[] Sports { get; set; }
+        public string? Name { get; set; }
+        public List<TrackPoint> TrackPoints { get; set; } = new();
+        public string? Slug { get; set; }
+        public string[] Sports { get; set; } = [];
 
         public static Route FromGpxFile(string filePath)
         {
             var doc = XDocument.Parse(File.ReadAllText(filePath));
+            if (doc.Root == null)
+            {
+                throw new Exception("Unable to load route from GPX file");
+            }
 
             var trkElement = doc.Root.Element(XName.Get("trk", GpxNamespace));
+            if (trkElement == null)
+            {
+                throw new Exception("GPX file did not contain a track element");
+            }
 
             var typeElement = trkElement.Element(XName.Get("link", GpxNamespace))?.Element(XName.Get("type", GpxNamespace));
             var trkSeg = trkElement.Elements(XName.Get("trkseg", GpxNamespace));
@@ -33,18 +41,23 @@ namespace RoadCaptain.SegmentBuilder
 
             var trackPoints = trkpt
                 .Select(trackPoint => new TrackPoint(
-                    double.Parse(trackPoint.Attribute(XName.Get("lat")).Value, CultureInfo.InvariantCulture),
-                    double.Parse(trackPoint.Attribute(XName.Get("lon")).Value, CultureInfo.InvariantCulture),
-                    double.Parse(trackPoint.Element(XName.Get("ele", GpxNamespace)).Value,
-                        CultureInfo.InvariantCulture)
+                    double.Parse(trackPoint.Attribute(XName.Get("lat"))?.Value ?? "", CultureInfo.InvariantCulture),
+                    double.Parse(trackPoint.Attribute(XName.Get("lon"))?.Value ?? "", CultureInfo.InvariantCulture),
+                    double.Parse(trackPoint.Element(XName.Get("ele", GpxNamespace))?.Value ?? "", CultureInfo.InvariantCulture)
                 ))
                 .ToList();
 
-            var sports = typeElement?.Value.Split(',') ?? new[] { "running", "cycling" };
+            var sports = typeElement?.Value.Split(',') ?? ["running", "cycling"];
 
+            var trackName = trkElement.Element(XName.Get("name", GpxNamespace))?.Value;
+            if (trackName == null)
+            {
+                trackName = "(unknown)";
+            }
+            
             return new Route
             {
-                Name = trkElement.Element(XName.Get("name", GpxNamespace)).Value,
+                Name = trackName,
                 Slug = Path.GetFileNameWithoutExtension(filePath),
                 TrackPoints = trackPoints,
                 Sports = sports
@@ -66,8 +79,8 @@ namespace RoadCaptain.SegmentBuilder
                 sport = (SportType)x;
             }
 
-            Segment currentSegment = null;
-            TrackPoint previousPoint = null;
+            Segment? currentSegment = null;
+            TrackPoint? previousPoint = null;
 
             foreach (var currentPoint in TrackPoints)
             {

@@ -76,7 +76,7 @@ namespace RoadCaptain.SegmentBuilder
             var closestPoint = junctionSegment.ClosestPoint.Point;
 
             // From closest point:
-            var startIndex = closestPoint.Index.Value;
+            var startIndex = closestPoint.Index!.Value;
             var endPoint = segmentToAdjust.Points[1];
             
             var down = new List<Tuple<TrackPoint, double>>();
@@ -100,7 +100,7 @@ namespace RoadCaptain.SegmentBuilder
             // for -1 / +1 of new point index interpolate
             // new points and again find the closest distance
             // to endpoint'
-            var newPointIndex = newPoint.Index.Value;
+            var newPointIndex = newPoint.Index!.Value;
             if (newPointIndex == junctionSegment.Segment.Points.Count - 1)
             {
                 return;
@@ -177,7 +177,7 @@ namespace RoadCaptain.SegmentBuilder
             var closestPoint = junctionSegment.ClosestPoint.Point;
 
             // From closest point:
-            var startIndex = closestPoint.Index.Value;
+            var startIndex = closestPoint.Index!.Value;
             var endPoint = segmentToAdjust.Points[^2];
             
             var down = new List<Tuple<TrackPoint, double>>();
@@ -201,7 +201,7 @@ namespace RoadCaptain.SegmentBuilder
             // for -1 / +1 of new point index interpolate
             // new points and again find the closest distance
             // to endpoint'
-            var newPointIndex = newPoint.Index.Value;
+            var newPointIndex = newPoint.Index!.Value;
 
             // Deal with segments that join head-on
             if (newPointIndex == junctionSegment.Segment.Points.Count - 1 || newPointIndex == 0)
@@ -236,7 +236,7 @@ namespace RoadCaptain.SegmentBuilder
             
             Logger.Information($"Replacing {originalA.CoordinatesDecimal} with {newPoint.CoordinatesDecimal}");
 
-            segmentToAdjust.Points.RemoveAt(newPoint.Index.Value);
+            segmentToAdjust.Points.RemoveAt(newPoint.Index!.Value);
             segmentToAdjust.Points.Add( newPoint);
         }
 

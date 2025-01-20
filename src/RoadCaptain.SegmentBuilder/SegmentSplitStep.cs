@@ -76,7 +76,7 @@ namespace RoadCaptain.SegmentBuilder
                 foreach (var overlap in startOverlaps)
                 {
                     if (overlap.DistanceOnSegment >= MinimumDistanceAlongSegment &&
-                        overlap.Segment.B.DistanceOnSegment - overlap.DistanceOnSegment >= MinimumDistanceAlongSegment)
+                        overlap.Segment!.B.DistanceOnSegment - overlap.DistanceOnSegment >= MinimumDistanceAlongSegment)
                     {
                         Logger.Information(
                             $"Found junction of start of {segment.Id} with {overlap.Segment.Id} {overlap.DistanceOnSegment:0}m along the segment");
@@ -113,7 +113,7 @@ namespace RoadCaptain.SegmentBuilder
                 foreach (var overlap in endOverlaps)
                 {
                     if (overlap.DistanceOnSegment >= MinimumDistanceAlongSegment &&
-                        overlap.Segment.B.DistanceOnSegment - overlap.DistanceOnSegment >= MinimumDistanceAlongSegment)
+                        overlap.Segment!.B.DistanceOnSegment - overlap.DistanceOnSegment >= MinimumDistanceAlongSegment)
                     {
                         Logger.Information(
                             $"Found junction of end of {segment.Id} with {overlap.Segment.Id} {overlap.DistanceOnSegment:0}m along the segment");

@@ -175,7 +175,7 @@ namespace RoadCaptain.SegmentBuilder
                 return (null, null);
             }
 
-            var before = junctionSegment.Slice("before", 0, pointAfter.Index.Value);
+            var before = junctionSegment.Slice("before", 0, pointAfter.Index!.Value);
             var after = junctionSegment.Slice("after", pointAfter.Index.Value + 1);
 
             return (

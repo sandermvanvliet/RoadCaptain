@@ -72,6 +72,11 @@ namespace RoadCaptain.SegmentBuilder
                 overlaps = OverlapsWith(endPoint, segments, segment.Id, 30);
             }
 
+            if (endPoint.Index == null)
+            {
+                throw new ArgumentException("The index of the provided endpoint was null", nameof(endPoint));
+            }
+            
             var pointBeforeEndPoint = endPoint.Index.Value == 0
                 ? segment.Points[1]
                 : segment.Points[^2];
