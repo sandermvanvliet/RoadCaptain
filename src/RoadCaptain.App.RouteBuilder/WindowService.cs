@@ -45,20 +45,20 @@ namespace RoadCaptain.App.RouteBuilder
                 throw new InvalidOperationException("Attempting to show a dialog but the current window that we use as the owner is null and that just won't do");
             }
 
-            var selectedFiles = await CurrentWindow.StorageProvider.OpenFilePickerAsync(
-                new FilePickerOpenOptions
+            var selectedFile = await CurrentWindow.StorageProvider.SaveFilePickerAsync(
+                new FilePickerSaveOptions
                 {
                     Title = "Open RoadCaptain route file",
-                    FileTypeFilter = [
+                    FileTypeChoices = [
                         new FilePickerFileType("RoadCaptaion route file (.json)") { Patterns = [ "*.json"]},
                         new FilePickerFileType("GPS Exchange Format (.gpx)") { Patterns = [ "*.gpx"]}
                     ],
                     SuggestedStartLocation = await CurrentWindow.StorageProvider.TryGetFolderFromPathAsync(initialDirectory),
-                    AllowMultiple = false,
+                    DefaultExtension = "*.json",
                     SuggestedFileName = suggestedFileName
                 });
 
-            return selectedFiles.FirstOrDefault()?.Path.ToString();
+            return selectedFile?.Path.ToString();
         }
 
         public async Task<bool> ShowDefaultSportSelectionDialog(SportType sport)
