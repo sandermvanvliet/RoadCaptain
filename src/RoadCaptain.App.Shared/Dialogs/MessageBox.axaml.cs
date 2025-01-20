@@ -47,6 +47,12 @@ namespace RoadCaptain.App.Shared.Dialogs
             Window? owner, 
             MessageBoxIcon icon = MessageBoxIcon.Information)
         {
+            if (owner == null)
+            {
+                // TODO: Make this go away because this is ridiculous
+                throw new ArgumentNullException(nameof(owner), "Owner can't be null, even though it's specified as nullable...");
+            }
+            
             var messageBox = new MessageBox
             {
                 DataContext = new MessageBoxViewModel(buttons, title, message, icon)

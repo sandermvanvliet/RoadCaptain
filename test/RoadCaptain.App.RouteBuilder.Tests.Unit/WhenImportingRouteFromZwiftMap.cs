@@ -3,6 +3,7 @@
 // See LICENSE or https://choosealicense.com/licenses/artistic-2.0/
 
 using System;
+using System.Threading.Tasks;
 using FluentAssertions;
 using RoadCaptain.Adapters;
 using Xunit;
@@ -14,7 +15,7 @@ namespace RoadCaptain.App.RouteBuilder.Tests.Unit
     public class WhenImportingRouteFromZwiftMap
     {
         [Fact]
-        public void GivenZwiftMapRoute_ItIsMappedToAPlannedRoute()
+        public async Task GivenZwiftMapRoute_ItIsMappedToAPlannedRoute()
         {
             var fileRoot = Environment.CurrentDirectory;
             var segmentStore = new SegmentStore(fileRoot, new Shared.NopMonitoringEvents());
@@ -29,7 +30,7 @@ namespace RoadCaptain.App.RouteBuilder.Tests.Unit
 
             var result = useCase.Execute(ZwiftMapRoute.FromGpxFile("zwiftmap-route.gpx"));
 
-            routeStore.StoreAsync(result, @"c:\temp\result.json").GetAwaiter().GetResult();
+            await routeStore.StoreAsync(result, @"c:\temp\result.json");
             result.Should().BeEquivalentTo(expectedPlannedRoute);
         }
     }

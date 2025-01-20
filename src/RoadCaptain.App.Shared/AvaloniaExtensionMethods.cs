@@ -69,7 +69,13 @@ namespace RoadCaptain.App.Shared
 
         private static void Restore(this CapturedWindowLocation? windowLocation, Window window)
         {
-            if (CanRestore(windowLocation, window.Screens.Primary))
+            var primaryScreen = window.Screens.Primary;
+            if (primaryScreen == null)
+            {
+                throw new InvalidOperationException("No primary screen found. That means I can't restore the window location.");
+            }
+            
+            if (CanRestore(windowLocation, primaryScreen))
             {
                 window.Position = new PixelPoint(
                         windowLocation.X,
@@ -109,7 +115,13 @@ namespace RoadCaptain.App.Shared
                     previous?.Height);
             }
 
-            if (IsPositionWithinScreen(window.Position.X, window.Position.Y, window.Screens.Primary))
+            var primaryScreen = window.Screens.Primary;
+            if (primaryScreen == null)
+            {
+                throw new InvalidOperationException("No primary screen found. That means I can't capture the window location.");
+            }
+            
+            if (IsPositionWithinScreen(window.Position.X, window.Position.Y, primaryScreen))
             {
                 return new CapturedWindowLocation(
                     window.Position.X,

@@ -14,12 +14,12 @@ namespace RoadCaptain.Adapters.Tests.Unit.RouteStorage
     public class WhenStoringRoutesInLocalDirectory
     {
         [Fact]
-        public void GivenDirectoryDoesNotExist_CallingIsAvailable_DirectoryIsCreated()
+        public async Task GivenDirectoryDoesNotExist_CallingIsAvailable_DirectoryIsCreated()
         {
             var userDataDirectory = Path.GetTempPath();
             var repository = new TestableLocalDirectoryRouteRepository(userDataDirectory);
 
-            repository.IsAvailableAsync().GetAwaiter().GetResult();
+            await repository.IsAvailableAsync();
 
             repository
                 .Directories

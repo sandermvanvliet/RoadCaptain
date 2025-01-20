@@ -21,6 +21,7 @@ namespace RoadCaptain.App.MacOs.Views
     {
         private readonly FieldInfo _cefRequestField;
         private bool _isInitialActivation = true;
+        private string ZwiftAuthenticationViewName = "ZwiftAuthView";
 
         public ZwiftLoginWindow()
         {
@@ -28,7 +29,12 @@ namespace RoadCaptain.App.MacOs.Views
 #if DEBUG
             this.AttachDevTools();
 #endif
-            var zwiftAuthView = this.Find<WebView>("ZwiftAuthView");
+            var zwiftAuthView = this.Find<WebView>(ZwiftAuthenticationViewName);
+            if (zwiftAuthView == null)
+            {
+                throw new InvalidOperationException("Unable to find the Zwift authentication view");
+            }
+            
             zwiftAuthView.BeforeNavigate += ZwiftAuthViewOnBeforeNavigate;
             zwiftAuthView.AllowDeveloperTools = false;
             zwiftAuthView.DisableBuiltinContextMenus = true;
@@ -123,7 +129,12 @@ namespace RoadCaptain.App.MacOs.Views
             {
                 _isInitialActivation = false;
 
-                var webView = this.Find<WebView>("ZwiftAuthView");
+                var webView = this.Find<WebView>(ZwiftAuthenticationViewName);
+                
+                if (webView == null)
+                {
+                    throw new InvalidOperationException("Unable to find the Zwift authentication view");
+                }
                 
                 webView.LoadUrl(
                     "https://www.zwift.com/eu/sign-in?redirect_uri=https://www.zwift.com/feed?auth_redirect=true");

@@ -98,6 +98,11 @@ namespace RoadCaptain.App.RouteBuilder
             };
             makeLoopDialog.DataContext = makeLoopDialogViewModel;
 
+            if (CurrentWindow == null)
+            {
+                throw new InvalidOperationException("Attempting to show a dialog but the current window that we use as the owner is null and that just won't do");
+            }
+
             await makeLoopDialog.ShowDialog(CurrentWindow);
 
             if (makeLoopDialog.DialogResult != DialogResult.Confirm)
@@ -136,6 +141,11 @@ namespace RoadCaptain.App.RouteBuilder
                 Resolve<IEnumerable<IRouteRepository>>());
 
             saveRouteDialog.DataContext = viewModel;
+            
+            if (CurrentWindow == null)
+            {
+                throw new InvalidOperationException("Attempting to show a dialog but the current window that we use as the owner is null and that just won't do");
+            }
 
             await saveRouteDialog.ShowDialog(CurrentWindow);
         }

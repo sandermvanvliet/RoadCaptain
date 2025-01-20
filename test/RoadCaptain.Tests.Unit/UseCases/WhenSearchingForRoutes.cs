@@ -3,6 +3,7 @@
 // See LICENSE or https://choosealicense.com/licenses/artistic-2.0/
 
 using System;
+using System.Threading.Tasks;
 using FluentAssertions;
 using RoadCaptain.Commands;
 using RoadCaptain.UseCases;
@@ -13,23 +14,23 @@ namespace RoadCaptain.Tests.Unit.UseCases
     public class WhenSearchingForRoutes
     {
         [Fact]
-        public void GivenSpecificRepositoryNameAndItDoesNotExist_RepositoryIsIgnored()
+        public async Task GivenSpecificRepositoryNameAndItDoesNotExist_RepositoryIsIgnored()
         {
             var command = new SearchRouteCommand("REPOSITORY DOES NOT EXIST");
             var useCase = new SearchRoutesUseCase(new[] { new StubRepository() }, new NopMonitoringEvents());
 
-            var results = useCase.ExecuteAsync(command).GetAwaiter().GetResult();
+            var results = await useCase.ExecuteAsync(command);
 
             results.Should().BeEmpty();
         }
 
         [Fact]
-        public void GivenThreeRepositoriesEachWithOneRouteAndSearchingAllRepositories_ThreeRoutesAreReturned()
+        public async Task GivenThreeRepositoriesEachWithOneRouteAndSearchingAllRepositories_ThreeRoutesAreReturned()
         {
             var command = new SearchRouteCommand("All");
             var useCase = new SearchRoutesUseCase(new[] { new StubRepository("One"), new StubRepository("Two"), new StubRepository("Three") }, new NopMonitoringEvents());
 
-            var result = useCase.ExecuteAsync(command).GetAwaiter().GetResult();
+            var result = await useCase.ExecuteAsync(command);
 
             result
                 .Should()
@@ -37,12 +38,12 @@ namespace RoadCaptain.Tests.Unit.UseCases
         }
 
         [Fact]
-        public void GivenThreeRepositoriesEachWithOneRouteAndSearchingInSpecificRepository_SingleRouteIsReturned()
+        public async Task GivenThreeRepositoriesEachWithOneRouteAndSearchingInSpecificRepository_SingleRouteIsReturned()
         {
             var command = new SearchRouteCommand("Two");
             var useCase = new SearchRoutesUseCase(new[] { new StubRepository("One"), new StubRepository("Two"), new StubRepository("Three") }, new NopMonitoringEvents());
 
-            var result = useCase.ExecuteAsync(command).GetAwaiter().GetResult();
+            var result = await useCase.ExecuteAsync(command);
 
             result
                 .Should()
@@ -50,12 +51,12 @@ namespace RoadCaptain.Tests.Unit.UseCases
         }
 
         [Fact]
-        public void GivenThreeRepositoriesEachWithOneRouteAndSearchingAllRepositoriesWhereOneRepositoryThrowsException_TwoRoutesAreReturned()
+        public async Task GivenThreeRepositoriesEachWithOneRouteAndSearchingAllRepositoriesWhereOneRepositoryThrowsException_TwoRoutesAreReturned()
         {
             var command = new SearchRouteCommand("All");
             var useCase = new SearchRoutesUseCase(new[] { new StubRepository("One"), new StubRepository("Two", throwsOnSearch: true), new StubRepository("Three") }, new NopMonitoringEvents());
 
-            var result = useCase.ExecuteAsync(command).GetAwaiter().GetResult();
+            var result = await useCase.ExecuteAsync(command);
 
             result
                 .Should()

@@ -26,7 +26,7 @@ namespace RoadCaptain.App.Windows.Views
             this.AttachDevTools();
 #endif
 
-            _webView = this.Find<WebView>("WebViewMain");
+            _webView = this.Find<WebView>("WebViewMain") ?? throw new InvalidOperationException("Unable to find the web view");
             _webView.CoreWebView2InitializationCompleted += ZwiftAuthView_OnCoreWebView2InitializationCompleted;
             _webView.NavigationStarting += ZwiftAuthView_OnNavigationStarting;
         }

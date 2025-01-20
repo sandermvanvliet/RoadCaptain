@@ -143,6 +143,11 @@ namespace RoadCaptain.App.Shared
 
         protected async Task<bool?> ShowDialog(Window window)
         {
+            if (CurrentWindow == null)
+            {
+                throw new InvalidOperationException("Attempting to show a dialog but the current window that we use as the owner is null and that just won't do");
+            }
+            
             await window.ShowDialog(CurrentWindow);
 
             return true;

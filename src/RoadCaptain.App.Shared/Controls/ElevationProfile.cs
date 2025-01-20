@@ -8,7 +8,6 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
-using Avalonia.Skia;
 
 namespace RoadCaptain.App.Shared.Controls
 {
@@ -22,7 +21,7 @@ namespace RoadCaptain.App.Shared.Controls
         public static readonly DirectProperty<ElevationProfile, RenderMode> RenderModeProperty = AvaloniaProperty.RegisterDirect<ElevationProfile, RenderMode>(nameof(RenderMode), map => map.RenderMode, (map, value) => map.RenderMode = value);
         
         private RenderTargetBitmap? _renderTarget;
-        private DrawingContext _drawingContext;
+        private DrawingContext? _drawingContext;
 
         public PlannedRoute? Route
         {
@@ -151,10 +150,10 @@ namespace RoadCaptain.App.Shared.Controls
 
         private void RenderElevationProfile()
         {
-            // if (_drawingContext != null)
-            // {
-            //     _renderOperation.Render(_drawingContext);
-            // }
+            if (_drawingContext != null)
+            {
+                //renderOperation.Render(_drawingContext);
+            }
         }
     }
 }
