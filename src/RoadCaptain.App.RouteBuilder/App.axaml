@@ -22,7 +22,6 @@
 	</Application.DataTemplates>
 
     <Application.Styles>
-        <FluentTheme />
         <StyleInclude Source="avares://RoadCaptain.App.Shared/Styles/Shared.axaml" />
     </Application.Styles>
 
