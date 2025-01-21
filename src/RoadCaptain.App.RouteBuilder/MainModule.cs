@@ -8,9 +8,8 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using Autofac;
 using Autofac.Core.Activators.Reflection;
-using Avalonia.Controls;
 using RoadCaptain.App.RouteBuilder.Services;
-using RoadCaptain.App.RouteBuilder.ViewModels;
+using RoadCaptain.App.RouteBuilder.Views;
 using RoadCaptain.App.Shared.ViewModels;
 using Module = Autofac.Module;
 
@@ -35,8 +34,12 @@ namespace RoadCaptain.App.RouteBuilder
             builder.RegisterDecorator<DelegateDecorator, IWindowService>();
 
             builder
-                .RegisterAssemblyTypes(ThisAssembly)
-                .Where(type => typeof(Window).IsAssignableFrom(type) && type.Namespace != null && type.Namespace.EndsWith(".Views"))
+                .RegisterType(typeof(MainWindow))
+                .UsingConstructor(new MostParametersConstructorSelector())
+                .AsSelf();
+            
+            builder
+                .RegisterType(typeof(MakeLoopDialog))
                 .UsingConstructor(new MostParametersConstructorSelector())
                 .AsSelf();
 
