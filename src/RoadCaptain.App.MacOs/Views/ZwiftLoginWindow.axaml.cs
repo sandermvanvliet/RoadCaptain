@@ -27,7 +27,7 @@ namespace RoadCaptain.App.MacOs.Views
         {
             InitializeComponent();
 #if DEBUG
-            this.AttachDevTools();
+            
 #endif
             var zwiftAuthView = this.Find<WebView>(ZwiftAuthenticationViewName);
             if (zwiftAuthView == null)

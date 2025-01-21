@@ -15,7 +15,7 @@ namespace RoadCaptain.App.Shared.Dialogs
         {
             InitializeComponent();
 #if DEBUG
-            this.AttachDevTools();
+            
 #endif
         }
 

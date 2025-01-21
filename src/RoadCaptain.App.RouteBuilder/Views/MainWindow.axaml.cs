@@ -41,7 +41,7 @@ namespace RoadCaptain.App.RouteBuilder.Views
             InitializeComponent();
 
 #if DEBUG
-            this.AttachDevTools();
+            
 #endif
             
             this.Bind(ViewModel.BuildRouteViewModel.SaveRouteCommand).To(Key.S).WithPlatformModifier();

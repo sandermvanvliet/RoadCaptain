@@ -19,7 +19,7 @@ namespace RoadCaptain.App.RouteBuilder.Views
         {
             InitializeComponent();
 #if DEBUG
-            this.AttachDevTools();
+            
 #endif
         }
 

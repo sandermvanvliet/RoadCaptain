@@ -23,7 +23,7 @@ namespace RoadCaptain.App.Windows.Views
         {
             InitializeComponent();
 #if DEBUG
-            this.AttachDevTools();
+            
 #endif
 
             _webView = this.Find<WebView>("WebViewMain") ?? throw new InvalidOperationException("Unable to find the web view");
