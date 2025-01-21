@@ -5,6 +5,10 @@
 		<Company>Codenizer BV</Company>
 		<Copyright>2023 Sander van Vliet</Copyright>
 	</PropertyGroup>
+	
+	<PropertyGroup>
+		<LangVersion>latest</LangVersion>
+	</PropertyGroup>
 
 	<PropertyGroup>
 		<OSPlatform Condition="'$(OSPlatform)'=='' And $([MSBuild]::IsOSPlatform('WINDOWS'))">WINDOWS</OSPlatform>

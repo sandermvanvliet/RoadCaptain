@@ -17,9 +17,9 @@
 		</NativeMenu>
 	</NativeMenu.Menu>
 	
-	<Application.DataTemplates>
-		<routeBuilder:ViewLocator />
-	</Application.DataTemplates>
+	<!-- <Application.DataTemplates> -->
+	<!-- 	<routeBuilder:ViewLocator /> -->
+	<!-- </Application.DataTemplates> -->
 
     <Application.Styles>
         <StyleInclude Source="avares://RoadCaptain.App.Shared/Styles/Shared.axaml" />

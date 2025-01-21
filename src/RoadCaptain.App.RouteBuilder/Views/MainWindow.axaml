@@ -17,6 +17,7 @@
         Title="{Binding Path=Model.WindowTitle}"
         Height="768" Width="1024"
         Activated="MainWindow_OnActivated"
+        Closing="Window_OnClosing"
         WindowState="Maximized"
         x:DataType="viewModels:MainWindowViewModel">
 	<Design.DataContext>
@@ -55,19 +56,7 @@
 			</StackPanel>
 		</Grid>
 		<Grid Margin="0,2,2,0">
-			<views:LandingPage 
-			                   IsVisible="{Binding RelativeSource={RelativeSource AncestorType=Window}, Path=DataContext.Route.ReadyToBuild, FallbackValue=False, Converter={StaticResource BooleanConverter},ConverterParameter=invert}"
-			                   Margin="3,40,4,4" 
-			                   DataContext="{Binding LandingPageViewModel}"/>
-
-			
-			<views:BuildRoute 
-			                  VerticalAlignment="Top"
-			                  HorizontalAlignment="Left"
-			                  Background="White"
-			                  Margin="4,0,0,0" 
-			                  IsVisible="{Binding Path=Route.ReadyToBuild}"
-			                  DataContext="{Binding Path=BuildRouteViewModel}" />
+			<TransitioningContentControl Content="{Binding CurrentView}" />
 		</Grid>
 	</DockPanel>
 

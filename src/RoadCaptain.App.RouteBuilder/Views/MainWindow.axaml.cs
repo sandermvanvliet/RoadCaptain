@@ -15,6 +15,9 @@ namespace RoadCaptain.App.RouteBuilder.Views
 {
     public partial class MainWindow : Window
     {
+        private readonly IWindowService _windowService;
+        
+        // Note: This constructor is used by the Avalonia designer only
         // ReSharper disable once UnusedMember.Global because this constructor only exists for the Avalonia designer
 #pragma warning disable CS8618
         public MainWindow()
@@ -25,8 +28,10 @@ namespace RoadCaptain.App.RouteBuilder.Views
             InitializeComponent();
         }
 
-        public MainWindow(MainWindowViewModel viewModel, IUserPreferences userPreferences)
+        public MainWindow(MainWindowViewModel viewModel, IUserPreferences userPreferences, IWindowService windowService)
         {
+            _windowService = windowService;
+            
             this.UseWindowStateTracking(
                 userPreferences.RouteBuilderLocation,
                 newWindowLocation =>
@@ -39,10 +44,6 @@ namespace RoadCaptain.App.RouteBuilder.Views
             DataContext = viewModel;
 
             InitializeComponent();
-
-#if DEBUG
-            
-#endif
             
             this.Bind(ViewModel.BuildRouteViewModel.SaveRouteCommand).To(Key.S).WithPlatformModifier();
             this.Bind(ViewModel.BuildRouteViewModel.ClearRouteCommand).To(Key.R).WithPlatformModifier();
@@ -59,6 +60,11 @@ namespace RoadCaptain.App.RouteBuilder.Views
             Dispatcher.UIThread.InvokeAsync(() => ViewModel.CheckForNewVersion());
             Dispatcher.UIThread.InvokeAsync(() => ViewModel.CheckLastOpenedVersion());
             Dispatcher.UIThread.InvokeAsync(() => ViewModel.LandingPageViewModel.LoadMyRoutesCommand.Execute(null));
+        }
+
+        private void Window_OnClosing(object? sender, WindowClosingEventArgs e)
+        {
+            //_windowService.Shutdown(0);
         }
     }
 }

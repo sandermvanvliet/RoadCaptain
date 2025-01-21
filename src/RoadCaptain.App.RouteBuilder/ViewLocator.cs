@@ -1,4 +1,6 @@
 using System;
+using System.Linq;
+using Autofac;
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
 using RoadCaptain.App.RouteBuilder.ViewModels;
@@ -6,16 +8,24 @@ using RoadCaptain.App.Shared.ViewModels;
 
 namespace RoadCaptain.App.RouteBuilder
 {
-    public class ViewLocator : IDataTemplate
+    public class ViewLocator(IContainer container, MonitoringEvents monitoringEvents) : IDataTemplate
     {
         public Control Build(object? data)
         {
-            var name = data!.GetType().FullName!.Replace("ViewModel", "View");
-            var type = Type.GetType(name);
+            var name = data!.GetType().FullName!.Replace("ViewModel", "").Split('.').Last();
+            var type = Type.GetType($"RoadCaptain.App.RouteBuilder.Views.{name}");
 
             if (type != null)
             {
-                return (Control)Activator.CreateInstance(type)!;
+                try
+                {
+                    return (Control)container.Resolve(type);
+                }
+                catch (Exception ex)
+                {
+                    monitoringEvents.Error(ex, "Unable to locate view");
+                    throw;
+                }
             }
 
             return new TextBlock { Text = "Not Found: " + name };

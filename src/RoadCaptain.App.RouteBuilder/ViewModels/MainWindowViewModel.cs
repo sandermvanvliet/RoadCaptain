@@ -9,6 +9,7 @@ using System.Windows.Input;
 using ReactiveUI;
 using RoadCaptain.App.RouteBuilder.Models;
 using RoadCaptain.App.RouteBuilder.Services;
+using RoadCaptain.App.RouteBuilder.Views;
 using RoadCaptain.App.Shared.ViewModels;
 using CommandResult = RoadCaptain.App.Shared.Commands.CommandResult;
 using RelayCommand = RoadCaptain.App.Shared.Commands.RelayCommand;
@@ -27,6 +28,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
         private readonly IUserPreferences _userPreferences;
         private bool _haveCheckedLastOpenedVersion;
         private readonly IApplicationFeatures _applicationFeatures;
+        private ViewModelBase _currentView;
 
         public MainWindowViewModel(
             IRouteStore routeStore, 
@@ -99,6 +101,14 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             Version = GetType().Assembly.GetName().Version?.ToString(4) ?? "0.0.0.0";
             
             statusBarService.Subscribe(message => Model.StatusBarInfo(message), message => Model.StatusBarWarning(message), message => Model.StatusBarError(message));
+            
+            CurrentView = LandingPageViewModel;
+        }
+
+        public ViewModelBase CurrentView
+        {
+            get => _currentView;
+            set => this.RaiseAndSetIfChanged(ref _currentView, value);
         }
 
         public MainWindowModel Model { get; }

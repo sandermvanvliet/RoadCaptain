@@ -21,6 +21,7 @@ using Serilog.Core;
 using RoadCaptain.App.Shared.Commands;
 using System.Runtime.InteropServices;
 using System.Security.Policy;
+using Avalonia.Markup.Xaml.Templates;
 using RoadCaptain.App.RouteBuilder.ViewModels;
 using RoadCaptain.App.Shared;
 
@@ -71,17 +72,20 @@ namespace RoadCaptain.App.RouteBuilder
         public override void Initialize()
         {
             AvaloniaXamlLoader.Load(this);
+            
+            DataTemplates.Add(new ViewLocator(_container, _monitoringEvents));
         }
 
         public override void OnFrameworkInitializationCompleted()
         {
             if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
             {
-                desktop.MainWindow = _container.Resolve<MainWindow>();
-                
-                _windowService.SetLifetime(desktop);
                 desktop.Startup += App_OnStartup;
                 desktop.Exit += App_OnExit;
+                
+                _windowService.SetLifetime(desktop);
+                
+                desktop.MainWindow = _container.Resolve<MainWindow>();
             }
             
             base.OnFrameworkInitializationCompleted();

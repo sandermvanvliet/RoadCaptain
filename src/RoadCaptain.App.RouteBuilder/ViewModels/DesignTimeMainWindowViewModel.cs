@@ -7,6 +7,7 @@ using Autofac;
 using Avalonia.Threading;
 using Microsoft.Extensions.Configuration;
 using RoadCaptain.App.RouteBuilder.Services;
+using RoadCaptain.App.Shared.ViewModels;
 using RoadCaptain.Ports;
 using RoadCaptain.UseCases;
 using Serilog.Core;

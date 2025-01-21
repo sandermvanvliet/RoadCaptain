@@ -4,10 +4,12 @@
 
 using System;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using Autofac;
 using Autofac.Core.Activators.Reflection;
+using Avalonia.Controls;
 using RoadCaptain.App.RouteBuilder.Services;
 using RoadCaptain.App.RouteBuilder.Views;
 using RoadCaptain.App.Shared.ViewModels;
@@ -23,25 +25,17 @@ namespace RoadCaptain.App.RouteBuilder
                 .RegisterType<MonitoringEventsWithSerilog>()
                 .As<MonitoringEvents>()
                 .SingleInstance();
-            
+
             // Single instance because we keep track of the active window
             builder.RegisterType<WindowService>()
                 .As<IWindowService>()
                 .As<Shared.IWindowService>()
                 .SingleInstance();
-            
+
             builder.RegisterType<StatusBarService>().As<IStatusBarService>().SingleInstance();
             builder.RegisterDecorator<DelegateDecorator, IWindowService>();
 
-            builder
-                .RegisterType(typeof(MainWindow))
-                .UsingConstructor(new MostParametersConstructorSelector())
-                .AsSelf();
-            
-            builder
-                .RegisterType(typeof(MakeLoopDialog))
-                .UsingConstructor(new MostParametersConstructorSelector())
-                .AsSelf();
+            RegisterViews(builder);
 
             string? platformAssemblyPath = null;
             var thisAssemblyLocation = Path.GetDirectoryName(GetType().Assembly.Location);
@@ -51,7 +45,7 @@ namespace RoadCaptain.App.RouteBuilder
                 throw new Exception(
                     "Unable to determine the location of the RoadCaptain Route Builder assembly which means I can't initialize properly");
             }
-            
+
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
                 platformAssemblyPath = Path.Combine(thisAssemblyLocation, "RoadCaptain.App.Windows.dll");
@@ -77,14 +71,35 @@ namespace RoadCaptain.App.RouteBuilder
             }
             else
             {
-                throw new Exception("Unable to determine platform, can't load platform specific application components and I refuse to start");
+                throw new Exception(
+                    "Unable to determine platform, can't load platform specific application components and I refuse to start");
             }
-            
+
             builder
                 .RegisterAssemblyTypes(ThisAssembly)
-                .Where(type => type.BaseType == typeof(ViewModelBase) && type.Namespace != null && type.Namespace.EndsWith(".ViewModels"))
+                .Where(type =>
+                    type.BaseType == typeof(ViewModelBase) && type.Namespace != null &&
+                    type.Namespace.EndsWith(".ViewModels"))
                 .AsSelf();
+        }
+
+        private void RegisterViews(ContainerBuilder builder)
+        {
+            var viewTypes = ThisAssembly
+                .GetTypes()
+                .Where(type =>
+                    type is { IsClass: true, IsAbstract: false, Namespace: not null } &&
+                    (type.BaseType == typeof(Window) || type.BaseType == typeof(UserControl)) &&
+                    type.Namespace.EndsWith(".Views"))
+                .ToList();
+
+            foreach (var viewType in viewTypes)
+            {
+                builder
+                    .RegisterType(viewType)
+                    .UsingConstructor(new MostParametersConstructorSelector())
+                    .AsSelf();
+            }
         }
     }
 }
-
