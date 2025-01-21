@@ -19,12 +19,13 @@ namespace RoadCaptain.App.RouteBuilder
             {
                 try
                 {
-                    return (Control)container.Resolve(type);
+                    var instance = (Control)container.Resolve(type);
+                    instance.DataContext = data;
+                    return instance;
                 }
                 catch (Exception ex)
                 {
                     monitoringEvents.Error(ex, "Unable to locate view");
-                    throw;
                 }
             }
 
