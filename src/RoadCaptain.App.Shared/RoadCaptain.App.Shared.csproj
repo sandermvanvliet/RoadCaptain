@@ -18,6 +18,7 @@
 	<Import Project="..\..\AvaloniaReferences.props" />
 
 	<ItemGroup>
+		<PackageReference Include="Avalonia.ReactiveUI" />
 		<PackageReference Include="Codenizer.Avalonia.Map" />
 		<PackageReference Include="Markdown.Avalonia" />
 		<PackageReference Include="Microsoft.IdentityModel.JsonWebTokens" />

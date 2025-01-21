@@ -5,6 +5,7 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Media;
+using ReactiveUI;
 using RoadCaptain.App.Shared.ViewModels;
 
 
