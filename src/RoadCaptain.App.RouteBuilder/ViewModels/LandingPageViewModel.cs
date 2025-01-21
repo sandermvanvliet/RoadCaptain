@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -18,13 +19,13 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
 {
     public class LandingPageViewModel : ViewModelBase
     {
-        private WorldViewModel[] _worlds;
-        private SportViewModel[] _sports;
+        private WorldViewModel[] _worlds = [];
+        private SportViewModel[] _sports = [];
         private readonly IUserPreferences _userPreferences;
         private readonly IWindowService _windowService;
         private SportViewModel? _selectedSport;
         private WorldViewModel? _selectedWorld;
-        private Shared.ViewModels.RouteViewModel[] _myRoutes = Array.Empty<Shared.ViewModels.RouteViewModel>();
+        private Shared.ViewModels.RouteViewModel[] _myRoutes = [];
         private Shared.ViewModels.RouteViewModel? _selectedRoute;
         private readonly SearchRoutesUseCase _searchRoutesUseCase;
         private bool _inProgress = true;
@@ -45,9 +46,9 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             _loadRouteFromFileUseCase = loadRouteFromFileUseCase;
             _deleteRouteUseCase = deleteRouteUseCase;
 
-            _worlds = worldStore.LoadWorlds().Select(world => new WorldViewModel(world)).ToArray();
-            _sports = new[] { new SportViewModel(SportType.Cycling, DefaultSport), new SportViewModel(SportType.Running, DefaultSport) };
-            SelectedSport = _sports.SingleOrDefault(s => s.IsSelected);
+            Worlds = worldStore.LoadWorlds().Select(world => new WorldViewModel(world)).ToArray();
+            Sports = [new SportViewModel(SportType.Cycling, DefaultSport), new SportViewModel(SportType.Running, DefaultSport)];
+            SelectedSport = Sports.SingleOrDefault(s => s.IsSelected);
             
             SelectWorldCommand = new AsyncRelayCommand(
                 _ => SelectWorld(_ as WorldViewModel ??
@@ -206,47 +207,25 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
         public WorldViewModel[] Worlds
         {
             get => _worlds;
-            private set
-            {
-                if (value == _worlds) return;
-                _worlds = value;
-                this.RaisePropertyChanged();
-            }
+            private set => this.RaiseAndSetIfChanged(ref _worlds, value);
         }
 
         public SportViewModel[] Sports
         {
             get => _sports;
-            private set
-            {
-                if (value == _sports) return;
-                _sports = value;
-                this.RaisePropertyChanged();
-            }
+            private set => this.RaiseAndSetIfChanged(ref _sports, value);
         }
 
         public WorldViewModel? SelectedWorld
         {
             get => _selectedWorld;
-            private set
-            {
-                if (value == _selectedWorld) return;
-                
-                _selectedWorld = value;
-                this.RaisePropertyChanged();
-            }
+            private set => this.RaiseAndSetIfChanged(ref _selectedWorld, value);
         }
 
         public SportViewModel? SelectedSport
         {
             get => _selectedSport;
-            private set
-            {
-                if (value == _selectedSport) return;
-                
-                _selectedSport = value;
-                this.RaisePropertyChanged();
-            }
+            private set => this.RaiseAndSetIfChanged(ref _selectedSport, value);
         }
 
         public bool HasDefaultSport => !string.IsNullOrEmpty(DefaultSport);
@@ -279,13 +258,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
         public Shared.ViewModels.RouteViewModel? SelectedRoute
         {
             get => _selectedRoute;
-            set
-            {
-                if (value == _selectedRoute) return;
-                
-                _selectedRoute = value;
-                this.RaisePropertyChanged();
-            }
+            set => this.RaiseAndSetIfChanged(ref _selectedRoute, value);
         }
 
         private Task<CommandResult> SelectWorld(WorldViewModel world)
