@@ -23,7 +23,7 @@ foreach($file in $csharpFiles)
         
         $targetContent | Out-File $file -NoNewline
     }
-    elseif($ccontentsTrimmed -ne $licenseFirstLine)
+    elseif($contentsTrimmed -ne $licenseFirstLine)
     {
         $fullPath = $file.FullName
 
@@ -40,11 +40,13 @@ foreach($file in $csharpFiles)
 $xamlFiles = Get-ChildItem -Recurse -Filter *.axaml | where-object {!$_.fullname.Contains("\obj\") -and !$_.fullname.Contains("\bin\")}
 
 $prepend = Get-Content "xaml-license.txt" -Raw
+$licenseFirstLine = (Get-Content "xaml-license.txt" | Select-Object -Skip 1 -First 1).Trim()
 
 foreach($file in $xamlFiles)
 {
-    $contents = get-content $file -head 2
-    if(!$contents[1].Trim().StartsWith("// Copyright (c) "))
+    $contents = (get-content $file | Select-Object -Skip 1 -First 1)
+    $contentsTrimmed = $contents.Trim()
+    if(!$contentsTrimmed.StartsWith("// Copyright (c) "))
     {
         $fullPath = $file.FullName
 
@@ -53,7 +55,20 @@ foreach($file in $xamlFiles)
         $rawContents = Get-Content $file -Raw
 
         $targetContent = $prepend + $rawContents
-        Set-Content $file $targetContent
+
+        $targetContent | Out-File $file -NoNewline
+    }
+    elseif($contentsTrimmed -ne $licenseFirstLine)
+    {
+        $fullPath = $file.FullName
+
+        Write-Host "$fullPath has a license header but it's not up to date, changing it"
+
+        $rawContents = Get-Content $file -Raw
+
+        $targetContent = $rawContents.Replace($contentsTrimmed, $licenseFirstLine)
+
+        $targetContent | Out-File $file -NoNewline
     }
 }
 
