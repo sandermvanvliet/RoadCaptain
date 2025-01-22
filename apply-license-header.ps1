@@ -75,11 +75,13 @@ foreach($file in $xamlFiles)
 $powershellFiles = Get-ChildItem -Recurse -Filter *.ps1 | where-object {!$_.fullname.Contains("\obj\") -and !$_.fullname.Contains("\bin\")}
 
 $prepend = Get-Content "powershell-license.txt" -Raw
+$licenseFirstLine = (Get-Content "powershell-license.txt" -head 1).Trim()
 
 foreach($file in $powershellFiles)
 {
     $contents = get-content $file -head 1
-    if(!$contents.Trim().StartsWith("# Copyright (c) "))
+    $contentsTrimmed = $contents.Trim()
+    if(!$contentsTrimmed.StartsWith("# Copyright (c) "))
     {
         $fullPath = $file.FullName
 
@@ -88,6 +90,19 @@ foreach($file in $powershellFiles)
         $rawContents = Get-Content $file -Raw
 
         $targetContent = $prepend + $rawContents
-        Set-Content $file $targetContent
+
+        $targetContent | Out-File $file -NoNewline
+    }
+    elseif($contentsTrimmed -ne $licenseFirstLine)
+    {
+        $fullPath = $file.FullName
+
+        Write-Host "$fullPath has a license header but it's not up to date, changing it"
+
+        $rawContents = Get-Content $file -Raw
+
+        $targetContent = $rawContents.Replace($contents.Trim(), $licenseFirstLine)
+
+        $targetContent | Out-File $file -NoNewline
     }
 }
