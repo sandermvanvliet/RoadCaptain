@@ -132,7 +132,7 @@
                                                 Classes.isSelected="{Binding Path=IsSelected}">
                                             <Border.Styles>
                                                 <Style Selector="Border">
-                                                    <Setter Property="BorderBrush" Value="#1192CC" />
+                                                    <Setter Property="BorderBrush" Value="{StaticResource ZwiftBlue}" />
                                                 </Style>
                                                 <Style Selector="Border:pointerover">
                                                     <Setter Property="BorderBrush" Value="{StaticResource ZwiftOrange}" />
