@@ -15,6 +15,7 @@ on:
 
 jobs:
   build_api_linux-x64:
+    timeout-minutes: 20
 
     runs-on: ubuntu-latest
 

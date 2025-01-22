@@ -11,6 +11,7 @@ permissions:
 
 jobs:
   create_release:
+    timeout-minutes: 20
     runs-on: ubuntu-latest
     
     steps:
@@ -36,6 +37,7 @@ jobs:
       version: ${{ steps.get_version.outputs.info }}
 
   build_win:
+    timeout-minutes: 20
 
     runs-on: windows-2022
 
@@ -79,6 +81,7 @@ jobs:
         asset_content_type: application/x-msi
 
   build_macos-x64:
+    timeout-minutes: 30
 
     runs-on: macos-11
 
