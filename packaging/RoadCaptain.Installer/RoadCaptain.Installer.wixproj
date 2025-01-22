@@ -9,8 +9,8 @@
 		<SchemaVersion>2.0</SchemaVersion>
 		<OutputName>RoadCaptain_$(Version)</OutputName>
 		<OutputType>Package</OutputType>
-		<RunnerTargetDir Condition="'$(RunnerTargetDir)'==''">..\..\src\RoadCaptain.App.Runner\bin\$(Configuration)\net6.0-windows\win-x64\</RunnerTargetDir>
-		<RouteBuilderTargetDir Condition="'$(RouteBuilderTargetDir)'==''">..\..\src\RoadCaptain.App.RouteBuilder\bin\$(Configuration)\net6.0-windows\win-x64\</RouteBuilderTargetDir>
+		<RunnerTargetDir Condition="'$(RunnerTargetDir)'==''">..\..\src\RoadCaptain.App.Runner\bin\$(Configuration)\net8.0-windows\win-x64\</RunnerTargetDir>
+		<RouteBuilderTargetDir Condition="'$(RouteBuilderTargetDir)'==''">..\..\src\RoadCaptain.App.RouteBuilder\bin\$(Configuration)\net8.0-windows\win-x64\</RouteBuilderTargetDir>
 		<DefineConstants>ProductVersion=$(Version);RunnerTargetDir=$(RunnerTargetDir);RouteBuilderTargetDir=$(RouteBuilderTargetDir)</DefineConstants>
 	</PropertyGroup>
 	<PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">

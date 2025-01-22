@@ -2,7 +2,7 @@
   "profiles": {
     "RoadCaptain.WixComponentFileGenerator": {
       "commandName": "Project",
-      "commandLineArgs": "\"..\\..\\..\\..\\..\\src\\RoadCaptain.App.Runner\\bin\\Release\\net6.0-windows\\win-x64\\publish\" \"..\\..\\..\\..\\..\\src\\RoadCaptain.App.RouteBuilder\\bin\\Release\\net6.0-windows\\win-x64\\publish\" \"..\\..\\..\\..\\RoadCaptain.Installer\\Components.wxi\""
+      "commandLineArgs": "\"..\\..\\..\\..\\..\\src\\RoadCaptain.App.Runner\\bin\\Release\\net8.0-windows\\win-x64\\publish\" \"..\\..\\..\\..\\..\\src\\RoadCaptain.App.RouteBuilder\\bin\\Release\\net8.0-windows\\win-x64\\publish\" \"..\\..\\..\\..\\RoadCaptain.Installer\\Components.wxi\""
     }
   }
 }

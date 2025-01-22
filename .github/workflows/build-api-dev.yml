@@ -24,11 +24,11 @@ jobs:
     
     - name: Publish API
       # Because of reasons we need to explicitly set RuntimeIdentifiers to only win-x64 because MSBuild sets it to osx-x64;win-x64
-      run: dotnet publish --no-self-contained -c ${{ env.CONFIGURATION }} -r ${{ env.RID }} -p:RuntimeIdentifiers=${{ env.RID }} src/RoadCaptain.App.Web/RoadCaptain.App.Web.csproj
+      run: dotnet publish --no-self-contained -c ${{ env.CONFIGURATION }} -r ${{ env.RID }} -p:RuntimeIdentifiers=${{ env.RID }} -o ./publish src/RoadCaptain.App.Web/RoadCaptain.App.Web.csproj
     
     - name: Create ZIP archive
       run: tar -zcf "${{ github.workspace }}/${{ env.ZIP_FILE }}" *
-      working-directory: src/RoadCaptain.App.Web/bin/${{ env.CONFIGURATION }}/net6.0/linux-x64/publish
+      working-directory: ./publish
       
     - name: Setup SSH key
       env:
