@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using RoadCaptain.Ports;
 
@@ -34,7 +35,7 @@ namespace RoadCaptain.Adapters
             string? zwiftRouteName = null,
             int? minDistance = null, int? maxDistance = null, int? minAscent = null, int? maxAscent = null,
             int? minDescent = null, int? maxDescent = null, bool? isLoop = null, string[]? komSegments = null,
-            string[]? sprintSegments = null)
+            string[]? sprintSegments = null, CancellationToken cancellationToken = default)
         {
             var path = Path.GetDirectoryName(GetType().Assembly.Location);
 

@@ -6,6 +6,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using RoadCaptain.Ports;
@@ -63,7 +65,8 @@ namespace RoadCaptain.Adapters
             int? maxDescent = null,
             bool? isLoop = null,
             string[]? komSegments = null,
-            string[]? sprintSegments = null)
+            string[]? sprintSegments = null,
+            CancellationToken cancellationToken = default)
         {
             if (!_settings.IsValid)
             {
@@ -82,7 +85,7 @@ namespace RoadCaptain.Adapters
             {
                 try
                 {
-                    var serialized = await ReadAllTextAsync(file);
+                    var serialized = await ReadAllTextAsync(file, cancellationToken);
                     var routeModel = JsonConvert.DeserializeObject<RouteModel>(serialized, JsonSettings);
 
                     if (routeModel != null)
@@ -172,9 +175,9 @@ namespace RoadCaptain.Adapters
                 .ToArray();
         }
 
-        protected virtual async Task<string> ReadAllTextAsync(string file)
+        protected virtual async Task<string> ReadAllTextAsync(string file, CancellationToken cancellationToken)
         {
-            return await File.ReadAllTextAsync(file);
+            return await File.ReadAllTextAsync(file, cancellationToken);
         }
 
         public async Task<RouteModel> StoreAsync(PlannedRoute plannedRoute, Uri? routeUri)

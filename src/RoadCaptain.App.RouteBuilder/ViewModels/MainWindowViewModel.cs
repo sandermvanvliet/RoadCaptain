@@ -66,14 +66,14 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             {
                 switch (args.PropertyName)
                 {
-                    case nameof(LandingPageViewModel.SelectedWorld):
-                    case nameof(LandingPageViewModel.SelectedSport):
-                        if (LandingPageViewModel is { SelectedSport: not null, SelectedWorld: not null })
-                        {
-                            Route.World = worldStore.LoadWorldById(LandingPageViewModel.SelectedWorld.Id);
-                            Route.Sport = LandingPageViewModel.SelectedSport.Sport;
-                        }
+                    case nameof(LandingPageViewModel.CanBuildRoute):
+                    {
+                        Route.Clear();
+                        Route.World = worldStore.LoadWorldById(LandingPageViewModel.SelectedWorld!.Id);
+                        Route.Sport = LandingPageViewModel.SelectedSport!.Sport;
+                        CurrentView = BuildRouteViewModel!;
                         break;
+                    }
                     case nameof(LandingPageViewModel.SelectedRoute):
                         var routeModel = LandingPageViewModel.SelectedRoute?.AsRouteModel();
                         if (routeModel != null)
@@ -88,6 +88,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
                                 statusBarService.Error($"Unable to load route: {e.Message}");
                             }
                         }
+                        CurrentView = BuildRouteViewModel!;
                         break;
                 }
             };

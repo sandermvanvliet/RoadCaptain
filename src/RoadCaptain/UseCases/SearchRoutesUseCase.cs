@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using RoadCaptain.Commands;
 using RoadCaptain.Ports;
@@ -22,7 +23,7 @@ namespace RoadCaptain.UseCases
             _monitoringEvents = monitoringEvents;
         }
         
-        public async Task<IEnumerable<RouteModel>> ExecuteAsync(SearchRouteCommand command)
+        public async Task<IEnumerable<RouteModel>> ExecuteAsync(SearchRouteCommand command, CancellationToken cancellationToken)
         {
             var repositoriesToSearch = new List<IRouteRepository>();
             
@@ -69,7 +70,8 @@ namespace RoadCaptain.UseCases
                         command.MaxDescent,
                         command.IsLoop,
                         command.KomSegments,
-                        command.SprintSegments);
+                        command.SprintSegments,
+                        cancellationToken);
                 }
                 catch (Exception e)
                 {

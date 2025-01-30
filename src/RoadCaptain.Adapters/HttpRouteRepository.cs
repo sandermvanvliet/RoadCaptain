@@ -75,7 +75,9 @@ namespace RoadCaptain.Adapters
             {
                 return false;
             }
-
+            
+            using var tokenSource = new CancellationTokenSource(TimeSpan.FromSeconds(5));
+            
             using var response = await RetryPolicy.ExecuteAsync(async () =>
             {
                 using var request = new HttpRequestMessage(HttpMethod.Get, new Uri(_settings.Uri, "/2023-01/status"));
@@ -97,7 +99,8 @@ namespace RoadCaptain.Adapters
             int? maxDescent = null,
             bool? isLoop = null,
             string[]? komSegments = null,
-            string[]? sprintSegments = null)
+            string[]? sprintSegments = null,
+            CancellationToken cancellationToken = default)
         {
             if (!_settings.IsValid)
             {
@@ -148,7 +151,6 @@ namespace RoadCaptain.Adapters
             
             using var response = await RetryPolicy.ExecuteAsync(async () =>
             {
-                using var tokenSource = new CancellationTokenSource(TimeSpan.FromSeconds(3));
                 using var request = new HttpRequestMessage(HttpMethod.Get, builder.Uri);
                 
                 // We don't require one, but it's nice to have one
@@ -157,8 +159,7 @@ namespace RoadCaptain.Adapters
                     request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", securityToken);
                 }
                 
-                return await _httpClient.SendAsync(request, HttpCompletionOption.ResponseContentRead,
-                    tokenSource.Token);
+                return await _httpClient.SendAsync(request, HttpCompletionOption.ResponseContentRead, cancellationToken);
             });
 
             if (!response.IsSuccessStatusCode)

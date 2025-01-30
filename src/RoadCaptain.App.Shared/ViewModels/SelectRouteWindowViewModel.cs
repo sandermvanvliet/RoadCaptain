@@ -4,6 +4,7 @@
 
 using System;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using ReactiveUI;
 using RoadCaptain.App.Shared.Commands;
@@ -428,7 +429,9 @@ namespace RoadCaptain.App.Shared.ViewModels
                     null
                     );
 
-                Routes = (await _useCase.ExecuteAsync(command))
+                using var tokenSource = new CancellationTokenSource(TimeSpan.FromSeconds(10));
+                
+                Routes = (await _useCase.ExecuteAsync(command, tokenSource.Token))
                     .Select(routeModel => new RouteViewModel(routeModel))
                     .ToArray();
             }

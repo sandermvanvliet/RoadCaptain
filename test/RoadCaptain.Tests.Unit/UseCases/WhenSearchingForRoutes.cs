@@ -3,6 +3,7 @@
 // See LICENSE or https://choosealicense.com/licenses/artistic-2.0/
 
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
 using RoadCaptain.Commands;
@@ -19,7 +20,7 @@ namespace RoadCaptain.Tests.Unit.UseCases
             var command = new SearchRouteCommand("REPOSITORY DOES NOT EXIST");
             var useCase = new SearchRoutesUseCase(new[] { new StubRepository() }, new NopMonitoringEvents());
 
-            var results = await useCase.ExecuteAsync(command);
+            var results = await useCase.ExecuteAsync(command, CancellationToken.None);
 
             results.Should().BeEmpty();
         }
@@ -30,7 +31,7 @@ namespace RoadCaptain.Tests.Unit.UseCases
             var command = new SearchRouteCommand("All");
             var useCase = new SearchRoutesUseCase(new[] { new StubRepository("One"), new StubRepository("Two"), new StubRepository("Three") }, new NopMonitoringEvents());
 
-            var result = await useCase.ExecuteAsync(command);
+            var result = await useCase.ExecuteAsync(command, CancellationToken.None);
 
             result
                 .Should()
@@ -43,7 +44,7 @@ namespace RoadCaptain.Tests.Unit.UseCases
             var command = new SearchRouteCommand("Two");
             var useCase = new SearchRoutesUseCase(new[] { new StubRepository("One"), new StubRepository("Two"), new StubRepository("Three") }, new NopMonitoringEvents());
 
-            var result = await useCase.ExecuteAsync(command);
+            var result = await useCase.ExecuteAsync(command, CancellationToken.None);
 
             result
                 .Should()
@@ -56,7 +57,7 @@ namespace RoadCaptain.Tests.Unit.UseCases
             var command = new SearchRouteCommand("All");
             var useCase = new SearchRoutesUseCase(new[] { new StubRepository("One"), new StubRepository("Two", throwsOnSearch: true), new StubRepository("Three") }, new NopMonitoringEvents());
 
-            var result = await useCase.ExecuteAsync(command);
+            var result = await useCase.ExecuteAsync(command, CancellationToken.None);
 
             result
                 .Should()

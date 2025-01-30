@@ -3,6 +3,7 @@
 // See LICENSE or https://choosealicense.com/licenses/artistic-2.0/
 
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace RoadCaptain.Ports
@@ -23,7 +24,8 @@ namespace RoadCaptain.Ports
             int? maxDescent = null,
             bool? isLoop = null,
             string[]? komSegments = null,
-            string[]? sprintSegments = null);
+            string[]? sprintSegments = null,
+            CancellationToken cancellationToken = default);
 
         Task<RouteModel> StoreAsync(PlannedRoute plannedRoute, Uri? routeUri);
 

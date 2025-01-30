@@ -3,6 +3,7 @@
 // See LICENSE or https://choosealicense.com/licenses/artistic-2.0/
 
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using RoadCaptain.Ports;
 using RoadCaptain.UseCases;
@@ -97,7 +98,7 @@ namespace RoadCaptain.App.Shared.ViewModels
             string? zwiftRouteName = null,
             int? minDistance = null, int? maxDistance = null, int? minAscent = null, int? maxAscent = null,
             int? minDescent = null, int? maxDescent = null, bool? isLoop = null, string[]? komSegments = null,
-            string[]? sprintSegments = null)
+            string[]? sprintSegments = null, CancellationToken cancellationToken = default)
         {
             return Task.FromResult(new[]
             {

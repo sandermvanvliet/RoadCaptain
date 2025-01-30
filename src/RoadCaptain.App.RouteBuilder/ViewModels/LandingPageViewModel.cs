@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using ReactiveUI;
@@ -31,6 +32,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
         private bool _inProgress = true;
         private readonly LoadRouteFromFileUseCase _loadRouteFromFileUseCase;
         private readonly DeleteRouteUseCase _deleteRouteUseCase;
+        private bool _canBuildRoute;
 
         public LandingPageViewModel(
             IWorldStore worldStore, 
@@ -168,16 +170,23 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
 
             try
             {
+                using var tokenSource = new CancellationTokenSource(TimeSpan.FromSeconds(10));
+
                 var currentUser = "Sander van Vliet [RoadCaptain]";
-            
-                var result = await _searchRoutesUseCase.ExecuteAsync(new SearchRouteCommand(RetrieveRepositoriesIntent.Manage, creator: currentUser));
+
+                var result = await _searchRoutesUseCase.ExecuteAsync(
+                    new SearchRouteCommand(RetrieveRepositoriesIntent.Manage, creator: currentUser), tokenSource.Token);
 
                 var theRoutes = result
                     .Select(r => new Shared.ViewModels.RouteViewModel(r))
                     .ToArray();
                 MyRoutes = theRoutes;
-            
+
                 return CommandResult.Success();
+            }
+            catch (OperationCanceledException)
+            {
+                return CommandResult.Aborted();
             }
             finally
             {
@@ -219,13 +228,27 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
         public WorldViewModel? SelectedWorld
         {
             get => _selectedWorld;
-            private set => this.RaiseAndSetIfChanged(ref _selectedWorld, value);
+            private set
+            {
+                this.RaiseAndSetIfChanged(ref _selectedWorld, value);
+                CanBuildRoute = SelectedWorld != null && SelectedSport != null;
+            }
         }
 
         public SportViewModel? SelectedSport
         {
             get => _selectedSport;
-            private set => this.RaiseAndSetIfChanged(ref _selectedSport, value);
+            private set
+            {
+                this.RaiseAndSetIfChanged(ref _selectedSport, value);
+                CanBuildRoute = SelectedWorld != null && SelectedSport != null;
+            }
+        }
+
+        public bool CanBuildRoute
+        {
+            get => _canBuildRoute;
+            set => this.RaiseAndSetIfChanged(ref _canBuildRoute, value);
         }
 
         public bool HasDefaultSport => !string.IsNullOrEmpty(DefaultSport);

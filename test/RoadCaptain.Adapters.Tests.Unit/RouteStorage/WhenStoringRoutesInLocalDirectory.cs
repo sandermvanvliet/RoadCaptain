@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using RoadCaptain.Ports;
 using System.IO;
 using System.Linq;
+using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
 
@@ -58,7 +60,7 @@ namespace RoadCaptain.Adapters.Tests.Unit.RouteStorage
             return Task.CompletedTask;
         }
 
-        protected override Task<string> ReadAllTextAsync(string file)
+        protected override Task<string> ReadAllTextAsync(string file, CancellationToken cancellationToken)
         {
             if (StoredFiles.TryGetValue(file, out var text))
             {

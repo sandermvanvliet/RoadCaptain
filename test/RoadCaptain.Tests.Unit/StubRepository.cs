@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using RoadCaptain.Ports;
 
@@ -30,7 +31,7 @@ namespace RoadCaptain.Tests.Unit
         public async Task<RouteModel[]> SearchAsync(string? world = null, string? creator = null, string? name = null, string? zwiftRouteName = null,
             int? minDistance = null, int? maxDistance = null, int? minAscent = null, int? maxAscent = null,
             int? minDescent = null, int? maxDescent = null, bool? isLoop = null, string[]? komSegments = null,
-            string[]? sprintSegments = null)
+            string[]? sprintSegments = null, CancellationToken cancellationToken = default)
         {
             // This only exists to ensure that this repository is properly asynchronous
             await Task.Delay(10);
