@@ -16,7 +16,8 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
 using Polly;
-using Polly.Extensions.Http;
+using Polly.CircuitBreaker;
+using Polly.Retry;
 using RoadCaptain.Ports;
 
 namespace RoadCaptain.Adapters
@@ -34,18 +35,6 @@ namespace RoadCaptain.Adapters
             }
         };
 
-        private static readonly IAsyncPolicy<HttpResponseMessage> RetryPolicy = GetRetryPolicy();
-        
-        static IAsyncPolicy<HttpResponseMessage> GetRetryPolicy()
-        {
-            return HttpPolicyExtensions
-                .HandleTransientHttpError()
-                .OrResult(msg => msg.StatusCode == System.Net.HttpStatusCode.NotFound)
-                .Or<OperationCanceledException>()
-                .WaitAndRetryAsync(6, retryAttempt => TimeSpan.FromSeconds(Math.Pow(2,
-                    retryAttempt)));
-        }
-        
         private readonly JsonSerializer _serializer;
         private readonly RouteStoreToDisk _routeStoreToDisk;
         private readonly ISecurityTokenProvider _securityTokenProvider;
@@ -62,11 +51,17 @@ namespace RoadCaptain.Adapters
             _securityTokenProvider = securityTokenProvider;
             _serializer = JsonSerializer.Create(JsonSettings);
             Name = _settings.Name;
+            _resiliencePipeline = new ResiliencePipelineBuilder()
+                .AddRetry(new RetryStrategyOptions())
+                .AddCircuitBreaker(new CircuitBreakerStrategyOptions())
+                .Build();
         }
 
         public string Name { get; }
         public bool IsReadOnly => false;
         public bool RequiresAuthentication => true;
+        
+        private readonly ResiliencePipeline _resiliencePipeline;
 
         public async Task<bool> IsAvailableAsync(CancellationToken cancellationToken)
         {
@@ -74,17 +69,14 @@ namespace RoadCaptain.Adapters
             {
                 return false;
             }
-            
-            using var tokenSource = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
-            tokenSource.CancelAfter(TimeSpan.FromSeconds(5));
-            
-            using var response = await RetryPolicy.ExecuteAsync(async () =>
+
+            return await _resiliencePipeline.ExecuteAsync(async ct =>
             {
                 using var request = new HttpRequestMessage(HttpMethod.Get, new Uri(_settings.Uri, "/2023-01/status"));
-                return await _httpClient.SendAsync(request, tokenSource.Token);
-            });
+                using var response = await _httpClient.SendAsync(request, ct);
 
-            return response.IsSuccessStatusCode;
+                return response.IsSuccessStatusCode;
+            }, cancellationToken);
         }
 
         public async Task<RouteModel[]> SearchAsync(string? world = null,
@@ -149,18 +141,18 @@ namespace RoadCaptain.Adapters
                 TokenPurpose.RouteRepositoryAccess, 
                 TokenPromptBehaviour.DoNotPrompt);
             
-            using var response = await RetryPolicy.ExecuteAsync(async () =>
+            using var request = new HttpRequestMessage(HttpMethod.Get, builder.Uri);
+            
+            // We don't require one, but it's nice to have one
+            if (!string.IsNullOrEmpty(securityToken))
             {
-                using var request = new HttpRequestMessage(HttpMethod.Get, builder.Uri);
-                
-                // We don't require one, but it's nice to have one
-                if (!string.IsNullOrEmpty(securityToken))
-                {
-                    request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", securityToken);
-                }
-                
-                return await _httpClient.SendAsync(request, HttpCompletionOption.ResponseContentRead, cancellationToken);
-            });
+                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", securityToken);
+            }
+
+            using var response = await _resiliencePipeline.ExecuteAsync(async ct => await _httpClient.SendAsync(
+                request,
+                HttpCompletionOption.ResponseContentRead,
+                ct), cancellationToken);
 
             if (!response.IsSuccessStatusCode)
             {
@@ -224,13 +216,12 @@ namespace RoadCaptain.Adapters
                 httpMethod = HttpMethod.Put;
             }
 
-            using var response = await RetryPolicy.ExecuteAsync(async () =>
-            {
-                using var request = new HttpRequestMessage(httpMethod, routeUri);
-                request.Content = new StringContent(JsonConvert.SerializeObject(createRouteModel, JsonSettings), Encoding.UTF8, "application/json");
-                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
-                return await _httpClient.SendAsync(request);
-            });
+            using var request = new HttpRequestMessage(httpMethod, routeUri);
+            request.Content = new StringContent(JsonConvert.SerializeObject(createRouteModel, JsonSettings), Encoding.UTF8, "application/json");
+            request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            
+            using var tokenSource = new CancellationTokenSource(TimeSpan.FromSeconds(3));
+            using var response = await _resiliencePipeline.ExecuteAsync(async ct => await _httpClient.SendAsync(request, ct), tokenSource.Token);
             
             if (!response.IsSuccessStatusCode)
             {
@@ -280,16 +271,12 @@ namespace RoadCaptain.Adapters
                 throw new ArgumentException("A security token is required to delete a route");
             }
 
-            var response = await RetryPolicy.ExecuteAsync(async () =>
-            {
-                var request = new HttpRequestMessage(HttpMethod.Delete, routeUri);
+            using var request = new HttpRequestMessage(HttpMethod.Delete, routeUri);
+            request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", securityToken);
 
-                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", securityToken);
-
-                using var tokenSource = new CancellationTokenSource(TimeSpan.FromSeconds(3));
+            using var tokenSource = new CancellationTokenSource(TimeSpan.FromSeconds(3));
                 
-                return await _httpClient.SendAsync(request, tokenSource.Token);
-            });
+            using var response = await _resiliencePipeline.ExecuteAsync(async ct => await _httpClient.SendAsync(request, ct), tokenSource.Token);
 
             if (!response.IsSuccessStatusCode)
             {
