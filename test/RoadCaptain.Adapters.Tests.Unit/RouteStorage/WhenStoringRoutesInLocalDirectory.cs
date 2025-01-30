@@ -21,7 +21,7 @@ namespace RoadCaptain.Adapters.Tests.Unit.RouteStorage
             var userDataDirectory = Path.GetTempPath();
             var repository = new TestableLocalDirectoryRouteRepository(userDataDirectory);
 
-            await repository.IsAvailableAsync();
+            await repository.IsAvailableAsync(CancellationToken.None);
 
             repository
                 .Directories

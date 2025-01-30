@@ -17,7 +17,6 @@ using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
 using Polly;
 using Polly.Extensions.Http;
-using Polly.Retry;
 using RoadCaptain.Ports;
 
 namespace RoadCaptain.Adapters
@@ -69,19 +68,20 @@ namespace RoadCaptain.Adapters
         public bool IsReadOnly => false;
         public bool RequiresAuthentication => true;
 
-        public async Task<bool> IsAvailableAsync()
+        public async Task<bool> IsAvailableAsync(CancellationToken cancellationToken)
         {
             if (!_settings.IsValid)
             {
                 return false;
             }
             
-            using var tokenSource = new CancellationTokenSource(TimeSpan.FromSeconds(5));
+            using var tokenSource = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+            tokenSource.CancelAfter(TimeSpan.FromSeconds(5));
             
             using var response = await RetryPolicy.ExecuteAsync(async () =>
             {
                 using var request = new HttpRequestMessage(HttpMethod.Get, new Uri(_settings.Uri, "/2023-01/status"));
-                return await _httpClient.SendAsync(request);
+                return await _httpClient.SendAsync(request, tokenSource.Token);
             });
 
             return response.IsSuccessStatusCode;
@@ -167,7 +167,9 @@ namespace RoadCaptain.Adapters
                 throw new Exception($"Unable to search for routes, received an non-successful response: {response.StatusCode}");
             }
 
-            using var tokenSource = new CancellationTokenSource(TimeSpan.FromSeconds(3));
+            using var tokenSource = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+            tokenSource.CancelAfter(TimeSpan.FromSeconds(3));
+            
             using var textReader = new StreamReader(await response.Content.ReadAsStreamAsync(tokenSource.Token));
             await using var jsonTextReader = new JsonTextReader(textReader);
             var routeModels = _serializer.Deserialize<RouteModel[]>(jsonTextReader);
@@ -187,7 +189,7 @@ namespace RoadCaptain.Adapters
                     .ToArray();
             }
 
-            return Array.Empty<RouteModel>();
+            return [];
         }
 
         public async Task<RouteModel> StoreAsync(PlannedRoute plannedRoute, Uri? routeUri)

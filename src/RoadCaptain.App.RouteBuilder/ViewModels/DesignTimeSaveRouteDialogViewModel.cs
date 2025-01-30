@@ -28,7 +28,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
 
     internal class StubRouteRepository : IRouteRepository
     {
-        public Task<bool> IsAvailableAsync()
+        public Task<bool> IsAvailableAsync(CancellationToken cancellationToken)
         {
             return Task.FromResult(true);
         }

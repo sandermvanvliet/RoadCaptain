@@ -10,7 +10,7 @@ namespace RoadCaptain.Ports
 {
     public interface IRouteRepository
     {
-        Task<bool> IsAvailableAsync();
+        Task<bool> IsAvailableAsync(CancellationToken cancellationToken);
 
         Task<RouteModel[]> SearchAsync(string? world = null,
             string? creator = null,

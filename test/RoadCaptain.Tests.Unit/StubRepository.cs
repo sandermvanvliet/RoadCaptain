@@ -23,7 +23,7 @@ namespace RoadCaptain.Tests.Unit
             Name = name;
         }
 
-        public Task<bool> IsAvailableAsync()
+        public Task<bool> IsAvailableAsync(CancellationToken cancellationToken)
         {
             return Task.FromResult(true);
         }

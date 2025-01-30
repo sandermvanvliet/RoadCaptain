@@ -38,7 +38,7 @@ namespace RoadCaptain.Adapters
         public bool IsReadOnly => false;
         public bool RequiresAuthentication => false;
 
-        public Task<bool> IsAvailableAsync()
+        public Task<bool> IsAvailableAsync(CancellationToken cancellationToken)
         {
             if (!_settings.IsValid)
             {

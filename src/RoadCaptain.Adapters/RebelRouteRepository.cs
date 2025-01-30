@@ -26,7 +26,7 @@ namespace RoadCaptain.Adapters
             _segmentStore = segmentStore;
         }
         
-        public Task<bool> IsAvailableAsync()
+        public Task<bool> IsAvailableAsync(CancellationToken cancellationToken)
         {
             return Task.FromResult(true);
         }
