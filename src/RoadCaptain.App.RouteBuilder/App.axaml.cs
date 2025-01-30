@@ -82,10 +82,9 @@ namespace RoadCaptain.App.RouteBuilder
             {
                 desktop.Startup += App_OnStartup;
                 desktop.Exit += App_OnExit;
-                
+
                 _windowService.SetLifetime(desktop);
-                
-                desktop.MainWindow = _container.Resolve<MainWindow>();
+                _windowService.ShowMainWindow(ApplicationLifetime);
             }
             
             base.OnFrameworkInitializationCompleted();
