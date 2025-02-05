@@ -14,15 +14,11 @@ using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using Avalonia.Threading;
 using Microsoft.Extensions.Configuration;
-using RoadCaptain.App.RouteBuilder.Views;
 using RoadCaptain.App.Shared.Dialogs;
 using Serilog;
 using Serilog.Core;
-using RoadCaptain.App.Shared.Commands;
 using System.Runtime.InteropServices;
-using System.Security.Policy;
-using Avalonia.Markup.Xaml.Templates;
-using RoadCaptain.App.RouteBuilder.ViewModels;
+using Avalonia.Data.Core.Plugins;
 using RoadCaptain.App.Shared;
 
 namespace RoadCaptain.App.RouteBuilder
@@ -73,11 +69,15 @@ namespace RoadCaptain.App.RouteBuilder
         {
             AvaloniaXamlLoader.Load(this);
             
-            DataTemplates.Add(new ViewLocator(_container, _monitoringEvents));
+            DataTemplates.Add(_container.Resolve<ViewLocator>());
         }
 
         public override void OnFrameworkInitializationCompleted()
         {
+            // Line below is needed to remove Avalonia data validation.
+            // Without this line you will get duplicate validations from both Avalonia and CT
+            BindingPlugins.DataValidators.RemoveAt(0);
+            
             if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
             {
                 desktop.Startup += App_OnStartup;

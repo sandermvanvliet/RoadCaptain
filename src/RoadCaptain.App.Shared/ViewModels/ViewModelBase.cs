@@ -2,11 +2,11 @@
 // Licensed under Artistic License 2.0
 // See LICENSE or https://choosealicense.com/licenses/artistic-2.0/
 
-using ReactiveUI;
+using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace RoadCaptain.App.Shared.ViewModels
 {
-    public abstract class ViewModelBase : ReactiveObject
+    public abstract class ViewModelBase : ObservableObject
     {
     }
 }

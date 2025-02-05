@@ -37,16 +37,7 @@ namespace RoadCaptain.App.Runner.Models
         public string WindowTitle
         {
             get => _windowTitle;
-            set
-            {
-                if (value == _windowTitle)
-                {
-                    return;
-                }
-
-                _windowTitle = value;
-                this.RaisePropertyChanged();
-            }
+            set => SetProperty(ref _windowTitle, value);
         }
 
 
@@ -55,8 +46,8 @@ namespace RoadCaptain.App.Runner.Models
             get => _route;
             set
             {
-                if (Equals(value, _route)) return;
-                _route = value;
+                SetProperty(ref _route, value);
+                
                 if (_route != null)
                 {
                     InitializeRoute(_route);
@@ -65,118 +56,67 @@ namespace RoadCaptain.App.Runner.Models
                 {
                     ClearRoute();
                 }
-                this.RaisePropertyChanged();
             }
         }
 
         public double ElapsedDistance
         {
             get => _elapsedDistance;
-            set
-            {
-                if (value.Equals(_elapsedDistance)) return;
-                _elapsedDistance = value;
-                this.RaisePropertyChanged();
-            }
+            set => SetProperty(ref _elapsedDistance, value);
         }
 
         public double ElapsedAscent
         {
             get => _elapsedAscent;
-            set
-            {
-                if (value.Equals(_elapsedAscent)) return;
-                _elapsedAscent = value;
-                this.RaisePropertyChanged();
-            }
+            set => SetProperty(ref _elapsedAscent, value);
         }
 
         public double ElapsedDescent
         {
             get => _elapsedDescent;
-            set
-            {
-                if (value.Equals(_elapsedDescent)) return;
-                _elapsedDescent = value;
-                this.RaisePropertyChanged();
-            }
+            set => SetProperty(ref _elapsedDescent, value);
         }
 
         public double TotalDistance
         {
             get => IsOnLoop ? _loopDistance : _totalDistance;
-            set
-            {
-                if (value.Equals(_totalDistance)) return;
-                _totalDistance = value;
-                this.RaisePropertyChanged();
-            }
+            set => SetProperty(ref _totalDistance, value);
         }
 
         public double TotalAscent
         {
             get => _totalAscent;
-            set
-            {
-                if (value.Equals(_totalAscent)) return;
-                _totalAscent = value;
-                this.RaisePropertyChanged();
-            }
+            set => SetProperty(ref _totalAscent, value);
         }
 
         public double TotalDescent
         {
             get => _totalDescent;
-            set
-            {
-                if (value.Equals(_totalDescent)) return;
-                _totalDescent = value;
-                this.RaisePropertyChanged();
-            }
+            set => SetProperty(ref _totalDescent, value);
         }
 
         public SegmentSequenceModel? CurrentSegment
         {
             get => _currentSegment;
-            set
-            {
-                if (Equals(value, _currentSegment)) return;
-                _currentSegment = value;
-                this.RaisePropertyChanged();
-            }
+            set => SetProperty(ref _currentSegment, value);
         }
 
         public SegmentSequenceModel? NextSegment
         {
             get => _nextSegment;
-            set
-            {
-                if (Equals(value, _nextSegment)) return;
-                _nextSegment = value;
-                this.RaisePropertyChanged();
-            }
+            set => SetProperty(ref _nextSegment, value);
         }
 
         public string LoopText
         {
             get => _loopText;
-            set
-            {
-                if(value == _loopText) return;
-                _loopText = value;
-                this.RaisePropertyChanged();
-            }
+            set => SetProperty(ref _loopText, value);
         }
 
         public int CurrentSegmentIndex
         {
             get => _currentSegmentIndex;
-            set
-            {
-                if (value == _currentSegmentIndex) return;
-                _currentSegmentIndex = value;
-                this.RaisePropertyChanged();
-            }
+            set => SetProperty(ref _currentSegmentIndex, value);
         }
 
         public int SegmentCount => Route?.RouteSegmentSequence.Count ?? 0;
@@ -188,8 +128,8 @@ namespace RoadCaptain.App.Runner.Models
             {
                 if (value == _isOnLoop) return;
                 _isOnLoop = value;
-                this.RaisePropertyChanged();
-                this.RaisePropertyChanged(nameof(TotalDistance));
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(TotalDistance));
             }
         }
 

@@ -5,7 +5,6 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Media;
-using ReactiveUI;
 using RoadCaptain.App.Shared.ViewModels;
 
 
@@ -31,31 +30,13 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
         public bool IsSelected
         {
             get => _isSelected;
-            set
-            {
-                if (value == _isSelected)
-                {
-                    return;
-                }
-
-                _isSelected = value;
-                this.RaisePropertyChanged();
-            }
+            set => SetProperty(ref _isSelected, value);
         }
 
         public bool IsDefault
         {
             get => _isDefault;
-            set
-            {
-                if (value == _isDefault)
-                {
-                    return;
-                }
-
-                _isDefault = value;
-                this.RaisePropertyChanged();
-            }
+            set => SetProperty(ref _isDefault, value);
         }
 
         public DrawingImage? Image {

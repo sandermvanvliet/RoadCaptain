@@ -6,7 +6,6 @@ using System;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Windows.Input;
-using ReactiveUI;
 using RoadCaptain.App.Shared.Commands;
 using RoadCaptain.App.Shared.ViewModels;
 
@@ -38,44 +37,24 @@ namespace RoadCaptain.App.Shared.Dialogs.ViewModels
         public string Title
         {
             get => _title;
-            set
-            {
-                if (value == _title) return;
-                _title = value;
-                this.RaisePropertyChanged();
-            }
+            set => SetProperty(ref _title, value);
         }
         public string DownloadLink
         {
             get => _downloadLink;
-            set
-            {
-                if (value == _downloadLink) return;
-                _downloadLink = value;
-                this.RaisePropertyChanged();
-            }
+            set => SetProperty(ref _downloadLink, value);
         }
 
         public string Version
         {
             get => _version;
-            set
-            {
-                if (value == _version) return;
-                _version = value;
-                this.RaisePropertyChanged();
-            }
+            set => SetProperty(ref _version, value);
         }
 
         public string ReleaseNotes
         {
             get => _releaseNotes;
-            set
-            {
-                if (value == _releaseNotes) return;
-                _releaseNotes = value;
-                this.RaisePropertyChanged();
-            }
+            set => SetProperty(ref _releaseNotes, value);
         }
 
         private CommandResult OpenLink(string url)

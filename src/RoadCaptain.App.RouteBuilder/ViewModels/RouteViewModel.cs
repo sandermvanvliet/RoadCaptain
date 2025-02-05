@@ -7,7 +7,6 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Collections.ObjectModel;
 using System.Linq;
-using ReactiveUI;
 using RoadCaptain.App.Shared.ViewModels;
 using CommandResult = RoadCaptain.App.Shared.Commands.CommandResult;
 using RoadCaptain.Ports;
@@ -50,16 +49,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
         public string Name
         {
             get => _name ?? string.Empty;
-            set
-            {
-                if (value == _name)
-                {
-                    return;
-                }
-
-                _name = value;
-                this.RaisePropertyChanged();
-            }
+            set => SetProperty(ref _name, value);
         }
 
         public World? World
@@ -67,14 +57,8 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             get => _world;
             set
             {
-                if (value == _world)
-                {
-                    return;
-                }
-
-                _world = value;
-                this.RaisePropertyChanged();
-                this.RaisePropertyChanged(nameof(ReadyToBuild));
+                SetProperty(ref _world, value);
+                OnPropertyChanged(nameof(ReadyToBuild));
             }
         }
 
@@ -83,14 +67,8 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             get => _sport;
             set
             {
-                if (value == _sport)
-                {
-                    return;
-                }
-
-                _sport = value;
-                this.RaisePropertyChanged();
-                this.RaisePropertyChanged(nameof(ReadyToBuild));
+                SetProperty(ref _sport, value);
+                OnPropertyChanged(nameof(ReadyToBuild));
             }
         }
 
@@ -99,24 +77,13 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
         public List<MarkerViewModel> Markers
         {
             get => _markers;
-            private set
-            {
-                if (Equals(value, _markers)) return;
-                _markers = value;
-                this.RaisePropertyChanged();
-            }
+            private set => SetProperty(ref _markers, value);
         }
 
         public LoopMode LoopMode
         {
             get => _loopMode;
-            set
-            {
-                if (value == _loopMode) return;
-                _loopMode = value;
-                IsTainted = true;
-                this.RaisePropertyChanged();
-            }
+            set => SetProperty(ref _loopMode, value);
         }
 
         public int? NumberOfLoops
@@ -124,10 +91,8 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             get => _numberOfLoops;
             set
             {
-                if (value == _numberOfLoops) return;
-                _numberOfLoops = value;
+                SetProperty(ref _numberOfLoops, value);
                 IsTainted = true;
-                this.RaisePropertyChanged();
             }
         }
 
@@ -142,12 +107,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
         public bool IsReadOnly
         {
             get => _isReadOnly;
-            private set
-            {
-                if (value == _isReadOnly) return;
-                _isReadOnly = value;
-                this.RaisePropertyChanged();
-            }
+            private set => SetProperty(ref _isReadOnly, value);
         }
 
         public void StartOn(Segment segment)
@@ -188,10 +148,10 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
 
             DetermineMarkersForRoute();
 
-            this.RaisePropertyChanged(nameof(Sequence));
-            this.RaisePropertyChanged(nameof(TotalDistance));
-            this.RaisePropertyChanged(nameof(TotalAscent));
-            this.RaisePropertyChanged(nameof(TotalDescent));
+            OnPropertyChanged(nameof(Sequence));
+            OnPropertyChanged(nameof(TotalDistance));
+            OnPropertyChanged(nameof(TotalAscent));
+            OnPropertyChanged(nameof(TotalDescent));
         }
 
         public void NextStep(TurnDirection direction,
@@ -230,10 +190,10 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
 
             DetermineMarkersForRoute();
 
-            this.RaisePropertyChanged(nameof(Sequence));
-            this.RaisePropertyChanged(nameof(TotalDistance));
-            this.RaisePropertyChanged(nameof(TotalAscent));
-            this.RaisePropertyChanged(nameof(TotalDescent));
+            OnPropertyChanged(nameof(Sequence));
+            OnPropertyChanged(nameof(TotalDistance));
+            OnPropertyChanged(nameof(TotalAscent));
+            OnPropertyChanged(nameof(TotalDescent));
         }
 
         public void Save(Uri routeUri, string? repositoryName)
@@ -312,8 +272,6 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             World = null;
             Sport = SportType.Unknown;
 
-            this.RaisePropertyChanged(nameof(ReadyToBuild));
-
             return Clear();
         }
 
@@ -327,13 +285,13 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             RepositoryName = null;
             Uri = null;
 
-            this.RaisePropertyChanged(nameof(Sequence));
-            this.RaisePropertyChanged(nameof(TotalDistance));
-            this.RaisePropertyChanged(nameof(TotalAscent));
-            this.RaisePropertyChanged(nameof(TotalDescent));
-            this.RaisePropertyChanged(nameof(Markers));
-            this.RaisePropertyChanged(nameof(Uri));
-            this.RaisePropertyChanged(nameof(RepositoryName));
+            OnPropertyChanged(nameof(Sequence));
+            OnPropertyChanged(nameof(TotalDistance));
+            OnPropertyChanged(nameof(TotalAscent));
+            OnPropertyChanged(nameof(TotalDescent));
+            OnPropertyChanged(nameof(Markers));
+            OnPropertyChanged(nameof(Uri));
+            OnPropertyChanged(nameof(RepositoryName));
 
             return CommandResult.Success();
         }
@@ -392,16 +350,16 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
 
             DetermineMarkersForRoute();
 
-            this.RaisePropertyChanged(nameof(Name));
-            this.RaisePropertyChanged(nameof(World));
-            this.RaisePropertyChanged(nameof(Sport));
-            this.RaisePropertyChanged(nameof(Sequence));
-            this.RaisePropertyChanged(nameof(TotalDistance));
-            this.RaisePropertyChanged(nameof(TotalAscent));
-            this.RaisePropertyChanged(nameof(TotalDescent));
-            this.RaisePropertyChanged(nameof(ReadyToBuild));
-            this.RaisePropertyChanged(nameof(LoopMode));
-            this.RaisePropertyChanged(nameof(NumberOfLoops));
+            OnPropertyChanged(nameof(Name));
+            OnPropertyChanged(nameof(World));
+            OnPropertyChanged(nameof(Sport));
+            OnPropertyChanged(nameof(Sequence));
+            OnPropertyChanged(nameof(TotalDistance));
+            OnPropertyChanged(nameof(TotalAscent));
+            OnPropertyChanged(nameof(TotalDescent));
+            OnPropertyChanged(nameof(ReadyToBuild));
+            OnPropertyChanged(nameof(LoopMode));
+            OnPropertyChanged(nameof(NumberOfLoops));
         }
 
         public SegmentSequenceViewModel? RemoveLast()
@@ -436,10 +394,10 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
 
                 DetermineMarkersForRoute();
 
-                this.RaisePropertyChanged(nameof(Sequence));
-                this.RaisePropertyChanged(nameof(TotalDistance));
-                this.RaisePropertyChanged(nameof(TotalAscent));
-                this.RaisePropertyChanged(nameof(TotalDescent));
+                OnPropertyChanged(nameof(Sequence));
+                OnPropertyChanged(nameof(TotalDistance));
+                OnPropertyChanged(nameof(TotalAscent));
+                OnPropertyChanged(nameof(TotalDescent));
 
                 return lastSegment;
             }
@@ -546,7 +504,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             seqList[endIndex].Model.NextSegmentId = seqList[startIndex].SegmentId;
             LoopMode = mode;
             NumberOfLoops = numberOfLoops;
-            this.RaisePropertyChanged(nameof(IsLoop));
+            OnPropertyChanged(nameof(IsLoop));
         }
 
         private void DetermineMarkersForRoute()

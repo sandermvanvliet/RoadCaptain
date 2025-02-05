@@ -56,7 +56,7 @@
 			</StackPanel>
 		</Grid>
 		<Grid Margin="0,2,2,0">
-			<TransitioningContentControl Content="{Binding CurrentView}" />
+			<ContentControl Name="MainContentControl" Content="{Binding CurrentView}" />
 		</Grid>
 	</DockPanel>
 

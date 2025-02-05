@@ -8,7 +8,6 @@ using System.Collections.Immutable;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using ReactiveUI;
 using RoadCaptain.App.Shared.Commands;
 using RoadCaptain.App.Shared.ViewModels;
 using RoadCaptain.Commands;
@@ -134,17 +133,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
         public string? OutputFilePath
         {
             get => _outputFilePath;
-            set
-            {
-                if (value == _outputFilePath)
-                {
-                    return;
-                }
-                
-                _outputFilePath = value;
-                
-                this.RaisePropertyChanged();
-            }
+            set => SetProperty(ref _outputFilePath, value);
         }
 
         public string? RouteName
@@ -152,37 +141,21 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             get => _route.Name;
             set
             {
-                if (_route.Name == value) return;
-                _route.Name = value ?? string.Empty;
-                this.RaisePropertyChanged();
+                _route.Name = value;
+                OnPropertyChanged();
             }
         }
 
         public RouteViewModel Route
         {
             get => _route;
-            set
-            {
-                if (_route == value) return;
-                _route = value;
-                this.RaisePropertyChanged();
-            }
+            set => SetProperty(ref _route, value);
         }
 
         public ImmutableList<string> Repositories
         {
             get => _repositoryNames ?? ImmutableList<string>.Empty;
-            set
-            {
-                if (value == _repositoryNames)
-                {
-                    return;
-                }
-                
-                _repositoryNames = value;
-                
-                this.RaisePropertyChanged();
-            }
+            set => SetProperty(ref _repositoryNames, value);
         }
 
         public string? SelectedRepositoryName
@@ -190,19 +163,12 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             get => _selectedRepositoryName;
             set
             {
-                if (value == _selectedRepositoryName)
-                {
-                    return;
-                }
+                SetProperty(ref _selectedRepositoryName, value);
                 
-                _selectedRepositoryName = value;
-
                 if (value != null)
                 {
                     OutputFilePath = null;
                 }
-                
-                this.RaisePropertyChanged();
             }
         }
         public event EventHandler? ShouldClose;

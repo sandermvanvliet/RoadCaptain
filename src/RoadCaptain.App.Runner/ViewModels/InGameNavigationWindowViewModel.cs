@@ -35,7 +35,7 @@ namespace RoadCaptain.App.Runner.ViewModels
                 {
                     case nameof(Model.CurrentSegment):
                     case nameof(Model.NextSegment):
-                        this.RaisePropertyChanged(nameof(Model));
+                        OnPropertyChanged(nameof(Model));
                         break;
                 }
             };
@@ -247,12 +247,7 @@ namespace RoadCaptain.App.Runner.ViewModels
         public bool HasRouteFinished
         {
             get => _hasRouteFinished;
-            set
-            {
-                if (value == _hasRouteFinished) return;
-                _hasRouteFinished = value;
-                this.RaisePropertyChanged();
-            }
+            set => SetProperty(ref _hasRouteFinished, value);
         }
 
         public ulong LastSequenceNumber { get; set; }
@@ -260,12 +255,7 @@ namespace RoadCaptain.App.Runner.ViewModels
         public CallToActionViewModel? CallToAction
         {
             get => _callToAction;
-            set
-            {
-                if (value == _callToAction) return;
-                _callToAction = value;
-                this.RaisePropertyChanged();
-            }
+            set => SetProperty(ref _callToAction, value);
         }
 
         private string GetActivityFromSport()

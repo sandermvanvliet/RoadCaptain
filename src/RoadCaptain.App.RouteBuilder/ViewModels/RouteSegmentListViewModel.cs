@@ -5,7 +5,6 @@
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using ReactiveUI;
 using RoadCaptain.App.Shared.Commands;
 using RoadCaptain.App.Shared.ViewModels;
 
@@ -41,25 +40,13 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
         public SegmentSequenceViewModel? SelectedSegmentSequence
         {
             get => _selectedSegmentSequence;
-            set
-            {
-                if (value == _selectedSegmentSequence) return;
-                
-                _selectedSegmentSequence = value;
-                this.RaisePropertyChanged();
-            }
+            set => SetProperty(ref _selectedSegmentSequence, value);
         }
 
         public MarkerViewModel? SelectedMarker
         {
             get => _selectedMarker;
-            set
-            {
-                if (value == _selectedMarker) return;
-
-                _selectedMarker = value;
-                this.RaisePropertyChanged();
-            }
+            set => SetProperty(ref _selectedMarker, value);
         }
 
         private async Task<CommandResult> ConfigureLoop()
@@ -75,7 +62,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             {
                 Route.LoopMode = shouldCreateLoop.Mode;
                 Route.NumberOfLoops = shouldCreateLoop.NumberOfLoops;
-                this.RaisePropertyChanged(nameof(Route));
+                OnPropertyChanged(nameof(Route));
             }
             else
             {
@@ -84,7 +71,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
                 {
                     seq.Type = SegmentSequenceType.Regular;
                 }
-                this.RaisePropertyChanged(nameof(Route));
+                OnPropertyChanged(nameof(Route));
             }
 
             return CommandResult.Success();

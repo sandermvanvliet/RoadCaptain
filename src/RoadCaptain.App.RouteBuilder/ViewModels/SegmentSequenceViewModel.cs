@@ -49,11 +49,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
         public string? TurnGlyph
         {
             get => _turnGlyph;
-            private set
-            {
-                _turnGlyph = value;
-                this.RaisePropertyChanged();
-            }
+            private set => SetProperty(ref _turnGlyph, value);
         }
 
         public string? SegmentId => Model.SegmentId;
@@ -91,9 +87,9 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             set
             {
                 _direction = value;
-                this.RaisePropertyChanged();
-                this.RaisePropertyChanged(nameof(Ascent));
-                this.RaisePropertyChanged(nameof(Descent));
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(Ascent));
+                OnPropertyChanged(nameof(Descent));
             }
         }
 
@@ -108,11 +104,11 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             {
                 if (Model.Type == value) return;
                 Model.Type = value;
-                this.RaisePropertyChanged();
-                this.RaisePropertyChanged(nameof(IsLeadIn));
-                this.RaisePropertyChanged(nameof(IsLoop));
-                this.RaisePropertyChanged(nameof(ColumnSpan));
-                this.RaisePropertyChanged(nameof(LoopImage));
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(IsLeadIn));
+                OnPropertyChanged(nameof(IsLoop));
+                OnPropertyChanged(nameof(ColumnSpan));
+                OnPropertyChanged(nameof(LoopImage));
             }
         }
 

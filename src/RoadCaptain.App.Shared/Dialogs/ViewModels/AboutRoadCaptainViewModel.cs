@@ -30,11 +30,7 @@ namespace RoadCaptain.App.Shared.Dialogs.ViewModels
         public string Version
         {
             get => _version;
-            set
-            {
-                _version = value;
-                this.RaisePropertyChanged();
-            }
+            set => SetProperty(ref _version, value);
         }
 
         private CommandResult OpenLink(string url)

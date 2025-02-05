@@ -49,7 +49,7 @@
             <RowDefinition Height="34"/>
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-
+    
         <Panel Grid.Row="1"
                Grid.Column="1"
                VerticalAlignment="Stretch">
@@ -59,19 +59,19 @@
                 MapObjectSelected="ZwiftMap_OnMapObjectSelected"
                 VerticalAlignment="Top"
                 Classes.narrowHeight="{Binding Path=ShowElevationProfile}" />
-
-            <controls:ElevationProfile
-                Height="250"
-                VerticalAlignment="Bottom"
-                HorizontalAlignment="Stretch"
-                Segments="{Binding Path=Segments}"
-                Route="{Binding Path=Route,Mode=OneWay,Converter={StaticResource RouteViewModelConverter}}"
-                RiderPosition="{Binding Path=RiderPosition}"
-                Markers="{Binding Path=Markers}"
-                IsVisible="{Binding Path=ShowElevationProfile}"
-                RenderMode="All" />
+    
+            <!-- <controls:ElevationProfile -->
+            <!--     Height="250" -->
+            <!--     VerticalAlignment="Bottom" -->
+            <!--     HorizontalAlignment="Stretch" -->
+            <!--     Segments="{Binding Path=Segments}" -->
+            <!--     Route="{Binding Path=Route,Mode=OneWay,Converter={StaticResource RouteViewModelConverter}}" -->
+            <!--     RiderPosition="{Binding Path=RiderPosition}" -->
+            <!--     Markers="{Binding Path=Markers}" -->
+            <!--     IsVisible="{Binding Path=ShowElevationProfile}" -->
+            <!--     RenderMode="All" /> -->
         </Panel>
-
+    
         <WrapPanel
             Grid.Column="1"
             Grid.Row="0"
@@ -97,7 +97,7 @@
             <Button Content="⛰" Command="{Binding Path=ToggleShowClimbsCommand}" ToolTip.Tip="Show the KOM start (red) and finish (green) markers on the map" Classes="toolbar" />
             <Button Content="⏱" Command="{Binding Path=ToggleShowSprintsCommand}" ToolTip.Tip="Show the sprint segments on the map" Classes="toolbar" />
             <Button Content="E" Command="{Binding Path=ToggleShowElevationCommand}" ToolTip.Tip="Show the elevation profile for the current route" Classes="toolbar" />
-           
+    
             <StackPanel Orientation="Horizontal">
                 <Button Content="+" Click="ZoomIn_Click" ToolTip.Tip="Zoom in"
                         IsEnabled="{Binding Path=Route.ReadyToBuild}" IsVisible="{Binding Path=Route.ReadyToBuild}"
@@ -117,7 +117,7 @@
                 </Button>
             </StackPanel>
         </WrapPanel>
-
+    
         <views:RouteSegmentListView
             Grid.Row="0"
             Grid.RowSpan="2"

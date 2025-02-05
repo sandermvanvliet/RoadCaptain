@@ -20,6 +20,7 @@
 	<ItemGroup>
 		<PackageReference Include="Avalonia.ReactiveUI" />
 		<PackageReference Include="Codenizer.Avalonia.Map" />
+		<PackageReference Include="CommunityToolkit.Mvvm" />
 		<PackageReference Include="Markdown.Avalonia" />
 		<PackageReference Include="Microsoft.IdentityModel.JsonWebTokens" />
 		<PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" />

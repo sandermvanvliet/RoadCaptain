@@ -3,7 +3,6 @@
 // See LICENSE or https://choosealicense.com/licenses/artistic-2.0/
 
 using System;
-using ReactiveUI;
 using RoadCaptain.App.Shared.ViewModels;
 
 
@@ -28,16 +27,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
         public bool IsSelected
         {
             get => _isSelected;
-            set
-            {
-                if (value == _isSelected)
-                {
-                    return;
-                }
-
-                _isSelected = value;
-                this.RaisePropertyChanged();
-            }
+            set => SetProperty(ref _isSelected, value);
         }
 
         public string Image => $"avares://RoadCaptain.App.Shared/Assets/world-{_world.Id!.ToLower()}.jpg";

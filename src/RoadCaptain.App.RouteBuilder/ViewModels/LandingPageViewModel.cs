@@ -4,12 +4,10 @@
 
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using ReactiveUI;
 using RoadCaptain.App.Shared.Commands;
 using RoadCaptain.App.Shared.ViewModels;
 using RoadCaptain.Commands;
@@ -197,12 +195,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
         public bool InProgress
         {
             get => _inProgress;
-            protected set
-            {
-                if (value == _inProgress) return;
-                _inProgress = value;
-                this.RaisePropertyChanged();
-            }
+            protected set => SetProperty(ref _inProgress, value);
         }
 
         public ICommand SelectWorldCommand { get; }
@@ -216,13 +209,13 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
         public WorldViewModel[] Worlds
         {
             get => _worlds;
-            private set => this.RaiseAndSetIfChanged(ref _worlds, value);
+            private set => SetProperty(ref _worlds, value);
         }
 
         public SportViewModel[] Sports
         {
             get => _sports;
-            private set => this.RaiseAndSetIfChanged(ref _sports, value);
+            private set => SetProperty(ref _sports, value);
         }
 
         public WorldViewModel? SelectedWorld
@@ -230,7 +223,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             get => _selectedWorld;
             private set
             {
-                this.RaiseAndSetIfChanged(ref _selectedWorld, value);
+                SetProperty(ref _selectedWorld, value);
                 CanBuildRoute = SelectedWorld != null && SelectedSport != null;
             }
         }
@@ -240,7 +233,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             get => _selectedSport;
             private set
             {
-                this.RaiseAndSetIfChanged(ref _selectedSport, value);
+                SetProperty(ref _selectedSport, value);
                 CanBuildRoute = SelectedWorld != null && SelectedSport != null;
             }
         }
@@ -248,7 +241,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
         public bool CanBuildRoute
         {
             get => _canBuildRoute;
-            set => this.RaiseAndSetIfChanged(ref _canBuildRoute, value);
+            set => SetProperty(ref _canBuildRoute, value);
         }
 
         public bool HasDefaultSport => !string.IsNullOrEmpty(DefaultSport);
@@ -261,27 +254,21 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
                 _userPreferences.DefaultSport = value;
                 _userPreferences.Save();
 
-                this.RaisePropertyChanged();
-                this.RaisePropertyChanged(nameof(HasDefaultSport));
+                OnPropertyChanged(nameof(DefaultSport));
+                OnPropertyChanged(nameof(HasDefaultSport));
             }
         }
 
         public Shared.ViewModels.RouteViewModel[] MyRoutes
         {
             get => _myRoutes;
-            set
-            {
-                if (value == _myRoutes) return;
-
-                _myRoutes = value.OrderBy(r => r.World).ThenBy(r => r.Name).ToArray();
-                this.RaisePropertyChanged();
-            }
+            set => SetProperty(ref _myRoutes, value.OrderBy(r => r.World).ThenBy(r => r.Name).ToArray());
         }
 
         public Shared.ViewModels.RouteViewModel? SelectedRoute
         {
             get => _selectedRoute;
-            set => this.RaiseAndSetIfChanged(ref _selectedRoute, value);
+            set => SetProperty(ref _selectedRoute, value);
         }
 
         private Task<CommandResult> SelectWorld(WorldViewModel world)

@@ -91,11 +91,7 @@ namespace RoadCaptain.App.Runner.ViewModels
         public TrackPoint RiderPosition
         {
             get => _riderPosition ?? TrackPoint.Unknown;
-            private set
-            {
-                _riderPosition = value;
-                this.RaisePropertyChanged();
-            }
+            private set => SetProperty(ref _riderPosition, value);
         }
 
         public RenderMode RenderMode
@@ -103,14 +99,10 @@ namespace RoadCaptain.App.Runner.ViewModels
             get => _renderMode;
             set
             {
-                if (value == _renderMode) return;
-                
-                _renderMode = value;
+                SetProperty(ref _renderMode, value);
                 
                 _userPreferences.ElevationProfileRenderMode = _renderMode.ToString();
                 _userPreferences.Save();
-
-                this.RaisePropertyChanged();
             }
         }
 
@@ -174,9 +166,9 @@ namespace RoadCaptain.App.Runner.ViewModels
             Markers = markers;
             Route = route;
 
-            this.RaisePropertyChanged(nameof(Markers));
-            this.RaisePropertyChanged(nameof(Segments));
-            this.RaisePropertyChanged(nameof(Route));
+            OnPropertyChanged(nameof(Markers));
+            OnPropertyChanged(nameof(Segments));
+            OnPropertyChanged(nameof(Route));
         }
     }
 }

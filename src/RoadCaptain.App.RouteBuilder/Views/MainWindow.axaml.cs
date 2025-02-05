@@ -3,7 +3,7 @@
 // See LICENSE or https://choosealicense.com/licenses/artistic-2.0/
 
 using System;
-using Avalonia;
+using System.Diagnostics;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Threading;
@@ -16,7 +16,8 @@ namespace RoadCaptain.App.RouteBuilder.Views
     public partial class MainWindow : Window
     {
         private readonly IWindowService _windowService;
-        
+        private readonly ViewLocator _viewLocator;
+
         // Note: This constructor is used by the Avalonia designer only
         // ReSharper disable once UnusedMember.Global because this constructor only exists for the Avalonia designer
 #pragma warning disable CS8618
@@ -28,10 +29,13 @@ namespace RoadCaptain.App.RouteBuilder.Views
             InitializeComponent();
         }
 
-        public MainWindow(MainWindowViewModel viewModel, IUserPreferences userPreferences, IWindowService windowService)
+        public MainWindow(MainWindowViewModel viewModel, IUserPreferences userPreferences, IWindowService windowService, ViewLocator viewLocator)
         {
-            _windowService = windowService;
+            InitializeComponent();
             
+            _windowService = windowService;
+            _viewLocator = viewLocator;
+
             this.UseWindowStateTracking(
                 userPreferences.RouteBuilderLocation,
                 newWindowLocation =>
@@ -43,11 +47,23 @@ namespace RoadCaptain.App.RouteBuilder.Views
             ViewModel = viewModel;
             DataContext = viewModel;
 
-            InitializeComponent();
-            
-            this.Bind(ViewModel.BuildRouteViewModel.SaveRouteCommand).To(Key.S).WithPlatformModifier();
-            this.Bind(ViewModel.BuildRouteViewModel.ClearRouteCommand).To(Key.R).WithPlatformModifier();
-            this.Bind(ViewModel.BuildRouteViewModel.RemoveLastSegmentCommand).To(Key.Z).WithPlatformModifier();
+            viewModel.PropertyChanged += (sender, args) =>
+            {
+                var propertyValue = "(idk)";
+                if (args.PropertyName == nameof(viewModel.CurrentView))
+                {
+                    propertyValue = viewModel.CurrentView.GetType().FullName;
+                }
+                Debug.WriteLine($"PropertyChanged: {args.PropertyName}: {propertyValue}");
+                var contentTypeFullName = MainContentControl.Content?.GetType().FullName ?? "(null)";
+                Debug.WriteLine($"Content type name: {contentTypeFullName}");
+                
+                var dataContextTypeFullName = MainContentControl.DataContext?.GetType().FullName ?? "(null)";
+                Debug.WriteLine($"DataContext type name: {dataContextTypeFullName}");
+            };
+            // this.Bind(ViewModel.BuildRouteViewModel.SaveRouteCommand).To(Key.S).WithPlatformModifier();
+            // this.Bind(ViewModel.BuildRouteViewModel.ClearRouteCommand).To(Key.R).WithPlatformModifier();
+            // this.Bind(ViewModel.BuildRouteViewModel.RemoveLastSegmentCommand).To(Key.Z).WithPlatformModifier();
         }
 
         private MainWindowViewModel ViewModel { get; }
@@ -57,9 +73,9 @@ namespace RoadCaptain.App.RouteBuilder.Views
             // Remove event handler to ensure this is only called once
             Activated -= MainWindow_OnActivated;
 
-            Dispatcher.UIThread.InvokeAsync(() => ViewModel.CheckForNewVersion());
-            Dispatcher.UIThread.InvokeAsync(() => ViewModel.CheckLastOpenedVersion());
-            Dispatcher.UIThread.InvokeAsync(() => ViewModel.LandingPageViewModel.LoadMyRoutesCommand.Execute(null));
+            // Dispatcher.UIThread.InvokeAsync(() => ViewModel.CheckForNewVersion());
+            // Dispatcher.UIThread.InvokeAsync(() => ViewModel.CheckLastOpenedVersion());
+            // Dispatcher.UIThread.InvokeAsync(() => ViewModel.LandingPageViewModel.LoadMyRoutesCommand.Execute(null));
         }
 
         private void Window_OnClosing(object? sender, WindowClosingEventArgs e)

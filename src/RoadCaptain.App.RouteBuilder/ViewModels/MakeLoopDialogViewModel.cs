@@ -5,7 +5,6 @@
 using System;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using ReactiveUI;
 using RoadCaptain.App.Shared.Commands;
 using RoadCaptain.App.Shared.Dialogs;
 using RoadCaptain.App.Shared.ViewModels;
@@ -39,45 +38,25 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
         public bool NoLoop
         {
             get => _noLoop;
-            set
-            {
-                if (value == _noLoop) return;
-                _noLoop = value;
-                this.RaisePropertyChanged();
-            }
+            set => SetProperty(ref _noLoop, value);
         }
 
         public bool InfiniteLoop
         {
             get => _infiniteLoop;
-            set
-            {
-                if (value == _infiniteLoop) return;
-                _infiniteLoop = value;
-                this.RaisePropertyChanged();
-            }
+            set => SetProperty(ref _infiniteLoop, value);
         }
 
         public bool ConstrainedLoop
         {
             get => _constrainedLoop;
-            set
-            {
-                if (value == _constrainedLoop) return;
-                _constrainedLoop = value;
-                this.RaisePropertyChanged();
-            }
+            set => SetProperty(ref _constrainedLoop, value);
         }
 
         public int? NumberOfLoops
         {
             get => _numberOfLoops;
-            set
-            {
-                if (value == _numberOfLoops) return;
-                _numberOfLoops = value;
-                this.RaisePropertyChanged();
-            }
+            set => SetProperty(ref _numberOfLoops, value);
         }
         
         public ICommand CloseDialogCommand { get; }

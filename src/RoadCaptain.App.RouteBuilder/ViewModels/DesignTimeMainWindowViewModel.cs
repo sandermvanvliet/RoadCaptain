@@ -2,12 +2,10 @@
 // Licensed under Artistic License 2.0
 // See LICENSE or https://choosealicense.com/licenses/artistic-2.0/
 
-using System.Collections.Generic;
 using Autofac;
 using Avalonia.Threading;
 using Microsoft.Extensions.Configuration;
 using RoadCaptain.App.RouteBuilder.Services;
-using RoadCaptain.App.Shared.ViewModels;
 using RoadCaptain.Ports;
 using RoadCaptain.UseCases;
 using Serilog.Core;

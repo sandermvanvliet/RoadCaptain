@@ -6,10 +6,8 @@ using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using ReactiveUI;
 using RoadCaptain.App.RouteBuilder.Models;
 using RoadCaptain.App.RouteBuilder.Services;
-using RoadCaptain.App.RouteBuilder.Views;
 using RoadCaptain.App.Shared.ViewModels;
 using CommandResult = RoadCaptain.App.Shared.Commands.CommandResult;
 using RelayCommand = RoadCaptain.App.Shared.Commands.RelayCommand;
@@ -50,16 +48,8 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
     
             Model = new MainWindowModel();
             Route = new RouteViewModel(routeStore, segmentStore);
-            Route.PropertyChanged += (sender, args) =>
-            {
-                switch (args.PropertyName)
-                {
-                    case nameof(Route.ReadyToBuild) when !Route.ReadyToBuild && LandingPageViewModel != null:
-                        LandingPageViewModel.SelectedRoute = null;
-                        LandingPageViewModel.LoadMyRoutesCommand.Execute(null);
-                        break;
-                }
-            };
+            
+            this.PropertyChanged += (s, e) => Debug.WriteLine($"PropertyChanged: {e.PropertyName}");
             
             LandingPageViewModel = new LandingPageViewModel(worldStore, userPreferences, windowService, searchRoutesUseCase, loadRouteFromFileUseCase, deleteRouteUseCase);
             LandingPageViewModel.PropertyChanged += (_, args) =>
@@ -68,10 +58,14 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
                 {
                     case nameof(LandingPageViewModel.CanBuildRoute):
                     {
-                        Route.Clear();
-                        Route.World = worldStore.LoadWorldById(LandingPageViewModel.SelectedWorld!.Id);
-                        Route.Sport = LandingPageViewModel.SelectedSport!.Sport;
-                        CurrentView = BuildRouteViewModel!;
+                        if (LandingPageViewModel.CanBuildRoute)
+                        {
+                            Route.Clear();
+                            Route.World = worldStore.LoadWorldById(LandingPageViewModel.SelectedWorld!.Id);
+                            Route.Sport = LandingPageViewModel.SelectedSport!.Sport;
+                            CurrentView = new BuildRouteViewModel(Route, userPreferences, windowService, segmentStore, statusBarService);
+                        }
+
                         break;
                     }
                     case nameof(LandingPageViewModel.SelectedRoute):
@@ -82,18 +76,16 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
                             {
                                 Route.LoadFromRouteModel(routeModel);
                                 statusBarService.Info("Loaded route successfully");
+                                CurrentView = new BuildRouteViewModel(Route, userPreferences, windowService, segmentStore, statusBarService);
                             }
                             catch (Exception e)
                             {
                                 statusBarService.Error($"Unable to load route: {e.Message}");
                             }
                         }
-                        CurrentView = BuildRouteViewModel!;
                         break;
                 }
             };
-            
-            BuildRouteViewModel = new BuildRouteViewModel(Route, userPreferences, windowService, segmentStore, statusBarService);
 
             OpenLinkCommand = new RelayCommand(
                 link => OpenLink(link as string ?? throw new ArgumentNullException(nameof(RelayCommand.CommandParameter))),
@@ -109,7 +101,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
         public ViewModelBase CurrentView
         {
             get => _currentView;
-            set => this.RaiseAndSetIfChanged(ref _currentView, value);
+            set => SetProperty(ref _currentView, value);
         }
 
         public MainWindowModel Model { get; }
@@ -141,23 +133,16 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             get => _version ?? "0.0.0.0";
             set
             {
-                if (value == _version) return;
-                _version = value;
+                SetProperty(ref _version, value);
                 ChangelogUri =
                     $"https://github.com/sandermvanvliet/RoadCaptain/blob/main/Changelog.md/#{Version.Replace(".", "")}";
-                this.RaisePropertyChanged();
             }
         }
 
         public string? ChangelogUri
         {
             get => _changelogUri;
-            set
-            {
-                if (value == _changelogUri) return;
-                _changelogUri = value;
-                this.RaisePropertyChanged();
-            }
+            set => SetProperty(ref _changelogUri, value);
         }
 
         public BuildRouteViewModel BuildRouteViewModel { get; }

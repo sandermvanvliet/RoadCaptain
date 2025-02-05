@@ -7,12 +7,11 @@ using System.Linq;
 using Autofac;
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
-using RoadCaptain.App.RouteBuilder.ViewModels;
 using RoadCaptain.App.Shared.ViewModels;
 
 namespace RoadCaptain.App.RouteBuilder
 {
-    public class ViewLocator(IContainer container, MonitoringEvents monitoringEvents) : IDataTemplate
+    public class ViewLocator(IComponentContext container, MonitoringEvents monitoringEvents) : IDataTemplate
     {
         public Control Build(object? data)
         {

@@ -2,7 +2,6 @@
 // Licensed under Artistic License 2.0
 // See LICENSE or https://choosealicense.com/licenses/artistic-2.0/
 
-using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
@@ -12,8 +11,6 @@ using Avalonia.Interactivity;
 using Codenizer.Avalonia.Map;
 using RoadCaptain.App.RouteBuilder.ViewModels;
 using RoadCaptain.App.Shared.Controls;
-using InvalidOperationException = System.InvalidOperationException;
-using Point = Avalonia.Point;
 
 namespace RoadCaptain.App.RouteBuilder.Views
 {
@@ -24,13 +21,20 @@ namespace RoadCaptain.App.RouteBuilder.Views
 
         public BuildRoute()
         {
-            
             InitializeComponent();
-            
+
             ZwiftMap.RenderPriority = new ZwiftMapRenderPriority();
             ZwiftMap.LogDiagnostics = false;
 
             _mapObjectsSource = new MapObjectsSource(ZwiftMap);
+
+            DataContextChanged += (s, e) =>
+            {
+                _viewModel = DataContext as BuildRouteViewModel;
+                _viewModel.PropertyChanged += BuildRouteViewModelPropertyChanged;
+                
+                BuildRouteViewModelPropertyChanged(_viewModel, new PropertyChangedEventArgs(nameof(_viewModel.Route)));
+            };
         }
 
         private void BuildRouteViewModelPropertyChanged(object? sender, PropertyChangedEventArgs e)
@@ -42,7 +46,7 @@ namespace RoadCaptain.App.RouteBuilder.Views
                     using (ZwiftMap.BeginUpdate())
                     {
                         _viewModel.ClearSegmentHighlight();
-
+        
                         _mapObjectsSource.SynchronizeRouteSegmentsOnZwiftMap(_viewModel.Route);
                     }
                     break;
@@ -55,7 +59,7 @@ namespace RoadCaptain.App.RouteBuilder.Views
                     {
                         RouteSegmentListView.RouteListView.ScrollIntoView(RouteSegmentListView.RouteListView.ItemCount - 1);
                     }
-
+        
                     // Redraw when the route changes so that the
                     // route path is painted correctly
                     using (ZwiftMap.BeginUpdate())
@@ -70,11 +74,11 @@ namespace RoadCaptain.App.RouteBuilder.Views
                             _mapObjectsSource.Clear();
                         }
                     }
-
+        
                     break;
                 case nameof(_viewModel.RiderPosition):
                     var routePath = ZwiftMap.MapObjects.OfType<RoutePath>().SingleOrDefault();
-
+        
                     if (routePath != null)
                     {
                         if (_viewModel.RiderPosition == null)
@@ -88,9 +92,9 @@ namespace RoadCaptain.App.RouteBuilder.Views
                             routePath.MoveNext();
                         }
                     }
-
-                    InvalidateZwiftMap();
-
+        
+                    //InvalidateZwiftMap();
+        
                     break;
                 case nameof(_viewModel.ShowClimbs):
                     _mapObjectsSource.ToggleClimbs(_viewModel.ShowClimbs);
@@ -108,20 +112,20 @@ namespace RoadCaptain.App.RouteBuilder.Views
         }
         private void ZoomIn_Click(object sender, RoutedEventArgs e)
         {
-            ZwiftMap.Zoom(ZwiftMap.ZoomLevel + 0.1f, new Point(Bounds.Width / 2, Bounds.Height / 2));
+            ZwiftMap.Zoom(ZwiftMap.ZoomLevel + 0.1f, new Avalonia.Point(Bounds.Width / 2, Bounds.Height / 2));
         }
-
+        
         private void ZoomOut_Click(object sender, RoutedEventArgs e)
         {
-            ZwiftMap.Zoom(ZwiftMap.ZoomLevel - 0.1f, new Point(Bounds.Width / 2, Bounds.Height / 2));
+            ZwiftMap.Zoom(ZwiftMap.ZoomLevel - 0.1f, new Avalonia.Point(Bounds.Width / 2, Bounds.Height / 2));
         }
-
+        
         private void ResetZoom_Click(object sender, RoutedEventArgs e)
         {
             ZwiftMap.ZoomAll();
         }
-
-
+        
+        
         private void ZoomRoute_Click(object? sender, RoutedEventArgs e)
         {
             ZwiftMap.ZoomExtent("route");

@@ -46,6 +46,11 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             
             Route = routeViewModel;
             Route.PropertyChanged += (_, args) => HandleRoutePropertyChanged(segmentStore, args);
+
+            if (Route.ReadyToBuild)
+            {
+                TryLoadSegmentsForWorldAndSport(segmentStore);
+            }
             
             RouteSegmentListViewModel = new RouteSegmentListViewModel(Route, windowService);
             
@@ -135,11 +140,9 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             get => _showClimbs;
             private set
             {
-                if (value == _showClimbs) return;
-                _showClimbs = value;
+                SetProperty(ref _showClimbs, value);
                 _userPreferences.ShowClimbs = _showClimbs;
                 _userPreferences.Save();
-                this.RaisePropertyChanged();
             }
         }
 
@@ -148,11 +151,9 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             get => _showSprints;
             private set
             {
-                if (value == _showSprints) return;
-                _showSprints = value;
+                SetProperty(ref _showSprints, value);
                 _userPreferences.ShowSprints = _showSprints;
                 _userPreferences.Save();
-                this.RaisePropertyChanged();
             }
         }
 
@@ -161,100 +162,52 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             get => _showElevationProfile;
             private set
             {
-                if (value == _showElevationProfile) return;
-                _showElevationProfile = value;
+                SetProperty(ref _showElevationProfile, value);
                 _userPreferences.ShowElevationProfile = _showElevationProfile;
                 _userPreferences.Save();
-                this.RaisePropertyChanged();
             }
         }
 
         public TrackPoint? RiderPosition
         {
             get => _riderPosition;
-            set
-            {
-                _riderPosition = value;
-                this.RaisePropertyChanged();
-            }
+            set => SetProperty(ref _riderPosition, value);
         }
 
         public SimulationState SimulationState
         {
             get => _simulationState;
-            set
-            {
-                _simulationState = value;
-                this.RaisePropertyChanged();
-            }
+            set => SetProperty(ref _simulationState, value);
         }
 
         public List<Segment> Segments
         {
             get => _segments;
-            set
-            {
-                if (value == _segments)
-                {
-                    return;
-                }
-
-                _segments = value;
-                this.RaisePropertyChanged();
-            }
+            set => SetProperty(ref _segments, value);
         }
 
         public List<Segment> Markers
         {
             get => _markers;
-            set
-            {
-                if (value == _markers)
-                {
-                    return;
-                }
-
-                _markers = value;
-
-                this.RaisePropertyChanged();
-            }
+            set => SetProperty(ref _markers, value);
         }
 
         public Segment? HighlightedSegment
         {
             get => _highlightedSegment;
-            set
-            {
-                if (value == _highlightedSegment)
-                {
-                    return;
-                }
-
-                _highlightedSegment = value;
-                this.RaisePropertyChanged();
-            }
+            set => SetProperty(ref _highlightedSegment, value);
         }
 
         public Segment? SelectedSegment
         {
             get => _selectedSegment;
-            private set
-            {
-                if (value == _selectedSegment) return;
-                _selectedSegment = value;
-                this.RaisePropertyChanged();
-            }
+            private set => SetProperty(ref _selectedSegment, value);
         }
 
         public Segment? HighlightedMarker
         {
             get => _highlightedMarker;
-            private set
-            {
-                if (value == _highlightedMarker) return;
-                _highlightedMarker = value;
-                this.RaisePropertyChanged();
-            }
+            private set => SetProperty(ref _highlightedMarker, value);
         }
 
         private async Task<CommandResult> ClearRoute()
@@ -277,7 +230,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
 
             SimulationState = SimulationState.NotStarted;
 
-            this.RaisePropertyChanged(nameof(Route));
+            OnPropertyChanged(nameof(Route));
 
             return commandResult;
         }
@@ -489,7 +442,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
                 if (shouldCreateLoop.Mode is LoopMode.Infinite or LoopMode.Constrained)
                 {
                     Route.MakeLoop(startIndex.Value, endIndex.Value, shouldCreateLoop.Mode, shouldCreateLoop.NumberOfLoops);
-                    this.RaisePropertyChanged(nameof(Route));
+                    OnPropertyChanged(nameof(Route));
                 }
             }
         }
@@ -628,7 +581,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
                 }
                 case nameof(Route.ReadyToBuild):
                 case nameof(Route.Sequence):
-                    this.RaisePropertyChanged(nameof(Route));
+                    OnPropertyChanged(nameof(Route));
                     break;
             }
         }

@@ -16,10 +16,6 @@
 			<NativeMenuItem Header="Documentation" Click="Documentation_OnClick" />
 		</NativeMenu>
 	</NativeMenu.Menu>
-	
-	<!-- <Application.DataTemplates> -->
-	<!-- 	<routeBuilder:ViewLocator /> -->
-	<!-- </Application.DataTemplates> -->
 
     <Application.Styles>
 	    <FluentTheme />

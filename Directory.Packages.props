@@ -16,6 +16,7 @@
     <PackageVersion Include="BouncyCastle.NetCore" Version="2.2.1" />
     <PackageVersion Include="Codenizer.Avalonia.Map" Version="0.5.1" />
     <PackageVersion Include="Codenizer.HttpClient.Testable" Version="2.6.0" />
+    <PackageVersion Include="CommunityToolkit.Mvvm" Version="8.4.0" />
     <PackageVersion Include="coverlet.collector" Version="6.0.0" />
     <PackageVersion Include="FluentAssertions" Version="6.12.0" />
     <PackageVersion Include="Google.Protobuf.Tools" Version="3.25.3" />

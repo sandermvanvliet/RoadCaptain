@@ -4,6 +4,7 @@
 
 using System;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using ReactiveUI;
@@ -73,16 +74,7 @@ namespace RoadCaptain.App.Shared.ViewModels
         public bool IsBusy
         {
             get => _isBusy;
-            set
-            {
-                if (value == _isBusy)
-                {
-                    return;
-                }
-                
-                _isBusy = value;
-                this.RaisePropertyChanged();
-            }
+            set => SetProperty(ref _isBusy, value);
         }
 
         public string WindowTitle => "RoadCaptain - Route selection";
@@ -101,241 +93,91 @@ namespace RoadCaptain.App.Shared.ViewModels
         public RouteViewModel[] Routes
         {
             get => _routes;
-            set
-            {
-                if (value == _routes)
-                {
-                    return;
-                }
-
-                _routes = value;
-
-                this.RaisePropertyChanged();
-            }
+            set => SetProperty(ref _routes, value);
         }
 
         public string[] Repositories
         {
             get => _repositories;
-            set
-            {
-                if (value == _repositories)
-                {
-                    return;
-                }
-
-                _repositories = value;
-
-                this.RaisePropertyChanged();
-            }
+            set => SetProperty(ref _repositories, value);
         }
 
         public RouteViewModel? SelectedRoute
         {
             get => _selectedRoute;
-            set
-            {
-                if (value == _selectedRoute)
-                {
-                    return;
-                }
-
-                _selectedRoute = value;
-
-                this.RaisePropertyChanged();
-            }
+            set => SetProperty(ref _selectedRoute, value);
         }
 
         public World[] AvailableWorlds
         {
             get => _availableWorlds;
-            set
-            {
-                if (value == _availableWorlds)
-                {
-                    return;
-                }
-                
-                _availableWorlds = value;
-
-                this.RaisePropertyChanged();
-            }
+            set => SetProperty(ref _availableWorlds, value);
         }
 
         public string? FilterRepository
         {
             get => _filterRepository;
-            set
-            {
-                if (value == _filterRepository)
-                {
-                    return;
-                }
-                
-                _filterRepository = value;
-
-                this.RaisePropertyChanged();
-            }
+            set => SetProperty(ref _filterRepository, value);
         }
 
         public World? FilterWorld
         {
             get => _filterWorld;
-            set
-            {
-                if (value == _filterWorld)
-                {
-                    return;
-                }
-                
-                _filterWorld = value;
-                
-                this.RaisePropertyChanged();
-            }
+            set => SetProperty(ref _filterWorld, value);
         }
 
         public string? FilterRouteName
         {
             get => _filterRouteName;
-            set
-            {
-                if (value == _filterRouteName)
-                {
-                    return;
-                }
-                
-                _filterRouteName = value;
-                
-                this.RaisePropertyChanged();
-            }
+            set => SetProperty(ref _filterRouteName, value);
         }
 
         public string? FilterCreatorName
         {
             get => _filterCreatorName;
-            set
-            {
-                if (value == _filterCreatorName)
-                {
-                    return;
-                }
-                
-                _filterCreatorName = value;
-                
-                this.RaisePropertyChanged();
-            }
+            set => SetProperty(ref _filterCreatorName, value);
         }
 
         public string? FilterZwiftRouteName
         {
             get => _filterZwiftRouteName;
-            set
-            {
-                if (value == _filterZwiftRouteName)
-                {
-                    return;
-                }
-                
-                _filterZwiftRouteName = value;
-                
-                this.RaisePropertyChanged();
-            }
+            set => SetProperty(ref _filterZwiftRouteName, value);
         }
 
         public int? FilterDistanceMin
         {
             get => _filterDistanceMin;
-            set
-            {
-                if (value == _filterDistanceMin)
-                {
-                    return;
-                }
-                
-                _filterDistanceMin = value;
-                
-                this.RaisePropertyChanged();
-            }
+            set => SetProperty(ref _filterDistanceMin, value);
         }
 
         public int? FilterDistanceMax
         {
             get => _filterDistanceMax;
-            set
-            {
-                if (value == _filterDistanceMax)
-                {
-                    return;
-                }
-                
-                _filterDistanceMax = value;
-                
-                this.RaisePropertyChanged();
-            }
+            set => SetProperty(ref _filterDistanceMax, value);
         }
 
         public int? FilterAscentMin
         {
             get => _filterAscentMin;
-            set
-            {
-                if (value == _filterAscentMin)
-                {
-                    return;
-                }
-                
-                _filterAscentMin = value;
-                
-                this.RaisePropertyChanged();
-            }
+            set => SetProperty(ref _filterAscentMin, value);
         }
 
         public int? FilterAscentMax
         {
             get => _filterAscentMax;
-            set
-            {
-                if (value == _filterAscentMax)
-                {
-                    return;
-                }
-                
-                _filterAscentMax = value;
-                
-                this.RaisePropertyChanged();
-            }
+            set => SetProperty(ref _filterAscentMax, value);
         }
 
         public int? FilterDescentMin
         {
             get => _filterDescentMin;
-            set
-            {
-                if (value == _filterDescentMin)
-                {
-                    return;
-                }
-                
-                _filterDescentMin = value;
-                
-                this.RaisePropertyChanged();
-            }
+            set => SetProperty(ref _filterDescentMin, value);
         }
 
         public int? FilterDescentMax
         {
             get => _filterDescentMax;
-            set
-            {
-                if (value == _filterDescentMax)
-                {
-                    return;
-                }
-                
-                _filterDescentMax = value;
-                
-                this.RaisePropertyChanged();
-            }
+            set => SetProperty(ref _filterDescentMax, value);
         }
 
         public bool IsLoopYesChecked
@@ -343,15 +185,8 @@ namespace RoadCaptain.App.Shared.ViewModels
             get => _isLoopYesChecked;
             set
             {
-                if (value == _isLoopYesChecked)
-                {
-                    return;
-                }
-                
-                _isLoopYesChecked = value;
-
-                this.RaisePropertyChanged();
-                this.RaisePropertyChanged(nameof(FilterIsLoop));
+                SetProperty(ref _isLoopYesChecked, value);
+                OnPropertyChanged(nameof(FilterIsLoop));
             }
         }
 
@@ -360,15 +195,8 @@ namespace RoadCaptain.App.Shared.ViewModels
             get => _isLoopNoChecked;
             set
             {
-                if (value == _isLoopNoChecked)
-                {
-                    return;
-                }
-                
-                _isLoopNoChecked = value;
-
-                this.RaisePropertyChanged();
-                this.RaisePropertyChanged(nameof(FilterIsLoop));
+                SetProperty(ref _isLoopNoChecked, value);
+                OnPropertyChanged(nameof(FilterIsLoop));
             }
         }
 
@@ -377,15 +205,8 @@ namespace RoadCaptain.App.Shared.ViewModels
             get => _isLoopBothChecked;
             set
             {
-                if (value == _isLoopBothChecked)
-                {
-                    return;
-                }
-                
-                _isLoopBothChecked = value;
-
-                this.RaisePropertyChanged();
-                this.RaisePropertyChanged(nameof(FilterIsLoop));
+                SetProperty(ref _isLoopBothChecked, value);
+                OnPropertyChanged(nameof(FilterIsLoop));
             }
         }
 

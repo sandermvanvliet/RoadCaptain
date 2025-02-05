@@ -253,30 +253,15 @@ namespace RoadCaptain.App.Runner.ViewModels
             get => _routePath;
             set
             {
-                if (value == _routePath)
-                {
-                    return;
-                }
-
-                _routePath = value;
-                this.RaisePropertyChanged();
-                this.RaisePropertyChanged(nameof(CanStartRoute));
+                SetProperty(ref _routePath, value);
+                OnPropertyChanged(nameof(CanStartRoute));
             }
         }
 
         public string WindowTitle
         {
             get => _windowTitle;
-            set
-            {
-                if (value == _windowTitle)
-                {
-                    return;
-                }
-
-                _windowTitle = value;
-                this.RaisePropertyChanged();
-            }
+            set => SetProperty(ref _windowTitle, value);
         }
 
         public bool LoggedInToZwift
@@ -284,15 +269,9 @@ namespace RoadCaptain.App.Runner.ViewModels
             get => _loggedInToZwift;
             set
             {
-                if (value == _loggedInToZwift)
-                {
-                    return;
-                }
-
-                _loggedInToZwift = value;
-                this.RaisePropertyChanged();
-                this.RaisePropertyChanged(nameof(ZwiftLoggedInText));
-                this.RaisePropertyChanged(nameof(CanStartRoute));
+                SetProperty(ref _loggedInToZwift, value);
+                OnPropertyChanged(nameof(ZwiftLoggedInText));
+                OnPropertyChanged(nameof(CanStartRoute));
             }
         }
 
@@ -306,46 +285,19 @@ namespace RoadCaptain.App.Runner.ViewModels
         public string? ZwiftName
         {
             get => _zwiftName;
-            set
-            {
-                if (value == _zwiftName)
-                {
-                    return;
-                }
-
-                _zwiftName = value;
-                this.RaisePropertyChanged();
-            }
+            set => SetProperty(ref _zwiftName, value);
         }
 
         public IImage? ZwiftAvatar
         {
             get => _zwiftAvatar;
-            set
-            {
-                if (value == _zwiftAvatar)
-                {
-                    return;
-                }
-
-                _zwiftAvatar = value;
-                this.RaisePropertyChanged();
-            }
+            set => SetProperty(ref _zwiftAvatar, value);
         }
 
         public string? ZwiftAvatarUri
         {
             get => _zwiftAvatarUri;
-            set
-            {
-                if (value == _zwiftAvatarUri)
-                {
-                    return;
-                }
-
-                _zwiftAvatarUri = value;
-                this.RaisePropertyChanged();
-            }
+            set => SetProperty(ref _zwiftAvatarUri, value);
         }
 
         public string Version
@@ -353,22 +305,15 @@ namespace RoadCaptain.App.Runner.ViewModels
             get => _version;
             set
             {
-                if (value == _version) return;
-                _version = value;
+                SetProperty(ref _version, value);
                 ChangelogUri = $"https://github.com/sandermvanvliet/RoadCaptain/blob/main/Changelog.md/#{Version.Replace(".", "")}";
-                this.RaisePropertyChanged();
             }
         }
 
         public string? ChangelogUri
         {
             get => _changelogUri;
-            set
-            {
-                if (value == _changelogUri) return;
-                _changelogUri = value;
-                this.RaisePropertyChanged();
-            }
+            set => SetProperty(ref _changelogUri, value);
         }
 
         public Models.RouteModel? Route
@@ -376,12 +321,8 @@ namespace RoadCaptain.App.Runner.ViewModels
             get => _route;
             set
             {
-                if (Equals(value, _route)) return;
-
-                _route = value;
-
-                this.RaisePropertyChanged();
-                this.RaisePropertyChanged(nameof(CanStartRoute));
+                SetProperty(ref _route, value);
+                OnPropertyChanged(nameof(CanStartRoute));
             }
         }
 
@@ -390,10 +331,8 @@ namespace RoadCaptain.App.Runner.ViewModels
             get => _endActivityAtEndOfRoute;
             set
             {
-                if (value == _endActivityAtEndOfRoute) return;
-                _endActivityAtEndOfRoute = value;
+                SetProperty(ref _endActivityAtEndOfRoute, value);
                 _userPreferences.EndActivityAtEndOfRoute = value;
-                this.RaisePropertyChanged();
             }
         }
 

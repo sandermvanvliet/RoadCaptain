@@ -3,10 +3,8 @@
 // See LICENSE or https://choosealicense.com/licenses/artistic-2.0/
 
 using System.Threading.Tasks;
-using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using RoadCaptain.App.Shared.Dialogs;
-using RoadCaptain.App.Shared.Models;
 using RouteViewModel = RoadCaptain.App.RouteBuilder.ViewModels.RouteViewModel;
 
 namespace RoadCaptain.App.RouteBuilder

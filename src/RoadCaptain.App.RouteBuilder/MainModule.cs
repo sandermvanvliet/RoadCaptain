@@ -11,7 +11,6 @@ using Autofac;
 using Autofac.Core.Activators.Reflection;
 using Avalonia.Controls;
 using RoadCaptain.App.RouteBuilder.Services;
-using RoadCaptain.App.RouteBuilder.Views;
 using RoadCaptain.App.Shared.ViewModels;
 using Module = Autofac.Module;
 
@@ -31,6 +30,8 @@ namespace RoadCaptain.App.RouteBuilder
                 .As<IWindowService>()
                 .As<Shared.IWindowService>()
                 .SingleInstance();
+            
+            builder.RegisterType<ViewLocator>().AsSelf().SingleInstance();
 
             builder.RegisterType<StatusBarService>().As<IStatusBarService>().SingleInstance();
             builder.RegisterDecorator<DelegateDecorator, IWindowService>();
