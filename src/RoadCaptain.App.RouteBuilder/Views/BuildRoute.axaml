@@ -10,7 +10,6 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:views="clr-namespace:RoadCaptain.App.RouteBuilder.Views"
              xmlns:map="clr-namespace:Codenizer.Avalonia.Map;assembly=Codenizer.Avalonia.Map"
-             xmlns:controls="clr-namespace:RoadCaptain.App.Shared.Controls;assembly=RoadCaptain.App.Shared"
              xmlns:viewModels="clr-namespace:RoadCaptain.App.RouteBuilder.ViewModels"
              xmlns:converters="clr-namespace:RoadCaptain.App.Shared.Converters;assembly=RoadCaptain.App.Shared"
              xmlns:converters1="clr-namespace:RoadCaptain.App.RouteBuilder.Converters"

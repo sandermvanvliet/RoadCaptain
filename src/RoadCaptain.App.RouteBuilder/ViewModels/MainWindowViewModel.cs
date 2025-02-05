@@ -6,6 +6,7 @@ using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Avalonia;
 using RoadCaptain.App.RouteBuilder.Models;
 using RoadCaptain.App.RouteBuilder.Services;
 using RoadCaptain.App.Shared.ViewModels;
@@ -49,8 +50,6 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             Model = new MainWindowModel();
             Route = new RouteViewModel(routeStore, segmentStore);
             
-            this.PropertyChanged += (s, e) => Debug.WriteLine($"PropertyChanged: {e.PropertyName}");
-            
             LandingPageViewModel = new LandingPageViewModel(worldStore, userPreferences, windowService, searchRoutesUseCase, loadRouteFromFileUseCase, deleteRouteUseCase);
             LandingPageViewModel.PropertyChanged += (_, args) =>
             {
@@ -63,7 +62,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
                             Route.Clear();
                             Route.World = worldStore.LoadWorldById(LandingPageViewModel.SelectedWorld!.Id);
                             Route.Sport = LandingPageViewModel.SelectedSport!.Sport;
-                            CurrentView = new BuildRouteViewModel(Route, userPreferences, windowService, segmentStore, statusBarService);
+                            CurrentView = BuildRouteViewModel = new BuildRouteViewModel(Route, userPreferences, windowService, segmentStore, statusBarService);
                         }
 
                         break;
@@ -76,7 +75,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
                             {
                                 Route.LoadFromRouteModel(routeModel);
                                 statusBarService.Info("Loaded route successfully");
-                                CurrentView = new BuildRouteViewModel(Route, userPreferences, windowService, segmentStore, statusBarService);
+                                CurrentView = BuildRouteViewModel = new BuildRouteViewModel(Route, userPreferences, windowService, segmentStore, statusBarService);
                             }
                             catch (Exception e)
                             {
@@ -91,6 +90,30 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
                 link => OpenLink(link as string ?? throw new ArgumentNullException(nameof(RelayCommand.CommandParameter))),
                 param => !string.IsNullOrEmpty(param as string));
 
+            SaveRouteCommand = new RelayCommand(
+                parameter =>
+                {
+                    BuildRouteViewModel!.SaveRouteCommand.Execute(parameter);
+                    return CommandResult.Success();
+                },
+                parameter => BuildRouteViewModel != null && BuildRouteViewModel.SaveRouteCommand.CanExecute(parameter));
+
+            ClearRouteCommand = new RelayCommand(
+                parameter =>
+                {
+                    BuildRouteViewModel!.ClearRouteCommand.Execute(parameter);
+                    return CommandResult.Success();
+                },
+                parameter => BuildRouteViewModel != null && BuildRouteViewModel.ClearRouteCommand.CanExecute(parameter));
+            
+            RemoveLastSegmentCommand = new RelayCommand(
+                parameter =>
+                {
+                    BuildRouteViewModel!.RemoveLastSegmentCommand.Execute(parameter);
+                    return CommandResult.Success();
+                },
+                parameter => BuildRouteViewModel != null && BuildRouteViewModel.RemoveLastSegmentCommand.CanExecute(parameter));
+            
             Version = GetType().Assembly.GetName().Version?.ToString(4) ?? "0.0.0.0";
             
             statusBarService.Subscribe(message => Model.StatusBarInfo(message), message => Model.StatusBarWarning(message), message => Model.StatusBarError(message));
@@ -106,8 +129,10 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
 
         public MainWindowModel Model { get; }
         public RouteViewModel Route { get; }
-
-        public ICommand OpenLinkCommand { get; set; }
+        public ICommand OpenLinkCommand { get; }
+        public ICommand SaveRouteCommand { get; }
+        public ICommand ClearRouteCommand { get; }
+        public ICommand RemoveLastSegmentCommand { get; }
 
         public LandingPageViewModel LandingPageViewModel { get; }
 
@@ -145,7 +170,7 @@ namespace RoadCaptain.App.RouteBuilder.ViewModels
             set => SetProperty(ref _changelogUri, value);
         }
 
-        public BuildRouteViewModel BuildRouteViewModel { get; }
+        public BuildRouteViewModel BuildRouteViewModel { get; set; }
 
         public async Task CheckForNewVersion()
         {

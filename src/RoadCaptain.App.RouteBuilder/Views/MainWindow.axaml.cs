@@ -46,24 +46,10 @@ namespace RoadCaptain.App.RouteBuilder.Views
 
             ViewModel = viewModel;
             DataContext = viewModel;
-
-            viewModel.PropertyChanged += (sender, args) =>
-            {
-                var propertyValue = "(idk)";
-                if (args.PropertyName == nameof(viewModel.CurrentView))
-                {
-                    propertyValue = viewModel.CurrentView.GetType().FullName;
-                }
-                Debug.WriteLine($"PropertyChanged: {args.PropertyName}: {propertyValue}");
-                var contentTypeFullName = MainContentControl.Content?.GetType().FullName ?? "(null)";
-                Debug.WriteLine($"Content type name: {contentTypeFullName}");
-                
-                var dataContextTypeFullName = MainContentControl.DataContext?.GetType().FullName ?? "(null)";
-                Debug.WriteLine($"DataContext type name: {dataContextTypeFullName}");
-            };
-            // this.Bind(ViewModel.BuildRouteViewModel.SaveRouteCommand).To(Key.S).WithPlatformModifier();
-            // this.Bind(ViewModel.BuildRouteViewModel.ClearRouteCommand).To(Key.R).WithPlatformModifier();
-            // this.Bind(ViewModel.BuildRouteViewModel.RemoveLastSegmentCommand).To(Key.Z).WithPlatformModifier();
+            
+            this.Bind(ViewModel.SaveRouteCommand).To(Key.S).WithPlatformModifier();
+            this.Bind(ViewModel.ClearRouteCommand).To(Key.R).WithPlatformModifier();
+            this.Bind(ViewModel.RemoveLastSegmentCommand).To(Key.Z).WithPlatformModifier();
         }
 
         private MainWindowViewModel ViewModel { get; }
@@ -73,9 +59,9 @@ namespace RoadCaptain.App.RouteBuilder.Views
             // Remove event handler to ensure this is only called once
             Activated -= MainWindow_OnActivated;
 
-            // Dispatcher.UIThread.InvokeAsync(() => ViewModel.CheckForNewVersion());
-            // Dispatcher.UIThread.InvokeAsync(() => ViewModel.CheckLastOpenedVersion());
-            // Dispatcher.UIThread.InvokeAsync(() => ViewModel.LandingPageViewModel.LoadMyRoutesCommand.Execute(null));
+            Dispatcher.UIThread.InvokeAsync(() => ViewModel.CheckForNewVersion());
+            Dispatcher.UIThread.InvokeAsync(() => ViewModel.CheckLastOpenedVersion());
+            Dispatcher.UIThread.InvokeAsync(() => ViewModel.LandingPageViewModel.LoadMyRoutesCommand.Execute(null));
         }
 
         private void Window_OnClosing(object? sender, WindowClosingEventArgs e)

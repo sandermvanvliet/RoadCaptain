@@ -2,15 +2,18 @@
 // Licensed under Artistic License 2.0
 // See LICENSE or https://choosealicense.com/licenses/artistic-2.0/
 
+using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using Avalonia.Controls;
+using Avalonia.Input;
 using Avalonia.Interactivity;
 using Codenizer.Avalonia.Map;
 using RoadCaptain.App.RouteBuilder.ViewModels;
 using RoadCaptain.App.Shared.Controls;
+using RoadCaptain.App.Shared.Commands;
 
 namespace RoadCaptain.App.RouteBuilder.Views
 {
