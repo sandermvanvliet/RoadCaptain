@@ -1,0 +1,11 @@
+{
+  "$schema": "http://json.schemastore.org/launchsettings.json",
+  "profiles": {
+    "RoadCaptain.DataExtractor": {
+      "commandName": "Project",
+      "commandLineArgs": "c:\\temp\\zwift-ext\\roads-copy.wad",
+      "environmentVariables": {
+      }
+    }
+  }
+}
