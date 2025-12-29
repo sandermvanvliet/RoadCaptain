@@ -13,9 +13,6 @@ class Program
             return;
         }
 
-        new ZwiftStateMachine().Parse(File.ReadAllBytes(inputFilePath));
-        
-        //new ZwiftAdvancedParser().ParseWithLogic(File.ReadAllBytes(inputFilePath));
-        
+        var unpacker = new WadUnpacker(inputFilePath);
     }
 }
