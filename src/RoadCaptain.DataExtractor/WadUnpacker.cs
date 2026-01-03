@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Runtime.InteropServices;
 
 namespace RoadCaptain.DataExtractor
@@ -111,13 +112,19 @@ namespace RoadCaptain.DataExtractor
             return theStructure;
         }
 
-        private void ProcessDecompressedData(byte[] data)
+        private void ProcessDecompressedData(byte[] decompressedData)
         {
-            var wh = new WadHeader();
-            var ptr = new IntPtr();
-            Marshal.StructureToPtr(wh, ptr, false);
-            Marshal.Copy(data, 0, ptr, Marshal.SizeOf(wh));
-
+            var wh = BytesToStruct<WadHeader>(decompressedData);
+            
+            for (var assetIdx = 0; assetIdx < (int)WadAssetType.CNT; assetIdx++)
+            {
+                if (wh.m_assets[assetIdx] != IntPtr.Zero)
+                {
+                    Debugger.Break();
+                }
+            }
+            
+            Debugger.Break();
             // // 2. Iterate through Asset Types
             // for (int assetIdx = 0; assetIdx < (int)WadAssetType.CNT; assetIdx++)
             // {

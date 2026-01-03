@@ -3,7 +3,8 @@
   "profiles": {
     "RoadCaptain.DataExtractor": {
       "commandName": "Project",
-      "commandLineArgs": "c:\\temp\\zwift-ext\\roads-copy.wad",
+      "_commandLineArgs": "c:\\temp\\zwift-ext\\roads-copy.wad",
+      "commandLineArgs": "\"C:\\Program Files (x86)\\Zwift\\assets\\Worlds\\worlds.wad\"",
       "environmentVariables": {
       }
     }

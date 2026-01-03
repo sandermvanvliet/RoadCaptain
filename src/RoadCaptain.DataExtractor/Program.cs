@@ -13,6 +13,8 @@ class Program
             return;
         }
 
-        var unpacker = new WadUnpacker(inputFilePath);
+        //var unpacker = new WadUnpacker(inputFilePath);
+        
+        TgxConverter.Run([@"C:\Program Files (x86)\Zwift\data\Worlds\world3\map.ztx"]);
     }
 }
