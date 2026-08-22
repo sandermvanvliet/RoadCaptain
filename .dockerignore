@@ -1,0 +1,13 @@
+**/bin/
+**/obj/
+.git
+.idea
+.github
+test/
+images/
+site/
+vendor/
+docs/
+packaging/
+routes/
+share/

@@ -1,0 +1,10 @@
+services:
+  api-prod:
+    image: ghcr.io/sandermvanvliet/roadcaptain-api:latest
+    ports:
+      - "5000:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+    volumes:
+      - ./database.sqlite3:/app/database.sqlite3
+    restart: unless-stopped

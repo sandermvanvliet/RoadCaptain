@@ -1,0 +1,6 @@
+services:
+  site:
+    image: ghcr.io/sandermvanvliet/roadcaptain-site:latest
+    ports:
+      - "8081:80"
+    restart: unless-stopped
